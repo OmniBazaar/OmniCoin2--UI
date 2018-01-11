@@ -135,7 +135,7 @@ class AccountSelector extends React.Component {
                                     name="username"
                                     id="username"
                                     value={this.props.accountName || ""}
-                                    placeholder={this.props.placeholder || counterpart.translate("account.name")}
+                                    placeholder={this.props.placeholder}
                                     ref="user_input"
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}
@@ -159,7 +159,7 @@ class AccountSelector extends React.Component {
                                 </div>
                             </div>
 
-                            {error ? <div className="error-area">
+                            {error ? <div className="facolor-error">
                                 <span>{error}</span>
                             </div> : null}
                         </div>

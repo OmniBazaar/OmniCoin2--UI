@@ -19,6 +19,7 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Background from "assets/omni-background.png";
 // import Incognito from "./components/Layout/Incognito";
 // import { isIncognito } from "feature_detect";
 
@@ -177,7 +178,7 @@ class App extends React.Component {
                     <Header/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <div className="grid-block">
-                        <div className="grid-block vertical">
+                        <div className="grid-block vertical" style={{backgroundImage: `url(${Background})`}}>
                             {this.props.children}
                         </div>
 
