@@ -1200,6 +1200,7 @@
     "switch_model_wallet": "Switch to local wallet",
     "switch_model_password": "Switch to cloud wallet",
     "account_public": "Account Name (Public)",
+    "referrer": "Referrer Name",
     "current_pass": "Current password",
     "no_wallet": "You do not have a local wallet yet",
     "generated": "Generated password",

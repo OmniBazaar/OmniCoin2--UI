@@ -4,6 +4,7 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
+import AccountSelector from "./../Account/AccountSelector";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router/es";
@@ -30,6 +31,9 @@ class CreateAccountPassword extends React.Component {
         this.state = {
             validAccountName: false,
             accountName: "",
+            validReferrerName: false,
+            referrerName: "",
+            referrerId: null,
             validPassword: false,
             registrar_account: null,
             loading: false,
@@ -65,7 +69,7 @@ class CreateAccountPassword extends React.Component {
 
     isValid() {
         let firstAccount = AccountStore.getMyAccounts().length === 0;
-        let valid = this.state.validAccountName;
+        let valid = this.state.validAccountName && (!this.state.referrerName || this.state.validReferrerName);
         if (!WalletDb.getWallet()) {
             valid = valid && this.state.validPassword;
         }
@@ -81,6 +85,26 @@ class CreateAccountPassword extends React.Component {
         if(e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
         this.setState(state);
+    }
+
+    onReferrerChanged(referrerAccount) {
+        if (referrerAccount) {
+            this.setState({
+                referrerId: referrerAccount.get("id"),
+                validReferrerName: true
+            })
+        }
+    }
+
+    onReferrerChange(referrerName) {
+        let referrerAccount = ChainStore.getAccount(referrerName);
+        if (!referrerAccount) {
+            this.setState({
+                validReferrerName: false,
+                referrerId: null
+            });
+        }
+        this.setState({referrerName});
     }
 
     onFinishConfirm(confirm_store_state) {
@@ -146,7 +170,7 @@ class CreateAccountPassword extends React.Component {
         //     this.createAccount(account_name);
         // } else {
         let password = this.state.generatedPassword;
-        this.createAccount(account_name, password);
+        this.createAccount(account_name, password); // TODO (omnibazaar) add referrer as parameter
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -218,8 +242,19 @@ class CreateAccountPassword extends React.Component {
                     {this.state.confirm_password && this.state.confirm_password !== this.state.generatedPassword ?
                     <div className="has-error"><Translate content="wallet.confirm_error" /></div> : null}
                 </section>
+                <section>
+                    <label className="left-label"><Translate content="wallet.referrer" /></label>
+                    <AccountSelector
+                        hideImage
+                        onAccountChanged={this.onReferrerChanged.bind(this)}
+                        onChange={this.onReferrerChange.bind(this)}
+                        accountName={this.state.referrerName}
+                        account={this.state.referrerName}
+                    />
+                </section>
 
-            <br />
+
+                    <br />
             <div className="confirm-checks" onClick={this._onInput.bind(this, "understand_3")}>
                 <label>
                     <input type="checkbox" onChange={() => {}} checked={this.state.understand_3}/>
