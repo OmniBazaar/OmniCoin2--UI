@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import { isIncognito } from "feature_detect";
-var logo = require("assets/logo-ico-blue.png");
+var logo = require("assets/omni-logo.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
@@ -36,7 +36,7 @@ export default class LoginSelector extends React.Component {
 
                         {!!childCount ? null :
                         <div className="button-group">
-                            <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>
+                            <label style={{textAlign: "center"}}><Translate content="account.new_user" /><br/>
                                 <Link to="/create-account/password">
                                     <div className="button">
                                         <Translate content="header.create_account" />
@@ -44,7 +44,7 @@ export default class LoginSelector extends React.Component {
                                 </Link>
                             </label>
 
-                            <label style={{textAlign: "left"}}><Translate content="account.existing_user" /><br/>
+                            <label style={{textAlign: "center"}}><Translate content="account.existing_user" /><br/>
                                 <div className="button success" onClick={() => {
                                     SettingsActions.changeSetting({setting: "passwordLogin", value: true});
                                     WalletUnlockActions.unlock.defer();
@@ -57,7 +57,6 @@ export default class LoginSelector extends React.Component {
                         {!!childCount ? null :
                         <div className="creation-options">
                             <div><Link to="/wallet/backup/restore"><Translate content="account.restore" /></Link></div>
-                            <div><Link to="/create-account/wallet"><Translate content="account.advanced" /></Link></div>
                         </div>}
 
                         {this.props.children}

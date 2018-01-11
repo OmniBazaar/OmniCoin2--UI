@@ -65,6 +65,7 @@ div.account-creation {
         text-align: left;
     }
     div.button-group {
+        justify-content: space-between;
         padding-top: 2rem;
         label {
             > span {
@@ -86,7 +87,9 @@ div.account-creation {
 
     div.creation-options, div.button-group {
         display: flex;
-        justify-content: space-between;
+    }
+    div.creation-options {
+        justify-content: center;
     }
     div.creation-options {
         padding-top: 2.5rem;
