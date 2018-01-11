@@ -16,7 +16,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
-var logo = require("assets/omni-logo.png");
+var logo = require("assets/omni-logo-with-text.png");
 
 class WalletUnlockModal extends React.Component {
 

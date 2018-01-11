@@ -21,7 +21,7 @@ import notify from "actions/NotificationActions";
 import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
 
-var logo = require("assets/omni-logo.png");
+var logo = require("assets/omni-logo-with-text.png");
 
 const FlagImage = ({flag, width = 20, height = 20}) => {
     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;

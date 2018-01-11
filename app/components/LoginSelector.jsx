@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import { isIncognito } from "feature_detect";
-var logo = require("assets/omni-logo.png");
+var logo = require("assets/omni-logo-with-text.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
