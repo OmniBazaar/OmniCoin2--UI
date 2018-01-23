@@ -1,13 +1,13 @@
 {
-    "counterpart": {
-        "formats": {
-            "date": {
-                "short_custom": "%e %b '%y",
-                "market_history": "%e/%m %H:%M:%S",
-                "market_history_us": "%m/%e %H:%M:%S"
-            }
-        }
-    },
+  "counterpart": {
+    "formats": {
+      "date": {
+        "short_custom": "%e %b '%y",
+        "market_history": "%e/%m %H:%M:%S",
+        "market_history_us": "%m/%e %H:%M:%S"
+      }
+    }
+  },
   "languages": {
     "en": "English",
     "zh": "简体中文",
@@ -25,8 +25,8 @@
   },
   "sync_fail": {
     "title": "Failed to sync with the API server",
-    "sub_text_1" : "Please verify that your computer clock is correct.",
-    "sub_text_2" : "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
+    "sub_text_1": "Please verify that your computer clock is correct.",
+    "sub_text_2": "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header": {
     "title": "BitShares UI",
@@ -792,12 +792,12 @@
         "title": "Margin positions"
       },
       "whitelist": {
-            "whitelist_authorities": "Whitelist authorities",
-            "blacklist_authorities": "Blacklist authorities",
-            "whitelist_markets": "Market whitelist",
-            "blacklist_markets": "Market blacklist",
-            "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities"
-        }
+        "whitelist_authorities": "Whitelist authorities",
+        "blacklist_authorities": "Blacklist authorities",
+        "whitelist_markets": "Market whitelist",
+        "blacklist_markets": "Market blacklist",
+        "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities"
+      }
     },
     "witnesses": {
       "title": "Witnesses",
@@ -938,22 +938,22 @@
   },
   "exchange": {
     "chart_options": {
-        "tools": "Tools",
-        "title": "Indicators",
-        "sma": "SMA",
-        "ema1": "EMA 1",
-        "ema2": "EMA 2",
-        "smaVolume": "SMA",
-        "macd": "MACD chart",
-        "bb": "Bollinger Bands",
-        "fib": "Draw Fibonacci retracement",
-        "trendline": "Draw trend line",
-        "volume": "Show volume chart",
-        "clamp_chart": "Clamp chart edge",
-        "period": "Period",
-        "height": "Chart height",
-        "price_title": "Price indicators",
-        "volume_title": "Volume indicators"
+      "tools": "Tools",
+      "title": "Indicators",
+      "sma": "SMA",
+      "ema1": "EMA 1",
+      "ema2": "EMA 2",
+      "smaVolume": "SMA",
+      "macd": "MACD chart",
+      "bb": "Bollinger Bands",
+      "fib": "Draw Fibonacci retracement",
+      "trendline": "Draw trend line",
+      "volume": "Show volume chart",
+      "clamp_chart": "Clamp chart edge",
+      "period": "Period",
+      "height": "Chart height",
+      "price_title": "Price indicators",
+      "volume_title": "Volume indicators"
     },
     "market": "Market",
     "price_history": "Price Chart",
@@ -1211,6 +1211,158 @@
     "bts_rules": "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
     "ok_done": "OK, take me to the dashboard"
   },
+  "marketplace": {
+    "search": "Search",
+    "categories": [
+      {
+        "name": "Community",
+        "subcategories": [
+          "Activities",
+          "Arts",
+          "Childcare",
+          "Classes",
+          "Events",
+          "General",
+          "Groups",
+          "Local News",
+          "Lost/Found",
+          "Music",
+          "Pets",
+          "Politics",
+          "Ridesharing",
+          "Volunteers"
+        ]
+      },
+      {
+        "name": "Personals",
+        "subcategories": [
+          "Strictly Platonic",
+          "Seeking Women",
+          "Seeking Men",
+          "Misc Romance",
+          "Casual Encounters",
+          "Missed Connections",
+          "Rants and Raves"
+        ]
+      },
+      {
+        "name": "Housing",
+        "subcategories": [
+          "Apts/Housing",
+          "Housing Swap",
+          "Housing Wanted",
+          "Office/Commercial",
+          "Real Estate for Scale",
+          "Rooms to Share",
+          "Room Wanted",
+          "Sublets/Temporary",
+          "Vaction"
+        ]
+      },
+      {
+        "name": "For Sale",
+        "subcategories": [
+          "Antiques",
+          "Appliances",
+          "Arts/Crafts",
+          "ATV/Snowmobile",
+          "Auto Parts",
+          "Baby/Child",
+          "Barter",
+          "Beauty/Health",
+          "Bikes",
+          "Boats",
+          "Books",
+          "Business",
+          "Cars/Trucks",
+          "CD/DVD/VHS",
+          "Farm/Garden",
+          "Free",
+          "Furniture",
+          "Garage Sale",
+          "General",
+          "Heavy Equip",
+          "Household",
+          "Jewelry",
+          "Materials",
+          "Motorcycles",
+          "Musical Instr",
+          "Photo/Video",
+          "RVs/Campers"
+        ]
+      },
+      {
+        "name": "Jobs",
+        "subcategories": [
+          "Accounting/Finance",
+          "Admin/Office",
+          "Architect/Engineer",
+          "Art/Media/Design",
+          "Aerospace/Science",
+          "Business Management",
+          "Customer Service",
+          "Education",
+          "Food/Bev/Hosp",
+          "General Labor",
+          "Government",
+          "Human Resources",
+          "IT/Software/CS",
+          "Legal/Paralegal",
+          "Manufacturing",
+          "Sales/Marketing"
+        ]
+      },
+      {
+        "name": "Services",
+        "subcategories": [
+          "Automotive",
+          "Beauty/Personal",
+          "Computer/IT",
+          "Creative",
+          "Dental",
+          "Event Mgmt",
+          "Farm/Garden",
+          "Financial",
+          "Health Care",
+          "Labor/Construction",
+          "Legal",
+          "Lessons/Coaching",
+          "Marine",
+          "Real Estate",
+          "Skilled Trades",
+          "Small Business",
+          "Therapeutic",
+          "Travel/Vaction",
+          "Writing/Editing"
+        ]
+      },
+      {
+        "name": "Gigs",
+        "subcategories": [
+          "Baby Sitting",
+          "Cleaning",
+          "Crew",
+          "Delivery",
+          "Escort",
+          "House Sitting",
+          "Handyman",
+          "Massage",
+          "Moving/Hauling",
+          "Pet Care",
+          "Tech Support"
+        ]
+      },
+      {
+        "name": "Gigs",
+        "subcategories": [
+          "Local/Bitcoin",
+          "Local/OmniCoin",
+          "Local/Other",
+          "Bitcoin/OmniCoin"
+        ]
+      }
+    ]
+  },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
     "no_valid": "No valid feeds for %(asset_symbol)s",
@@ -1262,17 +1414,17 @@
       "cancel": "No"
     },
     "proposals": {
-        "pay_with": "Pay with account",
-        "approval_add": "Approval to add",
-        "approval_remove": "Approval to remove",
-        "key_approval_add": "Key approval to add",
-        "key_approval_remove": "Key approval to remove"
+      "pay_with": "Pay with account",
+      "approval_add": "Approval to add",
+      "approval_remove": "Approval to remove",
+      "key_approval_add": "Key approval to add",
+      "key_approval_remove": "Key approval to remove"
     },
     "ok": "OK",
-    "qrcode":{
-      "label":"qrcode",
-      "title":"Private key QR code",
-      "input_message":"Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code."
+    "qrcode": {
+      "label": "qrcode",
+      "title": "Private key QR code",
+      "input_message": "Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code."
     }
   },
   "init_error": {
@@ -1302,10 +1454,10 @@
     "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
-        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
-        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/"
+      "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+      "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+      "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+      "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/"
     },
     "your_account": "Your account",
     "bitkapital_text": "Choose an asset to deposit or withdraw:",
@@ -1328,9 +1480,9 @@
     "generate_new_memo": "Get new memo",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
-	  "convert": "Internal conversion",
+    "convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
-	  "convert_now": "Convert now",
+    "convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1351,7 +1503,7 @@
     "support_block": "For support, please contact OpenLedger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
-	  "convert_coin": "Convert to %(coin)s (%(symbol)s)",
+    "convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
@@ -1379,7 +1531,7 @@
     "contact_TRADE": "Contact Blocktrades",
     "over_limit": "Limit Reached"
   },
-    "trx_error": {
-        "expire": "Your transaction has expired without being confirmed, please try again later."
-    }
+  "trx_error": {
+    "expire": "Your transaction has expired without being confirmed, please try again later."
+  }
 }

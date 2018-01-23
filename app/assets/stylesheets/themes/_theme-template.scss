@@ -31,7 +31,8 @@ $account-green,
 $account-primarytext,
 $account-dimmed,
 $account-border,
-$account-background
+$account-background,
+$category-header
 ) {
 
     .font-secondary {
@@ -297,6 +298,12 @@ $account-background
         color: $secondary-text-color;
     }
 
+    ul.categories {
+        background-color: $bg-color;
+        .category {
+            background-color: $account-header;
+        }
+    }
     .header-right-menu {
         a:hover {background-color: lighten($panel-bg-color, 4%);}
         a.active {background-color: lighten($panel-bg-color, 4%);}
@@ -1219,12 +1226,13 @@ $account-background
     }
 
     /* Table view account */
-    div.overview-tabs {
+    div.overview-tabs  {
         background-color: $account-background;
         > div.service-selector {
             background-color: $account-header;
         }
     }
+
     ul.account-overview {
 
         li {

@@ -1,0 +1,10 @@
+ul.categories {
+  -webkit-column-count: 7;
+  -moz-column-count: 7;
+  column-count: 7;
+  margin-left: 0 !important;
+  li {
+    list-style: none;
+    text-align: center;
+  }
+}

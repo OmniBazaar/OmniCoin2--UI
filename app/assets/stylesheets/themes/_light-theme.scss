@@ -42,6 +42,9 @@ $account-dimmed: #5d5d5d;
 $account-border: rgba(50, 49, 49, 0.1);
 $account-background: #e5e6e4;
 
+// Marketplace colors
+$category-header: #b1b1b1;
+
 .lightTheme {
   @include theme(
     $primary-text-color,
@@ -74,7 +77,8 @@ $account-background: #e5e6e4;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $category-header
   );
 
   .change-up {

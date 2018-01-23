@@ -41,6 +41,9 @@ $account-dimmed: #afafaf;
 $account-border: #323131;
 $account-background: #3f3f3f;
 
+// Marketplace colors
+$category-header: #656565;
+
 .darkTheme {
   @include theme(
     $primary-text-color,
@@ -73,6 +76,7 @@ $account-background: #3f3f3f;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $category-header
   );
 }
