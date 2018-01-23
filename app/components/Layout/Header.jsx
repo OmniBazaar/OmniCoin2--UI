@@ -319,7 +319,7 @@ class Header extends React.Component {
                     <ul className="menu-bar">
                         <li>{dashboard}</li>
                         {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}><Translate content="header.wallet" /></Link></li>}
-                        {currentAccount ? <li><a className={cnames({active: active.indexOf("marketplace") !== -1})} onClick={this._onNavigate.bind(this, "/marketplace")}><Translate component="span" content="header.marketplace" /></a></li> : null}
+                        {currentAccount ? <li><a className={cnames({active: active.indexOf("marketplace") !== -1})} onClick={this._onNavigate.bind(this, "/marketplace/categories")}><Translate component="span" content="header.marketplace" /></a></li> : null}
                         {currentAccount ? <li><a className={cnames({active: active.indexOf("processors") !== -1})} onClick={this._onNavigate.bind(this, "/processors")}><Translate component="span" content="header.processors" /></a></li> : null}
                         {currentAccount ? <li><a className={cnames({active: active.indexOf("escrow") !== -1})} onClick={this._onNavigate.bind(this, "/escrow")}><Translate component="span" content="header.escrow" /></a></li> : null}
                     </ul>

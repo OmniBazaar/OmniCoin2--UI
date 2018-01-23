@@ -198,8 +198,7 @@ class Assets extends React.Component {
                                 <Tab title="explorer.assets.market">
                                     <div className="grid-block shrink">
                                         <div className="grid-content">
-                                            <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
-                                        </div>
+                                       </div>
                                     </div>
                                     <div className="grid-block" style={{paddingBottom: 20}}>
                                         <div className="grid-content">

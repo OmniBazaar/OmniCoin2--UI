@@ -1212,6 +1212,7 @@
     "ok_done": "OK, take me to the dashboard"
   },
   "marketplace": {
+    "search": "Search",
     "categories": [
       {
         "name": "Community",

@@ -48,6 +48,7 @@ import Help from "./components/Help";
 import InitError from "./components/InitError";
 import LoginSelector from "./components/LoginSelector";
 import CreateWorker from "./components/Account/CreateWorker";
+import Categories from './components/Marketplace/Categories';
 
 const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
@@ -122,6 +123,9 @@ const routes = (
             <Route path="whitelist" component={AccountWhitelist} />
             <Route path="signedmessages" component={AccountSignedMessages} />
             <Redirect from="overview" to="dashboard" />
+        </Route>
+        <Route path="/marketplace">
+            <Route path="categories" component={Categories}/>
         </Route>
 
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
