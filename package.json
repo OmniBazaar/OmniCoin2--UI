@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "electron": "^1.8.2",
+    "flow-bin": "^0.65.0",
     "react-scripts": "1.1.0"
   },
   "main": "src/electron-starter.js",
@@ -17,6 +18,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron .",
-    "dev": "nf start -p 3000"
+    "dev": "nf start -p 3000",
+    "flow": "flow"
   }
 }
