@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM, {render} from 'react-dom';
 import {createStore, applyMiddleware, combineReducers} from 'redux';
 import createSagaMiddleware from 'redux-saga'
-import {reducer as formReducer} from 'react-redux-form';
+import {reducer as formReducer} from 'redux-form';
 
 import {Provider} from 'react-redux';
 

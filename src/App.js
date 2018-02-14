@@ -10,9 +10,9 @@ class App extends Component {
     return (
         <Router>
             <Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/signup" component={Signup} />
-                <Route path="/login" component={Login} />
+                <Route exact path="/" render={(props) => <Home {...props} />}/>
+                <Route path="/signup" render={(props) => <Signup {...props} />}/>
+                <Route path="/login" render={(props) => <Login {...props} />}/>
             </Switch>
         </Router>
     )
