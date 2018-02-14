@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import Signup from './scenes/Signup/Signup'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import Signup from './scenes/Signup/Signup';
+import Login from './scenes/Login/Login';
+import Home from './scenes/Home/Home';
+
 class App extends Component {
   render() {
     return (
-        <Signup/>
+        <Router>
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/signup" component={Signup} />
+                <Route path="/login" component={Login} />
+            </Switch>
+        </Router>
     )
   }
 }

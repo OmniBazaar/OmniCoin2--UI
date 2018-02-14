@@ -1,3 +1,4 @@
+@import '../../styles/index';
 
 .signup-container {
   display: flex;
@@ -5,9 +6,9 @@
   justify-content: space-between;
   align-items: center;
   height: 150px;
-  margin-top: -100px;
+  margin-top: -150px;
   span {
-    color: white;
+    color: $primary-white;
   }
   .password {
     display: flex;
