@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Field, reduxForm } from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
 
 import { login } from  '../../../services/auth/authActions';
 
@@ -27,20 +28,19 @@ class LoginForm extends Component {
    render() {
        const {handleSubmit, username} = this.props;
        return (
-           <form onSubmit={handleSubmit(this.submit)} className="signup-container">
-               <img src={BtnLock} height={50} width={50}/>
+           <Form onSubmit={handleSubmit(this.submit)} className="signup-container">
+               <Image src={BtnLock} width={50} height={50}/>
                <span>{username}</span>
                <div className="password-block">
-                   <Field
-                       type="password"
-                       name="password"
-                       className="form-control"
-                       placeholder="Enter password"
-                       component="input"
-                   />
-                   <button className="btn btn-success" type="submit">UNLOCK</button>
+                       <Field
+                           type="password"
+                           name="password"
+                           placeholder="Enter password"
+                           component="input"
+                       />
+                   <Button content="UNLOCK" color="green" type="submit"/>
                </div>
-           </form>
+           </Form>
        )
    }
 }

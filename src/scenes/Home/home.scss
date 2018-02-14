@@ -1,0 +1,24 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  .sidebar {
+    flex: 1;
+    background-color: black;
+    .header {
+      justify-content: flex-end;
+    }
+  }
+  .home-content {
+    flex: 5;
+  }
+}
+
+.ui.left.push.sidebar {
+  transform: translate3d(-80%,0,0);
+}
+
+.ui.visible.push.sidebar {
+  transform: translate3d(0,0,0);
+}

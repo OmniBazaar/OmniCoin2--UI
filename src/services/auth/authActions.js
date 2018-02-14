@@ -1,7 +1,7 @@
 /**
  * Created by denissamohvalov on 14.02.18.
  */
-import { createActions } from 'redux-actions'
+import { createActions } from 'redux-actions';
 
 
 const { login } = createActions({

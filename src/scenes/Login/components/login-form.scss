@@ -13,13 +13,13 @@
   .password-block {
     display: flex;
     flex-direction: row;
-    .form-control {
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0;
+    input {
+      border-bottom-right-radius: 0 !important;
+      border-top-right-radius: 0 !important;
     }
-    .btn {
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
+    button {
+      border-bottom-left-radius: 0 !important;
+      border-top-left-radius: 0 !important;
     }
   }
 
