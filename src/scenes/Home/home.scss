@@ -1,24 +1,32 @@
 .home-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   height: 100vh;
+  .home-content {
+    flex: 4;
+  }
+
   .sidebar {
-    flex: 1;
     background-color: black;
     .header {
-      justify-content: flex-end;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
     }
   }
-  .home-content {
-    flex: 5;
-  }
 }
 
-.ui.left.push.sidebar {
-  transform: translate3d(-80%,0,0);
+.sidebar.visible {
+    flex: 1;
 }
 
-.ui.visible.push.sidebar {
-  transform: translate3d(0,0,0);
+.sidebar {
+  flex: 0.2;
+  transition: flex 0.3s ease;
 }
+
+.hidden {
+  display: none;
+}
+
