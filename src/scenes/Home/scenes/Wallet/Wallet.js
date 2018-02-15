@@ -7,6 +7,10 @@ import './wallet.scss';
 
 export default class Wallet extends Component {
     render() {
-        return <div/>;
+        return (
+            <div>
+                Wallet
+            </div>
+        );
     }
 }
