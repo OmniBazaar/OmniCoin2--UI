@@ -1,0 +1,108 @@
+@import './colors';
+
+$button-primary-color: $primary-blue;
+$button-secondary-color: $primary-white;
+$button-green-color: $primary-green;
+
+$button-secondary-text-color: #393939;
+$button-shadow-color: rgba(0, 0, 0, .33);
+
+$button-padding-horizontal: 48px;
+$button-padding-vertical: 20px;
+
+@mixin font-smoothing($value: antialiased) {
+  @if $value == antialiased {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  } @else {
+    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+}
+
+%button {
+  @include font-smoothing(antialiased);
+
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button {
+  @extend %button;
+
+  &.button--disabled {
+    cursor: auto;
+  }
+}
+
+@function text-color ($color, $dark: $black, $light: $primary-white) {
+  @if (lightness($color) > 50) {
+    /* Lighter background, return dark color */
+    @return $dark;
+  } @else {
+    /* Darker background, return light color */
+    @return $light;
+  }
+}
+
+@mixin box-shadow($x-axis: 0, $y-axis: 1px, $blur: 2px, $color: $button-primary-color) {
+  box-shadow: $x-axis $y-axis $blur $color;
+}
+
+@mixin button-padding ($factor) {
+  border-radius: 4px;
+  padding-bottom: $button-padding-vertical / $factor;
+  padding-left: $button-padding-horizontal / $factor;
+  padding-right: $button-padding-horizontal / $factor;
+  padding-top: $button-padding-vertical / $factor;
+}
+
+@mixin app-button ($color) {
+  background-color: $color;
+  $text-color: text-color($color, $button-secondary-color);
+  color: $text-color;
+  text-decoration: none;
+
+  &:active:not(.disabled),
+  &.focused:not(.disabled) {
+    @include box-shadow(inset 0 2px 2px 0 $button-shadow-color);
+  }
+
+  @include button-padding(2);
+
+  &.button--small {
+    @include button-padding(2.5);
+    font-size: 12px;
+  }
+
+  &.button--disabled {
+    background-color: lighten($color, 40%);
+    color: lighten($text-color, 65%);
+  }
+}
+
+// Primary button styling
+.button--primary {
+  @include app-button($button-primary-color);
+
+  &:hover:not(.disabled):not(:active) {
+    background-color: darken($button-primary-color, 8%);
+  }
+}
+
+// Secondary button styling
+.button--secondary {
+  @include app-button($button-secondary-color);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}

@@ -44,7 +44,7 @@ export default class Home extends Component {
                         <Image src={SidebarLogo} width={150} height={40}/>
                         <Image
                             src={Burger}
-                            size={iconSize}
+                            height={iconSize}
                             width={iconSize}
                             className="burger"
                             onClick={this.toggleVisibility}/>
