@@ -6,6 +6,7 @@ const ButtonTypes = Object.freeze({
   PRIMARY: 'primary',
   SECONDARY: 'secondary',
   GREEN: 'green',
+  GRAY: 'gray',
 });
 
 export {
@@ -17,6 +18,7 @@ const Button = (props) => {
     'button': true,
     'button--primary': props.type === ButtonTypes.PRIMARY,
     'button--secondary': props.type === ButtonTypes.SECONDARY,
+    'button--gray': props.type === ButtonTypes.GRAY,
     'button--green': props.type === ButtonTypes.GREEN,
     'button--small': props.small,
     'button--disabled': props.disabled,

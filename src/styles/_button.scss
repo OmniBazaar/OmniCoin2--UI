@@ -7,8 +7,8 @@ $button-green-color: $primary-green;
 $button-secondary-text-color: #393939;
 $button-shadow-color: rgba(0, 0, 0, .33);
 
-$button-padding-horizontal: 48px;
-$button-padding-vertical: 20px;
+$button-padding-horizontal: 64px;
+$button-padding-vertical: 18px;
 
 @mixin font-smoothing($value: antialiased) {
   @if $value == antialiased {
@@ -27,8 +27,9 @@ $button-padding-vertical: 20px;
   cursor: pointer;
   display: inline-block;
   font-family: Roboto, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  line-height: 13px;
+  font-weight: 600;
   outline: none;
   text-align: center;
   text-decoration: none;
@@ -100,6 +101,15 @@ $button-padding-vertical: 20px;
 // Secondary button styling
 .button--secondary {
   @include app-button($button-secondary-color);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--gray {
+  @include app-button($lightest-gray);
   color: $primary-blue;
 
   &:hover:not(.disabled):not(:active) {

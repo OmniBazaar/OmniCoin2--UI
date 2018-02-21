@@ -36,6 +36,11 @@
           background-color: $lighter-gray;
         }
 
+        &:hover {
+          cursor: pointer;
+          background-color: darken($lighter-gray, 5%);
+        }
+
         .amount {
           color: $primary-blue;
           font-weight: bold;
@@ -50,7 +55,6 @@
     .mail-messages {
       flex: 1;
       background-color: $lighter-gray;
-      /*border-left: 1px solid $third-white;*/
       height: 100%;
 
       .mail-summary {
@@ -101,14 +105,55 @@
             font-size: 0.8em;
           }
         }
+
+        &:hover {
+          cursor: pointer;
+          background-color: darken($lighter-gray, 5%);
+        }
       }
     }
 
     .mail-message {
       flex: 3;
-      padding: 15px;
       background-color: $lighter-gray;
-      /*border-left: 1px solid $third-white;*/
+      height: 100%;
+
+      .message-header {
+        padding: 15px;
+        background-color: $lightest-gray;
+        border-bottom: 1px solid $third-white;
+      }
+
+      .message-body {
+        padding: 15px;
+      }
+
+      .top-detail {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        .from {
+          font-weight: bold;
+        }
+
+        .date {
+          color: $primary-gray;
+          font-size: 0.8em;
+        }
+      }
+
+      .mail-title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        .title {
+          font-size: 22px;
+        }
+      }
     }
   }
 
