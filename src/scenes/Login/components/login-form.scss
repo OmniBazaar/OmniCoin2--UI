@@ -1,0 +1,26 @@
+@import '../../../styles/index';
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 150px;
+  margin-top: -150px;
+  span {
+    color: $primary-white;
+  }
+  .password-block {
+    display: flex;
+    flex-direction: row;
+    input {
+      border-bottom-right-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+    }
+    button {
+      border-bottom-left-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+    }
+  }
+
+}

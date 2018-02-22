@@ -1,0 +1,124 @@
+@import './colors';
+@import './shared';
+
+$button-primary-color: $primary-blue;
+$button-secondary-color: $primary-white;
+$button-green-color: $primary-green;
+
+$button-secondary-text-color: #393939;
+$button-shadow-color: rgba(0, 0, 0, .33);
+$transparent: rgba(0, 0, 0, 0);
+
+$button-padding-horizontal: 64px;
+$button-padding-vertical: 18px;
+
+%button {
+  @include font-smoothing(antialiased);
+
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 13px;
+  font-weight: 600;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button {
+  @extend %button;
+
+  &.button--disabled {
+    cursor: auto;
+  }
+}
+
+@function text-color ($color, $dark: $black, $light: $primary-white) {
+  @if (lightness($color) > 50) {
+    /* Lighter background, return dark color */
+    @return $dark;
+  } @else {
+    /* Darker background, return light color */
+    @return $light;
+  }
+}
+
+@mixin button-padding ($factor) {
+  border-radius: 4px;
+  padding-bottom: $button-padding-vertical / $factor;
+  padding-left: $button-padding-horizontal / $factor;
+  padding-right: $button-padding-horizontal / $factor;
+  padding-top: $button-padding-vertical / $factor;
+}
+
+@mixin app-button ($color) {
+  background-color: $color;
+  $text-color: text-color($color, $button-secondary-color);
+  color: $text-color;
+  text-decoration: none;
+
+  &:active:not(.disabled),
+  &.focused:not(.disabled) {
+    @include box-shadow(inset 0 2px 2px 0 $button-shadow-color);
+  }
+
+  @include button-padding(2);
+
+  &.button--small {
+    @include button-padding(2.5);
+    font-size: 12px;
+  }
+
+  &.button--disabled {
+    background-color: lighten($color, 40%);
+    color: lighten($text-color, 65%);
+  }
+}
+
+// Primary button styling
+.button--primary {
+  @include app-button($button-primary-color);
+
+  &:hover:not(.disabled):not(:active) {
+    background-color: darken($button-primary-color, 8%);
+  }
+}
+
+// Secondary button styling
+.button--secondary {
+  @include app-button($button-secondary-color);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--gray {
+  @include app-button($lightest-gray);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--transparent {
+  @include app-button($transparent);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--green {
+  @include app-button($transparent);
+  color: $primary-green;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}

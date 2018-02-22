@@ -1,0 +1,74 @@
+@import '../../styles/index';
+
+$sidebar-size: 250px;
+$closed-side-bar-size: 70px;
+
+.home-container {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: $sidebar-size;
+    height: 100%;
+    background-color: black;
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      .burger {
+        cursor: pointer;
+      }
+    }
+    .menu {
+      .menu-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 2px 17px;
+        padding: 10px 10px;
+        span {
+          color: $primary-white;
+          margin-left: 15px;
+        }
+      }
+      .active {
+        border-radius: 5px;
+        background-color: $secondary-white;
+        cursor: pointer;
+      }
+      .menu-item:hover {
+        border-radius: 5px;
+        background-color: $secondary-white;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.home-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: $sidebar-size;
+  transition: margin 0.5s ease;
+}
+
+
+.home-content.shrink {
+  margin-left: $closed-side-bar-size;
+  transition: margin 0.5s ease;
+}
+
+.sidebar.visible {
+    left: 0;
+}
+
+.sidebar {
+  left: $closed-side-bar-size - $sidebar-size;
+  transition: left 0.5s ease;
+}
+
+
+

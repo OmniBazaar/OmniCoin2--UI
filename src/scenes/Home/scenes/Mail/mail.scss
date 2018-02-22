@@ -1,0 +1,250 @@
+@import '../../../../styles/index';
+
+$compose-width: 38%;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+
+  .header {
+    display: flex;
+    padding: 40px 30px;
+    background-color: $lighter-blue;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      font-size: 24px;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    .mail-items {
+      flex: 1;
+      padding: 15px;
+
+      .item {
+        display: flex;
+        padding: 10px;
+        justify-content: space-between;
+
+        &.active {
+          background-color: $lighter-gray;
+        }
+
+        &:hover {
+          cursor: pointer;
+          background-color: darken($lighter-gray, 5%);
+        }
+
+        .amount {
+          color: $primary-blue;
+          font-weight: bold;
+        }
+
+        &.last-item {
+          margin-top: 25px;
+        }
+      }
+    }
+
+    .mail-messages {
+      flex: 1;
+      background-color: $lighter-gray;
+      height: 100%;
+
+      .mail-summary {
+        padding: 15px;
+        border-bottom: 1px solid $third-white;
+
+        &.active {
+          background-color: $primary-white;
+        }
+
+        .title {
+          font-size: 13px;
+        }
+
+        .from {
+          width: 68%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        &.new {
+          .from {
+            font-weight: bold;
+          }
+
+          .top-detail {
+            position: relative;
+
+            &:before {
+              content: "\2022";
+              position: absolute;
+              left: -3px;
+              margin-left: -8px;
+              color: #2aabe4;
+            }
+          }
+        }
+
+        .top-detail {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-bottom: 8px;
+
+          .date {
+            color: $primary-gray;
+            font-size: 0.8em;
+          }
+        }
+
+        &:hover {
+          cursor: pointer;
+          background-color: darken($lighter-gray, 5%);
+        }
+      }
+    }
+
+    .mail-message {
+      flex: 3;
+      background-color: $lighter-gray;
+      height: 100%;
+
+      .message-header {
+        padding: 15px;
+        background-color: $lightest-gray;
+        border-bottom: 1px solid $third-white;
+      }
+
+      .message-body {
+        padding: 15px;
+      }
+
+      .top-detail {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        .from {
+          font-weight: bold;
+        }
+
+        .date {
+          color: $primary-gray;
+          font-size: 0.8em;
+        }
+      }
+
+      .mail-title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        .title {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+
+  .top-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .Resizer {
+    background: $third-white;
+    z-index: 1;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(158, 154, 154, 0.3);
+    border-bottom: 5px solid rgba(158, 154, 154, 0.3);
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.vertical:hover {
+    border-left: 5px solid rgba(158, 154, 154, 0.3);
+    border-right: 5px solid rgba(158, 154, 154, 0.3);
+  }
+
+  .Resizer.disabled {
+    cursor: not-allowed;
+  }
+
+  .Resizer.disabled:hover {
+    border-color: transparent;
+  }
+
+  .overlay.composer-visible {
+    height: 100%;
+    width: calc(100% - #{$compose-width});
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    left: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.compose-container {
+  width: $compose-width;
+  height: 100%;
+  padding: 15px;
+  position: absolute;
+  background-color: $lighter-gray;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}

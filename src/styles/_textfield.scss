@@ -1,0 +1,97 @@
+@import './colors';
+@import './shared';
+
+$textfield-padding: 16px;
+
+$textfield-border-radius: 2px;
+$textfield-border-width: 1px;
+$textfield-border-style: solid;
+$textfield-border-color: #d4dcea;
+$textfield-border-color-focused: #9ca7bb;
+$textfield-border-color-disabled: #e9e9e9;
+$textfield-border-color-error: $error;
+$textfield-border-color-success: $success;
+
+$textfield-textcolor: $black;
+$textfield-textcolor-success: $success;
+$textfield-textcolor-error: $error;
+$textfield-placeholder-color: #798192;
+
+$textfield-background-color: $white;
+$textfield-background-color-disabled: #f5f5f5;
+
+.textfield {
+  @include box-sizing(border-box);
+  @include placeholder {
+    color: $textfield-placeholder-color;
+  }
+  @include appearance(none);
+
+  background-color: $textfield-background-color;
+  border-color: $textfield-border-color;
+  border-radius: $textfield-border-radius;
+  border-style: $textfield-border-style;
+  border-width: $textfield-border-width;
+  color: $textfield-textcolor;
+  display: block;
+  font-size: 14px;
+  outline: none;
+  padding: $textfield-padding;
+  text-align: left;
+  width: 100%;
+
+  &:focus {
+    border-color: $textfield-border-color-focused;
+  }
+
+  &.field--disabled,
+  &:disabled {
+    background-color: $textfield-background-color-disabled;
+    border-color: $textfield-border-color-disabled;
+
+    + .textfield--hint {
+      display: none;
+    }
+  }
+
+  &.field--success:not(.field--disabled):not(:disabled):not(.field--error) {
+    border-color: $textfield-border-color-success;
+    color: $textfield-textcolor-success;
+
+    ~ .textfield--hint {
+      color: $textfield-textcolor-success;
+    }
+  }
+
+  &.field--error:not(.field--disabled):not(:disabled) {
+    border-color: $textfield-border-color-error;
+    color: $textfield-textcolor-error;
+
+    ~ .textfield--hint {
+      color: $textfield-textcolor-error;
+    }
+  }
+
+  &.field--small {
+    padding: 12px;
+  }
+}
+
+.textarea {
+  resize: none;
+}
+
+.textfield--hint {
+  display: block;
+  font-size: 13px;
+  padding-right: 2px;
+  padding-top: 5px;
+  text-align: right;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}

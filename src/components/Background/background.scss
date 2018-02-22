@@ -1,0 +1,26 @@
+@import '../../styles/index';
+
+.background-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $secondary-white;
+    img {
+      margin-left: -70px;
+    }
+  }
+  .footer {
+    margin-bottom: 1em;
+    a {
+      color: $secondary-white;
+      margin: 0 0.25em;
+    }
+  }
+}
