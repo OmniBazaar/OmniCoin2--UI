@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import classNames from 'classnames';
 import Button, {ButtonTypes} from '../../../../components/Button';
 import SplitPane from 'react-split-pane';
+import Compose from './Compose';
 
 import './mail.scss';
 
@@ -129,7 +130,11 @@ export default class Mail extends Component {
       messages: [],
       activeMessage: 0,
       activeFolder: MailTypes.INBOX,
-    }
+      showCompose: false,
+    };
+
+    this.onClickCompose = this.onClickCompose.bind(this);
+    this.onCloseCompose = this.onCloseCompose.bind(this);
   }
 
   componentDidMount () {
@@ -264,14 +269,29 @@ export default class Mail extends Component {
     );
   }
 
+  onClickCompose() {
+    let showCompose = !this.state.showCompose;
+    this.setState({ showCompose });
+  }
+
+  onCloseCompose() {
+    this.setState({ showCompose: false });
+  }
+
   render() {
-    let width = this.state.width;
+    let { width, showCompose } = this.state;
+    const containerClass = classNames({
+      'overlay': true,
+      'composer-visible': showCompose,
+    });
     let defaultSize = width / 5;
+
     return (
       <div ref={container => {this.container = container}} className='container'>
+        <div className={containerClass} onClick={this.onCloseCompose} />
         <div className='header'>
           <span className='title'>Mail</span>
-          <Button type={ButtonTypes.PRIMARY}>COMPOSE</Button>
+          <Button type={ButtonTypes.PRIMARY} onClick={this.onClickCompose}>COMPOSE</Button>
         </div>
         <div className='body'>
           <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{position: 'relative'}}>
@@ -286,6 +306,7 @@ export default class Mail extends Component {
             </SplitPane>
           </SplitPane>
         </div>
+        <Compose showCompose={showCompose} onClose={this.onCloseCompose} />
       </div>
     )
   }

@@ -1,5 +1,7 @@
 @import '../../../../styles/index';
 
+$compose-width: 38%;
+
 .container {
   display: flex;
   flex-direction: column;
@@ -157,6 +159,13 @@
     }
   }
 
+  .top-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
   .Resizer {
     background: $third-white;
     z-index: 1;
@@ -199,10 +208,43 @@
     border-left: 5px solid rgba(158, 154, 154, 0.3);
     border-right: 5px solid rgba(158, 154, 154, 0.3);
   }
+
   .Resizer.disabled {
     cursor: not-allowed;
   }
+
   .Resizer.disabled:hover {
     border-color: transparent;
+  }
+
+  .overlay.composer-visible {
+    height: 100%;
+    width: calc(100% - #{$compose-width});
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    left: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.compose-container {
+  width: $compose-width;
+  height: 100%;
+  padding: 15px;
+  position: absolute;
+  background-color: $lighter-gray;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+
+  .title {
+    font-size: 18px;
   }
 }

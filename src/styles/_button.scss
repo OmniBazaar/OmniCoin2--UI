@@ -1,4 +1,5 @@
 @import './colors';
+@import './shared';
 
 $button-primary-color: $primary-blue;
 $button-secondary-color: $primary-white;
@@ -6,19 +7,10 @@ $button-green-color: $primary-green;
 
 $button-secondary-text-color: #393939;
 $button-shadow-color: rgba(0, 0, 0, .33);
+$transparent: rgba(0, 0, 0, 0);
 
 $button-padding-horizontal: 64px;
 $button-padding-vertical: 18px;
-
-@mixin font-smoothing($value: antialiased) {
-  @if $value == antialiased {
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-  } @else {
-    -moz-osx-font-smoothing: auto;
-    -webkit-font-smoothing: subpixel-antialiased;
-  }
-}
 
 %button {
   @include font-smoothing(antialiased);
@@ -51,10 +43,6 @@ $button-padding-vertical: 18px;
     /* Darker background, return light color */
     @return $light;
   }
-}
-
-@mixin box-shadow($x-axis: 0, $y-axis: 1px, $blur: 2px, $color: $button-primary-color) {
-  box-shadow: $x-axis $y-axis $blur $color;
 }
 
 @mixin button-padding ($factor) {
@@ -111,6 +99,24 @@ $button-padding-vertical: 18px;
 .button--gray {
   @include app-button($lightest-gray);
   color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--transparent {
+  @include app-button($transparent);
+  color: $primary-blue;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
+.button--green {
+  @include app-button($transparent);
+  color: $primary-green;
 
   &:hover:not(.disabled):not(:active) {
     @include box-shadow(0 1px 4px 0 $button-shadow-color);
