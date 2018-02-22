@@ -131,10 +131,17 @@ export default class Mail extends Component {
       activeMessage: 0,
       activeFolder: MailTypes.INBOX,
       showCompose: false,
+      reply: false,
+      subject: '',
+      body: '',
     };
 
     this.onClickCompose = this.onClickCompose.bind(this);
     this.onCloseCompose = this.onCloseCompose.bind(this);
+    this.onClickReply = this.onClickReply.bind(this);
+    this.onClickDelete = this.onClickDelete.bind(this);
+    this.onChangeSubject = this.onChangeSubject.bind(this);
+    this.onChangeBody = this.onChangeBody.bind(this);
   }
 
   componentDidMount () {
@@ -257,8 +264,8 @@ export default class Mail extends Component {
               {message.title}
             </div>
             <div>
-              <Button type={ButtonTypes.GRAY}>REPLY</Button>
-              <Button type={ButtonTypes.GRAY}>DELETE</Button>
+              <Button type={ButtonTypes.GRAY} onClick={this.onClickReply}>REPLY</Button>
+              <Button type={ButtonTypes.GRAY} onClick={this.onClickDelete}>DELETE</Button>
             </div>
           </div>
         </div>
@@ -269,17 +276,37 @@ export default class Mail extends Component {
     );
   }
 
+  onClickReply() {
+    let subject = this.getMessage().title;
+    let body = this.getMessage().body;
+    this.setState({ subject, body, reply: true });
+    this.onClickCompose();
+  }
+
+  /**
+   * Todo: to implement
+   */
+  onClickDelete() {}
+
+  onChangeSubject(subject) {
+    this.setState({ subject });
+  }
+
+  onChangeBody(body) {
+    this.setState({ body });
+  }
+
   onClickCompose() {
     let showCompose = !this.state.showCompose;
     this.setState({ showCompose });
   }
 
   onCloseCompose() {
-    this.setState({ showCompose: false });
+    this.setState({ showCompose: false, subject: '', body: '' });
   }
 
   render() {
-    let { width, showCompose } = this.state;
+    let { width, showCompose, subject, body, reply } = this.state;
     const containerClass = classNames({
       'overlay': true,
       'composer-visible': showCompose,
@@ -306,7 +333,13 @@ export default class Mail extends Component {
             </SplitPane>
           </SplitPane>
         </div>
-        <Compose showCompose={showCompose} onClose={this.onCloseCompose} />
+        <Compose
+          showCompose={showCompose}
+          onClose={this.onCloseCompose}
+          subject={reply ? subject : ''}
+          onChangeSubject={this.onChangeSubject}
+          body={reply ? body : ''}
+          onChangeBody={this.onChangeBody} />
       </div>
     )
   }

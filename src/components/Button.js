@@ -25,7 +25,7 @@ const Button = (props) => {
     'button--small': props.small,
     'button--disabled': props.disabled,
     'button--focused': props.focused,
-  });
+  }, props.className);
 
   const onClick = props.disabled ? undefined : props.onClick;
 

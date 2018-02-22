@@ -53,7 +53,7 @@ export default class TextField extends Component {
     }, props.className);
 
     return (
-      <div style={props.style}>
+      <div className='field' style={props.style}>
         {props.multiline ? (
           <textarea
             ref='input'

@@ -11,10 +11,12 @@ export default class Compose extends Component {
     super(props);
 
     this.state = {
-      showCompose: false
+      showCompose: false,
     };
 
     this.closeCompose = this.closeCompose.bind(this);
+    this.onClickCancel = this.onClickCancel.bind(this);
+    this.onClickSend = this.onClickSend.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +37,17 @@ export default class Compose extends Component {
     }
   }
 
+  /**
+   * Todo: to implement
+   */
+  onClickSend() {}
+
+  /**
+   * Todo: to implement
+   */
+  onClickCancel() {}
+
+
   render() {
     const { showCompose } = this.state;
     const containerClass = classNames({
@@ -51,26 +64,41 @@ export default class Compose extends Component {
         <div>
           <p className='title'>New Message</p>
           <div>
-            <div className='form-fields'>
+            <div className='form-group'>
               <label>Sender</label>
-              <TextField type={TextFieldTypes.TEXT} placeholder='Sender here' />
+              <TextField type={TextFieldTypes.TEXT} placeholder='Sender' />
             </div>
-            <div className='form-fields'>
+            <div className='form-group address-wrap'>
               <label>To</label>
               <TextField type={TextFieldTypes.TEXT} placeholder='Start typing' />
-              <Button type={ButtonTypes.GREEN}>ADDRESS BOOK</Button>
+              <Button type={ButtonTypes.GREEN} className='address-button'>ADDRESS BOOK</Button>
             </div>
-            <div className='form-fields'>
+            <div className='form-group'>
               <label>Subject</label>
-              <TextField type={TextFieldTypes.TEXT} placeholder='Enter subject' />
+              <TextField
+                type={TextFieldTypes.TEXT}
+                placeholder='Enter subject'
+                value={this.props.subject}
+                onChangeText={this.props.onChangeSubject}
+              />
             </div>
-            <div className='form-fields'>
+            <div className='form-group'>
               <label>Message</label>
-              <TextField type={TextFieldTypes.TEXT} multiline placeholder='Enter message' />
+              <TextField
+                type={TextFieldTypes.TEXT}
+                multiline
+                numberOfLines={15}
+                placeholder='Enter message'
+                value={this.props.body}
+                onChangeText={this.props.onChangeBody}
+              />
             </div>
-            <div>
-              <Button type={ButtonTypes.TRANSPARENT}>CANCEL</Button>
-              <Button type={ButtonTypes.PRIMARY}>SEND</Button>
+            <div className='form-group submit-group'>
+              <label />
+              <div className='field'>
+                <Button type={ButtonTypes.TRANSPARENT} onClick={this.onClickCancel}>CANCEL</Button>
+                <Button type={ButtonTypes.PRIMARY} onClick={this.onClickSend}>SEND</Button>
+              </div>
             </div>
           </div>
         </div>
