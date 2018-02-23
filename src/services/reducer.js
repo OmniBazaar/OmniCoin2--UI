@@ -3,7 +3,9 @@
  */
 import { combineReducers } from 'redux';
 import authReducer from './auth/authReducer';
+import mailReducer from './mail/mailReducer';
 
-export default  combineReducers({
-    auth: authReducer
-})
+export default combineReducers({
+  auth: authReducer,
+  mail: mailReducer,
+});

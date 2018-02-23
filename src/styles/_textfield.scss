@@ -23,11 +23,11 @@ $textfield-background-color-disabled: #f5f5f5;
 .textfield {
   @include box-sizing(border-box);
   @include placeholder {
-    color: $textfield-placeholder-color;
+    color: $textfield-placeholder-color !important;
   }
   @include appearance(none);
 
-  background-color: $textfield-background-color;
+  background-color: $textfield-background-color !important;
   border-color: $textfield-border-color;
   border-radius: $textfield-border-radius;
   border-style: $textfield-border-style;
@@ -98,12 +98,12 @@ $textfield-background-color-disabled: #f5f5f5;
     flex: 1;
   }
 
-  .field {
+  .textfield {
     flex: 3;
   }
 
   &.submit-group {
-    .field {
+    .textfield {
       justify-content: space-between;
       display: flex;
 

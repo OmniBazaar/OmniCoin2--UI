@@ -1,5 +1,6 @@
 @import '../../../../styles/index';
 @import '../../../../styles/button';
+@import '../../../../styles/textfield';
 
 $compose-width: 38%;
 
@@ -260,7 +261,11 @@ $compose-width: 38%;
     .address-button {
       position: absolute;
       right: 0;
-      top: 7px;
+      /*top: 7px;*/
     }
+  }
+
+  .mail-form-container {
+
   }
 }

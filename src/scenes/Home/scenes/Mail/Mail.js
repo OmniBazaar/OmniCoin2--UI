@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
-import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
+
+import { Button, Image } from 'semantic-ui-react'
 import classNames from 'classnames';
 import SplitPane from 'react-split-pane';
 import Compose from './Compose';
@@ -8,6 +10,13 @@ import InboxIcon from './images/folder-inbox.svg';
 import OutboxIcon from './images/folder-outbox.svg';
 import SentIcon from './images/folder-sent.svg';
 import DeletedIcon from './images/folder-deleted.svg';
+
+import {
+  showComposeModal,
+  setActiveFolder,
+  setActiveMessage,
+  getMessages,
+} from  '../../../../services/mail/mailActions';
 
 import './mail.scss';
 
@@ -127,33 +136,23 @@ const folders = [
 
 const iconSize = 20;
 
-export default class Mail extends Component {
+class Mail extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
       width: window.innerWidth,
-      messages: [],
-      activeMessage: 0,
-      activeFolder: MailTypes.INBOX,
-      showCompose: false,
-      reply: false,
-      subject: '',
-      body: '',
     };
 
     this.onClickCompose = this.onClickCompose.bind(this);
     this.onCloseCompose = this.onCloseCompose.bind(this);
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
-    this.onChangeSubject = this.onChangeSubject.bind(this);
-    this.onChangeBody = this.onChangeBody.bind(this);
   }
 
   componentDidMount () {
-    const { activeFolder } = this.state;
-    this.fetchMessages(activeFolder);
+    this.fetchMessages(this.props.activeFolder);
   }
 
   /*
@@ -180,15 +179,17 @@ export default class Mail extends Component {
         emails = messages;
     }
 
+    this.props.getMessages(emails);
+
     this.setState({
       width: this.container.offsetWidth,
-      messages: emails,
     });
   }
 
   changeFolder(activeFolder) {
     this.fetchMessages(activeFolder);
-    this.setState({ activeFolder, activeMessage: 0 });
+    this.props.setActiveFolder(activeFolder);
+    this.props.setActiveMessage(0);
   }
 
   _renderFolderIcon(folderType) {
@@ -219,13 +220,13 @@ export default class Mail extends Component {
    * Renders folders for mail: inbox, outbox, sent, etc
    */
   _renderItems() {
+    const { props } = this;
     let self = this;
-    const { activeFolder } = this.state;
 
     return folders.map(function (folder, index) {
       const containerClass = classNames({
         'item': true,
-        'active': activeFolder === folder.type,
+        'active': props.activeFolder === folder.type,
         'last-item': index === folders.length - 1,
       });
 
@@ -240,20 +241,20 @@ export default class Mail extends Component {
   }
 
   clickedEmail(activeMessage) {
-    this.setState({ activeMessage });
+    this.props.setActiveMessage(activeMessage);
   }
 
   /**
    * Renders the list of emails
    */
   _renderMessages() {
+    const { props } = this;
     let self = this;
-    const { messages, activeMessage } = this.state;
 
-    return messages.map(function (message, index) {
+    return props.messages.map(function (message, index) {
       const containerClass = classNames({
         'mail-summary': true,
-        'active': activeMessage === index,
+        'active': props.activeMessage === index,
         'new': !message.read,
       });
 
@@ -272,9 +273,9 @@ export default class Mail extends Component {
   }
 
   getMessage() {
-    const { activeMessage, messages } = this.state;
+    const { props } = this;
 
-    return messages[activeMessage];
+    return props.messages[props.activeMessage];
   }
 
   _renderMessage() {
@@ -309,9 +310,6 @@ export default class Mail extends Component {
   }
 
   onClickReply() {
-    let subject = this.getMessage().title;
-    let body = this.getMessage().body;
-    this.setState({ subject, body, reply: true });
     this.onClickCompose();
   }
 
@@ -320,28 +318,21 @@ export default class Mail extends Component {
    */
   onClickDelete() {}
 
-  onChangeSubject(subject) {
-    this.setState({ subject });
-  }
-
-  onChangeBody(body) {
-    this.setState({ body });
-  }
-
   onClickCompose() {
-    let showCompose = !this.state.showCompose;
-    this.setState({ showCompose });
+    this.props.showComposeModal();
   }
 
   onCloseCompose() {
-    this.setState({ showCompose: false, subject: '', body: '' });
+    this.props.showComposeModal(false);
   }
 
   render() {
-    let { width, showCompose, subject, body, reply } = this.state;
+    const { props } = this;
+    let { width } = this.state;
+
     const containerClass = classNames({
       'overlay': true,
-      'composer-visible': showCompose,
+      'composer-visible': props.showCompose,
     });
     let defaultSize = width / 5;
 
@@ -366,13 +357,28 @@ export default class Mail extends Component {
           </SplitPane>
         </div>
         <Compose
-          showCompose={showCompose}
-          onClose={this.onCloseCompose}
-          subject={reply ? subject : ''}
-          onChangeSubject={this.onChangeSubject}
-          body={reply ? body : ''}
-          onChangeBody={this.onChangeBody} />
+          showCompose={props.showCompose}
+          onClose={this.onCloseCompose} />
       </div>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  showCompose: state.default.mail.showCompose,
+  activeFolder: state.default.mail.activeFolder,
+  activeMessage: state.default.mail.activeMessage,
+  messages: state.default.mail.messages,
+});
+
+const mapDispatchToProps = dispatch => ({
+  showComposeModal: showCompose => dispatch(showComposeModal(showCompose)),
+  setActiveFolder: activeFolder => dispatch(setActiveFolder(activeFolder)),
+  setActiveMessage: activeMessage => dispatch(setActiveMessage(activeMessage)),
+  getMessages: messages => dispatch(getMessages(messages)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Mail);

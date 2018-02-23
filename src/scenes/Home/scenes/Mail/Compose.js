@@ -1,34 +1,25 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+
 import classNames from 'classnames';
-import { Button, Input, Form } from 'semantic-ui-react'
-import TextField, {TextFieldTypes} from '../../../../components/TextField';
+import { Button, Form } from 'semantic-ui-react';
+
+import { sendMail } from  '../../../../services/mail/mailActions';
 
 import './mail.scss';
 
-export default class Compose extends Component {
+class Compose extends Component {
+
+  static propTypes = {
+    showCompose: PropTypes.bool,
+  };
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      showCompose: false,
-    };
-
     this.closeCompose = this.closeCompose.bind(this);
-    this.onClickCancel = this.onClickCancel.bind(this);
-    this.onClickSend = this.onClickSend.bind(this);
-  }
-
-  componentDidMount() {
-    if (this.state.showCompose !== this.props.showCompose) {
-      this.setState({ showCompose: this.state.showCompose });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.showCompose !== this.props.showCompose) {
-      this.setState({ showCompose: nextProps.showCompose });
-    }
   }
 
   closeCompose() {
@@ -40,23 +31,18 @@ export default class Compose extends Component {
   /**
    * Todo: to implement
    */
-  onClickSend() {}
-
-  /**
-   * Todo: to implement
-   */
-  onClickCancel() {}
-
-  /**
-   * Todo: to implement
-   */
   onClickAddress() {}
 
+  onSubmit = (values) => {
+    const { sender, to, subject, body } = values;
+    this.props.sendMail(sender, to, subject, body);
+  };
+
   render() {
-    const { showCompose } = this.state;
+    const props = this.props;
     const containerClass = classNames({
       'compose-container': true,
-      'visible': showCompose,
+      'visible': props.showCompose,
     });
 
     return (
@@ -66,47 +52,79 @@ export default class Compose extends Component {
           <Button content='CLOSE' onClick={this.closeCompose} className='button--transparent' />
         </div>
         <div>
-          <p className='title'>New Message</p>
-          <div>
-            <div className='form-group'>
-              <label>Sender</label>
-              <TextField type={TextFieldTypes.TEXT} placeholder='Sender' />
-            </div>
-            <div className='form-group address-wrap'>
-              <label>To</label>
-              <TextField type={TextFieldTypes.TEXT} placeholder='Start typing' />
-              <Button content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
-            </div>
-            <div className='form-group'>
-              <label>Subject</label>
-              <TextField
-                type={TextFieldTypes.TEXT}
-                placeholder='Enter subject'
-                value={this.props.subject}
-                onChangeText={this.props.onChangeSubject}
-              />
-            </div>
-            <div className='form-group'>
-              <label>Message</label>
-              <TextField
-                type={TextFieldTypes.TEXT}
-                multiline
-                numberOfLines={15}
-                placeholder='Enter message'
-                value={this.props.body}
-                onChangeText={this.props.onChangeBody}
-              />
-            </div>
-            <div className='form-group submit-group'>
-              <label />
-              <div className='field'>
-                <Button content='CANCEL' onClick={this.onClickCancel} className='button--transparent' />
-                <Button content='SEND' onClick={this.onClickCancel} className='button--primary' />
+          <Form onSubmit={this.onSubmit} className='mail-form-container'>
+            <p className='title'>New Message</p>
+            <div>
+              <div className='form-group'>
+                <label>Sender</label>
+                <Field
+                  type='text'
+                  name='sender'
+                  placeholder='Sender'
+                  component='input'
+                  className='textfield'
+                />
+              </div>
+              <div className='form-group address-wrap'>
+                <label>To</label>
+                <Field
+                  type='text'
+                  name='to'
+                  placeholder='Start typing'
+                  component='input'
+                  className='textfield'
+                />
+                <Button content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
+              </div>
+              <div className='form-group'>
+                <label>Subject</label>
+                <Field
+                  type='text'
+                  name='subject'
+                  placeholder='Enter subject'
+                  component='input'
+                  className='textfield'
+                />
+              </div>
+              <div className='form-group'>
+                <label>Message</label>
+                <Field
+                  type='text'
+                  name='body'
+                  placeholder='Enter message'
+                  component='textarea'
+                  className='textfield'
+                />
+              </div>
+              <div className='form-group submit-group'>
+                <label />
+                <div className='field'>
+                  <Button content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
+                  <Button type='submit' content='SEND' className='button--primary' />
+                </div>
               </div>
             </div>
-          </div>
+          </Form>
         </div>
       </div>
     )
   }
 }
+
+Compose = reduxForm({
+  form: 'sendMailForm',
+  destroyOnUnmount: true,
+})(Compose);
+
+const mapStateToProps = state => ({
+  sendMail: state.default.mail.sendMail,
+});
+
+const mapDispatchToProps = dispatch => ({
+  sendMail: (sender, to, subject, body) => dispatch(sendMail(sender, to, subject, body)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Compose);
