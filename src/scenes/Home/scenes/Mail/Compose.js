@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import classNames from 'classnames';
-import Button, {ButtonTypes} from '../../../../components/Button';
+import { Button, Input, Form } from 'semantic-ui-react'
 import TextField, {TextFieldTypes} from '../../../../components/TextField';
 
 import './mail.scss';
@@ -47,6 +47,10 @@ export default class Compose extends Component {
    */
   onClickCancel() {}
 
+  /**
+   * Todo: to implement
+   */
+  onClickAddress() {}
 
   render() {
     const { showCompose } = this.state;
@@ -59,7 +63,7 @@ export default class Compose extends Component {
       <div className={containerClass}>
         <div className='top-detail'>
           <span>Compose</span>
-          <Button type={ButtonTypes.TRANSPARENT} onClick={this.closeCompose}>CLOSE</Button>
+          <Button content='CLOSE' onClick={this.closeCompose} className='button--transparent' />
         </div>
         <div>
           <p className='title'>New Message</p>
@@ -71,7 +75,7 @@ export default class Compose extends Component {
             <div className='form-group address-wrap'>
               <label>To</label>
               <TextField type={TextFieldTypes.TEXT} placeholder='Start typing' />
-              <Button type={ButtonTypes.GREEN} className='address-button'>ADDRESS BOOK</Button>
+              <Button content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
             </div>
             <div className='form-group'>
               <label>Subject</label>
@@ -96,8 +100,8 @@ export default class Compose extends Component {
             <div className='form-group submit-group'>
               <label />
               <div className='field'>
-                <Button type={ButtonTypes.TRANSPARENT} onClick={this.onClickCancel}>CANCEL</Button>
-                <Button type={ButtonTypes.PRIMARY} onClick={this.onClickSend}>SEND</Button>
+                <Button content='CANCEL' onClick={this.onClickCancel} className='button--transparent' />
+                <Button content='SEND' onClick={this.onClickCancel} className='button--primary' />
               </div>
             </div>
           </div>

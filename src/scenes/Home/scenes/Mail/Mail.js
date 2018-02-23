@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import { Image } from 'semantic-ui-react';
+import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
 import classNames from 'classnames';
-import Button, {ButtonTypes} from '../../../../components/Button';
 import SplitPane from 'react-split-pane';
 import Compose from './Compose';
 
@@ -297,8 +296,8 @@ export default class Mail extends Component {
               {message.title}
             </div>
             <div>
-              <Button type={ButtonTypes.GRAY} onClick={this.onClickReply}>REPLY</Button>
-              <Button type={ButtonTypes.GRAY} onClick={this.onClickDelete}>DELETE</Button>
+              <Button content='REPLY' onClick={this.onClickReply} className='button--transparent' />
+              <Button content='DELETE' onClick={this.onClickDelete} className='button--transparent' />
             </div>
           </div>
         </div>
@@ -351,7 +350,7 @@ export default class Mail extends Component {
         <div className={containerClass} onClick={this.onCloseCompose} />
         <div className='header'>
           <span className='title'>Mail</span>
-          <Button type={ButtonTypes.PRIMARY} onClick={this.onClickCompose}>COMPOSE</Button>
+          <Button content='COMPOSE' onClick={this.onClickCompose} className='button--primary' />
         </div>
         <div className='body'>
           <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{position: 'relative'}}>

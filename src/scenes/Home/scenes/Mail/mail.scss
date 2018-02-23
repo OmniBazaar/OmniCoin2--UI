@@ -1,4 +1,5 @@
 @import '../../../../styles/index';
+@import '../../../../styles/button';
 
 $compose-width: 38%;
 
@@ -259,7 +260,7 @@ $compose-width: 38%;
     .address-button {
       position: absolute;
       right: 0;
-      top: 10px;
+      top: 7px;
     }
   }
 }
