@@ -4,6 +4,7 @@ import {
   SET_ACTIVE_FOLDER,
   SET_ACTIVE_MESSAGE,
   GET_MESSAGES,
+  SHOW_REPLY,
 } from './mailActions';
 
 const MailTypes = Object.freeze({
@@ -22,7 +23,8 @@ const initialState = {
   activeFolder: MailTypes.INBOX,
   activeMessage: 0,
   showCompose: false,
-  mailSent: false
+  mailSent: false,
+  reply: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -41,6 +43,13 @@ const reducer = (state = initialState, action) => {
     case SHOW_COMPOSE:
       return {
         ...state,
+        reply: false,
+        showCompose: !state.showCompose
+      };
+    case SHOW_REPLY:
+      return {
+        ...state,
+        reply: true,
         showCompose: !state.showCompose
       };
     case SET_ACTIVE_FOLDER:

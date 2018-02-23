@@ -22,6 +22,21 @@ class Compose extends Component {
     this.closeCompose = this.closeCompose.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { props } = this;
+
+    if (nextProps.reply && (nextProps.reply !== this.props.reply)) {
+      const message = this.getMessage(props.activeMessage);
+      this.props.change('subject', message.title);
+      this.props.change('body', message.body);
+    }
+
+    if (!nextProps.reply) {
+      this.props.change('subject', '');
+      this.props.change('body', '');
+    }
+  }
+
   closeCompose() {
     if (this.props.onClose) {
       this.props.onClose();
@@ -37,6 +52,12 @@ class Compose extends Component {
     const { sender, to, subject, body } = values;
     this.props.sendMail(sender, to, subject, body);
   };
+
+  getMessage() {
+    const { props } = this;
+
+    return props.messages[props.activeMessage];
+  }
 
   render() {
     const props = this.props;
@@ -118,6 +139,9 @@ Compose = reduxForm({
 
 const mapStateToProps = state => ({
   sendMail: state.default.mail.sendMail,
+  reply: state.default.mail.reply,
+  activeMessage: state.default.mail.activeMessage,
+  messages: state.default.mail.messages,
 });
 
 const mapDispatchToProps = dispatch => ({

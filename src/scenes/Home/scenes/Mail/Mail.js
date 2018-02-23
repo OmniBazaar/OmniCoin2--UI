@@ -16,6 +16,7 @@ import {
   setActiveFolder,
   setActiveMessage,
   getMessages,
+  showReplyModal,
 } from  '../../../../services/mail/mailActions';
 
 import './mail.scss';
@@ -310,7 +311,7 @@ class Mail extends Component {
   }
 
   onClickReply() {
-    this.onClickCompose();
+    this.props.showReplyModal();
   }
 
   /**
@@ -323,7 +324,7 @@ class Mail extends Component {
   }
 
   onCloseCompose() {
-    this.props.showComposeModal(false);
+    this.props.showComposeModal();
   }
 
   render() {
@@ -369,6 +370,7 @@ const mapStateToProps = state => ({
   activeFolder: state.default.mail.activeFolder,
   activeMessage: state.default.mail.activeMessage,
   messages: state.default.mail.messages,
+  reply: state.default.mail.reply,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -376,6 +378,7 @@ const mapDispatchToProps = dispatch => ({
   setActiveFolder: activeFolder => dispatch(setActiveFolder(activeFolder)),
   setActiveMessage: activeMessage => dispatch(setActiveMessage(activeMessage)),
   getMessages: messages => dispatch(getMessages(messages)),
+  showReplyModal: () => dispatch(showReplyModal()),
 });
 
 export default connect(
