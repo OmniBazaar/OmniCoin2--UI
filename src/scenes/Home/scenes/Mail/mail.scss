@@ -32,7 +32,10 @@ $compose-width: 38%;
       .item {
         display: flex;
         padding: 10px;
-        justify-content: space-between;
+
+        img {
+          margin-right: 15px;
+        }
 
         &.active {
           background-color: $lighter-gray;
@@ -46,6 +49,7 @@ $compose-width: 38%;
         .amount {
           color: $primary-blue;
           font-weight: bold;
+          margin-left: auto;
         }
 
         &.last-item {

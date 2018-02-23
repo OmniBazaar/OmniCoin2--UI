@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
+import { Image } from 'semantic-ui-react';
 import classNames from 'classnames';
 import Button, {ButtonTypes} from '../../../../components/Button';
 import SplitPane from 'react-split-pane';
 import Compose from './Compose';
+import InboxIcon from '../../images/mail/folder-inbox.svg';
+import OutboxIcon from '../../images/mail/folder-outbox.svg';
+import SentIcon from '../../images/mail/folder-sent.svg';
+import DeletedIcon from '../../images/mail/folder-deleted.svg';
 
 import './mail.scss';
 
@@ -120,6 +125,8 @@ const folders = [
   }
 ];
 
+const iconSize = 20;
+
 export default class Mail extends Component {
 
   constructor(props) {
@@ -184,6 +191,30 @@ export default class Mail extends Component {
     this.setState({ activeFolder, activeMessage: 0 });
   }
 
+  _renderFolderIcon(folderType) {
+    let icon;
+    switch (folderType) {
+      case MailTypes.INBOX:
+        icon = InboxIcon;
+        break;
+      case MailTypes.OUTBOX:
+        icon = OutboxIcon;
+        break;
+      case MailTypes.SENT:
+        icon = SentIcon;
+        break;
+      case MailTypes.DELETED:
+        icon = DeletedIcon;
+        break;
+      default:
+        icon = InboxIcon;
+    }
+
+    return (
+      <Image src={icon} width={iconSize} height={iconSize}/>
+    );
+  }
+
   /**
    * Renders folders for mail: inbox, outbox, sent, etc
    */
@@ -200,6 +231,7 @@ export default class Mail extends Component {
 
       return (
         <div key={'folder-' + index} className={containerClass} onClick={() => self.changeFolder(folder.type)}>
+          {self._renderFolderIcon(folder.type)}
           <span>{folder.label}</span>
           <span className='amount'>{folder.newEmails > 0 ? folder.newEmails : ''}</span>
         </div>
