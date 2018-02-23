@@ -4,10 +4,11 @@ import classNames from 'classnames';
 import Button, {ButtonTypes} from '../../../../components/Button';
 import SplitPane from 'react-split-pane';
 import Compose from './Compose';
-import InboxIcon from '../../images/mail/folder-inbox.svg';
-import OutboxIcon from '../../images/mail/folder-outbox.svg';
-import SentIcon from '../../images/mail/folder-sent.svg';
-import DeletedIcon from '../../images/mail/folder-deleted.svg';
+
+import InboxIcon from './images/folder-inbox.svg';
+import OutboxIcon from './images/folder-outbox.svg';
+import SentIcon from './images/folder-sent.svg';
+import DeletedIcon from './images/folder-deleted.svg';
 
 import './mail.scss';
 
