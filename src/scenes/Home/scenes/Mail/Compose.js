@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, change } from 'redux-form';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
@@ -25,17 +26,18 @@ class Compose extends Component {
   componentWillReceiveProps(nextProps) {
     const { props } = this;
 
-    if (nextProps.reply && (nextProps.reply !== this.props.reply)) {
-      const message = this.getMessage(props.activeMessage);
+    if (nextProps.mail.reply && (nextProps.mail.reply !== this.props.mail.reply)) {
+      const message = this.getMessage(props.mail.activeMessage);
       this.props.change('subject', message.title);
       this.props.change('body', message.body);
     }
 
-    if (!nextProps.reply) {
+    if (!nextProps.mail.reply) {
       this.props.change('subject', '');
       this.props.change('body', '');
     }
   }
+
 
   closeCompose() {
     if (this.props.onClose) {
@@ -50,20 +52,20 @@ class Compose extends Component {
 
   onSubmit = (values) => {
     const { sender, to, subject, body } = values;
-    this.props.sendMail(sender, to, subject, body);
+    this.props.mailActions.sendMail(sender, to, subject, body);
   };
 
   getMessage() {
     const { props } = this;
 
-    return props.messages[props.activeMessage];
+    return props.mail.messages[props.mail.activeMessage];
   }
 
   render() {
     const props = this.props;
     const containerClass = classNames({
       'compose-container': true,
-      'visible': props.showCompose,
+      'visible': props.mail.showCompose,
     });
 
     return (
@@ -137,18 +139,11 @@ Compose = reduxForm({
   destroyOnUnmount: true,
 })(Compose);
 
-const mapStateToProps = state => ({
-  sendMail: state.default.mail.sendMail,
-  reply: state.default.mail.reply,
-  activeMessage: state.default.mail.activeMessage,
-  messages: state.default.mail.messages,
-});
-
-const mapDispatchToProps = dispatch => ({
-  sendMail: (sender, to, subject, body) => dispatch(sendMail(sender, to, subject, body)),
-});
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+  state => {
+    return {...state.default}
+  },
+  (dispatch) => ({
+    mailActions: bindActionCreators({ sendMail }, dispatch),
+  }),
 )(Compose);

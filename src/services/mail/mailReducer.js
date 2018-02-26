@@ -1,10 +1,11 @@
+import { handleActions, combineActions } from 'redux-actions';
 import {
-  SEND_MAIL,
-  SHOW_COMPOSE,
-  SET_ACTIVE_FOLDER,
-  SET_ACTIVE_MESSAGE,
-  GET_MESSAGES,
-  SHOW_REPLY,
+  showComposeModal,
+  getMessages,
+  setActiveFolder,
+  setActiveMessage,
+  showReplyModal,
+  sendMail,
 } from './mailActions';
 
 const MailTypes = Object.freeze({
@@ -14,7 +15,7 @@ const MailTypes = Object.freeze({
   DELETED: 'deleted',
 });
 
-const initialState = {
+let defaultState = {
   messages: [],
   sender: '',
   to: '',
@@ -27,49 +28,45 @@ const initialState = {
   reply: false,
 };
 
-const reducer = (state = initialState, action) => {
-  if (!state._hydrated) {
-    state = { ...initialState, ...state, _hydrated: true };
+const reducer = handleActions({
+  [combineActions(showComposeModal)](state, { payload: { showCompose } }) {
+    return {
+      ...state,
+      reply: false,
+      showCompose: !state.showCompose
+    };
+  },
+  [combineActions(getMessages)](state, { payload: { messages } }) {
+    return {
+      ...state,
+      messages
+    };
+  },
+  [combineActions(setActiveFolder)](state, { payload: { activeFolder } }) {
+    return {
+      ...state,
+      activeFolder
+    };
+  },
+  [combineActions(setActiveMessage)](state, { payload: { activeMessage } }) {
+    return {
+      ...state,
+      activeMessage
+    };
+  },
+  [combineActions(showReplyModal)](state, { payload: { reply } }) {
+    return {
+      ...state,
+      reply: true,
+      showCompose: !state.showCompose
+    };
+  },
+  [combineActions(sendMail)](state, { payload: { mailSent } }) {
+    return {
+      ...state,
+      mailSent
+    };
   }
-
-  switch (action.type) {
-    case SEND_MAIL:
-      return {
-        ...state,
-        payload: {
-          mailSent: action.payload,
-        }
-      };
-    case SHOW_COMPOSE:
-      return {
-        ...state,
-        reply: false,
-        showCompose: !state.showCompose
-      };
-    case SHOW_REPLY:
-      return {
-        ...state,
-        reply: true,
-        showCompose: !state.showCompose
-      };
-    case SET_ACTIVE_FOLDER:
-      return {
-        ...state,
-        activeFolder: action.payload
-      };
-    case SET_ACTIVE_MESSAGE:
-      return {
-        ...state,
-        activeMessage: action.payload
-      };
-    case GET_MESSAGES:
-      return {
-        ...state,
-        messages: action.payload
-      };
-    default:
-      return state;
-  }
-};
+}, defaultState);
 
 export default reducer;
