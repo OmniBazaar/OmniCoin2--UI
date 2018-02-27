@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import Header from '../../../../components/Header';
 import { Tabs } from '../../../../components/Tabs/Tabs';
 import { Tab } from '../../../../components/Tabs/Tab';
-import { WalletDetail } from './WalletDetail';
+import { WalletDetail } from './component/WalletDetail';
 
 import { CoinTypes } from './constants';
 

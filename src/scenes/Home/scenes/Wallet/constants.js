@@ -1,6 +1,6 @@
 const CoinTypes = Object.freeze({
-  OMNI_COIN: 'omnicoin',
-  BIT_COIN: 'bitcoin',
+  OMNI_COIN: 'omniCoin',
+  BIT_COIN: 'bitCoin',
 });
 
 export {

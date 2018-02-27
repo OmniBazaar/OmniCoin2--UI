@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Image } from 'semantic-ui-react';
 
-import UserIcon from './images/th-user.svg';
-import BitCoinIcon from './images/th-bitcoin.svg';
-import OmniCoinIcon from './images/th-omnicoin.svg';
-import OmniCoinIconLg from './images/bg-omnicoin.svg';
-import BitCoinIconLg from './images/bg-bitcoin.svg';
+import UserIcon from '../images/th-user.svg';
+import BitCoinIcon from '../images/th-bitcoin.svg';
+import OmniCoinIcon from '../images/th-omnicoin.svg';
+import OmniCoinIconLg from '../images/bg-omnicoin.svg';
+import BitCoinIconLg from '../images/bg-bitcoin.svg';
 
-import { CoinTypes } from './constants';
+import { CoinTypes } from '../constants';
 
-import './wallet.scss';
+import '../wallet.scss';
 
 const iconSize = 20;
 const iconSizeLg = 100;
