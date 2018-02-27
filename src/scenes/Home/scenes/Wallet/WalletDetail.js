@@ -21,7 +21,8 @@ export const WalletDetail = (props) => {
   const currency = props.type === CoinTypes.OMNI_COIN ? 'XOM' : 'BTC';
 
   return (
-    <div key={props.walletKey} className='wallet-detail' style={{ backgroundImage: 'url("' + coinIconLg + '")', backgroundSize: iconSizeLg }}>
+    <div key={props.walletKey} className='wallet-detail' onClick={props.openWalletModal}
+         style={{ backgroundImage: 'url("' + coinIconLg + '")', backgroundSize: iconSizeLg }}>
       <div className='info'>
         <Image src={UserIcon} width={iconSize} height={iconSize} />
         <div className='top-detail'>
@@ -29,7 +30,7 @@ export const WalletDetail = (props) => {
             <span>Wallet</span>
             <div className='badge'>REGISTERED: {props.wallet.date}</div>
           </div>
-          <span className='code' onClick={props.openWalletModal}>{props.wallet.code}</span>
+          <span className='code'>{props.wallet.code}</span>
           <span className='accountId'>Account ID: {props.wallet.accountId}</span>
         </div>
       </div>

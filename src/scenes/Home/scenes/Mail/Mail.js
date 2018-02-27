@@ -346,7 +346,7 @@ class Mail extends Component {
     return (
       <div ref={container => {this.container = container}} className='container'>
         <div className={containerClass} onClick={this.onCloseCompose} />
-        <Header hasButton buttonContent='COMPOSE' title='Mail' onClick={this.onClickCompose} />
+        <Header hasButton buttonContent='COMPOSE' title='Mail' className='button--primary' onClick={this.onClickCompose} />
         <div className='body'>
           <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{position: 'relative'}}>
             <div className='mail-items'>

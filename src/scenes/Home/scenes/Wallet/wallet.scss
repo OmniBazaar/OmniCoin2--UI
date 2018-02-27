@@ -14,10 +14,11 @@
       .wallet-detail {
         flex-basis: 380px;
         margin-right: 20px;
-        background-color: $lighter-blue;
         border-radius: 3px;
+        background-color: $lighter-blue;
         background-position: right bottom;
         background-repeat: no-repeat;
+        cursor: pointer;
 
       .info {
           display: flex;
@@ -36,7 +37,6 @@
           .code {
             font-weight: bold;
             margin-bottom: 4px;
-            cursor: pointer;
           }
 
           .balance {
