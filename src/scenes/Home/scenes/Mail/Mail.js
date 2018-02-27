@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Button, Image } from 'semantic-ui-react'
+import { Button, Image } from 'semantic-ui-react';
 import classNames from 'classnames';
 import SplitPane from 'react-split-pane';
 import Compose from './Compose';
@@ -19,6 +19,8 @@ import {
   getMessages,
   showReplyModal,
 } from  '../../../../services/mail/mailActions';
+
+import Header from '../../../../components/Header';
 
 import './mail.scss';
 
@@ -344,10 +346,7 @@ class Mail extends Component {
     return (
       <div ref={container => {this.container = container}} className='container'>
         <div className={containerClass} onClick={this.onCloseCompose} />
-        <div className='header'>
-          <span className='title'>Mail</span>
-          <Button content='COMPOSE' onClick={this.onClickCompose} className='button--primary' />
-        </div>
+        <Header hasButton buttonContent='COMPOSE' title='Mail' className='button--primary' onClick={this.onClickCompose} />
         <div className='body'>
           <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{position: 'relative'}}>
             <div className='mail-items'>

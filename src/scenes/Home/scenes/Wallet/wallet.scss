@@ -1,0 +1,73 @@
+@import '../../../../styles/index';
+
+.quick-start {
+  padding: 20px;
+}
+
+.container {
+  &.wallet {
+    background-color: $lighter-gray;
+
+    .tabs-active-content {
+      display: flex;
+
+      .wallet-detail {
+        flex-basis: 380px;
+        margin-right: 20px;
+        border-radius: 3px;
+        background-color: $lighter-blue;
+        background-position: right bottom;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+      .info {
+          display: flex;
+          margin: 20px;
+
+          img {
+            margin-right: 10px;
+          }
+        }
+
+        .top-detail {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+
+          .code {
+            font-weight: bold;
+            margin-bottom: 4px;
+          }
+
+          .balance {
+            font-weight: bold;
+          }
+          .accountId {
+            font-size: 10px;
+          }
+        }
+
+        .title {
+          display: flex;
+          flex: 1;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 5px;
+        }
+
+        .badge {
+          border: 1px solid $primary-gray;
+          border-radius: 5px;
+          padding: 0 5px;
+          font-size: 9px;
+          color: $primary-gray;
+        }
+
+        .balance {
+
+        }
+      }
+    }
+  }
+}
+
