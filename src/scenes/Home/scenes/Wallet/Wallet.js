@@ -2,10 +2,20 @@
  * Created by denissamohvalov on 14.02.18.
  */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Header from '../../../../components/Header';
 import { Tabs } from '../../../../components/Tabs/Tabs';
 import { Tab } from '../../../../components/Tabs/Tab';
 import { WalletDetail } from './WalletDetail';
+
+import { CoinTypes } from './constants';
+
+import {
+  getBitcoinWallets,
+  getOmniCoinWallets,
+} from  '../../../../services/wallet/walletActions';
 
 import './wallet.scss';
 
@@ -45,22 +55,61 @@ const bitCoinWallets = [
   },
 ];
 
-export default class Wallet extends Component {
+
+class Wallet extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.openWalletModal = this.openWalletModal.bind(this);
+  }
+
+  componentDidMount () {
+    this.fetchWallets();
+  }
+
+  fetchWallets() {
+    this.props.walletActions.getBitcoinWallets(bitCoinWallets);
+    this.props.walletActions.getOmniCoinWallets(omniCoinWallets);
+  }
+
   onClickAddWallet() {
   }
 
+  openWalletModal() {
+
+  }
+
   _omniCoinContent() {
-    return omniCoinWallets.map(function (wallet, index) {
+    let self = this;
+    const { props } = this;
+
+    return props.wallet.omniCoinWallets.map(function (wallet, index) {
       return (
-        <WalletDetail type='omniCoin' walletKey={'wallet-' + index} wallet={wallet} />
+        <WalletDetail
+          key={'wall-' + index}
+          type={CoinTypes.OMNI_COIN}
+          walletKey={'wallet-' + index}
+          wallet={wallet}
+          openWalletModal={self.openWalletModal}
+        />
       );
     })
   }
 
   _bitCoinContent() {
-    return bitCoinWallets.map(function (wallet, index) {
+    let self = this;
+    const { props } = this;
+
+    return props.wallet.bitCoinWallets.map(function (wallet, index) {
       return (
-        <WalletDetail type='bitCoin' walletKey={'wallet-' + index} wallet={wallet} />
+        <WalletDetail
+          key={'wall-' + index}
+          type={CoinTypes.BIT_COIN}
+          walletKey={'wallet-' + index}
+          wallet={wallet}
+          openWalletModal={self.openWalletModal}
+        />
       );
     })
   }
@@ -88,3 +137,12 @@ export default class Wallet extends Component {
     );
   }
 }
+
+export default connect(
+  state => {
+    return {...state.default}
+  },
+  (dispatch) => ({
+    walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets }, dispatch),
+  }),
+)(Wallet);
