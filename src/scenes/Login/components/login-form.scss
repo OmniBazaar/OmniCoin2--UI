@@ -1,16 +1,24 @@
 @import '../../../styles/index';
 
+$field-width: 300px;
+
 .signup-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: 150px;
   margin-top: -150px;
   span {
     color: $primary-white;
   }
-  .password-block {
+  .username {
+    width: $field-width;
+    margin-bottom: 5px;
+    padding-right: 2px;
+  }
+  .password {
+    width: $field-width;
     display: flex;
     flex-direction: row;
     input {

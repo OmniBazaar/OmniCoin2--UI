@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
 
-import { login } from  '../../../services/auth/authActions';
+import { login, getCurrentUser } from  '../../../services/auth/authActions';
 
 import './login-form.scss';
 import BtnLock from '../../../assets/images/common/btn-lock-norm+pres.svg';
@@ -15,23 +15,58 @@ class LoginForm extends Component {
     //     accountKey: string
     // };
 
+    constructor(props) {
+        super(props);
+        this.submit.bind(this);
+    }
+
+    state = {
+        showUsernameInput: false
+    };
+
     static defaultProps = {
         username: "denis12343"
     };
 
-    submit = (values) => {
+    submit(values) {
         const { password } = values;
-        this.props.loginActions.login(this.props.username, password);
-    };
+        this.props.authActions.login(this.props.username, password);
+    }
+
+    componentWillMount() {
+        if (!this.props.auth.currentUser) {
+            this.setState({
+                showUsernameInput: true
+            })
+        }
+    }
 
 
    render() {
-       const {handleSubmit, username} = this.props;
+       const { handleSubmit, username } = this.props;
+       const { showUsernameInput } = this.state;
        return (
-           <Form onSubmit={handleSubmit(this.submit)} className="signup-container">
-               <Image src={BtnLock} width={50} height={50}/>
-               <span>{username}</span>
-               <div className="password-block">
+           <Form
+               onSubmit={handleSubmit(this.submit)}
+               className="signup-container"
+               style={{"justify-content": showUsernameInput ? "center" : "space-between"  }}
+           >
+                   {showUsernameInput ?
+                       <div className="username">
+                           <Field
+                               type="text"
+                               name="text"
+                               placeholder="Enter your username"
+                               component="input"/>
+                       </div>
+                       :
+                       [
+                           <Image src={BtnLock} width={50} height={50}/>,
+                           <span>{username}</span>
+                       ]
+                   }
+
+               <div className="password">
                        <Field
                            type="password"
                            name="password"
@@ -51,10 +86,10 @@ LoginForm = reduxForm({
 })(LoginForm);
 
 export default connect(
-    state => {
+    (state) => {
         return {...state.default}
     },
     (dispatch) => ({
-        loginActions: bindActionCreators({login}, dispatch),
-    }),
+        authActions: bindActionCreators({ login }, dispatch),
+    })
 )(LoginForm);

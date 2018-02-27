@@ -4,10 +4,16 @@
 import { createActions } from 'redux-actions';
 
 
-const { login } = createActions({
+const {
+    getCurrentUser,
+    login
+} = createActions({
+    GET_CURRENT_USER: () => ({}),
     LOGIN: (username, password) => ({ username, password }),
 });
 
+
 export {
+    getCurrentUser,
     login
 }
