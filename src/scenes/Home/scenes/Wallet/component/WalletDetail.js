@@ -54,7 +54,6 @@ WalletDetail.defaultProps = {
   type: '',
 };
 
-
 WalletDetail.propTypes = {
   wallet: PropTypes.object,
   className: PropTypes.string,

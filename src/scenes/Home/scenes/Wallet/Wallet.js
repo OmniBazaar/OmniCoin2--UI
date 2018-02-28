@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Header from '../../../../components/Header';
-import { Tabs } from '../../../../components/Tabs/Tabs';
-import { Tab } from '../../../../components/Tabs/Tab';
 import { WalletDetail } from './component/WalletDetail';
+import { Tab } from 'semantic-ui-react';
 
 import { CoinTypes } from './constants';
 
@@ -119,14 +118,18 @@ class Wallet extends Component {
       <div ref={container => {this.container = container}} className='container wallet'>
         <Header hasButton buttonContent='ADD WALLET' className='button--green-bg' title='Wallets' onClick={this.onClickAddWallet} />
           <div className='body'>
-            <Tabs>
-              <Tab title='OmniCoin'>
-                {this._omniCoinContent()}
-              </Tab>
-              <Tab title='BitCoin'>
-                {this._bitCoinContent()}
-              </Tab>
-            </Tabs>
+            <Tab className='tabs' menu={{ secondary: true, pointing: true }}
+                 panes={[
+                   {
+                     menuItem: 'OmniCoin',
+                     render: () => <Tab.Pane>{this._omniCoinContent()}</Tab.Pane>,
+                   },
+                   {
+                     menuItem: 'BitCoin',
+                     render: () => <Tab.Pane>{this._bitCoinContent()}</Tab.Pane>,
+                   },
+                 ]}
+            />
             <div className='quick-start'>
               <h1>Quick-start Guide! (Please read...)</h1>
               <h3>Welcome to OmniBazaar!</h3>
