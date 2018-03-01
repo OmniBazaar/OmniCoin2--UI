@@ -27,9 +27,9 @@ const standbyProcessors = [
   },
   {
     rank: 2,
-    name: 'john48',
+    name: 'blockchain2000',
     approval: '<0.01%',
-    reliability: '11.20%',
+    reliability: '56.55%',
     reputation: '???',
     referralScore: '???',
     publisherScore: '???',
@@ -49,9 +49,9 @@ const standbyProcessors = [
   },
   {
     rank: 4,
-    name: 'blockchain2000',
+    name: 'john48',
     approval: '<0.01%',
-    reliability: '56.55%',
+    reliability: '11.20%',
     reputation: '???',
     referralScore: '???',
     publisherScore: '???',
@@ -71,9 +71,9 @@ const standbyProcessors = [
   },
   {
     rank: 6,
-    name: 'deep-blue',
+    name: 'zord-12',
     approval: '<0.01%',
-    reliability: '56.55%',
+    reliability: '86.01%',
     reputation: '???',
     referralScore: '???',
     publisherScore: '???',
@@ -82,9 +82,64 @@ const standbyProcessors = [
   },
   {
     rank: 7,
+    name: 'cross120',
+    approval: '<0.01%',
+    reliability: '12.51%',
+    reputation: '???',
+    referralScore: '???',
+    publisherScore: '???',
+    netScore: '???',
+    approve: '',
+  },
+  {
+    rank: 8,
+    name: 'david324',
+    approval: '<0.01%',
+    reliability: '3.20%',
+    reputation: '???',
+    referralScore: '???',
+    publisherScore: '???',
+    netScore: '???',
+    approve: '',
+  },
+  {
+    rank: 9,
     name: 'deep-blue',
     approval: '<0.01%',
-    reliability: '56.55%',
+    reliability: '98.5%',
+    reputation: '???',
+    referralScore: '???',
+    publisherScore: '???',
+    netScore: '???',
+    approve: '',
+  },
+  {
+    rank: 10,
+    name: 'gray-2423',
+    approval: '<0.01%',
+    reliability: '34.40%',
+    reputation: '???',
+    referralScore: '???',
+    publisherScore: '???',
+    netScore: '???',
+    approve: '',
+  },
+  {
+    rank: 11,
+    name: 'homer34',
+    approval: '<0.01%',
+    reliability: '28.5%',
+    reputation: '???',
+    referralScore: '???',
+    publisherScore: '???',
+    netScore: '???',
+    approve: '',
+  },
+  {
+    rank: 12,
+    name: 'smith-24',
+    approval: '<0.01%',
+    reliability: '44.40%',
     reputation: '???',
     referralScore: '???',
     publisherScore: '???',
@@ -192,7 +247,7 @@ class Processors extends Component {
           size: 'small'
         }}
         header
-        rowsPerPage={2}
+        rowsPerPage={5}
         columnHeader={[
           {'rank': 'Rank'},
           {'name': 'Name'},
@@ -222,7 +277,7 @@ class Processors extends Component {
           size: 'small'
         }}
         header
-        rowsPerPage={3}
+        rowsPerPage={5}
         columnHeader={[
           {'rank': 'Rank'},
           {'name': 'Name'},

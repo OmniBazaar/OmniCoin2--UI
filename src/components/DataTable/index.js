@@ -32,6 +32,7 @@ export default class DataTable extends Component {
       column: null,
       direction: null,
       data: [],
+      currentData: [],
       columnHeader,
     };
   }
@@ -40,42 +41,71 @@ export default class DataTable extends Component {
     const rowsPerPage = nextProps.rowsPerPage || 5;
     const numberOfPages = Math.ceil(nextProps.data.length / rowsPerPage);
     const data = nextProps.data;
+    const activePage = 1;
+    const currentData = this.handleSlice(data, activePage, rowsPerPage);
 
     this.setState({
-      activePage: 1,
+      activePage,
       rowsPerPage,
       data,
-      numberOfPages
+      currentData,
+      numberOfPages,
+      column: null,
     });
   }
 
-  handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
+  handleSlice(data, activePage, rowsPerPage) {
+    //slice current data set (more filters could be added, and also sorting)
+    return data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
+  }
 
-  handleSort = clickedColumn => () => {
-    const { column, data, direction } = this.state;
+  handlePaginationChange = (e, { activePage }) => {
+    const { rowsPerPage, data, column } = this.state;
+    const currentData = this.handleSlice(data, activePage, rowsPerPage);
+
+    this.setState({
+      currentData,
+      activePage
+    }, function () {
+      if (column)
+        this.sortData(column, true);
+    });
+  };
+
+  sortData(clickedColumn, keepDirection) {
+    const { column, currentData, direction } = this.state;
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        data: _.sortBy(data, [clickedColumn]),
+        currentData: _.sortBy(currentData, [clickedColumn]).reverse(),
         direction: 'ascending',
       });
 
       return;
     }
 
+    let sortCurrentData = _.sortBy(currentData, [clickedColumn]);
+    let newDirection = null;
+    if (keepDirection === true) {
+      newDirection = direction;
+    } else {
+      newDirection = direction === 'ascending' ? 'descending' : 'ascending'
+    }
+
     this.setState({
-      data: data.reverse(),
-      direction: direction === 'ascending' ? 'descending' : 'ascending',
+      currentData: newDirection === 'ascending' ? sortCurrentData.reverse() : sortCurrentData,
+      direction: newDirection,
     });
+  }
+
+  handleSort = (clickedColumn, keepDirection) => () => {
+    this.sortData(clickedColumn, keepDirection);
   };
 
   render() {
-    const { activePage, rowsPerPage, numberOfPages, columns, data, columnHeader } = this.state;
+    const { activePage, numberOfPages, columns, currentData, columnHeader } = this.state;
     const { column, direction } = this.state;
-
-    //slice current data set (more filters could be added, and also sorting)
-    const currentData = data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
 
     let showEllipsis = true;
     let showFirstAndLastNav = true;
@@ -105,7 +135,7 @@ export default class DataTable extends Component {
                 let key = Object.keys(object)[0];
                 let value = Object.values(object)[0];
                 return (
-                  <TableHeaderCell key={key} sorted={column === key ? direction : null} onClick={this.handleSort(key)}>
+                  <TableHeaderCell key={key} sorted={column === key ? direction : null} onClick={this.handleSort(key, false)}>
                     {value}
                   </TableHeaderCell>
                 );
