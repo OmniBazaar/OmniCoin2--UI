@@ -4,7 +4,7 @@ import {
 } from './settingsActions';
 import {
     nodes
-} from '../blockchain/connection/connection';
+} from '../blockchain/connection/connectionSaga';
 
 let defaultState = {
     activeNode: nodes[2]

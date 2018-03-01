@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {  getCurrentUser } from  '../../services/auth/authActions';
+import {  getCurrentUser } from  '../../services/blockchain/auth/authActions';
 import Background from '../../components/Background/Background';
 import LoginForm from './components/LoginForm';
 import './login.scss';
@@ -10,7 +10,7 @@ import './login.scss';
 class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.auth.isAuthorized) {
+        if (!!nextProps.auth.currentUser) {
             this.props.history.push('/');
         }
     }
