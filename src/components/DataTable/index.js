@@ -105,6 +105,21 @@ export default class DataTable extends Component {
     this.sortData(clickedColumn, keepDirection);
   };
 
+  handleFilterChange = (e) => {
+    const { value } = e.target;
+    const { data } = this.state;
+
+    let filteredData = _.map(data, function(o) {
+      if (o.name.indexOf(value) !== -1) return o;
+    });
+
+    filteredData = _.without(filteredData, undefined);
+
+    this.setState({
+      currentData: filteredData,
+    });
+  };
+
   render() {
     const { activePage, numberOfPages, columns, currentData, columnHeader } = this.state;
     const { column, direction } = this.state;
@@ -115,7 +130,13 @@ export default class DataTable extends Component {
 
     return (
       <div>
-        <Input icon={<Icon name='filter' />} iconPosition='left' placeholder='Filter' className='filter-input' />
+        <Input
+          icon={<Icon name='filter' />}
+          iconPosition='left'
+          placeholder='Filter'
+          className='filter-input'
+          onChange={this.handleFilterChange}
+        />
         <Pagination
           activePage={activePage}
           boundaryRange={3}
