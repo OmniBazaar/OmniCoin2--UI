@@ -9,7 +9,7 @@ const {
     login
 } = createActions({
     GET_CURRENT_USER: () => ({}),
-    LOGIN: (username, password) => ({ username, password }),
+    LOGIN: (username, password, callback) => ({ username, password, callback }),
 });
 
 

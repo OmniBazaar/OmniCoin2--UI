@@ -1,26 +1,33 @@
 import { handleActions } from 'redux-actions';
+import { connect } from './connectionActions';
 
 let defaultState = {
-    connected: false,
     apiInstance: null,
-    error: null
+    isLoading: false,
+    error: null,
 };
 
 const reducer = handleActions({
+    [connect](state, {payload: {node}}) {
+        return {
+            ...state,
+            isLoading: true,
+        }
+    },
     CONNECT_SUCCEEDED: (state, action) => {
         return {
             ...state,
-            apiInstance: action.result,
-            connected: true,
-            error: null
+            apiInstance: action.apiInstance,
+            isLoading: false,
+            error: null,
         }
     },
     CONNECT_FAILED: (state, action) => {
         return {
             ...state,
             apiInstance: null,
-            connected: false,
-            error: action.result
+            isLoading: false,
+            error: action.error
         }
     }
 }, defaultState);
