@@ -3,6 +3,9 @@ import { Field, reduxForm } from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
+import {Apis} from "bitsharesjs-ws";
+import {ChainStore, PrivateKey, key, Aes, FetchChain} from "omnibazaarjs/es";
+import { Login } from  "omnibazaarjs/es"
 
 import { login, getCurrentUser } from  '../../../services/auth/authActions';
 
@@ -24,12 +27,11 @@ class LoginForm extends Component {
         showUsernameInput: false
     };
 
-    static defaultProps = {
-        username: "denis12343"
-    };
-
     submit(values) {
-        const { password } = values;
+        const { password, username } = values;
+        if (username) {
+            Login.checkKeys(username, password);
+        }
         this.props.authActions.login(this.props.username, password);
     }
 
@@ -49,13 +51,13 @@ class LoginForm extends Component {
            <Form
                onSubmit={handleSubmit(this.submit)}
                className="signup-container"
-               style={{"justify-content": showUsernameInput ? "center" : "space-between"  }}
+               style={{justifyContent: showUsernameInput ? "center" : "space-between"  }}
            >
                    {showUsernameInput ?
                        <div className="username">
                            <Field
                                type="text"
-                               name="text"
+                               name="username"
                                placeholder="Enter your username"
                                component="input"/>
                        </div>

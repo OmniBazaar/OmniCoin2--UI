@@ -13,7 +13,10 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.scss';
 import App from './App';
 import * as reducers from './services/reducer';
-import * as sagas from './services/saga';
+import {
+    connectionSubscriber
+} from './services/saga';
+
 
 const reducer = combineReducers({
     ...reducers,
@@ -32,7 +35,7 @@ const store = createStore(
     applyMiddleware(...middleware)
 );
 
-// sagaMiddleware.run(sagas);
+sagaMiddleware.run(connectionSubscriber);
 
 ReactDOM.render((
     <Provider store={store}>
