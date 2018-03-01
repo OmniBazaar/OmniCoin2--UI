@@ -21,55 +21,57 @@ export default class DataTable extends Component {
     const rowsPerPage = props.rowsPerPage || 5;
     const numberOfPages = Math.ceil(props.data.length / rowsPerPage);
     const columns = props.columnHeader || Object.keys(props.data[0] || []);
-    const columnsHeader = props.columnHeaderLabel || Object.keys(props.data[0] || []);
+    const columnHeader = props.columnHeader || [];
+    const activePage = 1;
 
     this.state = {
-      activePage: 1,
+      activePage,
       rowsPerPage,
       numberOfPages,
       columns,
-      columnsHeader,
       column: null,
       direction: null,
-    }
+      data: [],
+      columnHeader,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     const rowsPerPage = nextProps.rowsPerPage || 5;
     const numberOfPages = Math.ceil(nextProps.data.length / rowsPerPage);
+    const data = nextProps.data;
 
     this.setState({
       activePage: 1,
       rowsPerPage,
+      data,
       numberOfPages
-    })
+    });
   }
 
   handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
 
   handleSort = clickedColumn => () => {
-    console.log(clickedColumn);
-    const { column, columns, direction } = this.state;
+    const { column, data, direction } = this.state;
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        columns: _.sortBy(columns, [clickedColumn]),
+        data: _.sortBy(data, [clickedColumn]),
         direction: 'ascending',
       });
 
-      return
+      return;
     }
 
     this.setState({
-      columns: columns.reverse(),
+      data: data.reverse(),
       direction: direction === 'ascending' ? 'descending' : 'ascending',
-    })
+    });
   };
 
   render() {
-    const {data} = this.props;
-    const {activePage, rowsPerPage, numberOfPages, columns, columnsHeader} = this.state;
+    const { activePage, rowsPerPage, numberOfPages, columns, data, columnHeader } = this.state;
     const { column, direction } = this.state;
 
     //slice current data set (more filters could be added, and also sorting)
@@ -99,8 +101,15 @@ export default class DataTable extends Component {
           {this.props.header &&
           <TableHeader>
             <TableRow>
-              {columns.map(key =>
-                <TableHeaderCell key={key} sorted={column === key ? direction : null} onClick={this.handleSort(key)}>{key}</TableHeaderCell>
+              {columnHeader.map(object => {
+                let key = Object.keys(object)[0];
+                let value = Object.values(object)[0];
+                return (
+                  <TableHeaderCell key={key} sorted={column === key ? direction : null} onClick={this.handleSort(key)}>
+                    {value}
+                  </TableHeaderCell>
+                );
+              }
               )}
             </TableRow>
           </TableHeader>
@@ -108,11 +117,14 @@ export default class DataTable extends Component {
           <TableBody>
             {currentData.map(row =>
               <TableRow key={hash(row)}>
-                {columns.map((key) =>
-                  <TableCell
-                    key={hash({ ...row, key })}
-                    content={row[key]}
-                  />
+                {columns.map((object) => {
+                  let key = Object.keys(object)[0];
+                  return (
+                    <TableCell
+                      key={hash({ ...row, key })}
+                      content={row[key]}
+                    />
+                  );}
                 )}
               </TableRow>
             )}

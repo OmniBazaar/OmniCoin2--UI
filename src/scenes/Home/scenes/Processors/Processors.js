@@ -193,10 +193,19 @@ class Processors extends Component {
         }}
         header
         rowsPerPage={2}
-        columnHeader={['rank', 'name', 'approval', 'reliability', 'reputation', 'referralScore', 'publisherScore', 'netScore', 'approve']}
-        columnHeaderLabel={['Rank', 'Name', 'Approval', 'Reliability', 'Reputation', 'Referral Score', 'Publisher Score', 'Net Score', 'Approve']}
+        columnHeader={[
+          {'rank': 'Rank'},
+          {'name': 'Name'},
+          {'approval': 'Approval'},
+          {'reliability': 'Reliability'},
+          {'reputation': 'Reputation'},
+          {'referralScore': 'Referral Score'},
+          {'publisherScore': 'Publisher Score'},
+          {'netScore': 'NetScore'},
+          {'approve': 'Approve'}
+        ]}
       />
-    )
+    );
   }
 
   _standbyProcessors() {
@@ -214,10 +223,19 @@ class Processors extends Component {
         }}
         header
         rowsPerPage={3}
-        columnHeader={['rank', 'name', 'approval', 'reliability', 'reputation', 'referralScore', 'publisherScore', 'netScore', 'approve']}
-        columnHeaderLabel={['Rank', 'Name', 'Approval', 'Reliability', 'Reputation', 'Referral Score', 'Publisher Score', 'Net Score', 'Approve']}
+        columnHeader={[
+          {'rank': 'Rank'},
+          {'name': 'Name'},
+          {'approval': 'Approval'},
+          {'reliability': 'Reliability'},
+          {'reputation': 'Reputation'},
+          {'referralScore': 'Referral Score'},
+          {'publisherScore': 'Publisher Score'},
+          {'netScore': 'NetScore'},
+          {'approve': 'Approve'}
+        ]}
       />
-    )
+    );
   }
 
   render() {
