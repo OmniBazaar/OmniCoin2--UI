@@ -10,6 +10,8 @@ import {
   TableRow,
   TableHeader,
   Pagination,
+  Input,
+  Icon,
 } from 'semantic-ui-react';
 import './datatable.scss';
 
@@ -113,6 +115,7 @@ export default class DataTable extends Component {
 
     return (
       <div>
+        <Input icon={<Icon name='filter' />} iconPosition='left' placeholder='Filter' className='filter-input' />
         <Pagination
           activePage={activePage}
           boundaryRange={3}
