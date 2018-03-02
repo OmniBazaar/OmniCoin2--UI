@@ -27,3 +27,19 @@
     }
   }
 }
+
+.votes {
+  display: flex;
+
+  &.voted {
+    opacity: 0.5;
+  }
+
+  span {
+    margin-right: 22px;
+  }
+
+  img {
+    margin-right: 10px;
+  }
+}

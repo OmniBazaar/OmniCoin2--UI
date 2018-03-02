@@ -12,6 +12,7 @@ import {
   Pagination,
   Input,
   Icon,
+  Image,
 } from 'semantic-ui-react';
 
 import {
@@ -21,6 +22,12 @@ import {
   setPaginationTop,
   getTopProcessors,
 } from  '../../../../../services/processors/processorsTopActions';
+
+import DislikeIcon from '../images/btn-dislike.svg';
+import LikeIcon from '../images/btn-like.svg';
+import DotsIcon from '../images/btn-meehh.svg';
+
+const iconSize = 18;
 
 const topProcessors = [
   {
@@ -54,7 +61,7 @@ const topProcessors = [
     referralScore: '???',
     publisherScore: '???',
     netScore: '???',
-    approve: '',
+    approve: false,
   },
   {
     rank: 4,
@@ -122,14 +129,31 @@ class TopProcessors extends Component {
     this.props.processorsTopActions.setActivePageTop(activePage);
   };
 
+  renderVoteValue(approve) {
+    let vote = approve ? LikeIcon : DislikeIcon;
+    return (
+      <div className='votes voted'>
+        <span>Voted </span>
+        <Image src={vote} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
+  renderVote() {
+    return (
+      <div className='votes'>
+        <Image src={LikeIcon} width={iconSize} height={iconSize} />
+        <Image src={DotsIcon} width={iconSize} height={iconSize} />
+        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
   renderApprove(approve) {
-    if (approve) {
-      if (approve === true)
-        return 'Voted true';
-      else
-        return 'Voted false';
+    if (approve !== null && approve !== '') {
+      return this.renderVoteValue(approve);
     } else {
-      return '...';
+      return this.renderVote();
     }
   }
 
@@ -199,7 +223,7 @@ class TopProcessors extends Component {
               {topProcessorsFiltered.map(row =>
                 <TableRow key={hash(row)}>
                   <TableCell>{row['rank']}</TableCell>
-                  <TableCell>{row['name']}</TableCell>
+                  <TableCell><a>{row['name']}</a></TableCell>
                   <TableCell>{row['approval']}</TableCell>
                   <TableCell>{row['reliability']}</TableCell>
                   <TableCell>{row['reputation']}</TableCell>
