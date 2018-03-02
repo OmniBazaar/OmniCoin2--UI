@@ -32,7 +32,6 @@ export function* login(action) {
                 isAuthorized = true;
             }
         });
-      isAuthorized=true;
         if (isAuthorized) {
             yield put({
                 type: 'LOGIN_SUCCEEDED',
