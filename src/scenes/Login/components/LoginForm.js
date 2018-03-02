@@ -1,48 +1,113 @@
 import React, {Component} from 'react';
-import { Field, reduxForm } from 'redux-form';
+import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Button, Input, Form, Container, Image } from 'semantic-ui-react'
+import { Button, Form, Image } from 'semantic-ui-react'
+import {required} from 'redux-form-validators';
+import {toastr} from 'react-redux-toastr'
+import cn from 'classnames';
 
-import { login } from  '../../../services/auth/authActions';
+import {login, getCurrentUser} from  '../../../services/blockchain/auth/authActions';
 
 import './login-form.scss';
 import BtnLock from '../../../assets/images/common/btn-lock-norm+pres.svg';
-
+import ValidatableField from '../../../components/ValidatableField/ValidatableField';
 
 class LoginForm extends Component {
-    // static propTypes = {
-    //     accountKey: string
-    // };
 
-    static defaultProps = {
-        username: "denis12343"
+    constructor(props) {
+        super(props);
+        this.submit = this.submit.bind(this);
+    }
+
+    state = {
+        showUsernameInput: false,
+        isLoading: false,
     };
 
-    submit = (values) => {
-        const { password } = values;
-        this.props.loginActions.login(this.props.username, password);
+    componentWillMount() {
+        if (!this.props.auth.currentUser) {
+            this.setState({
+                showUsernameInput: true
+            })
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.error && !this.props.auth.error) {
+            toastr.error("Error", nextProps.auth.error);
+        }
+    }
+
+    submit(values) {
+        const {password, username} = values;
+        this.setState({isLoading: true});
+        this.props.authActions.login(
+            username,
+            password,
+            () => {this.setState({isLoading: false})}
+        );
+    }
+
+    renderPasswordField = ({input, disabled, loading, meta: {touched, error, warning}}) => {
+        console.log("LOADING", loading);
+        let btnClass = cn(loading ? "ui loading" : "");
+        return (
+            <div>
+                {touched && ((error && <span className="error">{error}</span>))}
+                <div className="password">
+                    <input
+                        {...input}
+                        type="password"
+                        placeholder="Enter password"
+                    />
+                    <Button
+                        content="UNLOCK"
+                        disabled={disabled || this.state.isLoading}
+                        color="green"
+                        type="submit"
+                        className={btnClass}
+                    />
+                </div>
+            </div>
+        );
     };
 
-
-   render() {
-       const {handleSubmit, username} = this.props;
-       return (
-           <Form onSubmit={handleSubmit(this.submit)} className="signup-container">
-               <Image src={BtnLock} width={50} height={50}/>
-               <span>{username}</span>
-               <div className="password-block">
-                       <Field
-                           type="password"
-                           name="password"
-                           placeholder="Enter password"
-                           component="input"
-                       />
-                   <Button content="UNLOCK" color="green" type="submit"/>
-               </div>
-           </Form>
-       )
-   }
+    render() {
+        const {handleSubmit, username, valid} = this.props;
+        const {showUsernameInput} = this.state;
+        return (
+            <Form
+                onSubmit={handleSubmit(this.submit)}
+                className="signup-container"
+                style={{justifyContent: showUsernameInput ? "center" : "space-between"}}
+            >
+                {showUsernameInput ?
+                    <div className="username">
+                        <Field
+                            type="text"
+                            name="username"
+                            placeholder="Enter your username"
+                            component={ValidatableField}
+                            validate={[required({message: "This field is required"})]}
+                        />
+                    </div>
+                    :
+                    [
+                        <Image src={BtnLock} width={50} height={50}/>,
+                        <span>{username}</span>
+                    ]
+                }
+                <Field
+                    name="password"
+                    disabled={!valid}
+                    loading={this.state.isLoading}
+                    component={this.renderPasswordField}
+                    validate={[required({message: "This field is required"})]}
+                />
+            </Form>
+        )
+    }
 }
 
 LoginForm = reduxForm({
@@ -51,10 +116,10 @@ LoginForm = reduxForm({
 })(LoginForm);
 
 export default connect(
-    state => {
+    (state) => {
         return {...state.default}
     },
     (dispatch) => ({
-        loginActions: bindActionCreators({login}, dispatch),
-    }),
+        authActions: bindActionCreators({login}, dispatch),
+    })
 )(LoginForm);
