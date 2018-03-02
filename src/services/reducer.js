@@ -5,11 +5,13 @@ import { combineReducers } from 'redux';
 import authReducer from './auth/authReducer';
 import mailReducer from './mail/mailReducer';
 import walletReducer from './wallet/walletReducer';
-import processorsReducer from './processors/processorsReducer';
+import processorsStandbyReducer from './processors/processorsStandbyReducer';
+import processorsTopReducer from './processors/processorsTopReducer';
 
 export default combineReducers({
   auth: authReducer,
   mail: mailReducer,
   wallet: walletReducer,
-  processors: processorsReducer,
+  processorsStandby: processorsStandbyReducer,
+  processorsTop: processorsTopReducer,
 });
