@@ -42,7 +42,7 @@ const store = createStore(
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 
-// localStorage.clear();
+localStorage.clear(); // Temporarily for login functionality TODO: remove this
 
 ReactDOM.render((
     <Provider store={store}>
