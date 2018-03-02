@@ -2,7 +2,7 @@
  * Created by denissamohvalov on 14.02.18.
  */
 import { handleActions, combineActions } from 'redux-actions';
-import { login, getCurrentUser } from './authActions';
+import { signup, login, getCurrentUser } from './authActions';
 
 let defaultState = {
     currentUser: null,
@@ -21,6 +21,11 @@ const reducer = handleActions({
           ...state,
           error: null
       }
+    },
+    [signup](state, {payload: {username, password, referrer, mac_address, harddrive_id}}) {
+        return {
+            ...state
+        }
     },
     LOGIN_FAILED: (state, action) => {
         return {

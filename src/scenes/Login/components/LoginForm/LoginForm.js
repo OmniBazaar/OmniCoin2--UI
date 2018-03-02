@@ -7,11 +7,11 @@ import {required} from 'redux-form-validators';
 import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 
-import {login, getCurrentUser} from  '../../../services/blockchain/auth/authActions';
+import { login } from  '../../../../services/blockchain/auth/authActions';
 
 import './login-form.scss';
-import BtnLock from '../../../assets/images/common/btn-lock-norm+pres.svg';
-import ValidatableField from '../../../components/ValidatableField/ValidatableField';
+import BtnLock from '../../../../assets/images/common/btn-lock-norm+pres.svg';
+import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 
 class LoginForm extends Component {
 
@@ -50,7 +50,6 @@ class LoginForm extends Component {
     }
 
     renderPasswordField = ({input, disabled, loading, meta: {touched, error, warning}}) => {
-        console.log("LOADING", loading);
         let btnClass = cn(loading ? "ui loading" : "");
         return (
             <div>
@@ -74,12 +73,12 @@ class LoginForm extends Component {
     };
 
     render() {
-        const {handleSubmit, username, valid} = this.props;
+        const {handleSubmit, valid, auth} = this.props;
         const {showUsernameInput} = this.state;
         return (
             <Form
                 onSubmit={handleSubmit(this.submit)}
-                className="signup-container"
+                className="login"
                 style={{justifyContent: showUsernameInput ? "center" : "space-between"}}
             >
                 {showUsernameInput ?
@@ -95,7 +94,7 @@ class LoginForm extends Component {
                     :
                     [
                         <Image src={BtnLock} width={50} height={50}/>,
-                        <span>{username}</span>
+                        <span>{auth.currentUser.username}</span>
                     ]
                 }
                 <Field

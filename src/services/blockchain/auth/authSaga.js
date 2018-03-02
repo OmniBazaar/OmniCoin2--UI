@@ -1,5 +1,5 @@
 import {put, takeEvery} from 'redux-saga/effects';
-import {ChainStore, PrivateKey, key, Aes, FetchChain} from "bitsharesjs/es";
+import {ChainStore, PrivateKey, key, Aes, FetchChain} from "omnibazaarjs/es";
 
 function generateKeyFromPassword(accountName, role, password) {
     let seed = accountName + role + password;
