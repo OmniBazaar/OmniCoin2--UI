@@ -2,7 +2,13 @@ import React, {Component} from 'react';
 import { Sidebar, Segment, Button, Menu, Image, Icon, Header } from 'semantic-ui-react'
 import cn from 'classnames';
 import ReactSVG from 'react-svg';
-import { Route, NavLink } from 'react-router-dom';
+import {
+    Route,
+    NavLink,
+    Redirect
+} from 'react-router-dom';
+import {connect} from 'react-redux';
+
 
 import Escrow from './scenes/Escrow/Escrow';
 import Mail from  './scenes/Mail/Mail';
@@ -26,7 +32,7 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 const iconSize = 20;
-export default class Home extends Component {
+class Home extends Component {
     state = { visible: true };
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -35,9 +41,14 @@ export default class Home extends Component {
         const { visible } = this.state;
         let sideBarClass = cn("sidebar", visible ? "visible" : "");
         let homeContentClass = cn("home-content", visible ? "" : "shrink");
-        console.log('This props', this.props);
+        if (!this.props.auth.currentUser) {
+           return <Redirect
+                to={{
+                    pathname: "/login",
+                }}
+            />
+        }
         return (
-
             <div className="home-container">
                 <div className={sideBarClass} style={{backgroundImage: `url(${BackgroundImage})`}}>
                     <div className="header">
@@ -96,3 +107,9 @@ export default class Home extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => {
+        return {...state.default}
+    }
+)(Home);

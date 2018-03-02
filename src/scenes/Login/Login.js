@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
+import {  getCurrentUser } from  '../../services/blockchain/auth/authActions';
 import Background from '../../components/Background/Background';
 import LoginForm from './components/LoginForm';
 import './login.scss';
@@ -8,9 +10,13 @@ import './login.scss';
 class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.auth.isAuthorized) {
+        if (!!nextProps.auth.currentUser) {
             this.props.history.push('/');
         }
+    }
+
+    componentWillMount() {
+        this.props.authActions.getCurrentUser();
     }
 
     render() {
@@ -23,7 +29,10 @@ class Login extends Component {
 }
 
 export default connect(
-    state => {
+    (state) => {
         return {...state.default}
-    }
+    },
+    (dispatch) => ({
+        authActions: bindActionCreators({ getCurrentUser }, dispatch),
+    }),
 )(Login);
