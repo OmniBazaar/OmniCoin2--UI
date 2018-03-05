@@ -1,6 +1,12 @@
 import { createActions } from 'redux-actions';
 
-const { getTopProcessors, sortDataTop, filterDataTop, setActivePageTop, setPaginationTop } = createActions({
+const {
+  getTopProcessors,
+  sortDataTop,
+  filterDataTop,
+  setActivePageTop,
+  setPaginationTop
+} = createActions({
   GET_TOP_PROCESSORS: (topProcessors) => ({ topProcessors }),
   SORT_DATA_TOP: (sortColumnTop) => ({ sortColumnTop }),
   FILTER_DATA_TOP: (filterTextTop) => ({ filterTextTop }),
@@ -14,4 +20,4 @@ export {
   filterDataTop,
   setActivePageTop,
   setPaginationTop,
-}
+};

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import hash from 'object-hash';
 import {
   Table,
@@ -165,6 +166,32 @@ const standbyProcessors = [
 ];
 
 class StandByProcessors extends Component {
+  static renderVoteValue(approve) {
+    const vote = approve ? LikeIcon : DislikeIcon;
+    return (
+      <div className="votes voted">
+        <span>Voted </span>
+        <Image src={vote} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
+  static renderVote() {
+    return (
+      <div className="votes">
+        <Image src={LikeIcon} width={iconSize} height={iconSize} />
+        <Image src={DotsIcon} width={iconSize} height={iconSize} />
+        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
+  static renderApprove(approve) {
+    if (approve !== null && approve !== '') {
+      return StandByProcessors.renderVoteValue(approve);
+    }
+    return StandByProcessors.renderVote();
+  }
 
   componentDidMount() {
     this.props.processorsStandbyActions.getStandbyProcessors(standbyProcessors);
@@ -184,56 +211,35 @@ class StandByProcessors extends Component {
     this.props.processorsStandbyActions.setActivePageStandBy(activePage);
   };
 
-  renderVoteValue(approve) {
-    let vote = approve ? LikeIcon : DislikeIcon;
-    return (
-      <div className='votes voted'>
-        <span>Voted </span>
-        <Image src={vote} width={iconSize} height={iconSize} />
-      </div>
-    );
-  }
-
-  renderVote() {
-    return (
-      <div className='votes'>
-        <Image src={LikeIcon} width={iconSize} height={iconSize} />
-        <Image src={DotsIcon} width={iconSize} height={iconSize} />
-        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
-      </div>
-    );
-  }
-
-  renderApprove(approve) {
-    if (approve !== null && approve !== '') {
-      return this.renderVoteValue(approve);
-    } else {
-      return this.renderVote();
-    }
-  }
-
   render() {
-    const { activePageStandBy, sortDirectionStandBy, totalPagesStandBy, sortColumnStandBy, standbyProcessorsFiltered } = this.props.processorsStandby;
+    const {
+      activePageStandBy,
+      sortDirectionStandBy,
+      totalPagesStandBy,
+      sortColumnStandBy,
+      standbyProcessorsFiltered
+    } = this.props.processorsStandby;
 
     return (
-      <div className='data-table'>
-        <div className='top-detail'>
+      <div className="data-table">
+        <div className="top-detail">
           <Input
-            icon={<Icon name='filter' />}
-            iconPosition='left'
-            placeholder='Filter'
-            className='filter-input'
+            icon={<Icon name="filter" />}
+            iconPosition="left"
+            placeholder="Filter"
+            className="filter-input"
             onChange={this.handleFilterChange}
           />
-          <div className='pagination-container'>
+          <div className="pagination-container">
             <Pagination
               activePage={activePageStandBy}
               boundaryRange={1}
               onPageChange={this.handlePaginationChange}
-              size='mini'
+              size="mini"
               siblingRange={1}
               totalPages={totalPagesStandBy}
-              // Heads up! All items are powered by shorthands, if you want to hide one of them, just pass `null` as value
+              // Heads up! All items are powered by shorthands,
+              // if you want to hide one of them, just pass `null` as value
               firstItem={{ ariaLabel: 'First item', content: '<< First' }}
               lastItem={{ ariaLabel: 'Last item', content: 'Last >>' }}
               prevItem={{ ariaLabel: 'Previous item', content: '< Prev' }}
@@ -241,55 +247,56 @@ class StandByProcessors extends Component {
             />
           </div>
         </div>
-        <div className='table-container'>
+        <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell key={'rank'} sorted={sortColumnStandBy === 'rank' ? sortDirectionStandBy : null} onClick={this.sortData('rank')}>
+                <TableHeaderCell key="rank" sorted={sortColumnStandBy === 'rank' ? sortDirectionStandBy : null} onClick={this.sortData('rank')}>
                   Rank
                 </TableHeaderCell>
-                <TableHeaderCell key={'name'} sorted={sortColumnStandBy === 'name' ? sortDirectionStandBy : null} onClick={this.sortData('name')}>
+                <TableHeaderCell key="name" sorted={sortColumnStandBy === 'name' ? sortDirectionStandBy : null} onClick={this.sortData('name')}>
                   Name
                 </TableHeaderCell>
-                <TableHeaderCell key={'approval'} sorted={sortColumnStandBy === 'approval' ? sortDirectionStandBy : null} onClick={this.sortData('approval')}>
+                <TableHeaderCell key="approval" sorted={sortColumnStandBy === 'approval' ? sortDirectionStandBy : null} onClick={this.sortData('approval')}>
                   Approval
                 </TableHeaderCell>
-                <TableHeaderCell key={'reliability'} sorted={sortColumnStandBy === 'reliability' ? sortDirectionStandBy : null} onClick={this.sortData('reliability')}>
+                <TableHeaderCell key="reliability" sorted={sortColumnStandBy === 'reliability' ? sortDirectionStandBy : null} onClick={this.sortData('reliability')}>
                   Reliability
                 </TableHeaderCell>
-                <TableHeaderCell key={'reputation'} sorted={sortColumnStandBy === 'reputation' ? sortDirectionStandBy : null} onClick={this.sortData('reputation')}>
+                <TableHeaderCell key="reputation" sorted={sortColumnStandBy === 'reputation' ? sortDirectionStandBy : null} onClick={this.sortData('reputation')}>
                   Reputation
                 </TableHeaderCell>
-                <TableHeaderCell key={'referralScore'} sorted={sortColumnStandBy === 'referralScore' ? sortDirectionStandBy : null} onClick={this.sortData('referralScore')}>
+                <TableHeaderCell key="referralScore" sorted={sortColumnStandBy === 'referralScore' ? sortDirectionStandBy : null} onClick={this.sortData('referralScore')}>
                   Referral Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'publisherScore'} sorted={sortColumnStandBy === 'publisherScore' ? sortDirectionStandBy : null} onClick={this.sortData('publisherScore')}>
+                <TableHeaderCell key="publisherScore" sorted={sortColumnStandBy === 'publisherScore' ? sortDirectionStandBy : null} onClick={this.sortData('publisherScore')}>
                   Publisher Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'netScore'} sorted={sortColumnStandBy === 'netScore' ? sortDirectionStandBy : null} onClick={this.sortData('netScore')}>
+                <TableHeaderCell key="netScore" sorted={sortColumnStandBy === 'netScore' ? sortDirectionStandBy : null} onClick={this.sortData('netScore')}>
                   Net Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'approve'} sorted={sortColumnStandBy === 'approve' ? sortDirectionStandBy : null} onClick={this.sortData('approve')}>
+                <TableHeaderCell key="approve" sorted={sortColumnStandBy === 'approve' ? sortDirectionStandBy : null} onClick={this.sortData('approve')}>
                   Approve
                 </TableHeaderCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {standbyProcessorsFiltered.map(row =>
-                <TableRow key={hash(row)}>
-                  <TableCell>{row['rank']}</TableCell>
-                  <TableCell><a>{row['name']}</a></TableCell>
-                  <TableCell>{row['approval']}</TableCell>
-                  <TableCell>{row['reliability']}</TableCell>
-                  <TableCell>{row['reputation']}</TableCell>
-                  <TableCell>{row['referralScore']}</TableCell>
-                  <TableCell>{row['publisherScore']}</TableCell>
-                  <TableCell>{row['netScore']}</TableCell>
-                  <TableCell>
-                    {this.renderApprove(row['approve'])}
-                  </TableCell>
-                </TableRow>
-              )}
+                (
+                  <TableRow key={hash(row)}>
+                    <TableCell>{row.rank}</TableCell>
+                    <TableCell><a>{row.name}</a></TableCell>
+                    <TableCell>{row.approval}</TableCell>
+                    <TableCell>{row.reliability}</TableCell>
+                    <TableCell>{row.reputation}</TableCell>
+                    <TableCell>{row.referralScore}</TableCell>
+                    <TableCell>{row.publisherScore}</TableCell>
+                    <TableCell>{row.netScore}</TableCell>
+                    <TableCell>
+                      {StandByProcessors.renderApprove(row.approve)}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>
@@ -298,10 +305,41 @@ class StandByProcessors extends Component {
   }
 }
 
+StandByProcessors.propTypes = {
+  processorsStandbyActions: PropTypes.shape({
+    getStandbyProcessors: PropTypes.func,
+    setActivePageStandBy: PropTypes.func,
+    setPaginationStandBy: PropTypes.func,
+    filterDataStandBy: PropTypes.func,
+    sortDataStandBy: PropTypes.func,
+  }),
+  tableProps: PropTypes.shape({
+    sortable: PropTypes.bool,
+    compact: PropTypes.bool,
+    basic: PropTypes.string,
+    striped: PropTypes.bool,
+    size: PropTypes.string,
+  }),
+  processorsStandby: PropTypes.shape({
+    activePageStandBy: 1,
+    standbyProcessorsFiltered: [],
+    sortDirectionStandBy: 'descending',
+    sortColumnStandBy: 'rank',
+    totalPagesStandBy: 1,
+    rowsPerPageStandBy: 10,
+  }),
+  rowsPerPage: PropTypes.number,
+};
+
+StandByProcessors.defaultProps = {
+  processorsStandbyActions: {},
+  processorsStandby: {},
+  tableProps: {},
+  rowsPerPage: 5,
+};
+
 export default connect(
-  state => {
-    return { ...state.default };
-  },
+  state => ({ ...state.default }),
   (dispatch) => ({
     processorsStandbyActions: bindActionCreators({
       sortDataStandBy,

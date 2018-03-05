@@ -9,7 +9,7 @@ import {
   setPaginationTop,
 } from './processorsTopActions';
 
-let defaultState = {
+const defaultState = {
   topProcessors: [],
   topProcessorsFiltered: [],
   activePageTop: 1,
@@ -20,13 +20,13 @@ let defaultState = {
   filterTextTop: '',
 };
 
-const sliceData = (data, activePage, rowsPerPage) => {
-  return data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
-};
+const sliceData = (data, activePage, rowsPerPage) => (
+  data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+);
 
-const getTotalPages = (data, rowsPerPage) => {
-  return Math.ceil(data.length / rowsPerPage);
-};
+const getTotalPages = (data, rowsPerPage) => (
+  Math.ceil(data.length / rowsPerPage)
+);
 
 const reducer = handleActions({
   [combineActions(getTopProcessors)](state, { payload: { topProcessors } }) {
@@ -39,14 +39,14 @@ const reducer = handleActions({
   [combineActions(filterDataTop)](state, { payload: { filterTextTop } }) {
     const data = state.topProcessors;
     const activePageTop = 1;
-    const rowsPerPageTop = state.rowsPerPageTop;
-    let totalPagesTop = state.totalPagesTop;
+    const { rowsPerPageTop, totalPagesTop } = state;
+    let totalPages = totalPagesTop;
     let currentData = [];
 
     if (filterTextTop !== '') {
-      let filteredData = _.map(data, function(o) {
-        let values = Object.values(o);
-        let result =_.map(values, function(val) {
+      let filteredData = _.map(data, (o) => {
+        const values = Object.values(o);
+        const result = _.map(values, (val) => {
           if (val) {
             if (val.toString().indexOf(filterTextTop) !== -1) return o;
           }
@@ -55,11 +55,11 @@ const reducer = handleActions({
       });
 
       filteredData = _.without(filteredData, undefined);
-      totalPagesTop = getTotalPages(filteredData, rowsPerPageTop);
+      totalPages = getTotalPages(filteredData, rowsPerPageTop);
       currentData = sliceData(filteredData, activePageTop, rowsPerPageTop);
     } else {
       currentData = data;
-      totalPagesTop = getTotalPages(currentData, rowsPerPageTop);
+      totalPages = getTotalPages(currentData, rowsPerPageTop);
       currentData = sliceData(currentData, activePageTop, rowsPerPageTop);
     }
 
@@ -67,13 +67,13 @@ const reducer = handleActions({
       ...state,
       filterTextTop,
       activePageTop,
-      totalPagesTop,
+      totalPagesTop: totalPages,
       topProcessorsFiltered: currentData,
     };
   },
   [combineActions(setPaginationTop)](state, { payload: { rowsPerPageTop } }) {
     const data = state.topProcessors;
-    const activePageTop = state.activePageTop;
+    const { activePageTop } = state;
     const totalPagesTop = getTotalPages(data, rowsPerPageTop);
     const currentData = sliceData(data, activePageTop, rowsPerPageTop);
 
@@ -87,7 +87,7 @@ const reducer = handleActions({
   [combineActions(setActivePageTop)](state, { payload: { activePageTop } }) {
     const data = state.topProcessors;
     if (activePageTop !== state.activePageTop) {
-      const rowsPerPageTop = state.rowsPerPageTop;
+      const { rowsPerPageTop } = state;
       const currentData = sliceData(data, activePageTop, rowsPerPageTop);
 
       return {
@@ -95,18 +95,18 @@ const reducer = handleActions({
         activePageTop,
         topProcessorsFiltered: currentData,
       };
-    } else {
-      return {
-        ...state,
-      }
     }
+
+    return {
+      ...state,
+    };
   },
   [combineActions(sortDataTop)](state, { payload: { sortColumnTop } }) {
-    const filterTextTop = state.filterTextTop;
+    const { filterTextTop } = state;
     let sortDirectionTop = state.sortDirectionTop === 'ascending' ? 'descending' : 'ascending';
-    let sortByFilter = _.sortBy(state.topProcessorsFiltered, [sortColumnTop]);
-    let sortByData = _.sortBy(state.topProcessors, [sortColumnTop]);
-    let sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
+    const sortByFilter = _.sortBy(state.topProcessorsFiltered, [sortColumnTop]);
+    const sortByData = _.sortBy(state.topProcessors, [sortColumnTop]);
+    const sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
     let sortedData = [];
 
     if (state.sortColumnTop !== sortColumnTop) {
@@ -116,8 +116,7 @@ const reducer = handleActions({
       sortedData = sortDirectionTop === 'ascending' ? sortBy.reverse() : sortBy;
     }
 
-    const activePageTop = state.activePageTop;
-    const rowsPerPageTop = state.rowsPerPageTop;
+    const { activePageTop, rowsPerPageTop } = state;
     const currentData = sliceData(sortedData, activePageTop, rowsPerPageTop);
 
     return {

@@ -9,7 +9,7 @@ import {
   setPaginationStandBy,
 } from './processorsStandbyActions';
 
-let defaultState = {
+const defaultState = {
   standbyProcessors: [],
   standbyProcessorsFiltered: [],
   activePageStandBy: 1,
@@ -20,13 +20,13 @@ let defaultState = {
   filterTextStandBy: '',
 };
 
-const sliceData = (data, activePage, rowsPerPage) => {
-  return data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
-};
+const sliceData = (data, activePage, rowsPerPage) => (
+  data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+);
 
-const getTotalPages = (data, rowsPerPage) => {
-  return Math.ceil(data.length / rowsPerPage);
-};
+const getTotalPages = (data, rowsPerPage) => (
+  Math.ceil(data.length / rowsPerPage)
+);
 
 const reducer = handleActions({
   [combineActions(getStandbyProcessors)](state, { payload: { standbyProcessors } }) {
@@ -37,7 +37,7 @@ const reducer = handleActions({
   },
   [combineActions(setPaginationStandBy)](state, { payload: { rowsPerPageStandBy } }) {
     const data = state.standbyProcessors;
-    const activePageStandBy = state.activePageStandBy;
+    const { activePageStandBy } = state;
     const totalPagesStandBy = getTotalPages(data, rowsPerPageStandBy);
     const currentData = sliceData(data, activePageStandBy, rowsPerPageStandBy);
 
@@ -51,14 +51,14 @@ const reducer = handleActions({
   [combineActions(filterDataStandBy)](state, { payload: { filterTextStandBy } }) {
     const data = state.standbyProcessors;
     const activePageStandBy = 1;
-    const rowsPerPageStandBy = state.rowsPerPageStandBy;
-    let totalPagesStandBy = state.totalPagesStandBy;
+    const { rowsPerPageStandBy, totalPagesStandBy } = state;
+    let totalPages = totalPagesStandBy;
     let currentData = [];
 
     if (filterTextStandBy !== '') {
-      let filteredData = _.map(data, function(o) {
-        let values = Object.values(o);
-        let result =_.map(values, function(val) {
+      let filteredData = _.map(data, (o) => {
+        const values = Object.values(o);
+        const result = _.map(values, (val) => {
           if (val) {
             if (val.toString().indexOf(filterTextStandBy) !== -1) return o;
           }
@@ -67,11 +67,11 @@ const reducer = handleActions({
       });
 
       filteredData = _.without(filteredData, undefined);
-      totalPagesStandBy = getTotalPages(filteredData, rowsPerPageStandBy);
+      totalPages = getTotalPages(filteredData, rowsPerPageStandBy);
       currentData = sliceData(filteredData, activePageStandBy, rowsPerPageStandBy);
     } else {
       currentData = data;
-      totalPagesStandBy = getTotalPages(currentData, rowsPerPageStandBy);
+      totalPages = getTotalPages(currentData, rowsPerPageStandBy);
       currentData = sliceData(currentData, activePageStandBy, rowsPerPageStandBy);
     }
 
@@ -79,13 +79,13 @@ const reducer = handleActions({
       ...state,
       filterTextStandBy,
       activePageStandBy,
-      totalPagesStandBy,
+      totalPagesStandBy: totalPages,
       standbyProcessorsFiltered: currentData,
     };
   },
   [combineActions(setPaginationStandBy)](state, { payload: { rowsPerPageStandBy } }) {
     const data = state.standbyProcessors;
-    const activePageStandBy = state.activePageStandBy;
+    const { activePageStandBy } = state;
     const totalPagesStandBy = getTotalPages(data, rowsPerPageStandBy);
     const currentData = sliceData(data, activePageStandBy, rowsPerPageStandBy);
 
@@ -99,7 +99,7 @@ const reducer = handleActions({
   [combineActions(setActivePageStandBy)](state, { payload: { activePageStandBy } }) {
     const data = state.standbyProcessors;
     if (activePageStandBy !== state.activePageStandBy) {
-      const rowsPerPageStandBy = state.rowsPerPageStandBy;
+      const { rowsPerPageStandBy } = state;
       const currentData = sliceData(data, activePageStandBy, rowsPerPageStandBy);
 
       return {
@@ -107,18 +107,18 @@ const reducer = handleActions({
         activePageStandBy,
         standbyProcessorsFiltered: currentData,
       };
-    } else {
-      return {
-        ...state,
-      }
     }
+
+    return {
+      ...state,
+    };
   },
   [combineActions(sortDataStandBy)](state, { payload: { sortColumnStandBy } }) {
-    const filterTextStandBy = state.filterTextStandBy;
+    const { filterTextStandBy } = state;
     let sortDirectionStandBy = state.sortDirectionStandBy === 'ascending' ? 'descending' : 'ascending';
-    let sortByFilter = _.sortBy(state.standbyProcessorsFiltered, [sortColumnStandBy]);
-    let sortByData = _.sortBy(state.standbyProcessors, [sortColumnStandBy]);
-    let sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
+    const sortByFilter = _.sortBy(state.standbyProcessorsFiltered, [sortColumnStandBy]);
+    const sortByData = _.sortBy(state.standbyProcessors, [sortColumnStandBy]);
+    const sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
     let sortedData = [];
 
     if (state.sortColumnStandBy !== sortColumnStandBy) {
@@ -128,8 +128,7 @@ const reducer = handleActions({
       sortedData = sortDirectionStandBy === 'ascending' ? sortBy.reverse() : sortBy;
     }
 
-    const activePageStandBy = state.activePageStandBy;
-    const rowsPerPageStandBy = state.rowsPerPageStandBy;
+    const { activePageStandBy, rowsPerPageStandBy } = state;
     const currentData = sliceData(sortedData, activePageStandBy, rowsPerPageStandBy);
 
     return {

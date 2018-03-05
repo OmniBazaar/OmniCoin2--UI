@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import hash from 'object-hash';
 import {
   Table,
@@ -110,6 +111,32 @@ const topProcessors = [
 ];
 
 class TopProcessors extends Component {
+  static renderVote() {
+    return (
+      <div className="votes">
+        <Image src={LikeIcon} width={iconSize} height={iconSize} />
+        <Image src={DotsIcon} width={iconSize} height={iconSize} />
+        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
+  static renderVoteValue(approve) {
+    const vote = approve ? LikeIcon : DislikeIcon;
+    return (
+      <div className="votes voted">
+        <span>Voted </span>
+        <Image src={vote} width={iconSize} height={iconSize} />
+      </div>
+    );
+  }
+
+  static renderApprove(approve) {
+    if (approve !== null && approve !== '') {
+      return TopProcessors.renderVoteValue(approve);
+    }
+    return TopProcessors.renderVote();
+  }
 
   componentDidMount() {
     this.props.processorsTopActions.getTopProcessors(topProcessors);
@@ -129,56 +156,33 @@ class TopProcessors extends Component {
     this.props.processorsTopActions.setActivePageTop(activePage);
   };
 
-  renderVoteValue(approve) {
-    let vote = approve ? LikeIcon : DislikeIcon;
-    return (
-      <div className='votes voted'>
-        <span>Voted </span>
-        <Image src={vote} width={iconSize} height={iconSize} />
-      </div>
-    );
-  }
-
-  renderVote() {
-    return (
-      <div className='votes'>
-        <Image src={LikeIcon} width={iconSize} height={iconSize} />
-        <Image src={DotsIcon} width={iconSize} height={iconSize} />
-        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
-      </div>
-    );
-  }
-
-  renderApprove(approve) {
-    if (approve !== null && approve !== '') {
-      return this.renderVoteValue(approve);
-    } else {
-      return this.renderVote();
-    }
-  }
-
   render() {
-    const { activePageTop, sortDirectionTop, totalPagesTop, sortColumnTop, topProcessorsFiltered } = this.props.processorsTop;
+    const {
+      activePageTop,
+      sortDirectionTop,
+      totalPagesTop,
+      sortColumnTop,
+      topProcessorsFiltered
+    } = this.props.processorsTop;
 
     return (
-      <div className='data-table'>
-        <div className='top-detail'>
+      <div className="data-table">
+        <div className="top-detail">
           <Input
-            icon={<Icon name='filter' />}
-            iconPosition='left'
-            placeholder='Filter'
-            className='filter-input'
+            icon={<Icon name="filter" />}
+            iconPosition="left"
+            placeholder="Filter"
+            className="filter-input"
             onChange={this.handleFilterChange}
           />
-          <div className='pagination-container'>
+          <div className="pagination-container">
             <Pagination
               activePage={activePageTop}
               boundaryRange={1}
               onPageChange={this.handlePaginationChange}
-              size='mini'
+              size="mini"
               siblingRange={1}
               totalPages={totalPagesTop}
-              // Heads up! All items are powered by shorthands, if you want to hide one of them, just pass `null` as value
               firstItem={{ ariaLabel: 'First item', content: '<< First' }}
               lastItem={{ ariaLabel: 'Last item', content: 'Last >>' }}
               prevItem={{ ariaLabel: 'Previous item', content: '< Prev' }}
@@ -186,55 +190,56 @@ class TopProcessors extends Component {
             />
           </div>
         </div>
-        <div className='table-container'>
+        <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell key={'rank'} sorted={sortColumnTop === 'rank' ? sortDirectionTop : null} onClick={this.sortData('rank')}>
+                <TableHeaderCell key="rank" sorted={sortColumnTop === 'rank' ? sortDirectionTop : null} onClick={this.sortData('rank')}>
                   Rank
                 </TableHeaderCell>
-                <TableHeaderCell key={'name'} sorted={sortColumnTop === 'name' ? sortDirectionTop : null} onClick={this.sortData('name')}>
+                <TableHeaderCell key="name" sorted={sortColumnTop === 'name' ? sortDirectionTop : null} onClick={this.sortData('name')}>
                   Name
                 </TableHeaderCell>
-                <TableHeaderCell key={'approval'} sorted={sortColumnTop === 'approval' ? sortDirectionTop : null} onClick={this.sortData('approval')}>
+                <TableHeaderCell key="approval" sorted={sortColumnTop === 'approval' ? sortDirectionTop : null} onClick={this.sortData('approval')}>
                   Approval
                 </TableHeaderCell>
-                <TableHeaderCell key={'reliability'} sorted={sortColumnTop === 'reliability' ? sortDirectionTop : null} onClick={this.sortData('reliability')}>
+                <TableHeaderCell key="reliability" sorted={sortColumnTop === 'reliability' ? sortDirectionTop : null} onClick={this.sortData('reliability')}>
                   Reliability
                 </TableHeaderCell>
-                <TableHeaderCell key={'reputation'} sorted={sortColumnTop === 'reputation' ? sortDirectionTop : null} onClick={this.sortData('reputation')}>
+                <TableHeaderCell key="reputation" sorted={sortColumnTop === 'reputation' ? sortDirectionTop : null} onClick={this.sortData('reputation')}>
                   Reputation
                 </TableHeaderCell>
-                <TableHeaderCell key={'referralScore'} sorted={sortColumnTop === 'referralScore' ? sortDirectionTop : null} onClick={this.sortData('referralScore')}>
+                <TableHeaderCell key="referralScore" sorted={sortColumnTop === 'referralScore' ? sortDirectionTop : null} onClick={this.sortData('referralScore')}>
                   Referral Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'publisherScore'} sorted={sortColumnTop === 'publisherScore' ? sortDirectionTop : null} onClick={this.sortData('publisherScore')}>
+                <TableHeaderCell key="publisherScore" sorted={sortColumnTop === 'publisherScore' ? sortDirectionTop : null} onClick={this.sortData('publisherScore')}>
                   Publisher Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'netScore'} sorted={sortColumnTop === 'netScore' ? sortDirectionTop : null} onClick={this.sortData('netScore')}>
+                <TableHeaderCell key="netScore" sorted={sortColumnTop === 'netScore' ? sortDirectionTop : null} onClick={this.sortData('netScore')}>
                   Net Score
                 </TableHeaderCell>
-                <TableHeaderCell key={'approve'} sorted={sortColumnTop === 'approve' ? sortDirectionTop : null} onClick={this.sortData('approve')}>
+                <TableHeaderCell key="approve" sorted={sortColumnTop === 'approve' ? sortDirectionTop : null} onClick={this.sortData('approve')}>
                   Approve
                 </TableHeaderCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {topProcessorsFiltered.map(row =>
-                <TableRow key={hash(row)}>
-                  <TableCell>{row['rank']}</TableCell>
-                  <TableCell><a>{row['name']}</a></TableCell>
-                  <TableCell>{row['approval']}</TableCell>
-                  <TableCell>{row['reliability']}</TableCell>
-                  <TableCell>{row['reputation']}</TableCell>
-                  <TableCell>{row['referralScore']}</TableCell>
-                  <TableCell>{row['publisherScore']}</TableCell>
-                  <TableCell>{row['netScore']}</TableCell>
-                  <TableCell>
-                    {this.renderApprove(row['approve'])}
-                  </TableCell>
-                </TableRow>
-              )}
+                (
+                  <TableRow key={hash(row)}>
+                    <TableCell>{row.rank}</TableCell>
+                    <TableCell><a>{row.name}</a></TableCell>
+                    <TableCell>{row.approval}</TableCell>
+                    <TableCell>{row.reliability}</TableCell>
+                    <TableCell>{row.reputation}</TableCell>
+                    <TableCell>{row.referralScore}</TableCell>
+                    <TableCell>{row.publisherScore}</TableCell>
+                    <TableCell>{row.netScore}</TableCell>
+                    <TableCell>
+                      {TopProcessors.renderApprove(row.approve)}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>
@@ -243,11 +248,47 @@ class TopProcessors extends Component {
   }
 }
 
+TopProcessors.propTypes = {
+  processorsTopActions: PropTypes.shape({
+    sortDataTop: PropTypes.func,
+    filterDataTop: PropTypes.func,
+    setActivePageTop: PropTypes.func,
+    setPaginationTop: PropTypes.func,
+    getTopProcessors: PropTypes.func,
+  }),
+  tableProps: PropTypes.shape({
+    sortable: PropTypes.bool,
+    compact: PropTypes.bool,
+    basic: PropTypes.string,
+    striped: PropTypes.bool,
+    size: PropTypes.string,
+  }),
+  processorsTop: PropTypes.shape({
+    activePageTop: 1,
+    topProcessorsFiltered: [],
+    sortColumnTop: 'rank',
+    sortDirectionTop: 'descending',
+    totalPagesTop: 1,
+  }),
+  rowsPerPage: PropTypes.number,
+};
+
+TopProcessors.defaultProps = {
+  processorsTopActions: {},
+  processorsTop: {},
+  tableProps: {},
+  rowsPerPage: 5,
+};
+
 export default connect(
-  state => { return { ...state.default }; },
+  state => ({ ...state.default }),
   (dispatch) => ({
     processorsTopActions: bindActionCreators({
-      sortDataTop, filterDataTop, setActivePageTop, setPaginationTop, getTopProcessors
+      sortDataTop,
+      filterDataTop,
+      setActivePageTop,
+      setPaginationTop,
+      getTopProcessors
     }, dispatch),
   }),
 )(TopProcessors);

@@ -1,6 +1,12 @@
 import { createActions } from 'redux-actions';
 
-const { getStandbyProcessors, sortDataStandBy, filterDataStandBy, setActivePageStandBy, setPaginationStandBy } = createActions({
+const {
+  getStandbyProcessors,
+  sortDataStandBy,
+  filterDataStandBy,
+  setActivePageStandBy,
+  setPaginationStandBy
+} = createActions({
   GET_STANDBY_PROCESSORS: (standbyProcessors) => ({ standbyProcessors }),
   SORT_DATA_STAND_BY: (sortColumnStandBy) => ({ sortColumnStandBy }),
   FILTER_DATA_STAND_BY: (filterTextStandBy) => ({ filterTextStandBy }),
@@ -14,4 +20,4 @@ export {
   filterDataStandBy,
   setActivePageStandBy,
   setPaginationStandBy,
-}
+};
