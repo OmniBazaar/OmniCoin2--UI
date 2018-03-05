@@ -31,7 +31,7 @@ const MailTypes = Object.freeze({
   DELETED: 'deleted',
 });
 
-const messages = [
+const messages = [/*
   {
     id: 1,
     from: 'test@email.com',
@@ -59,9 +59,9 @@ const messages = [
     body: 'Testing the emails',
     read: true,
   },
-];
+*/];
 
-const outboxMessages = [
+const outboxMessages = [/*
   {
     id: 1,
     from: 'test@email.com',
@@ -89,9 +89,9 @@ const outboxMessages = [
     body: 'Testing the emails',
     read: true,
   },
-];
+*/];
 
-const sentMessages = [
+const sentMessages = [/*
   {
     id: 1,
     from: 'test@email.com',
@@ -101,9 +101,9 @@ const sentMessages = [
     body: 'The email body goes over here',
     read: true,
   },
-];
+*/];
 
-const deletedMessages = [
+const deletedMessages = [/*
   {
     id: 1,
     from: 'test@email.com',
@@ -113,7 +113,7 @@ const deletedMessages = [
     body: 'The email body goes over here',
     read: true,
   },
-];
+*/];
 
 const folders = [
   {
@@ -159,29 +159,35 @@ class Mail extends Component {
     this.fetchMessages(this.props.activeFolder);
   }
 
+  getMessagesFromFolder(mailFolderName){
+    try {
+      let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
+      let mailFolder = rootMailFolder['ME'][mailFolderName];
+      let emails = Object.keys(mailFolder).map((mailUUID) => {
+        let email = mailFolder[mailUUID];
+        switch(mailFolderName){
+          case MailTypes.INBOX: email.user = email.sender; break;
+          case MailTypes.OUTBOX: email.user = email.recipient; break;
+          case MailTypes.SENT: email.user = email.recipient; break;
+          case MailTypes.DELETED: email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
+        }
+        email.read = email.read_status;
+        return email;
+      });
+      return emails;
+    }
+    catch(e){
+      return [];
+    }
+  }
   /*
    * Todo: this method needs to be changed to fetch the messages
    * when backend is implemented.
    */
   fetchMessages(activeFolder) {
+    
     let emails = messages;
-
-    switch (activeFolder) {
-      case MailTypes.INBOX:
-        emails = messages;
-        break;
-      case MailTypes.OUTBOX:
-        emails = outboxMessages;
-        break;
-      case MailTypes.SENT:
-        emails = sentMessages;
-        break;
-      case MailTypes.DELETED:
-        emails = deletedMessages;
-        break;
-      default:
-        emails = messages;
-    }
+    emails = this.getMessagesFromFolder(activeFolder);
 
     this.props.mailActions.getMessages(emails);
 
@@ -266,11 +272,11 @@ class Mail extends Component {
         return (
           <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(index)}>
             <div className='top-detail'>
-              <div className='from'>{message.from}</div>
-              <div className='date'>{message.time}</div>
+              <div className='from'>{message.user}</div>
+              <div className='date'>{message.created_time}</div>
             </div>
             <div className='title'>
-              {message.title}
+              {message.subject}
             </div>
           </div>
         )

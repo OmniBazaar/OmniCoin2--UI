@@ -68,6 +68,8 @@ class Compose extends Component {
       'visible': props.mail.showCompose,
     });
 
+    const { handleSubmit } = this.props;
+
     return (
       <div className={containerClass}>
         <div className='top-detail'>
@@ -75,7 +77,7 @@ class Compose extends Component {
           <Button content='CLOSE' onClick={this.closeCompose} className='button--transparent' />
         </div>
         <div>
-          <Form onSubmit={this.onSubmit} className='mail-form-container'>
+          <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className='mail-form-container'>
             <p className='title'>New Message</p>
             <div>
               <div className='form-group'>
