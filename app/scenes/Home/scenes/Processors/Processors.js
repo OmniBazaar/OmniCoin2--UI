@@ -1,30 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { Tab } from 'semantic-ui-react';
 import Header from '../../../../components/Header';
 import TopProcessors from './component/TopProcessors';
 import StandByProcessors from './component/StandByProcessors';
+import Badge from './component/Badge';
 
 import './processors.scss';
-
-const Badge = (props) => (
-  <div className="badge">
-    <span>{props.title}</span>
-    <span className="value">{props.value}</span>
-  </div>
-);
-
-Badge.propTypes = {
-  title: PropTypes.string,
-  value: PropTypes.string,
-};
-
-Badge.defaultProps = {
-  title: '',
-  value: '',
-};
 
 class Processors extends Component {
   static renderBadges() {
