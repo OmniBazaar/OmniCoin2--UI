@@ -1,39 +1,24 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import {Provider} from 'react-redux';
+import ReduxToastr from 'react-redux-toastr';
 
-import Signup from './scenes/Signup/Signup';
-import Login from './scenes/Login/Login';
-import Home from './scenes/Home/Home';
+import Root from './Root';
 
-import {connect as connectToNode} from './services/blockchain/connection/connectionActions';
+export default class App extends Component {
 
-
-
-class App extends Component {
-
-  componentWillMount() {
-      this.props.connectionActions.connectToNode(this.props.settings.activeNode);
-  }
+  static propTypes: {
+    store: {}
+  };
 
   render() {
     return (
-        <Router>
-            <Switch>
-                <Route path="/signup" render={(props) => <Signup {...props} />}/>
-                <Route path="/login" render={(props) => <Login {...props} />}/>
-                <Route path="/" render={(props) => <Home {...props} />}/>
-            </Switch>
-        </Router>
-    )
+      <Provider store={this.props.store}>
+        <div>
+          <Root/>
+          <ReduxToastr/>
+        </div>
+      </Provider>
+    );
   }
 }
-export default connect(
-    (state) => {
-        return {...state.default}
-    },
-    (dispatch) => ({
-        connectionActions: bindActionCreators({ connectToNode }, dispatch),
-    }),
-)(App);
+
