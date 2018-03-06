@@ -51,9 +51,10 @@ class Compose extends Component {
   onClickAddress() {}
 
   onSubmit = (values) => {
-    const { sender, to, subject, body } = values;
-    this.props.mailActions.sendMail(sender, to, subject, body, () => {
+    const { sender, recipient, subject, body } = values;
+    this.props.mailActions.sendMail(sender, recipient, subject, body, () => {
       this.props.mailActions.fetchMessagesFromFolder('outbox');
+      this.closeCompose();
     });
   };
 
@@ -96,7 +97,7 @@ class Compose extends Component {
                 <label>To</label>
                 <Field
                   type='text'
-                  name='to'
+                  name='recipient'
                   placeholder='Start typing'
                   component='input'
                   className='textfield'

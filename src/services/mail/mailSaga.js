@@ -50,7 +50,6 @@ export function* sendMail(action) {
     }
 
     localStorage.setItem('mail', JSON.stringify(mailObject));
-    console.log(localStorage.getItem('mail'));
     afterMailSentCallback();
 }
 

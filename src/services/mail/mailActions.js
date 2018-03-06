@@ -13,7 +13,7 @@ const {
   SET_ACTIVE_FOLDER: (activeFolder) => ({ activeFolder }),
   SET_ACTIVE_MESSAGE: (activeMessage) => ({ activeMessage }),
   SHOW_REPLY_MODAL: (reply) => ({ reply }),
-  SEND_MAIL: (sender, to, subject, body, afterMailSentCallback) => ({sender, to, subject, body, afterMailSentCallback})
+  SEND_MAIL: (sender, recipient, subject, body, afterMailSentCallback) => ({sender, recipient, subject, body, afterMailSentCallback}),
 });
 
 export {

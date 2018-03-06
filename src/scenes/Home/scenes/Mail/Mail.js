@@ -102,15 +102,14 @@ class Mail extends Component {
   }
 
   componentDidMount () {
-    this.fetchMessages(this.props.activeFolder);
+    this.fetchMessagesFromFolder(this.props.activeFolder);
   }
 
   /*
    * Todo: this method needs to be changed to fetch the messages
    * when backend is implemented.
    */
-  fetchMessages(activeFolder) {
-    
+  fetchMessagesFromFolder(activeFolder) {
     this.props.mailActions.fetchMessagesFromFolder(activeFolder);
     
     this.setState({
@@ -119,7 +118,7 @@ class Mail extends Component {
   }
 
   changeFolder(activeFolder) {
-    this.fetchMessages(activeFolder);
+    this.fetchMessagesFromFolder(activeFolder);
     this.props.mailActions.setActiveFolder(activeFolder);
     this.props.mailActions.setActiveMessage(0);
   }
@@ -191,11 +190,13 @@ class Mail extends Component {
           'new': !message.read,
         });
 
+        let createdTime = new Date(message.created_time);
+
         return (
           <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(index)}>
             <div className='top-detail'>
               <div className='from'>{message.user}</div>
-              <div className='date'>{message.created_time}</div>
+              <div className='date'>{createdTime.toLocaleString()}</div>
             </div>
             <div className='title'>
               {message.subject}
