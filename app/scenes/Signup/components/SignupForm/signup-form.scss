@@ -7,21 +7,27 @@
   height: 350px;
   width: 300px;
   margin-top: -20px;
-  .password-gen {
+  .hybrid-input {
     display: flex;
     flex-direction: row;
-    input {
+    .field {
       border-bottom-right-radius: 0 !important;
       border-top-right-radius: 0 !important;
       border-right: none !important;
     }
-    button {
+    .button {
       border: 1px solid rgba(34,36,38,.15);
       border-bottom-right-radius: 0.28571429rem !important;
       border-top-right-radius: 0.28571429rem !important;
       border-left: none;
       background: white;
       color: $primary-blue;
+    }
+    .icon {
+      margin: 0;
+      height: 38px;
+      padding-top: 0.7em;
+      padding-right: 0.1em;
     }
   }
   .question {
@@ -41,4 +47,8 @@
     }
   }
   color: $primary-white;
+}
+
+.hidden {
+  display: none !important;
 }

@@ -7,16 +7,19 @@ import { createActions } from 'redux-actions';
 const {
     getCurrentUser,
     login,
-    signup
+    signup,
+    account_lookup
 } = createActions({
     GET_CURRENT_USER: () => ({}),
     LOGIN: (username, password, callback) => ({ username, password, callback }),
-    SIGNUP: (username, password, referrer, mac_address, harddrive_id) => ({username, password, referrer, mac_address, harddrive_id})
+    SIGNUP: (username, password, referrer, mac_address, harddrive_id) => ({username, password, referrer, mac_address, harddrive_id}),
+    ACCOUNT_LOOKUP: (username) => ({username})
 });
 
 
 export {
     getCurrentUser,
     login,
-    signup
+    signup,
+    account_lookup
 }

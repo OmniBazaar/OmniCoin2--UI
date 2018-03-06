@@ -1,4 +1,4 @@
-import {put, takeEvery} from 'redux-saga/effects';
+import {put, takeEvery, takeLatest} from 'redux-saga/effects';
 import {ChainStore, PrivateKey, key, Aes, FetchChain} from "omnibazaarjs/es";
 
 function generateKeyFromPassword(accountName, role, password) {
@@ -12,7 +12,11 @@ export function* subscriber() {
     yield takeEvery(
         'LOGIN',
         login
-    )
+    );
+    yield takeLatest(
+      'ACCOUNT_LOOKUP',
+      account_lookup
+    );
 }
 
 export function* login(action) {
@@ -23,9 +27,6 @@ export function* login(action) {
     let isAuthorized = false;
     try {
         let account = yield FetchChain("getAccount", username);
-        if (!account) {
-            throw "Account doesn't exist";
-        }
         let key = generateKeyFromPassword(username, role, password);
         account.getIn([role, "key_auths"]).forEach(auth => {
             if (auth.get(0) === key.pubKey) {
@@ -45,7 +46,20 @@ export function* login(action) {
             yield put({type: 'LOGIN_FAILED', error:  "Invalid password"});
         }
     } catch(e) {
-        yield put({type: 'LOGIN_FAILED', error: e});
+        yield put({type: 'LOGIN_FAILED', error: "Account doesn't exist"});
     }
     callback();
+}
+
+
+export function* account_lookup(action) {
+  let username = action.payload.username;
+  let callback = action.payload.callback;
+  try {
+    let account = yield FetchChain("getAccount", username);
+    yield put({type: 'ACCOUNT_LOOKUP', result: true})
+  } catch (e) {
+    yield put({type: 'ACCOUNT_LOOKUP', result: false})
+  }
+
 }

@@ -7,6 +7,7 @@ import {required} from 'redux-form-validators';
 import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
+import { FetchChain } from "omnibazaarjs/es";
 
 import { login } from  '../../../../services/blockchain/auth/authActions';
 
@@ -41,8 +42,15 @@ class LoginForm extends Component {
     }
   }
 
+  static asyncValidate =  async (values) => {
+    try {
+      let account = await FetchChain("getAccount", values.username);
+    } catch (e) {
+      throw {username: "Account doesn't exist"};
+    }
+  };
+
   signUp() {
-    console.log('PUSHING to history', this.props.history);
     this.props.history.push('/signup');
   }
 
@@ -129,6 +137,8 @@ LoginForm = withRouter(LoginForm);
 
 LoginForm = reduxForm({
   form: 'loginForm',
+  asyncValidate: LoginForm.asyncValidate,
+  asyncBlurFields: ['username'],
   destroyOnUnmount: true,
 })(LoginForm);
 

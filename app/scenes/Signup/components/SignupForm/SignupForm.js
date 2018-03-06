@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Button, Form, Divider } from 'semantic-ui-react'
+import { Button, Form, Divider, Icon } from 'semantic-ui-react'
 import {required} from 'redux-form-validators';
 import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 import {key} from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
 import ClipboardButton from "react-clipboard.js";
+import { FetchChain } from "omnibazaarjs/es";
+
 
 import { signup } from  '../../../../services/blockchain/auth/authActions';
 
@@ -41,12 +43,33 @@ class SignupForm extends Component {
 
   }
 
-  renderPasswordGenerator = ({input,  meta: {touched, error, warning}}) => {
+  static asyncValidate =  async (values, dispatch, props, field) => {
+    const previousErrors = props.asyncErrors;
+    if (field === "username") {
+      try {
+        let account = await FetchChain("getAccount", values.username);
+      } catch (e) {
+        throw previousErrors;
+      }
+      throw Object.assign({}, previousErrors, {username: "Username already taken"});
+    }
+    if (field === "referrer") {
+      try {
+        let account = await FetchChain("getAccount", values.referrer);
+      } catch (e) {
+        throw Object.assign({}, previousErrors, {referrer: "Account doesn't exist"});
+      }
+    }
+    throw previousErrors;
+  };
+
+  renderPasswordGeneratorField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
     return (
-      <div className="password-gen">
+      <div className="hybrid-input">
         <input
           {...input}
           type="text"
+          className="field"
         />
         <ClipboardButton
           className="button"
@@ -57,6 +80,30 @@ class SignupForm extends Component {
           Copy
         </ClipboardButton>
       </div>
+    );
+  };
+
+  renderReferrerField = ({input,  meta: {asyncValidating, touched, error, warning, active}}) => {
+    let show = !error && touched && !asyncValidating && !active;
+    let iconClassName = cn("button icon", show ? "" : "hidden");
+    let inputClassName = cn(show ? "field" : "");
+    return (
+      [
+        <div>
+          {touched && ((error && <span className="error">{error}</span>) || (warning && <span className="warning">{warning}</span>))}
+        </div>,
+        <div className="hybrid-input">
+          <input
+            {...input}
+            type="text"
+            className={inputClassName}
+          />
+          <Icon
+            name="checkmark"
+            color="green"
+            className={iconClassName}/>
+        </div>
+        ]
     );
   };
   render() {
@@ -76,7 +123,7 @@ class SignupForm extends Component {
         <Field
           type="text"
           name="password"
-          component={this.renderPasswordGenerator}
+          component={this.renderPasswordGeneratorField}
           validate={[required({message: "This field is required"})]}
         />
         <Field
@@ -88,9 +135,9 @@ class SignupForm extends Component {
         />
         <Field
           type="text"
-          placeholder="Start typing referrer name"
+          placeholder="Referrer name"
           name="referrer"
-          component="input"
+          component={this.renderReferrerField}
         />
         <div className="agreement-terms">
           <Field
@@ -126,6 +173,8 @@ SignupForm = withRouter(SignupForm);
 
 SignupForm = reduxForm({
   form: 'signupForm',
+  asyncValidate: SignupForm.asyncValidate,
+  asyncBlurFields: ['username', 'referrer'],
   destroyOnUnmount: true,
 })(SignupForm);
 

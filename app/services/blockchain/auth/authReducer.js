@@ -2,11 +2,12 @@
  * Created by denissamohvalov on 14.02.18.
  */
 import { handleActions, combineActions } from 'redux-actions';
-import { signup, login, getCurrentUser } from './authActions';
+import { signup, login, getCurrentUser, account_lookup } from './authActions';
 
 let defaultState = {
     currentUser: null,
-    error: null
+    error: null,
+    accountExists: false
 };
 
 const reducer = handleActions({
@@ -27,11 +28,17 @@ const reducer = handleActions({
             ...state
         }
     },
+    [account_lookup](state, {payload: {username}}) {
+      return {
+        ...state
+      }
+    },
     LOGIN_FAILED: (state, action) => {
         return {
             ...state,
             currentUser: null,
-            error: action.error
+            error: action.error,
+            accountExists: false
         }
     },
     LOGIN_SUCCEEDED: (state, action) => {
@@ -39,8 +46,15 @@ const reducer = handleActions({
         return {
             ...state,
             currentUser: action.user,
-            error: null
+            error: null,
+            accountExists: true
         }
+    },
+    ACCOUNT_LOOKUP: (state, action) => {
+      return {
+        ...state,
+        accountExists: false,
+      }
     }
 }, defaultState);
 
