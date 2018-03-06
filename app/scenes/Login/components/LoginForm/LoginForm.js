@@ -86,7 +86,6 @@ class LoginForm extends Component {
       <Form
         onSubmit={handleSubmit(this.submit)}
         className="login"
-        style={{justifyContent: showUsernameInput ? "center" : "space-between"}}
       >
         {showUsernameInput ?
           <div className="username">
