@@ -1,5 +1,6 @@
-import {put, takeEvery, takeLatest} from 'redux-saga/effects';
+import {put, takeEvery, takeLatest, call} from 'redux-saga/effects';
 import {ChainStore, PrivateKey, key, Aes, FetchChain} from "omnibazaarjs/es";
+const faucetAddress = "https://faucet.bitshares.eu/onboarding";
 
 function generateKeyFromPassword(accountName, role, password) {
     let seed = accountName + role + password;
@@ -12,6 +13,10 @@ export function* subscriber() {
     yield takeEvery(
         'LOGIN',
         login
+    );
+    yield takeEvery(
+      'SIGNUP',
+      signup
     );
     yield takeLatest(
       'ACCOUNT_LOOKUP',
@@ -49,6 +54,36 @@ export function* login(action) {
         yield put({type: 'LOGIN_FAILED', error: "Account doesn't exist"});
     }
     callback();
+}
+
+export function* signup(action) {
+  let username = action.payload.username;
+  let password = action.payload.password;
+  let referrer = action.payload.referrer;
+  let { privKey :owner_private } = generateKeyFromPassword(username, "owner", password);
+  let { privKey :active_private } = generateKeyFromPassword(username, "active", password);
+  try {
+    let result = yield call(fetch, faucetAddress + "/api/v1/accounts", {
+      method: "post",
+      mode: "cors",
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        "account": {
+          "name": username,
+          "owner_key": owner_private.toPublicKey().toPublicKeyString(),
+          "active_key": active_private.toPublicKey().toPublicKeyString(),
+          "memo_key": active_private.toPublicKey().toPublicKeyString(),
+          "referrer": referrer
+        }
+      })
+    });
+    yield put({type: 'SIGNUP_SUCCEDED', result})
+  } catch(e) {
+    yield put({type: 'SIGNUP_FAILED', error: e});
+  }
 }
 
 

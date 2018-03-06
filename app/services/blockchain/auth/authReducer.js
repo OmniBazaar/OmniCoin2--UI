@@ -50,6 +50,18 @@ const reducer = handleActions({
             accountExists: true
         }
     },
+    SIGNUP_SUCCEEDED: (state, action) => {
+        console.log('SIGNUP SUCCEDED', action);
+        return  {
+          ...state
+        }
+    },
+    SIGNUP_FAILED: (state, action) => {
+        console.log('SIGNUP FAILED', action);
+        return  {
+          ...state
+        }
+    },
     ACCOUNT_LOOKUP: (state, action) => {
       return {
         ...state,

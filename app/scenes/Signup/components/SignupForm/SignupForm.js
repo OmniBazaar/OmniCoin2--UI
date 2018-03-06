@@ -40,7 +40,8 @@ class SignupForm extends Component {
   }
 
   submit(values) {
-
+      const {username, password, referrer} = values;
+      this.props.authActions.signup(username, password, referrer);
   }
 
   static asyncValidate =  async (values, dispatch, props, field) => {
@@ -54,13 +55,16 @@ class SignupForm extends Component {
       throw Object.assign({}, previousErrors, {username: "Username already taken"});
     }
     if (field === "referrer") {
+      if (!values.referrer) return;
       try {
         let account = await FetchChain("getAccount", values.referrer);
       } catch (e) {
         throw Object.assign({}, previousErrors, {referrer: "Account doesn't exist"});
       }
     }
-    throw previousErrors;
+    if (previousErrors) {
+      throw previousErrors;
+    }
   };
 
   renderPasswordGeneratorField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
@@ -103,7 +107,7 @@ class SignupForm extends Component {
             color="green"
             className={iconClassName}/>
         </div>
-        ]
+      ]
     );
   };
   render() {
