@@ -1,0 +1,35 @@
+@import '../../../../styles/index';
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 250px;
+  width: 300px;
+  margin-top: -150px;
+  span {
+    color: $primary-white;
+  }
+  .username {
+    margin-bottom: 5px;
+    padding-right: 2px;
+  }
+  .password {
+    display: flex;
+    flex-direction: row;
+    input {
+      border-bottom-right-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+    }
+    button {
+      border-bottom-left-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+      margin-right: 0.1em;
+    }
+  }
+  .question {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
