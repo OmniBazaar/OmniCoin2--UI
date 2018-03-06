@@ -17,7 +17,9 @@ import App from './App';
 import * as reducers from './services/reducer';
 import {
     connectionSubscriber,
-    authSubscriber
+    authSubscriber,
+    sendMailSubscriber,
+    fetchMessagesFromFolderSubscriber
 } from './services/saga';
 
 
@@ -41,6 +43,8 @@ const store = createStore(
 
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
+sagaMiddleware.run(sendMailSubscriber);
+sagaMiddleware.run(fetchMessagesFromFolderSubscriber);
 
 localStorage.clear(); // Temporarily for login functionality TODO: remove this
 

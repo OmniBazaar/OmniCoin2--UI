@@ -1,12 +1,12 @@
 import { handleActions, combineActions } from 'redux-actions';
 import {
   showComposeModal,
-  fetchMessagesForFolder,
   setActiveFolder,
   setActiveMessage,
   showReplyModal,
-  sendMail,
 } from './mailActions';
+
+import {sendMail} from './mailSaga';
 
 const MailTypes = Object.freeze({
   INBOX: 'inbox',
@@ -36,14 +36,6 @@ const reducer = handleActions({
       showCompose: !state.showCompose
     };
   },
-  [combineActions(fetchMessagesForFolder)](state, { payload: { messages, messageFolder } }){
-    let newState = {
-      ...state
-    };
-    newState.messages = messages;
-    newState.activeFolder = messageFolder;
-    return newState;
-  },
   [combineActions(setActiveFolder)](state, { payload: { activeFolder } }) {
     return {
       ...state,
@@ -64,10 +56,17 @@ const reducer = handleActions({
     };
   },
   [combineActions(sendMail)](state, { payload: { mailSent } }) {
-    console.log("MAIL SENT:", mailSent);
     return {
-      ...state,
+      ...state
     };
+  },
+  FETCHED_FOLDER_MESSAGES: (state, action) => {
+    let newState = {
+      ...state
+    };
+    newState.messages = action.messages;
+    newState.activeFolder = action.messageFolder;
+    return newState;
   }
 }, defaultState);
 

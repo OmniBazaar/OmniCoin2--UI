@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
 
-import { sendMail, setActiveFolder } from  '../../../../services/mail/mailActions';
+import { setActiveFolder, sendMail, fetchMessagesFromFolder } from  '../../../../services/mail/mailActions';
 
 import './mail.scss';
 
@@ -52,7 +52,9 @@ class Compose extends Component {
 
   onSubmit = (values) => {
     const { sender, to, subject, body } = values;
-    this.props.mailActions.sendMail(sender, to, subject, body);
+    this.props.mailActions.sendMail(sender, to, subject, body, () => {
+      this.props.mailActions.fetchMessagesFromFolder('outbox');
+    });
   };
 
   getMessage() {
@@ -146,6 +148,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ setActiveFolder, sendMail }, dispatch),
+    mailActions: bindActionCreators({ setActiveFolder, sendMail, fetchMessagesFromFolder }, dispatch),
   }),
 )(Compose);

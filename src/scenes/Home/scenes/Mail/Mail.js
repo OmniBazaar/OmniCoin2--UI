@@ -15,7 +15,7 @@ import DeletedIcon from './images/folder-deleted.svg';
 import {
   showComposeModal,
   setActiveFolder,
-  fetchMessagesForFolder,
+  fetchMessagesFromFolder,
   setActiveMessage,
   showReplyModal,
 } from  '../../../../services/mail/mailActions';
@@ -111,7 +111,7 @@ class Mail extends Component {
    */
   fetchMessages(activeFolder) {
     
-    this.props.mailActions.fetchMessagesForFolder(activeFolder);
+    this.props.mailActions.fetchMessagesFromFolder(activeFolder);
     
     this.setState({
       width: this.container.offsetWidth,
@@ -301,6 +301,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ showComposeModal, fetchMessagesForFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
+    mailActions: bindActionCreators({ showComposeModal, fetchMessagesFromFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
   }),
 )(Mail);
