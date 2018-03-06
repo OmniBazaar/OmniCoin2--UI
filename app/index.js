@@ -5,9 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 import {reducer as formReducer} from 'redux-form';
 import {reducer as toastrReducer} from 'react-redux-toastr'
-import ReduxToastr from 'react-redux-toastr'
-
-import {Provider} from 'react-redux';
+import { AppContainer } from 'react-hot-loader';
 
 import './app.global.scss';
 import App from './App';
@@ -42,12 +40,19 @@ sagaMiddleware.run(authSubscriber);
 localStorage.clear(); // Temporarily for login functionality TODO: remove this
 
 ReactDOM.render((
-    <Provider store={store}>
-        <div>
-            <App />
-            <ReduxToastr/>
-        </div>
-    </Provider>
+  <AppContainer>
+    <App store={store} />
+  </AppContainer>
 ), document.getElementById('root'));
 
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App');
+    render((
+      <AppContainer>
+        <NextApp store={store} />
+      </AppContainer>
+      ), document.getElementById('root'));
+  });
+}
 
