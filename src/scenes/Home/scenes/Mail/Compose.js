@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
 
-import { sendMail } from  '../../../../services/mail/mailActions';
+import { sendMail, setActiveFolder } from  '../../../../services/mail/mailActions';
 
 import './mail.scss';
 
@@ -146,6 +146,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ sendMail }, dispatch),
+    mailActions: bindActionCreators({ setActiveFolder, sendMail }, dispatch),
   }),
 )(Compose);

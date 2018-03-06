@@ -15,8 +15,8 @@ import DeletedIcon from './images/folder-deleted.svg';
 import {
   showComposeModal,
   setActiveFolder,
+  fetchMessagesForFolder,
   setActiveMessage,
-  getMessages,
   showReplyModal,
 } from  '../../../../services/mail/mailActions';
 
@@ -57,60 +57,6 @@ const messages = [/*
     time: '08:56:15 AM',
     title: 'Yet another email',
     body: 'Testing the emails',
-    read: true,
-  },
-*/];
-
-const outboxMessages = [/*
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-  {
-    id: 2,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Hey there',
-    body: 'This is a test for emails',
-    read: false,
-  },
-  {
-    id: 3,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Yet another email',
-    body: 'Testing the emails',
-    read: true,
-  },
-*/];
-
-const sentMessages = [/*
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Sent) Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-*/];
-
-const deletedMessages = [/*
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Deleted) Email title',
-    body: 'The email body goes over here',
     read: true,
   },
 */];
@@ -159,38 +105,14 @@ class Mail extends Component {
     this.fetchMessages(this.props.activeFolder);
   }
 
-  getMessagesFromFolder(mailFolderName){
-    try {
-      let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-      let mailFolder = rootMailFolder['ME'][mailFolderName];
-      let emails = Object.keys(mailFolder).map((mailUUID) => {
-        let email = mailFolder[mailUUID];
-        switch(mailFolderName){
-          case MailTypes.INBOX: email.user = email.sender; break;
-          case MailTypes.OUTBOX: email.user = email.recipient; break;
-          case MailTypes.SENT: email.user = email.recipient; break;
-          case MailTypes.DELETED: email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
-        }
-        email.read = email.read_status;
-        return email;
-      });
-      return emails;
-    }
-    catch(e){
-      return [];
-    }
-  }
   /*
    * Todo: this method needs to be changed to fetch the messages
    * when backend is implemented.
    */
   fetchMessages(activeFolder) {
     
-    let emails = messages;
-    emails = this.getMessagesFromFolder(activeFolder);
-
-    this.props.mailActions.getMessages(emails);
-
+    this.props.mailActions.fetchMessagesForFolder(activeFolder);
+    
     this.setState({
       width: this.container.offsetWidth,
     });
@@ -379,6 +301,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ showComposeModal, getMessages, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
+    mailActions: bindActionCreators({ showComposeModal, fetchMessagesForFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
   }),
 )(Mail);

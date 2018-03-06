@@ -1,7 +1,7 @@
 import { handleActions, combineActions } from 'redux-actions';
 import {
   showComposeModal,
-  getMessages,
+  fetchMessagesForFolder,
   setActiveFolder,
   setActiveMessage,
   showReplyModal,
@@ -36,11 +36,13 @@ const reducer = handleActions({
       showCompose: !state.showCompose
     };
   },
-  [combineActions(getMessages)](state, { payload: { messages } }) {
-    return {
-      ...state,
-      messages
+  [combineActions(fetchMessagesForFolder)](state, { payload: { messages, messageFolder } }){
+    let newState = {
+      ...state
     };
+    newState.messages = messages;
+    newState.activeFolder = messageFolder;
+    return newState;
   },
   [combineActions(setActiveFolder)](state, { payload: { activeFolder } }) {
     return {
@@ -62,9 +64,9 @@ const reducer = handleActions({
     };
   },
   [combineActions(sendMail)](state, { payload: { mailSent } }) {
+    console.log("MAIL SENT:", mailSent);
     return {
       ...state,
-      mailSent
     };
   }
 }, defaultState);
