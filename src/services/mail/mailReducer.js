@@ -61,12 +61,11 @@ const reducer = handleActions({
     };
   },
   FETCHED_FOLDER_MESSAGES: (state, action) => {
-    let newState = {
-      ...state
+    return {
+      ...state,
+      messages: action.messages,
+      activeFolder: action.messageFolder
     };
-    newState.messages = action.messages;
-    newState.activeFolder = action.messageFolder;
-    return newState;
   }
 }, defaultState);
 

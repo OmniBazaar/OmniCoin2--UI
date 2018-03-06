@@ -110,7 +110,7 @@ class Mail extends Component {
    * when backend is implemented.
    */
   fetchMessagesFromFolder(activeFolder) {
-    this.props.mailActions.fetchMessagesFromFolder(activeFolder);
+    this.props.mailActions.fetchMessagesFromFolder(this.props.auth.currentUser.username, activeFolder);
     
     this.setState({
       width: this.container.offsetWidth,

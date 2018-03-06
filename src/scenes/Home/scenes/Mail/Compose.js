@@ -52,10 +52,15 @@ class Compose extends Component {
 
   onSubmit = (values) => {
     const { sender, recipient, subject, body } = values;
-    this.props.mailActions.sendMail(sender, recipient, subject, body, () => {
-      this.props.mailActions.fetchMessagesFromFolder('outbox');
-      this.closeCompose();
-    });
+    this.props.mailActions.sendMail(
+        this.props.auth.currentUser.username, 
+        recipient, 
+        subject, 
+        body,
+        () => {
+          this.props.mailActions.fetchMessagesFromFolder(this.props.auth.currentUser.username, 'outbox');
+          this.closeCompose();
+        });
   };
 
   getMessage() {
@@ -83,16 +88,6 @@ class Compose extends Component {
           <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className='mail-form-container'>
             <p className='title'>New Message</p>
             <div>
-              <div className='form-group'>
-                <label>Sender</label>
-                <Field
-                  type='text'
-                  name='sender'
-                  placeholder='Sender'
-                  component='input'
-                  className='textfield'
-                />
-              </div>
               <div className='form-group address-wrap'>
                 <label>To</label>
                 <Field

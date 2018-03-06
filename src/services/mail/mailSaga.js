@@ -56,10 +56,11 @@ export function* sendMail(action) {
 export function* fetchMessagesFromFolder(action){
 
     let messageFolder = action.payload.messageFolder;
+    let currentUser = action.payload.currentUser;
 
     try {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-        let mailFolder = rootMailFolder['ME'][messageFolder];
+        let mailFolder = rootMailFolder[currentUser][messageFolder];
         let emails = Object.keys(mailFolder).map((mailUUID) => {
           let email = mailFolder[mailUUID];
           switch(messageFolder){
