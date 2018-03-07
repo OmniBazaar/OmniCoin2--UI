@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Image } from 'semantic-ui-react';
 
-import UserIcon from '../images/th-user.svg';
+import UserIcon from '../../../images/th-user.svg';
 import BitCoinIcon from '../images/th-bitcoin.svg';
-import OmniCoinIcon from '../images/th-omnicoin.svg';
+import OmniCoinIcon from '../../../images/th-omnicoin.svg';
 import OmniCoinIconLg from '../images/bg-omnicoin.svg';
 import BitCoinIconLg from '../images/bg-bitcoin.svg';
 
@@ -28,7 +28,7 @@ export const WalletDetail = (props) => {
         <div className='top-detail'>
           <div className='title'>
             <span>Wallet</span>
-            <div className='badge'>REGISTERED: {props.wallet.date}</div>
+            <div className='badge-tag'>REGISTERED: {props.wallet.date}</div>
           </div>
           <span className='code'>{props.wallet.code}</span>
           <span className='accountId'>Account ID: {props.wallet.accountId}</span>

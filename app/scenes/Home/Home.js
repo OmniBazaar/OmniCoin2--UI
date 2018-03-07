@@ -61,13 +61,13 @@ class Home extends Component {
         const { visible } = this.state;
         let sideBarClass = cn("sidebar", visible ? "visible" : "");
         let homeContentClass = cn("home-content", visible ? "" : "shrink");
-        if (!this.props.auth.currentUser) {
+        /*if (!this.props.auth.currentUser) {
            return <Redirect
                 to={{
                     pathname: "/login",
                 }}
             />
-        }
+        }*/
         return (
             <div className="home-container">
                 <div className={sideBarClass} style={{backgroundImage: `url(${BackgroundImage})`}}>
