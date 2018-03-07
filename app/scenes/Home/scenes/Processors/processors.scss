@@ -1,0 +1,30 @@
+@import '../../../../styles/index';
+@import '../../../../styles/datatable';
+
+.processors {
+  background-color: $lighter-gray;
+
+  .tabs {
+    border-bottom: none;
+  }
+
+  .badges {
+    display: flex;
+  }
+}
+
+.votes {
+  display: flex;
+
+  &.voted {
+    opacity: 0.5;
+  }
+
+  span {
+    margin-right: 22px;
+  }
+
+  img {
+    margin-right: 10px;
+  }
+}
