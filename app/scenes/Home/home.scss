@@ -45,6 +45,13 @@ $closed-side-bar-size: 70px;
       }
     }
   }
+
+  i.setting.icon {
+    color: $primary-white;
+    font-size: 20px;
+    width: 20px;
+    margin-right: 0;
+  }
 }
 
 .home-content {

@@ -111,7 +111,7 @@ class Home extends Component {
                                 <span>Support</span>
                             </NavLink>
                             <div onClick={this.onClickSettings} className="menu-item">
-                              <Image src={ProcessorsIcon} height={iconSize} width={iconSize} />
+                              <Icon name="setting" height={iconSize} width={iconSize} />
                               <span>Settings</span>
                             </div>
                         </div>
