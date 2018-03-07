@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Field, reduxForm} from 'redux-form';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Button, Form, Divider, Icon } from 'semantic-ui-react'
-import {required} from 'redux-form-validators';
-import {toastr} from 'react-redux-toastr'
+import { required } from 'redux-form-validators';
+import { toastr } from 'react-redux-toastr'
 import cn from 'classnames';
-import {key} from "omnibazaarjs/es";
+import { key } from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
 import ClipboardButton from "react-clipboard.js";
 import { FetchChain } from "omnibazaarjs/es";
@@ -25,23 +25,16 @@ class SignupForm extends Component {
     this.signIn = this.signIn.bind(this);
   }
 
-  state = {
-    isLoading: false
-  };
-
   componentWillMount() {
-    this.props.initialize({
+   this.props.initialize({
       password: ("P" + key.get_random_key().toWif()).substr(0, 45)
     });
   }
 
-  signIn() {
-    this.props.history.push('/login');
-  }
-
-  submit(values) {
-      const {username, password, referrer} = values;
-      this.props.authActions.signup(username, password, referrer);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.error && !this.props.auth.error) {
+      toastr.error("Error", nextProps.auth.error);
+    }
   }
 
   static asyncValidate =  async (values, dispatch, props, field) => {
@@ -66,6 +59,32 @@ class SignupForm extends Component {
       throw previousErrors;
     }
   };
+
+  static validate = (values) => {
+    const errors = {};
+    if (!values.agreementTerms) {
+      errors.agreementTerms = "This field is required";
+    }
+    if (values.password !== values.passwordConfirmation) {
+      errors.passwordConfirmation = "Password doesn't match";
+    }
+    return errors;
+  };
+
+  signIn() {
+    this.props.history.push('/login');
+  }
+
+  submit(values) {
+      const {username, password, referrer} = values;
+      this.props.authActions.signup(
+        username,
+        password,
+        referrer,
+        null,
+        null,
+      );
+  }
 
   renderPasswordGeneratorField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
     return (
@@ -111,7 +130,8 @@ class SignupForm extends Component {
     );
   };
   render() {
-    const {handleSubmit, valid, auth} = this.props;
+    const {handleSubmit, valid, auth, asyncValidating} = this.props;
+    let btnClass = cn(auth.loading || !!this.props.asyncValidating ? "ui loading" : "");
     return (
       <Form
         onSubmit={handleSubmit(this.submit)}
@@ -134,8 +154,8 @@ class SignupForm extends Component {
           type="password"
           placeholder="Confirm password"
           name="passwordConfirmation"
+          component={ValidatableField}
           validate={[required({message: "This field is required"})]}
-          component="input"
         />
         <Field
           type="text"
@@ -154,8 +174,9 @@ class SignupForm extends Component {
         </div>
         <Button
           content="Sign up"
-          disabled={!valid || this.state.isLoading}
+          disabled={!valid || auth.loading || !!asyncValidating}
           color="green"
+          className={btnClass}
           type="submit"
         />
         <Divider fitted/>
@@ -164,8 +185,9 @@ class SignupForm extends Component {
         </div>
         <Button
           content="Sign in"
-          disabled={this.state.isLoading}
+          disabled={auth.loading}
           color="blue"
+          className={btnClass}
           onClick={this.signIn}
         />
       </Form>
@@ -177,6 +199,7 @@ SignupForm = withRouter(SignupForm);
 
 SignupForm = reduxForm({
   form: 'signupForm',
+  validate: SignupForm.validate,
   asyncValidate: SignupForm.asyncValidate,
   asyncBlurFields: ['username', 'referrer'],
   destroyOnUnmount: true,

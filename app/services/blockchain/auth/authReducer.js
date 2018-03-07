@@ -1,13 +1,20 @@
-/**
- * Created by denissamohvalov on 14.02.18.
- */
+
 import { handleActions, combineActions } from 'redux-actions';
-import { signup, login, getCurrentUser, account_lookup } from './authActions';
+import {ipcRenderer} from 'electron';
+
+import {
+  signup,
+  login,
+  getCurrentUser,
+  accountLookup,
+  requestPcIds
+} from './authActions';
 
 let defaultState = {
     currentUser: null,
     error: null,
-    accountExists: false
+    accountExists: false,
+    loading: false,
 };
 
 const reducer = handleActions({
@@ -17,28 +24,38 @@ const reducer = handleActions({
             currentUser: localStorage.getItem('currentUser')
         }
     },
-    [login](state, {payload: {username, password, callback}}) {
+    [login](state, {payload: {username, password}}) {
       return {
           ...state,
-          error: null
+          error: null,
+          loading: true
       }
     },
     [signup](state, {payload: {username, password, referrer, mac_address, harddrive_id}}) {
         return {
-            ...state
+            ...state,
+            error: null,
+            loading: true,
         }
     },
-    [account_lookup](state, {payload: {username}}) {
+    [accountLookup](state, {payload: {username}}) {
       return {
         ...state
       }
+    },
+    [requestPcIds](state, {payload: {}}) {
+      ipcRenderer.once('receive-pc-ids', (event, arg) => {
+          localStorage.setItem("hardDriveId", arg.hardDriveId);
+          localStorage.setItem("macAddress", arg.macAddress);
+      });
+      ipcRenderer.send('get-pc-ids', null);
     },
     LOGIN_FAILED: (state, action) => {
         return {
             ...state,
             currentUser: null,
             error: action.error,
-            accountExists: false
+            loading: false
         }
     },
     LOGIN_SUCCEEDED: (state, action) => {
@@ -47,27 +64,40 @@ const reducer = handleActions({
             ...state,
             currentUser: action.user,
             error: null,
-            accountExists: true
+            loading: false
         }
     },
     SIGNUP_SUCCEEDED: (state, action) => {
-        console.log('SIGNUP SUCCEDED', action);
-        return  {
-          ...state
+      localStorage.setItem('currentUser', action.user);
+      return  {
+          ...state,
+          currentUser: action.user,
+          error: null,
+          loading: false
         }
     },
     SIGNUP_FAILED: (state, action) => {
-        console.log('SIGNUP FAILED', action);
         return  {
-          ...state
+          ...state,
+          currentUser: null,
+          error: action.error,
+          loading: false
         }
     },
     ACCOUNT_LOOKUP: (state, action) => {
       return {
         ...state,
         accountExists: false,
+        loading: true
       }
-    }
+    },
+    ACCOUNT_LOOKUP_SUCCEEDED: (state, action) => {
+      return {
+        ...state,
+        accountExists: action.result,
+        loading: false
+      }
+    },
 }, defaultState);
 
 export default reducer;

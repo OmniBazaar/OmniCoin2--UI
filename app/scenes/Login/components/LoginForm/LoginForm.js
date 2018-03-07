@@ -8,6 +8,8 @@ import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
 import { FetchChain } from "omnibazaarjs/es";
+import { ipcRenderer } from 'electron';
+
 
 import { login } from  '../../../../services/blockchain/auth/authActions';
 
@@ -25,7 +27,6 @@ class LoginForm extends Component {
 
   state = {
     showUsernameInput: false,
-    isLoading: false,
   };
 
   componentWillMount() {
@@ -56,16 +57,14 @@ class LoginForm extends Component {
 
   submit(values) {
     const {password, username} = values;
-    this.setState({isLoading: true});
     this.props.authActions.login(
       username,
       password,
-      () => {this.setState({isLoading: false})}
     );
   }
 
   renderPasswordField = ({input, disabled, loading, meta: {touched, error, warning}}) => {
-    let btnClass = cn(loading ? "ui loading" : "");
+    let btnClass = cn(loading || !!this.props.asyncValidating ? "ui loading" : "");
     return (
       <div>
         {touched && ((error && <span className="error">{error}</span>))}
@@ -77,7 +76,7 @@ class LoginForm extends Component {
           />
           <Button
             content="UNLOCK"
-            disabled={disabled || this.state.isLoading}
+            disabled={disabled || this.props.auth.loading || !!this.props.asyncValidating}
             color="green"
             type="submit"
             className={btnClass}
@@ -88,7 +87,7 @@ class LoginForm extends Component {
   };
 
   render() {
-    const {handleSubmit, valid, auth} = this.props;
+    const {handleSubmit, valid, auth, asyncValidating} = this.props;
     const {showUsernameInput} = this.state;
     return (
       <Form
@@ -114,7 +113,7 @@ class LoginForm extends Component {
         <Field
           name="password"
           disabled={!valid}
-          loading={this.state.isLoading}
+          loading={auth.loading}
           component={this.renderPasswordField}
           validate={[required({message: "This field is required"})]}
         />
@@ -124,7 +123,7 @@ class LoginForm extends Component {
         </div>
         <Button
           content="Sign up"
-          disabled={this.state.isLoading}
+          disabled={auth.loading}
           color="blue"
           onClick={this.signUp}
         />

@@ -1,6 +1,15 @@
-import {put, takeEvery, takeLatest, call} from 'redux-saga/effects';
-import {ChainStore, PrivateKey, key, Aes, FetchChain} from "omnibazaarjs/es";
-const faucetAddress = "https://faucet.bitshares.eu/onboarding";
+import {
+  put,
+  takeEvery,
+  takeLatest,
+  call
+} from 'redux-saga/effects';
+import {
+  PrivateKey,
+  FetchChain,
+} from "omnibazaarjs/es";
+
+const faucetAddress = "http://35.171.116.3:80";
 
 function generateKeyFromPassword(accountName, role, password) {
     let seed = accountName + role + password;
@@ -27,41 +36,41 @@ export function* subscriber() {
 export function* login(action) {
     let username = action.payload.username;
     let password = action.payload.password;
-    let callback = action.payload.callback;
-    let role = "active";
+    let roles = ["active", "owner"];
     let isAuthorized = false;
     try {
-        let account = yield FetchChain("getAccount", username);
-        let key = generateKeyFromPassword(username, role, password);
-        account.getIn([role, "key_auths"]).forEach(auth => {
-            if (auth.get(0) === key.pubKey) {
-                isAuthorized = true;
+        let account = yield call(FetchChain, "getAccount", username);
+        let key = generateKeyFromPassword(username, roles[0], password);
+        roles.forEach(role => {
+          account.getIn([role, "key_auths"]).forEach(auth => {
+            if (auth.get(0) === key.privKey.toPublicKey().toPublicKeyString('BTS')) {
+              isAuthorized = true;
             }
+          });
         });
         if (isAuthorized) {
             yield put({
                 type: 'LOGIN_SUCCEEDED',
                 user: {
                     username,
-                    password,
-                    key
+                    password
                 }
             });
         } else {
             yield put({type: 'LOGIN_FAILED', error:  "Invalid password"});
         }
     } catch(e) {
-        yield put({type: 'LOGIN_FAILED', error: "Account doesn't exist"});
+      console.log("ERROR ", e);
+      yield put({type: 'LOGIN_FAILED', error: "Account doesn't exist"});
     }
-    callback();
 }
 
 export function* signup(action) {
   let username = action.payload.username;
   let password = action.payload.password;
   let referrer = action.payload.referrer;
-  let { privKey :owner_private } = generateKeyFromPassword(username, "owner", password);
-  let { privKey :active_private } = generateKeyFromPassword(username, "active", password);
+  let ownerKey = generateKeyFromPassword(username, "owner", password);
+  let activeKey = generateKeyFromPassword(username, "active", password);
   try {
     let result = yield call(fetch, faucetAddress + "/api/v1/accounts", {
       method: "post",
@@ -73,15 +82,32 @@ export function* signup(action) {
       body: JSON.stringify({
         "account": {
           "name": username,
-          "owner_key": owner_private.toPublicKey().toPublicKeyString(),
-          "active_key": active_private.toPublicKey().toPublicKeyString(),
-          "memo_key": active_private.toPublicKey().toPublicKeyString(),
-          "referrer": referrer
+          "owner_key": ownerKey.privKey.toPublicKey().toPublicKeyString("BTS"),
+          "active_key": activeKey.privKey.toPublicKey().toPublicKeyString("BTS"),
+          "memo_key": activeKey.privKey.toPublicKey().toPublicKeyString("BTS"),
+          "referrer": referrer,
+          "harddrive_id": localStorage.getItem("hardDriveId"),
+          "mac_address": localStorage.getItem("macAddress")
         }
       })
     });
-    yield put({type: 'SIGNUP_SUCCEDED', result})
+    let resJson = yield call([result, 'json']);
+    if (result.status === 201) {
+      yield put({
+        type: 'SIGNUP_SUCCEEDED',
+        user: {
+          username,
+          password
+        }
+      });
+    } else {
+      const error = resJson.error;
+      console.log("ERROR", error);
+      let e = error.base && error.base.length && error.base.length > 0 ? error.base[0] : error.remote_ip[0];
+      yield put({type: 'SIGNUP_FAILED', error: e});
+    }
   } catch(e) {
+    console.log("ERROR", e);
     yield put({type: 'SIGNUP_FAILED', error: e});
   }
 }
@@ -89,12 +115,11 @@ export function* signup(action) {
 
 export function* account_lookup(action) {
   let username = action.payload.username;
-  let callback = action.payload.callback;
   try {
     let account = yield FetchChain("getAccount", username);
-    yield put({type: 'ACCOUNT_LOOKUP', result: true})
+    yield put({type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: true})
   } catch (e) {
-    yield put({type: 'ACCOUNT_LOOKUP', result: false})
+    yield put({type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: false})
   }
 
 }
