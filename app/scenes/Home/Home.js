@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Sidebar, Segment, Button, Menu, Image, Icon, Header } from 'semantic-ui-react'
+import { Sidebar, Segment, Button, Menu, Image, Icon, Header } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import {
     Route,
@@ -19,6 +20,7 @@ import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
 
 import './home.scss';
+import '../../styles/_modal.scss';
 import Burger from './images/hamburger-norm-press.svg';
 import BackgroundImage from './images/sidebar-bg@2x.jpg';
 import SidebarLogo from './images/logo-sidebar.svg';
@@ -30,11 +32,30 @@ import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
+import { showSettingsModal } from '../../services/menu/menuActions';
 const iconSize = 20;
 class Home extends Component {
     state = { visible: true };
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible });
+
+  onClickSettings = () => {
+    this.props.menuActions.showSettingsModal();
+  };
+
+  close = () => {
+    this.props.menuActions.showSettingsModal();
+  };
+
+  renderSettings() {
+    const { props } = this;
+
+    if (props.menu.showSettings) {
+      return (
+        <Settings onClose={this.close} />
+      );
+    }
+  }
 
     render() {
         const { visible } = this.state;
@@ -89,6 +110,10 @@ class Home extends Component {
                                 <Image src={SupportIcon} height={iconSize} width={iconSize}/>
                                 <span>Support</span>
                             </NavLink>
+                            <div onClick={this.onClickSettings} className="menu-item">
+                              <Image src={ProcessorsIcon} height={iconSize} width={iconSize} />
+                              <span>Settings</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,13 +127,15 @@ class Home extends Component {
                     <Route path="/transfer" render={(props) => <Transfer {...props} />}/>
                     <Route path="/wallet" render={(props) => <Wallet {...props} />}/>
                 </div>
+                {this.renderSettings()}
             </div>
         )
     }
 }
 
 export default connect(
-    (state) => {
-        return {...state.default}
-    }
+  state => ({ ...state.default }),
+  (dispatch) => ({
+    menuActions: bindActionCreators({ showSettingsModal }, dispatch),
+  }),
 )(Home);

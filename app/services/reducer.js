@@ -6,6 +6,7 @@ import settingsReducer from './settings/settingsReducer';
 import walletReducer from './wallet/walletReducer';
 import processorsStandbyReducer from './processors/processorsStandbyReducer';
 import processorsTopReducer from './processors/processorsTopReducer';
+import menuReducer from './menu/menuReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   processorsTop: processorsTopReducer,
   connection: connectionReducer,
   settings: settingsReducer,
+  menu: menuReducer,
 });
