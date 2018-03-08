@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { Button, Image, Form, Input } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { changePriority } from '../../../../../services/accountSettings/accountActions';
 import '../settings.scss';
 
 const iconSize = 20;
-
 
 const PriorityTypes = Object.freeze({
   LOCAL_DATA: 'local',
@@ -91,7 +90,7 @@ class PrivateData extends Component {
 
   publisherForm() {
     const { priority } = this.props.account;
-    console.log('HERE -->', priority);
+
     return (
       <div className="publisher-form">
         <div className="header">
@@ -194,8 +193,10 @@ PrivateData = reduxForm({
 
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
+    changePriority: PropTypes.func,
   }),
   account: PropTypes.shape({
+    priority: PropTypes.string,
   })
 };
 
