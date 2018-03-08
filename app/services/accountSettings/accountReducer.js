@@ -5,6 +5,7 @@ import {
   setPublisher,
   setTransactionProcessor,
   setEscrow,
+  changePriority,
 } from './accountActions';
 
 const defaultState = {
@@ -12,6 +13,7 @@ const defaultState = {
   publisher: false,
   transactionProcessor: false,
   escrow: false,
+  priority: 'local',
 };
 
 const reducer = handleActions({
@@ -37,6 +39,12 @@ const reducer = handleActions({
     return {
       ...state,
       escrow: !state.escrow,
+    };
+  },
+  [combineActions(changePriority)](state, { payload: { priority } }) {
+    return {
+      ...state,
+      priority
     };
   },
 }, defaultState);
