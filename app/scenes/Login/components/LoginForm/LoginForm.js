@@ -8,7 +8,6 @@ import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
 import { FetchChain } from "omnibazaarjs/es";
-import { ipcRenderer } from 'electron';
 
 
 import { login } from  '../../../../services/blockchain/auth/authActions';

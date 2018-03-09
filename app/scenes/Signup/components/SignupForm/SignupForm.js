@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Form, Divider, Icon } from 'semantic-ui-react'
+import { Button, Form, Divider, Icon } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
-import { toastr } from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
 import { key } from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
