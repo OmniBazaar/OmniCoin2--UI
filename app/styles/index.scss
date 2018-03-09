@@ -1,1 +1,10 @@
 @import './colors';
+
+a {
+  color: $primary-blue;
+  cursor: pointer;
+
+  &:hover {
+    color: darken($primary-blue, 10%);
+  }
+}

@@ -1,0 +1,98 @@
+@import 'index';
+
+.pagination {
+  .active.item {
+    border-bottom: none !important;
+  }
+}
+
+.data-table {
+  .top-detail {
+    .filter-input {
+      flex: 1;
+      margin-right: 20px;
+    }
+
+    .pagination-container {
+      flex: 1.5;
+      align-items: center;
+      justify-content: flex-end;
+      display: flex;
+
+      .pagination.menu {
+        border: none !important;
+        box-shadow: none !important;
+
+        a.item {
+          background-color: $lighter-blue !important;
+          color: $primary-blue !important;
+          font-weight: bold;
+          font-size: 12px;
+
+          &.active {
+            background-color: darken($lighter-blue, 7%) !important;
+          }
+
+          &:focus {
+            outline: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .table-container {
+    margin-top: 15px;
+
+    .sortable.table {
+      thead {
+        th {
+          border-left: none;
+          font-weight: 100;
+          color: rgba(0,0,0,.5);
+          border-bottom: 2px solid $primary-blue;
+
+          &.sorted {
+            background-color: $transparent;
+            color: $dark-gray;
+
+            &:after {
+              color: $primary-blue;
+            }
+          }
+        }
+      }
+      tr {
+        &:nth-child(2n) {
+          td {
+            background-color: lighten($lighter-blue, 2%) !important;
+          }
+        }
+
+        td {
+          border-top: none;
+        }
+      }
+    }
+  }
+
+  .filter-input {
+    input {
+      background-color: $lighter-blue !important;
+      border: none !important;
+    }
+  }
+
+  .filter.icon {
+    opacity: 1 !important;
+
+    &:before {
+      color: $primary-blue !important;
+      font-size: 22px;
+    }
+  }
+}
+
+.ui.menu .item:before {
+  background: rgb(248, 250, 249) !important;
+}
