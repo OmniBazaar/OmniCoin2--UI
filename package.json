@@ -193,7 +193,7 @@
     "history": "^4.7.2",
     "omnibazaarjs": "^1.0.0",
     "react": "^16.2.0",
-    "react-clipboard.js": "^1.1.3",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^4.0.0-beta.13",
     "react-redux": "^5.0.6",

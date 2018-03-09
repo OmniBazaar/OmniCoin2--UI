@@ -8,7 +8,8 @@ import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
 import { key } from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
-import ClipboardButton from "react-clipboard.js";
+import CopyToClipboard from 'react-copy-to-clipboard';
+
 import { FetchChain } from "omnibazaarjs/es";
 
 
@@ -94,20 +95,17 @@ class SignupForm extends Component {
           type="text"
           className="field"
         />
-        <ClipboardButton
-          className="button"
-          data-clipboard-text={input.value}
-          data-place="right"
-          onClick={() => toastr.success("Copy", "Password copied!")}
-        >
-          Copy
-        </ClipboardButton>
+        <CopyToClipboard text={input.value}>
+          <Button onClick={() => toastr.success("Copy", "Password copied!")}>
+            Copy
+          </Button>
+        </CopyToClipboard>
       </div>
     );
   };
 
   renderReferrerField = ({input,  meta: {asyncValidating, touched, error, warning, active}}) => {
-    let show = !error && touched && !asyncValidating && !active;
+    let show = !error && touched && !asyncValidating && !active && !!input.value;
     let iconClassName = cn("button icon", show ? "" : "hidden");
     let inputClassName = cn(show ? "field" : "");
     return (
