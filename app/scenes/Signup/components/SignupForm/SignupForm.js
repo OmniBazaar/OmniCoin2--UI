@@ -117,6 +117,7 @@ class SignupForm extends Component {
           <input
             {...input}
             type="text"
+            placeholder="Referrer name"
             className={inputClassName}
           />
           <Icon
