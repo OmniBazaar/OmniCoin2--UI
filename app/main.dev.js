@@ -10,8 +10,10 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
+import { machineId } from 'node-machine-id';
+import getmac from 'getmac';
 
 let mainWindow = null;
 
@@ -59,11 +61,26 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  getmac.getMac(function(err, macAddress){
+    if (err) throw err;
+    machineId().then((hardDriveId) => {
+      if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+        macAddress += Math.random();
+        hardDriveId += Math.random();
+      }
+      ipcMain.on('get-pc-ids', (event, arg) => {
+        event.sender.send('receive-pc-ids', {macAddress, hardDriveId});
+      })
+    });
+  });
+
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728
   });
+
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 

@@ -1,24 +1,20 @@
-@import '../../../styles/index';
+@import '../../../../styles/index';
 
-$field-width: 300px;
-
-.signup-container {
+.login {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 150px;
-  margin-top: -150px;
+  justify-content: space-between;
+  height: 200px;
+  width: 300px;
+  margin-top: -70px;
   span {
     color: $primary-white;
   }
   .username {
-    width: $field-width;
     margin-bottom: 5px;
     padding-right: 2px;
   }
   .password {
-    width: $field-width;
     display: flex;
     flex-direction: row;
     input {
@@ -28,7 +24,13 @@ $field-width: 300px;
     button {
       border-bottom-left-radius: 0 !important;
       border-top-left-radius: 0 !important;
+      margin-right: 0.1em;
     }
   }
-
+  .question {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+  }
 }

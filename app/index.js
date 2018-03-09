@@ -26,7 +26,7 @@ const middleware = [sagaMiddleware];
 
 if (process.env.NODE_ENV !== 'production') {
   const logger = createLogger();
-  middleware.push(logger);
+ // middleware.push(logger);
 }
 
 const store = createStore(

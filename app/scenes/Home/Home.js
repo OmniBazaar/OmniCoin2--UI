@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import { Sidebar, Segment, Button, Menu, Image, Icon, Header } from 'semantic-ui-react'
+import {Sidebar, Segment, Button, Menu, Image, Icon, Header} from 'semantic-ui-react'
 import cn from 'classnames';
+
 import {
     Route,
     NavLink,
     Redirect
 } from 'react-router-dom';
 import {connect} from 'react-redux';
-
 
 import Escrow from './scenes/Escrow/Escrow';
 import Mail from  './scenes/Mail/Mail';
@@ -17,6 +17,7 @@ import Settings from './scenes/Settings/Settings';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
+import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 
 import './home.scss';
 import Burger from './images/hamburger-norm-press.svg';
@@ -31,65 +32,71 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 const iconSize = 20;
+
 class Home extends Component {
     state = { visible: true };
 
-    toggleVisibility = () => this.setState({ visible: !this.state.visible });
+    toggleVisibility = () => this.setState({visible: !this.state.visible});
 
     render() {
-        const { visible } = this.state;
+        const {visible} = this.state;
         let sideBarClass = cn("sidebar", visible ? "visible" : "");
         let homeContentClass = cn("home-content", visible ? "" : "shrink");
         if (!this.props.auth.currentUser) {
            return <Redirect
                 to={{
-                    pathname: "/login",
+                    pathname: "/signup",
                 }}
             />
         }
         return (
             <div className="home-container">
                 <div className={sideBarClass} style={{backgroundImage: `url(${BackgroundImage})`}}>
-                    <div className="header">
-                        <Image src={SidebarLogo} width={150} height={40}/>
-                        <Image
-                            src={Burger}
-                            height={iconSize}
-                            width={iconSize}
-                            className="burger"
-                            onClick={this.toggleVisibility}/>
-                    </div>
-                    <div className="menu">
-                        <div className="menu">
-                            <NavLink to="/wallet" activeClassName='active' className="menu-item">
-                                <Image src={WalletIcon} height={iconSize} width={iconSize}/>
-                                <span>Wallet</span>
-                            </NavLink>
-                            <NavLink to="/marketplace" activeClassName='active' className="menu-item">
-                                <Image src={MarketplaceIcon} height={iconSize} width={iconSize}/>
-                                <span>Marketplace</span>
-                            </NavLink>
-                            <NavLink to="/transfer" activeClassName='active' className="menu-item">
-                                <Image src={TransferIcon} height={iconSize} width={iconSize}/>
-                                <span>Transfer</span>
-                            </NavLink>
-                            <NavLink to="/escrow" activeClassName='active' className="menu-item">
-                                <Image src={EscrowIcon} height={iconSize} width={iconSize}/>
-                                <span>Escrow</span>
-                            </NavLink>
-                            <NavLink to="/processors" activeClassName='active' className="menu-item">
-                                <Image src={ProcessorsIcon} height={iconSize} width={iconSize}/>
-                                <span>Processors</span>
-                            </NavLink>
-                            <NavLink to="/mail" activeClassName='active' className="menu-item">
-                                <Image src={MailIcon} height={iconSize} width={iconSize}/>
-                                <span>Mail</span>
-                            </NavLink>
-                            <NavLink to="/support" activeClassName='active' className="menu-item">
-                                <Image src={SupportIcon} height={iconSize} width={iconSize}/>
-                                <span>Support</span>
-                            </NavLink>
+                    <div className="top">
+                        <div className="header">
+                            <Image src={SidebarLogo} width={150} height={40}/>
+                            <Image
+                                src={Burger}
+                                height={iconSize}
+                                width={iconSize}
+                                className="burger"
+                                onClick={this.toggleVisibility}/>
                         </div>
+                        <div className="menu">
+                            <div className="menu">
+                                <NavLink to="/wallet" activeClassName='active' className="menu-item">
+                                    <Image src={WalletIcon} height={iconSize} width={iconSize}/>
+                                    <span>Wallet</span>
+                                </NavLink>
+                                <NavLink to="/marketplace" activeClassName='active' className="menu-item">
+                                    <Image src={MarketplaceIcon} height={iconSize} width={iconSize}/>
+                                    <span>Marketplace</span>
+                                </NavLink>
+                                <NavLink to="/transfer" activeClassName='active' className="menu-item">
+                                    <Image src={TransferIcon} height={iconSize} width={iconSize}/>
+                                    <span>Transfer</span>
+                                </NavLink>
+                                <NavLink to="/escrow" activeClassName='active' className="menu-item">
+                                    <Image src={EscrowIcon} height={iconSize} width={iconSize}/>
+                                    <span>Escrow</span>
+                                </NavLink>
+                                <NavLink to="/processors" activeClassName='active' className="menu-item">
+                                    <Image src={ProcessorsIcon} height={iconSize} width={iconSize}/>
+                                    <span>Processors</span>
+                                </NavLink>
+                                <NavLink to="/mail" activeClassName='active' className="menu-item">
+                                    <Image src={MailIcon} height={iconSize} width={iconSize}/>
+                                    <span>Mail</span>
+                                </NavLink>
+                                <NavLink to="/support" activeClassName='active' className="menu-item">
+                                    <Image src={SupportIcon} height={iconSize} width={iconSize}/>
+                                    <span>Support</span>
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bottom">
+                        <SocialNetworksFooter/>
                     </div>
                 </div>
                 <div className={homeContentClass}>
