@@ -1,4 +1,6 @@
 import {put, takeEvery, call} from 'redux-saga/effects';
+import { Apis } from 'bitsharesjs-ws';
+import { storeMail, getEmailsFromFolder, deleteMail } from './mailStorage';
 
 export function* sendMailSubscriber() {
     yield takeEvery(
@@ -14,77 +16,84 @@ export function* fetchMessagesFromFolderSubscriber(){
     )
 }
 
+
 export function* sendMail(action) {
     
-    let { uuid,
-            sender,
+    let {  sender,
             recipient,
             subject,
             body,
-            created_time,
-            read_status,
-            afterMailSentCallback }  = action.payload;
+            mailSentCallback,
+            mailDeliveredCallback }  = action.payload;
 
-    let mailObject = localStorage.getItem('mail');
-    if (!mailObject)
-        mailObject = {};
-    else
-        mailObject = JSON.parse(localStorage.getItem('mail'));
-
-    if (!mailObject[sender])
-        mailObject[sender] = {};
-
-    if (!mailObject[sender]["outbox"])
-        mailObject[sender]["outbox"] = {};
-
-    let currentTime = (new Date()).getTime();
-
-    mailObject[sender]["outbox"][currentTime] = {
-        uuid: currentTime,
+    let mailObject = {
         sender: sender,
         recipient: recipient,
         subject: subject,
         body: body,
-        created_time: currentTime,
-        read_status: true
+        read_status: false,
+        creation_time: (new Date()).getTime(),
+        uuid: (new Date()).getTime()
     }
 
-    localStorage.setItem('mail', JSON.stringify(mailObject));
-    afterMailSentCallback();
+    let afterSendCallback = () => {
+        console.log("Mail is delivered:", mailObject);
+        deleteMail(mailObject.uuid, sender, 'outbox');
+        storeMail(mailObject, sender, 'sent');
+        mailDeliveredCallback();
+    };
+
+    Apis.instance().mail_api().exec("send", [afterSendCallback, mailObject]).then(() => {
+        console.log("Mail is in the outbox:", mailObject);
+        storeMail(mailObject, sender, 'outbox');
+        mailSentCallback();
+    });
+
+    // Promise.resolve().then(() => {
+    //     console.log("Mail is in the outbox");
+    //     storeMail(mailObject, sender, 'outbox');
+    //     mailSentCallback();
+    // });
 }
 
 export function* fetchMessagesFromFolder(action){
 
-    let messageFolder = action.payload.messageFolder;
-    let currentUser = action.payload.currentUser;
+    let emails = getEmailsFromFolder(action.payload.currentUser, action.payload.messageFolder);
 
-    try {
-        let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-        let mailFolder = rootMailFolder[currentUser][messageFolder];
-        let emails = Object.keys(mailFolder).map((mailUUID) => {
-          let email = mailFolder[mailUUID];
-          switch(messageFolder){
-            case 'inbox': email.user = email.sender; break;
-            case 'outbox': email.user = email.recipient; break;
-            case 'sent': email.user = email.recipient; break;
-            case 'deleted': email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
-          }
-          email.read = email.read_status;
-          return email;
-        });
+    yield put({
+        type: 'FETCHED_FOLDER_MESSAGES',
+        messages: emails
+    });
 
-        yield put({
-            type: 'FETCHED_FOLDER_MESSAGES',
-            messages: emails,
-            messageFolder: messageFolder
-        });
-      }
-      catch(e) {
-        yield put({
-            type: 'FETCHED_FOLDER_MESSAGES',
-            messages: [],
-            messageFolder: messageFolder
-        });
-      }
-    
+    // let messageFolder = action.payload.messageFolder;
+    // let currentUser = action.payload.currentUser;
+
+    // try {
+    //     let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
+    //     let mailFolder = rootMailFolder[currentUser][messageFolder];
+    //     let emails = Object.keys(mailFolder).map((mailUUID) => {
+    //       let email = mailFolder[mailUUID];
+    //       switch(messageFolder){
+    //         case 'inbox': email.user = email.sender; break;
+    //         case 'outbox': email.user = email.recipient; break;
+    //         case 'sent': email.user = email.recipient; break;
+    //         case 'deleted': email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
+    //       }
+    //       email.read = email.read_status;
+    //       return email;
+    //     });
+
+    //     yield put({
+    //         type: 'FETCHED_FOLDER_MESSAGES',
+    //         messages: emails,
+    //         messageFolder: messageFolder
+    //     });
+    //   }
+    //   catch(e) {
+    //     yield put({
+    //         type: 'FETCHED_FOLDER_MESSAGES',
+    //         messages: [],
+    //         messageFolder: messageFolder
+    //     });
+    // }
 }

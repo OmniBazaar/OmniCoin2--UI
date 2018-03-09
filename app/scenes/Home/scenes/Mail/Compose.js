@@ -60,6 +60,9 @@ class Compose extends Component {
         () => {
           this.props.mailActions.fetchMessagesFromFolder(this.props.auth.currentUser.username, 'outbox');
           this.closeCompose();
+        },
+        () => {
+          this.props.mailActions.fetchMessagesFromFolder(this.props.auth.currentUser.username, 'sent');
         });
   };
 
