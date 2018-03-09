@@ -103,7 +103,7 @@ export function* signup(action) {
     } else {
       const error = resJson.error;
       console.log("ERROR", error);
-      let e = error.base && error.base.length && error.base.length > 0 ? error.base[0] : error.remote_ip[0];
+      let e = error.base && error.base.length && error.base.length > 0 ? error.base[0] : JSON.stringify(error);
       yield put({type: 'SIGNUP_FAILED', error: e});
     }
   } catch(e) {
