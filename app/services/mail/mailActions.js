@@ -21,7 +21,7 @@ const {
   SET_ACTIVE_MESSAGE: (activeMessage) => ({ activeMessage }),
   SHOW_REPLY_MODAL: (reply) => ({ reply }),
   SEND_MAIL: (sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback) => ({sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback}),
-  DELETE_MAIL: (messageObject, messageFolder, afterDeletionCallback) => ({messageObject, messageFolder, afterDeletionCallback})
+  DELETE_MAIL: (messageObject, messageFolder, afterDeletionCallback) => ({messageObject, messageFolder, afterDeletionCallback}),
 });
 
 export {

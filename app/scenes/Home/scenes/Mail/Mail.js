@@ -73,7 +73,13 @@ class Mail extends Component {
   }
 
   componentDidMount () {
-    this.changeFolderAndSetWidth(this.props.activeFolder);
+    this.changeFolder(MailTypes.INBOX);
+  }
+
+  changeFolder(activeFolder) {
+    this.changeFolderAndSetWidth(activeFolder);
+    this.props.mailActions.setActiveFolder(activeFolder);
+    this.props.mailActions.setActiveMessage(0);
   }
 
   changeFolderAndSetWidth(activeFolder) {
@@ -82,12 +88,6 @@ class Mail extends Component {
     this.setState({
       width: this.container.offsetWidth,
     });
-  }
-
-  changeFolder(activeFolder) {
-    this.changeFolderAndSetWidth(activeFolder);
-    this.props.mailActions.setActiveFolder(activeFolder);
-    this.props.mailActions.setActiveMessage(0);
   }
 
   _renderFolderIcon(folderType) {
@@ -129,11 +129,18 @@ class Mail extends Component {
         'last-item': index === folders.length - 1,
       });
 
+      // calculate is there some new emails
+      const sumReducer = (accumulator, currentMessage) => {
+        return accumulator + (currentMessage.read_status ? 0 : 1);
+      }
+
+      const numberOfUnreadMessagesInFolder = props.mail.messages[folder.type].reduce(sumReducer, 0);
+
       return (
         <div key={'folder-' + index} className={containerClass} onClick={() => self.changeFolder(folder.type)}>
           {self._renderFolderIcon(folder.type)}
           <span>{folder.label}</span>
-          <span className='amount'>1</span>
+          <span className='amount'>{numberOfUnreadMessagesInFolder > 0 ? numberOfUnreadMessagesInFolder : ''}</span>
         </div>
       );
     })

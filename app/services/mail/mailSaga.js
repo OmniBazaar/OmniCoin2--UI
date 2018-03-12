@@ -67,6 +67,7 @@ export function* sendMail(action) {
     // this is just for testing
     Promise.resolve().then(() => {
         console.log("Mail is delivered:", mailObject);
+        mailObject.read_status = true;
         storeMail(mailObject, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
     });
@@ -119,7 +120,7 @@ export function* changeFolder(action){
     let emails = getEmailsFromFolder(action.payload.myUsername, action.payload.messageFolder);
 
     yield put({
-        type: 'FETCHED_FOLDER_MESSAGES',
+        type: 'CHANGE_FOLDER_UPDATE',
         messages: emails,
         messageFolder: action.payload.messageFolder
     });

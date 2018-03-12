@@ -60,8 +60,7 @@ const reducer = handleActions({
       ...state
     };
   },
-  FETCHED_FOLDER_MESSAGES: (state, action) => {
-    
+  CHANGE_FOLDER_UPDATE: (state = null, action) => {
     return {
       ...state,
       messages: {
