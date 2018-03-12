@@ -1,6 +1,6 @@
 import MailTypes from './mailTypes';
 
-export function storeMail({uuid, sender, recipient, subject, body, created_time, read_status }, messageFolder) {
+export function storeMessage({uuid, sender, recipient, subject, body, created_time, read_status }, messageFolder) {
 
     let mailObject = localStorage.getItem('mail');
     if (!mailObject)
@@ -24,7 +24,12 @@ export function storeMail({uuid, sender, recipient, subject, body, created_time,
     localStorage.setItem('mail', JSON.stringify(mailObject));
 }
 
-export function deleteMail(uuid, messageFolder) {
+export function getMessage(messageFolder, uuid) {
+    let mailObject = JSON.parse(localStorage.getItem('mail'));
+    return mailObject[messageFolder][uuid];
+}
+
+export function deleteMessage(uuid, messageFolder) {
 
     try {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
@@ -37,7 +42,7 @@ export function deleteMail(uuid, messageFolder) {
     }
 }
 
-export function getEmailsFromFolder(myUsername, messageFolder){
+export function getMessagesFromFolder(myUsername, messageFolder){
 
     try {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));

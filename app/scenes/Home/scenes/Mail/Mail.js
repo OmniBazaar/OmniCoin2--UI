@@ -20,8 +20,9 @@ import {
   mailReceived,
   deleteMail,
   loadFolder,
+  mailSetRead,
   setActiveMessage,
-  showReplyModal,
+  showReplyModal
 } from  '../../../../services/mail/mailActions';
 
 import Header from '../../../../components/Header';
@@ -145,8 +146,15 @@ class Mail extends Component {
     })
   }
 
-  clickedEmail(activeMessage) {
-    this.props.mailActions.setActiveMessage(activeMessage);
+  clickedEmail(message, index) {
+    this.props.mailActions.setActiveMessage(index);
+
+    let currentMessageObject =  this.props.mail.messages[this.props.mail.activeFolder][index];
+    if (currentMessageObject.read_status === false){
+      this.props.mailActions.mailSetRead(this.props.mail.activeFolder, message.uuid, () => {
+        this.props.mailActions.loadFolder(this.props.auth.currentUser.username, this.props.mail.activeFolder);
+      }); 
+    }
   }
 
   /**
@@ -167,7 +175,7 @@ class Mail extends Component {
         let createdTime = new Date(message.created_time);
 
         return (
-          <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(index)}>
+          <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(message, index)}>
             <div className='top-detail'>
               <div className='from'>{message.user}</div>
               <div className='date'>{createdTime.toLocaleString()}</div>
@@ -291,9 +299,10 @@ export default connect(
                                       mailReceived,
                                       deleteMail,
                                       loadFolder,
+                                      mailSetRead,
                                       setActiveFolder,
                                       setActiveMessage,
                                       showReplyModal,
-                                       }, dispatch),
+                                      }, dispatch),
   }),
 )(Mail);

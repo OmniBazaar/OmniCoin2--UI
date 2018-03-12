@@ -1,6 +1,9 @@
 import {put, takeEvery, call} from 'redux-saga/effects';
 import { Apis } from 'bitsharesjs-ws';
-import { storeMail , getEmailsFromFolder, deleteMail as deleteMailFromStorage } from './mailStorage';
+import { storeMessage,
+         getMessagesFromFolder,
+         getMessage,
+         deleteMessage } from './mailStorage';
 import MailTypes from './mailTypes';
 
 export function* sendMailSubscriber() {
@@ -45,6 +48,13 @@ export function* deleteMailSubscriber(){
     )
 }
 
+export function* mailSetReadSubscriber(){
+    yield takeEvery(
+        'MAIL_SET_READ',
+        mailSetRead
+    )
+}
+
 export function* sendMail(action) {
     
     let {  sender,
@@ -67,8 +77,7 @@ export function* sendMail(action) {
     // this is just for testing
     Promise.resolve().then(() => {
         console.log("Mail is delivered:", mailObject);
-        mailObject.read_status = true;
-        storeMail(mailObject, MailTypes.SENT);
+        storeMessage(mailObject, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
     });
 
@@ -76,14 +85,14 @@ export function* sendMail(action) {
     
     // let afterDeliveredCallback = () => {
     //     console.log("Mail is delivered:", mailObject);
-    //     deleteMail(mailObject.uuid, MailTypes.OUTBOX);
-    //     storeMail(mailObject, MailTypes.SENT);
+    //     deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
+    //     storeMessage(mailObject, MailTypes.SENT);
     //     mailDeliveredCallback(mailObject);
     // };
 
     // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
     //     console.log("Mail is in the outbox:", mailObject);
-    //     storeMail(mailObject, MailTypes.OUTBOX);
+    //     storeMessage(mailObject, MailTypes.OUTBOX);
     //     mailSentCallback();
     // });
 
@@ -98,7 +107,7 @@ export function* subscribeForMail(action) {
     let mailReceivedCallback = (mailObject) => {
         console.log("Mail recieved: ", mailObject);
         mailObject.read_status = false;
-        storeMail(mailObject, mailObject.recipient, MailTypes.INBOX);
+        storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
         afterMailStoredCallback(mailObject);
     }
 
@@ -117,7 +126,7 @@ export function* confirmationRecieved(action){
 
 export function* loadFolder(action){
 
-    let emails = getEmailsFromFolder(action.payload.myUsername, action.payload.messageFolder);
+    let emails = getMessagesFromFolder(action.payload.myUsername, action.payload.messageFolder);
 
     yield put({
         type: 'LOAD_FOLDER_UPDATE',
@@ -127,12 +136,19 @@ export function* loadFolder(action){
 }
 
 export function* deleteMail(action){
-
     let messageObject = action.payload.messageObject;
     let messageFolder = action.payload.messageFolder;
     let afterDeletionCallback = action.payload.afterDeletionCallback;
 
-    storeMail(messageObject, MailTypes.DELETED);
-    deleteMailFromStorage(messageObject.uuid, messageFolder);
+    storeMessage(messageObject, MailTypes.DELETED);
+    deleteMessage(messageObject.uuid, messageFolder);
     afterDeletionCallback();
+}
+
+export function* mailSetRead(action) {
+    let { messageFolder, messageUUID, afterSetCallback } = action.payload;
+    let mailObject = getMessage(messageFolder, messageUUID);
+    mailObject.read_status = true;
+    storeMessage(mailObject, messageFolder);
+    afterSetCallback();
 }

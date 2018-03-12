@@ -18,7 +18,8 @@ import {
     mailReceivedSubscriber,
     confirmationRecievedSubscriber,
     loadFolderSubscriber,
-    deleteMailSubscriber
+    deleteMailSubscriber,
+    mailSetReadSubscriber
 } from './services/saga';
 
 
@@ -48,6 +49,7 @@ sagaMiddleware.run(mailReceivedSubscriber);
 sagaMiddleware.run(confirmationRecievedSubscriber);
 sagaMiddleware.run(loadFolderSubscriber);
 sagaMiddleware.run(deleteMailSubscriber);
+sagaMiddleware.run(mailSetReadSubscriber);
 
 localStorage.clear(); // Temporarily for login functionality TODO: remove this
 
