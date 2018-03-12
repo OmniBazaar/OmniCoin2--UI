@@ -181,6 +181,7 @@ class Mail extends Component {
       return props.mail.messages[props.mail.activeMessage];
   }
 
+
   _renderMessage() {
     let message = this.getMessage();
 
@@ -200,7 +201,9 @@ class Mail extends Component {
               {message.title}
             </div>
             <div>
-              <Button content='REPLY' onClick={this.onClickReply} className='button--transparent' />
+              { this.props.mail.activeFolder == MailTypes.INBOX &&
+                <Button content='REPLY' onClick={this.onClickReply} className='button--transparent' />
+              }
               <Button content='DELETE' onClick={this.onClickDelete} className='button--transparent' />
             </div>
           </div>
