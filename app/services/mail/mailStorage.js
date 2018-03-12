@@ -48,10 +48,10 @@ export function getEmailsFromFolder( user, messageFolder){
         let emails = Object.keys(mailFolder).map((mailUUID) => {
           let email = mailFolder[mailUUID];
           switch(messageFolder){
-            case 'inbox': email.user = email.sender; break;
-            case 'outbox': email.user = email.recipient; break;
-            case 'sent': email.user = email.recipient; break;
-            case 'deleted': email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
+            case MailTypes.INBOX: email.user = email.sender; break;
+            case MailTypes.OUTBOX: email.user = email.recipient; break;
+            case MailTypes.SENT: email.user = email.recipient; break;
+            case MailTypes.DELETED: email.user = (email.sender == user ? email.recipient: email.sender); break;
           }
           email.read = email.read_status;
           return email;

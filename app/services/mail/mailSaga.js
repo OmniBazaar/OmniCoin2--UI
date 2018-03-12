@@ -127,11 +127,12 @@ export function* changeFolder(action){
 
 export function* deleteMail(action){
 
-    let uuid = action.payload.uuid;
+    let messageObject = action.payload.messageObject;
     let user = action.payload.user;
     let messageFolder = action.payload.messageFolder;
     let afterDeletionCallback = action.payload.afterDeletionCallback;
 
-    deleteMailFromStorage(uuid, user, messageFolder);
+    storeMail(messageObject, user, MailTypes.DELETED);
+    deleteMailFromStorage(messageObject.uuid, user, messageFolder);
     afterDeletionCallback();
 }

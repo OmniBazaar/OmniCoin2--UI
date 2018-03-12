@@ -219,7 +219,7 @@ class Mail extends Component {
   onClickDelete() {
       if (this.props.mail.activeMessage >= 0){
         let messageObjToDelete = this.props.mail.messages[this.props.mail.activeMessage];
-        this.props.mailActions.deleteMail(messageObjToDelete.uuid,
+        this.props.mailActions.deleteMail(messageObjToDelete,
                                           this.props.auth.currentUser.username,
                                           this.props.mail.activeFolder,
                                           () => {

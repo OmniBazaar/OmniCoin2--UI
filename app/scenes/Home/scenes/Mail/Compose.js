@@ -51,7 +51,7 @@ class Compose extends Component {
    */
   onClickAddress() {}
 
-  onSubmit = (values) => {
+  onSubmit(values) {
     const { sender, recipient, subject, body } = values;
     this.props.mailActions.sendMail(
         this.props.auth.currentUser.username, 
