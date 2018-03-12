@@ -10,6 +10,7 @@ const {
   setActiveMessage,
   showReplyModal,
   sendMail,
+  deleteMail
 } = createActions({
   SHOW_COMPOSE_MODAL: (showCompose) => ({ showCompose }),
   SUBSCRIBE_FOR_MAIL: (reciever, afterMailStoredCallback) => ({reciever, afterMailStoredCallback}),
@@ -20,6 +21,7 @@ const {
   SET_ACTIVE_MESSAGE: (activeMessage) => ({ activeMessage }),
   SHOW_REPLY_MODAL: (reply) => ({ reply }),
   SEND_MAIL: (sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback) => ({sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback}),
+  DELETE_MAIL: (uuid, user, messageFolder, afterDeletionCallback) => ({uuid, user, messageFolder, afterDeletionCallback})
 });
 
 export {
@@ -32,4 +34,5 @@ export {
   setActiveMessage,
   showReplyModal,
   sendMail,
+  deleteMail
 }

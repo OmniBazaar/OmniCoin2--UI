@@ -33,6 +33,7 @@ export function deleteMail(uuid, user, messageFolder) {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
         let mailFolder = rootMailFolder[user][messageFolder];
         delete mailFolder[uuid];
+        localStorage.setItem('mail', JSON.stringify(rootMailFolder));
     }
     catch (e) {
         // do nothing

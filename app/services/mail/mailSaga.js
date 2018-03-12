@@ -1,6 +1,6 @@
 import {put, takeEvery, call} from 'redux-saga/effects';
 import { Apis } from 'bitsharesjs-ws';
-import { storeMail, getEmailsFromFolder, deleteMail } from './mailStorage';
+import { storeMail , getEmailsFromFolder, deleteMail as deleteMailFromStorage } from './mailStorage';
 
 export function* sendMailSubscriber() {
     yield takeEvery(
@@ -34,6 +34,13 @@ export function* changeFolderSubscriber(){
     yield takeEvery(
         'CHANGE_FOLDER',
         changeFolder
+    )
+}
+
+export function* deleteMailSubscriber(){
+    yield takeEvery(
+        'DELETE_MAIL',
+        deleteMail
     )
 }
 
@@ -99,18 +106,11 @@ export function* subscribeForMail(action) {
 }
 
 export function* mailReceived(action){
-
-    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]).then(() => {
-        
-    });
+    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]);
 }
 
 export function* confirmationRecieved(action){
-
-    console.log("AAA");
-    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]).then(() => {
-       
-    });
+    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]);
 }
 
 export function* changeFolder(action){
@@ -122,4 +122,15 @@ export function* changeFolder(action){
         messages: emails,
         messageFolder: action.payload.messageFolder
     });
+}
+
+export function* deleteMail(action){
+
+    let uuid = action.payload.uuid;
+    let user = action.payload.user;
+    let messageFolder = action.payload.messageFolder;
+    let afterDeletionCallback = action.payload.afterDeletionCallback;
+
+    deleteMailFromStorage(uuid, user, messageFolder);
+    afterDeletionCallback();
 }

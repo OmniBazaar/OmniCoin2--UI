@@ -17,6 +17,7 @@ import {
   setActiveFolder,
   subscribeForMail,
   mailReceived,
+  deleteMail,
   changeFolder,
   setActiveMessage,
   showReplyModal,
@@ -225,10 +226,18 @@ class Mail extends Component {
     this.props.mailActions.showReplyModal();
   }
 
-  /**
-   * Todo: to implement
-   */
-  onClickDelete() {}
+  onClickDelete() {
+      if (this.props.mail.activeMessage >= 0){
+        let messageObjToDelete = this.props.mail.messages[this.props.mail.activeMessage];
+        this.props.mailActions.deleteMail(messageObjToDelete.uuid,
+                                          this.props.auth.currentUser.username,
+                                          this.props.mail.activeFolder,
+                                          () => {
+                                              this.changeFolder(this.props.mail.activeFolder);
+                                          });
+      }
+      
+  }
 
   onClickCompose() {
     this.props.mailActions.showComposeModal();
@@ -281,9 +290,11 @@ export default connect(
     mailActions: bindActionCreators({ showComposeModal, 
                                       subscribeForMail,
                                       mailReceived,
+                                      deleteMail,
                                       changeFolder,
                                       setActiveFolder,
                                       setActiveMessage,
-                                      showReplyModal }, dispatch),
+                                      showReplyModal,
+                                       }, dispatch),
   }),
 )(Mail);

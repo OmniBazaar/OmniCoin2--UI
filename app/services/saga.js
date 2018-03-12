@@ -4,7 +4,8 @@ import { sendMailSubscriber,
          subscribeForMailSubscriber,
          mailReceivedSubscriber,
          confirmationRecievedSubscriber,
-         changeFolderSubscriber } from './mail/mailSaga';
+         changeFolderSubscriber,
+         deleteMailSubscriber } from './mail/mailSaga';
 
 export {
     connectionSubscriber,
@@ -13,5 +14,6 @@ export {
     subscribeForMailSubscriber,
     mailReceivedSubscriber,
     confirmationRecievedSubscriber,
-    changeFolderSubscriber
+    changeFolderSubscriber,
+    deleteMailSubscriber
 }
