@@ -18,42 +18,114 @@ import {
 
 import {
   getRecentTransactions,
+  setActivePage,
+  sortData,
+  filterData,
+  setPagination,
 } from '../../../../../services/accountSettings/accountActions';
+
+const iconSize = 20;
 
 const recentTransactions = [
   {
     id: 1,
     date: '2018-03-12',
-    from: '',
+    from: 'Unknown',
     to: '',
-    memo: '',
+    memo: 'Welcome bonus',
     amount: 1.50,
     fee: 0,
     Balance: 10500.50
-  }
+  },
+  {
+    id: 2,
+    date: '2018-01-12',
+    from: '',
+    to: 'Eugen L',
+    memo: '',
+    amount: 10.50,
+    fee: 5.0,
+    Balance: 10500.50
+  },
+  {
+    id: 3,
+    date: '2018-09-12',
+    from: 'Unknown',
+    to: '',
+    memo: '',
+    amount: 10.50,
+    fee: 0,
+    Balance: 10500.50
+  },
+  {
+    id: 4,
+    date: '2018-09-15',
+    from: '',
+    to: 'Emma',
+    memo: '',
+    amount: 10.50,
+    fee: 0,
+    Balance: 10500.50
+  },
+  {
+    id: 5,
+    date: '2018-09-15',
+    from: '',
+    to: 'Jessica',
+    memo: '',
+    amount: 10.50,
+    fee: 5.0,
+    Balance: 10500.50
+  },
+  {
+    id: 6,
+    date: '2018-09-15',
+    from: '',
+    to: 'to',
+    memo: '',
+    amount: 10.50,
+    fee: 0,
+    Balance: 10500.50
+  },
+  {
+    id: 7,
+    date: '2018-09-15',
+    from: 'Stella',
+    to: '',
+    memo: '',
+    amount: 10.50,
+    fee: 0,
+    Balance: 10500.50
+  },
+  {
+    id: 8,
+    date: '2018-09-15',
+    from: 'Stella',
+    to: 'Unknown',
+    memo: '',
+    amount: 10.50,
+    fee: 0,
+    Balance: 10500.50
+  },
 ];
 
 class RecentTransactions extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.accountSettingsActions.getRecentTransactions(recentTransactions);
-    /* this.props.accountSettingsActions.setPaginationTop(this.props.rowsPerPage); */
+    this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
   }
 
   handleFilterChange = (e) => {
     const { value } = e.target;
-    this.props.accountSettingsActions.filterDataTop(value);
+    this.props.accountSettingsActions.filterData(value);
   };
 
   sortData = (clickedColumn) => () => {
-    this.props.accountSettingsActions.sortDataTop(clickedColumn);
+    this.props.accountSettingsActions.sortData(clickedColumn);
   };
 
   handlePaginationChange = (e, { activePage }) => {
-    this.props.accountSettingsActions.setActivePageTop(activePage);
+    this.props.accountSettingsActions.setActivePage(activePage);
   };
 
   render() {
@@ -96,10 +168,11 @@ class RecentTransactions extends Component {
               <TableHeader>
                 <TableRow>
                   <TableHeaderCell key="date" sorted={sortColumn === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
-                    Date
+                    Date (GMT+2)
                   </TableHeaderCell>
                   <TableHeaderCell key="fromto" sorted={sortColumn === 'fromto' ? sortDirection : null} onClick={this.sortData('fromto')}>
-                    From To
+                    <Icon name="long arrow down" width={iconSize} height={iconSize} className="from-icon" />From
+                    <Icon name="long arrow up" width={iconSize} height={iconSize} className="to-icon" />To
                   </TableHeaderCell>
                   <TableHeaderCell key="memo" sorted={sortColumn === 'memo' ? sortDirection : null} onClick={this.sortData('memo')}>
                     Memo
@@ -130,6 +203,22 @@ class RecentTransactions extends Component {
               </TableBody>
             </Table>
           </div>
+          <div className="top-detail bottom">
+            <div className="pagination-container">
+              <Pagination
+                activePage={activePage}
+                boundaryRange={1}
+                onPageChange={this.handlePaginationChange}
+                size="mini"
+                siblingRange={1}
+                totalPages={totalPages}
+                firstItem={{ ariaLabel: 'First item', content: '<< First' }}
+                lastItem={{ ariaLabel: 'Last item', content: 'Last >>' }}
+                prevItem={{ ariaLabel: 'Previous item', content: '< Prev' }}
+                nextItem={{ ariaLabel: 'Next item', content: 'Next >' }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -144,6 +233,21 @@ RecentTransactions.propTypes = {
     setPagination: PropTypes.func,
     getRecentTransactions: PropTypes.func,
   }),
+  tableProps: PropTypes.shape({
+    sortable: PropTypes.bool,
+    compact: PropTypes.bool,
+    basic: PropTypes.string,
+    striped: PropTypes.bool,
+    size: PropTypes.string,
+  }),
+  account: PropTypes.shape({
+    recentTransactionsFiltered: [],
+    activePage: 1,
+    totalPages: 1,
+    sortColumn: 'date',
+    sortDirection: 'descending',
+  }),
+  rowsPerPage: PropTypes.number,
 };
 
 RecentTransactions.defaultProps = {
@@ -156,7 +260,13 @@ RecentTransactions.defaultProps = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    accountSettingsActions: bindActionCreators({ getRecentTransactions, }, dispatch),
+    accountSettingsActions: bindActionCreators({
+      getRecentTransactions,
+      setActivePage,
+      sortData,
+      filterData,
+      setPagination,
+    }, dispatch),
   }),
 )(RecentTransactions);
 

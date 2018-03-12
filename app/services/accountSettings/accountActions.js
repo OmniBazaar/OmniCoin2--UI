@@ -7,6 +7,10 @@ const {
   setEscrow,
   changePriority,
   getRecentTransactions,
+  setActivePage,
+  setPagination,
+  sortData,
+  filterData
 } = createActions({
   SET_REFERRER: (referrer) => ({ referrer }),
   SET_PUBLISHER: (publisher) => ({ publisher }),
@@ -14,6 +18,10 @@ const {
   SET_ESCROW: (escrow) => ({ escrow }),
   CHANGE_PRIORITY: (priority) => ({ priority }),
   GET_RECENT_TRANSACTIONS: (recentTransactions) => ({ recentTransactions }),
+  SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
+  SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
+  SORT_DATA: (sortColumn) => ({ sortColumn }),
+  FILTER_DATA: (filterText) => ({ filterText }),
 });
 
 export {
@@ -23,4 +31,8 @@ export {
   setEscrow,
   changePriority,
   getRecentTransactions,
+  setActivePage,
+  setPagination,
+  sortData,
+  filterData
 };

@@ -127,6 +127,19 @@ $sidebar-size: 250px;
     }
   }
 
+  .data-table .top-detail {
+    flex-direction: row !important;
+  }
+
+  .from-icon {
+    color: $green;
+  }
+
+  .to-icon {
+    color: $orange;
+    margin-left: 15px;
+  }
+
   .sidebar {
     &.settings {
       background-color: $gray;

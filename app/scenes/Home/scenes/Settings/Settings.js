@@ -84,7 +84,19 @@ class Settings extends Component {
                  },
                  {
                    menuItem: 'Recent Transactions',
-                   render: () => <Tab.Pane><RecentTransactions /></Tab.Pane>,
+                   render: () => (
+                     <Tab.Pane>
+                       <RecentTransactions
+                         rowsPerPage={5}
+                         tableProps={{
+                           sortable: true,
+                           compact: true,
+                           basic: 'very',
+                           striped: true,
+                           size: 'small'
+                         }}
+                       />
+                     </Tab.Pane>),
                  },
                  {
                    menuItem: 'Keys',
