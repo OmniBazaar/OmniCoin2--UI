@@ -60,14 +60,13 @@ const reducer = handleActions({
       ...state
     };
   },
-  CHANGE_FOLDER_UPDATE: (state = null, action) => {
+  LOAD_FOLDER_UPDATE: (state, action) => {
     return {
       ...state,
       messages: {
         ...state.messages,
         [action.messageFolder]: action.messages,
-      },
-      activeFolder: action.messageFolder
+      }
     };
   }
 }, defaultState);

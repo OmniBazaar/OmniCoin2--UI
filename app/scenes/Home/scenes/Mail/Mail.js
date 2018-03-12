@@ -19,7 +19,7 @@ import {
   subscribeForMail,
   mailReceived,
   deleteMail,
-  changeFolder,
+  loadFolder,
   setActiveMessage,
   showReplyModal,
 } from  '../../../../services/mail/mailActions';
@@ -73,18 +73,17 @@ class Mail extends Component {
   }
 
   componentDidMount () {
+    this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.INBOX);
+    this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
+    this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.SENT);
+    this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.DELETED);
     this.changeFolder(MailTypes.INBOX);
   }
 
   changeFolder(activeFolder) {
-    this.changeFolderAndSetWidth(activeFolder);
+    this.props.mailActions.loadFolder(this.props.auth.currentUser.username, activeFolder);
     this.props.mailActions.setActiveFolder(activeFolder);
     this.props.mailActions.setActiveMessage(0);
-  }
-
-  changeFolderAndSetWidth(activeFolder) {
-    this.props.mailActions.changeFolder(this.props.auth.currentUser.username, activeFolder);
-    
     this.setState({
       width: this.container.offsetWidth,
     });
@@ -291,7 +290,7 @@ export default connect(
                                       subscribeForMail,
                                       mailReceived,
                                       deleteMail,
-                                      changeFolder,
+                                      loadFolder,
                                       setActiveFolder,
                                       setActiveMessage,
                                       showReplyModal,

@@ -31,10 +31,10 @@ export function* confirmationRecievedSubscriber() {
     )
 }
 
-export function* changeFolderSubscriber(){
+export function* loadFolderSubscriber(){
     yield takeEvery(
-        'CHANGE_FOLDER',
-        changeFolder
+        'LOAD_FOLDER',
+        loadFolder
     )
 }
 
@@ -112,15 +112,15 @@ export function* mailReceived(action){
 }
 
 export function* confirmationRecieved(action){
-    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]);
+    Apis.instance().mail_api.exec('confirm_received', [action.payload.uuid]);
 }
 
-export function* changeFolder(action){
+export function* loadFolder(action){
 
     let emails = getEmailsFromFolder(action.payload.myUsername, action.payload.messageFolder);
 
     yield put({
-        type: 'CHANGE_FOLDER_UPDATE',
+        type: 'LOAD_FOLDER_UPDATE',
         messages: emails,
         messageFolder: action.payload.messageFolder
     });

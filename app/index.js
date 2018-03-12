@@ -17,7 +17,7 @@ import {
     subscribeForMailSubscriber,
     mailReceivedSubscriber,
     confirmationRecievedSubscriber,
-    changeFolderSubscriber,
+    loadFolderSubscriber,
     deleteMailSubscriber
 } from './services/saga';
 
@@ -46,7 +46,7 @@ sagaMiddleware.run(sendMailSubscriber);
 sagaMiddleware.run(subscribeForMailSubscriber);
 sagaMiddleware.run(mailReceivedSubscriber);
 sagaMiddleware.run(confirmationRecievedSubscriber);
-sagaMiddleware.run(changeFolderSubscriber);
+sagaMiddleware.run(loadFolderSubscriber);
 sagaMiddleware.run(deleteMailSubscriber);
 
 localStorage.clear(); // Temporarily for login functionality TODO: remove this

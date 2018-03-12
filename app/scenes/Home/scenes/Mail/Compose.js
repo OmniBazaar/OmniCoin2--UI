@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
 
-import { setActiveFolder, sendMail, confirmationReceived, changeFolder } from  '../../../../services/mail/mailActions';
+import { setActiveFolder, sendMail, confirmationReceived, loadFolder } from  '../../../../services/mail/mailActions';
 import MailTypes from '../../../../services/mail/mailTypes';
 
 import './mail.scss';
@@ -59,12 +59,16 @@ class Compose extends Component {
         subject, 
         body,
         () => {
-          this.props.mailActions.changeFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
+          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
+          this.props.mailActions.setActiveFolder(MailTypes.OUTBOX);
           this.closeCompose();
         },
         (mailObject) => {
-          this.props.mailActions.changeFolder(this.props.auth.currentUser.username, MailTypes.SENT);
+          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.SENT);
+          this.props.mailActions.setActiveFolder(MailTypes.SENT);
           this.props.mailActions.confirmationReceived(mailObject.uuid);
+          this.closeCompose();
+          
         });
   };
 
@@ -149,6 +153,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ setActiveFolder, sendMail, confirmationReceived, changeFolder }, dispatch),
+    mailActions: bindActionCreators({ setActiveFolder, sendMail, confirmationReceived, loadFolder }, dispatch),
   }),
 )(Compose);
