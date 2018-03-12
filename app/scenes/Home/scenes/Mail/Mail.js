@@ -15,6 +15,7 @@ import DeletedIcon from './images/folder-deleted.svg';
 import {
   showComposeModal,
   setActiveFolder,
+  subscribeForMail,
   fetchMessagesFromFolder,
   setActiveMessage,
   showReplyModal,
@@ -30,36 +31,6 @@ const MailTypes = Object.freeze({
   SENT: 'sent',
   DELETED: 'deleted',
 });
-
-const messages = [/*
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-  {
-    id: 2,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Hey there',
-    body: 'This is a test for emails',
-    read: false,
-  },
-  {
-    id: 3,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Yet another email',
-    body: 'Testing the emails',
-    read: true,
-  },
-*/];
 
 const folders = [
   {
@@ -99,6 +70,8 @@ class Mail extends Component {
     this.onCloseCompose = this.onCloseCompose.bind(this);
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
+
+    this.props.mailActions.subscribeForMail(this.props.auth.currentUser.username);
   }
 
   componentDidMount () {
@@ -302,6 +275,6 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ showComposeModal, fetchMessagesFromFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
+    mailActions: bindActionCreators({ showComposeModal, subscribeForMail, fetchMessagesFromFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
   }),
 )(Mail);

@@ -2,6 +2,9 @@ import { createActions } from 'redux-actions';
 
 const {
   showComposeModal,
+  subscribeForMail,
+  mailReceived,
+  confirmationReceived,
   fetchMessagesFromFolder,
   setActiveFolder,
   setActiveMessage,
@@ -9,6 +12,9 @@ const {
   sendMail,
 } = createActions({
   SHOW_COMPOSE_MODAL: (showCompose) => ({ showCompose }),
+  SUBSCRIBE_FOR_MAIL: (reciever) => ({reciever}),
+  MAIL_RECEIVED: (uuid) => ({uuid}),
+  CONFIRMATION_RECEIVED: (uuid) => ({uuid}),
   FETCH_MESSAGES_FROM_FOLDER: (currentUser, messageFolder) => ({currentUser, messageFolder}),
   SET_ACTIVE_FOLDER: (activeFolder) => ({ activeFolder }),
   SET_ACTIVE_MESSAGE: (activeMessage) => ({ activeMessage }),
@@ -18,6 +24,9 @@ const {
 
 export {
   showComposeModal,
+  subscribeForMail,
+  mailReceived,
+  confirmationReceived,
   fetchMessagesFromFolder,
   setActiveFolder,
   setActiveMessage,

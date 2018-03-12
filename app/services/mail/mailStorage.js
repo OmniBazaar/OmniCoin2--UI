@@ -11,10 +11,10 @@ export function storeMail({uuid, sender, recipient, subject, body, created_time,
     if (!mailObject[sender])
         mailObject[sender] = {};
 
-    if (!mailObject[sender]["outbox"])
-        mailObject[sender]["outbox"] = {};
+    if (!mailObject[sender][messageFolder])
+        mailObject[sender][messageFolder] = {};
 
-    mailObject[sender]["outbox"][uuid] = {
+    mailObject[sender][messageFolder][uuid] = {
         uuid: uuid,
         sender: sender,
         recipient: recipient,

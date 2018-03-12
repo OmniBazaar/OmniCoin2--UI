@@ -11,7 +11,7 @@ export const nodes = [
     {name: "Bitshares Node", url: "wss://japan.bitshares.apasia.tech/ws"},
     {name: "Local", url: "ws://127.0.0.1:8090"},
     {name: "Netherlands", url: "wss://dex.rnglab.org"},
-    {name: "Scopic Node", url: "ws://35.171.116.3:8090"},
+    // {name: "Scopic Node", url: "ws://35.171.116.3:8090"},
     {name: "Munich Node", url: "wss://eu.openledger.info/ws"}
 ];
 

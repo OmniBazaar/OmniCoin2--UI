@@ -9,13 +9,33 @@ export function* sendMailSubscriber() {
     )
 }
 
+export function* subscribeForMailSubscriber(){
+    yield takeEvery(
+        'SUBSCRIBE_FOR_MAIL',
+        subscribeForMail
+    )
+}
+
+export function* mailReceivedSubscriber() {
+    yield takeEvery(
+        'MAIL_RECEIVED',
+        mailReceived
+    )
+}
+
+export function* confirmationRecievedSubscriber() {
+    yield takeEvery(
+        'CONFIRMATION_RECEIVED',
+        confirmationRecieved
+    )
+}
+
 export function* fetchMessagesFromFolderSubscriber(){
     yield takeEvery(
         'FETCH_MESSAGES_FROM_FOLDER',
         fetchMessagesFromFolder
     )
 }
-
 
 export function* sendMail(action) {
     
@@ -36,24 +56,57 @@ export function* sendMail(action) {
         uuid: (new Date()).getTime()
     }
 
-    let afterSendCallback = () => {
-        console.log("Mail is delivered:", mailObject);
-        deleteMail(mailObject.uuid, sender, 'outbox');
-        storeMail(mailObject, sender, 'sent');
-        mailDeliveredCallback();
-    };
-
-    Apis.instance().mail_api().exec("send", [afterSendCallback, mailObject]).then(() => {
-        console.log("Mail is in the outbox:", mailObject);
+    // this is just for testing
+    Promise.resolve().then(() => {
         storeMail(mailObject, sender, 'outbox');
         mailSentCallback();
     });
 
-    // Promise.resolve().then(() => {
-    //     console.log("Mail is in the outbox");
+    /* and this should be real code
+    
+    // let afterDeliveredCallback = () => {
+    //     console.log("Mail is delivered:", mailObject);
+    //     deleteMail(mailObject.uuid, sender, 'outbox');
+    //     storeMail(mailObject, sender, 'sent');
+    //     mailDeliveredCallback();
+    // };
+
+    // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
+    //     console.log("Mail is in the outbox:", mailObject);
     //     storeMail(mailObject, sender, 'outbox');
     //     mailSentCallback();
     // });
+
+    */
+}
+
+export function* subscribeForMail(action) {
+
+    let reciever = action.payload.reciever;
+
+    let mailReceivedCallback = (mailObject) => {
+        console.log("Mail recieved: ", mailObject);
+        mailObject.read_status = false;
+        storeMail(mailObject, mailObject.recipient, 'inbox');
+    }
+
+    Apis.instance().mail_api.exec("subscribe", [mailReceivedCallback, reciever]).then(() => {
+        // do nothing special   
+    });
+}
+
+export function* mailReceived(action){
+
+    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]).then(() => {
+        
+    });
+}
+
+export function* confirmationRecieved(action){
+
+    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]).then(() => {
+       
+    });
 }
 
 export function* fetchMessagesFromFolder(action){
@@ -64,36 +117,4 @@ export function* fetchMessagesFromFolder(action){
         type: 'FETCHED_FOLDER_MESSAGES',
         messages: emails
     });
-
-    // let messageFolder = action.payload.messageFolder;
-    // let currentUser = action.payload.currentUser;
-
-    // try {
-    //     let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-    //     let mailFolder = rootMailFolder[currentUser][messageFolder];
-    //     let emails = Object.keys(mailFolder).map((mailUUID) => {
-    //       let email = mailFolder[mailUUID];
-    //       switch(messageFolder){
-    //         case 'inbox': email.user = email.sender; break;
-    //         case 'outbox': email.user = email.recipient; break;
-    //         case 'sent': email.user = email.recipient; break;
-    //         case 'deleted': email.user = (email.sender == 'ME' ? email.recipient: email.sender); break;
-    //       }
-    //       email.read = email.read_status;
-    //       return email;
-    //     });
-
-    //     yield put({
-    //         type: 'FETCHED_FOLDER_MESSAGES',
-    //         messages: emails,
-    //         messageFolder: messageFolder
-    //     });
-    //   }
-    //   catch(e) {
-    //     yield put({
-    //         type: 'FETCHED_FOLDER_MESSAGES',
-    //         messages: [],
-    //         messageFolder: messageFolder
-    //     });
-    // }
 }

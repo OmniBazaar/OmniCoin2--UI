@@ -1,11 +1,17 @@
 import {subscriber as connectionSubscriber} from './blockchain/connection/connectionSaga';
 import {subscriber as authSubscriber} from './blockchain/auth/authSaga';
-import { sendMailSubscriber } from './mail/mailSaga';
-import { fetchMessagesFromFolderSubscriber } from './mail/mailSaga';
+import { sendMailSubscriber,
+         subscribeForMailSubscriber,
+         mailReceivedSubscriber,
+         confirmationRecievedSubscriber,
+         fetchMessagesFromFolderSubscriber } from './mail/mailSaga';
 
 export {
     connectionSubscriber,
     authSubscriber,
     sendMailSubscriber,
+    subscribeForMailSubscriber,
+    mailReceivedSubscriber,
+    confirmationRecievedSubscriber,
     fetchMessagesFromFolderSubscriber
 }
