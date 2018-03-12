@@ -8,12 +8,13 @@ import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
 
 import {connect as connectToNode} from './services/blockchain/connection/connectionActions';
-
+import {requestPcIds} from './services/blockchain/auth/authActions';
 
 class Root extends Component {
 
   componentWillMount() {
       this.props.connectionActions.connectToNode(this.props.settings.activeNode);
+      this.props.authActions.requestPcIds();
   }
 
   render() {
@@ -35,5 +36,6 @@ export default connect(
     },
     (dispatch) => ({
         connectionActions: bindActionCreators({ connectToNode }, dispatch),
+        authActions: bindActionCreators({ requestPcIds }, dispatch)
     }),
 )(Root);

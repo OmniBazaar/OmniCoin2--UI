@@ -11,6 +11,9 @@ $closed-side-bar-size: 70px;
     width: $sidebar-size;
     height: 100%;
     background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .header {
       display: flex;
       flex-direction: row;

@@ -8,6 +8,7 @@ import UserIcon from '../../images/th-user-white.svg';
 import OmniIcon from '../../images/th-omnicoin.svg';
 import PublicData from './component/PublicData';
 import PrivateData from './component/PrivateData';
+import RecentTransactions from './component/RecentTransactions';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import './settings.scss';
@@ -15,12 +16,6 @@ import './settings.scss';
 const iconSize = 20;
 
 class Settings extends Component {
-  _recentTransactions() {
-    return (
-      <div>Recent Transactions</div>
-    );
-  }
-
   _keys() {
     return (
       <div>Keys</div>
@@ -89,7 +84,7 @@ class Settings extends Component {
                  },
                  {
                    menuItem: 'Recent Transactions',
-                   render: () => <Tab.Pane>{this._recentTransactions()}</Tab.Pane>,
+                   render: () => <Tab.Pane><RecentTransactions /></Tab.Pane>,
                  },
                  {
                    menuItem: 'Keys',

@@ -1,0 +1,58 @@
+@import '../../../../styles/index';
+
+.signup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 350px;
+  width: 300px;
+  margin-top: -20px;
+  .hybrid-input {
+    display: flex;
+    flex-direction: row;
+    .field {
+      border-bottom-right-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+      border-right: none !important;
+    }
+    .button {
+      width: 60px;
+      border: 1px solid rgba(34,36,38,.15);
+      border-bottom-right-radius: 0.28571429rem !important;
+      border-top-right-radius: 0.28571429rem !important;
+      border-bottom-left-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+      margin-right: 0;
+      border-left: none;
+      background: white;
+      color: $primary-blue;
+    }
+    .icon {
+      margin: 0;
+      height: 38px;
+      padding-top: 0.7em;
+      cursor: inherit;
+    }
+  }
+  .question {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .agreement-terms {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    a {
+      margin-left: 3px;
+    }
+    span {
+      margin-left: 3px;
+    }
+  }
+  color: $primary-white;
+}
+
+.hidden {
+  display: none !important;
+}

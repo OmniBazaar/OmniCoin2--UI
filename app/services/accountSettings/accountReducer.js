@@ -6,6 +6,7 @@ import {
   setTransactionProcessor,
   setEscrow,
   changePriority,
+  getRecentTransactions,
 } from './accountActions';
 
 const defaultState = {
@@ -14,7 +15,23 @@ const defaultState = {
   transactionProcessor: false,
   escrow: false,
   priority: 'local',
+  recentTransactions: [],
+  recentTransactionsFiltered: [],
+  sortDirection: 'descending',
+  sortColumn: 'rank',
+  activePage: 1,
+  totalPages: 1,
+  rowsPerPage: 10,
+  filterTextTop: '',
 };
+
+const sliceData = (data, activePage, rowsPerPage) => (
+  data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+);
+
+const getTotalPages = (data, rowsPerPage) => (
+  Math.ceil(data.length / rowsPerPage)
+);
 
 const reducer = handleActions({
   [combineActions(setReferrer)](state, { payload: { referrer } }) {
@@ -45,6 +62,13 @@ const reducer = handleActions({
     return {
       ...state,
       priority
+    };
+  },
+  [combineActions(getRecentTransactions)](state, { payload: { recentTransactions } }) {
+    return {
+      ...state,
+      recentTransactions,
+      recentTransactionsFiltered: recentTransactions,
     };
   },
 }, defaultState);

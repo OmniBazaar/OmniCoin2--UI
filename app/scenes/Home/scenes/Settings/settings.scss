@@ -18,6 +18,14 @@ $sidebar-size: 250px;
 
       .tabs {
         border-bottom: none;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .segment.active {
+          height: 100%;
+          overflow-y: auto;
+        }
       }
 
       .check-form {

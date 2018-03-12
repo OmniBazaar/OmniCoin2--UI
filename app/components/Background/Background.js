@@ -2,11 +2,12 @@
  * Created by denissamohvalov on 12.02.18.
  */
 import React, {Component} from 'react';
-import { Image } from 'semantic-ui-react'
+import { Image } from 'semantic-ui-react';
 
 import BackgroundImage from '../../assets/images/main-bg.jpg';
-import Logo from '../../assets/images/logo.png'
-import './background.scss'
+import Logo from '../../assets/images/logo.png';
+import SocialNetworksFooter from '../SocialNetworksFooter/SocialNetworksFooter';
+import './background.scss';
 export default class Background extends Component {
     render() {
         return (
@@ -18,15 +19,7 @@ export default class Background extends Component {
                 <div className="content">
                     {this.props.children}
                 </div>
-                <div className="footer">
-                    <a href="#">Facebook</a>
-                    <span>|</span>
-                    <a href="#">Twitter</a>
-                    <span>|</span>
-                    <a href="#">Google+</a>
-                    <span>|</span>
-                    <a href="#">Linkedin</a>
-                </div>
+                <SocialNetworksFooter/>
             </div>
         )
     }
