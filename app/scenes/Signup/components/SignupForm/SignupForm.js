@@ -9,14 +9,76 @@ import cn from 'classnames';
 import { key } from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
-
+import { defineMessages, injectIntl } from 'react-intl';
 import { FetchChain } from "omnibazaarjs/es";
-
 
 import { signup } from  '../../../../services/blockchain/auth/authActions';
 
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
+
+const messages = defineMessages({
+  usernameExists: {
+    id: 'SignupForm.usernameExists',
+    defaultMessage: 'Username already taken'
+  },
+  noAccount: {
+    id: 'SignupForm.noAccount',
+    defaultMessage: 'Account doesn\'t exist'
+  },
+  fieldRequired: {
+    id: 'SignupForm.fieldRequired',
+    defaultMessage: 'This field is required'
+  },
+  passwordDoesntMatch: {
+    id: 'SignupForm.passwordDoesntMatch',
+    defaultMessage: 'Password doesn\'t match'
+  },
+  copy: {
+    id: 'SignupForm.copy',
+    defaultMessage: 'Copy'
+  },
+  passwordCopied: {
+    id: 'SignupForm.passwordCopied',
+    defaultMessage: 'Password copied!'
+  },
+  referrerName: {
+    id: 'SignupForm.referrerName',
+    defaultMessage: 'Referrer name'
+  },
+  accountName: {
+    id: 'SignupForm.accountName',
+    defaultMessage: 'Account name'
+  },
+  confirmPassword: {
+    id: 'SignupForm.confirmPassword',
+    defaultMessage: 'Confirm password'
+  },
+  agree: {
+    id: 'SignupForm.agree',
+    defaultMessage: 'I agree with'
+  },
+  termsAndCond: {
+    id: 'SignupForm.termsAndCond',
+    defaultMessage: 'Terms & Conditions'
+  },
+  signup: {
+    id: 'SignupForm.signup',
+    defaultMessage: 'Sign up'
+  },
+  signin: {
+    id: 'SignupForm.signin',
+    defaultMessage: 'Sign in'
+  },
+  haveAccount: {
+    id: 'SignupForm.haveAccount',
+    defaultMessage: 'Already have an account?'
+  },
+  error: {
+    id: 'SignupForm.error',
+    defaultMessage: 'Error'
+  }
+});
 
 class SignupForm extends Component {
 
@@ -33,8 +95,10 @@ class SignupForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
-      toastr.error("Error", nextProps.auth.error);
+      let content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
+      toastr.error(formatMessage(messages.error), content);
     }
   }
 
@@ -46,14 +110,14 @@ class SignupForm extends Component {
       } catch (e) {
         throw previousErrors;
       }
-      throw Object.assign({}, previousErrors, {username: "Username already taken"});
+      throw Object.assign({}, previousErrors, {username: messages.usernameExists});
     }
     if (field === "referrer") {
       if (!values.referrer) return;
       try {
         let account = await FetchChain("getAccount", values.referrer);
       } catch (e) {
-        throw Object.assign({}, previousErrors, {referrer: "Account doesn't exist"});
+        throw Object.assign({}, previousErrors, {referrer: messages.noAccount});
       }
     }
     if (previousErrors) {
@@ -64,10 +128,10 @@ class SignupForm extends Component {
   static validate = (values) => {
     const errors = {};
     if (!values.agreementTerms) {
-      errors.agreementTerms = "This field is required";
+      errors.agreementTerms = messages.fieldRequired;
     }
     if (values.password !== values.passwordConfirmation) {
-      errors.passwordConfirmation = "Password doesn't match";
+      errors.passwordConfirmation = messages.passwordDoesntMatch;
     }
     return errors;
   };
@@ -88,6 +152,7 @@ class SignupForm extends Component {
   }
 
   renderPasswordGeneratorField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
+    const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
         <input
@@ -96,8 +161,8 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={() => toastr.success("Copy", "Password copied!")}>
-            Copy
+          <Button onClick={() => toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied))}>
+            {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
       </div>
@@ -105,19 +170,21 @@ class SignupForm extends Component {
   };
 
   renderReferrerField = ({input,  meta: {asyncValidating, touched, error, warning, active}}) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
     let show = !error && touched && !asyncValidating && !active && !!input.value;
     let iconClassName = cn("button icon", show ? "" : "hidden");
     let inputClassName = cn(show ? "field" : "");
     return (
       [
         <div>
-          {touched && ((error && <span className="error">{error}</span>) || (warning && <span className="warning">{warning}</span>))}
+          {touched && (error && <span className="error">{errorMessage}</span>)}
         </div>,
         <div className="hybrid-input">
           <input
             {...input}
             type="text"
-            placeholder="Referrer name"
+            placeholder={formatMessage(messages.referrerName)}
             className={inputClassName}
           />
           <Icon
@@ -131,6 +198,7 @@ class SignupForm extends Component {
   render() {
     const {handleSubmit, valid, auth, asyncValidating} = this.props;
     let btnClass = cn(auth.loading || !!this.props.asyncValidating ? "ui loading" : "");
+    const { formatMessage } = this.props.intl;
     return (
       <Form
         onSubmit={handleSubmit(this.submit)}
@@ -139,26 +207,25 @@ class SignupForm extends Component {
         <Field
           type="text"
           name="username"
-          placeholder="Account name"
+          placeholder={formatMessage(messages.accountName)}
           component={ValidatableField}
-          validate={[required({message: "This field is required"})]}
+          validate={[required({message: formatMessage(messages.fieldRequired)})]}
         />
         <Field
           type="text"
           name="password"
           component={this.renderPasswordGeneratorField}
-          validate={[required({message: "This field is required"})]}
+          validate={[required({message: formatMessage(messages.fieldRequired)})]}
         />
         <Field
           type="password"
-          placeholder="Confirm password"
+          placeholder={formatMessage(messages.confirmPassword)}
           name="passwordConfirmation"
           component={ValidatableField}
-          validate={[required({message: "This field is required"})]}
+          validate={[required({message: formatMessage(messages.fieldRequired)})]}
         />
         <Field
           type="text"
-          placeholder="Referrer name"
           name="referrer"
           component={this.renderReferrerField}
         />
@@ -168,11 +235,11 @@ class SignupForm extends Component {
             name="agreementTerms"
             component="input"
           />
-          <span>I agree with </span>
-          <a href="#">Terms & Conditions</a>
+          <span>{ formatMessage(messages.agree) } </span>
+          <a href="#">{ formatMessage(messages.termsAndCond) }</a>
         </div>
         <Button
-          content="Sign up"
+          content={ formatMessage(messages.signup) }
           disabled={!valid || auth.loading || !!asyncValidating}
           color="green"
           className={btnClass}
@@ -180,10 +247,10 @@ class SignupForm extends Component {
         />
         <Divider fitted/>
         <div className="question">
-          <h3>Already have an account?</h3>
+          <h3>{ formatMessage(messages.haveAccount) }</h3>
         </div>
         <Button
-          content="Sign in"
+          content={ formatMessage(messages.signin) }
           disabled={auth.loading}
           color="blue"
           className={btnClass}
@@ -203,6 +270,8 @@ SignupForm = reduxForm({
   asyncBlurFields: ['username', 'referrer'],
   destroyOnUnmount: true,
 })(SignupForm);
+
+SignupForm = injectIntl(SignupForm);
 
 export default connect(
   (state) => {

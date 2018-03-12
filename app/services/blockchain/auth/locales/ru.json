@@ -1,0 +1,4 @@
+{
+  "AuthService.invalidPassword": "Неверный пароль",
+  "AuthService.noAccount": "Aккаунт не существует"
+}

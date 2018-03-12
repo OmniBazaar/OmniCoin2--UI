@@ -1,3 +1,4 @@
+import { defineMessages } from 'react-intl';
 import {
   put,
   takeEvery,
@@ -10,6 +11,18 @@ import {
 } from "omnibazaarjs/es";
 
 const faucetAddress = "http://35.171.116.3:80";
+
+const messages = defineMessages({
+  invalidPassword: {
+    id: 'AuthService.invalidPassword',
+    defaultMessage: 'Invalid password',
+  },
+  noAccount: {
+    id: 'AuthService.noAccount',
+    defaultMessage: 'Account doesn\'t exist'
+  }
+});
+
 
 function generateKeyFromPassword(accountName, role, password) {
     let seed = accountName + role + password;
@@ -34,8 +47,10 @@ export function* subscriber() {
 }
 
 export function* login(action) {
-    let username = action.payload.username;
-    let password = action.payload.password;
+    let {
+      username,
+      password
+    } = action.payload;
     let roles = ["active", "owner"];
     let isAuthorized = false;
     try {
@@ -57,18 +72,20 @@ export function* login(action) {
                 }
             });
         } else {
-            yield put({type: 'LOGIN_FAILED', error:  "Invalid password"});
+            yield put({type: 'LOGIN_FAILED', error:  messages.invalidPassword});
         }
     } catch(e) {
       console.log("ERROR ", e);
-      yield put({type: 'LOGIN_FAILED', error: "Account doesn't exist"});
+      yield put({type: 'LOGIN_FAILED', error: messages.noAccount});
     }
 }
 
 export function* signup(action) {
-  let username = action.payload.username;
-  let password = action.payload.password;
-  let referrer = action.payload.referrer;
+  let {
+    username,
+    password,
+    referrer
+  } = action.payload;
   let ownerKey = generateKeyFromPassword(username, "owner", password);
   let activeKey = generateKeyFromPassword(username, "active", password);
   try {
