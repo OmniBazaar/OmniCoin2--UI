@@ -1,6 +1,7 @@
 import {put, takeEvery, call} from 'redux-saga/effects';
 import { Apis } from 'bitsharesjs-ws';
 import { storeMail , getEmailsFromFolder, deleteMail as deleteMailFromStorage } from './mailStorage';
+import MailTypes from './mailTypes';
 
 export function* sendMailSubscriber() {
     yield takeEvery(
@@ -66,7 +67,7 @@ export function* sendMail(action) {
     // this is just for testing
     Promise.resolve().then(() => {
         console.log("Mail is delivered:", mailObject);
-        storeMail(mailObject, sender, 'sent');
+        storeMail(mailObject, sender, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
     });
 
@@ -74,14 +75,14 @@ export function* sendMail(action) {
     
     // let afterDeliveredCallback = () => {
     //     console.log("Mail is delivered:", mailObject);
-    //     deleteMail(mailObject.uuid, sender, 'outbox');
-    //     storeMail(mailObject, sender, 'sent');
+    //     deleteMail(mailObject.uuid, sender, MailTypes.OUTBOX);
+    //     storeMail(mailObject, sender, MailTypes.SENT);
     //     mailDeliveredCallback(mailObject);
     // };
 
     // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
     //     console.log("Mail is in the outbox:", mailObject);
-    //     storeMail(mailObject, sender, 'outbox');
+    //     storeMail(mailObject, sender, MailTypes.OUTBOX);
     //     mailSentCallback();
     // });
 
@@ -96,7 +97,7 @@ export function* subscribeForMail(action) {
     let mailReceivedCallback = (mailObject) => {
         console.log("Mail recieved: ", mailObject);
         mailObject.read_status = false;
-        storeMail(mailObject, mailObject.recipient, 'inbox');
+        storeMail(mailObject, mailObject.recipient, MailTypes.INBOX);
         afterMailStoredCallback(mailObject);
     }
 

@@ -11,6 +11,7 @@ import InboxIcon from './images/folder-inbox.svg';
 import OutboxIcon from './images/folder-outbox.svg';
 import SentIcon from './images/folder-sent.svg';
 import DeletedIcon from './images/folder-deleted.svg';
+import MailTypes from '../../../../services/mail/mailTypes';
 
 import {
   showComposeModal,
@@ -26,13 +27,6 @@ import {
 import Header from '../../../../components/Header';
 
 import './mail.scss';
-
-const MailTypes = Object.freeze({
-  INBOX: 'inbox',
-  OUTBOX: 'outbox',
-  SENT: 'sent',
-  DELETED: 'deleted',
-});
 
 const folders = [
   {
@@ -82,10 +76,6 @@ class Mail extends Component {
     this.changeFolderAndSetWidth(this.props.activeFolder);
   }
 
-  /*
-   * Todo: this method needs to be changed to fetch the messages
-   * when backend is implemented.
-   */
   changeFolderAndSetWidth(activeFolder) {
     this.props.mailActions.changeFolder(this.props.auth.currentUser.username, activeFolder);
     

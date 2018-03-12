@@ -6,14 +6,8 @@ import {
   showReplyModal,
 } from './mailActions';
 
+import MailTypes from './mailTypes';
 import {sendMail} from './mailSaga';
-
-const MailTypes = Object.freeze({
-  INBOX: 'inbox',
-  OUTBOX: 'outbox',
-  SENT: 'sent',
-  DELETED: 'deleted',
-});
 
 let defaultState = {
   messages: [],

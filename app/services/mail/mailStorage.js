@@ -1,4 +1,4 @@
-
+import MailTypes from './mailTypes';
 
 export function storeMail({uuid, sender, recipient, subject, body, created_time, read_status }, user, messageFolder) {
 
