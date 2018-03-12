@@ -106,7 +106,7 @@ class Compose extends Component {
                   component='input'
                   className='textfield'
                 />
-                <Button content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
+                <Button type="button" content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
               </div>
               <div className='form-group'>
                 <label>Subject</label>
@@ -131,7 +131,7 @@ class Compose extends Component {
               <div className='form-group submit-group'>
                 <label />
                 <div className='field'>
-                  <Button content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
+                  <Button type="button" content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
                   <Button type='submit' content='SEND' className='button--primary' />
                 </div>
               </div>

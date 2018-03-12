@@ -133,7 +133,6 @@ class Mail extends Component {
       const sumReducer = (accumulator, currentMessage) => {
         return accumulator + (currentMessage.read_status ? 0 : 1);
       }
-
       const numberOfUnreadMessagesInFolder = props.mail.messages[folder.type].reduce(sumReducer, 0);
 
       return (
