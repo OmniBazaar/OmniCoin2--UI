@@ -30,10 +30,10 @@ export function* confirmationRecievedSubscriber() {
     )
 }
 
-export function* fetchMessagesFromFolderSubscriber(){
+export function* changeFolderSubscriber(){
     yield takeEvery(
-        'FETCH_MESSAGES_FROM_FOLDER',
-        fetchMessagesFromFolder
+        'CHANGE_FOLDER',
+        changeFolder
     )
 }
 
@@ -58,8 +58,9 @@ export function* sendMail(action) {
 
     // this is just for testing
     Promise.resolve().then(() => {
-        storeMail(mailObject, sender, 'outbox');
-        mailSentCallback();
+        console.log("Mail is delivered:", mailObject);
+        storeMail(mailObject, sender, 'sent');
+        mailDeliveredCallback(mailObject);
     });
 
     /* and this should be real code
@@ -68,7 +69,7 @@ export function* sendMail(action) {
     //     console.log("Mail is delivered:", mailObject);
     //     deleteMail(mailObject.uuid, sender, 'outbox');
     //     storeMail(mailObject, sender, 'sent');
-    //     mailDeliveredCallback();
+    //     mailDeliveredCallback(mailObject);
     // };
 
     // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
@@ -83,11 +84,13 @@ export function* sendMail(action) {
 export function* subscribeForMail(action) {
 
     let reciever = action.payload.reciever;
+    let afterMailStoredCallback = action.payload.afterMailStoredCallback;
 
     let mailReceivedCallback = (mailObject) => {
         console.log("Mail recieved: ", mailObject);
         mailObject.read_status = false;
         storeMail(mailObject, mailObject.recipient, 'inbox');
+        afterMailStoredCallback(mailObject);
     }
 
     Apis.instance().mail_api.exec("subscribe", [mailReceivedCallback, reciever]).then(() => {
@@ -104,17 +107,19 @@ export function* mailReceived(action){
 
 export function* confirmationRecieved(action){
 
+    console.log("AAA");
     Apis.instance().mail_api.exec('set_received', [action.payload.uuid]).then(() => {
        
     });
 }
 
-export function* fetchMessagesFromFolder(action){
+export function* changeFolder(action){
 
     let emails = getEmailsFromFolder(action.payload.currentUser, action.payload.messageFolder);
 
     yield put({
         type: 'FETCHED_FOLDER_MESSAGES',
-        messages: emails
+        messages: emails,
+        messageFolder: action.payload.messageFolder
     });
 }

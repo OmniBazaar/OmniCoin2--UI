@@ -16,7 +16,8 @@ import {
   showComposeModal,
   setActiveFolder,
   subscribeForMail,
-  fetchMessagesFromFolder,
+  mailReceived,
+  changeFolder,
   setActiveMessage,
   showReplyModal,
 } from  '../../../../services/mail/mailActions';
@@ -71,19 +72,21 @@ class Mail extends Component {
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
 
-    this.props.mailActions.subscribeForMail(this.props.auth.currentUser.username);
+    this.props.mailActions.subscribeForMail(this.props.auth.currentUser.username, (receivedMailObject) => {
+      this.props.mailActions.mailReceived(receivedMailObject.uuid);
+    });
   }
 
   componentDidMount () {
-    this.fetchMessagesFromFolder(this.props.activeFolder);
+    this.changeFolderAndSetWidth(this.props.activeFolder);
   }
 
   /*
    * Todo: this method needs to be changed to fetch the messages
    * when backend is implemented.
    */
-  fetchMessagesFromFolder(activeFolder) {
-    this.props.mailActions.fetchMessagesFromFolder(this.props.auth.currentUser.username, activeFolder);
+  changeFolderAndSetWidth(activeFolder) {
+    this.props.mailActions.changeFolder(this.props.auth.currentUser.username, activeFolder);
     
     this.setState({
       width: this.container.offsetWidth,
@@ -91,7 +94,7 @@ class Mail extends Component {
   }
 
   changeFolder(activeFolder) {
-    this.fetchMessagesFromFolder(activeFolder);
+    this.changeFolderAndSetWidth(activeFolder);
     this.props.mailActions.setActiveFolder(activeFolder);
     this.props.mailActions.setActiveMessage(0);
   }
@@ -275,6 +278,12 @@ export default connect(
     return {...state.default}
   },
   (dispatch) => ({
-    mailActions: bindActionCreators({ showComposeModal, subscribeForMail, fetchMessagesFromFolder, setActiveFolder, setActiveMessage, showReplyModal }, dispatch),
+    mailActions: bindActionCreators({ showComposeModal, 
+                                      subscribeForMail,
+                                      mailReceived,
+                                      changeFolder,
+                                      setActiveFolder,
+                                      setActiveMessage,
+                                      showReplyModal }, dispatch),
   }),
 )(Mail);
