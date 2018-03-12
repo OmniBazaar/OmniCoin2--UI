@@ -1,0 +1,17 @@
+{
+  "SignupForm.usernameExists": "Username already taken",
+  "SignupForm.noAccount": "Account doesn't exist",
+  "SignupForm.fieldRequired": "This field is required",
+  "SignupForm.passwordDoesntMatch": "Password doesn't match",
+  "SignupForm.copy": "Copy",
+  "SignupForm.passwordCopied": "Password copied!",
+  "SignupForm.referrerName": "Referrer name",
+  "SignupForm.accountName": "Account name",
+  "SignupForm.confirmPassword": "Confirm password",
+  "SignupForm.agree": "I agree with",
+  "SignupForm.termsAndCond": "Terms & Conditions",
+  "SignupForm.signup": "Sign up",
+  "SignupForm.signin": "Sign in",
+  "SignupForm.haveAccount": "Already have an account?",
+  "SignupForm.error": "Error"
+}

@@ -8,13 +8,48 @@ import {toastr} from 'react-redux-toastr'
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
 import { FetchChain } from "omnibazaarjs/es";
-
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { login } from  '../../../../services/blockchain/auth/authActions';
 
 import './login-form.scss';
 import BtnLock from '../../../../assets/images/common/btn-lock-norm+pres.svg';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
+
+const messages = defineMessages({
+  accountDoesntExist: {
+    id: 'LoginForm.accountDoesntExist',
+    defaultMessage: 'Account doesn\'t exist'
+  },
+  enterPassword: {
+    id: 'LoginForm.enterPassword',
+    defaultMessage: 'Enter password'
+  },
+  unlock: {
+    id: 'LoginForm.unlock',
+    defaultMessage: 'Unlock'
+  },
+  enterUsername: {
+    id: 'LoginForm.enterUsername',
+    defaultMessage: 'Enter your username'
+  },
+  fieldRequired: {
+    id: 'LoginForm.fieldRequired',
+    defaultMessage: 'This field is required'
+  },
+  noAccount: {
+    id: 'LoginForm.noAccount',
+    defaultMessage: 'Do not have an account?'
+  },
+  signup: {
+    id: 'LoginForm.signup',
+    defaultMessage: 'Sign up'
+  },
+  error: {
+    id: 'LoginForm.error',
+    defaultMessage: 'Error'
+  }
+});
 
 class LoginForm extends Component {
 
@@ -37,8 +72,10 @@ class LoginForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
-      toastr.error("Error", nextProps.auth.error);
+      let content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
+      toastr.error(formatMessage(messages.error), content);
     }
   }
 
@@ -46,7 +83,8 @@ class LoginForm extends Component {
     try {
       let account = await FetchChain("getAccount", values.username);
     } catch (e) {
-      throw {username: "Account doesn't exist"};
+      console.log("ERR", e);
+      throw {username: messages.accountDoesntExist};
     }
   };
 
@@ -63,18 +101,20 @@ class LoginForm extends Component {
   }
 
   renderPasswordField = ({input, disabled, loading, meta: {touched, error, warning}}) => {
+    const { formatMessage } = this.props.intl;
     let btnClass = cn(loading || !!this.props.asyncValidating ? "ui loading" : "");
+    const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div>
-        {touched && ((error && <span className="error">{error}</span>))}
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <div className="password">
           <input
             {...input}
             type="password"
-            placeholder="Enter password"
+            placeholder={ formatMessage(messages.enterPassword) }
           />
           <Button
-            content="UNLOCK"
+            content={ formatMessage(messages.unlock) }
             disabled={disabled || this.props.auth.loading || !!this.props.asyncValidating}
             color="green"
             type="submit"
@@ -86,7 +126,13 @@ class LoginForm extends Component {
   };
 
   render() {
-    const {handleSubmit, valid, auth, asyncValidating} = this.props;
+    const {
+      handleSubmit,
+      valid,
+      auth,
+      asyncValidating
+    } = this.props;
+    const { formatMessage } = this.props.intl;
     const {showUsernameInput} = this.state;
     return (
       <Form
@@ -98,9 +144,9 @@ class LoginForm extends Component {
             <Field
               type="text"
               name="username"
-              placeholder="Enter your username"
+              placeholder={ formatMessage(messages.enterUsername) }
               component={ValidatableField}
-              validate={[required({message: "This field is required"})]}
+              validate={[required({message: formatMessage(messages.fieldRequired)})]}
             />
           </div>
           :
@@ -114,14 +160,14 @@ class LoginForm extends Component {
           disabled={!valid}
           loading={auth.loading}
           component={this.renderPasswordField}
-          validate={[required({message: "This field is required"})]}
+          validate={[required({message: formatMessage(messages.fieldRequired)})]}
         />
         <Divider fitted/>
         <div className="question">
-          <h3>Do not have an account?</h3>
+          <h3>{ formatMessage(messages.noAccount) }</h3>
         </div>
         <Button
-          content="Sign up"
+          content={ formatMessage(messages.signup) }
           disabled={auth.loading}
           color="blue"
           onClick={this.signUp}
@@ -131,6 +177,7 @@ class LoginForm extends Component {
   }
 }
 
+
 LoginForm = withRouter(LoginForm);
 
 LoginForm = reduxForm({
@@ -139,6 +186,8 @@ LoginForm = reduxForm({
   asyncBlurFields: ['username'],
   destroyOnUnmount: true,
 })(LoginForm);
+
+LoginForm = injectIntl(LoginForm);
 
 export default connect(
   (state) => {

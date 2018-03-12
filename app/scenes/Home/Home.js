@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Sidebar, Segment, Button, Menu, Image, Icon, Header} from 'semantic-ui-react'
 import cn from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import {
     Route,
@@ -66,31 +67,52 @@ class Home extends Component {
                             <div className="menu">
                                 <NavLink to="/wallet" activeClassName='active' className="menu-item">
                                     <Image src={WalletIcon} height={iconSize} width={iconSize}/>
-                                    <span>Wallet</span>
+                                    <FormattedMessage
+                                      id="Home.wallet"
+                                      defaultMessage="Wallet"
+                                    />
                                 </NavLink>
                                 <NavLink to="/marketplace" activeClassName='active' className="menu-item">
                                     <Image src={MarketplaceIcon} height={iconSize} width={iconSize}/>
-                                    <span>Marketplace</span>
+                                    <FormattedMessage
+                                      id="Home.marketplace"
+                                      defaultMessage="Marketplace"
+                                    />
                                 </NavLink>
                                 <NavLink to="/transfer" activeClassName='active' className="menu-item">
                                     <Image src={TransferIcon} height={iconSize} width={iconSize}/>
-                                    <span>Transfer</span>
+                                    <FormattedMessage
+                                      id="Home.transfer"
+                                      defaultMessage="Transfer"
+                                    />
                                 </NavLink>
                                 <NavLink to="/escrow" activeClassName='active' className="menu-item">
                                     <Image src={EscrowIcon} height={iconSize} width={iconSize}/>
-                                    <span>Escrow</span>
+                                    <FormattedMessage
+                                      id="Home.escrow"
+                                      defaultMessage="Escrow"
+                                    />
                                 </NavLink>
                                 <NavLink to="/processors" activeClassName='active' className="menu-item">
                                     <Image src={ProcessorsIcon} height={iconSize} width={iconSize}/>
-                                    <span>Processors</span>
+                                    <FormattedMessage
+                                      id="Home.processors"
+                                      defaultMessage="Processors"
+                                    />
                                 </NavLink>
                                 <NavLink to="/mail" activeClassName='active' className="menu-item">
                                     <Image src={MailIcon} height={iconSize} width={iconSize}/>
-                                    <span>Mail</span>
+                                    <FormattedMessage
+                                      id="Home.mail"
+                                      defaultMessage="Mail"
+                                    />
                                 </NavLink>
                                 <NavLink to="/support" activeClassName='active' className="menu-item">
                                     <Image src={SupportIcon} height={iconSize} width={iconSize}/>
-                                    <span>Support</span>
+                                    <FormattedMessage
+                                      id="Home.support"
+                                      defaultMessage="Support"
+                                    />
                                 </NavLink>
                             </div>
                         </div>

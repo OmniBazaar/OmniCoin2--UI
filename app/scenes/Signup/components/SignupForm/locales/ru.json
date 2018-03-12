@@ -1,0 +1,17 @@
+{
+  "SignupForm.usernameExists": "Пользователь с таким именем уже существует",
+  "SignupForm.noAccount": "Аккаунт не существует",
+  "SignupForm.fieldRequired": "Это поле обязательно к заполнению",
+  "SignupForm.passwordDoesntMatch": "Пароли не совпадают",
+  "SignupForm.copy": "Копировать",
+  "SignupForm.passwordCopied": "Пароль скопирован!",
+  "SignupForm.referrerName": "Имя реферрера",
+  "SignupForm.accountName": "Аккаунт",
+  "SignupForm.confirmPassword": "Подтвердите пароль",
+  "SignupForm.agree": "Я согласен с",
+  "SignupForm.termsAndCond": "Условиями и Соглашениями",
+  "SignupForm.signup": "Регистрация",
+  "SignupForm.signin": "Вход",
+  "SignupForm.haveAccount": "У Вас уже есть аккаунт?",
+  "SignupForm.error": "Ошибка"
+}

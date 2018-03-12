@@ -1,0 +1,10 @@
+{
+  "LoginForm.accountDoesntExist": "Аккаунт не существует",
+  "LoginForm.enterPassword": "Введите пароль",
+  "LoginForm.unlock": "Войти",
+  "LoginForm.enterUsername": "Введите имя пользователя",
+  "LoginForm.fieldRequired": "Это поле обязательно к заполнению!",
+  "LoginForm.noAccount": "У Вас еще нет аккаунта?",
+  "LoginForm.signup": "Регистрация",
+  "LoginForm.error": "Ошибка"
+}
