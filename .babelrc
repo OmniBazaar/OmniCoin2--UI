@@ -7,7 +7,15 @@
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports"],
+  "plugins": [
+    "add-module-exports",
+    [
+      "react-intl", {
+      "messagesDir": "./app/dist/i18n",
+      "enforceDescriptions": false
+    }
+    ]
+  ],
   "env": {
     "production": {
       "presets": ["react-optimize"],
