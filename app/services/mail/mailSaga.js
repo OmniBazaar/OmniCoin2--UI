@@ -74,29 +74,20 @@ export function* sendMail(action) {
         uuid: (new Date()).getTime()
     }
 
-    // this is just for testing
-    Promise.resolve().then(() => {
+    let afterDeliveredCallback = () => {
         console.log("Mail is delivered:", mailObject);
+        deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
         storeMessage(mailObject, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
+    };
+
+    Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
+        console.log("Mail is in the outbox:", mailObject);
+        storeMessage(mailObject, MailTypes.OUTBOX);
+        mailSentCallback();
     });
 
-    /* and this should be real code
     
-    // let afterDeliveredCallback = () => {
-    //     console.log("Mail is delivered:", mailObject);
-    //     deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
-    //     storeMessage(mailObject, MailTypes.SENT);
-    //     mailDeliveredCallback(mailObject);
-    // };
-
-    // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
-    //     console.log("Mail is in the outbox:", mailObject);
-    //     storeMessage(mailObject, MailTypes.OUTBOX);
-    //     mailSentCallback();
-    // });
-
-    */
 }
 
 export function* subscribeForMail(action) {
