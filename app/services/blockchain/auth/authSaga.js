@@ -34,8 +34,10 @@ export function* subscriber() {
 }
 
 export function* login(action) {
-    let username = action.payload.username;
-    let password = action.payload.password;
+    let {
+      username,
+      password
+    } = action.payload;
     let roles = ["active", "owner"];
     let isAuthorized = false;
     try {
@@ -66,9 +68,11 @@ export function* login(action) {
 }
 
 export function* signup(action) {
-  let username = action.payload.username;
-  let password = action.payload.password;
-  let referrer = action.payload.referrer;
+  let {
+    username,
+    password,
+    referrer
+  } = action.payload;
   let ownerKey = generateKeyFromPassword(username, "owner", password);
   let activeKey = generateKeyFromPassword(username, "active", password);
   try {
