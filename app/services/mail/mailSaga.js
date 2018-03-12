@@ -67,7 +67,7 @@ export function* sendMail(action) {
     // this is just for testing
     Promise.resolve().then(() => {
         console.log("Mail is delivered:", mailObject);
-        storeMail(mailObject, sender, MailTypes.SENT);
+        storeMail(mailObject, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
     });
 
@@ -75,14 +75,14 @@ export function* sendMail(action) {
     
     // let afterDeliveredCallback = () => {
     //     console.log("Mail is delivered:", mailObject);
-    //     deleteMail(mailObject.uuid, sender, MailTypes.OUTBOX);
-    //     storeMail(mailObject, sender, MailTypes.SENT);
+    //     deleteMail(mailObject.uuid, MailTypes.OUTBOX);
+    //     storeMail(mailObject, MailTypes.SENT);
     //     mailDeliveredCallback(mailObject);
     // };
 
     // Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
     //     console.log("Mail is in the outbox:", mailObject);
-    //     storeMail(mailObject, sender, MailTypes.OUTBOX);
+    //     storeMail(mailObject, MailTypes.OUTBOX);
     //     mailSentCallback();
     // });
 
@@ -116,7 +116,7 @@ export function* confirmationRecieved(action){
 
 export function* changeFolder(action){
 
-    let emails = getEmailsFromFolder(action.payload.currentUser, action.payload.messageFolder);
+    let emails = getEmailsFromFolder(action.payload.myUsername, action.payload.messageFolder);
 
     yield put({
         type: 'FETCHED_FOLDER_MESSAGES',
@@ -128,11 +128,10 @@ export function* changeFolder(action){
 export function* deleteMail(action){
 
     let messageObject = action.payload.messageObject;
-    let user = action.payload.user;
     let messageFolder = action.payload.messageFolder;
     let afterDeletionCallback = action.payload.afterDeletionCallback;
 
-    storeMail(messageObject, user, MailTypes.DELETED);
-    deleteMailFromStorage(messageObject.uuid, user, messageFolder);
+    storeMail(messageObject, MailTypes.DELETED);
+    deleteMailFromStorage(messageObject.uuid, messageFolder);
     afterDeletionCallback();
 }

@@ -119,6 +119,7 @@ class Mail extends Component {
    */
   _renderItems() {
     const { props } = this;
+   
     let self = this;
 
     return folders.map(function (folder, index) {
@@ -132,7 +133,7 @@ class Mail extends Component {
         <div key={'folder-' + index} className={containerClass} onClick={() => self.changeFolder(folder.type)}>
           {self._renderFolderIcon(folder.type)}
           <span>{folder.label}</span>
-          <span className='amount'>{folder.newEmails > 0 ? folder.newEmails : ''}</span>
+          <span className='amount'>1</span>
         </div>
       );
     })
@@ -149,8 +150,8 @@ class Mail extends Component {
     const { props } = this;
     let self = this;
 
-    if (props.mail.messages) {
-      return props.mail.messages.map(function (message, index) {
+    if (props.mail.messages[props.mail.activeFolder].length > 0) {
+      return props.mail.messages[props.mail.activeFolder].map(function (message, index) {
         const containerClass = classNames({
           'mail-summary': true,
           'active': props.mail.activeMessage === index,
@@ -177,8 +178,8 @@ class Mail extends Component {
   getMessage() {
     const { props } = this;
 
-    if (props.mail.messages)
-      return props.mail.messages[props.mail.activeMessage];
+    if (props.mail.messages[props.mail.activeFolder].length > 0)
+      return props.mail.messages[props.mail.activeFolder][props.mail.activeMessage];
   }
 
 
@@ -221,9 +222,8 @@ class Mail extends Component {
 
   onClickDelete() {
       if (this.props.mail.activeMessage >= 0){
-        let messageObjToDelete = this.props.mail.messages[this.props.mail.activeMessage];
+        let messageObjToDelete = this.props.mail.messages[this.props.mail.activeFolder][this.props.mail.activeMessage];
         this.props.mailActions.deleteMail(messageObjToDelete,
-                                          this.props.auth.currentUser.username,
                                           this.props.mail.activeFolder,
                                           () => {
                                               this.changeFolder(this.props.mail.activeFolder);

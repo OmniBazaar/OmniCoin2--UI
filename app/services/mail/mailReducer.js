@@ -10,7 +10,13 @@ import MailTypes from './mailTypes';
 import {sendMail} from './mailSaga';
 
 let defaultState = {
-  messages: [],
+
+  messages: {
+    [MailTypes.INBOX]: [],
+    [MailTypes.OUTBOX]: [],
+    [MailTypes.SENT]: [],
+    [MailTypes.DELETED]: []
+  },
   sender: '',
   to: '',
   subject: '',
@@ -19,7 +25,7 @@ let defaultState = {
   activeMessage: 0,
   showCompose: false,
   mailSent: false,
-  reply: false,
+  reply: false
 };
 
 const reducer = handleActions({
@@ -55,9 +61,13 @@ const reducer = handleActions({
     };
   },
   FETCHED_FOLDER_MESSAGES: (state, action) => {
+    
     return {
       ...state,
-      messages: action.messages,
+      messages: {
+        ...state.messages,
+        [action.messageFolder]: action.messages,
+      },
       activeFolder: action.messageFolder
     };
   }
