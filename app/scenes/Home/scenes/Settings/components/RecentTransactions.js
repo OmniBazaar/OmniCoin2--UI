@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
 import {
@@ -13,7 +14,6 @@ import {
   Pagination,
   Input,
   Icon,
-  Image,
 } from 'semantic-ui-react';
 
 import {
@@ -25,6 +25,64 @@ import {
 } from '../../../../../services/accountSettings/accountActions';
 
 const iconSize = 20;
+const messages = defineMessages({
+  firstItem: {
+    id: 'Settings.firstItem',
+    defaultMessage: 'First item'
+  },
+  lastItem: {
+    id: 'Settings.lastItem',
+    defaultMessage: 'Last item'
+  },
+  previousItem: {
+    id: 'Settings.previousItem',
+    defaultMessage: 'Previous item'
+  },
+  nextItem: {
+    id: 'Settings.nextItem',
+    defaultMessage: 'Next item'
+  },
+  first: {
+    id: 'Settings.first',
+    defaultMessage: 'First'
+  },
+  last: {
+    id: 'Settings.last',
+    defaultMessage: 'Last'
+  },
+  prev: {
+    id: 'Settings.prev',
+    defaultMessage: 'Prev'
+  },
+  next: {
+    id: 'Settings.next',
+    defaultMessage: 'Next'
+  },
+  date: {
+    id: 'Settings.date',
+    defaultMessage: 'Date'
+  },
+  memo: {
+    id: 'Settings.memo',
+    defaultMessage: 'Memo'
+  },
+  amount: {
+    id: 'Settings.amount',
+    defaultMessage: 'Amount'
+  },
+  fee: {
+    id: 'Settings.fee',
+    defaultMessage: 'Fee'
+  },
+  balance: {
+    id: 'Settings.balance',
+    defaultMessage: 'Balance'
+  },
+  details: {
+    id: 'Settings.details',
+    defaultMessage: 'DETAILS'
+  },
+});
 
 const recentTransactions = [
   {
@@ -136,6 +194,7 @@ class RecentTransactions extends Component {
       sortColumn,
       recentTransactionsFiltered
     } = this.props.account;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className="private-data">
@@ -156,10 +215,10 @@ class RecentTransactions extends Component {
                 size="mini"
                 siblingRange={1}
                 totalPages={totalPages}
-                firstItem={{ ariaLabel: 'First item', content: '<< First' }}
-                lastItem={{ ariaLabel: 'Last item', content: 'Last >>' }}
-                prevItem={{ ariaLabel: 'Previous item', content: '< Prev' }}
-                nextItem={{ ariaLabel: 'Next item', content: 'Next >' }}
+                firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
+                lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
+                prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
+                nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
               />
             </div>
           </div>
@@ -168,23 +227,23 @@ class RecentTransactions extends Component {
               <TableHeader>
                 <TableRow>
                   <TableHeaderCell key="date" sorted={sortColumn === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
-                    Date (GMT+2)
+                    {formatMessage(messages.date)} (GMT+2)
                   </TableHeaderCell>
                   <TableHeaderCell key="fromto" sorted={sortColumn === 'fromto' ? sortDirection : null} onClick={this.sortData('fromto')}>
                     <Icon name="long arrow down" width={iconSize} height={iconSize} className="from-icon" />From
                     <Icon name="long arrow up" width={iconSize} height={iconSize} className="to-icon" />To
                   </TableHeaderCell>
                   <TableHeaderCell key="memo" sorted={sortColumn === 'memo' ? sortDirection : null} onClick={this.sortData('memo')}>
-                    Memo
+                    {formatMessage(messages.memo)}
                   </TableHeaderCell>
                   <TableHeaderCell key="amount" sorted={sortColumn === 'amount' ? sortDirection : null} onClick={this.sortData('amount')}>
-                    Amount
+                    {formatMessage(messages.amount)}
                   </TableHeaderCell>
                   <TableHeaderCell key="fee" sorted={sortColumn === 'fee' ? sortDirection : null} onClick={this.sortData('fee')}>
-                    Fee
+                    {formatMessage(messages.fee)}
                   </TableHeaderCell>
                   <TableHeaderCell key="balance" sorted={sortColumn === 'balance' ? sortDirection : null} onClick={this.sortData('balance')}>
-                    Balance
+                    {formatMessage(messages.balance)}
                   </TableHeaderCell>
                 </TableRow>
               </TableHeader>
@@ -197,7 +256,7 @@ class RecentTransactions extends Component {
                       <TableCell>{row.memo}</TableCell>
                       <TableCell>{row.amount}</TableCell>
                       <TableCell>{row.fee}</TableCell>
-                      <TableCell>{row.balance} <a>DETAILS</a></TableCell>
+                      <TableCell>{row.balance} <a>{formatMessage(messages.details)}</a></TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -212,10 +271,10 @@ class RecentTransactions extends Component {
                 size="mini"
                 siblingRange={1}
                 totalPages={totalPages}
-                firstItem={{ ariaLabel: 'First item', content: '<< First' }}
-                lastItem={{ ariaLabel: 'Last item', content: 'Last >>' }}
-                prevItem={{ ariaLabel: 'Previous item', content: '< Prev' }}
-                nextItem={{ ariaLabel: 'Next item', content: 'Next >' }}
+                firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
+                lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
+                prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
+                nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
               />
             </div>
           </div>
@@ -268,5 +327,4 @@ export default connect(
       setPagination,
     }, dispatch),
   }),
-)(RecentTransactions);
-
+)(injectIntl(RecentTransactions));

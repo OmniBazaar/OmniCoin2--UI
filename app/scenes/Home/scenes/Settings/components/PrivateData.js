@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -9,6 +10,40 @@ import { changePriority } from '../../../../../services/accountSettings/accountA
 import '../settings.scss';
 
 const iconSize = 20;
+const messages = defineMessages({
+  notPublisherYet: {
+    id: 'Settings.notPublisherYet',
+    defaultMessage: 'You are not a publisher yet.'
+  },
+  publisherNeedInfo: {
+    id: 'Settings.publisherNeedInfo',
+    defaultMessage: 'We need the following information so that we can connect you to a Publisher of listings that align with your interests.'
+  },
+  localArea: {
+    id: 'Settings.localArea',
+    defaultMessage: 'Local area.'
+  },
+  byCategoryType: {
+    id: 'Settings.byCategoryType',
+    defaultMessage: 'By Category / Type'
+  },
+  publisherName: {
+    id: 'Settings.publisherName',
+    defaultMessage: 'Publisher Name'
+  },
+  country: {
+    id: 'Settings.country',
+    defaultMessage: 'Country'
+  },
+  startTyping: {
+    id: 'Settings.startTyping',
+    defaultMessage: 'Start typing...'
+  },
+  apply: {
+    id: 'Settings.apply',
+    defaultMessage: 'APPLY'
+  },
+});
 
 const PriorityTypes = Object.freeze({
   LOCAL_DATA: 'local',
@@ -90,14 +125,14 @@ class PrivateData extends Component {
 
   publisherForm() {
     const { priority } = this.props.account;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className="publisher-form">
         <div className="header">
-          <p className="title">You are not a publisher yet.</p>
+          <p className="title">{formatMessage(messages.notPublisherYet)}</p>
           <p>
-            We need the following information so that we can connect you to a
-            Publisher of listings that align with your interests.
+            {formatMessage(messages.publisherNeedInfo)}
           </p>
         </div>
         <Form onSubmit={this.onSubmit} className="mail-form-container">
@@ -113,7 +148,7 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.LOCAL_DATA}
                   value={PriorityTypes.LOCAL_DATA}
                 />
-                <label className="checkbox-inline">Local area</label>
+                <label className="checkbox-inline">{formatMessage(messages.localArea)}</label>
               </div>
 
               <div className="radio-wrapper">
@@ -125,7 +160,7 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.BY_CATEGORY}
                   value={PriorityTypes.BY_CATEGORY}
                 />
-                <label className="checkbox-inline">By Category / Type</label>
+                <label className="checkbox-inline">{formatMessage(messages.byCategoryType)}</label>
               </div>
 
               <div className="radio-wrapper">
@@ -137,17 +172,17 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.PUBLISHER}
                   value={PriorityTypes.PUBLISHER}
                 />
-                <label className="checkbox-inline">Publisher Name</label>
+                <label className="checkbox-inline">{formatMessage(messages.publisherName)}</label>
               </div>
             </div>
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>Country</label>
+            <label>{formatMessage(messages.country)}</label>
             <Field
               type="text"
               name="country"
-              placeholder="Country"
+              placeholder={formatMessage(messages.country)}
               component="input"
               className="textfield"
             />
@@ -158,7 +193,7 @@ class PrivateData extends Component {
             <Field
               type="text"
               name="city"
-              placeholder="Start typing..."
+              placeholder={formatMessage(messages.startTyping)}
               component="input"
               className="textfield"
             />
@@ -167,7 +202,7 @@ class PrivateData extends Component {
           <div className="form-group submit-group">
             <label />
             <div className="field">
-              <Button type="submit" content="APPLY" className="button--green-bg" />
+              <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
             </div>
             <div className="col-1" />
           </div>
@@ -212,4 +247,4 @@ export default connect(
       changePriority,
     }, dispatch),
   }),
-)(PrivateData);
+)(injectIntl(PrivateData));
