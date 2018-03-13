@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Modal, Tab, Image } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import UserIcon from '../../images/th-user-white.svg';
@@ -10,8 +11,10 @@ import OmniIcon from '../../images/th-omnicoin.svg';
 import PublicData from './components/PublicData';
 import PrivateData from './components/PrivateData';
 import RecentTransactions from './components/RecentTransactions';
+import TransactionDetails from './components/TransactionDetails';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
+import { showDetailsModal } from '../../../../services/accountSettings/accountActions';
 import './settings.scss';
 
 const iconSize = 20;
@@ -51,6 +54,12 @@ const messages = defineMessages({
 });
 
 class Settings extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onCloseDetails = this.onCloseDetails.bind(this);
+  }
+
   keys() {
     return (
       <div>Keys</div>
@@ -68,6 +77,10 @@ class Settings extends Component {
       this.props.onClose();
     }
   };
+
+  onCloseDetails() {
+    this.props.accountSettingsActions.showDetailsModal();
+  }
 
   sideMenu() {
     const { formatMessage } = this.props.intl;
@@ -102,6 +115,10 @@ class Settings extends Component {
   renderModal() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
+    const containerClass = classNames({
+      overlay: true,
+      'details-visible': props.account.showDetails,
+    });
 
     return (
       <Modal size="fullscreen" open={props.menu.showSettings} onClose={this.close}>
@@ -147,6 +164,11 @@ class Settings extends Component {
                  },
                 ]}
               />
+              <div className={containerClass} onClick={this.onCloseDetails} />
+              <TransactionDetails
+                showCompose={props.account.showDetails}
+                onClose={this.onCloseDetails}
+              />
             </div>
           </div>
         </Modal.Content>
@@ -176,6 +198,6 @@ Settings.defaultProps = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    accountSettingsActions: bindActionCreators({ getCurrentUser, }, dispatch),
+    accountSettingsActions: bindActionCreators({ getCurrentUser, showDetailsModal }, dispatch),
   }),
 )(injectIntl(Settings));

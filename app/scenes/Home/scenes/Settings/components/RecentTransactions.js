@@ -22,9 +22,11 @@ import {
   sortData,
   filterData,
   setPagination,
+  showDetailsModal,
 } from '../../../../../services/accountSettings/accountActions';
 
 const iconSize = 20;
+
 const messages = defineMessages({
   firstItem: {
     id: 'Settings.firstItem',
@@ -168,6 +170,13 @@ const recentTransactions = [
 ];
 
 class RecentTransactions extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onCloseDetails = this.onCloseDetails.bind(this);
+    this.onClickDetails = this.onClickDetails.bind(this);
+  }
+
   componentDidMount() {
     this.props.accountSettingsActions.getRecentTransactions(recentTransactions);
     this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
@@ -186,6 +195,14 @@ class RecentTransactions extends Component {
     this.props.accountSettingsActions.setActivePage(activePage);
   };
 
+  onClickDetails() {
+    this.props.accountSettingsActions.showDetailsModal();
+  }
+
+  onCloseDetails() {
+    this.props.accountSettingsActions.showDetailsModal();
+  }
+
   render() {
     const {
       activePage,
@@ -195,6 +212,7 @@ class RecentTransactions extends Component {
       recentTransactionsFiltered
     } = this.props.account;
     const { formatMessage } = this.props.intl;
+    const { props } = this;
 
     return (
       <div className="private-data">
@@ -256,7 +274,12 @@ class RecentTransactions extends Component {
                       <TableCell>{row.memo}</TableCell>
                       <TableCell>{row.amount}</TableCell>
                       <TableCell>{row.fee}</TableCell>
-                      <TableCell>{row.balance} <a>{formatMessage(messages.details)}</a></TableCell>
+                      <TableCell>
+                        {row.balance}
+                        <span className="link" onClick={this.onClickDetails}>
+                          {formatMessage(messages.details)}
+                        </span>
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -291,6 +314,7 @@ RecentTransactions.propTypes = {
     setActivePage: PropTypes.func,
     setPagination: PropTypes.func,
     getRecentTransactions: PropTypes.func,
+    showDetailsModal: PropTypes.func,
   }),
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
@@ -325,6 +349,7 @@ export default connect(
       sortData,
       filterData,
       setPagination,
+      showDetailsModal,
     }, dispatch),
   }),
 )(injectIntl(RecentTransactions));

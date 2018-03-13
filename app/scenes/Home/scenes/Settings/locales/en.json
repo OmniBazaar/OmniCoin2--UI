@@ -38,5 +38,6 @@
   "Settings.publisherName": "Publisher Name",
   "Settings.country": "Country",
   "Settings.startTyping": "Start typing...",
-  "Settings.apply": "APPLY"
+  "Settings.apply": "APPLY",
+  "Settings.close": "CLOSE"
 }

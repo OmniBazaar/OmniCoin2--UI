@@ -12,6 +12,7 @@ import {
   filterData,
   setPagination,
   sortData,
+  showDetailsModal,
 } from './accountActions';
 
 const defaultState = {
@@ -28,6 +29,7 @@ const defaultState = {
   totalPages: 1,
   rowsPerPage: 10,
   filterText: '',
+  showDetails: false,
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -67,6 +69,12 @@ const reducer = handleActions({
     return {
       ...state,
       priority
+    };
+  },
+  [combineActions(showDetailsModal)](state, { payload: { showDetails } }) {
+    return {
+      ...state,
+      showDetails: !state.showDetails
     };
   },
   [combineActions(getRecentTransactions)](state, { payload: { recentTransactions } }) {

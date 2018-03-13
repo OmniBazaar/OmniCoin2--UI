@@ -10,7 +10,8 @@ const {
   setActivePage,
   setPagination,
   sortData,
-  filterData
+  filterData,
+  showDetailsModal
 } = createActions({
   SET_REFERRER: (referrer) => ({ referrer }),
   SET_PUBLISHER: (publisher) => ({ publisher }),
@@ -22,6 +23,7 @@ const {
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SORT_DATA: (sortColumn) => ({ sortColumn }),
   FILTER_DATA: (filterText) => ({ filterText }),
+  SHOW_DETAILS_MODAL: (showDetails) => ({ showDetails }),
 });
 
 export {
@@ -34,5 +36,6 @@ export {
   setActivePage,
   setPagination,
   sortData,
-  filterData
+  filterData,
+  showDetailsModal
 };
