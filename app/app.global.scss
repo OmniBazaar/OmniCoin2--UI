@@ -5,8 +5,10 @@
 @import "~font-awesome/css/font-awesome.css";
 @import '~react-redux-toastr/src/styles/index.scss';
 @import '~semantic-ui-css/semantic.css';
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Titillium+Web');
 
 body {
+  font-family: 'Titillium Web', sans-serif;
   margin: 0;
 }
 
