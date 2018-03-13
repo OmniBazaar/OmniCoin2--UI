@@ -11,7 +11,8 @@ const {
   setPagination,
   sortData,
   filterData,
-  showDetailsModal
+  showDetailsModal,
+  setRescan
 } = createActions({
   SET_REFERRER: (referrer) => ({ referrer }),
   SET_PUBLISHER: (publisher) => ({ publisher }),
@@ -24,6 +25,7 @@ const {
   SORT_DATA: (sortColumn) => ({ sortColumn }),
   FILTER_DATA: (filterText) => ({ filterText }),
   SHOW_DETAILS_MODAL: (detailSelected) => ({ detailSelected }),
+  SET_RESCAN: (rescanBlockchain) => ({ rescanBlockchain }),
 });
 
 export {
@@ -37,5 +39,6 @@ export {
   setPagination,
   sortData,
   filterData,
-  showDetailsModal
+  showDetailsModal,
+  setRescan
 };

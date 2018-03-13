@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Button, Tab, Form, Image } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
+import PropTypes from 'prop-types';
 
 import CheckNormal from '../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../images/ch-box-1-norm.svg';
+
+import {
+  setRescan,
+} from '../../../../../services/accountSettings/accountActions';
 
 const iconSize = 20;
 
@@ -127,6 +133,10 @@ class Keys extends Component {
     this.props.accountSettingsActions.setRescan();
   }
 
+  getCheckIcon() {
+    return this.props.account.rescanBlockchain ? CheckNormal : CheckPreNom;
+  }
+
   importWF() {
     const { formatMessage } = this.props.intl;
 
@@ -148,7 +158,7 @@ class Keys extends Component {
             <div className="col-1" />
             <div className="col-3 checkbox">
               <div className="check-container">
-                <Image src={CheckNormal} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleCheck} />
+                <Image src={this.getCheckIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleCheck} />
               </div>
               <div className="description-text">
                 <p className="option">{formatMessage(messages.rescanBlockchain)}</p>
@@ -158,8 +168,8 @@ class Keys extends Component {
           </div>
           <div className="bottom-detail">
             <div className="col-1" />
-            <div className="col-3 checkbox">
-              <Button content={formatMessage(messages.importKey)} type="submit" className="button--primary" />
+            <div className="col-3">
+              <Button content={formatMessage(messages.importKey)} type="submit" className="button--primary checkbox" />
             </div>
             <div className="col-1" />
           </div>
@@ -220,4 +230,26 @@ Keys = reduxForm({
   destroyOnUnmount: true,
 })(Keys);
 
-export default connect(state => ({ ...state.default }))(injectIntl(Keys));
+
+Keys.propTypes = {
+  accountSettingsActions: PropTypes.shape({
+    setRescan: PropTypes.func,
+  }),
+  account: PropTypes.shape({
+    rescanBlockchain: PropTypes.bool,
+  })
+};
+
+Keys.defaultProps = {
+  accountSettingsActions: {},
+  account: {},
+};
+
+export default connect(
+  state => ({ ...state.default }),
+  (dispatch) => ({
+    accountSettingsActions: bindActionCreators({
+      setRescan
+    }, dispatch),
+  }),
+)(injectIntl(Keys));

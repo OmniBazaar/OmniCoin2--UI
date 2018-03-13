@@ -13,6 +13,7 @@ import {
   setPagination,
   sortData,
   showDetailsModal,
+  setRescan,
 } from './accountActions';
 
 const defaultState = {
@@ -31,6 +32,7 @@ const defaultState = {
   filterText: '',
   showDetails: false,
   detailSelected: {},
+  rescanBlockchain: false,
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -77,7 +79,12 @@ const reducer = handleActions({
       ...state,
       showDetails: !state.showDetails,
       detailSelected,
-      detailSelected,
+    };
+  },
+  [combineActions(setRescan)](state, { payload: { rescanBlockchain } }) {
+    return {
+      ...state,
+      rescanBlockchain: !state.rescanBlockchain,
     };
   },
   [combineActions(getRecentTransactions)](state, { payload: { recentTransactions } }) {

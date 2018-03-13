@@ -358,8 +358,17 @@ $sidebar-size: 250px;
         display: flex;
         margin-left: -4px;
 
+        &.button {
+          margin-left: -7px;
+        }
+
         .description-text {
           margin-left: 5px;
+        }
+
+        &:hover {
+          opacity: 0.8;
+          cursor: pointer;
         }
       }
     }
