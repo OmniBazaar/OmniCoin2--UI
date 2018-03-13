@@ -47,5 +47,12 @@
   "Settings.transactionDetails": "Transaction Details",
   "Settings.withdraw": "Withdraw",
   "Settings.deposit": "Deposit",
-  "Settings.amountOfAsset": "amount of asset"
+  "Settings.amountOfAsset": "amount of asset",
+  "Settings.publicKey": "Public Key",
+  "Settings.yourPublicKey": "Your Public Key",
+  "Settings.copy": "COPY",
+  "Settings.keyCopied": "Key copied!",
+  "Settings.publicKeyNote": "It is safe to share this key with anyone who may wish to send you OmniCoins. However, it is easier to give them your account name.",
+  "Settings.importWF": "Import WF Key",
+  "Settings.importFromWallet": "Import Keys from Wallet"
 }

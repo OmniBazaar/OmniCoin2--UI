@@ -146,6 +146,7 @@ $sidebar-size: 250px;
       .sidebar {
         .info {
           margin-bottom: 35px;
+          flex-direction: row;
         }
       }
 
@@ -315,5 +316,43 @@ $sidebar-size: 250px;
       display: block;
       z-index: 5;
     }
+  }
+
+  .keys-container {
+    .title {
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      .hybrid-input {
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        right: -2px;
+        top: 1px;
+        bottom: 1px;
+      }
+
+      .note {
+        color: $primary-gray;
+        font-size: 12px;
+        text-align: justify;
+      }
+    }
+
+    .keys-form-container {
+      margin: 30px;
+      margin-bottom: 35px;
+    }
+
+  }
+}
+
+.settings-container {
+  .tabs .segment.active {
+    padding: 0!important;
   }
 }

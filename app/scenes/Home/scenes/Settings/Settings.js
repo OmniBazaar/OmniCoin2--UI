@@ -12,6 +12,8 @@ import PublicData from './components/PublicData';
 import PrivateData from './components/PrivateData';
 import RecentTransactions from './components/RecentTransactions';
 import TransactionDetails from './components/TransactionDetails';
+import Keys from './components/Keys';
+import Vote from './components/Vote';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import { showDetailsModal } from '../../../../services/accountSettings/accountActions';
@@ -58,18 +60,6 @@ class Settings extends Component {
     super(props);
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
-  }
-
-  keys() {
-    return (
-      <div>Keys</div>
-    );
-  }
-
-  vote() {
-    return (
-      <div>Vote</div>
-    );
   }
 
   close = () => {
@@ -123,7 +113,7 @@ class Settings extends Component {
     return (
       <Modal size="fullscreen" open={props.menu.showSettings} onClose={this.close}>
         <Modal.Content>
-          <div className="modal-container">
+          <div className="modal-container settings-container">
             <div className="sidebar settings visible">{this.sideMenu()}</div>
             <div className="modal-content">
               <Tab
@@ -156,11 +146,11 @@ class Settings extends Component {
                  },
                  {
                    menuItem: 'Keys',
-                   render: () => <Tab.Pane>{this.keys()}</Tab.Pane>,
+                   render: () => <Tab.Pane className="keys-tab"><Keys /></Tab.Pane>,
                  },
                  {
                    menuItem: 'Vote',
-                   render: () => <Tab.Pane>{this.vote()}</Tab.Pane>,
+                   render: () => <Tab.Pane><Vote /></Tab.Pane>,
                  },
                 ]}
               />
@@ -182,6 +172,9 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
+  accountSettingsActions: PropTypes.shape({
+    showDetailsModal: PropTypes.func,
+  }),
   onClose: PropTypes.func,
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
@@ -191,6 +184,7 @@ Settings.propTypes = {
 };
 
 Settings.defaultProps = {
+  accountSettingsActions: {},
   onClose: () => {},
   auth: {},
 };
