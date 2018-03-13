@@ -186,7 +186,7 @@ class PublicData extends Component {
           <Button content="UPDATE" onClick={this.updatePublicData} className="button--green-bg" />
           <div className="labels">
             <span>{formatMessage(messages.updateTransactionFee)}</span>
-            <span className="amount">5 {formatMessage(messages.xom)}</span>
+            <span className="amount">5 XOM</span>
           </div>
         </div>
       </div>

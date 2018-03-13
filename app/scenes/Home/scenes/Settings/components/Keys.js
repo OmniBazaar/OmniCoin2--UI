@@ -3,8 +3,13 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Button, Tab } from 'semantic-ui-react';
+import { Button, Tab, Form, Image } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
+
+import CheckNormal from '../../../images/ch-box-0-norm.svg';
+import CheckPreNom from '../../../images/ch-box-1-norm.svg';
+
+const iconSize = 20;
 
 const messages = defineMessages({
   publicKey: {
@@ -35,16 +40,38 @@ const messages = defineMessages({
     id: 'Settings.importFromWallet',
     defaultMessage: 'Import Keys from Wallet'
   },
+  wfPrivateKey: {
+    id: 'Settings.wfPrivateKey',
+    defaultMessage: 'WF Private Key'
+  },
+  enterPrivateKey: {
+    id: 'Settings.enterPrivateKey',
+    defaultMessage: 'Enter Private Key'
+  },
+  rescanBlockchain: {
+    id: 'Settings.rescanBlockchain',
+    defaultMessage: 'Rescan Blockchain'
+  },
+  importKey: {
+    id: 'Settings.importKey',
+    defaultMessage: 'IMPORT KEY'
+  },
 });
 
 const publicKey = 'as3432fas34asf34';
 
 class Keys extends Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleCheck = this.toggleCheck.bind(this);
+  }
+
   componentDidMount() {
     this.props.change('publicKey', publicKey);
   }
 
-  renderPublicKeyField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
+  renderPublicKeyField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -67,6 +94,79 @@ class Keys extends Component {
       </div>
     );
   };
+
+  renderPublicKeyFieldTWO = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div className="hybrid-input">
+        <input
+          {...input}
+          disabled
+          type="text"
+          className="textfield"
+        />
+        <CopyToClipboard text={input.value}>
+          <Button
+            className="copy-btn button--green address-button"
+            onClick={
+              () => toastr.success(formatMessage(messages.copy), formatMessage(messages.keyCopied))
+            }
+          >
+            {formatMessage(messages.copy)}
+          </Button>
+        </CopyToClipboard>
+      </div>
+    );
+  };
+
+  onSubmitImportWF() {
+    console.log('Import WF key');
+  }
+
+  toggleCheck() {
+    this.props.accountSettingsActions.setRescan();
+  }
+
+  importWF() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div>
+        <Form onSubmit={this.onSubmitImportWF} className="import-wf-container">
+          <div className="form-group">
+            <label>{formatMessage(messages.wfPrivateKey)}</label>
+            <Field
+              type="text"
+              name="privateKey"
+              component="input"
+              className="textfield"
+              placeholder={formatMessage(messages.enterPrivateKey)}
+            />
+            <div className="col-1" />
+          </div>
+          <div className="form-group rescan">
+            <div className="col-1" />
+            <div className="col-3 checkbox">
+              <div className="check-container">
+                <Image src={CheckNormal} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleCheck} />
+              </div>
+              <div className="description-text">
+                <p className="option">{formatMessage(messages.rescanBlockchain)}</p>
+              </div>
+            </div>
+            <div className="col-1" />
+          </div>
+          <div className="bottom-detail">
+            <div className="col-1" />
+            <div className="col-3 checkbox">
+              <Button content={formatMessage(messages.importKey)} type="submit" className="button--primary" />
+            </div>
+            <div className="col-1" />
+          </div>
+        </Form>
+      </div>
+    );
+  }
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -101,7 +201,7 @@ class Keys extends Component {
             panes={[
               {
                 menuItem: formatMessage(messages.importWF),
-                render: () => <Tab.Pane>importWF</Tab.Pane>,
+                render: () => <Tab.Pane>{this.importWF()}</Tab.Pane>,
               },
               {
                 menuItem: formatMessage(messages.importFromWallet),

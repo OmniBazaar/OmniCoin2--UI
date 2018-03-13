@@ -348,6 +348,22 @@ $sidebar-size: 250px;
       margin-bottom: 35px;
     }
 
+    .import-wf-container {
+      .rescan {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .checkbox {
+        display: flex;
+        margin-left: -4px;
+
+        .description-text {
+          margin-left: 5px;
+        }
+      }
+    }
+
   }
 }
 
