@@ -62,6 +62,22 @@ const messages = defineMessages({
     id: 'Settings.importKey',
     defaultMessage: 'IMPORT KEY'
   },
+  walletPath: {
+    id: 'Settings.walletPath',
+    defaultMessage: 'Wallet Path'
+  },
+  walletPassword: {
+    id: 'Settings.walletPassword',
+    defaultMessage: 'Wallet Password'
+  },
+  selectFile: {
+    id: 'Settings.selectFile',
+    defaultMessage: 'Select File'
+  },
+  enterPassword: {
+    id: 'Settings.enterPassword',
+    defaultMessage: 'Please enter password'
+  },
 });
 
 const publicKey = 'as3432fas34asf34';
@@ -75,33 +91,10 @@ class Keys extends Component {
 
   componentDidMount() {
     this.props.change('publicKey', publicKey);
+    this.props.change('walletPath', '...');
   }
 
   renderPublicKeyField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
-    const { formatMessage } = this.props.intl;
-    return (
-      <div className="hybrid-input">
-        <input
-          {...input}
-          disabled
-          type="text"
-          className="textfield"
-        />
-        <CopyToClipboard text={input.value}>
-          <Button
-            className="copy-btn button--green address-button"
-            onClick={
-              () => toastr.success(formatMessage(messages.copy), formatMessage(messages.keyCopied))
-            }
-          >
-            {formatMessage(messages.copy)}
-          </Button>
-        </CopyToClipboard>
-      </div>
-    );
-  };
-
-  renderPublicKeyFieldTWO = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -135,6 +128,86 @@ class Keys extends Component {
 
   getCheckIcon() {
     return this.props.account.rescanBlockchain ? CheckNormal : CheckPreNom;
+  }
+
+  selectFile() {
+    console.log('Select file');
+  }
+
+  renderWalletField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div className="hybrid-input">
+        <input
+          {...input}
+          type="text"
+          className="textfield"
+        />
+        <Button
+          className="copy-btn button--green address-button"
+          onClick={() => this.selectFile()}
+        >
+          {formatMessage(messages.selectFile)}
+        </Button>
+      </div>
+    );
+  };
+
+  renderPasswordField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div className="hybrid-input">
+        <input
+          {...input}
+          type="password"
+          className="textfield"
+          placeholder={formatMessage(messages.enterPassword)}
+        />
+      </div>
+    );
+  };
+
+  onSubmitImportWallet() {
+    console.log('Submit wallet');
+  }
+
+  importKeyFromWallet() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div>
+        <Form onSubmit={this.onSubmitImportWallet} className="from-wallet-container">
+          <div className="form-group">
+            <label>{formatMessage(messages.walletPath)}</label>
+            <Field
+              disabled
+              type="text"
+              name="walletPath"
+              component={this.renderWalletField}
+              className="textfield"
+            />
+            <div className="col-1" />
+          </div>
+          <div className="form-group">
+            <label>{formatMessage(messages.walletPassword)}</label>
+            <Field
+              type="text"
+              name="walletPassword"
+              component={this.renderPasswordField}
+              className="textfield"
+            />
+            <div className="col-1" />
+          </div>
+          <div className="bottom-detail">
+            <div className="col-1" />
+            <div className="col-3">
+              <Button content={formatMessage(messages.importKey)} type="submit" className="button--primary checkbox" />
+            </div>
+            <div className="col-1" />
+          </div>
+        </Form>
+      </div>
+    );
   }
 
   importWF() {
@@ -215,7 +288,7 @@ class Keys extends Component {
               },
               {
                 menuItem: formatMessage(messages.importFromWallet),
-                render: () => <Tab.Pane>importFromWallet</Tab.Pane>,
+                render: () => <Tab.Pane>{this.importKeyFromWallet()}</Tab.Pane>,
               }
             ]}
           />
