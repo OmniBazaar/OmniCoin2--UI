@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {Field, reduxForm} from 'redux-form';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Button, Form, Image, Divider } from 'semantic-ui-react';
-import {required} from 'redux-form-validators';
-import {toastr} from 'react-redux-toastr'
+import { required } from 'redux-form-validators';
+import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
-import { FetchChain } from "omnibazaarjs/es";
+import { FetchChain } from 'omnibazaarjs/es';
 import { defineMessages, injectIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 
-import { login } from  '../../../../services/blockchain/auth/authActions';
+import { login } from '../../../../services/blockchain/auth/authActions';
 
 import './login-form.scss';
 import BtnLock from '../../../../assets/images/common/btn-lock-norm+pres.svg';
@@ -52,6 +53,14 @@ const messages = defineMessages({
 });
 
 class LoginForm extends Component {
+  static asyncValidate = async (values) => {
+    try {
+      const account = await FetchChain('getAccount', values.username);
+    } catch (e) {
+      console.log('ERR', e);
+      throw { username: messages.accountDoesntExist };
+    }
+  };
 
   constructor(props) {
     super(props);
@@ -67,42 +76,36 @@ class LoginForm extends Component {
     if (!this.props.auth.currentUser) {
       this.setState({
         showUsernameInput: true
-      })
+      });
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
-      let content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
+      const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error)
+        : nextProps.auth.error;
       toastr.error(formatMessage(messages.error), content);
     }
   }
-
-  static asyncValidate =  async (values) => {
-    try {
-      let account = await FetchChain("getAccount", values.username);
-    } catch (e) {
-      console.log("ERR", e);
-      throw {username: messages.accountDoesntExist};
-    }
-  };
 
   signUp() {
     this.props.history.push('/signup');
   }
 
   submit(values) {
-    const {password, username} = values;
+    const { password, username } = values;
     this.props.authActions.login(
       username,
       password,
     );
   }
 
-  renderPasswordField = ({input, disabled, loading, meta: {touched, error, warning}}) => {
+  renderPasswordField = ({
+    input, disabled, loading, meta: { touched, error, warning }
+  }) => {
     const { formatMessage } = this.props.intl;
-    let btnClass = cn(loading || !!this.props.asyncValidating ? "ui loading" : "");
+    const btnClass = cn(loading || !!this.props.asyncValidating ? 'ui loading' : '');
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div>
@@ -111,10 +114,10 @@ class LoginForm extends Component {
           <input
             {...input}
             type="password"
-            placeholder={ formatMessage(messages.enterPassword) }
+            placeholder={formatMessage(messages.enterPassword)}
           />
           <Button
-            content={ formatMessage(messages.unlock) }
+            content={formatMessage(messages.unlock)}
             disabled={disabled || this.props.auth.loading || !!this.props.asyncValidating}
             color="green"
             type="submit"
@@ -133,7 +136,7 @@ class LoginForm extends Component {
       asyncValidating
     } = this.props;
     const { formatMessage } = this.props.intl;
-    const {showUsernameInput} = this.state;
+    const { showUsernameInput } = this.state;
     return (
       <Form
         onSubmit={handleSubmit(this.submit)}
@@ -144,14 +147,14 @@ class LoginForm extends Component {
             <Field
               type="text"
               name="username"
-              placeholder={ formatMessage(messages.enterUsername) }
+              placeholder={formatMessage(messages.enterUsername)}
               component={ValidatableField}
-              validate={[required({message: formatMessage(messages.fieldRequired)})]}
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
           :
           [
-            <Image src={BtnLock} width={50} height={50}/>,
+            <Image src={BtnLock} width={50} height={50} />,
             <span>{auth.currentUser.username}</span>
           ]
         }
@@ -160,20 +163,20 @@ class LoginForm extends Component {
           disabled={!valid}
           loading={auth.loading}
           component={this.renderPasswordField}
-          validate={[required({message: formatMessage(messages.fieldRequired)})]}
+          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
-        <Divider fitted/>
+        <Divider fitted />
         <div className="question">
           <h3>{ formatMessage(messages.noAccount) }</h3>
         </div>
         <Button
-          content={ formatMessage(messages.signup) }
+          content={formatMessage(messages.signup)}
           disabled={auth.loading}
           color="blue"
           onClick={this.signUp}
         />
       </Form>
-    )
+    );
   }
 }
 
@@ -190,10 +193,29 @@ LoginForm = reduxForm({
 LoginForm = injectIntl(LoginForm);
 
 export default connect(
-  (state) => {
-    return {...state.default}
-  },
+  (state) => ({ ...state.default }),
   (dispatch) => ({
-    authActions: bindActionCreators({login}, dispatch),
+    authActions: bindActionCreators({ login }, dispatch),
   })
 )(LoginForm);
+
+
+LoginForm.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    }),
+    error: PropTypes.shape({}),
+    accountExists: PropTypes.bool,
+    loading: PropTypes.bool
+  }),
+  authActions: PropTypes.shape({
+    login: PropTypes.func
+  })
+};
+
+LoginForm.defaultProps = {
+  auth: null,
+  authActions: null
+};

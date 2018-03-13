@@ -16,10 +16,14 @@ export default class Header extends Component {
     });
 
     return (
-      <div className='header'>
-        <span className='title'>{props.title}</span>
+      <div className="header">
+        <span className="title">{props.title}</span>
         {props.hasButton ?
-          <Button content={props.buttonContent} onClick={props.onClick} className={containerClass} />
+          <Button
+            content={props.buttonContent}
+            onClick={props.onClick}
+            className={containerClass}
+          />
         : null }
       </div>
     );

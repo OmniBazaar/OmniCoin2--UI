@@ -21,30 +21,34 @@ export const WalletDetail = (props) => {
   const currency = props.type === CoinTypes.OMNI_COIN ? 'XOM' : 'BTC';
 
   return (
-    <div key={props.walletKey} className='wallet-detail' onClick={props.openWalletModal}
-         style={{ backgroundImage: 'url("' + coinIconLg + '")', backgroundSize: iconSizeLg }}>
-      <div className='info'>
+    <div
+      key={props.walletKey}
+      className="wallet-detail"
+      onClick={props.openWalletModal}
+      style={{ backgroundImage: `url("${coinIconLg}")`, backgroundSize: iconSizeLg }}
+    >
+      <div className="info">
         <Image src={UserIcon} width={iconSize} height={iconSize} />
-        <div className='top-detail'>
-          <div className='title'>
+        <div className="top-detail">
+          <div className="title">
             <span>Wallet</span>
-            <div className='badge'>REGISTERED: {props.wallet.date}</div>
+            <div className="badge">REGISTERED: {props.wallet.date}</div>
           </div>
-          <span className='code'>{props.wallet.code}</span>
-          <span className='accountId'>Account ID: {props.wallet.accountId}</span>
+          <span className="code">{props.wallet.code}</span>
+          <span className="accountId">Account ID: {props.wallet.accountId}</span>
         </div>
       </div>
-      <div className='info'>
+      <div className="info">
         <Image src={coinIcon} width={iconSize} height={iconSize} />
-        <div className='top-detail'>
-          <div className='title'>
+        <div className="top-detail">
+          <div className="title">
             <span>Current Balance</span>
           </div>
-          <span className='balance'>{props.wallet.balance} {currency}</span>
+          <span className="balance">{props.wallet.balance} {currency}</span>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 WalletDetail.defaultProps = {

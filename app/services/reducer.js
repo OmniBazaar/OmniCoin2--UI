@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import authReducer from './blockchain/auth/authReducer';
 import mailReducer from './mail/mailReducer';
 import connectionReducer from './blockchain/connection/connectionReducer';

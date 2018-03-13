@@ -1,10 +1,9 @@
 import { createActions } from 'redux-actions';
+
 const {
-    connect,
+  connect,
 } = createActions({
-    CONNECT: (node) => ({node})
+  CONNECT: (node) => ({ node })
 });
 
-export {
-    connect
-}
+export { connect };

@@ -5,26 +5,28 @@ import { createActions } from 'redux-actions';
 
 
 const {
-    getCurrentUser,
-    login,
-    signup,
-    accountLookup,
-    requestPcIds
+  getCurrentUser,
+  login,
+  signup,
+  accountLookup,
+  requestPcIds
 } = createActions({
-    GET_CURRENT_USER: () => ({}),
-    LOGIN: (username, password) => ({ username, password }),
-    SIGNUP: (username, password, referrer, mac_address, harddrive_id) => (
-      {username, password, referrer, mac_address, harddrive_id}
-      ),
-    ACCOUNT_LOOKUP: (username) => ({username}),
-    REQUEST_PC_IDS: () => ({})
+  GET_CURRENT_USER: () => ({}),
+  LOGIN: (username, password) => ({ username, password }),
+  SIGNUP: (username, password, referrer, macAddress, harddriveId) => (
+    {
+      username, password, referrer, macAddress, harddriveId
+    }
+  ),
+  ACCOUNT_LOOKUP: (username) => ({ username }),
+  REQUEST_PC_IDS: () => ({})
 });
 
 
 export {
-    getCurrentUser,
-    login,
-    signup,
-    accountLookup,
-    requestPcIds
-}
+  getCurrentUser,
+  login,
+  signup,
+  accountLookup,
+  requestPcIds
+};

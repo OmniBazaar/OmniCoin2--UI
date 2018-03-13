@@ -1,17 +1,18 @@
-import React, {Component} from 'react';
-import {Sidebar, Segment, Button, Menu, Image, Icon, Header} from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { Image } from 'semantic-ui-react';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
 
 import {
-    Route,
-    NavLink,
-    Redirect
+  Route,
+  NavLink,
+  Redirect
 } from 'react-router-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import Escrow from './scenes/Escrow/Escrow';
-import Mail from  './scenes/Mail/Mail';
+import Mail from './scenes/Mail/Mail';
 import Marketplace from './scenes/Marketplace/Marketplace';
 import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
@@ -37,107 +38,120 @@ const iconSize = 20;
 class Home extends Component {
     state = { visible: true };
 
-    toggleVisibility = () => this.setState({visible: !this.state.visible});
+    toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
     render() {
-        const {visible} = this.state;
-        let sideBarClass = cn("sidebar", visible ? "visible" : "");
-        let homeContentClass = cn("home-content", visible ? "" : "shrink");
-        if (!this.props.auth.currentUser) {
-           return <Redirect
-                to={{
-                    pathname: "/signup",
+      const { visible } = this.state;
+      const sideBarClass = cn('sidebar', visible ? 'visible' : '');
+      const homeContentClass = cn('home-content', visible ? '' : 'shrink');
+      if (!this.props.auth.currentUser) {
+        return (<Redirect
+          to={{
+                    pathname: '/signup',
                 }}
-            />
-        }
-        return (
-            <div className="home-container">
-                <div className={sideBarClass} style={{backgroundImage: `url(${BackgroundImage})`}}>
-                    <div className="top">
-                        <div className="header">
-                            <Image src={SidebarLogo} width={150} height={40}/>
-                            <Image
-                                src={Burger}
-                                height={iconSize}
-                                width={iconSize}
-                                className="burger"
-                                onClick={this.toggleVisibility}/>
-                        </div>
-                        <div className="menu">
-                            <div className="menu">
-                                <NavLink to="/wallet" activeClassName='active' className="menu-item">
-                                    <Image src={WalletIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.wallet"
-                                      defaultMessage="Wallet"
-                                    />
-                                </NavLink>
-                                <NavLink to="/marketplace" activeClassName='active' className="menu-item">
-                                    <Image src={MarketplaceIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.marketplace"
-                                      defaultMessage="Marketplace"
-                                    />
-                                </NavLink>
-                                <NavLink to="/transfer" activeClassName='active' className="menu-item">
-                                    <Image src={TransferIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.transfer"
-                                      defaultMessage="Transfer"
-                                    />
-                                </NavLink>
-                                <NavLink to="/escrow" activeClassName='active' className="menu-item">
-                                    <Image src={EscrowIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.escrow"
-                                      defaultMessage="Escrow"
-                                    />
-                                </NavLink>
-                                <NavLink to="/processors" activeClassName='active' className="menu-item">
-                                    <Image src={ProcessorsIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.processors"
-                                      defaultMessage="Processors"
-                                    />
-                                </NavLink>
-                                <NavLink to="/mail" activeClassName='active' className="menu-item">
-                                    <Image src={MailIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.mail"
-                                      defaultMessage="Mail"
-                                    />
-                                </NavLink>
-                                <NavLink to="/support" activeClassName='active' className="menu-item">
-                                    <Image src={SupportIcon} height={iconSize} width={iconSize}/>
-                                    <FormattedMessage
-                                      id="Home.support"
-                                      defaultMessage="Support"
-                                    />
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bottom">
-                        <SocialNetworksFooter/>
-                    </div>
+        />);
+      }
+      return (
+        <div className="home-container">
+          <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
+            <div className="top">
+              <div className="header">
+                <Image src={SidebarLogo} width={150} height={40} />
+                <Image
+                  src={Burger}
+                  height={iconSize}
+                  width={iconSize}
+                  className="burger"
+                  onClick={this.toggleVisibility}
+                />
+              </div>
+              <div className="menu">
+                <div className="menu">
+                  <NavLink to="/wallet" activeClassName="active" className="menu-item">
+                    <Image src={WalletIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.wallet"
+                      defaultMessage="Wallet"
+                    />
+                  </NavLink>
+                  <NavLink to="/marketplace" activeClassName="active" className="menu-item">
+                    <Image src={MarketplaceIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.marketplace"
+                      defaultMessage="Marketplace"
+                    />
+                  </NavLink>
+                  <NavLink to="/transfer" activeClassName="active" className="menu-item">
+                    <Image src={TransferIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.transfer"
+                      defaultMessage="Transfer"
+                    />
+                  </NavLink>
+                  <NavLink to="/escrow" activeClassName="active" className="menu-item">
+                    <Image src={EscrowIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.escrow"
+                      defaultMessage="Escrow"
+                    />
+                  </NavLink>
+                  <NavLink to="/processors" activeClassName="active" className="menu-item">
+                    <Image src={ProcessorsIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.processors"
+                      defaultMessage="Processors"
+                    />
+                  </NavLink>
+                  <NavLink to="/mail" activeClassName="active" className="menu-item">
+                    <Image src={MailIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.mail"
+                      defaultMessage="Mail"
+                    />
+                  </NavLink>
+                  <NavLink to="/support" activeClassName="active" className="menu-item">
+                    <Image src={SupportIcon} height={iconSize} width={iconSize} />
+                    <FormattedMessage
+                      id="Home.support"
+                      defaultMessage="Support"
+                    />
+                  </NavLink>
                 </div>
-                <div className={homeContentClass}>
-                    <Route path="/escrow" render={(props) => <Escrow {...props} />}/>
-                    <Route path="/mail" render={(props) => <Mail {...props} />}/>
-                    <Route path="/marketplace" render={(props) => <Marketplace {...props} />}/>
-                    <Route path="/processors" render={(props) => <Processors {...props} />}/>
-                    <Route path="/settings" render={(props) => <Settings {...props} />}/>
-                    <Route path="/support" render={(props) => <Support {...props} />}/>
-                    <Route path="/transfer" render={(props) => <Transfer {...props} />}/>
-                    <Route path="/wallet" render={(props) => <Wallet {...props} />}/>
-                </div>
+              </div>
             </div>
-        )
+            <div className="bottom">
+              <SocialNetworksFooter />
+            </div>
+          </div>
+          <div className={homeContentClass}>
+            <Route path="/escrow" render={(props) => <Escrow {...props} />} />
+            <Route path="/mail" render={(props) => <Mail {...props} />} />
+            <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
+            <Route path="/processors" render={(props) => <Processors {...props} />} />
+            <Route path="/settings" render={(props) => <Settings {...props} />} />
+            <Route path="/support" render={(props) => <Support {...props} />} />
+            <Route path="/transfer" render={(props) => <Transfer {...props} />} />
+            <Route path="/wallet" render={(props) => <Wallet {...props} />} />
+          </div>
+        </div>
+      );
     }
 }
 
-export default connect(
-    (state) => {
-        return {...state.default}
-    }
-)(Home);
+export default connect((state) => ({ ...state.default }))(Home);
+
+Home.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    }),
+    error: PropTypes.shape({}),
+    accountExists: PropTypes.bool,
+    loading: PropTypes.bool
+  })
+};
+
+Home.defaultProps = {
+  auth: null
+};

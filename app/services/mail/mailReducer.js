@@ -15,7 +15,7 @@ const MailTypes = Object.freeze({
   DELETED: 'deleted',
 });
 
-let defaultState = {
+const defaultState = {
   messages: [],
   sender: '',
   to: '',

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 
@@ -11,12 +11,12 @@ class Marketplace extends Component {
     };
 
     render() {
-        return (
-            <div style={{display: "flex", flexDirection: "column"}}>
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
                 Marketplace
-              <Button onClick={this.logout}>Logout</Button>
-            </div>
-        );
+          <Button onClick={this.logout}>Logout</Button>
+        </div>
+      );
     }
 }
 
