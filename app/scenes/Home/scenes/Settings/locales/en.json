@@ -39,5 +39,13 @@
   "Settings.country": "Country",
   "Settings.startTyping": "Start typing...",
   "Settings.apply": "APPLY",
-  "Settings.close": "CLOSE"
+  "Settings.close": "CLOSE",
+  "Settings.operations": "Operations",
+  "Settings.timeStamp": "TimeStamp",
+  "Settings.transaction": "Transaction",
+  "Settings.block": "Block",
+  "Settings.transactionDetails": "Transaction Details",
+  "Settings.withdraw": "Withdraw",
+  "Settings.deposit": "Deposit",
+  "Settings.amountOfAsset": "amount of asset"
 }

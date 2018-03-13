@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
+import _ from 'lodash';
 import {
   Table,
   TableBody,
@@ -14,6 +15,7 @@ import {
   Pagination,
   Input,
   Icon,
+  Image,
 } from 'semantic-ui-react';
 
 import {
@@ -25,7 +27,12 @@ import {
   showDetailsModal,
 } from '../../../../../services/accountSettings/accountActions';
 
-const iconSize = 20;
+import IncomingIcon from '../images/ui-arrow-incoming.svg';
+import OutgoingIcon from '../images/ui-arrow-aoutgoing.svg';
+
+const iconSize = 15;
+const iconToSize = 12;
+const iconSizeToHeight = 16;
 
 const messages = defineMessages({
   firstItem: {
@@ -86,86 +93,141 @@ const messages = defineMessages({
   },
 });
 
-const recentTransactions = [
+const recentTransactionsData = [
   {
-    id: 1,
-    date: '2018-03-12',
+    id: 'b4f24567',
+    date: 'Nov 15, 2017, 9:28 PM',
     from: 'Unknown',
     to: '',
     memo: 'Welcome bonus',
     amount: 1.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: [
+      {
+        id: 1,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 2,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 3,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 4,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 5,
+        type: 'withdraw',
+        amount: 2000.00
+      }
+    ]
   },
   {
-    id: 2,
-    date: '2018-01-12',
+    id: 'f5f24567',
+    date: 'Dec 1, 2017, 7:04 PM',
     from: '',
     to: 'Eugen L',
     memo: '',
     amount: 10.50,
     fee: 5.0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: [
+      {
+        id: 1,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 2,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 3,
+        type: 'deposit',
+        amount: 16.00
+      },
+      {
+        id: 4,
+        type: 'withdraw',
+        amount: 2000.00
+      }
+    ]
   },
   {
-    id: 3,
-    date: '2018-09-12',
+    id: 'g6g35678',
+    date: 'Dec 5, 2017, 5:11 PM',
     from: 'Unknown',
     to: '',
     memo: '',
     amount: 10.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
   {
-    id: 4,
-    date: '2018-09-15',
+    id: 'a1f01567',
+    date: 'Dec 6, 2017, 8:01 AM',
     from: '',
     to: 'Emma',
     memo: '',
     amount: 10.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
   {
-    id: 5,
-    date: '2018-09-15',
+    id: 'za1f2456',
+    date: 'Dec 8, 2017, 8:01 AM',
     from: '',
     to: 'Jessica',
     memo: '',
     amount: 10.50,
     fee: 5.0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
   {
-    id: 6,
-    date: '2018-09-15',
+    id: 'h7f2453r',
+    date: 'Dec 10, 2017, 10:16 AM',
     from: '',
     to: 'to',
     memo: '',
     amount: 10.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
   {
-    id: 7,
-    date: '2018-09-15',
+    id: 'n3o84256',
+    date: 'Dec 10, 2017, 11:33 AM',
     from: 'Stella',
     to: '',
     memo: '',
     amount: 10.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
   {
-    id: 8,
-    date: '2018-09-15',
+    id: 'y9q98467',
+    date: 'Dec 12, 2017, 09:33 AM',
     from: 'Stella',
     to: 'Unknown',
     memo: '',
     amount: 10.50,
     fee: 0,
-    Balance: 10500.50
+    balance: 10500.50,
+    operations: []
   },
 ];
 
@@ -174,11 +236,10 @@ class RecentTransactions extends Component {
     super(props);
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
-    this.onClickDetails = this.onClickDetails.bind(this);
   }
 
   componentDidMount() {
-    this.props.accountSettingsActions.getRecentTransactions(recentTransactions);
+    this.props.accountSettingsActions.getRecentTransactions(recentTransactionsData);
     this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
   }
 
@@ -195,9 +256,14 @@ class RecentTransactions extends Component {
     this.props.accountSettingsActions.setActivePage(activePage);
   };
 
-  onClickDetails() {
-    this.props.accountSettingsActions.showDetailsModal();
-  }
+  onClickDetails = (detailId) => {
+    const { recentTransactions } = this.props.account;
+    const filteredData = _.map(recentTransactions, (o) => {
+      if (o.id === detailId) return o;
+    });
+    const result = _.without(filteredData, undefined)[0];
+    this.props.accountSettingsActions.showDetailsModal(result);
+  };
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
@@ -247,9 +313,9 @@ class RecentTransactions extends Component {
                   <TableHeaderCell key="date" sorted={sortColumn === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
                     {formatMessage(messages.date)} (GMT+2)
                   </TableHeaderCell>
-                  <TableHeaderCell key="fromto" sorted={sortColumn === 'fromto' ? sortDirection : null} onClick={this.sortData('fromto')}>
-                    <Icon name="long arrow down" width={iconSize} height={iconSize} className="from-icon" />From
-                    <Icon name="long arrow up" width={iconSize} height={iconSize} className="to-icon" />To
+                  <TableHeaderCell key="fromto" className="from-to" sorted={sortColumn === 'fromto' ? sortDirection : null} onClick={this.sortData('fromto')}>
+                    <Image src={IncomingIcon} width={iconSize} height={iconSize} className="from-icon" />From
+                    <Image src={OutgoingIcon} width={iconToSize} height={iconSizeToHeight} className="to-icon" />To
                   </TableHeaderCell>
                   <TableHeaderCell key="memo" sorted={sortColumn === 'memo' ? sortDirection : null} onClick={this.sortData('memo')}>
                     {formatMessage(messages.memo)}
@@ -274,9 +340,9 @@ class RecentTransactions extends Component {
                       <TableCell>{row.memo}</TableCell>
                       <TableCell>{row.amount}</TableCell>
                       <TableCell>{row.fee}</TableCell>
-                      <TableCell>
+                      <TableCell className="balance">
                         {row.balance}
-                        <span className="link" onClick={this.onClickDetails}>
+                        <span className="link" onClick={() => this.onClickDetails(row.id)}>
                           {formatMessage(messages.details)}
                         </span>
                       </TableCell>
@@ -324,6 +390,7 @@ RecentTransactions.propTypes = {
     size: PropTypes.string,
   }),
   account: PropTypes.shape({
+    recentTransactions: [],
     recentTransactionsFiltered: [],
     activePage: 1,
     totalPages: 1,

@@ -30,6 +30,7 @@ const defaultState = {
   rowsPerPage: 10,
   filterText: '',
   showDetails: false,
+  detailSelected: {},
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -71,10 +72,12 @@ const reducer = handleActions({
       priority
     };
   },
-  [combineActions(showDetailsModal)](state, { payload: { showDetails } }) {
+  [combineActions(showDetailsModal)](state, { payload: { detailSelected } }) {
     return {
       ...state,
-      showDetails: !state.showDetails
+      showDetails: !state.showDetails,
+      detailSelected,
+      detailSelected,
     };
   },
   [combineActions(getRecentTransactions)](state, { payload: { recentTransactions } }) {

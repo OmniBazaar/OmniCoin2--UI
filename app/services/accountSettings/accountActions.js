@@ -23,7 +23,7 @@ const {
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SORT_DATA: (sortColumn) => ({ sortColumn }),
   FILTER_DATA: (filterText) => ({ filterText }),
-  SHOW_DETAILS_MODAL: (showDetails) => ({ showDetails }),
+  SHOW_DETAILS_MODAL: (detailSelected) => ({ detailSelected }),
 });
 
 export {
