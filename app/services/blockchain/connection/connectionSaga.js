@@ -6,7 +6,7 @@ import {
 import {
     Apis,
     Manager
-} from "bitsharesjs-ws";
+} from "omnibazaarjs-ws";
 
 export const nodes = [
      // {name: "Bitshares Node", url: "wss://japan.bitshares.apasia.tech/ws"},

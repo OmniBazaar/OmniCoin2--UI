@@ -1,27 +1,20 @@
 import MailTypes from './mailTypes';
 
-export function storeMessage({uuid, sender, recipient, subject, body, created_time, read_status }, messageFolder) {
+export function storeMessage(mailObject, messageFolder) {
 
-    let mailObject = localStorage.getItem('mail');
-    if (!mailObject)
-        mailObject = {};
+    let mailFolder = localStorage.getItem('mail');
+    if (!mailFolder)
+        mailFolder = {};
     else
-        mailObject = JSON.parse(localStorage.getItem('mail'));
+        mailFolder = JSON.parse(localStorage.getItem('mail'));
 
-    if (!mailObject[messageFolder])
-        mailObject[messageFolder] = {};
+    if (!mailFolder[messageFolder])
+        mailFolder[messageFolder] = {};
 
-    mailObject[messageFolder][uuid] = {
-        uuid: uuid,
-        sender: sender,
-        recipient: recipient,
-        subject: subject,
-        body: body,
-        created_time: uuid,
-        read_status: read_status
-    }
+    let uuid = mailObject.uuid;
+    mailFolder[messageFolder][uuid] = {...mailObject};
 
-    localStorage.setItem('mail', JSON.stringify(mailObject));
+    localStorage.setItem('mail', JSON.stringify(mailFolder));
 }
 
 export function getMessage(messageFolder, uuid) {
@@ -63,4 +56,8 @@ export function getMessagesFromFolder(myUsername, messageFolder){
     catch(e) {
         return [];
     }
+}
+
+export function generateMailUUID(mailSender, mailCreatedTime) {
+    return mailSender + mailCreatedTime;
 }

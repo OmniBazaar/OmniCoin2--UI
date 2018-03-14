@@ -64,6 +64,7 @@ class Compose extends Component {
           this.closeCompose();
         },
         (mailObject) => {
+          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
           this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.SENT);
           this.props.mailActions.setActiveFolder(MailTypes.SENT);
           this.props.mailActions.confirmationReceived(mailObject.uuid);

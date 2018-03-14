@@ -68,8 +68,11 @@ class Mail extends Component {
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
 
-    this.props.mailActions.subscribeForMail(this.props.auth.currentUser.username, (receivedMailObject) => {
-      this.props.mailActions.mailReceived(receivedMailObject.uuid);
+    this.props.mailActions.subscribeForMail(this.props.auth.currentUser.username, (recievedMmailObjects) => {
+      recievedMmailObjects.forEach((mailObject) => {
+        this.props.mailActions.mailReceived(mailObject.uuid);
+      });
+      this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.INBOX);
     });
   }
 
@@ -171,13 +174,13 @@ class Mail extends Component {
           'new': !message.read,
         });
 
-        let createdTime = new Date(message.created_time);
+        let creationTime = new Date(message.creation_time * 1000).toLocaleDateString();
 
         return (
           <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(message, index)}>
             <div className='top-detail'>
               <div className='from'>{message.user}</div>
-              <div className='date'>{createdTime.toLocaleString()}</div>
+              <div className='date'>{creationTime}</div>
             </div>
             <div className='title'>
               {message.subject}

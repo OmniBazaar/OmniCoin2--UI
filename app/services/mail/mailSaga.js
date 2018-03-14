@@ -1,9 +1,11 @@
 import {put, takeEvery, call} from 'redux-saga/effects';
-import { Apis } from 'bitsharesjs-ws';
+import { Apis } from 'omnibazaarjs-ws';
 import { storeMessage,
          getMessagesFromFolder,
          getMessage,
-         deleteMessage } from './mailStorage';
+         deleteMessage,
+         generateMailUUID } from './mailStorage';
+
 import MailTypes from './mailTypes';
 
 export function* sendMailSubscriber() {
@@ -64,24 +66,29 @@ export function* sendMail(action) {
             mailSentCallback,
             mailDeliveredCallback }  = action.payload;
 
+    let currentTimeMil = (new Date()).getTime();
+    let uuid = generateMailUUID(sender, currentTimeMil);
+    let currentTimeSec = Math.floor( currentTimeMil / 1000 );
+
     let mailObject = {
         sender: sender,
         recipient: recipient,
         subject: subject,
         body: body,
         read_status: false,
-        creation_time: (new Date()).getTime(),
-        uuid: (new Date()).getTime()
+        creation_time: currentTimeSec,
+        uuid: uuid
     }
 
     let afterDeliveredCallback = () => {
         console.log("Mail is delivered:", mailObject);
+        mailObject.read_status = true;
         deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
         storeMessage(mailObject, MailTypes.SENT);
         mailDeliveredCallback(mailObject);
     };
 
-    Apis.instance().mail_api().exec("send", [afterDeliveredCallback, mailObject]).then(() => {
+    Apis.instance().network_api().exec("mail_send", [afterDeliveredCallback, mailObject]).then(() => {
         console.log("Mail is in the outbox:", mailObject);
         storeMessage(mailObject, MailTypes.OUTBOX);
         mailSentCallback();
@@ -95,24 +102,26 @@ export function* subscribeForMail(action) {
     let reciever = action.payload.reciever;
     let afterMailStoredCallback = action.payload.afterMailStoredCallback;
 
-    let mailReceivedCallback = (mailObject) => {
-        console.log("Mail recieved: ", mailObject);
-        mailObject.read_status = false;
-        storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
-        afterMailStoredCallback(mailObject);
+    let mailReceivedCallback = (recievedMmailObjects) => {
+        console.log("Mail recieved: ", recievedMmailObjects);
+        recievedMmailObjects.forEach((mailObject) => {
+            mailObject.read_status = false;
+            storeMessage(mailObject, MailTypes.INBOX);
+        })
+        afterMailStoredCallback(recievedMmailObjects);
     }
 
-    Apis.instance().mail_api.exec("subscribe", [mailReceivedCallback, reciever]).then(() => {
+    Apis.instance().network_api().exec("mail_subscribe", [mailReceivedCallback, reciever]).then(() => {
         // do nothing special   
     });
 }
 
 export function* mailReceived(action){
-    Apis.instance().mail_api.exec('set_received', [action.payload.uuid]);
+    Apis.instance().network_api().exec('mail_set_received', [action.payload.uuid]);
 }
 
 export function* confirmationRecieved(action){
-    Apis.instance().mail_api.exec('confirm_received', [action.payload.uuid]);
+    Apis.instance().network_api().exec('mail_confirm_received', [action.payload.uuid]);
 }
 
 export function* loadFolder(action){
