@@ -12,7 +12,9 @@ const {
   sortData,
   filterData,
   showDetailsModal,
-  setRescan
+  setRescan,
+  getVotes,
+  sortVotesData,
 } = createActions({
   SET_REFERRER: (referrer) => ({ referrer }),
   SET_PUBLISHER: (publisher) => ({ publisher }),
@@ -26,6 +28,8 @@ const {
   FILTER_DATA: (filterText) => ({ filterText }),
   SHOW_DETAILS_MODAL: (detailSelected) => ({ detailSelected }),
   SET_RESCAN: (rescanBlockchain) => ({ rescanBlockchain }),
+  GET_VOTES: (votes) => ({ votes }),
+  SORT_VOTES_DATA: (sortVoteColumn) => ({ sortVoteColumn }),
 });
 
 export {
@@ -40,5 +44,7 @@ export {
   sortData,
   filterData,
   showDetailsModal,
-  setRescan
+  setRescan,
+  getVotes,
+  sortVotesData
 };

@@ -372,12 +372,25 @@ $sidebar-size: 250px;
         }
       }
     }
+  }
 
+  .recent-transactions,
+  .vote-container {
+    .top-detail {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+  }
+
+  .vote-container {
+    .title {
+      font-size: 17px;
+    }
+    .filter-input {
+      flex: inherit;
+    }
   }
 }
 
-.settings-container {
-  .tabs .segment.active {
-    padding: 0!important;
-  }
-}

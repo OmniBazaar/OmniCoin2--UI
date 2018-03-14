@@ -281,7 +281,7 @@ class RecentTransactions extends Component {
     const { props } = this;
 
     return (
-      <div className="private-data">
+      <div className="recent-transactions">
         <div className="data-table">
           <div className="top-detail">
             <Input

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 import {
   Table,
   TableBody,
@@ -18,6 +20,11 @@ import _ from 'lodash';
 import DislikeIcon from '../../../images/btn-dislike.svg';
 import LikeIcon from '../../../images/btn-like.svg';
 import DotsIcon from '../../../images/btn-meehh.svg';
+
+import {
+  getVotes,
+  sortVotesData
+} from '../../../../../services/accountSettings/accountActions';
 
 const iconSize = 18;
 
@@ -97,26 +104,28 @@ class Vote extends Component {
     return Vote.renderVote();
   }
 
+  componentDidMount() {
+    this.props.accountSettingsActions.getVotes(currentVotes);
+  }
+
   sortData = (clickedColumn) => () => {
-    // this.props.processorsTopActions.sortDataTop(clickedColumn);
+    this.props.accountSettingsActions.sortVotesData(clickedColumn);
   };
 
   render() {
     const { formatMessage } = this.props.intl;
 
     const {
-      activePage,
-      sortDirection,
-      totalPages,
-      sortColumn,
-      recentTransactionsFiltered
+      sortVoteDirection,
+      sortVoteColumn,
+      votesFiltered
     } = this.props.account;
 
     return (
       <div className="vote-container">
-        <p className="title">{formatMessage(messages.currentVotes)}</p>
         <div className="data-table">
           <div className="top-detail">
+            <p className="title">{formatMessage(messages.currentVotes)}</p>
             <Input
               icon={<Icon name="filter" />}
               iconPosition="left"
@@ -129,19 +138,19 @@ class Vote extends Component {
             <Table {...this.props.tableProps}>
               <TableHeader>
                 <TableRow>
-                  <TableHeaderCell key="processor" sorted={sortColumn === 'processor' ? sortDirection : null} onClick={this.sortData('processor')}>
+                  <TableHeaderCell key="processor" sorted={sortVoteColumn === 'processor' ? sortVoteDirection : null} onClick={this.sortData('processor')}>
                     {formatMessage(messages.processor)}
                   </TableHeaderCell>
-                  <TableHeaderCell key="votes" sorted={sortColumn === 'votes' ? sortDirection : null} onClick={this.sortData('votes')}>
+                  <TableHeaderCell key="votes" sorted={sortVoteColumn === 'votes' ? sortVoteDirection : null} onClick={this.sortData('votes')}>
                     {formatMessage(messages.votes)}
                   </TableHeaderCell>
-                  <TableHeaderCell key="approve" sorted={sortColumn === 'approve' ? sortDirection : null} onClick={this.sortData('approve')}>
+                  <TableHeaderCell key="approve" sorted={sortVoteColumn === 'approve' ? sortVoteDirection : null} onClick={this.sortData('approve')}>
                     {formatMessage(messages.approval)}
                   </TableHeaderCell>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentVotes.map(row =>
+                {votesFiltered.map(row =>
                   (
                     <TableRow key={hash(row)}>
                       <TableCell>{row.processor}</TableCell>
@@ -160,4 +169,39 @@ class Vote extends Component {
   }
 }
 
-export default connect(state => ({ ...state.default }))(injectIntl(Vote));
+Vote.propTypes = {
+  accountSettingsActions: PropTypes.shape({
+    sortVotesData: PropTypes.func,
+    getVotes: PropTypes.func,
+  }),
+  tableProps: PropTypes.shape({
+    sortable: PropTypes.bool,
+    compact: PropTypes.bool,
+    basic: PropTypes.string,
+    striped: PropTypes.bool,
+    size: PropTypes.string,
+  }),
+  account: PropTypes.shape({
+    votesFiltered: [],
+    sortVoteColumn: 'processor',
+    sortVoteDirection: 'descending',
+  }),
+  rowsPerPage: PropTypes.number,
+};
+
+Vote.defaultProps = {
+  accountSettingsActions: {},
+  account: {},
+  tableProps: {},
+  rowsPerPage: 5,
+};
+
+export default connect(
+  state => ({ ...state.default }),
+  (dispatch) => ({
+    accountSettingsActions: bindActionCreators({
+      getVotes,
+      sortVotesData,
+    }, dispatch),
+  }),
+)(injectIntl(Vote));

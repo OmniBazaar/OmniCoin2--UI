@@ -14,6 +14,8 @@ import {
   sortData,
   showDetailsModal,
   setRescan,
+  getVotes,
+  sortVotesData,
 } from './accountActions';
 
 const defaultState = {
@@ -33,6 +35,10 @@ const defaultState = {
   showDetails: false,
   detailSelected: {},
   rescanBlockchain: false,
+  votes: [],
+  votesFiltered: [],
+  sortVoteDirection: 'descending',
+  sortVoteColumn: 'processor',
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -182,6 +188,36 @@ const reducer = handleActions({
       recentTransactionsFiltered: currentData,
       sortDirection,
       sortColumn,
+    };
+  },
+  [combineActions(getVotes)](state, { payload: { votes } }) {
+    console.log('here', votes);
+    return {
+      ...state,
+      votes,
+      votesFiltered: votes,
+    };
+  },
+  [combineActions(sortVotesData)](state, { payload: { sortVoteColumn } }) {
+    let sortVoteDirection = state.sortVoteDirection === 'ascending' ? 'descending' : 'ascending';
+    const sortBy = _.sortBy(state.votes, [sortVoteColumn]);
+    let sortedData = [];
+
+    if (state.sortVoteColumn !== sortVoteColumn) {
+      sortedData = sortBy.reverse();
+      sortVoteDirection = 'ascending';
+    } else {
+      sortedData = sortVoteDirection === 'ascending' ? sortBy.reverse() : sortBy;
+    }
+
+    const { activePage, rowsPerPage } = state;
+    const currentData = sliceData(sortedData, activePage, rowsPerPage);
+
+    return {
+      ...state,
+      votesFiltered: currentData,
+      sortVoteDirection,
+      sortVoteColumn,
     };
   },
 }, defaultState);
