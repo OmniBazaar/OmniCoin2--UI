@@ -61,7 +61,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  getmac.getMac(function(err, macAddress){
+  getmac.getMac((err, macAddress) => {
     if (err) throw err;
     machineId().then((hardDriveId) => {
       if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
@@ -69,8 +69,8 @@ app.on('ready', async () => {
         hardDriveId += Math.random();
       }
       ipcMain.on('get-pc-ids', (event, arg) => {
-        event.sender.send('receive-pc-ids', {macAddress, hardDriveId});
-      })
+        event.sender.send('receive-pc-ids', { macAddress, hardDriveId });
+      });
     });
   });
 

@@ -1,11 +1,9 @@
 import { createActions } from 'redux-actions';
 
 const {
-    setActiveNode,
+  setActiveNode,
 } = createActions({
-    SET_ACTIVE_NODE: (node) => ({ node }),
+  SET_ACTIVE_NODE: (node) => ({ node }),
 });
 
-export {
-    setActiveNode
-}
+export { setActiveNode };

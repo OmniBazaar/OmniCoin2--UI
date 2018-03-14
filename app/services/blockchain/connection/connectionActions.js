@@ -1,10 +1,14 @@
 import { createActions } from 'redux-actions';
+
 const {
-    connect,
+  connect,
+  getDynGlobalObject
 } = createActions({
-    CONNECT: (node) => ({node})
+  CONNECT: (node) => ({ node }),
+  GET_DYN_GLOBAL_OBJECT: () => ({})
 });
 
 export {
-    connect
-}
+  connect,
+  getDynGlobalObject
+};

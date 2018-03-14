@@ -13,7 +13,6 @@ import MailTypes from '../../../../services/mail/mailTypes';
 import './mail.scss';
 
 class Compose extends Component {
-
   static propTypes = {
     showCompose: PropTypes.bool,
   };
@@ -86,16 +85,16 @@ class Compose extends Component {
     const props = this.props;
     const containerClass = classNames({
       'compose-container': true,
-      'visible': props.mail.showCompose,
+      visible: props.mail.showCompose,
     });
 
     const { handleSubmit } = this.props;
 
     return (
       <div className={containerClass}>
-        <div className='top-detail'>
+        <div className="top-detail">
           <span>Compose</span>
-          <Button content='CLOSE' onClick={this.closeCompose} className='button--transparent' />
+          <Button content="CLOSE" onClick={this.closeCompose} className="button--transparent" />
         </div>
         <div>
           <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className='mail-form-container'>
@@ -112,27 +111,27 @@ class Compose extends Component {
                 />
                 <Button type="button" content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
               </div>
-              <div className='form-group'>
+              <div className="form-group">
                 <label>Subject</label>
                 <Field
-                  type='text'
-                  name='subject'
-                  placeholder='Enter subject'
-                  component='input'
-                  className='textfield'
+                  type="text"
+                  name="subject"
+                  placeholder="Enter subject"
+                  component="input"
+                  className="textfield"
                 />
               </div>
-              <div className='form-group'>
+              <div className="form-group">
                 <label>Message</label>
                 <Field
-                  type='text'
-                  name='body'
-                  placeholder='Enter message'
-                  component='textarea'
-                  className='textfield'
+                  type="text"
+                  name="body"
+                  placeholder="Enter message"
+                  component="textarea"
+                  className="textfield"
                 />
               </div>
-              <div className='form-group submit-group'>
+              <div className="form-group submit-group">
                 <label />
                 <div className='field'>
                   <Button type="button" content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
@@ -143,7 +142,7 @@ class Compose extends Component {
           </Form>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -153,9 +152,7 @@ Compose = reduxForm({
 })(Compose);
 
 export default connect(
-  state => {
-    return {...state.default}
-  },
+  state => ({ ...state.default }),
   (dispatch) => ({
     mailActions: bindActionCreators({ setActiveFolder, sendMail, confirmationReceived, loadFolder }, dispatch),
   }),

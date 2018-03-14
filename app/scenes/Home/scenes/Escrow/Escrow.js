@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import './escrow.scss';
 
 export default class Escrow extends Component {
-    render() {
-        return (
-            <div>
+  render() {
+    return (
+      <div>
                 Escrow
-            </div>
-        );
-    }
+      </div>
+    );
+  }
 }
