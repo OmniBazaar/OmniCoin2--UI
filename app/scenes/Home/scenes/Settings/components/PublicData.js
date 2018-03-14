@@ -87,6 +87,10 @@ const messages = defineMessages({
 });
 
 class PublicData extends Component {
+  static updatePublicData() {
+    console.log('Update data');
+  }
+
   constructor(props) {
     super(props);
 
@@ -126,10 +130,6 @@ class PublicData extends Component {
 
   getEscrowIcon() {
     return this.props.account.escrow ? CheckPreNom : CheckNormal;
-  }
-
-  updatePublicData() {
-    console.log('Update data');
   }
 
   render() {
@@ -183,7 +183,7 @@ class PublicData extends Component {
           </div>
         </div>
         <div className="bottom-detail">
-          <Button content="UPDATE" onClick={this.updatePublicData} className="button--green-bg" />
+          <Button content="UPDATE" onClick={PublicData.updatePublicData} className="button--green-bg" />
           <div className="labels">
             <span>{formatMessage(messages.updateTransactionFee)}</span>
             <span className="amount">5 XOM</span>
@@ -206,12 +206,16 @@ PublicData.propTypes = {
     publisher: PropTypes.bool,
     transactionProcessor: PropTypes.bool,
     escrow: PropTypes.bool,
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 
 PublicData.defaultProps = {
   accountSettingsActions: {},
   account: {},
+  intl: {},
 };
 
 export default connect(

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { changePriority } from '../../../../../services/accountSettings/accountActions';
 import '../settings.scss';
 
-const iconSize = 20;
 const messages = defineMessages({
   notPublisherYet: {
     id: 'Settings.notPublisherYet',
@@ -63,7 +62,7 @@ class PrivateData extends Component {
       <div className="private-form">
         <Form onSubmit={this.onSubmit} className="mail-form-container">
           <div className="form-group">
-            <label>Email</label>
+            <span>Email</span>
             <Field
               type="text"
               name="email"
@@ -74,7 +73,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>First Name</label>
+            <span>First Name</span>
             <Field
               type="text"
               name="firstname"
@@ -85,7 +84,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>Last Name</label>
+            <span>Last Name</span>
             <Field
               type="text"
               name="lastname"
@@ -96,7 +95,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>Website</label>
+            <span>Website</span>
             <Field
               type="text"
               name="website"
@@ -107,7 +106,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group submit-group">
-            <label />
+            <span />
             <div className="field">
               <Button type="submit" content="UPDATE" className="button--green-bg" />
             </div>
@@ -119,7 +118,6 @@ class PrivateData extends Component {
   }
 
   onChangePriority(priority) {
-    console.log(priority);
     this.props.accountSettingsActions.changePriority(priority);
   }
 
@@ -137,7 +135,7 @@ class PrivateData extends Component {
         </div>
         <Form onSubmit={this.onSubmit} className="mail-form-container">
           <div className="form-group">
-            <label>Search Priority</label>
+            <span>Search Priority</span>
             <div className="field radios-container">
               <div className="radio-wrapper">
                 <Field
@@ -148,7 +146,7 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.LOCAL_DATA}
                   value={PriorityTypes.LOCAL_DATA}
                 />
-                <label className="checkbox-inline">{formatMessage(messages.localArea)}</label>
+                <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
               </div>
 
               <div className="radio-wrapper">
@@ -160,7 +158,7 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.BY_CATEGORY}
                   value={PriorityTypes.BY_CATEGORY}
                 />
-                <label className="checkbox-inline">{formatMessage(messages.byCategoryType)}</label>
+                <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
               </div>
 
               <div className="radio-wrapper">
@@ -172,13 +170,13 @@ class PrivateData extends Component {
                   checked={priority === PriorityTypes.PUBLISHER}
                   value={PriorityTypes.PUBLISHER}
                 />
-                <label className="checkbox-inline">{formatMessage(messages.publisherName)}</label>
+                <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
               </div>
             </div>
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>{formatMessage(messages.country)}</label>
+            <span>{formatMessage(messages.country)}</span>
             <Field
               type="text"
               name="country"
@@ -189,7 +187,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>City</label>
+            <span>City</span>
             <Field
               type="text"
               name="city"
@@ -200,7 +198,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group submit-group">
-            <label />
+            <span />
             <div className="field">
               <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
             </div>
@@ -221,30 +219,35 @@ class PrivateData extends Component {
   }
 }
 
-PrivateData = reduxForm({
-  form: 'privateDataForm',
-  destroyOnUnmount: true,
-})(PrivateData);
-
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
     changePriority: PropTypes.func,
   }),
   account: PropTypes.shape({
     priority: PropTypes.string,
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 
 PrivateData.defaultProps = {
   accountSettingsActions: {},
   account: {},
+  intl: {},
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    accountSettingsActions: bindActionCreators({
-      changePriority,
-    }, dispatch),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      accountSettingsActions: bindActionCreators({
+        changePriority,
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'privateDataForm',
+    destroyOnUnmount: true,
   }),
 )(injectIntl(PrivateData));

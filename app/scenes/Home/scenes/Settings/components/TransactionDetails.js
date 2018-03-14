@@ -145,12 +145,16 @@ TransactionDetails.propTypes = {
   onClose: PropTypes.func,
   account: PropTypes.shape({
     detailSelected: {},
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 
 TransactionDetails.defaultProps = {
   onClose: () => {},
   account: {},
+  intl: {},
 };
 
 export default connect(state => ({ ...state.default }))(injectIntl(TransactionDetails));

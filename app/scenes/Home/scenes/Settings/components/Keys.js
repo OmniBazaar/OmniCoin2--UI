@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -85,6 +85,18 @@ const messages = defineMessages({
 const publicKey = 'as3432fas34asf34';
 
 class Keys extends Component {
+  static onSubmitImportWF() {
+    console.log('Import WF key');
+  }
+
+  static onSubmitImportWallet() {
+    console.log('Submit wallet');
+  }
+
+  static selectFile() {
+    console.log('Select file');
+  }
+
   constructor(props) {
     super(props);
 
@@ -96,7 +108,9 @@ class Keys extends Component {
     this.props.change('walletPath', '...');
   }
 
-  renderPublicKeyField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+  renderPublicKeyField = ({
+    input
+  }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -120,10 +134,6 @@ class Keys extends Component {
     );
   };
 
-  onSubmitImportWF() {
-    console.log('Import WF key');
-  }
-
   toggleCheck() {
     this.props.accountSettingsActions.setRescan();
   }
@@ -132,11 +142,9 @@ class Keys extends Component {
     return this.props.account.rescanBlockchain ? CheckNormal : CheckPreNom;
   }
 
-  selectFile() {
-    console.log('Select file');
-  }
-
-  renderWalletField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+  renderWalletField = ({
+    input
+  }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -147,7 +155,7 @@ class Keys extends Component {
         />
         <Button
           className="copy-btn button--green address-button"
-          onClick={() => this.selectFile()}
+          onClick={() => Keys.selectFile()}
         >
           {formatMessage(messages.selectFile)}
         </Button>
@@ -155,7 +163,9 @@ class Keys extends Component {
     );
   };
 
-  renderPasswordField = ({ input,  meta: {asyncValidating, touched, error, warning} }) => {
+  renderPasswordField = ({
+    input
+  }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -169,18 +179,14 @@ class Keys extends Component {
     );
   };
 
-  onSubmitImportWallet() {
-    console.log('Submit wallet');
-  }
-
   importKeyFromWallet() {
     const { formatMessage } = this.props.intl;
 
     return (
       <div>
-        <Form onSubmit={this.onSubmitImportWallet} className="from-wallet-container">
+        <Form onSubmit={Keys.onSubmitImportWallet} className="from-wallet-container">
           <div className="form-group">
-            <label>{formatMessage(messages.walletPath)}</label>
+            <span>{formatMessage(messages.walletPath)}</span>
             <Field
               disabled
               type="text"
@@ -191,7 +197,7 @@ class Keys extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <label>{formatMessage(messages.walletPassword)}</label>
+            <span>{formatMessage(messages.walletPassword)}</span>
             <Field
               type="text"
               name="walletPassword"
@@ -217,9 +223,9 @@ class Keys extends Component {
 
     return (
       <div>
-        <Form onSubmit={this.onSubmitImportWF} className="import-wf-container">
+        <Form onSubmit={Keys.onSubmitImportWF} className="import-wf-container">
           <div className="form-group">
-            <label>{formatMessage(messages.wfPrivateKey)}</label>
+            <span>{formatMessage(messages.wfPrivateKey)}</span>
             <Field
               type="text"
               name="privateKey"
@@ -261,7 +267,7 @@ class Keys extends Component {
         <div className="ui form keys-form-container">
           <p className="title">{formatMessage(messages.publicKey)}</p>
           <div className="form-group">
-            <label>{formatMessage(messages.yourPublicKey)}</label>
+            <span>{formatMessage(messages.yourPublicKey)}</span>
             <Field
               disabled
               type="text"
@@ -300,31 +306,37 @@ class Keys extends Component {
   }
 }
 
-Keys = reduxForm({
-  form: 'keysForm',
-  destroyOnUnmount: true,
-})(Keys);
-
-
 Keys.propTypes = {
   accountSettingsActions: PropTypes.shape({
     setRescan: PropTypes.func,
   }),
   account: PropTypes.shape({
     rescanBlockchain: PropTypes.bool,
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
+  change: PropTypes.func,
 };
 
 Keys.defaultProps = {
   accountSettingsActions: {},
   account: {},
+  intl: {},
+  change: null,
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    accountSettingsActions: bindActionCreators({
-      setRescan
-    }, dispatch),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      accountSettingsActions: bindActionCreators({
+        setRescan
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'keysForm',
+    destroyOnUnmount: true,
   }),
 )(injectIntl(Keys));

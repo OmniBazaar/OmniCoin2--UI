@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
-import _ from 'lodash';
 import {
   Table,
   TableBody,
@@ -258,11 +257,13 @@ class RecentTransactions extends Component {
 
   onClickDetails = (detailId) => {
     const { recentTransactions } = this.props.account;
-    const filteredData = _.map(recentTransactions, (o) => {
-      if (o.id === detailId) return o;
+    const filteredData = [];
+
+    recentTransactions.forEach((o) => {
+      if (o.id === detailId) return filteredData.push(o);
     });
-    const result = _.without(filteredData, undefined)[0];
-    this.props.accountSettingsActions.showDetailsModal(result);
+
+    this.props.accountSettingsActions.showDetailsModal(filteredData[0]);
   };
 
   onCloseDetails() {
@@ -278,7 +279,6 @@ class RecentTransactions extends Component {
       recentTransactionsFiltered
     } = this.props.account;
     const { formatMessage } = this.props.intl;
-    const { props } = this;
 
     return (
       <div className="recent-transactions">
@@ -342,7 +342,13 @@ class RecentTransactions extends Component {
                       <TableCell>{row.fee}</TableCell>
                       <TableCell className="balance">
                         {row.balance}
-                        <span className="link" onClick={() => this.onClickDetails(row.id)}>
+                        <span
+                          className="link"
+                          onClick={() => this.onClickDetails(row.id)}
+                          onKeyDown={() => this.onClickDetails(row.id)}
+                          role="link"
+                          tabIndex={0}
+                        >
                           {formatMessage(messages.details)}
                         </span>
                       </TableCell>
@@ -397,6 +403,9 @@ RecentTransactions.propTypes = {
     sortColumn: 'date',
     sortDirection: 'descending',
   }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
   rowsPerPage: PropTypes.number,
 };
 
@@ -405,6 +414,7 @@ RecentTransactions.defaultProps = {
   account: {},
   tableProps: {},
   rowsPerPage: 5,
+  intl: {},
 };
 
 export default connect(

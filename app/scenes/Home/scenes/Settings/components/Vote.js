@@ -15,7 +15,6 @@ import {
   Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
-import _ from 'lodash';
 
 import DislikeIcon from '../../../images/btn-dislike.svg';
 import LikeIcon from '../../../images/btn-like.svg';
@@ -85,12 +84,6 @@ const voteOptions = [
 ];
 
 class Vote extends Component {
-  constructor(props) {
-    super(props);
-
-    this.vote = this.vote.bind(this);
-  }
-
   static renderVote() {
     return (
       <div className="votes">
@@ -118,6 +111,16 @@ class Vote extends Component {
     return Vote.renderVote();
   }
 
+  static vote() {
+    console.log('Vote');
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.vote = this.vote.bind(this);
+  }
+
   componentDidMount() {
     this.props.accountSettingsActions.getVotes(currentVotes);
   }
@@ -125,10 +128,6 @@ class Vote extends Component {
   sortData = (clickedColumn) => () => {
     this.props.accountSettingsActions.sortVotesData(clickedColumn);
   };
-
-  vote() {
-    console.log('Vote');
-  }
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -153,7 +152,7 @@ class Vote extends Component {
               <Button
                 content={formatMessage(messages.vote)}
                 className="vote button--primary"
-                onClick={this.vote}
+                onClick={Vote.vote}
               />
             </div>
           </div>
@@ -209,6 +208,9 @@ Vote.propTypes = {
     sortVoteColumn: 'processor',
     sortVoteDirection: 'descending',
   }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
   rowsPerPage: PropTypes.number,
 };
 
@@ -216,6 +218,7 @@ Vote.defaultProps = {
   accountSettingsActions: {},
   account: {},
   tableProps: {},
+  intl: {},
   rowsPerPage: 5,
 };
 

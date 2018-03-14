@@ -167,7 +167,13 @@ class Settings extends Component {
                  },
                 ]}
               />
-              <div className={containerClass} onClick={this.onCloseDetails} />
+              <div
+                className={containerClass}
+                onClick={this.onCloseDetails}
+                onKeyDown={this.onCloseDetails}
+                role="link"
+                tabIndex={0}
+              />
               <TransactionDetails
                 showCompose={props.account.showDetails}
                 onClose={this.onCloseDetails}
@@ -189,13 +195,17 @@ Settings.propTypes = {
     currentUser: PropTypes.shape({
       username: PropTypes.string,
     })
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 
 Settings.defaultProps = {
   accountSettingsActions: {},
   onClose: () => {},
   auth: {},
+  intl: {},
 };
 
 export default connect(
