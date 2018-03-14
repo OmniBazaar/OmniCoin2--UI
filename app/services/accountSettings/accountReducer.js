@@ -50,57 +50,57 @@ const getTotalPages = (data, rowsPerPage) => (
 );
 
 const reducer = handleActions({
-  [combineActions(setReferrer)](state, { payload: { referrer } }) {
+  [setReferrer](state) {
     return {
       ...state,
       referrer: !state.referrer,
     };
   },
-  [combineActions(setPublisher)](state, { payload: { publisher } }) {
+  [setPublisher](state) {
     return {
       ...state,
       publisher: !state.publisher,
     };
   },
-  [combineActions(setTransactionProcessor)](state, { payload: { transactionProcessor } }) {
+  [setTransactionProcessor](state) {
     return {
       ...state,
       transactionProcessor: !state.transactionProcessor,
     };
   },
-  [combineActions(setEscrow)](state, { payload: { escrow } }) {
+  [setEscrow](state) {
     return {
       ...state,
       escrow: !state.escrow,
     };
   },
-  [combineActions(changePriority)](state, { payload: { priority } }) {
+  [changePriority](state, { payload: { priority } }) {
     return {
       ...state,
       priority
     };
   },
-  [combineActions(showDetailsModal)](state, { payload: { detailSelected } }) {
+  [showDetailsModal](state, { payload: { detailSelected } }) {
     return {
       ...state,
       showDetails: !state.showDetails,
       detailSelected,
     };
   },
-  [combineActions(setRescan)](state, { payload: { rescanBlockchain } }) {
+  [setRescan](state) {
     return {
       ...state,
       rescanBlockchain: !state.rescanBlockchain,
     };
   },
-  [combineActions(getRecentTransactions)](state, { payload: { recentTransactions } }) {
+  [getRecentTransactions](state, { payload: { recentTransactions } }) {
     return {
       ...state,
       recentTransactions,
       recentTransactionsFiltered: recentTransactions,
     };
   },
-  [combineActions(filterData)](state, { payload: { filterText } }) {
+  [filterData](state, { payload: { filterText } }) {
     const data = state.recentTransactions;
     const activePage = 1;
     let { totalPages } = state;
@@ -135,7 +135,7 @@ const reducer = handleActions({
       recentTransactionsFiltered: currentData,
     };
   },
-  [combineActions(setPagination)](state, { payload: { rowsPerPage } }) {
+  [setPagination](state, { payload: { rowsPerPage } }) {
     const data = state.recentTransactions;
     const { activePage } = state;
     const totalPages = getTotalPages(data, rowsPerPage);
@@ -148,7 +148,7 @@ const reducer = handleActions({
       recentTransactionsFiltered: currentData,
     };
   },
-  [combineActions(setActivePage)](state, { payload: { activePage } }) {
+  [setActivePage](state, { payload: { activePage } }) {
     const data = state.recentTransactions;
     if (activePage !== state.activePage) {
       const { rowsPerPage } = state;
@@ -165,7 +165,7 @@ const reducer = handleActions({
       ...state,
     };
   },
-  [combineActions(sortData)](state, { payload: { sortColumn } }) {
+  [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
     const sortByFilter = _.sortBy(state.recentTransactionsFiltered, [sortColumn]);
@@ -190,14 +190,14 @@ const reducer = handleActions({
       sortColumn,
     };
   },
-  [combineActions(getVotes)](state, { payload: { votes } }) {
+  [getVotes](state, { payload: { votes } }) {
     return {
       ...state,
       votes,
       votesFiltered: votes,
     };
   },
-  [combineActions(sortVotesData)](state, { payload: { sortVoteColumn } }) {
+  [sortVotesData](state, { payload: { sortVoteColumn } }) {
     let sortVoteDirection = state.sortVoteDirection === 'ascending' ? 'descending' : 'ascending';
     const sortBy = _.sortBy(state.votes, [sortVoteColumn]);
     let sortedData = [];

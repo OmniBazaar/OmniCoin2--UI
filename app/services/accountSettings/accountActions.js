@@ -16,10 +16,10 @@ const {
   getVotes,
   sortVotesData,
 } = createActions({
-  SET_REFERRER: (referrer) => ({ referrer }),
-  SET_PUBLISHER: (publisher) => ({ publisher }),
-  SET_TRANSACTION_PROCESSOR: (transactionProcessor) => ({ transactionProcessor }),
-  SET_ESCROW: (escrow) => ({ escrow }),
+  SET_REFERRER: () => ({}),
+  SET_PUBLISHER: () => ({}),
+  SET_TRANSACTION_PROCESSOR: () => ({}),
+  SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
   GET_RECENT_TRANSACTIONS: (recentTransactions) => ({ recentTransactions }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
@@ -27,7 +27,7 @@ const {
   SORT_DATA: (sortColumn) => ({ sortColumn }),
   FILTER_DATA: (filterText) => ({ filterText }),
   SHOW_DETAILS_MODAL: (detailSelected) => ({ detailSelected }),
-  SET_RESCAN: (rescanBlockchain) => ({ rescanBlockchain }),
+  SET_RESCAN: () => ({}),
   GET_VOTES: (votes) => ({ votes }),
   SORT_VOTES_DATA: (sortVoteColumn) => ({ sortVoteColumn }),
 });
