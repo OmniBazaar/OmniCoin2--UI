@@ -1,0 +1,7 @@
+{
+  "Latency.seconds": "{latency} с",
+  "Latency.milliseconds": "{latency} мс",
+  "Latency.low": "Низкая задержка сети",
+  "Latency.medium": "Средняя задержка сети",
+  "Latency.high": "Высокая задержка сети"
+}
