@@ -20,6 +20,7 @@ import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
+import ChainFooter from '../../components/ChainFooter/ChainFooter';
 
 import './home.scss';
 import Burger from './images/hamburger-norm-press.svg';
@@ -124,14 +125,17 @@ class Home extends Component {
             </div>
           </div>
           <div className={homeContentClass}>
-            <Route path="/escrow" render={(props) => <Escrow {...props} />} />
-            <Route path="/mail" render={(props) => <Mail {...props} />} />
-            <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
-            <Route path="/processors" render={(props) => <Processors {...props} />} />
-            <Route path="/settings" render={(props) => <Settings {...props} />} />
-            <Route path="/support" render={(props) => <Support {...props} />} />
-            <Route path="/transfer" render={(props) => <Transfer {...props} />} />
-            <Route path="/wallet" render={(props) => <Wallet {...props} />} />
+            <div className="route">
+              <Route path="/escrow" render={(props) => <Escrow {...props} />} />
+              <Route path="/mail" render={(props) => <Mail {...props} />} />
+              <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
+              <Route path="/processors" render={(props) => <Processors {...props} />} />
+              <Route path="/settings" render={(props) => <Settings {...props} />} />
+              <Route path="/support" render={(props) => <Support {...props} />} />
+              <Route path="/transfer" render={(props) => <Transfer {...props} />} />
+              <Route path="/wallet" render={(props) => <Wallet {...props} />} />
+            </div>
+            <ChainFooter />
           </div>
         </div>
       );

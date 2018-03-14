@@ -9,23 +9,27 @@ import PropTypes from 'prop-types';
 import BackgroundImage from '../../assets/images/main-bg.jpg';
 import Logo from '../../assets/images/logo.png';
 import SocialNetworksFooter from '../SocialNetworksFooter/SocialNetworksFooter';
+import ChainFooter from '../ChainFooter/ChainFooter';
 import './background.scss';
 
 export default class Background extends Component {
   render() {
     return (
-      <div className="background-container" style={{ backgroundImage: `url(${BackgroundImage})` }}>
-        <div className="header">
-          <Image src={Logo} width={300} height={100} />
-          <FormattedMessage
-            id="Background.header"
-            defaultMessage="Comunity-Owned Peer-to-Peer Marketplace"
-          />
+      <div className="background-container">
+        <div className="background-content" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+          <div className="header">
+            <Image src={Logo} width={300} height={100} />
+            <FormattedMessage
+              id="Background.header"
+              defaultMessage="Comunity-Owned Peer-to-Peer Marketplace"
+            />
+          </div>
+          <div className="content">
+            {this.props.children}
+          </div>
+          <SocialNetworksFooter />
         </div>
-        <div className="content">
-          {this.props.children}
-        </div>
-        <SocialNetworksFooter />
+        <ChainFooter />
       </div>
     );
   }

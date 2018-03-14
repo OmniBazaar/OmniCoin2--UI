@@ -1,0 +1,11 @@
+@import '../../styles/index';
+
+.chain-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  color: rgba(255, 255, 255, 0.7);;
+  font-family: $montserrat;
+  width: 100%;
+  padding-right: 0.5em;
+}
