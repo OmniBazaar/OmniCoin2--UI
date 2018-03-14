@@ -102,7 +102,7 @@ class Settings extends Component {
     );
   }
 
-  renderModal() {
+  render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const containerClass = classNames({
@@ -177,10 +177,6 @@ class Settings extends Component {
         </Modal.Content>
       </Modal>
     );
-  }
-
-  render() {
-    return this.renderModal();
   }
 }
 
