@@ -6,13 +6,13 @@ import { Button, Form, Divider, Icon } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
-import { key } from "omnibazaarjs/es";
 import { withRouter } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { defineMessages, injectIntl } from 'react-intl';
-import { FetchChain } from "omnibazaarjs/es";
+import { key, FetchChain } from 'omnibazaarjs/es';
+import PropTypes from 'prop-types';
 
-import { signup } from  '../../../../services/blockchain/auth/authActions';
+import { signup } from '../../../../services/blockchain/auth/authActions';
 
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
@@ -81,43 +81,22 @@ const messages = defineMessages({
 });
 
 class SignupForm extends Component {
-
-  constructor(props) {
-    super(props);
-    this.submit = this.submit.bind(this);
-    this.signIn = this.signIn.bind(this);
-  }
-
-  componentWillMount() {
-   this.props.initialize({
-      password: ("P" + key.get_random_key().toWif()).substr(0, 45)
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { formatMessage } = this.props.intl;
-    if (nextProps.auth.error && !this.props.auth.error) {
-      let content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
-      toastr.error(formatMessage(messages.error), content);
-    }
-  }
-
-  static asyncValidate =  async (values, dispatch, props, field) => {
+  static asyncValidate = async (values, dispatch, props, field) => {
     const previousErrors = props.asyncErrors;
-    if (field === "username") {
+    if (field === 'username') {
       try {
-        let account = await FetchChain("getAccount", values.username);
+        const account = await FetchChain('getAccount', values.username);
       } catch (e) {
         throw previousErrors;
       }
-      throw Object.assign({}, previousErrors, {username: messages.usernameExists});
+      throw Object.assign({}, previousErrors, { username: messages.usernameExists });
     }
-    if (field === "referrer") {
+    if (field === 'referrer') {
       if (!values.referrer) return;
       try {
-        let account = await FetchChain("getAccount", values.referrer);
+        const account = await FetchChain('getAccount', values.referrer);
       } catch (e) {
-        throw Object.assign({}, previousErrors, {referrer: messages.noAccount});
+        throw Object.assign({}, previousErrors, { referrer: messages.noAccount });
       }
     }
     if (previousErrors) {
@@ -136,22 +115,46 @@ class SignupForm extends Component {
     return errors;
   };
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+    this.signIn = this.signIn.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.initialize({
+      password: (`P${key.get_random_key().toWif()}`).substr(0, 45)
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+    if (nextProps.auth.error && !this.props.auth.error) {
+      const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
+      toastr.error(formatMessage(messages.error), content);
+    }
+  }
+
   signIn() {
     this.props.history.push('/login');
   }
 
   submit(values) {
-      const {username, password, referrer} = values;
-      this.props.authActions.signup(
-        username,
-        password,
-        referrer,
-        null,
-        null,
-      );
+    const { username, password, referrer } = values;
+    this.props.authActions.signup(
+      username,
+      password,
+      referrer,
+      null,
+      null,
+    );
   }
 
-  renderPasswordGeneratorField = ({input,  meta: {asyncValidating, touched, error, warning}}) => {
+  renderPasswordGeneratorField = ({
+    input, meta: {
+      asyncValidating, touched, error, warning
+    }
+  }) => {
     const { formatMessage } = this.props.intl;
     return (
       <div className="hybrid-input">
@@ -161,7 +164,10 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={() => toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied))}>
+          <Button onClick={() =>
+            toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied))
+          }
+          >
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
@@ -169,12 +175,16 @@ class SignupForm extends Component {
     );
   };
 
-  renderReferrerField = ({input,  meta: {asyncValidating, touched, error, warning, active}}) => {
+  renderReferrerField = ({
+    input, meta: {
+      asyncValidating, touched, error, warning, active
+    }
+  }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
-    let show = !error && touched && !asyncValidating && !active && !!input.value;
-    let iconClassName = cn("button icon", show ? "" : "hidden");
-    let inputClassName = cn(show ? "field" : "");
+    const show = !error && touched && !asyncValidating && !active && !!input.value;
+    const iconClassName = cn('button icon', show ? '' : 'hidden');
+    const inputClassName = cn(show ? 'field' : '');
     return (
       [
         <div>
@@ -190,14 +200,17 @@ class SignupForm extends Component {
           <Icon
             name="checkmark"
             color="green"
-            className={iconClassName}/>
+            className={iconClassName}
+          />
         </div>
       ]
     );
   };
   render() {
-    const {handleSubmit, valid, auth, asyncValidating} = this.props;
-    let btnClass = cn(auth.loading || !!this.props.asyncValidating ? "ui loading" : "");
+    const {
+      handleSubmit, valid, auth, asyncValidating
+    } = this.props;
+    const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
     const { formatMessage } = this.props.intl;
     return (
       <Form
@@ -209,20 +222,20 @@ class SignupForm extends Component {
           name="username"
           placeholder={formatMessage(messages.accountName)}
           component={ValidatableField}
-          validate={[required({message: formatMessage(messages.fieldRequired)})]}
+          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
         <Field
           type="text"
           name="password"
           component={this.renderPasswordGeneratorField}
-          validate={[required({message: formatMessage(messages.fieldRequired)})]}
+          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
         <Field
           type="password"
           placeholder={formatMessage(messages.confirmPassword)}
           name="passwordConfirmation"
           component={ValidatableField}
-          validate={[required({message: formatMessage(messages.fieldRequired)})]}
+          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
         <Field
           type="text"
@@ -239,18 +252,18 @@ class SignupForm extends Component {
           <a href="#">{ formatMessage(messages.termsAndCond) }</a>
         </div>
         <Button
-          content={ formatMessage(messages.signup) }
+          content={formatMessage(messages.signup)}
           disabled={!valid || auth.loading || !!asyncValidating}
           color="green"
           className={btnClass}
           type="submit"
         />
-        <Divider fitted/>
+        <Divider fitted />
         <div className="question">
           <h3>{ formatMessage(messages.haveAccount) }</h3>
         </div>
         <Button
-          content={ formatMessage(messages.signin) }
+          content={formatMessage(messages.signin)}
           disabled={auth.loading}
           color="blue"
           className={btnClass}
@@ -274,10 +287,28 @@ SignupForm = reduxForm({
 SignupForm = injectIntl(SignupForm);
 
 export default connect(
-  (state) => {
-    return {...state.default}
-  },
+  (state) => ({ ...state.default }),
   (dispatch) => ({
-    authActions: bindActionCreators({signup}, dispatch),
+    authActions: bindActionCreators({ signup }, dispatch),
   })
 )(SignupForm);
+
+SignupForm.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    }),
+    error: PropTypes.shape({}),
+    accountExists: PropTypes.bool,
+    loading: PropTypes.bool
+  }),
+  authActions: PropTypes.shape({
+    login: PropTypes.func
+  })
+};
+
+SignupForm.defaultProps = {
+  auth: null,
+  authActions: null
+};

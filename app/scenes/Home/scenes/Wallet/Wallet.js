@@ -14,7 +14,7 @@ import { CoinTypes } from './constants';
 import {
   getBitcoinWallets,
   getOmniCoinWallets,
-} from  '../../../../services/wallet/walletActions';
+} from '../../../../services/wallet/walletActions';
 
 import './wallet.scss';
 
@@ -56,14 +56,13 @@ const bitCoinWallets = [
 
 
 class Wallet extends Component {
-
   constructor(props) {
     super(props);
 
     this.openWalletModal = this.openWalletModal.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.fetchWallets();
   }
 
@@ -80,46 +79,44 @@ class Wallet extends Component {
   }
 
   _omniCoinContent() {
-    let self = this;
+    const self = this;
     const { props } = this;
 
-    return props.wallet.omniCoinWallets.map(function (wallet, index) {
-      return (
-        <WalletDetail
-          key={'wall-' + index}
-          type={CoinTypes.OMNI_COIN}
-          walletKey={'wallet-' + index}
-          wallet={wallet}
-          openWalletModal={self.openWalletModal}
-        />
-      );
-    })
+    return props.wallet.omniCoinWallets.map((wallet, index) => (
+      <WalletDetail
+        key={`wall-${index}`}
+        type={CoinTypes.OMNI_COIN}
+        walletKey={`wallet-${index}`}
+        wallet={wallet}
+        openWalletModal={self.openWalletModal}
+      />
+    ));
   }
 
   _bitCoinContent() {
-    let self = this;
+    const self = this;
     const { props } = this;
 
-    return props.wallet.bitCoinWallets.map(function (wallet, index) {
-      return (
-        <WalletDetail
-          key={'wall-' + index}
-          type={CoinTypes.BIT_COIN}
-          walletKey={'wallet-' + index}
-          wallet={wallet}
-          openWalletModal={self.openWalletModal}
-        />
-      );
-    })
+    return props.wallet.bitCoinWallets.map((wallet, index) => (
+      <WalletDetail
+        key={`wall-${index}`}
+        type={CoinTypes.BIT_COIN}
+        walletKey={`wallet-${index}`}
+        wallet={wallet}
+        openWalletModal={self.openWalletModal}
+      />
+    ));
   }
 
   render() {
     return (
-      <div ref={container => {this.container = container}} className='container wallet'>
-        <Header hasButton buttonContent='ADD WALLET' className='button--green-bg' title='Wallets' onClick={this.onClickAddWallet} />
-          <div className='body'>
-            <Tab className='tabs' menu={{ secondary: true, pointing: true }}
-                 panes={[
+      <div ref={container => { this.container = container; }} className="container wallet">
+        <Header hasButton buttonContent="ADD WALLET" className="button--green-bg" title="Wallets" onClick={this.onClickAddWallet} />
+        <div className="body">
+          <Tab
+            className="tabs"
+            menu={{ secondary: true, pointing: true }}
+            panes={[
                    {
                      menuItem: 'OmniCoin',
                      render: () => <Tab.Pane>{this._omniCoinContent()}</Tab.Pane>,
@@ -129,22 +126,20 @@ class Wallet extends Component {
                      render: () => <Tab.Pane>{this._bitCoinContent()}</Tab.Pane>,
                    },
                  ]}
-            />
-            <div className='quick-start'>
-              <h1>Quick-start Guide! (Please read...)</h1>
-              <h3>Welcome to OmniBazaar!</h3>
-              <p>If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched, configured and populated in the background. This process will take a few minutes ~ about the same amount of time it will take you to read this orientation page.</p>
-            </div>
+          />
+          <div className="quick-start">
+            <h1>Quick-start Guide! (Please read...)</h1>
+            <h3>Welcome to OmniBazaar!</h3>
+            <p>If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched, configured and populated in the background. This process will take a few minutes ~ about the same amount of time it will take you to read this orientation page.</p>
           </div>
+        </div>
       </div>
     );
   }
 }
 
 export default connect(
-  state => {
-    return {...state.default}
-  },
+  state => ({ ...state.default }),
   (dispatch) => ({
     walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets }, dispatch),
   }),

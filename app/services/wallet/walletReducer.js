@@ -4,7 +4,7 @@ import {
   getOmniCoinWallets,
 } from './walletActions';
 
-let defaultState = {
+const defaultState = {
   omniCoinWallets: [],
   bitCoinWallets: [],
 };

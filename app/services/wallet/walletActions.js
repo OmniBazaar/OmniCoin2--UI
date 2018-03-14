@@ -8,4 +8,4 @@ const { getBitcoinWallets, getOmniCoinWallets } = createActions({
 export {
   getBitcoinWallets,
   getOmniCoinWallets,
-}
+};

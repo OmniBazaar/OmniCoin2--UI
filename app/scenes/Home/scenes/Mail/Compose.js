@@ -7,12 +7,11 @@ import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
 
-import { sendMail } from  '../../../../services/mail/mailActions';
+import { sendMail } from '../../../../services/mail/mailActions';
 
 import './mail.scss';
 
 class Compose extends Component {
-
   static propTypes = {
     showCompose: PropTypes.bool,
   };
@@ -51,7 +50,9 @@ class Compose extends Component {
   onClickAddress() {}
 
   onSubmit = (values) => {
-    const { sender, to, subject, body } = values;
+    const {
+      sender, to, subject, body
+    } = values;
     this.props.mailActions.sendMail(sender, to, subject, body);
   };
 
@@ -65,72 +66,72 @@ class Compose extends Component {
     const props = this.props;
     const containerClass = classNames({
       'compose-container': true,
-      'visible': props.mail.showCompose,
+      visible: props.mail.showCompose,
     });
 
     return (
       <div className={containerClass}>
-        <div className='top-detail'>
+        <div className="top-detail">
           <span>Compose</span>
-          <Button content='CLOSE' onClick={this.closeCompose} className='button--transparent' />
+          <Button content="CLOSE" onClick={this.closeCompose} className="button--transparent" />
         </div>
         <div>
-          <Form onSubmit={this.onSubmit} className='mail-form-container'>
-            <p className='title'>New Message</p>
+          <Form onSubmit={this.onSubmit} className="mail-form-container">
+            <p className="title">New Message</p>
             <div>
-              <div className='form-group'>
+              <div className="form-group">
                 <label>Sender</label>
                 <Field
-                  type='text'
-                  name='sender'
-                  placeholder='Sender'
-                  component='input'
-                  className='textfield'
+                  type="text"
+                  name="sender"
+                  placeholder="Sender"
+                  component="input"
+                  className="textfield"
                 />
               </div>
-              <div className='form-group address-wrap'>
+              <div className="form-group address-wrap">
                 <label>To</label>
                 <Field
-                  type='text'
-                  name='to'
-                  placeholder='Start typing'
-                  component='input'
-                  className='textfield'
+                  type="text"
+                  name="to"
+                  placeholder="Start typing"
+                  component="input"
+                  className="textfield"
                 />
-                <Button content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
+                <Button content="ADDRESS BOOK" onClick={this.onClickAddress} className="button--green address-button" />
               </div>
-              <div className='form-group'>
+              <div className="form-group">
                 <label>Subject</label>
                 <Field
-                  type='text'
-                  name='subject'
-                  placeholder='Enter subject'
-                  component='input'
-                  className='textfield'
+                  type="text"
+                  name="subject"
+                  placeholder="Enter subject"
+                  component="input"
+                  className="textfield"
                 />
               </div>
-              <div className='form-group'>
+              <div className="form-group">
                 <label>Message</label>
                 <Field
-                  type='text'
-                  name='body'
-                  placeholder='Enter message'
-                  component='textarea'
-                  className='textfield'
+                  type="text"
+                  name="body"
+                  placeholder="Enter message"
+                  component="textarea"
+                  className="textfield"
                 />
               </div>
-              <div className='form-group submit-group'>
+              <div className="form-group submit-group">
                 <label />
-                <div className='field'>
-                  <Button content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
-                  <Button type='submit' content='SEND' className='button--primary' />
+                <div className="field">
+                  <Button content="CANCEL" onClick={this.closeCompose} className="button--transparent" />
+                  <Button type="submit" content="SEND" className="button--primary" />
                 </div>
               </div>
             </div>
           </Form>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -140,9 +141,7 @@ Compose = reduxForm({
 })(Compose);
 
 export default connect(
-  state => {
-    return {...state.default}
-  },
+  state => ({ ...state.default }),
   (dispatch) => ({
     mailActions: bindActionCreators({ sendMail }, dispatch),
   }),

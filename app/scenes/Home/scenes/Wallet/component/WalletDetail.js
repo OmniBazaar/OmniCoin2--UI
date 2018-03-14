@@ -21,42 +21,53 @@ export const WalletDetail = (props) => {
   const currency = props.type === CoinTypes.OMNI_COIN ? 'XOM' : 'BTC';
 
   return (
-    <div key={props.walletKey} className='wallet-detail' onClick={props.openWalletModal}
-         style={{ backgroundImage: 'url("' + coinIconLg + '")', backgroundSize: iconSizeLg }}>
-      <div className='info'>
+    <div
+      key={props.walletKey}
+      className="wallet-detail"
+      onClick={props.openWalletModal}
+      onKeyDown={props.openWalletModal}
+      role="link"
+      tabIndex={0}
+      style={{ backgroundImage: `url("${coinIconLg}")`, backgroundSize: iconSizeLg }}
+    >
+      <div className="info">
         <Image src={UserIcon} width={iconSize} height={iconSize} />
-        <div className='top-detail'>
-          <div className='title'>
+        <div className="top-detail">
+          <div className="title">
             <span>Wallet</span>
-            <div className='badge-tag'>REGISTERED: {props.wallet.date}</div>
+            <div className="badge">REGISTERED: {props.wallet.date}</div>
           </div>
-          <span className='code'>{props.wallet.code}</span>
-          <span className='accountId'>Account ID: {props.wallet.accountId}</span>
+          <span className="code">{props.wallet.code}</span>
+          <span className="accountId">Account ID: {props.wallet.accountId}</span>
         </div>
       </div>
-      <div className='info'>
+      <div className="info">
         <Image src={coinIcon} width={iconSize} height={iconSize} />
-        <div className='top-detail'>
-          <div className='title'>
+        <div className="top-detail">
+          <div className="title">
             <span>Current Balance</span>
           </div>
-          <span className='balance'>{props.wallet.balance} {currency}</span>
+          <span className="balance">{props.wallet.balance} {currency}</span>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 WalletDetail.defaultProps = {
+  openWalletModal: null,
   wallet: {},
-  className: '',
   walletKey: '',
   type: '',
 };
 
 WalletDetail.propTypes = {
-  wallet: PropTypes.object,
-  className: PropTypes.string,
+  wallet: PropTypes.shape({
+    date: PropTypes.string,
+    code: PropTypes.string,
+    accountId: PropTypes.string,
+    balance: PropTypes.number,
+  }),
   walletKey: PropTypes.string,
   type: PropTypes.string,
   openWalletModal: PropTypes.func,
