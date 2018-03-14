@@ -174,7 +174,7 @@ class Mail extends Component {
           'new': !message.read,
         });
 
-        let creationTime = new Date(message.creation_time * 1000).toLocaleDateString();
+        let creationTime = new Date(message.creation_time * 1000).toLocaleString();
 
         return (
           <div key={'item-' + index} className={containerClass} onClick={() => self.clickedEmail(message, index)}>

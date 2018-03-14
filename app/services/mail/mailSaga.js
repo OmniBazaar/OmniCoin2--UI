@@ -80,12 +80,20 @@ export function* sendMail(action) {
         uuid: uuid
     }
 
+    /* afterDeliveredCallback happens to be triggered multiple times
+    by the backend, so this will ensure that action is handle only once */
+    let mailDeliveredOnce = false;
+
     let afterDeliveredCallback = () => {
-        console.log("Mail is delivered:", mailObject);
-        mailObject.read_status = true;
-        deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
-        storeMessage(mailObject, MailTypes.SENT);
-        mailDeliveredCallback(mailObject);
+
+        if (!mailDeliveredOnce){
+            console.log("Mail is delivered:", mailObject);
+            mailObject.read_status = true;
+            deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
+            storeMessage(mailObject, MailTypes.SENT);
+            mailDeliveredCallback(mailObject);
+        }
+        mailDeliveredOnce = true;
     };
 
     Apis.instance().network_api().exec("mail_send", [afterDeliveredCallback, mailObject]).then(() => {

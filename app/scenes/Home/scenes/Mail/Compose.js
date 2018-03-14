@@ -29,8 +29,11 @@ class Compose extends Component {
 
     if (nextProps.mail.reply && (nextProps.mail.reply !== this.props.mail.reply)) {
       const message = this.getMessage(props.mail.activeMessage);
-      this.props.change('subject', message.title);
-      this.props.change('body', message.body);
+      if (message){
+        this.props.change('subject', message.subject);
+        this.props.change('body', message.body);
+      }
+      
     }
 
     if (!nextProps.mail.reply) {
