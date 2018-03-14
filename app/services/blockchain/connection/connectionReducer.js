@@ -1,9 +1,10 @@
 import { handleActions } from 'redux-actions';
-import { connect } from './connectionActions';
+import { connect, } from './connectionActions';
 
 const defaultState = {
-  apiInstance: null,
   node: null,
+  latency: null,
+  dynGlobalObject: null,
   isLoading: false,
   error: null,
 };
@@ -16,19 +17,29 @@ const reducer = handleActions({
       node
     };
   },
-  CONNECT_SUCCEEDED: (state, action) => ({
+  CONNECT_SUCCEEDED: (state, { node, latency }) => ({
     ...state,
-    apiInstance: action.apiInstance,
     isLoading: false,
     error: null,
+    node,
+    latency,
   }),
-  CONNECT_FAILED: (state, action) => ({
+  CONNECT_FAILED: (state, { error }) => ({
     ...state,
-    apiInstance: null,
     node: null,
+    latency: null,
     isLoading: false,
-    error: action.error
-  })
+    error
+  }),
+  DYN_GLOBAL_OBJECT_SUCCEEDED: (state, { dynGlobalObject }) => ({
+    ...state,
+    dynGlobalObject,
+    error: false
+  }),
+  DYN_GLOBAL_OBJECT_FAILED: (state, { error }) => ({
+    ...state,
+    error
+  }),
 }, defaultState);
 
 export default reducer;
