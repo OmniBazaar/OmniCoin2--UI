@@ -1,12 +1,14 @@
 function getColor(latency) {
-  if (latency < 500) {
-    return 'green';
-  }
-  if (latency < 1000) {
-    return 'orange';
-  }
-  if (latency > 1000) {
-    return 'red';
+  const status = getStatus(latency);
+  switch (status) {
+    case 'low':
+      return 'green';
+    case 'medium':
+      return 'orange';
+    case 'high':
+      return 'red';
+    default:
+      return 'red';
   }
 }
 

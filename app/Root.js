@@ -7,13 +7,21 @@ import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
 
-import { connect as connectToNode } from './services/blockchain/connection/connectionActions';
+import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import { requestPcIds } from './services/blockchain/auth/authActions';
 
 class Root extends Component {
   componentWillMount() {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
+  }
+
+  componentDidMount() {
+    this.syncInterval = setInterval(this.props.connectionActions.getDynGlobalObject, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.syncInterval);
   }
 
   render() {
@@ -32,7 +40,7 @@ class Root extends Component {
 export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
-    connectionActions: bindActionCreators({ connectToNode }, dispatch),
+    connectionActions: bindActionCreators({ connectToNode, getDynGlobalObject }, dispatch),
     authActions: bindActionCreators({ requestPcIds }, dispatch)
   }),
 )(Root);

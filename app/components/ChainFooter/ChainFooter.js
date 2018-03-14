@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 
 import Latency from '../Latency/Latency';
 import { getColor } from '../../services/blockchain/latency/latency';
@@ -31,7 +32,16 @@ class ChainFooter extends Component {
   }
 }
 
-export default ChainFooter;
+export default connect((state) => {
+  const {
+    error, dynGlobalObject, latency, isLoading
+  } = state.default.connection;
+  return {
+    isConnected: !error && !isLoading,
+    block: !!dynGlobalObject && dynGlobalObject.head_block_number,
+    latency
+  };
+})(ChainFooter);
 
 ChainFooter.propTypes = {
   isConnected: PropTypes.bool,
