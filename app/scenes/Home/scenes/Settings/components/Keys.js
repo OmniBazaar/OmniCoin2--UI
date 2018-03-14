@@ -11,9 +11,7 @@ import PropTypes from 'prop-types';
 import CheckNormal from '../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../images/ch-box-1-norm.svg';
 
-import {
-  setRescan,
-} from '../../../../../services/accountSettings/accountActions';
+import { setRescan } from '../../../../../services/accountSettings/accountActions';
 
 const iconSize = 20;
 
@@ -77,6 +75,10 @@ const messages = defineMessages({
   enterPassword: {
     id: 'Settings.enterPassword',
     defaultMessage: 'Please enter password'
+  },
+  importWallet: {
+    id: 'Settings.importWallet',
+    defaultMessage: 'IMPORT WALLET'
   },
 });
 
@@ -201,7 +203,7 @@ class Keys extends Component {
           <div className="bottom-detail">
             <div className="col-1" />
             <div className="col-3">
-              <Button content={formatMessage(messages.importKey)} type="submit" className="button--primary checkbox" />
+              <Button content={formatMessage(messages.importWallet)} type="submit" className="button--primary checkbox" />
             </div>
             <div className="col-1" />
           </div>

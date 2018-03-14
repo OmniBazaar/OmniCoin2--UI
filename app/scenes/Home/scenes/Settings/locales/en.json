@@ -62,5 +62,12 @@
   "Settings.walletPath": "Wallet Path",
   "Settings.walletPassword": "Wallet Password",
   "Settings.selectFile": "Select File",
-  "Settings.enterPassword": "Please enter password"
+  "Settings.enterPassword": "Please enter password",
+  "Settings.importWallet": "IMPORT WALLET",
+  "Settings.currentVotes": "Current Votes",
+  "Settings.vote": "VOTE",
+  "Settings.processor": "Processor",
+  "Settings.votes": "Votes (XOM)",
+  "Settings.approval": "Approval",
+  "Settings.voted": "Voted"
 }

@@ -150,7 +150,20 @@ class Settings extends Component {
                  },
                  {
                    menuItem: 'Vote',
-                   render: () => <Tab.Pane><Vote /></Tab.Pane>,
+                   render: () => (
+                     <Tab.Pane>
+                       <Vote
+                         rowsPerPage={5}
+                         tableProps={{
+                           sortable: true,
+                           compact: true,
+                           basic: 'very',
+                           striped: true,
+                           size: 'small'
+                         }}
+                       />
+                     </Tab.Pane>
+                   ),
                  },
                 ]}
               />
