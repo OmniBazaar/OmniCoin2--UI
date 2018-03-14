@@ -90,8 +90,8 @@ class TransactionDetails extends Component {
 
   render() {
     const { props } = this;
-    const { formatMessage } = props.intl;
-    const { detailSelected } = props.account;
+    const { formatMessage } = this.props.intl;
+    const { detailSelected } = this.props.account;
     const containerClass = classNames({
       'details-container': true,
       details: true,
