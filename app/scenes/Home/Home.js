@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image } from 'semantic-ui-react';
+import { Image, Icon } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
@@ -140,7 +140,7 @@ class Home extends Component {
                   />
                 </NavLink>
                 <div onClick={this.onClickSettings} onKeyDown={this.onClickSettings} className="menu-item" role="link" tabIndex={0}>
-                  <Image src={ProcessorsIcon} height={iconSize} width={iconSize} />
+                  <Icon name="setting" height={iconSize} width={iconSize} />
                   <span>Settings</span>
                 </div>
                 {this.renderSettings()}
