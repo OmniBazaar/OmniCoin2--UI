@@ -10,9 +10,9 @@ import {
   TableHeaderCell,
   TableRow,
   TableHeader,
-  Input,
-  Icon,
+  Select,
   Image,
+  Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 import _ from 'lodash';
@@ -76,7 +76,21 @@ const currentVotes = [
   },
 ];
 
+const voteOptions = [
+  {
+    key: 'all',
+    value: 'all',
+    text: 'All'
+  },
+];
+
 class Vote extends Component {
+  constructor(props) {
+    super(props);
+
+    this.vote = this.vote.bind(this);
+  }
+
   static renderVote() {
     return (
       <div className="votes">
@@ -112,6 +126,10 @@ class Vote extends Component {
     this.props.accountSettingsActions.sortVotesData(clickedColumn);
   };
 
+  vote() {
+    console.log('Vote');
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
 
@@ -126,13 +144,18 @@ class Vote extends Component {
         <div className="data-table">
           <div className="top-detail">
             <p className="title">{formatMessage(messages.currentVotes)}</p>
-            <Input
-              icon={<Icon name="filter" />}
-              iconPosition="left"
-              placeholder="Filter"
-              className="filter-input"
-              onChange={this.handleFilterChange}
-            />
+            <div>
+              <Select
+                placeholder="Select"
+                options={voteOptions}
+                defaultValue="all"
+              />
+              <Button
+                content={formatMessage(messages.vote)}
+                className="vote button--primary"
+                onClick={this.vote}
+              />
+            </div>
           </div>
           <div className="table-container">
             <Table {...this.props.tableProps}>

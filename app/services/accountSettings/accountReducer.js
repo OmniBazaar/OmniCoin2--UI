@@ -191,7 +191,6 @@ const reducer = handleActions({
     };
   },
   [combineActions(getVotes)](state, { payload: { votes } }) {
-    console.log('here', votes);
     return {
       ...state,
       votes,
