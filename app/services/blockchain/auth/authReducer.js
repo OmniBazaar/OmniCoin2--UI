@@ -5,6 +5,7 @@ import { ipcRenderer } from 'electron';
 import {
   signup,
   login,
+  logout,
   getCurrentUser,
   accountLookup,
   requestPcIds
@@ -29,6 +30,13 @@ const reducer = handleActions({
       ...state,
       error: null,
       loading: true
+    };
+  },
+  [logout](state, { payload: {} }) {
+    localStorage.removeItem('currentUser');
+    return {
+      ...state,
+      currentUser: null
     };
   },
   [signup](state, {

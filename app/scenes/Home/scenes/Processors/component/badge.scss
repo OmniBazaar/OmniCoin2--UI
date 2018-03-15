@@ -14,3 +14,19 @@
     margin-top: 4px;
   }
 }
+
+.wallet {
+  .badge {
+    display: flex;
+    flex-direction: column;
+    border-radius: 6px;
+    background-color: #e8edf0;
+    border: 1px solid darken($primary-gray, 15%);
+    padding: 0 5px;
+    font-size: 10px;
+    line-height: 15px;
+    color: darken($primary-gray, 15%);
+    flex-basis: initial;
+    margin: 0;
+  }
+}
