@@ -54,8 +54,8 @@ export function* sendMail(action) {
         if (!mailDeliveredOnce){
             console.log("Mail is delivered:", mailObject);
             mailObject.read_status = true;
-            deleteMessage(mailObject.uuid, MailTypes.OUTBOX);
-            storeMessage(mailObject, MailTypes.SENT);
+            deleteMessage(mailObject.sender, MailTypes.OUTBOX, mailObject.uuid);
+            storeMessage(mailObject, mailObject.sender, MailTypes.SENT);
             mailDeliveredCallback(mailObject);
         }
         mailDeliveredOnce = true;
@@ -63,15 +63,14 @@ export function* sendMail(action) {
 
     Apis.instance().network_api().exec("mail_send", [afterDeliveredCallback, mailObject]).then(() => {
         console.log("Mail is in the outbox:", mailObject);
-        storeMessage(mailObject, MailTypes.OUTBOX);
+        storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);
         mailSentCallback();
     });    
 }
 
 export function* subscribeForMail(action) {
 
-    let reciever = action.payload.reciever;
-    let afterMailStoredCallback = action.payload.afterMailStoredCallback;
+    let { reciever, afterMailStoredCallback} = action.payload;
 
     let mailReceivedOnce = false;
 
@@ -80,7 +79,7 @@ export function* subscribeForMail(action) {
             console.log("Mail recieved: ", recievedMmailObjects);
             recievedMmailObjects.forEach((mailObject) => {
                 mailObject.read_status = false;
-                storeMessage(mailObject, MailTypes.INBOX);
+                storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
             })
             afterMailStoredCallback(recievedMmailObjects);
             mailReceivedOnce = true;
@@ -102,7 +101,9 @@ export function* confirmationRecieved(action){
 
 export function* loadFolder(action){
 
-    let emails = getMessagesFromFolder(action.payload.myUsername, action.payload.messageFolder);
+    let { user, messageFolder } = action.payload;
+
+    let emails = getMessagesFromFolder(user, messageFolder);
 
     yield put({
         type: 'LOAD_FOLDER_UPDATE',
@@ -112,19 +113,18 @@ export function* loadFolder(action){
 }
 
 export function* deleteMail(action){
-    let messageObject = action.payload.messageObject;
-    let messageFolder = action.payload.messageFolder;
-    let afterDeletionCallback = action.payload.afterDeletionCallback;
+   
+    let { messageObject, messageFolder, user, afterDeletionCallback } = action.payload;
 
-    storeMessage(messageObject, MailTypes.DELETED);
-    deleteMessage(messageObject.uuid, messageFolder);
+    storeMessage(messageObject, user, MailTypes.DELETED);
+    deleteMessage(user, messageFolder, messageObject.uuid);
     afterDeletionCallback();
 }
 
 export function* mailSetRead(action) {
-    let { messageFolder, messageUUID, afterSetCallback } = action.payload;
-    let mailObject = getMessage(messageFolder, messageUUID);
+    let { user, messageFolder, messageUUID, afterSetCallback } = action.payload;
+    let mailObject = getMessage(user, messageFolder, messageUUID);
     mailObject.read_status = true;
-    storeMessage(mailObject, messageFolder);
+    storeMessage(mailObject, user, messageFolder);
     afterSetCallback();
 }

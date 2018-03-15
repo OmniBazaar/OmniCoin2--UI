@@ -151,7 +151,9 @@ class Mail extends Component {
 
     let currentMessageObject =  this.props.mail.messages[this.props.mail.activeFolder][index];
     if (currentMessageObject.read_status === false){
-      this.props.mailActions.mailSetRead(this.props.mail.activeFolder, message.uuid, () => {
+      this.props.mailActions.mailSetRead(
+        this.props.auth.currentUser.username,
+        this.props.mail.activeFolder, message.uuid, () => {
         this.props.mailActions.loadFolder(this.props.auth.currentUser.username, this.props.mail.activeFolder);
       }); 
     }
@@ -237,10 +239,12 @@ class Mail extends Component {
   onClickDelete() {
       if (this.props.mail.activeMessage >= 0){
         let messageObjToDelete = this.props.mail.messages[this.props.mail.activeFolder][this.props.mail.activeMessage];
-        this.props.mailActions.deleteMail(messageObjToDelete,
-                                          this.props.mail.activeFolder,
+        this.props.mailActions.deleteMail(this.props.auth.currentUser.username,
+                                          this.props.mail.activeFolder,                                
+                                          messageObjToDelete,
                                           () => {
-                                              this.changeFolder(this.props.mail.activeFolder);
+                                              this.props.mailActions.loadFolder(this.props.auth.currentUser.username,
+                                                                                this.props.mail.activeFolder);
                                           });
       }
       

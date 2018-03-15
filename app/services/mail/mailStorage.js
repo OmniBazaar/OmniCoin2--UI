@@ -1,6 +1,7 @@
 import MailTypes from './mailTypes';
 
-export function storeMessage(mailObject, messageFolder) {
+export function storeMessage(mailObject, user, messageFolder) {
+
 
     let mailFolder = localStorage.getItem('mail');
     if (!mailFolder)
@@ -8,25 +9,28 @@ export function storeMessage(mailObject, messageFolder) {
     else
         mailFolder = JSON.parse(localStorage.getItem('mail'));
 
-    if (!mailFolder[messageFolder])
-        mailFolder[messageFolder] = {};
+    if (!mailFolder[user])
+        mailFolder[user] = {};
+
+    if (!mailFolder[user][messageFolder])
+        mailFolder[user][messageFolder] = {};
 
     let uuid = mailObject.uuid;
-    mailFolder[messageFolder][uuid] = {...mailObject};
+    mailFolder[user][messageFolder][uuid] = {...mailObject};
 
     localStorage.setItem('mail', JSON.stringify(mailFolder));
 }
 
-export function getMessage(messageFolder, uuid) {
+export function getMessage(user, messageFolder, uuid) {
     let mailObject = JSON.parse(localStorage.getItem('mail'));
-    return mailObject[messageFolder][uuid];
+    return mailObject[user][messageFolder][uuid];
 }
 
-export function deleteMessage(uuid, messageFolder) {
+export function deleteMessage(user, messageFolder, uuid) {
 
     try {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-        let mailFolder = rootMailFolder[messageFolder];
+        let mailFolder = rootMailFolder[user][messageFolder];
         delete mailFolder[uuid];
         localStorage.setItem('mail', JSON.stringify(rootMailFolder));
     }
@@ -35,18 +39,18 @@ export function deleteMessage(uuid, messageFolder) {
     }
 }
 
-export function getMessagesFromFolder(myUsername, messageFolder){
+export function getMessagesFromFolder(user, messageFolder){
 
     try {
         let rootMailFolder = JSON.parse(localStorage.getItem('mail'));
-        let mailFolder = rootMailFolder[messageFolder];
+        let mailFolder = rootMailFolder[user][messageFolder];
         let emails = Object.keys(mailFolder).map((mailUUID) => {
           let email = mailFolder[mailUUID];
           switch(messageFolder){
             case MailTypes.INBOX: email.user = email.sender; break;
             case MailTypes.OUTBOX: email.user = email.recipient; break;
             case MailTypes.SENT: email.user = email.recipient; break;
-            case MailTypes.DELETED: email.user = (email.sender == myUsername ? email.recipient: email.sender); break;
+            case MailTypes.DELETED: email.user = (email.sender == user ? email.recipient: email.sender); break;
           }
           email.read = email.read_status;
           return email;
@@ -58,6 +62,6 @@ export function getMessagesFromFolder(myUsername, messageFolder){
     }
 }
 
-export function generateMailUUID(mailSender, mailCreatedTime) {
-    return mailSender + mailCreatedTime;
+export function generateMailUUID(user, mailCreatedTime) {
+    return user + mailCreatedTime;
 }
