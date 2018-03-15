@@ -65,9 +65,7 @@ export function* sendMail(action) {
         console.log("Mail is in the outbox:", mailObject);
         storeMessage(mailObject, MailTypes.OUTBOX);
         mailSentCallback();
-    });
-
-    
+    });    
 }
 
 export function* subscribeForMail(action) {
@@ -75,13 +73,18 @@ export function* subscribeForMail(action) {
     let reciever = action.payload.reciever;
     let afterMailStoredCallback = action.payload.afterMailStoredCallback;
 
+    let mailReceivedOnce = false;
+
     let mailReceivedCallback = (recievedMmailObjects) => {
-        console.log("Mail recieved: ", recievedMmailObjects);
-        recievedMmailObjects.forEach((mailObject) => {
-            mailObject.read_status = false;
-            storeMessage(mailObject, MailTypes.INBOX);
-        })
-        afterMailStoredCallback(recievedMmailObjects);
+        if (!mailReceivedOnce){
+            console.log("Mail recieved: ", recievedMmailObjects);
+            recievedMmailObjects.forEach((mailObject) => {
+                mailObject.read_status = false;
+                storeMessage(mailObject, MailTypes.INBOX);
+            })
+            afterMailStoredCallback(recievedMmailObjects);
+            mailReceivedOnce = true;
+        }
     }
 
     Apis.instance().network_api().exec("mail_subscribe", [mailReceivedCallback, reciever]).then(() => {
