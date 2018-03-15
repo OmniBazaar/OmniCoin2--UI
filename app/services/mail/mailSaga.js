@@ -1,4 +1,4 @@
-import {put, takeEvery, call} from 'redux-saga/effects';
+import {put, takeEvery, call, all} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { storeMessage,
          getMessagesFromFolder,
@@ -8,54 +8,19 @@ import { storeMessage,
 
 import MailTypes from './mailTypes';
 
-export function* sendMailSubscriber() {
-    yield takeEvery(
-        'SEND_MAIL',
-        sendMail
-    )
+
+export function* mailSubscriber() {
+    yield all([
+        takeEvery('SEND_MAIL', sendMail),
+        takeEvery('SUBSCRIBE_FOR_MAIL', subscribeForMail),
+        takeEvery('MAIL_RECEIVED', mailReceived),
+        takeEvery('CONFIRMATION_RECEIVED', confirmationRecieved),
+        takeEvery('LOAD_FOLDER', loadFolder),
+        takeEvery('DELETE_MAIL', deleteMail),
+        takeEvery('MAIL_SET_READ', mailSetRead)
+    ]);
 }
 
-export function* subscribeForMailSubscriber(){
-    yield takeEvery(
-        'SUBSCRIBE_FOR_MAIL',
-        subscribeForMail
-    )
-}
-
-export function* mailReceivedSubscriber() {
-    yield takeEvery(
-        'MAIL_RECEIVED',
-        mailReceived
-    )
-}
-
-export function* confirmationRecievedSubscriber() {
-    yield takeEvery(
-        'CONFIRMATION_RECEIVED',
-        confirmationRecieved
-    )
-}
-
-export function* loadFolderSubscriber(){
-    yield takeEvery(
-        'LOAD_FOLDER',
-        loadFolder
-    )
-}
-
-export function* deleteMailSubscriber(){
-    yield takeEvery(
-        'DELETE_MAIL',
-        deleteMail
-    )
-}
-
-export function* mailSetReadSubscriber(){
-    yield takeEvery(
-        'MAIL_SET_READ',
-        mailSetRead
-    )
-}
 
 export function* sendMail(action) {
     
