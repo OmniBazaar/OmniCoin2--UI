@@ -52,7 +52,6 @@ export function getMessagesFromFolder(user, messageFolder){
             case MailTypes.SENT: email.user = email.recipient; break;
             case MailTypes.DELETED: email.user = (email.sender == user ? email.recipient: email.sender); break;
           }
-          email.read = email.read_status;
           return email;
         });
         return emails;

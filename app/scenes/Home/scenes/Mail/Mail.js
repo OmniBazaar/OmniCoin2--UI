@@ -171,7 +171,7 @@ class Mail extends Component {
         const containerClass = classNames({
           'mail-summary': true,
           active: props.mail.activeMessage === index,
-          new: !message.read,
+          new: !message.read_status,
         });
 
         let creationTime = new Date(message.creation_time * 1000).toLocaleString();
