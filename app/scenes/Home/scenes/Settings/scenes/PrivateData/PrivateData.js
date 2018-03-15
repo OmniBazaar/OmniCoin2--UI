@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { changePriority } from '../../../../services/accountSettings/accountActions';
+import { changePriority } from '../../../../../../services/accountSettings/accountActions';
 
-import '../Settings/settings.scss';
+import '../../settings.scss';
 import './private.scss';
 
 const messages = defineMessages({

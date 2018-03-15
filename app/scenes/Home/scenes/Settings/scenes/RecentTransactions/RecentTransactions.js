@@ -24,7 +24,7 @@ import {
   filterData,
   setPagination,
   showDetailsModal,
-} from '../../../../services/accountSettings/accountActions';
+} from '../../../../../../services/accountSettings/accountActions';
 
 import IncomingIcon from './images/ui-arrow-incoming.svg';
 import OutgoingIcon from './images/ui-arrow-aoutgoing.svg';
