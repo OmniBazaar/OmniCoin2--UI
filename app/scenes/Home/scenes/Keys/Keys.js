@@ -8,10 +8,12 @@ import { Button, Tab, Form, Image } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
 import PropTypes from 'prop-types';
 
-import CheckNormal from '../../../images/ch-box-0-norm.svg';
-import CheckPreNom from '../../../images/ch-box-1-norm.svg';
+import CheckNormal from '../../images/ch-box-0-norm.svg';
+import CheckPreNom from '../../images/ch-box-1-norm.svg';
 
-import { setRescan } from '../../../../../services/accountSettings/accountActions';
+import { setRescan } from '../../../../services/accountSettings/accountActions';
+
+import './keys.scss';
 
 const iconSize = 20;
 

@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 
 import UserIcon from '../../images/th-user-white.svg';
 import OmniIcon from '../../images/th-omnicoin.svg';
-import PublicData from './components/PublicData';
-import PrivateData from './components/PrivateData';
-import RecentTransactions from './components/RecentTransactions';
-import TransactionDetails from './components/TransactionDetails';
-import Keys from './components/Keys';
-import Vote from './components/Vote';
+import PublicData from '../PublicData/PublicData';
+import PrivateData from '../PrivateData/PrivateData';
+import RecentTransactions from '../RecentTransactions/RecentTransactions';
+import TransactionDetails from '../RecentTransactions/components/TransactionDetails';
+import Keys from '../Keys/Keys';
+import Vote from '../Vote/Vote';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import { showDetailsModal } from '../../../../services/accountSettings/accountActions';

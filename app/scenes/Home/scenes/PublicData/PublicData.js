@@ -5,17 +5,18 @@ import { Button, Image } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import CheckNormal from '../../../images/ch-box-0-norm.svg';
-import CheckPreNom from '../../../images/ch-box-1-norm.svg';
+import CheckNormal from '../../images/ch-box-0-norm.svg';
+import CheckPreNom from '../../images/ch-box-1-norm.svg';
 
-import { getCurrentUser } from '../../../../../services/blockchain/auth/authActions';
+import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
   setReferrer,
   setPublisher,
   setTransactionProcessor,
   setEscrow,
-} from '../../../../../services/accountSettings/accountActions';
-import '../settings.scss';
+} from '../../../../services/accountSettings/accountActions';
+import '../Settings/settings.scss';
+import './public.scss';
 
 const iconSize = 20;
 const messages = defineMessages({
@@ -79,10 +80,6 @@ const messages = defineMessages({
   updateTransactionFee: {
     id: 'Settings.updateTransactionFee',
     defaultMessage: 'Update data transaction fee: '
-  },
-  xom: {
-    id: 'Settings.xom',
-    defaultMessage: 'XOM'
   },
 });
 

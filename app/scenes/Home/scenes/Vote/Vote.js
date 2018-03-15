@@ -16,14 +16,16 @@ import {
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 
-import DislikeIcon from '../../../images/btn-dislike.svg';
-import LikeIcon from '../../../images/btn-like.svg';
-import DotsIcon from '../../../images/btn-meehh.svg';
+import DislikeIcon from '../../images/btn-dislike.svg';
+import LikeIcon from '../../images/btn-like.svg';
+import DotsIcon from '../../images/btn-meehh.svg';
+
+import './votes.scss';
 
 import {
   getVotes,
   sortVotesData
-} from '../../../../../services/accountSettings/accountActions';
+} from '../../../../services/accountSettings/accountActions';
 
 const iconSize = 18;
 
@@ -113,12 +115,6 @@ class Vote extends Component {
 
   static vote() {
     console.log('Vote');
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.vote = this.vote.bind(this);
   }
 
   componentDidMount() {

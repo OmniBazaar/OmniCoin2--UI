@@ -1,0 +1,32 @@
+@import '../../../../styles/index';
+
+.vote-container {
+  .top-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
+
+  .filter-input {
+    flex: inherit;
+  }
+
+  .vote {
+    margin-left: 10px;
+  }
+
+  .ui.selection {
+    &.dropdown {
+      background-color: $lighter-blue;
+      border: none;
+    }
+    &.active.dropdown .menu {
+      border: none;
+    }
+  }
+}

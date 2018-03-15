@@ -24,14 +24,16 @@ import {
   filterData,
   setPagination,
   showDetailsModal,
-} from '../../../../../services/accountSettings/accountActions';
+} from '../../../../services/accountSettings/accountActions';
 
-import IncomingIcon from '../images/ui-arrow-incoming.svg';
-import OutgoingIcon from '../images/ui-arrow-aoutgoing.svg';
+import IncomingIcon from './images/ui-arrow-incoming.svg';
+import OutgoingIcon from './images/ui-arrow-aoutgoing.svg';
+import './recent.scss';
 
 const iconSize = 15;
 const iconToSize = 12;
 const iconSizeToHeight = 16;
+
 
 const messages = defineMessages({
   firstItem: {
