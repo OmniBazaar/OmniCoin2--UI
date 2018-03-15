@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Image } from 'semantic-ui-react';
 
-import UserIcon from '../images/th-user.svg';
+import UserIcon from '../../../images/th-user.svg';
 import BitCoinIcon from '../images/th-bitcoin.svg';
-import OmniCoinIcon from '../images/th-omnicoin.svg';
+import OmniCoinIcon from '../../../images/th-omnicoin.svg';
 import OmniCoinIconLg from '../images/bg-omnicoin.svg';
 import BitCoinIconLg from '../images/bg-bitcoin.svg';
 
@@ -25,6 +25,9 @@ export const WalletDetail = (props) => {
       key={props.walletKey}
       className="wallet-detail"
       onClick={props.openWalletModal}
+      onKeyDown={props.openWalletModal}
+      role="link"
+      tabIndex={0}
       style={{ backgroundImage: `url("${coinIconLg}")`, backgroundSize: iconSizeLg }}
     >
       <div className="info">
@@ -52,15 +55,19 @@ export const WalletDetail = (props) => {
 };
 
 WalletDetail.defaultProps = {
+  openWalletModal: null,
   wallet: {},
-  className: '',
   walletKey: '',
   type: '',
 };
 
 WalletDetail.propTypes = {
-  wallet: PropTypes.object,
-  className: PropTypes.string,
+  wallet: PropTypes.shape({
+    date: PropTypes.string,
+    code: PropTypes.string,
+    accountId: PropTypes.string,
+    balance: PropTypes.number,
+  }),
   walletKey: PropTypes.string,
   type: PropTypes.string,
   openWalletModal: PropTypes.func,

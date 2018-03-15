@@ -39,12 +39,16 @@
         }
       }
     }
+
+    &.bottom {
+      margin-top: 20px;
+    }
   }
 
   .table-container {
     margin-top: 15px;
 
-    .sortable.table {
+    .table {
       thead {
         th {
           border-left: none;

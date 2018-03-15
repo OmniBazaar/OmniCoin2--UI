@@ -45,12 +45,21 @@
       margin: 0 !important;
       border: none !important;
       background-color: #f8faf9;
+      width: 100%;
     }
 
     .pagination {
       .active.item {
         border-bottom: none !important;
       }
+    }
+  }
+}
+
+.settings-container {
+  .ui {
+    &.segment.active.keys-tab {
+      padding: 0 !important;
     }
   }
 }

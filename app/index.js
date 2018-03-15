@@ -68,8 +68,6 @@ sagaMiddleware.run(loadFolderSubscriber);
 sagaMiddleware.run(deleteMailSubscriber);
 sagaMiddleware.run(mailSetReadSubscriber);
 
-localStorage.clear(); // Temporarily for login functionality TODO: remove this
-
 ReactDOM.render(
   (
     <AppContainer>
