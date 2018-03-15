@@ -12,5 +12,6 @@
   "Preferences.priorityForListing": "Priority for Listings You Create",
   "Preferences.publisherFee": "Publisher Fee You Receive",
   "Preferences.chargeFee": "Fee You Charge to Publish Listings",
-  "Preferences.update": "UPDATE"
+  "Preferences.update": "UPDATE",
+  "Preferences.commandHint": "Type command and hit enter"
 }

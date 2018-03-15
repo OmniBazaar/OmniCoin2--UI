@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Modal, Tab, Form, Button, Select, Image } from 'semantic-ui-react';
+import { Modal, Tab, Form, Button, Select, Image, Icon } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 
 import './preferences.scss';
-import { setReferral } from '../../../../services/preferences/preferencesActions';
+import { setReferral, sendCommand } from '../../../../services/preferences/preferencesActions';
 
 import CheckNormal from '../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../images/ch-box-1-norm.svg';
 
 const iconSize = 20;
+const iconSizeSmall = 12;
 
 const messages = defineMessages({
   preferencesTab: {
@@ -70,6 +71,10 @@ const messages = defineMessages({
   update: {
     id: 'Preferences.update',
     defaultMessage: 'UPDATE'
+  },
+  commandHint: {
+    id: 'Preferences.commandHint',
+    defaultMessage: 'Type command and hit enter'
   },
 });
 
@@ -132,11 +137,67 @@ class Preferences extends Component {
     </div>
   );
 
+  renderHintField = ({
+    input, placeholder, hint, onKeyDown
+  }) => (
+    <div className="hybrid-input">
+      <input
+        {...input}
+        autoFocus
+        type="text"
+        className="textfield command-field"
+        placeholder={placeholder}
+        onKeyDown={onKeyDown}
+      />
+      <div className="hint button--gray-text">
+        <Icon name="long arrow left" width={iconSizeSmall} height={iconSizeSmall} />
+        {hint}
+      </div>
+    </div>
+  );
+
   getReferrerIcon() {
     return this.props.preferences.referral ? CheckPreNom : CheckNormal;
   }
 
-  preferencesForm() {
+  sendCommandEnter = e => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      this.props.preferencesActions.sendCommand(e.target.value);
+      this.props.change('command', '');
+    }
+  };
+
+  renderCommands() {
+    const { sentCommands } = this.props.preferences;
+    return (
+      sentCommands.map((command) => (
+        <p className="command">{`>> ${command}`}</p>
+      ))
+    );
+  }
+
+  consoleTab() {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div className="command-container">
+        <Field
+          type="text"
+          name="command"
+          component={this.renderHintField}
+          className="textfield"
+          onKeyDown={this.sendCommandEnter}
+          hint={formatMessage(messages.commandHint)}
+        />
+        <div className="command-result">
+          {this.renderCommands()}
+          <p className="command">{'>> help clear_console'}</p>
+          <p className="command">[command_name] ? (alias for: help [command_name]) about</p>
+        </div>
+      </div>
+    );
+  }
+
+  preferencesTab() {
     const { formatMessage } = this.props.intl;
     return (
       <div className="preferences-form-container">
@@ -256,11 +317,11 @@ class Preferences extends Component {
                 panes={[
                   {
                     menuItem: formatMessage(messages.preferencesTab),
-                    render: () => <Tab.Pane>{this.preferencesForm()}</Tab.Pane>,
+                    render: () => <Tab.Pane>{this.preferencesTab()}</Tab.Pane>,
                   },
                   {
                     menuItem: formatMessage(messages.consoleTab),
-                    render: () => <Tab.Pane>test 2</Tab.Pane>,
+                    render: () => <Tab.Pane className="console-tab">{this.consoleTab()}</Tab.Pane>,
                   },
                 ]}
               />
@@ -274,11 +335,14 @@ class Preferences extends Component {
 
 Preferences.propTypes = {
   onClose: PropTypes.func,
+  change: PropTypes.func,
   preferencesActions: PropTypes.shape({
     setReferral: PropTypes.func,
+    sendCommand: PropTypes.func,
   }),
   preferences: PropTypes.shape({
     referral: PropTypes.bool,
+    sentCommands: PropTypes.array,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -287,6 +351,7 @@ Preferences.propTypes = {
 
 Preferences.defaultProps = {
   onClose: () => {},
+  change: () => {},
   preferencesActions: {},
   preferences: {},
   intl: {},
@@ -296,7 +361,7 @@ export default compose(
   connect(
     state => ({ ...state.default }),
     (dispatch) => ({
-      preferencesActions: bindActionCreators({ setReferral }, dispatch),
+      preferencesActions: bindActionCreators({ setReferral, sendCommand }, dispatch),
     }),
   ),
   reduxForm({
