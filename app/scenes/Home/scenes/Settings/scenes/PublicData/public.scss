@@ -1,0 +1,32 @@
+.content {
+  .check-form {
+    .description {
+      display: flex;
+      margin-bottom: 30px;
+
+      img {
+        margin-right: 12px;
+      }
+
+      .description-text {
+        .title {
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    .check-container {
+      display: flex;
+
+      .checkbox {
+        min-width: 20px;
+
+        &:hover {
+          opacity: 0.8;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

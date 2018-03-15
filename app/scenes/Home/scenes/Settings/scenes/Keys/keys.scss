@@ -1,0 +1,56 @@
+@import '../../../../../../styles/index';
+
+.keys-container {
+  .title {
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .form-group {
+    .hybrid-input {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: -2px;
+      top: 1px;
+      bottom: 1px;
+    }
+
+    .note {
+      color: $primary-gray;
+      font-size: 12px;
+      text-align: justify;
+    }
+  }
+
+  .keys-form-container {
+    margin: 30px 30px 35px;
+  }
+
+  .import-wf-container {
+    .rescan {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .checkbox {
+      display: flex;
+      margin-left: -4px;
+
+      &.button {
+        margin-left: -7px;
+      }
+
+      .description-text {
+        margin-left: 5px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 @import './colors';
 @import './fonts';
 
-a {
+a, .link {
   color: $primary-blue;
   cursor: pointer;
 

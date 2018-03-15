@@ -1,0 +1,39 @@
+.recent-transactions {
+  .top-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+}
+
+.overlay {
+  &.details-visible {
+    height: 100%;
+    width: calc(100% - 38%);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    left: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.details-container {
+  width: 38%;
+  height: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  position: absolute;
+  background-color: #f8faf9;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+
+  &.visible {
+    display: block;
+    z-index: 5;
+  }
+}

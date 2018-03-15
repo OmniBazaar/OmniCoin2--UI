@@ -24,9 +24,9 @@ import {
   getStandbyProcessors,
 } from '../../../../../services/processors/processorsStandbyActions';
 
-import DislikeIcon from '../images/btn-dislike.svg';
-import LikeIcon from '../images/btn-like.svg';
-import DotsIcon from '../images/btn-meehh.svg';
+import DislikeIcon from '../../../images/btn-dislike.svg';
+import LikeIcon from '../../../images/btn-like.svg';
+import DotsIcon from '../../../images/btn-meehh.svg';
 
 const iconSize = 18;
 
