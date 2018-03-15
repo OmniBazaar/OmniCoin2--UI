@@ -1,8 +1,6 @@
 import { handleActions, combineActions } from 'redux-actions';
 
-import {
-  showSettingsModal,
-} from './menuActions';
+import { showSettingsModal, } from './menuActions';
 
 const defaultState = {
   showSettings: false,
