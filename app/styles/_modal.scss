@@ -4,6 +4,18 @@
   left: 50%;
   transform: translate(-50%, 0px);
 }
-.ui.fullscreen.modal {
-  left: 50% !important;
+.ui.modal {
+  &.fullscreen {
+    left: 50% !important;
+    height: 80%;
+  }
+
+  &.normal,
+  &.large {
+    height: 80%;
+  }
+
+  .modal-content {
+    height: 100%;
+  }
 }

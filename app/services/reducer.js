@@ -8,6 +8,7 @@ import processorsStandbyReducer from './processors/processorsStandbyReducer';
 import processorsTopReducer from './processors/processorsTopReducer';
 import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
+import preferencesReducer from './preferences/preferencesReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -19,4 +20,5 @@ export default combineReducers({
   settings: settingsReducer,
   menu: menuReducer,
   account: accountReducer,
+  preferences: preferencesReducer,
 });

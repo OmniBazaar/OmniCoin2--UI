@@ -1,0 +1,38 @@
+.ui.modal {
+  .preferences-form-container {
+
+    .form-group {
+      label, span {
+        flex: 2;
+        align-self: center;
+      }
+
+      .dropdown, .textfield {
+        flex: 2.81;
+      }
+
+      &.top {
+        span {
+          align-self: flex-start;
+          margin-top: 10px;
+        }
+      }
+    }
+
+    .field {
+      flex: 3;
+      margin-top: 15px;
+    }
+  }
+}
+
+.hybrid-input {
+  position: relative;
+
+  button {
+    position: absolute;
+    right: -2px;
+    top: 1px;
+    bottom: 1px;
+  }
+}

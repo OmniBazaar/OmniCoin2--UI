@@ -3,7 +3,6 @@
 $sidebar-size: 250px;
 
 .ui.modal {
-  height: 80%;
   border-top-left-radius: 0.4rem;
   border-bottom-left-radius: 0.4rem;
 
@@ -46,7 +45,7 @@ $sidebar-size: 250px;
         }
       }
 
-      .modal-content {
+      .modal-content.side-menu {
         height: 100%;
         display: flex;
         border-radius: 0.28rem;

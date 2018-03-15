@@ -20,6 +20,7 @@ import { showDetailsModal } from '../../../../services/accountSettings/accountAc
 import './settings.scss';
 
 const iconSize = 20;
+
 const messages = defineMessages({
   account: {
     id: 'Settings.account',
@@ -115,7 +116,7 @@ class Settings extends Component {
         <Modal.Content>
           <div className="modal-container settings-container">
             <div className="sidebar settings visible">{this.sideMenu()}</div>
-            <div className="modal-content">
+            <div className="modal-content side-menu">
               <Tab
                 className="tabs"
                 menu={{ secondary: true, pointing: true }}

@@ -21,10 +21,17 @@
   }
 
   .ui {
+    .item {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 16px;
+    }
+
     &.secondary.menu {
       margin: 0 !important;
       padding: 0 !important;
       border-bottom: 1px solid $lighter-blue !important;
+      background-color: #f8faf9;
+      border-radius: 0.28571429rem;
 
       .item {
         padding: 25px;
