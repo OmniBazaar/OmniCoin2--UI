@@ -11,109 +11,23 @@ import InboxIcon from './images/folder-inbox.svg';
 import OutboxIcon from './images/folder-outbox.svg';
 import SentIcon from './images/folder-sent.svg';
 import DeletedIcon from './images/folder-deleted.svg';
+import MailTypes from '../../../../services/mail/mailTypes';
 
 import {
   showComposeModal,
   setActiveFolder,
+  subscribeForMail,
+  mailReceived,
+  deleteMail,
+  loadFolder,
+  mailSetRead,
   setActiveMessage,
-  getMessages,
-  showReplyModal,
+  showReplyModal
 } from '../../../../services/mail/mailActions';
 
 import Header from '../../../../components/Header';
 
 import './mail.scss';
-
-const MailTypes = Object.freeze({
-  INBOX: 'inbox',
-  OUTBOX: 'outbox',
-  SENT: 'sent',
-  DELETED: 'deleted',
-});
-
-const messages = [
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-  {
-    id: 2,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Hey there',
-    body: 'This is a test for emails',
-    read: false,
-  },
-  {
-    id: 3,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: 'Yet another email',
-    body: 'Testing the emails',
-    read: true,
-  },
-];
-
-const outboxMessages = [
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-  {
-    id: 2,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Hey there',
-    body: 'This is a test for emails',
-    read: false,
-  },
-  {
-    id: 3,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Outbox) Yet another email',
-    body: 'Testing the emails',
-    read: true,
-  },
-];
-
-const sentMessages = [
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Sent) Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-];
-
-const deletedMessages = [
-  {
-    id: 1,
-    from: 'test@email.com',
-    date: '21 JAN 2018, 08:56:15 AM',
-    time: '08:56:15 AM',
-    title: '(Deleted) Email title',
-    body: 'The email body goes over here',
-    read: true,
-  },
-];
 
 const folders = [
   {
@@ -152,47 +66,34 @@ class Mail extends Component {
     this.onCloseCompose = this.onCloseCompose.bind(this);
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
-  }
 
-  componentDidMount() {
-    this.fetchMessages(this.props.activeFolder);
-  }
+    const { username } = this.props.auth.currentUser;
 
-  /*
-   * Todo: this method needs to be changed to fetch the messages
-   * when backend is implemented.
-   */
-  fetchMessages(activeFolder) {
-    let emails = messages;
-
-    switch (activeFolder) {
-      case MailTypes.INBOX:
-        emails = messages;
-        break;
-      case MailTypes.OUTBOX:
-        emails = outboxMessages;
-        break;
-      case MailTypes.SENT:
-        emails = sentMessages;
-        break;
-      case MailTypes.DELETED:
-        emails = deletedMessages;
-        break;
-      default:
-        emails = messages;
-    }
-
-    this.props.mailActions.getMessages(emails);
-
-    this.setState({
-      width: this.container.offsetWidth,
+    this.props.mailActions.subscribeForMail(username, (recievedMmailObjects) => {
+      recievedMmailObjects.forEach((mailObject) => {
+        this.props.mailActions.mailReceived(mailObject.uuid);
+      });
+      this.props.mailActions.loadFolder(username, MailTypes.INBOX);
     });
   }
 
+  componentDidMount() {
+    const { username } = this.props.auth.currentUser;
+    this.props.mailActions.loadFolder(username, MailTypes.INBOX);
+    this.props.mailActions.loadFolder(username, MailTypes.OUTBOX);
+    this.props.mailActions.loadFolder(username, MailTypes.SENT);
+    this.props.mailActions.loadFolder(username, MailTypes.DELETED);
+    this.changeFolder(MailTypes.INBOX);
+  }
+
   changeFolder(activeFolder) {
-    this.fetchMessages(activeFolder);
+    const { username } = this.props.auth.currentUser;
+    this.props.mailActions.loadFolder(username, activeFolder);
     this.props.mailActions.setActiveFolder(activeFolder);
     this.props.mailActions.setActiveMessage(0);
+    this.setState({
+      width: this.container.offsetWidth,
+    });
   }
 
   _renderFolderIcon(folderType) {
@@ -233,18 +134,32 @@ class Mail extends Component {
         'last-item': index === folders.length - 1,
       });
 
+      // calculate is there some new emails
+      const sumReducer = (accumulator, currentMessage) => accumulator + (currentMessage.read_status ? 0 : 1);
+      const numberOfUnreadMessagesInFolder = props.mail.messages[folder.type].reduce(sumReducer, 0);
+
       return (
         <div key={`folder-${index}`} className={containerClass} onClick={() => self.changeFolder(folder.type)}>
           {self._renderFolderIcon(folder.type)}
           <span>{folder.label}</span>
-          <span className="amount">{folder.newEmails > 0 ? folder.newEmails : ''}</span>
+          <span className="amount">{numberOfUnreadMessagesInFolder > 0 ? numberOfUnreadMessagesInFolder : ''}</span>
         </div>
       );
     });
   }
 
-  clickedEmail(activeMessage) {
-    this.props.mailActions.setActiveMessage(activeMessage);
+  clickedEmail(message, index) {
+    this.props.mailActions.setActiveMessage(index);
+
+    const currentMessageObject = this.props.mail.messages[this.props.mail.activeFolder][index];
+    if (currentMessageObject.read_status === false) {
+      this.props.mailActions.mailSetRead(
+        this.props.auth.currentUser.username,
+        this.props.mail.activeFolder, message.uuid, () => {
+          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, this.props.mail.activeFolder);
+        }
+      );
+    }
   }
 
   /**
@@ -254,22 +169,24 @@ class Mail extends Component {
     const { props } = this;
     const self = this;
 
-    if (props.mail.messages) {
-      return props.mail.messages.map((message, index) => {
+    if (props.mail.messages[props.mail.activeFolder].length > 0) {
+      return props.mail.messages[props.mail.activeFolder].map((message, index) => {
         const containerClass = classNames({
           'mail-summary': true,
           active: props.mail.activeMessage === index,
-          new: !message.read,
+          new: !message.read_status,
         });
 
+        const creationTime = new Date(message.creation_time * 1000).toLocaleString();
+
         return (
-          <div key={`item-${index}`} className={containerClass} onClick={() => self.clickedEmail(index)}>
+          <div key={`item-${index}`} className={containerClass} onClick={() => self.clickedEmail(message, index)}>
             <div className="top-detail">
-              <div className="from">{message.from}</div>
-              <div className="date">{message.time}</div>
+              <div className="from">{message.user}</div>
+              <div className="date">{creationTime}</div>
             </div>
             <div className="title">
-              {message.title}
+              {message.subject}
             </div>
           </div>
         );
@@ -280,8 +197,11 @@ class Mail extends Component {
   getMessage() {
     const { props } = this;
 
-    if (props.mail.messages) { return props.mail.messages[props.mail.activeMessage]; }
+    if (props.mail.messages[props.mail.activeFolder].length > 0){
+      return props.mail.messages[props.mail.activeFolder][props.mail.activeMessage];
+    }
   }
+
 
   _renderMessage() {
     const message = this.getMessage();
@@ -302,7 +222,9 @@ class Mail extends Component {
               {message.title}
             </div>
             <div>
-              <Button content="REPLY" onClick={this.onClickReply} className="button--transparent" />
+              { this.props.mail.activeFolder === MailTypes.INBOX &&
+                <Button content="REPLY" onClick={this.onClickReply} className="button--transparent" />
+              }
               <Button content="DELETE" onClick={this.onClickDelete} className="button--transparent" />
             </div>
           </div>
@@ -318,10 +240,22 @@ class Mail extends Component {
     this.props.mailActions.showReplyModal();
   }
 
-  /**
-   * Todo: to implement
-   */
-  onClickDelete() {}
+  onClickDelete() {
+    if (this.props.mail.activeMessage >= 0) {
+      const messageObjToDelete = this.props.mail.messages[this.props.mail.activeFolder][this.props.mail.activeMessage];
+      this.props.mailActions.deleteMail(
+        this.props.auth.currentUser.username,
+        this.props.mail.activeFolder,
+        messageObjToDelete,
+        () => {
+          this.props.mailActions.loadFolder(
+            this.props.auth.currentUser.username,
+            this.props.mail.activeFolder
+          );
+        }
+      );
+    }
+  }
 
   onClickCompose() {
     this.props.mailActions.showComposeModal();
@@ -371,7 +305,15 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     mailActions: bindActionCreators({
-      showComposeModal, getMessages, setActiveFolder, setActiveMessage, showReplyModal
+      showComposeModal,
+      subscribeForMail,
+      mailReceived,
+      deleteMail,
+      loadFolder,
+      mailSetRead,
+      setActiveFolder,
+      setActiveMessage,
+      showReplyModal,
     }, dispatch),
   }),
 )(Mail);

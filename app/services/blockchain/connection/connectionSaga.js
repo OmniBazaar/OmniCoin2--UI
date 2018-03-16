@@ -6,9 +6,8 @@ import {
 } from 'redux-saga/effects';
 import {
   Apis,
-  Manager,
-} from 'bitsharesjs-ws';
-
+  Manager
+} from 'omnibazaarjs-ws';
 
 export const nodes = [
   // {name: "Bitshares Node", url: "wss://japan.bitshares.apasia.tech/ws"},

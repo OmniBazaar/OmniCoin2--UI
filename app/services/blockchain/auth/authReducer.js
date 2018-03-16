@@ -22,7 +22,7 @@ const reducer = handleActions({
   [getCurrentUser](state, { payload: {} }) {
     return {
       ...state,
-      currentUser: localStorage.getItem('currentUser')
+      currentUser: JSON.parse(localStorage.getItem('currentUser'))
     };
   },
   [login](state, { payload: { username, password } }) {
@@ -69,7 +69,7 @@ const reducer = handleActions({
     loading: false
   }),
   LOGIN_SUCCEEDED: (state, action) => {
-    localStorage.setItem('currentUser', action.user);
+    localStorage.setItem('currentUser', JSON.stringify(action.user));
     return {
       ...state,
       currentUser: action.user,
@@ -78,7 +78,7 @@ const reducer = handleActions({
     };
   },
   SIGNUP_SUCCEEDED: (state, action) => {
-    localStorage.setItem('currentUser', action.user);
+    localStorage.setItem('currentUser', JSON.stringify(action.user));
     return {
       ...state,
       currentUser: action.user,

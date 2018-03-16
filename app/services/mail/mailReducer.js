@@ -1,22 +1,22 @@
 import { handleActions, combineActions } from 'redux-actions';
 import {
   showComposeModal,
-  getMessages,
   setActiveFolder,
   setActiveMessage,
   showReplyModal,
-  sendMail,
 } from './mailActions';
 
-const MailTypes = Object.freeze({
-  INBOX: 'inbox',
-  OUTBOX: 'outbox',
-  SENT: 'sent',
-  DELETED: 'deleted',
-});
+import MailTypes from './mailTypes';
+import { sendMail } from './mailSaga';
 
 const defaultState = {
-  messages: [],
+
+  messages: {
+    [MailTypes.INBOX]: [],
+    [MailTypes.OUTBOX]: [],
+    [MailTypes.SENT]: [],
+    [MailTypes.DELETED]: []
+  },
   sender: '',
   to: '',
   subject: '',
@@ -25,7 +25,7 @@ const defaultState = {
   activeMessage: 0,
   showCompose: false,
   mailSent: false,
-  reply: false,
+  reply: false
 };
 
 const reducer = handleActions({
@@ -34,12 +34,6 @@ const reducer = handleActions({
       ...state,
       reply: false,
       showCompose: !state.showCompose
-    };
-  },
-  [combineActions(getMessages)](state, { payload: { messages } }) {
-    return {
-      ...state,
-      messages
     };
   },
   [combineActions(setActiveFolder)](state, { payload: { activeFolder } }) {
@@ -63,10 +57,16 @@ const reducer = handleActions({
   },
   [combineActions(sendMail)](state, { payload: { mailSent } }) {
     return {
-      ...state,
-      mailSent
+      ...state
     };
-  }
+  },
+  LOAD_FOLDER_UPDATE: (state, action) => ({
+    ...state,
+    messages: {
+      ...state.messages,
+      [action.messageFolder]: action.messages,
+    }
+  })
 }, defaultState);
 
 export default reducer;

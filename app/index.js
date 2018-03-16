@@ -20,7 +20,8 @@ import App from './App';
 import * as reducers from './services/reducer';
 import {
   connectionSubscriber,
-  authSubscriber
+  authSubscriber,
+  mailSubscriber
 } from './services/saga';
 
 addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
@@ -46,6 +47,8 @@ if (process.env.NODE_ENV !== 'production') {
   // middleware.push(logger);
 }
 
+// localStorage.clear();
+
 const store = createStore(
   reducer,
   applyMiddleware(...middleware)
@@ -53,6 +56,7 @@ const store = createStore(
 
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
+sagaMiddleware.run(mailSubscriber);
 
 ReactDOM.render(
   (
