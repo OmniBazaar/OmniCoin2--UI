@@ -21,7 +21,8 @@ import * as reducers from './services/reducer';
 import {
   connectionSubscriber,
   authSubscriber,
-  mailSubscriber
+  mailSubscriber,
+  escrowSubscriber
 } from './services/saga';
 
 addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
@@ -57,6 +58,7 @@ const store = createStore(
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
+sagaMiddleware.run(escrowSubscriber);
 
 ReactDOM.render(
   (
