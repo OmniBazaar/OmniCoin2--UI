@@ -7,9 +7,9 @@ import {
 } from './mailActions';
 
 import MailTypes from './mailTypes';
-import {sendMail} from './mailSaga';
+import { sendMail } from './mailSaga';
 
-let defaultState = {
+const defaultState = {
 
   messages: {
     [MailTypes.INBOX]: [],
@@ -60,15 +60,13 @@ const reducer = handleActions({
       ...state
     };
   },
-  LOAD_FOLDER_UPDATE: (state, action) => {
-    return {
-      ...state,
-      messages: {
-        ...state.messages,
-        [action.messageFolder]: action.messages,
-      }
-    };
-  }
+  LOAD_FOLDER_UPDATE: (state, action) => ({
+    ...state,
+    messages: {
+      ...state.messages,
+      [action.messageFolder]: action.messages,
+    }
+  })
 }, defaultState);
 
 export default reducer;

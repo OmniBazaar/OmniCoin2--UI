@@ -19,9 +19,9 @@ import './app.global.scss';
 import App from './App';
 import * as reducers from './services/reducer';
 import {
-    connectionSubscriber,
-    authSubscriber,
-    mailSubscriber
+  connectionSubscriber,
+  authSubscriber,
+  mailSubscriber
 } from './services/saga';
 
 addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== 'production') {
   // middleware.push(logger);
 }
 
-//localStorage.clear();
+// localStorage.clear();
 
 const store = createStore(
   reducer,

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
 
-import { setActiveFolder, sendMail, confirmationReceived, loadFolder } from  '../../../../services/mail/mailActions';
+import { setActiveFolder, sendMail, confirmationReceived, loadFolder } from '../../../../services/mail/mailActions';
 import MailTypes from '../../../../services/mail/mailTypes';
 
 import './mail.scss';
@@ -28,11 +28,10 @@ class Compose extends Component {
 
     if (nextProps.mail.reply && (nextProps.mail.reply !== this.props.mail.reply)) {
       const message = this.getMessage(props.mail.activeMessage);
-      if (message){
+      if (message) {
         this.props.change('subject', message.subject);
         this.props.change('body', message.body);
       }
-      
     }
 
     if (!nextProps.mail.reply) {
@@ -54,21 +53,24 @@ class Compose extends Component {
   onClickAddress() {}
 
   onSubmit(values) {
-    const { sender, recipient, subject, body } = values;
+    const {
+      sender, recipient, subject, body
+    } = values;
     this.props.mailActions.sendMail(
-        this.props.auth.currentUser.username, 
-        recipient, 
-        subject, 
-        body,
-        () => {
-          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
-        },
-        (mailObject) => {
-          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
-          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.SENT);
-          this.props.mailActions.confirmationReceived(mailObject.uuid);
-        });
-  };
+      this.props.auth.currentUser.username,
+      recipient,
+      subject,
+      body,
+      () => {
+        this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
+      },
+      (mailObject) => {
+        this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.OUTBOX);
+        this.props.mailActions.loadFolder(this.props.auth.currentUser.username, MailTypes.SENT);
+        this.props.mailActions.confirmationReceived(mailObject.uuid);
+      }
+    );
+  }
 
   getMessage() {
     const { props } = this;
@@ -92,19 +94,19 @@ class Compose extends Component {
           <Button content="CLOSE" onClick={this.closeCompose} className="button--transparent" />
         </div>
         <div>
-          <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className='mail-form-container'>
-            <p className='title'>New Message</p>
+          <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="mail-form-container">
+            <p className="title">New Message</p>
             <div>
-              <div className='form-group address-wrap'>
+              <div className="form-group address-wrap">
                 <label>To</label>
                 <Field
-                  type='text'
-                  name='recipient'
-                  placeholder='Start typing'
-                  component='input'
-                  className='textfield'
+                  type="text"
+                  name="recipient"
+                  placeholder="Start typing"
+                  component="input"
+                  className="textfield"
                 />
-                <Button type="button" content='ADDRESS BOOK' onClick={this.onClickAddress} className='button--green address-button' />
+                <Button type="button" content="ADDRESS BOOK" onClick={this.onClickAddress} className="button--green address-button" />
               </div>
               <div className="form-group">
                 <label>Subject</label>
@@ -128,9 +130,9 @@ class Compose extends Component {
               </div>
               <div className="form-group submit-group">
                 <label />
-                <div className='field'>
-                  <Button type="button" content='CANCEL' onClick={this.closeCompose} className='button--transparent' />
-                  <Button type='submit' content='SEND' className='button--primary' />
+                <div className="field">
+                  <Button type="button" content="CANCEL" onClick={this.closeCompose} className="button--transparent" />
+                  <Button type="submit" content="SEND" className="button--primary" />
                 </div>
               </div>
             </div>
@@ -149,6 +151,8 @@ Compose = reduxForm({
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    mailActions: bindActionCreators({ setActiveFolder, sendMail, confirmationReceived, loadFolder }, dispatch),
+    mailActions: bindActionCreators({
+      setActiveFolder, sendMail, confirmationReceived, loadFolder
+    }, dispatch),
   }),
 )(Compose);
