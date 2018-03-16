@@ -49,6 +49,37 @@ $closed-side-bar-size: 70px;
     }
   }
 
+  .menu-item {
+    &.account {
+      background-color: $dark-gray-2;
+      color: $primary-white;
+      display: flex;
+      flex-direction: row;
+      padding: 16px 14px;
+      align-items: center;
+      justify-content: space-around;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      .code {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .bold {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
   i.setting.icon {
     color: $primary-white;
     font-size: 20px;

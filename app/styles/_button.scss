@@ -114,6 +114,15 @@ $button-padding-vertical: 18px;
   }
 }
 
+.button--gray-text {
+  @include app-button($transparent);
+  color: rgba(0, 0, 0, 0.6) !important;
+
+  &:hover:not(.disabled):not(:active) {
+    @include box-shadow(0 1px 4px 0 $button-shadow-color);
+  }
+}
+
 .button--green-bg {
   @include app-button($primary-green);
 

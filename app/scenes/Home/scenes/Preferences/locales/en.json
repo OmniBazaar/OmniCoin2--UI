@@ -1,0 +1,17 @@
+{
+  "Preferences.preferencesTab": "Preferences",
+  "Preferences.consoleTab": "Console",
+  "Preferences.seconds": "SECONDS",
+  "Preferences.xomUnit": "XOM",
+  "Preferences.logoutTimeout": "LogOut Timeout",
+  "Preferences.transactionFee": "Transaction Fee",
+  "Preferences.byDefaultVote": "By Default Vote for",
+  "Preferences.referralProgram": "Participate in Referral Program",
+  "Preferences.referralProgramTitle": "I'd like to refer my friends to OmniBazaar",
+  "Preferences.referralProgramText": "REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. As a Referrer, you agree to follow the OmniBazaar software to automatically send a small number of OmniCoins from your account to the new users you refer, to enable those new users to register their user names and get started in OmniBazaar. In exchange you receive a commission (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. In order to serve as a Referrer, you must keep the OmniBazaar application running on your computer.",
+  "Preferences.priorityForListing": "Priority for Listings You Create",
+  "Preferences.publisherFee": "Publisher Fee You Receive",
+  "Preferences.chargeFee": "Fee You Charge to Publish Listings",
+  "Preferences.update": "UPDATE",
+  "Preferences.commandHint": "Type command and hit enter"
+}

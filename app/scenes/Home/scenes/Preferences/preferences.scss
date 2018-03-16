@@ -1,0 +1,91 @@
+@import '../../../../styles/index';
+
+.ui.modal {
+  .preferences-form-container {
+    .form-group {
+      label, span {
+        flex: 2;
+        align-self: center;
+      }
+
+      .dropdown, .textfield {
+        flex: 2.81;
+        padding: 0.67857143em 1em;
+      }
+
+      &.top {
+        span {
+          align-self: flex-start;
+          margin-top: 10px;
+        }
+      }
+    }
+
+    .field {
+      flex: 3;
+      margin-top: 15px;
+    }
+  }
+
+  .segment.active.tab.console-tab {
+    padding: 0 !important;
+
+    .textfield {
+      font-family: 'Titillium Web', sans-serif;
+      padding: 1em;
+      background-color: $white !important;
+      border: none;
+      font-size: 16px;
+      height: 50px;
+    }
+    .hybrid-input {
+      .hint {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        bottom: 0;
+        align-items: center;
+        display: flex;
+      }
+
+      .long.arrow {
+        height: auto;
+        font-size: 10px;
+        margin-right: 15px;
+      }
+    }
+
+    .command-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .command-field {
+        caret-color: $primary-blue;
+      }
+
+      .command-result {
+        flex: 1;
+        background-color: $gray;
+        padding: 20px;
+
+        .command {
+          font-family: 'Titillium Web', sans-serif;
+          color: $third-white;
+          font-weight: lighter;
+        }
+      }
+    }
+  }
+}
+
+.hybrid-input {
+  position: relative;
+
+  button {
+    position: absolute;
+    right: -2px;
+    top: 1px;
+    bottom: 1px;
+  }
+}

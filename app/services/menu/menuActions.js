@@ -1,7 +1,8 @@
 import { createActions } from 'redux-actions';
 
-const { showSettingsModal } = createActions({
-  SHOW_SETTINGS_MODAL: (showSettings) => ({ showSettings }),
+const { showSettingsModal, showPreferencesModal } = createActions({
+  SHOW_SETTINGS_MODAL: () => ({}),
+  SHOW_PREFERENCES_MODAL: () => ({}),
 });
 
-export { showSettingsModal };
+export { showSettingsModal, showPreferencesModal };

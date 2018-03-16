@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Icon } from 'semantic-ui-react';
+import { Image, Icon, Popup } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
@@ -17,6 +17,8 @@ import Mail from './scenes/Mail/Mail';
 import Marketplace from './scenes/Marketplace/Marketplace';
 import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
+import Preferences from './scenes/Preferences/Preferences';
+import SettingsMenu from './scenes/SettingsMenu/SettingsMenu';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
@@ -36,29 +38,65 @@ import ProcessorsIcon from './images/sdb-processors.svg';
 import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
-import { showSettingsModal } from '../../services/menu/menuActions';
+import UserIcon from './images/th-user-white.svg';
+import LockIcon from './images/btn-lock-hover.svg';
+import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 
 const iconSize = 20;
+const iconLockSize = 25;
+
+const accountId = 'as45df3242cg5600s';
 
 class Home extends Component {
+  static accountMenu() {
+    return (
+      <div className="menu-item account">
+        <Image src={UserIcon} width={iconSize} height={iconSize} />
+        <div>
+          <span>Account</span>
+          <div className="code">
+            <span className="bold">{accountId}</span>
+            <Icon name="caret down" width={iconSize} height={iconSize} />
+          </div>
+        </div>
+        <Image src={LockIcon} width={iconLockSize} height={iconLockSize} />
+      </div>
+    );
+  }
+
   state = { visible: true };
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
-  onClickSettings = () => {
-    this.props.menuActions.showSettingsModal();
-  };
+  toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
-  close = () => {
-    this.props.menuActions.showSettingsModal();
-  };
+  togglePreferences = () => this.props.menuActions.showPreferencesModal();
 
-  renderSettings() {
+  renderSettingsMenu() {
+    return (
+      <SettingsMenu
+        toggleAccount={this.toggleSettingsAccount}
+        togglePreferences={this.togglePreferences}
+      />
+    );
+  }
+
+  renderAccountSettings() {
     const { props } = this;
 
     if (props.menu.showSettings) {
       return (
-        <Settings onClose={this.close} />
+        <Settings onClose={this.toggleSettingsAccount} />
+      );
+    }
+  }
+
+  renderPreferences() {
+    const { props } = this;
+
+    if (props.menu.showPreferences) {
+      return (
+        <Preferences onClose={this.togglePreferences} />
       );
     }
   }
@@ -139,15 +177,19 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
-                <div onClick={this.onClickSettings} onKeyDown={this.onClickSettings} className="menu-item" role="link" tabIndex={0}>
-                  <Icon name="setting" height={iconSize} width={iconSize} />
-                  <span>Settings</span>
-                </div>
-                {this.renderSettings()}
+                {this.renderAccountSettings()}
+                {this.renderPreferences()}
               </div>
             </div>
           </div>
           <div className="bottom">
+            <Popup
+              trigger={Home.accountMenu()}
+              flowing
+              hoverable
+            >
+              {this.renderSettingsMenu()}
+            </Popup>
             <SocialNetworksFooter />
           </div>
         </div>
@@ -172,7 +214,7 @@ class Home extends Component {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    menuActions: bindActionCreators({ showSettingsModal }, dispatch),
+    menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
   }),
 )(Home);
 
@@ -187,7 +229,8 @@ Home.propTypes = {
     loading: PropTypes.bool
   }),
   menuActions: PropTypes.shape({
-    showSettingsModal: PropTypes.func
+    showSettingsModal: PropTypes.func,
+    showPreferencesModal: PropTypes.func
   })
 };
 
