@@ -197,7 +197,7 @@ class Mail extends Component {
   getMessage() {
     const { props } = this;
 
-    if (props.mail.messages[props.mail.activeFolder].length > 0){
+    if (props.mail.messages[props.mail.activeFolder].length > 0) {
       return props.mail.messages[props.mail.activeFolder][props.mail.activeMessage];
     }
   }
@@ -292,10 +292,11 @@ class Mail extends Component {
             </SplitPane>
           </SplitPane>
         </div>
-        <Compose
-          showCompose={props.mail.showCompose}
-          onClose={this.onCloseCompose}
-        />
+        {props.mail.showCompose &&
+          <Compose
+            onClose={this.onCloseCompose}
+          />
+        }
       </div>
     );
   }

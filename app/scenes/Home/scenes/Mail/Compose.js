@@ -13,33 +13,21 @@ import MailTypes from '../../../../services/mail/mailTypes';
 import './mail.scss';
 
 class Compose extends Component {
-  static propTypes = {
-    showCompose: PropTypes.bool,
-  };
-
   constructor(props) {
     super(props);
 
     this.closeCompose = this.closeCompose.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { props } = this;
-
-    if (nextProps.mail.reply && (nextProps.mail.reply !== this.props.mail.reply)) {
-      const message = this.getMessage(props.mail.activeMessage);
-      if (message) {
-        this.props.change('subject', message.subject);
-        this.props.change('body', message.body);
-      }
-    }
-
-    if (!nextProps.mail.reply) {
-      this.props.change('subject', '');
-      this.props.change('body', '');
+  componentWillMount() {
+    if (this.props.mail.reply) {
+      const message = this.getActiveMessage();
+      this.props.initialize({
+        recipient: message.recipient,
+        subject: message.subject,
+      });
     }
   }
-
 
   closeCompose() {
     if (this.props.onClose) {
@@ -72,17 +60,20 @@ class Compose extends Component {
     );
   }
 
-  getMessage() {
-    const { props } = this;
-
-    return props.mail.messages[props.mail.activeMessage];
+  getActiveMessage() {
+    const {
+      messages,
+      activeMessage,
+      activeFolder
+    } = this.props.mail;
+    return messages[activeFolder][activeMessage];
   }
 
   render() {
     const props = this.props;
     const containerClass = classNames({
-      'compose-container': true,
-      visible: props.mail.showCompose,
+      visible: true,
+      'compose-container': true
     });
 
     const { handleSubmit } = this.props;
