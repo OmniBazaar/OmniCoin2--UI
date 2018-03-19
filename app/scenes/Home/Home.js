@@ -117,7 +117,11 @@ class Home extends Component {
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
           <div className="top">
             <div className="header">
-              <Image src={SidebarLogo} width={150} height={40} />
+              <Image
+                src={SidebarLogo}
+                className="logo"
+                width={150}
+                height={40} />
               <Image
                 src={Burger}
                 height={iconSize}
