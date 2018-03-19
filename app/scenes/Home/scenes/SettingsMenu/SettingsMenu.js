@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { bindActionCreators } from 'redux';
+
+import { logout } from '../../../../services/blockchain/auth/authActions';
 
 import './menu.scss';
 
@@ -15,6 +18,10 @@ const messages = defineMessages({
     id: 'SettingsMenu.preferences',
     defaultMessage: 'Preferences'
   },
+  logout: {
+    id: 'SettingsMenu.logout',
+    defaultMessage: 'Logout'
+  }
 });
 
 class SettingsMenu extends Component {
@@ -23,6 +30,7 @@ class SettingsMenu extends Component {
 
     this.toggleAccount = this.toggleAccount.bind(this);
     this.togglePreferences = this.togglePreferences.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   toggleAccount() {
@@ -35,6 +43,10 @@ class SettingsMenu extends Component {
     if (this.props.togglePreferences) {
       this.props.togglePreferences();
     }
+  }
+
+  logout() {
+    this.props.authActions.logout();
   }
 
   render() {
@@ -60,6 +72,15 @@ class SettingsMenu extends Component {
           >
             {formatMessage(messages.preferences)}
           </div>
+          <div
+            className="menu-option"
+            onClick={this.logout}
+            onKeyDown={this.logout}
+            role="link"
+            tabIndex={0}
+          >
+            {formatMessage(messages.logout)}
+          </div>
         </Grid.Column>
       </Grid>
     );
@@ -80,4 +101,9 @@ SettingsMenu.defaultProps = {
   intl: {},
 };
 
-export default connect(state => ({ ...state.default }))(injectIntl(SettingsMenu));
+export default connect(
+  state => ({ ...state.default }),
+  dispatch => ({
+    authActions: bindActionCreators({ logout }, dispatch)
+  })
+)(injectIntl(SettingsMenu));
