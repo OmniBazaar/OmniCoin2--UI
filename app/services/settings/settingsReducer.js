@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { setActiveNode, } from './settingsActions';
-import { nodes } from '../blockchain/connection/connectionSaga';
+import { nodesAddresses as nodes } from '../blockchain/settings';
 
 const defaultState = {
   activeNode: nodes[2]

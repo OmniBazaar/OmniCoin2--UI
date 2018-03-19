@@ -15,8 +15,6 @@ class Marketplace extends Component {
   }
 }
 
-Marketplace = connect(
-  (state) => ({ ...state.default }),
-)(Marketplace);
+Marketplace = connect((state) => ({ ...state.default }), )(Marketplace);
 
 export default withRouter(Marketplace);

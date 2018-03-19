@@ -1,0 +1,35 @@
+@import '../../../../styles/index';
+
+.menu-item {
+  &.account {
+    background-color: $dark-gray-2;
+    color: $primary-white;
+    display: flex;
+    flex-direction: row;
+    padding: 16px 14px;
+    align-items: center;
+    justify-content: space-around;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    .code {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .bold {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        width: 120px;
+      }
+    }
+  }
+}
