@@ -47,7 +47,13 @@ if (process.env.NODE_ENV !== 'production') {
   // middleware.push(logger);
 }
 
-// localStorage.clear();
+if (localStorage.getItem('currentUser')) {
+  try {
+    JSON.parse(localStorage.getItem('currentUser'))
+  } catch(e) {
+    localStorage.clear();
+  }
+}
 
 const store = createStore(
   reducer,
