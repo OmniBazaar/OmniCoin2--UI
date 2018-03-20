@@ -1,31 +1,100 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Tab } from 'semantic-ui-react';
+import { defineMessages, injectIntl } from 'react-intl';
+import PropTypes from 'prop-types';
+
+
+import MyEscrowAgents from './scenes/MyEscrowAgents/MyEscrowAgents';
+import MyEscrowSettings from './scenes/MyEscrowSettings/MyEscrowSettings';
+import MyEscrowTransactions from './scenes/MyEscrowTransactions/MyEscrowTransactions';
+import Header from '../../../../components/Header/index';
+
 import { loadEscrowTransactions, loadEscrowAgents } from '../../../../services/escrow/escrowActions';
 import './escrow.scss';
 
+const messages = defineMessages({
+  escrow: {
+    id: 'Escrow.escrow',
+    defaultMessage: 'Escrow'
+  },
+  transactions: {
+    id: 'Escrow.transactions',
+    defaultMessage: 'My Escrow Transactions'
+  },
+  agents: {
+    id: 'Escrow.agents',
+    defaultMessage: 'My Escrow Agents'
+  },
+  settings: {
+    id: 'Escrow.settings',
+    defaultMessage: 'My Escrow Settings'
+  }
+});
 class Escrow extends Component {
 
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.escrowActions.loadEscrowTransactions();
     this.props.escrowActions.loadEscrowAgents();
   }
 
   render() {
-    console.log(this.props.escrow.transactions);
-    console.log(this.props.escrow.agents);
+    const { formatMessage } = this.props.intl;
     return (
-      <div>
-                
+      <div className="container escrow">
+        <Header title={formatMessage(messages.escrow)} />
+        <div className="body">
+          <Tab
+            className="tabs"
+            menu={{ secondary: true, pointing: true }}
+            panes={[
+                   {
+                     menuItem: formatMessage(messages.transactions),
+                     render: () => (
+                       <Tab.Pane>
+                         <MyEscrowTransactions />
+                       </Tab.Pane>
+                     ),
+                   },
+                   {
+                     menuItem: formatMessage(messages.agents),
+                     render: () => (
+                       <Tab.Pane>
+                         <MyEscrowAgents />
+                       </Tab.Pane>
+                     ),
+                   },
+                   {
+                     menuItem: formatMessage(messages.settings),
+                     render: () => (
+                       <Tab.Pane>
+                         <MyEscrowSettings />
+                       </Tab.Pane>
+                     ),
+                   }
+                 ]}
+          />
+        </div>
       </div>
     );
   }
 }
+
+Escrow.propTypes = {
+  escrowActions: PropTypes.shape({
+    loadEscrowTransactions: PropTypes.func,
+    loadEscrowAgents: PropTypes.func,
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  })
+};
+
+Escrow.defaultProps = {
+  escrowActions: {},
+  intl: {}
+};
 
 export default connect(
   state => ({ ...state.default }),
@@ -35,5 +104,5 @@ export default connect(
       loadEscrowAgents
     }, dispatch),
   }),
-)(Escrow);
+)(injectIntl(Escrow));
 

@@ -50,8 +50,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 if (localStorage.getItem('currentUser')) {
   try {
-    JSON.parse(localStorage.getItem('currentUser'))
-  } catch(e) {
+    JSON.parse(localStorage.getItem('currentUser'));
+  } catch (e) {
     localStorage.clear();
   }
 }
