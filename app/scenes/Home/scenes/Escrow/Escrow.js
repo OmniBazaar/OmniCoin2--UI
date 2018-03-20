@@ -32,11 +32,13 @@ const messages = defineMessages({
     defaultMessage: 'My Escrow Settings'
   }
 });
+
 class Escrow extends Component {
 
   componentDidMount() {
-    this.props.escrowActions.loadEscrowTransactions();
-    this.props.escrowActions.loadEscrowAgents();
+    const { username } = this.props.auth.currentUser;
+    this.props.escrowActions.loadEscrowTransactions(username);
+    this.props.escrowActions.loadEscrowAgents(username);
   }
 
   render() {
