@@ -1,0 +1,28 @@
+@import "../../../../../../../../styles/colors";
+
+.agent-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 5px;
+  background-color: lighten($lighter-blue, 3%);
+  border-radius: 5px;
+  align-items: center;
+  .left-part {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      background-color: $primary-blue;
+      border-radius: 50%;
+    }
+    span {
+      margin-left: 10px;
+    }
+  }
+}
