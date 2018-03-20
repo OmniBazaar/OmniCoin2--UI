@@ -3,7 +3,6 @@
  */
 import { createActions } from 'redux-actions';
 
-
 const {
   getCurrentUser,
   login,
