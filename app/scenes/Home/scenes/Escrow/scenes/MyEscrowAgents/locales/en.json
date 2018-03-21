@@ -1,3 +1,8 @@
 {
-
+  "MyEscrowAgents.search": "Search",
+  "MyEscrowAgents.clear": "Clear",
+  "MyEscrowAgents.approveChanges": "Approve changes",
+  "MyEscrowAgents.user": "User",
+  "MyEscrowAgents.approve": "Approve",
+  "MyEscrowAgents.agentsApproved": "Agents successfully approved"
 }

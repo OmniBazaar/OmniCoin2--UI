@@ -37,7 +37,7 @@ const messages = defineMessages({
   contentNext: {
     id: 'Pagination.contentNext',
     defaultMessage: 'Next >'
-  },
+  }
 });
 class CustomPagination extends Component {
   render() {

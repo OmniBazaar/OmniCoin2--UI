@@ -25,7 +25,7 @@ import {
   escrowSubscriber
 } from './services/saga';
 
-addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
+addLocaleData([...en, ...es, ...fr, ...it]);
 
 const language = (navigator.languages && navigator.languages[0]) ||
   navigator.language ||
@@ -69,7 +69,10 @@ sagaMiddleware.run(escrowSubscriber);
 ReactDOM.render(
   (
     <AppContainer>
-      <IntlProvider locale={language} messages={messages}>
+      <IntlProvider
+        locale={language}
+        messages={messages}
+      >
         <App store={store} />
       </IntlProvider>
     </AppContainer>
@@ -82,7 +85,10 @@ if (module.hot) {
     render(
       (
         <AppContainer>
-          <IntlProvider locale={language} messages={messages}>
+          <IntlProvider
+            locale={language}
+            messages={messages}
+          >
             <NextApp store={store} />
           </IntlProvider>
         </AppContainer>

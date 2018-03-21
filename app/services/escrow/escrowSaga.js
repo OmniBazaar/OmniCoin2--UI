@@ -22,7 +22,6 @@ function* loadEscrowTransactions(action) {
 
   const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
 
-  console.log('AAA': result);
   yield put({
     type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
     transactions: dummyTransactions

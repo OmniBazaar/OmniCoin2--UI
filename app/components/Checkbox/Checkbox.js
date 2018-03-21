@@ -25,6 +25,12 @@ class Checkbox extends Component {
     }
   }
 
+  componentDidMount() {
+    this.setState({
+      isChecked: this.props.value
+    })
+  }
+
   getIcon() {
     return this.state.isChecked ? CheckPreNom : CheckNormal;
   }
