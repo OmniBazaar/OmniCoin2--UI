@@ -13,13 +13,18 @@ function* loadEscrowTransactions(action) {
   const { username } = action.payload;
 
   // some dummy transactions
-  const dummyTransactions = {
-    'a': {
+  const dummyTransactions = [
+    {
       transactionID: 'a',
       amount: 'a',
       parties: 'a'
+    },
+    {
+      transactionID: 'b',
+      amount: 'c',
+      parties: 'a'
     }
-  };
+  ];
 
   try 
   {

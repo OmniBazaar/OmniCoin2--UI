@@ -24,12 +24,62 @@ const messages = defineMessages({
 
 class MyEscrowTransactions extends Component {
 
+  constructor(props){
+    super(props);
+
+    this.state = {
+      transactions: props.escrow.transactions,
+      sortAsc: {
+          transactionID: false,
+          amount: false,
+          parties: false
+      },
+      lastHeaderClicked: 'transactionID'
+    }
+  }
+
   componentDidMount() {
 
   }
 
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      ...this.state,
+      transactions: nextProps.escrow.transactions
+    });
+    this.sortColumn(this.state.lastHeaderClicked, this.state.sortAsc[this.state.lastHeaderClicked]);
+  }
+
+  sortColumn(headerName, asc){
+    this.setState({
+      ...this.state,
+      sortAsc: {
+        ...this.state.sortAsc,
+        [headerName]: asc
+      },
+      transactions: this.state.transactions.slice().sort((transA, transB) => {
+          return (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1);
+      })
+    });
+  }
+
+  handleHeaderClick(headerName) {
+    let newHeaderSortAsc = !this.state.sortAsc[headerName];
+    this.setState({
+      ...this.state,
+      sortAsc: {
+        ...this.state.sortAsc,
+        [headerName]: newHeaderSortAsc
+      },
+      transactions: this.state.transactions.slice().sort((transA, transB) => {
+          return (transA[headerName].localeCompare(transB[headerName])) * (newHeaderSortAsc ? 1 : -1);
+      }),
+      lastHeaderClicked: headerName
+    });
+  }
+
   renderRows() {
-    return Object.values(this.props.escrow.transactions).map((escrowObject) => {
+    return this.state.transactions.map((escrowObject) => {
       return (
         <Table.Row key={escrowObject.transactionID}>
           <Table.Cell>{escrowObject.transactionID}</Table.Cell>
@@ -44,12 +94,28 @@ class MyEscrowTransactions extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    return <Table striped>
+    return <Table striped sortable>
     <Table.Header>
       <Table.Row>
-        <Table.HeaderCell>{formatMessage(messages.transactionID)}</Table.HeaderCell>
-        <Table.HeaderCell>{formatMessage(messages.amount)}</Table.HeaderCell>
-        <Table.HeaderCell>{formatMessage(messages.parties)}</Table.HeaderCell>
+
+        <Table.HeaderCell 
+            sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
+            onClick={this.handleHeaderClick.bind(this, 'transactionID')}>
+            {formatMessage(messages.transactionID)}
+        </Table.HeaderCell>
+        
+        <Table.HeaderCell sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
+            sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
+            onClick={this.handleHeaderClick.bind(this, 'amount')}>
+            {formatMessage(messages.amount)}
+        </Table.HeaderCell>
+
+        <Table.HeaderCell sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
+             sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
+             onClick={this.handleHeaderClick.bind(this, 'parties')}>
+             {formatMessage(messages.parties)}
+        </Table.HeaderCell>
+
       </Table.Row>
     </Table.Header>
 
@@ -57,24 +123,7 @@ class MyEscrowTransactions extends Component {
       {this.renderRows()}
     </Table.Body>
 
-    <Table.Footer>
-      <Table.Row>
-        <Table.HeaderCell colSpan='3'>
-          <Menu floated='right' pagination>
-            <Menu.Item as='a' icon>
-              <Icon name='chevron left' />
-            </Menu.Item>
-            <Menu.Item as='a'>1</Menu.Item>
-            <Menu.Item as='a'>2</Menu.Item>
-            <Menu.Item as='a'>3</Menu.Item>
-            <Menu.Item as='a'>4</Menu.Item>
-            <Menu.Item as='a' icon>
-              <Icon name='chevron right' />
-            </Menu.Item>
-          </Menu>
-        </Table.HeaderCell>
-      </Table.Row>
-    </Table.Footer>
+    
   </Table>
   }
 }

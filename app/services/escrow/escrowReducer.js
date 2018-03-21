@@ -3,7 +3,7 @@ import { handleActions, combineActions } from 'redux-actions';
 import { loadEscrowTransactions } from './escrowActions';
 
 const defaultState = {
-  transactions: {},
+  transactions: [],
   agents: {},
   escrowSettings: {
 
