@@ -10,6 +10,10 @@ import VersatilityIcon from './images/tile-versatility.svg';
 import RewardsIcon from './images/tile-rewards.svg';
 import BenefitIcon from './images/tile-benefits.svg';
 import FeesIcon from './images/tile-fees.svg';
+import ForSaleIcon from './images/bg-forsale.jpg';
+import ServicesIcon from './images/bg-services.jpg';
+import JobsIcon from './images/bg-jobs.jpg';
+import CryptoIcon from './images/bg-crypto.jpg';
 
 import { getFeatureList, getForSale, getCategories } from '../../../../services/marketplace/marketplaceActions';
 
@@ -18,10 +22,18 @@ import './marketplace.scss';
 const iconSize = 20;
 const iconSizeSmall = 12;
 
+const CategoriesTypes = Object.freeze({
+  FOR_SALE: 'For sale',
+  SERVICES: 'Services',
+  JOBS: 'Jobs',
+  CRYPTO_BAZAAR: 'CrytoBazaar',
+});
+
 const categories = [
   {
     id: 1,
-    category: 'For sale',
+    category: CategoriesTypes.FOR_SALE,
+    image: ForSaleIcon,
     subCategories: [
       {
         id: 1,
@@ -30,6 +42,287 @@ const categories = [
       {
         id: 2,
         subCategory: 'Appliances'
+      },
+      {
+        id: 3,
+        subCategory: 'Arts / Crafts'
+      },
+      {
+        id: 4,
+        subCategory: 'Baby / Child'
+      },
+      {
+        id: 5,
+        subCategory: 'Barter'
+      },
+      {
+        id: 6,
+        subCategory: 'Beauty / Health'
+      },
+      {
+        id: 7,
+        subCategory: 'Bikes'
+      },
+      {
+        id: 8,
+        subCategory: 'Boats'
+      },
+      {
+        id: 8,
+        subCategory: 'Books'
+      },
+      {
+        id: 9,
+        subCategory: 'Business'
+      },
+      {
+        id: 10,
+        subCategory: 'Cars / Trucks'
+      },
+      {
+        id: 11,
+        subCategory: 'CD / DVD / VHS'
+      },
+      {
+        id: 12,
+        subCategory: 'Farm / Garden'
+      },
+      {
+        id: 13,
+        subCategory: 'Free'
+      },
+      {
+        id: 14,
+        subCategory: 'Furniture'
+      },
+      {
+        id: 15,
+        subCategory: 'Garage Sale'
+      },
+      {
+        id: 16,
+        subCategory: 'General'
+      },
+      {
+        id: 17,
+        subCategory: 'Heavy Equip'
+      },
+      {
+        id: 18,
+        subCategory: 'Household'
+      },
+      {
+        id: 19,
+        subCategory: 'Jewelry'
+      },
+      {
+        id: 20,
+        subCategory: 'Materials'
+      },
+      {
+        id: 21,
+        subCategory: 'Motorcycles'
+      },
+      {
+        id: 22,
+        subCategory: 'Musical Instruments'
+      },
+      {
+        id: 23,
+        subCategory: 'Photo / Video'
+      },
+      {
+        id: 24,
+        subCategory: 'RVs / Campers'
+      }
+    ]
+  },
+  {
+    id: 2,
+    category: CategoriesTypes.SERVICES,
+    image: ServicesIcon,
+    subCategories: [
+      {
+        id: 1,
+        subCategory: 'Automotive'
+      },
+      {
+        id: 2,
+        subCategory: 'Beauty / Personal'
+      },
+      {
+        id: 3,
+        subCategory: 'Computer / IT'
+      },
+      {
+        id: 4,
+        subCategory: 'Creative'
+      },
+      {
+        id: 5,
+        subCategory: 'Dental'
+      },
+      {
+        id: 6,
+        subCategory: 'Event Mgmt'
+      },
+      {
+        id: 7,
+        subCategory: 'Farm / Garden'
+      },
+      {
+        id: 8,
+        subCategory: 'Financial'
+      },
+      {
+        id: 9,
+        subCategory: 'Health Care'
+      },
+      {
+        id: 10,
+        subCategory: 'Labor / Construction'
+      },
+      {
+        id: 11,
+        subCategory: 'Legal'
+      },
+      {
+        id: 12,
+        subCategory: 'Lessons / Coaching'
+      },
+      {
+        id: 13,
+        subCategory: 'Marine'
+      },
+      {
+        id: 14,
+        subCategory: 'Real State'
+      },
+      {
+        id: 15,
+        subCategory: 'Skilled Trades'
+      },
+      {
+        id: 16,
+        subCategory: 'Small Business'
+      },
+      {
+        id: 17,
+        subCategory: 'Therapeutic'
+      },
+      {
+        id: 18,
+        subCategory: 'Travel / Vacation'
+      },
+      {
+        id: 19,
+        subCategory: 'Writing / Editing'
+      }
+    ]
+  },
+  {
+    id: 3,
+    category: CategoriesTypes.JOBS,
+    image: JobsIcon,
+    subCategories: [
+      {
+        id: 1,
+        subCategory: 'Accounting / Finance'
+      },
+      {
+        id: 2,
+        subCategory: 'Admin / Office'
+      },
+      {
+        id: 3,
+        subCategory: 'Architect / Engineer'
+      },
+      {
+        id: 4,
+        subCategory: 'Art / Media / Design'
+      },
+      {
+        id: 5,
+        subCategory: 'Aerospace / Science'
+      },
+      {
+        id: 6,
+        subCategory: 'Business Management'
+      },
+      {
+        id: 7,
+        subCategory: 'Customer Service'
+      },
+      {
+        id: 8,
+        subCategory: 'Education'
+      },
+      {
+        id: 9,
+        subCategory: 'Food / Bev / Hosp'
+      },
+      {
+        id: 10,
+        subCategory: 'General Labor'
+      },
+      {
+        id: 11,
+        subCategory: 'Government'
+      },
+      {
+        id: 12,
+        subCategory: 'Human Resources'
+      },
+      {
+        id: 13,
+        subCategory: 'IT / Software / Computer'
+      },
+      {
+        id: 14,
+        subCategory: 'Legal / Paralegal'
+      },
+      {
+        id: 15,
+        subCategory: 'Manufacturing'
+      },
+      {
+        id: 16,
+        subCategory: 'Sales / Marketing'
+      }
+    ]
+  },
+  {
+    id: 4,
+    category: CategoriesTypes.CRYPTO_BAZAAR,
+    image: CryptoIcon,
+    subCategories: [
+      {
+        id: 1,
+        subCategory: 'Local + OmniCoin'
+      },
+      {
+        id: 2,
+        subCategory: 'Local + Bitcoin'
+      },
+      {
+        id: 3,
+        subCategory: 'Local + Eutherium'
+      },
+      {
+        id: 4,
+        subCategory: 'Local + Monero'
+      },
+      {
+        id: 5,
+        subCategory: 'Local + Other'
+      },
+      {
+        id: 6,
+        subCategory: 'OmniCoin + Bitcoin'
+      },
+      {
+        id: 7,
+        subCategory: 'Omnicoin + Other'
       }
     ]
   }
@@ -167,6 +460,14 @@ const messages = defineMessages({
     id: 'Marketplace.fees',
     defaultMessage: 'Fees'
   },
+  categories: {
+    id: 'Marketplace.categories',
+    defaultMessage: 'Categories'
+  },
+  viewAll: {
+    id: 'Marketplace.viewAll',
+    defaultMessage: 'VIEW ALL'
+  },
 });
 
 class Marketplace extends Component {
@@ -176,13 +477,14 @@ class Marketplace extends Component {
 
   fetchFeatureList() {
     this.props.marketplaceActions.getFeatureList(featureListings);
+    this.props.marketplaceActions.getCategories(categories);
   }
 
   onClickItem = () => {
     console.log('View detail');
   };
 
-  renderFeatureList() {
+  featureListItems() {
     const { props } = this;
 
     return (
@@ -224,37 +526,82 @@ class Marketplace extends Component {
     );
   }
 
+  viewAllSubCategories = (category) => {
+    console.log('View all sub categories for: ', category);
+  };
+
+  categoriesItems() {
+    const { props } = this;
+    const { formatMessage } = this.props.intl;
+
+    return (
+      props.marketplace.categories.map((category) => {
+        const style = { backgroundImage: `url(${category.image})` };
+        return (
+          <div key={`fl-item-${category.id}`} className="item" style={style}>
+            <span className="title">{category.category}</span>
+            <div className="sub-categories">
+              {category.subCategories.map((subCategory) => (
+                <div className="sub-category">{subCategory.subCategory}</div>
+              ))}
+              {
+                category.category !== CategoriesTypes.CRYPTO_BAZAAR ?
+                  <div
+                    className="view-all"
+                    onClick={() => this.viewAllSubCategories(category.category)}
+                    onKeyDown={() => this.viewAllSubCategories(category.category)}
+                    tabIndex={0}
+                    role="link"
+                  >
+                    {formatMessage(messages.viewAll)}
+                  </div>
+              : null}
+            </div>
+          </div>
+        );
+      })
+    );
+  }
+
+  header() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="header">
+        <div className="menu">The menu</div>
+        <span className="title">{formatMessage(messages.welcome)}</span>
+        <div className="badges">
+          <div className="badge blue">
+            <Image src={OverviewIcon} width={iconSize} height={iconSize} />
+            <span>{formatMessage(messages.overview)}</span>
+          </div>
+          <div className="badge green">
+            <Image src={VersatilityIcon} width={iconSize} height={iconSize} />
+            <span>{formatMessage(messages.versatility)}</span>
+          </div>
+          <div className="badge yellow">
+            <Image src={BenefitIcon} width={iconSize} height={iconSize} />
+            <span>{formatMessage(messages.benefits)}</span>
+          </div>
+          <div className="badge orange">
+            <Image src={RewardsIcon} width={iconSize} height={iconSize} />
+            <span>{formatMessage(messages.rewards)}</span>
+          </div>
+          <div className="badge red">
+            <Image src={FeesIcon} width={iconSize} height={iconSize} />
+            <span>{formatMessage(messages.fees)}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
 
     return (
       <div className="marketplace-container">
-        <div className="header">
-          <div className="menu">The menu</div>
-          <span className="title">{formatMessage(messages.welcome)}</span>
-          <div className="badges">
-            <div className="badge blue">
-              <Image src={OverviewIcon} width={iconSize} height={iconSize} />
-              <span>{formatMessage(messages.overview)}</span>
-            </div>
-            <div className="badge green">
-              <Image src={VersatilityIcon} width={iconSize} height={iconSize} />
-              <span>{formatMessage(messages.versatility)}</span>
-            </div>
-            <div className="badge yellow">
-              <Image src={BenefitIcon} width={iconSize} height={iconSize} />
-              <span>{formatMessage(messages.benefits)}</span>
-            </div>
-            <div className="badge orange">
-              <Image src={RewardsIcon} width={iconSize} height={iconSize} />
-              <span>{formatMessage(messages.rewards)}</span>
-            </div>
-            <div className="badge red">
-              <Image src={FeesIcon} width={iconSize} height={iconSize} />
-              <span>{formatMessage(messages.fees)}</span>
-            </div>
-          </div>
-        </div>
+        {this.header()}
         <div className="body">
           <div className="list-container">
             <div className="top-detail">
@@ -262,10 +609,17 @@ class Marketplace extends Component {
               <Button content={formatMessage(messages.seeAll)} className="button--blue" />
             </div>
             <div className="items">
-              {this.renderFeatureList()}
+              {this.featureListItems()}
             </div>
           </div>
-          <div>Categories</div>
+          <div className="categories-container">
+            <div className="top-detail">
+              <span className="heading">{formatMessage(messages.categories)}</span>
+            </div>
+            <div className="items">
+              {this.categoriesItems()}
+            </div>
+          </div>
           <div>For sale</div>
           <div>Jobs</div>
           <div>Rentals</div>

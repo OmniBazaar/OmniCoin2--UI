@@ -94,18 +94,22 @@
     background-color: $lighter-gray;
     padding: 15px;
 
-    .list-container {
-      .top-detail {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
+    .heading {
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-        .heading {
-          font-size: 17px;
-          font-weight: bold;
-        }
+    .top-detail {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .list-container {
+      .button {
+        padding: 0;
       }
 
       .items {
@@ -148,7 +152,7 @@
               line-height: 7px;
               color: $primary-gray;
               font-weight: lighter;
-              margin: auto;
+              margin: 0 5px;
             }
           }
 
@@ -248,6 +252,66 @@
           .item {
             flex: 0 1 100%;
             margin: 0 0 10px 0;
+          }
+        }
+      }
+    }
+
+    .categories-container {
+      .items {
+        display: flex;
+        margin-bottom: 20px;
+        flex-flow: row wrap;
+        position: relative;
+
+        .item {
+          display: flex;
+          flex-direction: column;
+          margin: 0 1.4% 1.4% 0;
+          flex: 0 1 48.6%;
+          border-radius: 5px;
+          padding: 18px;
+          background: no-repeat top;
+          background-size: cover;
+
+          .title {
+            color: $white;
+            font-size: 18px;
+            margin-bottom: 8px;
+          }
+
+          .sub-categories {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 133px;
+            flex-wrap: wrap;
+
+            .sub-category {
+              color: $third-white;
+              font-size: 13px;
+            }
+          }
+
+          .view-all {
+            color: $white;
+            font-weight: bold;
+            font-size: 15px;
+            flex-grow: 1;
+            align-items: flex-end;
+            display: flex;
+            cursor: pointer;
+
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+
+        @media (max-width: 1100px) {
+          .item {
+            flex: 0 1 100%;
+            margin: 0 0 1.4% 0;
           }
         }
       }
