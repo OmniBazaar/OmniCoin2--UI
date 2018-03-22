@@ -691,6 +691,10 @@ const messages = defineMessages({
     id: 'Marketplace.jobs',
     defaultMessage: 'Jobs'
   },
+  services: {
+    id: 'Marketplace.services',
+    defaultMessage: 'Services'
+  },
   cryptoBazaar: {
     id: 'Marketplace.cryptoBazaar',
     defaultMessage: 'CryptoBazaar'
@@ -967,6 +971,7 @@ class Marketplace extends Component {
             {this.categoriesItems()}
           </div>
           {this.renderListItems('forSale', formatMessage(messages.forSale), props.marketplace.forSaleList)}
+          {this.renderListItems('services', formatMessage(messages.services), props.marketplace.servicesList)}
           {this.renderListItems('jobs', formatMessage(messages.jobs), props.marketplace.jobsList)}
           {this.renderListItems('rentals', formatMessage(messages.rentals), props.marketplace.rentalsList)}
           {this.renderListItems('crypto', formatMessage(messages.cryptoBazaar), props.marketplace.cryptoBazaarList)}
