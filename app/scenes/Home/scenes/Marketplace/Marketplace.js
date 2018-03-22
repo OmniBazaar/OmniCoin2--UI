@@ -38,6 +38,7 @@ const CategoriesTypes = Object.freeze({
   SERVICES: 'Services',
   JOBS: 'Jobs',
   CRYPTO_BAZAAR: 'CrytoBazaar',
+  RENTALS: 'Rentals'
 });
 
 const forSaleCategories = [
@@ -970,11 +971,31 @@ class Marketplace extends Component {
             </div>
             {this.categoriesItems()}
           </div>
-          {this.renderListItems('forSale', formatMessage(messages.forSale), props.marketplace.forSaleList)}
-          {this.renderListItems('services', formatMessage(messages.services), props.marketplace.servicesList)}
-          {this.renderListItems('jobs', formatMessage(messages.jobs), props.marketplace.jobsList)}
-          {this.renderListItems('rentals', formatMessage(messages.rentals), props.marketplace.rentalsList)}
-          {this.renderListItems('crypto', formatMessage(messages.cryptoBazaar), props.marketplace.cryptoBazaarList)}
+          {this.renderListItems(
+            CategoriesTypes.FOR_SALE,
+            formatMessage(messages.forSale),
+            props.marketplace.forSaleList
+          )}
+          {this.renderListItems(
+            CategoriesTypes.SERVICES,
+            formatMessage(messages.services),
+            props.marketplace.servicesList
+          )}
+          {this.renderListItems(
+            CategoriesTypes.JOBS,
+            formatMessage(messages.jobs),
+            props.marketplace.jobsList
+          )}
+          {this.renderListItems(
+            CategoriesTypes.RENTALS,
+            formatMessage(messages.rentals),
+            props.marketplace.rentalsList
+          )}
+          {this.renderListItems(
+            CategoriesTypes.CRYPTO_BAZAAR,
+            formatMessage(messages.cryptoBazaar),
+            props.marketplace.cryptoBazaarList
+          )}
           <div>
             {this.renderFooter()}
           </div>
