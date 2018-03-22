@@ -992,12 +992,6 @@ Marketplace.propTypes = {
     getJobsCategories: PropTypes.func,
     getCryptoCategories: PropTypes.func,
   }),
-  marketplace: PropTypes.shape({
-    categories: PropTypes.array,
-    featureList: PropTypes.array,
-    forSaleList: PropTypes.array,
-    jobsList: PropTypes.array,
-  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -1005,7 +999,6 @@ Marketplace.propTypes = {
 
 Marketplace.defaultProps = {
   marketplaceActions: {},
-  marketplace: {},
   intl: {},
 };
 
