@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Label, Menu, Table } from 'semantic-ui-react'
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHeaderCell,
+  TableRow,
+  TableHeader, } from 'semantic-ui-react'
 
 import './my-escrow-transactions.scss';
 
@@ -43,11 +49,15 @@ class MyEscrowTransactions extends Component {
   }
 
   componentWillReceiveProps(nextProps){
+   
+    let headerName  = this.state.lastHeaderClicked;
+    let asc = this.state.sortAsc[headerName];
+
     this.setState({
-      ...this.state,
-      transactions: nextProps.escrow.transactions
+      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => {
+          return (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1);
+      })
     });
-    this.sortColumn(this.state.lastHeaderClicked, this.state.sortAsc[this.state.lastHeaderClicked]);
   }
 
   sortColumn(headerName, asc){
@@ -81,11 +91,11 @@ class MyEscrowTransactions extends Component {
   renderRows() {
     return this.state.transactions.map((escrowObject) => {
       return (
-        <Table.Row key={escrowObject.transactionID}>
-          <Table.Cell>{escrowObject.transactionID}</Table.Cell>
-          <Table.Cell>{escrowObject.amount}</Table.Cell>
-          <Table.Cell>{escrowObject.parties}</Table.Cell>
-        </Table.Row>
+        <TableRow key={escrowObject.transactionID}>
+          <TableCell>{escrowObject.transactionID}</TableCell>
+          <TableCell>{escrowObject.amount}</TableCell>
+          <TableCell>{escrowObject.parties}</TableCell>
+        </TableRow>
       );
     });
   }
@@ -94,37 +104,45 @@ class MyEscrowTransactions extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    return <Table striped sortable>
-    <Table.Header>
-      <Table.Row>
+    return (<div className="table-container">
+    <Table
+      sortable="true"
+      compact="true"
+      basic="very"
+      striped="true"
+      size="small"
+    >
+    <TableHeader>
+      <TableRow>
 
-        <Table.HeaderCell 
+        <TableHeaderCell 
             sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
             onClick={this.handleHeaderClick.bind(this, 'transactionID')}>
             {formatMessage(messages.transactionID)}
-        </Table.HeaderCell>
+        </TableHeaderCell>
         
-        <Table.HeaderCell sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
+        <TableHeaderCell sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
             sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
             onClick={this.handleHeaderClick.bind(this, 'amount')}>
             {formatMessage(messages.amount)}
-        </Table.HeaderCell>
+        </TableHeaderCell>
 
-        <Table.HeaderCell sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
+        <TableHeaderCell sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
              sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
              onClick={this.handleHeaderClick.bind(this, 'parties')}>
              {formatMessage(messages.parties)}
-        </Table.HeaderCell>
+        </TableHeaderCell>
 
-      </Table.Row>
-    </Table.Header>
+      </TableRow>
+    </TableHeader>
 
-    <Table.Body>
+    <TableBody>
       {this.renderRows()}
-    </Table.Body>
+    </TableBody>
 
     
   </Table>
+  </div>);
   }
 }
 
