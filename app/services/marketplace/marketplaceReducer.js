@@ -1,10 +1,28 @@
 import { handleActions } from 'redux-actions';
-import { getFeatureList, getForSale, getCategories } from './marketplaceActions';
+import {
+  getFeatureList,
+  getForSaleList,
+  getServicesList,
+  getJobsList,
+  getRentalsList,
+  getCryptoBazaarList,
+  getForSaleCategories,
+  getServicesCategories,
+  getJobsCategories,
+  getCryptoCategories
+} from './marketplaceActions';
 
 const defaultState = {
-  categories: [],
+  forSaleCategories: [],
+  servicesCategories: [],
+  jobsCategories: [],
+  cryptoCategories: [],
   featureList: [],
-  forSaleList: []
+  forSaleList: [],
+  servicesList: [],
+  jobsList: [],
+  rentalsList: [],
+  cryptoBazaarList: [],
 };
 
 const reducer = handleActions({
@@ -14,16 +32,58 @@ const reducer = handleActions({
       featureList
     };
   },
-  [getForSale](state, { payload: { forSaleList } }) {
+  [getForSaleList](state, { payload: { forSaleList } }) {
     return {
       ...state,
       forSaleList
     };
   },
-  [getCategories](state, { payload: { categories } }) {
+  [getServicesList](state, { payload: { servicesList } }) {
     return {
       ...state,
-      categories
+      servicesList
+    };
+  },
+  [getJobsList](state, { payload: { jobsList } }) {
+    return {
+      ...state,
+      jobsList
+    };
+  },
+  [getRentalsList](state, { payload: { rentalsList } }) {
+    return {
+      ...state,
+      rentalsList
+    };
+  },
+  [getCryptoBazaarList](state, { payload: { cryptoBazaarList } }) {
+    return {
+      ...state,
+      cryptoBazaarList
+    };
+  },
+  [getForSaleCategories](state, { payload: { forSaleCategories } }) {
+    return {
+      ...state,
+      forSaleCategories
+    };
+  },
+  [getServicesCategories](state, { payload: { servicesCategories } }) {
+    return {
+      ...state,
+      servicesCategories
+    };
+  },
+  [getJobsCategories](state, { payload: { jobsCategories } }) {
+    return {
+      ...state,
+      jobsCategories
+    };
+  },
+  [getCryptoCategories](state, { payload: { cryptoCategories } }) {
+    return {
+      ...state,
+      cryptoCategories
     };
   }
 }, defaultState);

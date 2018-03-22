@@ -19,7 +19,6 @@
     background: url('./images/ui-header.jpg') no-repeat center;
     background-size: cover;
     justify-content: center;
-    //flex: 0.35;
 
     .title,
     .menu,
@@ -110,6 +109,13 @@
     .list-container {
       .button {
         padding: 0;
+        margin: 0 19px;
+      }
+
+      @media (max-width: 1290px) {
+        .button {
+          margin: 0 10px;
+        }
       }
 
       .items {
@@ -126,6 +132,10 @@
 
           &:hover {
             opacity: 0.8;
+          }
+
+          span:focus {
+            outline: none;
           }
 
           .img-wrapper {
@@ -305,6 +315,9 @@
             &:focus {
               outline: none;
             }
+            &:hover {
+              opacity: 0.8;
+            }
           }
         }
 
@@ -314,6 +327,42 @@
             margin: 0 0 1.4% 0;
           }
         }
+      }
+    }
+
+    .market-footer {
+      background-color: $primary-blue;
+      border-radius: 5px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .title,
+      .description {
+        color: $lighter-gray;
+        margin-bottom: 20px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .description {
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        width: 75%;
+      }
+
+      .button {
+        margin: 0;
+      }
+
+      .button:first-child {
+        margin-right: 18px;
       }
     }
   }

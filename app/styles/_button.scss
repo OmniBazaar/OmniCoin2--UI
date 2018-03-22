@@ -76,7 +76,7 @@ $button-padding-vertical: 18px;
 // Secondary button styling
 .button--secondary {
   @include app-button($button-secondary-color);
-  color: $primary-blue;
+  color: $primary-blue !important;
 
   &:hover:not(.disabled):not(:active) {
     @include box-shadow(0 1px 4px 0 $button-shadow-color);
