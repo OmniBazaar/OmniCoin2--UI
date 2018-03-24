@@ -1,7 +1,10 @@
 {
   "Marketplace.welcome": "Welcome to OmniBazaar",
   "Marketplace.featuredListings": "Featured listings",
-  "Marketplace.forSale": "For sale",
+  "Marketplace.home": "Home",
+  "Marketplace.more": "More",
+  "Marketplace.about": "About",
+  "Marketplace.forSale": "For Sale",
   "Marketplace.jobs": "Jobs",
   "Marketplace.services": "Services",
   "Marketplace.cryptoBazaar": "CryptoBazaar",
@@ -17,5 +20,6 @@
   "Marketplace.getOmniCoins": "Get Some OmniCoins",
   "Marketplace.getOmniCoinsText": "See how we are enabling e-commerce without middleman and payment without bankers. OmniBazaar is an Internet marketplace \"of the people, by the people, for the people\"",
   "Marketplace.exchangeOne": "EXCHANGE ONE",
-  "Marketplace.exchangeTwo": "EXCHANGE TWO"
+  "Marketplace.exchangeTwo": "EXCHANGE TWO",
+  "Marketplace.addListing": "ADD LISTING"
 }

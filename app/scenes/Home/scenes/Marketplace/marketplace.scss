@@ -35,8 +35,52 @@
     }
 
     .menu {
-      margin: 0 10px;
-      align-self: flex-end;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      ul {
+        list-style: none;
+        display: flex;
+        padding: 0;
+
+        li {
+          margin-right: 30px;
+          padding: 0 5px;
+
+          &:hover {
+            border-bottom: 2px solid $primary-blue;
+            cursor: pointer;
+          }
+
+          &.active {
+            border-bottom: 2px solid $primary-blue;
+          }
+        }
+      }
+
+      .options {
+        display: flex;
+        align-items: center;
+
+        button {
+          border-radius: 16px!important;
+          padding: 0.5em 1.1em 0.5em!important;
+          font-size: 13px!important;
+          display: flex;
+          align-items: center;
+          margin-right: 10px;
+
+          .image {
+            margin-right: 5px;
+          }
+        }
+
+        img {
+          margin-right: 10px;
+        }
+      }
     }
 
     .badges {
@@ -365,5 +409,27 @@
         margin-right: 18px;
       }
     }
+
+  }
+}
+
+.menu-popup {
+  border-radius: 0 !important;
+  max-width: none !important;
+  left: 250px !important;
+  right: 10px !important;
+  margin: 0 !important;
+
+  &.orange {
+    border-bottom: 2px solid $orange !important;
+
+    .title {
+      color: $orange;
+    }
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 10px;
   }
 }

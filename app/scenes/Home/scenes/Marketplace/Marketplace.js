@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Image, Icon } from 'semantic-ui-react';
+import { Button, Image, Icon, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import classNames from 'classnames';
 
 import OverviewIcon from './images/tile-overview.svg';
 import VersatilityIcon from './images/tile-versatility.svg';
@@ -14,6 +15,13 @@ import ForSaleIcon from './images/bg-forsale.jpg';
 import ServicesIcon from './images/bg-services.jpg';
 import JobsIcon from './images/bg-jobs.jpg';
 import CryptoIcon from './images/bg-crypto.jpg';
+import AddIcon from './images/btn-add-listing.svg';
+import SearchIcon from './images/btn-search-norm.svg';
+import SearchHoverIcon from './images/btn-search-hover.svg';
+import SearchPressIcon from './images/btn-search-press.svg';
+import UserIcon from './images/btn-user-menu-norm.svg';
+import UserHoverIcon from './images/btn-user-menu-hover.svg';
+import UserPressIcon from './images/btn-user-menu-press.svg';
 
 import {
   getFeatureList,
@@ -30,7 +38,9 @@ import {
 
 import './marketplace.scss';
 
+const iconSizeBig = 25;
 const iconSize = 20;
+const iconSizeMedium = 15;
 const iconSizeSmall = 12;
 
 const CategoriesTypes = Object.freeze({
@@ -684,9 +694,21 @@ const messages = defineMessages({
     id: 'Marketplace.featuredListings',
     defaultMessage: 'Featured listings'
   },
+  home: {
+    id: 'Marketplace.home',
+    defaultMessage: 'Home'
+  },
+  more: {
+    id: 'Marketplace.more',
+    defaultMessage: 'More'
+  },
+  about: {
+    id: 'Marketplace.about',
+    defaultMessage: 'About'
+  },
   forSale: {
     id: 'Marketplace.forSale',
-    defaultMessage: 'For sale'
+    defaultMessage: 'For Sale'
   },
   jobs: {
     id: 'Marketplace.jobs',
@@ -751,6 +773,10 @@ const messages = defineMessages({
   exchangeTwo: {
     id: 'Marketplace.exchangeTwo',
     defaultMessage: 'EXCHANGE TWO'
+  },
+  addListing: {
+    id: 'Marketplace.addListing',
+    defaultMessage: 'ADD LISTING'
   },
 });
 
@@ -880,12 +906,79 @@ class Marketplace extends Component {
     );
   }
 
+  renderMenu() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="menu">
+        <ul>
+          <li className="active">{formatMessage(messages.home)}</li>
+          {this.forSaleSubMenu()}
+          <li>{formatMessage(messages.services)}</li>
+          <li>{formatMessage(messages.jobs)}</li>
+          <li>{formatMessage(messages.cryptoBazaar)}</li>
+          <li>{formatMessage(messages.more)}</li>
+          <li>{formatMessage(messages.about)}</li>
+        </ul>
+        <div className="options">
+          <Button icon className="button--green-bg">
+            <Image src={AddIcon} width={iconSizeMedium} height={iconSizeMedium} />
+            {formatMessage(messages.addListing)}
+          </Button>
+          <Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />
+          <Image src={UserIcon} width={iconSizeBig} height={iconSizeBig} />
+        </div>
+      </div>
+    );
+  }
+
+  forSaleMenu() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <li>{formatMessage(messages.forSale)}</li>
+    );
+  }
+
+  forSaleSubMenu() {
+    const { props } = this;
+    const { formatMessage } = this.props.intl;
+    /*
+    const containerClass = classNames({
+      'button--primary': props.className === 'button--primary',
+      'button--green': props.className === 'button--green',
+      'button--green-bg': props.className === 'button--green-bg',
+      'button--transparent': props.className === 'button--transparent',
+    });
+    */
+
+    return (
+      <Popup
+        trigger={this.forSaleMenu()}
+        hoverable
+        basic
+        on="click"
+        position="top center"
+        wide="very"
+        hideOnScroll
+        className="menu-popup orange"
+      >
+        <div>
+          <p className="title">{formatMessage(messages.forSale)}</p>
+          <div>
+            Sub menu here
+          </div>
+        </div>
+      </Popup>
+    );
+  }
+
   header() {
     const { formatMessage } = this.props.intl;
 
     return (
       <div className="header">
-        <div className="menu">The menu</div>
+        {this.renderMenu()}
         <span className="title">{formatMessage(messages.welcome)}</span>
         <div className="badges">
           <div className="badge blue">
