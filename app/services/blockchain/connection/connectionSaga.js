@@ -14,6 +14,7 @@ export const nodes = [
   // {name: "Local", url: "wss://kc-us-dex.xeldal.com/ws"},
   // {name: "Netherlands", url: "wss://dex.rnglab.org"},
   { name: 'Scopic Node', url: 'ws://35.171.116.3:8090' },
+  // { name: 'My Test Node', url: 'ws://127.0.0.1:11011' },
   // {name: "Munich Node", url: "wss://eu.openledger.info/ws"}
 ];
 
