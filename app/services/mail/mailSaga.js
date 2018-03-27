@@ -63,41 +63,75 @@ export function* sendMail(action) {
     mailDeliveredOnce = true;
   };
 
-  Apis.instance().network_api().exec('mail_send', [afterDeliveredCallback, mailObject]).then(() => {
-    console.log('Mail is in the outbox:', mailObject);
-    storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);
-    mailSentCallback();
-  });
+  try {
+    yield (Apis.instance().network_api().exec('mail_send', [afterDeliveredCallback, mailObject]).then(() => {
+      console.log('Mail is in the outbox:', mailObject);
+      storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);
+      mailSentCallback();
+    }));
+  }
+  catch (err) {
+    console.log('sendMail error:', err);
+  }
 }
 
 export function* subscribeForMail(action) {
   const { reciever, afterMailStoredCallback } = action.payload;
+  
+  /* this callback can be triggered by the server multiple times
+  for one batch of emails, until the server receives mailReceived signals,
+  so before storing the messages, check if they exist */
+  const mailReceivedCallback = (recievedMailObjects) => {
+    
+      // store just the really-new-received mails here
+      let mailsToSetRead = [];
 
-  let mailReceivedOnce = false;
+      console.log('Mail recieved: ', recievedMailObjects);
+      recievedMailObjects.forEach((mailObject) => {
 
-  const mailReceivedCallback = (recievedMmailObjects) => {
-    if (!mailReceivedOnce) {
-      console.log('Mail recieved: ', recievedMmailObjects);
-      recievedMmailObjects.forEach((mailObject) => {
-        mailObject.read_status = false;
-        storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
+        if (!getMessage(reciever, MailTypes.INBOX, mailObject.uuid)){
+          mailObject.read_status = false;
+          storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
+          mailsToSetRead.push(mailObject);
+        }
       });
-      afterMailStoredCallback(recievedMmailObjects);
-      mailReceivedOnce = true;
-    }
+      afterMailStoredCallback(mailsToSetRead);
   };
 
-  Apis.instance().network_api().exec('mail_subscribe', [mailReceivedCallback, reciever]).then(() => {
-    // do nothing special
-  });
+  try 
+  {
+    yield (Apis.instance().network_api().exec('mail_subscribe', [mailReceivedCallback, reciever]))
+  }
+  catch(err)
+  {
+    console.log('subscribeForMail error:', err);
+  }
+  
 }
 
 export function* mailReceived(action) {
-  Apis.instance().network_api().exec('mail_set_received', [action.payload.uuid]);
+
+  try 
+  {
+    yield (Apis.instance().network_api().exec('mail_set_received', [action.payload.uuid]));
+  }
+  catch(err)
+  {
+    console.log("mailReceived error: ", err);
+  }
+
+ 
 }
 
 export function* confirmationRecieved(action) {
-  Apis.instance().network_api().exec('mail_confirm_received', [action.payload.uuid]);
+
+  try {
+    yield (Apis.instance().network_api().exec('mail_confirm_received', [action.payload.uuid]));
+  }
+  catch(err)
+  {
+    console.log("confirmationRecieved: ", err);
+  }
 }
 
 export function* loadFolder(action) {
@@ -127,7 +161,11 @@ export function* mailSetRead(action) {
     user, messageFolder, messageUUID, afterSetCallback
   } = action.payload;
   const mailObject = getMessage(user, messageFolder, messageUUID);
-  mailObject.read_status = true;
-  storeMessage(mailObject, user, messageFolder);
+
+  if (mailObject){
+    mailObject.read_status = true;
+    storeMessage(mailObject, user, messageFolder);
+  }
+
   afterSetCallback();
 }
