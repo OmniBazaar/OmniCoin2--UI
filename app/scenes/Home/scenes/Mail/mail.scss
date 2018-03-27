@@ -4,6 +4,11 @@
 
 $compose-width: 38%;
 
+.SplitPane.split-pane .Pane1 {
+  width: auto !important;
+  min-width: 260px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
