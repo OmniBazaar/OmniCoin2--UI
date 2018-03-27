@@ -5,12 +5,11 @@ import {
   takeLatest,
   call
 } from 'redux-saga/effects';
-import {
-  PrivateKey,
-  FetchChain,
-} from 'omnibazaarjs/es';
+import { FetchChain } from 'omnibazaarjs/es';
 
-const faucetAddress = 'http://35.171.116.3:80';
+import { generateKeyFromPassword } from '../utils/wallet';
+import { faucetAddresses } from '../settings';
+
 
 const messages = defineMessages({
   invalidPassword: {
@@ -23,13 +22,6 @@ const messages = defineMessages({
   }
 });
 
-
-function generateKeyFromPassword(accountName, role, password) {
-  const seed = accountName + role + password;
-  const privKey = PrivateKey.fromSeed(seed);
-  const pubKey = privKey.toPublicKey().toString();
-  return { privKey, pubKey };
-}
 
 export function* subscriber() {
   yield takeEvery(
@@ -89,7 +81,7 @@ export function* signup(action) {
   const ownerKey = generateKeyFromPassword(username, 'owner', password);
   const activeKey = generateKeyFromPassword(username, 'active', password);
   try {
-    const result = yield call(fetch, `${faucetAddress}/api/v1/accounts`, {
+    const result = yield call(fetch, `${faucetAddresses[0]}/api/v1/accounts`, {
       method: 'post',
       mode: 'cors',
       headers: {

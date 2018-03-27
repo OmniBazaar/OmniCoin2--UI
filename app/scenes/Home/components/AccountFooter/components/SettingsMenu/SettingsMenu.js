@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { bindActionCreators } from 'redux';
+import { showSettingsModal, showPreferencesModal } from '../../../../../../services/menu/menuActions';
+
+import { logout } from '../../../../../../services/blockchain/auth/authActions';
 
 import './menu.scss';
 
@@ -15,37 +19,24 @@ const messages = defineMessages({
     id: 'SettingsMenu.preferences',
     defaultMessage: 'Preferences'
   },
+  logout: {
+    id: 'SettingsMenu.logout',
+    defaultMessage: 'Logout'
+  }
 });
 
 class SettingsMenu extends Component {
-  constructor(props) {
-    super(props);
-
-    this.toggleAccount = this.toggleAccount.bind(this);
-    this.togglePreferences = this.togglePreferences.bind(this);
-  }
-
-  toggleAccount() {
-    if (this.props.toggleAccount) {
-      this.props.toggleAccount();
-    }
-  }
-
-  togglePreferences() {
-    if (this.props.togglePreferences) {
-      this.props.togglePreferences();
-    }
-  }
-
   render() {
     const { formatMessage } = this.props.intl;
+    const { showSettingsModal, showPreferencesModal } = this.props.menuActions;
+    const { logout } = this.props.authActions;
     return (
       <Grid centered textAlign="left" divided columns={1}>
         <Grid.Column textAlign="left">
           <div
             className="menu-option"
-            onClick={this.toggleAccount}
-            onKeyDown={this.toggleAccount}
+            onClick={showSettingsModal}
+            onKeyDown={showSettingsModal}
             role="link"
             tabIndex={0}
           >
@@ -53,12 +44,21 @@ class SettingsMenu extends Component {
           </div>
           <div
             className="menu-option"
-            onClick={this.togglePreferences}
-            onKeyDown={this.togglePreferences}
+            onClick={showPreferencesModal}
+            onKeyDown={showPreferencesModal}
             role="link"
             tabIndex={0}
           >
             {formatMessage(messages.preferences)}
+          </div>
+          <div
+            className="menu-option"
+            onClick={logout}
+            onKeyDown={logout}
+            role="link"
+            tabIndex={0}
+          >
+            {formatMessage(messages.logout)}
           </div>
         </Grid.Column>
       </Grid>
@@ -67,17 +67,23 @@ class SettingsMenu extends Component {
 }
 
 SettingsMenu.propTypes = {
-  toggleAccount: PropTypes.func,
-  togglePreferences: PropTypes.func,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  menuActions: PropTypes.shape({
+    showSettingsModal: PropTypes.func,
+    showPreferencesModal: PropTypes.func
+  })
 };
 
 SettingsMenu.defaultProps = {
-  toggleAccount: () => {},
-  togglePreferences: () => {},
   intl: {},
 };
 
-export default connect(state => ({ ...state.default }))(injectIntl(SettingsMenu));
+export default connect(
+  state => ({ ...state.default }),
+  dispatch => ({
+    authActions: bindActionCreators({ logout }, dispatch),
+    menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
+  })
+)(injectIntl(SettingsMenu));

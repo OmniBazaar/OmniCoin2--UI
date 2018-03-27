@@ -18,12 +18,13 @@ import Marketplace from './scenes/Marketplace/Marketplace';
 import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
 import Preferences from './scenes/Preferences/Preferences';
-import SettingsMenu from './scenes/SettingsMenu/SettingsMenu';
+import SettingsMenu from './components/AccountFooter/components/SettingsMenu/SettingsMenu';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
+import AccountFooter from './components/AccountFooter/AccountFooter';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -38,32 +39,13 @@ import ProcessorsIcon from './images/sdb-processors.svg';
 import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
-import UserIcon from './images/th-user-white.svg';
-import LockIcon from './images/btn-lock-hover.svg';
+
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 
 const iconSize = 20;
-const iconLockSize = 25;
 
-const accountId = 'as45df3242cg5600s';
 
 class Home extends Component {
-  static accountMenu() {
-    return (
-      <div className="menu-item account">
-        <Image src={UserIcon} width={iconSize} height={iconSize} />
-        <div>
-          <span>Account</span>
-          <div className="code">
-            <span className="bold">{accountId}</span>
-            <Icon name="caret down" width={iconSize} height={iconSize} />
-          </div>
-        </div>
-        <Image src={LockIcon} width={iconLockSize} height={iconLockSize} />
-      </div>
-    );
-  }
-
   state = { visible: true };
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -72,14 +54,6 @@ class Home extends Component {
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
 
-  renderSettingsMenu() {
-    return (
-      <SettingsMenu
-        toggleAccount={this.toggleSettingsAccount}
-        togglePreferences={this.togglePreferences}
-      />
-    );
-  }
 
   renderAccountSettings() {
     const { props } = this;
@@ -117,7 +91,12 @@ class Home extends Component {
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
           <div className="top">
             <div className="header">
-              <Image src={SidebarLogo} width={150} height={40} />
+              <Image
+                src={SidebarLogo}
+                className="logo"
+                width={150}
+                height={40}
+              />
               <Image
                 src={Burger}
                 height={iconSize}
@@ -183,13 +162,7 @@ class Home extends Component {
             </div>
           </div>
           <div className="bottom">
-            <Popup
-              trigger={Home.accountMenu()}
-              flowing
-              hoverable
-            >
-              {this.renderSettingsMenu()}
-            </Popup>
+            <AccountFooter />
             <SocialNetworksFooter />
           </div>
         </div>
@@ -215,7 +188,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
-  }),
+  })
 )(Home);
 
 Home.propTypes = {
@@ -232,6 +205,7 @@ Home.propTypes = {
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func
   })
+
 };
 
 Home.defaultProps = {
