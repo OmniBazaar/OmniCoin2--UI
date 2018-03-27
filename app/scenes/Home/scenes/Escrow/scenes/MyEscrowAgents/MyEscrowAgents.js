@@ -187,7 +187,7 @@ class MyEscrowAgents extends Component {
           <span>{formatMessage(messages.approve)}</span>
         </div>
         <div className="content">
-          <ul style={{"list-style-type": "none"}}>
+          <ul style={{listStyleType: "none"}}>
             {this.renderAgents()}
           </ul>
         </div>

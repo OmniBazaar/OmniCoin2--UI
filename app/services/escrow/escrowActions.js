@@ -6,7 +6,9 @@ const {
   loadMyEscrowAgents,
   addOrUpdateAgents,
   setMyEscrowAgents,
-  removeMyEscrowAgents
+  removeMyEscrowAgents,
+  getEscrowSettings,
+  updateEscrowSettings
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
@@ -14,7 +16,9 @@ createActions({
   LOAD_MY_ESCROW_AGENTS: () => ({}),
   ADD_OR_UPDATE_AGENTS: (agents) => ({agents}),
   SET_MY_ESCROW_AGENTS: (agents) => ({agents}),
-  REMOVE_MY_ESCROW_AGENTS: (agents) => ({agents})
+  REMOVE_MY_ESCROW_AGENTS: (agents) => ({agents}),
+  GET_ESCROW_SETTINGS: (settings) => ({settings}),
+  UPDATE_ESCROW_SETTINGS: (settings) => ({settings})
 });
 
 export {
@@ -23,5 +27,7 @@ export {
   loadMyEscrowAgents,
   addOrUpdateAgents,
   setMyEscrowAgents,
-  removeMyEscrowAgents
+  removeMyEscrowAgents,
+  getEscrowSettings,
+  updateEscrowSettings
 };

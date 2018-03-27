@@ -5,7 +5,9 @@ import {
   loadMyEscrowAgents,
   addOrUpdateAgents,
   setMyEscrowAgents,
-  removeMyEscrowAgents
+  removeMyEscrowAgents,
+  getEscrowSettings,
+  updateEscrowSettings
 } from './escrowActions';
 import EscrowStorage from './escrowStorage';
 
@@ -43,6 +45,19 @@ const reducer = handleActions({
     return {
       ...state,
       myAgents
+    }
+  },
+  [getEscrowSettings](state) {
+      return  {
+        ...state,
+        settings: EscrowStorage.getEscrowSettings()
+      }
+  },
+  [updateEscrowSettings](state, {payload: {settings}}) {
+    EscrowStorage.updateEscrowSettings(settings);
+    return {
+      ...state,
+      settings: EscrowStorage.getEscrowSettings()
     }
   },
   LOAD_ESCROW_TRANSACTIONS_DONE: (state, action) => ({

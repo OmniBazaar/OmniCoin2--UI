@@ -1,4 +1,5 @@
 const key = 'selectedEscrows';
+const settingsKey = 'escrowSettings';
 export default class EscrowStorage {
   static getSelectedAgents() {
     const escrows = localStorage.getItem(key);
@@ -42,5 +43,21 @@ export default class EscrowStorage {
     });
     EscrowStorage.setSelectedAgents(afterRemove);
     return afterRemove;
+  }
+
+  static updateEscrowSettings(settings) {
+    localStorage.setItem(settingsKey, JSON.stringify(settings));
+  }
+
+  static getEscrowSettings() {
+    const settings = localStorage.getItem(settingsKey);
+    if (!settings) {
+      localStorage.setItem(settingsKey, JSON.stringify({
+        positiveRating: false,
+        transactionProcessor: false,
+        activeTransactionProcessor: false
+      }))
+    }
+    return JSON.parse(localStorage.getItem(settingsKey));
   }
 }
