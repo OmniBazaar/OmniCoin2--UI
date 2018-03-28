@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Button, Image } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
+
 
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
@@ -14,6 +16,7 @@ import {
   setPublisher,
   setTransactionProcessor,
   setEscrow,
+  updatePublicData
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -81,12 +84,17 @@ const messages = defineMessages({
     id: 'Settings.updateTransactionFee',
     defaultMessage: 'Update data transaction fee: '
   },
+  update: {
+    id: 'Settings.update',
+    defaultMessage: 'Update'
+  },
+  successUpdate: {
+    id: 'Settings.successUpdate',
+    defaultMessage: 'Updated successfully'
+  }
 });
 
 class PublicData extends Component {
-  static updatePublicData() {
-    console.log('Update data');
-  }
 
   constructor(props) {
     super(props);
@@ -95,7 +103,15 @@ class PublicData extends Component {
     this.togglePublisher = this.togglePublisher.bind(this);
     this.toggleTransactionProcessor = this.toggleTransactionProcessor.bind(this);
     this.toggleEscrow = this.toggleEscrow.bind(this);
+    this.updatePublicData = this.updatePublicData.bind(this);
   }
+
+  updatePublicData() {
+    const { formatMessage } = this.props.intl;
+    this.props.accountSettingsActions.updatePublicData();
+    toastr.success(formatMessage(messages.update), formatMessage(messages.successUpdate))
+  }
+
 
   toggleReferrer() {
     this.props.accountSettingsActions.setReferrer();
@@ -180,7 +196,7 @@ class PublicData extends Component {
           </div>
         </div>
         <div className="bottom-detail">
-          <Button content="UPDATE" onClick={PublicData.updatePublicData} className="button--green-bg" />
+          <Button content={formatMessage(messages.update)} onClick={this.updatePublicData} className="button--green-bg" />
           <div className="labels">
             <span>{formatMessage(messages.updateTransactionFee)}</span>
             <span className="amount">5 XOM</span>
@@ -224,6 +240,7 @@ export default connect(
       setPublisher,
       setTransactionProcessor,
       setEscrow,
+      updatePublicData
     }, dispatch),
   }),
 )(injectIntl(PublicData));

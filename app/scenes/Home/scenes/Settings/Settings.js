@@ -75,8 +75,8 @@ class Settings extends Component {
 
   sideMenu() {
     const { formatMessage } = this.props.intl;
-    const { username } = this.props.auth.currentUser;
-
+    const { username }  = this.props.auth.currentUser;
+    const { accountId } = this.props.auth;
     return (
       <div>
         <div className="info">
@@ -87,7 +87,7 @@ class Settings extends Component {
               <div className="badge-tag">{formatMessage(messages.registered)}</div>
             </div>
             <span className="username">{username || 'Username'}</span>
-            <span className="accountId">{formatMessage(messages.accountId)}: 234234</span>
+            <span className="accountId">{formatMessage(messages.accountId)}: {accountId}</span>
           </div>
         </div>
         <div className="info">

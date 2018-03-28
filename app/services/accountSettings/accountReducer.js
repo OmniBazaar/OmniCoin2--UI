@@ -16,6 +16,7 @@ import {
   setRescan,
   getVotes,
   sortVotesData,
+  updatePublicData,
 } from './accountActions';
 
 const defaultState = {
@@ -87,6 +88,11 @@ const reducer = handleActions({
       detailSelected,
     };
   },
+  [updatePublicData](state, { payload: { }}) {
+    return {
+      ...state,
+    }
+  },
   [setRescan](state) {
     return {
       ...state,
@@ -100,6 +106,7 @@ const reducer = handleActions({
       recentTransactionsFiltered: recentTransactions,
     };
   },
+
   [filterData](state, { payload: { filterText } }) {
     const data = state.recentTransactions;
     const activePage = 1;

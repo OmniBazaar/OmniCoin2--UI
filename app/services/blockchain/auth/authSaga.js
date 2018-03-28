@@ -6,6 +6,7 @@ import {
   call
 } from 'redux-saga/effects';
 import { FetchChain } from 'omnibazaarjs/es';
+import {Apis} from "omnibazaarjs-ws";
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { faucetAddresses } from '../settings';
@@ -122,12 +123,16 @@ export function* signup(action) {
 }
 
 
-export function* accountLookup(action) {
-  const { username } = action.payload;
+export function* accountLookup({payload: {username}}) {
   try {
-    const account = yield FetchChain('getAccount', username);
-    yield put({ type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: true });
-  } catch (e) {
-    yield put({ type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: false });
+    const result = yield Apis.instance().db_api().exec("lookup_accounts", [username, 1]);
+    if (result && result[0][0] === username) {
+      console.log("RESULT FETCH", result[0][1]);
+      yield put({type: "ACCOUNT_LOOKUP_SUCCEEDED", accountId: result[0][1]});
+    } else {
+      yield put({type: "ACCOUNT_LOOKUP_FAILED", error: "Account not found"});
+    }
+  } catch(e) {
+    yield put({ type: "ACCOUNT_LOOKUP_FAILED", error: e});
   }
 }

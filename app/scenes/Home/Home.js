@@ -41,6 +41,7 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
+import { accountLookup } from '../../services/blockchain/auth/authActions';
 
 const iconSize = 20;
 
@@ -48,11 +49,18 @@ const iconSize = 20;
 class Home extends Component {
   state = { visible: true };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.connection.node && !this.props.connection.node) {
+      this.props.authActions.accountLookup(this.props.auth.currentUser.username);
+    }
+  }
+
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
+
 
 
   renderAccountSettings() {
@@ -188,6 +196,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
+    authActions: bindActionCreators({ accountLookup }, dispatch)
   })
 )(Home);
 

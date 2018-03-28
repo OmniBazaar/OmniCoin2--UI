@@ -13,6 +13,7 @@ import {
 
 const defaultState = {
   currentUser: null,
+  accountId: null,
   error: null,
   accountExists: false,
   loading: false,
@@ -99,9 +100,13 @@ const reducer = handleActions({
   }),
   ACCOUNT_LOOKUP_SUCCEEDED: (state, action) => ({
     ...state,
-    accountExists: action.result,
-    loading: false
+    accountExists: true,
+    loading: false,
+    accountId: action.accountId
   }),
+  ACCOUNT_LOOKUP_FAILED: (state, action) => ({
+    accountId: null
+  })
 }, defaultState);
 
 export default reducer;
