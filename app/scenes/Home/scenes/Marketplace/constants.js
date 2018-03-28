@@ -1,11 +1,12 @@
 const CategoriesTypes = Object.freeze({
-  FEATURED: 'featured',
-  MORE: 'More',
-  FOR_SALE: 'For sale',
-  SERVICES: 'Services',
-  JOBS: 'Jobs',
-  CRYPTO_BAZAAR: 'CrytoBazaar',
-  RENTALS: 'Rentals'
+  FEATURED: 'featuredListings',
+  MORE: 'more',
+  FOR_SALE: 'forSale',
+  SERVICES: 'services',
+  JOBS: 'jobs',
+  CRYPTO_BAZAAR: 'cryptoBazaar',
+  RENTALS: 'rentals',
+  ABOUT: 'about',
 });
 
 export { CategoriesTypes };

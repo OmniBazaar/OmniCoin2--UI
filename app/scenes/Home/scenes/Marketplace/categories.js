@@ -1,5 +1,44 @@
 import { defineMessages } from 'react-intl';
 
+const mainCategories = defineMessages({
+  featuredListings: {
+    id: 'Marketplace.featuredListings',
+    defaultMessage: 'Featured listings'
+  },
+  home: {
+    id: 'Marketplace.home',
+    defaultMessage: 'Home'
+  },
+  more: {
+    id: 'Marketplace.more',
+    defaultMessage: 'More'
+  },
+  about: {
+    id: 'Marketplace.about',
+    defaultMessage: 'About'
+  },
+  forSale: {
+    id: 'Marketplace.forSale',
+    defaultMessage: 'For Sale'
+  },
+  jobs: {
+    id: 'Marketplace.jobs',
+    defaultMessage: 'Jobs'
+  },
+  services: {
+    id: 'Marketplace.services',
+    defaultMessage: 'Services'
+  },
+  cryptoBazaar: {
+    id: 'Marketplace.cryptoBazaar',
+    defaultMessage: 'CryptoBazaar'
+  },
+  rentals: {
+    id: 'Marketplace.rentals',
+    defaultMessage: 'Rentals'
+  },
+});
+
 const saleCategories = defineMessages({
   antiques: {
     id: 'Marketplace.antiques',
@@ -280,7 +319,7 @@ const cryptoCategories = defineMessages({
   },
 });
 
-const communityCategories = defineMessages({
+const moreCategories = defineMessages({
   activities: {
     id: 'Marketplace.activities',
     defaultMessage: 'Activities'
@@ -336,10 +375,7 @@ const communityCategories = defineMessages({
   general: {
     id: 'Marketplace.general',
     defaultMessage: 'General'
-  }
-});
-
-const housingCategories = defineMessages({
+  },
   aptsHousing: {
     id: 'Marketplace.aptsHousing',
     defaultMessage: 'Apts / Housing'
@@ -375,10 +411,7 @@ const housingCategories = defineMessages({
   vacation: {
     id: 'Marketplace.vacation',
     defaultMessage: 'Vacation'
-  }
-});
-
-const gigsCategories = defineMessages({
+  },
   babySitting: {
     id: 'Marketplace.babySitting',
     defaultMessage: 'Baby Sitting'
@@ -425,7 +458,7 @@ const gigsCategories = defineMessages({
   },
 });
 
-const quickLinksCategories = defineMessages({
+const aboutCategories = defineMessages({
   home: {
     id: 'Marketplace.home',
     defaultMessage: 'Home'
@@ -446,9 +479,6 @@ const quickLinksCategories = defineMessages({
     id: 'Marketplace.downloads',
     defaultMessage: 'Downloads'
   },
-});
-
-const supportCategories = defineMessages({
   tutorialVideos: {
     id: 'Marketplace.tutorialVideos',
     defaultMessage: 'Tutorial Videos'
@@ -469,9 +499,6 @@ const supportCategories = defineMessages({
     id: 'Marketplace.contact',
     defaultMessage: 'Contact'
   },
-});
-
-const usefulLinksCategories = defineMessages({
   privacyPolicy: {
     id: 'Marketplace.privacyPolicy',
     defaultMessage: 'Privacy Policy'
@@ -514,15 +541,12 @@ const userMenu = defineMessages({
 });
 
 export {
+  mainCategories,
   saleCategories,
   servicesCategories,
   jobsCategories,
   cryptoCategories,
-  communityCategories,
-  housingCategories,
-  gigsCategories,
-  quickLinksCategories,
-  supportCategories,
-  usefulLinksCategories,
+  moreCategories,
+  aboutCategories,
   userMenu
 };

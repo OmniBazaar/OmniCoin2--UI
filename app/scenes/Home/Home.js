@@ -41,6 +41,7 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
+import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 
 const iconSize = 20;
 
@@ -74,6 +75,12 @@ class Home extends Component {
       );
     }
   }
+
+  setActiveCategory = () => {
+    if (this.props.menuActions.setActiveCategory) {
+      this.props.menuActions.setActiveCategory('Marketplace.home');
+    }
+  };
 
   render() {
     const { visible } = this.state;
@@ -114,7 +121,7 @@ class Home extends Component {
                     defaultMessage="Wallet"
                   />
                 </NavLink>
-                <NavLink to="/marketplace" activeClassName="active" className="menu-item">
+                <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
                   <Image src={MarketplaceIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.marketplace"
@@ -187,7 +194,11 @@ class Home extends Component {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
+    menuActions: bindActionCreators({
+      showSettingsModal,
+      showPreferencesModal,
+      setActiveCategory
+    }, dispatch),
   })
 )(Home);
 
@@ -203,7 +214,8 @@ Home.propTypes = {
   }),
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
-    showPreferencesModal: PropTypes.func
+    showPreferencesModal: PropTypes.func,
+    setActiveCategory: PropTypes.func
   })
 
 };
