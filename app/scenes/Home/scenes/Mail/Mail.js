@@ -284,7 +284,7 @@ class Mail extends Component {
             <div className="mail-items">
               {this._renderItems()}
             </div>
-            <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{ position: 'relative' }}>
+            <SplitPane split="vertical" minSize={defaultSize} style={{ position: 'relative' }} className="split-pane">
               <div className="mail-messages">
                 {this._renderMessages()}
               </div>

@@ -420,11 +420,86 @@
   right: 10px !important;
   margin: 0 !important;
 
-  &.orange {
+  &.for-sale {
+    border-bottom: 2px solid $primary-green !important;
+
+    .title {
+      color: $primary-green;
+    }
+  }
+
+  &.services {
     border-bottom: 2px solid $orange !important;
 
     .title {
       color: $orange;
+    }
+  }
+
+  &.jobs {
+    border-bottom: 2px solid $primary-blue !important;
+
+    .title {
+      color: $primary-blue;
+    }
+  }
+
+  &.crypto {
+    border-bottom: 2px solid $red !important;
+
+    .title {
+      color: $red;
+    }
+  }
+
+  .menu-wrapper {
+    padding: 34px 15px;
+
+    .submenu {
+      display: flex;
+      flex-direction: column;
+      max-height: 180px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+
+      span {
+        line-height: 23px;
+        max-width: 130px;
+      }
+    }
+
+    &.more,
+    &.about {
+      display: flex;
+
+      .submenu {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        max-height: 250px;
+        margin-bottom: 5px;
+        flex: 1;
+
+        &.logo {
+          flex: 1.5;
+          margin-left: 20px;
+        }
+
+        .link {
+          color: $primary-blue;
+          font-weight: bold;
+          width: 200px;
+          text-align: center;
+          margin-top: 20px;
+          font-size: 17px;
+        }
+      }
+
+      .sub-categories {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
     }
   }
 
