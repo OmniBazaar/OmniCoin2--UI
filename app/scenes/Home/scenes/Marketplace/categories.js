@@ -486,6 +486,29 @@ const usefulLinksCategories = defineMessages({
   },
 });
 
+const userMenu = defineMessages({
+  recentSearches: {
+    id: 'Marketplace.recentSearches',
+    defaultMessage: 'Recent Searches'
+  },
+  myPurchases: {
+    id: 'Marketplace.myPurchases',
+    defaultMessage: 'My Purchases'
+  },
+  favoriteListings: {
+    id: 'Marketplace.favoriteListings',
+    defaultMessage: 'Favorite Listings'
+  },
+  newListingDefaults: {
+    id: 'Marketplace.newListingDefaults',
+    defaultMessage: 'New Listing Defaults'
+  },
+  resyncWithServer: {
+    id: 'Marketplace.resyncWithServer',
+    defaultMessage: 'Resync with Server'
+  },
+});
+
 export {
   saleCategories,
   servicesCategories,
@@ -496,5 +519,6 @@ export {
   gigsCategories,
   quickLinksCategories,
   supportCategories,
-  usefulLinksCategories
+  usefulLinksCategories,
+  userMenu
 };

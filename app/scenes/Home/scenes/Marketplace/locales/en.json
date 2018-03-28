@@ -139,5 +139,10 @@
   "Marketplace.privacyPolicy": "Privacy Policy",
   "Marketplace.termsOfUse": "Terms of Use",
   "Marketplace.webWallet": "Web Wallet",
-  "Marketplace.ominCoinExplorer": "OmniCoin Explorer"
+  "Marketplace.ominCoinExplorer": "OmniCoin Explorer",
+  "Marketplace.recentSearches": "Recent Searches",
+  "Marketplace.myPurchases": "My Purchases",
+  "Marketplace.favoriteListings": "Favorite Listings",
+  "Marketplace.newListingDefaults": "New Listing Defaults",
+  "Marketplace.resyncWithServer": "Resync with Server"
 }

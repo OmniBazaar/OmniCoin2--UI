@@ -26,7 +26,8 @@ import {
   gigsCategories,
   quickLinksCategories,
   supportCategories,
-  usefulLinksCategories
+  usefulLinksCategories,
+  userMenu
 } from '../../categories';
 
 const logoWidth = 200;
@@ -392,6 +393,29 @@ class Menu extends Component {
     );
   }
 
+  renderUserMenu() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Popup
+        trigger={<Image src={UserIcon} width={iconSizeBig} height={iconSizeBig} />}
+        hoverable
+        basic
+        on="click"
+        position="bottom center"
+        wide="very"
+        hideOnScroll
+        className="user-menu"
+      >
+        <div className="link-menu">{formatMessage(userMenu.recentSearches)}</div>
+        <div className="link-menu">{formatMessage(userMenu.myPurchases)}</div>
+        <div className="link-menu">{formatMessage(userMenu.favoriteListings)}</div>
+        <div className="link-menu">{formatMessage(userMenu.newListingDefaults)}</div>
+        <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
+      </Popup>
+    );
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
 
@@ -412,7 +436,7 @@ class Menu extends Component {
             {formatMessage(messages.addListing)}
           </Button>
           <Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />
-          <Image src={UserIcon} width={iconSizeBig} height={iconSizeBig} />
+          {this.renderUserMenu()}
         </div>
       </div>
     );

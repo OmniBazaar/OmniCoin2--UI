@@ -79,6 +79,7 @@
 
         img {
           margin-right: 10px;
+          cursor: pointer;
         }
       }
     }
@@ -506,5 +507,12 @@
   .title {
     font-size: 18px;
     margin-bottom: 10px;
+  }
+}
+
+.user-menu {
+  .link-menu {
+    line-height: 30px;
+    cursor: pointer;
   }
 }
