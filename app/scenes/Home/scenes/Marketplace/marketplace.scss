@@ -456,6 +456,7 @@
   .menu-wrapper {
     padding: 34px 15px;
 
+
     .submenu {
       display: flex;
       flex-direction: column;
@@ -466,6 +467,23 @@
       span {
         line-height: 23px;
         max-width: 130px;
+        cursor: pointer;
+
+        &:hover {
+          color: $primary-blue;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        a.menu-item {
+          color: $dark-gray-2;
+
+          &:hover {
+            color: $primary-blue;
+          }
+        }
       }
     }
 
@@ -514,5 +532,17 @@
   .link-menu {
     line-height: 30px;
     cursor: pointer;
+  }
+}
+
+li {
+  .menu-item {
+    color: $third-white;
+  }
+
+  span {
+    &:focus {
+      outline: none;
+    }
   }
 }

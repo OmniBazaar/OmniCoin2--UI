@@ -332,6 +332,10 @@ const communityCategories = defineMessages({
   volunteers: {
     id: 'Marketplace.volunteers',
     defaultMessage: 'Volunteers'
+  },
+  general: {
+    id: 'Marketplace.general',
+    defaultMessage: 'General'
   }
 });
 

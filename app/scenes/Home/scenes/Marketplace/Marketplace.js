@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { NavLink } from 'react-router-dom';
 
 import OverviewIcon from './images/tile-overview.svg';
 import VersatilityIcon from './images/tile-versatility.svg';
@@ -33,6 +32,7 @@ import {
   getRentalsList,
   getServicesList,
   getCryptoBazaarList,
+  setActiveCategory
 } from '../../../../services/marketplace/marketplaceActions';
 
 import './marketplace.scss';
@@ -752,8 +752,10 @@ class Marketplace extends Component {
    * todo:
    * onClick SEE ALL, open view with all results for that category
    */
-  seeAll = (listType) => {
-    console.log(listType);
+  viewCategory = (categoryId) => {
+    if (this.props.marketplaceActions.setActiveCategory) {
+      this.props.marketplaceActions.setActiveCategory(categoryId);
+    }
   };
 
   renderListItems(type, title, itemsList) {
@@ -767,9 +769,11 @@ class Marketplace extends Component {
       <div className="list-container">
         <div className="top-detail">
           <span className="heading">{title}</span>
-          <NavLink to={{ pathname: '/category-listing', type }} activeClassName="active" className="menu-item">
-            <Button content={formatMessage(messages.seeAll)} className="button--blue" />
-          </NavLink>
+          <Button
+            onClick={() => this.viewCategory(type)}
+            content={formatMessage(messages.seeAll)}
+            className="button--blue"
+          />
         </div>
         <div className="items">
           {this.listItems(itemsList, maxDisplay)}
@@ -794,14 +798,22 @@ class Marketplace extends Component {
         <span className="title">{formatMessage(messages.getOmniCoins)}</span>
         <span className="description">{formatMessage(messages.getOmniCoinsText)}</span>
         <div>
-          <Button content={formatMessage(messages.exchangeOne)} className="button--secondary" onClick={() => this.onClickExchangeOne()} />
-          <Button content={formatMessage(messages.exchangeTwo)} className="button--secondary" onClick={() => this.onClickExchangeTwo()} />
+          <Button
+            content={formatMessage(messages.exchangeOne)}
+            className="button--secondary"
+            onClick={() => this.onClickExchangeOne()}
+          />
+          <Button
+            content={formatMessage(messages.exchangeTwo)}
+            className="button--secondary"
+            onClick={() => this.onClickExchangeTwo()}
+          />
         </div>
       </div>
     );
   }
 
-  render() {
+  renderMarketHome() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
 
@@ -852,6 +864,32 @@ class Marketplace extends Component {
       </div>
     );
   }
+
+  renderCategoryListing() {
+    const { props } = this;
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="marketplace-container">
+        <div className="header">
+          <Menu />
+        </div>
+        <div className="body">
+          ACTIVE CATEGORY: {props.marketplace.activeCategory}
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    const { props } = this;
+
+    if (props.marketplace.activeCategory === messages.home.id) {
+      return this.renderMarketHome();
+    }
+
+    return this.renderCategoryListing();
+  }
 }
 
 Marketplace.propTypes = {
@@ -883,6 +921,7 @@ export default connect(
       getRentalsList,
       getServicesList,
       getCryptoBazaarList,
+      setActiveCategory
     }, dispatch),
   }),
 )(injectIntl(Marketplace));

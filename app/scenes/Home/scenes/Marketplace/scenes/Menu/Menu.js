@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Image, Icon, Popup } from 'semantic-ui-react';
+import { Button, Image, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -14,7 +15,7 @@ import UserHoverIcon from '../../images/btn-user-menu-hover.svg';
 import UserPressIcon from '../../images/btn-user-menu-press.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
 
-import { CategoriesTypes } from '../../constants';
+import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
 
 import {
   saleCategories,
@@ -98,11 +99,41 @@ const messages = defineMessages({
 });
 
 class Menu extends Component {
-  static menuTitle(title) {
+  menuTitle(category) {
+    const { props } = this;
+    const { formatMessage } = this.props.intl;
+    const title = formatMessage(category);
+    const optionMenuClass = classNames({
+      active: props.marketplace.parentCategory === category.id
+    });
+
     return (
-      <li>{title}</li>
+      <li className={optionMenuClass}>{title}</li>
     );
   }
+
+  renderOption(category, parentCategory) {
+    const { formatMessage } = this.props.intl;
+    const type = category.id;
+    const parent = parentCategory ? parentCategory.id : null;
+
+    return (
+      <span
+        onClick={() => this.viewCategory(type, parent)}
+        onKeyDown={() => this.viewCategory(type, parent)}
+        tabIndex={0}
+        role="link"
+      >
+        {formatMessage(category)}
+      </span>
+    );
+  }
+
+  viewCategory = (categoryId, parent) => {
+    if (this.props.marketplaceActions.setActiveCategory) {
+      this.props.marketplaceActions.setActiveCategory(categoryId, parent);
+    }
+  };
 
   renderForSaleSubMenu() {
     const { formatMessage } = this.props.intl;
@@ -110,10 +141,10 @@ class Menu extends Component {
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.forSale)}
         hoverable
         basic
-        on="click"
+        on="hover"
         position="bottom center"
         wide="very"
         hideOnScroll
@@ -122,31 +153,31 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            <span>{formatMessage(saleCategories.antiques)}</span>
-            <span>{formatMessage(saleCategories.appliances)}</span>
-            <span>{formatMessage(saleCategories.artsCrafts)}</span>
-            <span>{formatMessage(saleCategories.babyChild)}</span>
-            <span>{formatMessage(saleCategories.barter)}</span>
-            <span>{formatMessage(saleCategories.beautyHealth)}</span>
-            <span>{formatMessage(saleCategories.bikes)}</span>
-            <span>{formatMessage(saleCategories.boats)}</span>
-            <span>{formatMessage(saleCategories.books)}</span>
-            <span>{formatMessage(saleCategories.business)}</span>
-            <span>{formatMessage(saleCategories.carsTrucks)}</span>
-            <span>{formatMessage(saleCategories.cdDvd)}</span>
-            <span>{formatMessage(saleCategories.farmGarden)}</span>
-            <span>{formatMessage(saleCategories.free)}</span>
-            <span>{formatMessage(saleCategories.furniture)}</span>
-            <span>{formatMessage(saleCategories.garageSale)}</span>
-            <span>{formatMessage(saleCategories.general)}</span>
-            <span>{formatMessage(saleCategories.heavyEquip)}</span>
-            <span>{formatMessage(saleCategories.household)}</span>
-            <span>{formatMessage(saleCategories.jewelry)}</span>
-            <span>{formatMessage(saleCategories.materials)}</span>
-            <span>{formatMessage(saleCategories.motorcycles)}</span>
-            <span>{formatMessage(saleCategories.musicalInstruments)}</span>
-            <span>{formatMessage(saleCategories.photoVideo)}</span>
-            <span>{formatMessage(saleCategories.rvCampers)}</span>
+            {this.renderOption(saleCategories.antiques, messages.forSale)}
+            {this.renderOption(saleCategories.appliances, messages.forSale)}
+            {this.renderOption(saleCategories.artsCrafts, messages.forSale)}
+            {this.renderOption(saleCategories.babyChild, messages.forSale)}
+            {this.renderOption(saleCategories.barter, messages.forSale)}
+            {this.renderOption(saleCategories.beautyHealth, messages.forSale)}
+            {this.renderOption(saleCategories.bikes, messages.forSale)}
+            {this.renderOption(saleCategories.boats, messages.forSale)}
+            {this.renderOption(saleCategories.books, messages.forSale)}
+            {this.renderOption(saleCategories.business, messages.forSale)}
+            {this.renderOption(saleCategories.carsTrucks, messages.forSale)}
+            {this.renderOption(saleCategories.cdDvd, messages.forSale)}
+            {this.renderOption(saleCategories.farmGarden, messages.forSale)}
+            {this.renderOption(saleCategories.free, messages.forSale)}
+            {this.renderOption(saleCategories.furniture, messages.forSale)}
+            {this.renderOption(saleCategories.garageSale, messages.forSale)}
+            {this.renderOption(saleCategories.general, messages.forSale)}
+            {this.renderOption(saleCategories.heavyEquip, messages.forSale)}
+            {this.renderOption(saleCategories.household, messages.forSale)}
+            {this.renderOption(saleCategories.jewelry, messages.forSale)}
+            {this.renderOption(saleCategories.materials, messages.forSale)}
+            {this.renderOption(saleCategories.motorcycles, messages.forSale)}
+            {this.renderOption(saleCategories.musicalInstruments, messages.forSale)}
+            {this.renderOption(saleCategories.photoVideo, messages.forSale)}
+            {this.renderOption(saleCategories.rvCampers, messages.forSale)}
           </div>
         </div>
       </Popup>
@@ -159,7 +190,7 @@ class Menu extends Component {
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.services)}
         hoverable
         basic
         on="click"
@@ -171,25 +202,25 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            <span>{formatMessage(servicesCategories.automotive)}</span>
-            <span>{formatMessage(servicesCategories.beautyPersonal)}</span>
-            <span>{formatMessage(servicesCategories.computerIT)}</span>
-            <span>{formatMessage(servicesCategories.creative)}</span>
-            <span>{formatMessage(servicesCategories.dental)}</span>
-            <span>{formatMessage(servicesCategories.eventMgmt)}</span>
-            <span>{formatMessage(servicesCategories.farmGarden)}</span>
-            <span>{formatMessage(servicesCategories.financial)}</span>
-            <span>{formatMessage(servicesCategories.healthCare)}</span>
-            <span>{formatMessage(servicesCategories.laborConstruction)}</span>
-            <span>{formatMessage(servicesCategories.legal)}</span>
-            <span>{formatMessage(servicesCategories.lessonsCoaching)}</span>
-            <span>{formatMessage(servicesCategories.marine)}</span>
-            <span>{formatMessage(servicesCategories.realState)}</span>
-            <span>{formatMessage(servicesCategories.skilledTrades)}</span>
-            <span>{formatMessage(servicesCategories.smallBusiness)}</span>
-            <span>{formatMessage(servicesCategories.therapeutic)}</span>
-            <span>{formatMessage(servicesCategories.travelVacation)}</span>
-            <span>{formatMessage(servicesCategories.writingEditing)}</span>
+            {this.renderOption(servicesCategories.automotive, messages.services)}
+            {this.renderOption(servicesCategories.beautyPersonal, messages.services)}
+            {this.renderOption(servicesCategories.computerIT, messages.services)}
+            {this.renderOption(servicesCategories.creative, messages.services)}
+            {this.renderOption(servicesCategories.dental, messages.services)}
+            {this.renderOption(servicesCategories.eventMgmt, messages.services)}
+            {this.renderOption(servicesCategories.farmGarden, messages.services)}
+            {this.renderOption(servicesCategories.financial, messages.services)}
+            {this.renderOption(servicesCategories.healthCare, messages.services)}
+            {this.renderOption(servicesCategories.laborConstruction, messages.services)}
+            {this.renderOption(servicesCategories.legal, messages.services)}
+            {this.renderOption(servicesCategories.lessonsCoaching, messages.services)}
+            {this.renderOption(servicesCategories.marine, messages.services)}
+            {this.renderOption(servicesCategories.realState, messages.services)}
+            {this.renderOption(servicesCategories.skilledTrades, messages.services)}
+            {this.renderOption(servicesCategories.smallBusiness, messages.services)}
+            {this.renderOption(servicesCategories.therapeutic, messages.services)}
+            {this.renderOption(servicesCategories.travelVacation, messages.services)}
+            {this.renderOption(servicesCategories.writingEditing, messages.services)}
           </div>
         </div>
       </Popup>
@@ -202,7 +233,7 @@ class Menu extends Component {
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.jobs)}
         hoverable
         basic
         on="click"
@@ -214,22 +245,22 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            <span>{formatMessage(jobsCategories.accounting)}</span>
-            <span>{formatMessage(jobsCategories.adminOffice)}</span>
-            <span>{formatMessage(jobsCategories.architect)}</span>
-            <span>{formatMessage(jobsCategories.artMediaDesign)}</span>
-            <span>{formatMessage(jobsCategories.aerospace)}</span>
-            <span>{formatMessage(jobsCategories.businessManagement)}</span>
-            <span>{formatMessage(jobsCategories.customerService)}</span>
-            <span>{formatMessage(jobsCategories.education)}</span>
-            <span>{formatMessage(jobsCategories.foodBev)}</span>
-            <span>{formatMessage(jobsCategories.generalLabor)}</span>
-            <span>{formatMessage(jobsCategories.government)}</span>
-            <span>{formatMessage(jobsCategories.humanResources)}</span>
-            <span>{formatMessage(jobsCategories.itSoftware)}</span>
-            <span>{formatMessage(jobsCategories.legalParalegal)}</span>
-            <span>{formatMessage(jobsCategories.manufacturing)}</span>
-            <span>{formatMessage(jobsCategories.salesMarketing)}</span>
+            {this.renderOption(jobsCategories.accounting, messages.jobs)}
+            {this.renderOption(jobsCategories.adminOffice, messages.jobs)}
+            {this.renderOption(jobsCategories.architect, messages.jobs)}
+            {this.renderOption(jobsCategories.artMediaDesign, messages.jobs)}
+            {this.renderOption(jobsCategories.aerospace, messages.jobs)}
+            {this.renderOption(jobsCategories.businessManagement, messages.jobs)}
+            {this.renderOption(jobsCategories.customerService, messages.jobs)}
+            {this.renderOption(jobsCategories.education, messages.jobs)}
+            {this.renderOption(jobsCategories.foodBev, messages.jobs)}
+            {this.renderOption(jobsCategories.generalLabor, messages.jobs)}
+            {this.renderOption(jobsCategories.government, messages.jobs)}
+            {this.renderOption(jobsCategories.humanResources, messages.jobs)}
+            {this.renderOption(jobsCategories.itSoftware, messages.jobs)}
+            {this.renderOption(jobsCategories.legalParalegal, messages.jobs)}
+            {this.renderOption(jobsCategories.manufacturing, messages.jobs)}
+            {this.renderOption(jobsCategories.salesMarketing, messages.jobs)}
           </div>
         </div>
       </Popup>
@@ -242,7 +273,7 @@ class Menu extends Component {
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.cryptoBazaar)}
         hoverable
         basic
         on="click"
@@ -254,13 +285,13 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            <span>{formatMessage(cryptoCategories.localOmniCoin)}</span>
-            <span>{formatMessage(cryptoCategories.localBitCoin)}</span>
-            <span>{formatMessage(cryptoCategories.localEutherium)}</span>
-            <span>{formatMessage(cryptoCategories.localMonero)}</span>
-            <span>{formatMessage(cryptoCategories.localOther)}</span>
-            <span>{formatMessage(cryptoCategories.omniCoinBitCoin)}</span>
-            <span>{formatMessage(cryptoCategories.omniCoinOther)}</span>
+            {this.renderOption(cryptoCategories.localOmniCoin, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.localBitCoin, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.localEutherium, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.localMonero, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.localOther, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.omniCoinBitCoin, messages.cryptoBazaar)}
+            {this.renderOption(cryptoCategories.omniCoinOther, messages.cryptoBazaar)}
           </div>
         </div>
       </Popup>
@@ -269,11 +300,10 @@ class Menu extends Component {
 
   renderMoreSubMenu() {
     const { formatMessage } = this.props.intl;
-    const categoryTitle = formatMessage(messages.more);
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.more)}
         hoverable
         basic
         on="click"
@@ -286,50 +316,50 @@ class Menu extends Component {
           <div className="submenu">
             <p className="title">{formatMessage(messages.community)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(communityCategories.activities)}</span>
-              <span>{formatMessage(communityCategories.arts)}</span>
-              <span>{formatMessage(communityCategories.childCare)}</span>
-              <span>{formatMessage(communityCategories.classes)}</span>
-              <span>{formatMessage(communityCategories.events)}</span>
-              <span>{formatMessage(saleCategories.general)}</span>
-              <span>{formatMessage(communityCategories.groups)}</span>
-              <span>{formatMessage(communityCategories.localNews)}</span>
-              <span>{formatMessage(communityCategories.lostFound)}</span>
-              <span>{formatMessage(communityCategories.music)}</span>
-              <span>{formatMessage(communityCategories.pets)}</span>
-              <span>{formatMessage(communityCategories.politics)}</span>
-              <span>{formatMessage(communityCategories.ridesharing)}</span>
-              <span>{formatMessage(communityCategories.volunteers)}</span>
+              {this.renderOption(communityCategories.activities, messages.more)}
+              {this.renderOption(communityCategories.arts, messages.more)}
+              {this.renderOption(communityCategories.childCare, messages.more)}
+              {this.renderOption(communityCategories.classes, messages.more)}
+              {this.renderOption(communityCategories.events, messages.more)}
+              {this.renderOption(communityCategories.general, messages.more)}
+              {this.renderOption(communityCategories.groups, messages.more)}
+              {this.renderOption(communityCategories.localNews, messages.more)}
+              {this.renderOption(communityCategories.lostFound, messages.more)}
+              {this.renderOption(communityCategories.music, messages.more)}
+              {this.renderOption(communityCategories.pets, messages.more)}
+              {this.renderOption(communityCategories.politics, messages.more)}
+              {this.renderOption(communityCategories.ridesharing, messages.more)}
+              {this.renderOption(communityCategories.volunteers, messages.more)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.housing)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(housingCategories.aptsHousing)}</span>
-              <span>{formatMessage(housingCategories.housingSwap)}</span>
-              <span>{formatMessage(housingCategories.housingWanted)}</span>
-              <span>{formatMessage(housingCategories.officeCommercial)}</span>
-              <span>{formatMessage(housingCategories.realEstateSale)}</span>
-              <span>{formatMessage(housingCategories.roomsToShare)}</span>
-              <span>{formatMessage(housingCategories.roomWanted)}</span>
-              <span>{formatMessage(housingCategories.subletsTemporary)}</span>
-              <span>{formatMessage(housingCategories.vacation)}</span>
+              {this.renderOption(housingCategories.aptsHousing, messages.more)}
+              {this.renderOption(housingCategories.housingSwap, messages.more)}
+              {this.renderOption(housingCategories.housingWanted, messages.more)}
+              {this.renderOption(housingCategories.officeCommercial, messages.more)}
+              {this.renderOption(housingCategories.realEstateSale, messages.more)}
+              {this.renderOption(housingCategories.roomsToShare, messages.more)}
+              {this.renderOption(housingCategories.roomWanted, messages.more)}
+              {this.renderOption(housingCategories.subletsTemporary, messages.more)}
+              {this.renderOption(housingCategories.vacation, messages.more)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.gigs)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(gigsCategories.babySitting)}</span>
-              <span>{formatMessage(gigsCategories.cleaning)}</span>
-              <span>{formatMessage(gigsCategories.crew)}</span>
-              <span>{formatMessage(gigsCategories.delivery)}</span>
-              <span>{formatMessage(gigsCategories.escort)}</span>
-              <span>{formatMessage(gigsCategories.houseSitting)}</span>
-              <span>{formatMessage(gigsCategories.handyman)}</span>
-              <span>{formatMessage(gigsCategories.massage)}</span>
-              <span>{formatMessage(gigsCategories.movingHauling)}</span>
-              <span>{formatMessage(gigsCategories.petCare)}</span>
-              <span>{formatMessage(gigsCategories.techSupport)}</span>
+              {this.renderOption(gigsCategories.babySitting, messages.more)}
+              {this.renderOption(gigsCategories.cleaning, messages.more)}
+              {this.renderOption(gigsCategories.crew, messages.more)}
+              {this.renderOption(gigsCategories.delivery, messages.more)}
+              {this.renderOption(gigsCategories.escort, messages.more)}
+              {this.renderOption(gigsCategories.houseSitting, messages.more)}
+              {this.renderOption(gigsCategories.handyman, messages.more)}
+              {this.renderOption(gigsCategories.massage, messages.more)}
+              {this.renderOption(gigsCategories.movingHauling, messages.more)}
+              {this.renderOption(gigsCategories.petCare, messages.more)}
+              {this.renderOption(gigsCategories.techSupport, messages.more)}
             </div>
           </div>
         </div>
@@ -339,11 +369,10 @@ class Menu extends Component {
 
   renderAboutSubMenu() {
     const { formatMessage } = this.props.intl;
-    const categoryTitle = formatMessage(messages.about);
 
     return (
       <Popup
-        trigger={Menu.menuTitle(categoryTitle)}
+        trigger={this.menuTitle(messages.about)}
         hoverable
         basic
         on="click"
@@ -362,30 +391,30 @@ class Menu extends Component {
           <div className="submenu">
             <p className="title">{formatMessage(messages.quickLinks)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(quickLinksCategories.home)}</span>
-              <span>{formatMessage(quickLinksCategories.features)}</span>
-              <span>{formatMessage(quickLinksCategories.theTeam)}</span>
-              <span>{formatMessage(quickLinksCategories.roadmap)}</span>
-              <span>{formatMessage(quickLinksCategories.downloads)}</span>
+              {this.renderOption(quickLinksCategories.home, messages.about)}
+              {this.renderOption(quickLinksCategories.features, messages.about)}
+              {this.renderOption(quickLinksCategories.theTeam, messages.about)}
+              {this.renderOption(quickLinksCategories.roadmap, messages.about)}
+              {this.renderOption(quickLinksCategories.downloads, messages.about)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.support)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(supportCategories.tutorialVideos)}</span>
-              <span>{formatMessage(supportCategories.community)}</span>
-              <span>{formatMessage(supportCategories.slack)}</span>
-              <span>{formatMessage(supportCategories.blog)}</span>
-              <span>{formatMessage(supportCategories.contact)}</span>
+              {this.renderOption(supportCategories.tutorialVideos, messages.about)}
+              {this.renderOption(supportCategories.community, messages.about)}
+              {this.renderOption(supportCategories.slack, messages.about)}
+              {this.renderOption(supportCategories.blog, messages.about)}
+              {this.renderOption(supportCategories.contact, messages.about)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.usefulLinks)}</p>
             <div className="sub-categories">
-              <span>{formatMessage(usefulLinksCategories.privacyPolicy)}</span>
-              <span>{formatMessage(usefulLinksCategories.termsOfUse)}</span>
-              <span>{formatMessage(usefulLinksCategories.webWallet)}</span>
-              <span>{formatMessage(usefulLinksCategories.ominCoinExplorer)}</span>
+              {this.renderOption(usefulLinksCategories.privacyPolicy, messages.about)}
+              {this.renderOption(usefulLinksCategories.termsOfUse, messages.about)}
+              {this.renderOption(usefulLinksCategories.webWallet, messages.about)}
+              {this.renderOption(usefulLinksCategories.ominCoinExplorer, messages.about)}
             </div>
           </div>
         </div>
@@ -417,12 +446,25 @@ class Menu extends Component {
   }
 
   render() {
+    const { props } = this;
     const { formatMessage } = this.props.intl;
+    const optionMenuClass = classNames({
+      active: !props.marketplace.parentCategory
+    });
 
     return (
       <div className="menu">
         <ul>
-          <li className="active">{formatMessage(messages.home)}</li>
+          <li className={optionMenuClass}>
+            <span
+              onClick={() => this.viewCategory(messages.home.id)}
+              onKeyDown={() => this.viewCategory(messages.home.id)}
+              tabIndex={0}
+              role="link"
+            >
+              {formatMessage(messages.home)}
+            </span>
+          </li>
           {this.renderForSaleSubMenu()}
           {this.renderServicesSubMenu()}
           {this.renderJobsSubMenu()}
@@ -444,6 +486,7 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
+  setActiveCategory: PropTypes.func,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -451,6 +494,14 @@ Menu.propTypes = {
 
 Menu.defaultProps = {
   intl: {},
+  setActiveCategory: () => {},
 };
 
-export default connect(state => ({ ...state.default }))(injectIntl(Menu));
+export default connect(
+  state => ({ ...state.default }),
+  (dispatch) => ({
+    marketplaceActions: bindActionCreators({
+      setActiveCategory,
+    }, dispatch),
+  }),
+)(injectIntl(Menu));

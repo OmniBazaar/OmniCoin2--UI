@@ -6,23 +6,18 @@ import {
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
-  getForSaleCategories,
-  getServicesCategories,
-  getJobsCategories,
-  getCryptoCategories
+  setActiveCategory
 } from './marketplaceActions';
 
 const defaultState = {
-  forSaleCategories: [],
-  servicesCategories: [],
-  jobsCategories: [],
-  cryptoCategories: [],
   featureList: [],
   forSaleList: [],
   servicesList: [],
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
+  activeCategory: 'Marketplace.home',
+  parentCategory: null
 };
 
 const reducer = handleActions({
@@ -62,28 +57,11 @@ const reducer = handleActions({
       cryptoBazaarList
     };
   },
-  [getForSaleCategories](state, { payload: { forSaleCategories } }) {
+  [setActiveCategory](state, { payload: { activeCategory, parentCategory } }) {
     return {
       ...state,
-      forSaleCategories
-    };
-  },
-  [getServicesCategories](state, { payload: { servicesCategories } }) {
-    return {
-      ...state,
-      servicesCategories
-    };
-  },
-  [getJobsCategories](state, { payload: { jobsCategories } }) {
-    return {
-      ...state,
-      jobsCategories
-    };
-  },
-  [getCryptoCategories](state, { payload: { cryptoCategories } }) {
-    return {
-      ...state,
-      cryptoCategories
+      activeCategory,
+      parentCategory
     };
   }
 }, defaultState);
