@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import { NavLink } from 'react-router-dom';
 
 import OverviewIcon from './images/tile-overview.svg';
 import VersatilityIcon from './images/tile-versatility.svg';
@@ -135,6 +136,14 @@ const featureListings = [
     subCategory: 'Design',
     description: 'We need someone to make a design for an awesome application.',
     image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 13,
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
   },
 ];
 
@@ -502,9 +511,9 @@ class Marketplace extends Component {
     console.log('View detail');
   };
 
-  listItems(items) {
+  listItems(items, size) {
     return (
-      items.map((item) => {
+      items.slice(0, size).map((item) => {
         const style = { backgroundImage: `url(${item.image})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
@@ -739,21 +748,31 @@ class Marketplace extends Component {
     );
   }
 
+  /**
+   * todo:
+   * onClick SEE ALL, open view with all results for that category
+   */
   seeAll = (listType) => {
     console.log(listType);
   };
 
   renderListItems(type, title, itemsList) {
     const { formatMessage } = this.props.intl;
+    let maxDisplay = 6;
+    if (type === CategoriesTypes.FEATURED) {
+      maxDisplay = 12;
+    }
 
     return (
       <div className="list-container">
         <div className="top-detail">
           <span className="heading">{title}</span>
-          <Button content={formatMessage(messages.seeAll)} className="button--blue" onClick={() => this.seeAll(type)} />
+          <NavLink to={{ pathname: '/category-listing', type }} activeClassName="active" className="menu-item">
+            <Button content={formatMessage(messages.seeAll)} className="button--blue" />
+          </NavLink>
         </div>
         <div className="items">
-          {this.listItems(itemsList)}
+          {this.listItems(itemsList, maxDisplay)}
         </div>
       </div>
     );
@@ -790,7 +809,11 @@ class Marketplace extends Component {
       <div className="marketplace-container">
         {this.header()}
         <div className="body">
-          {this.renderListItems('featured', formatMessage(messages.featuredListings), props.marketplace.featureList)}
+          {this.renderListItems(
+            CategoriesTypes.FEATURED,
+            formatMessage(messages.featuredListings),
+            props.marketplace.featureList
+          )}
           <div className="categories-container">
             <div className="top-detail">
               <span className="heading">{formatMessage(messages.categories)}</span>
