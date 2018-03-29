@@ -267,10 +267,10 @@ PublicData.propTypes = {
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
-  }).required,
+  }).isRequired,
   walletActions: PropTypes.shape({
     getAccountBalance: PropTypes.func
-  }).required,
+  }).isRequired,
   account: PropTypes.shape({
     referrer: PropTypes.bool,
     publisher: PropTypes.bool,
@@ -288,7 +288,7 @@ PublicData.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     })
-  }).required
+  }).isRequired
 };
 
 PublicData.defaultProps = {

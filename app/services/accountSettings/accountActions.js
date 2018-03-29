@@ -16,6 +16,8 @@ const {
   getVotes,
   sortVotesData,
   updatePublicData,
+  getPrivateData,
+  updatePrivateData
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -32,6 +34,8 @@ const {
   GET_VOTES: (votes) => ({ votes }),
   SORT_VOTES_DATA: (sortVoteColumn) => ({ sortVoteColumn }),
   UPDATE_PUBLIC_DATA: () => ({}),
+  GET_PRIVATE_DATA: () => ({}),
+  UPDATE_PRIVATE_DATA: (data) => ({ data })
 });
 
 export {
@@ -50,4 +54,6 @@ export {
   getVotes,
   sortVotesData,
   updatePublicData,
+  getPrivateData,
+  updatePrivateData
 };

@@ -5,45 +5,54 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
 
-import { changePriority } from '../../../../../../services/accountSettings/accountActions';
+import { changePriority, getPrivateData, updatePrivateData } from '../../../../../../services/accountSettings/accountActions';
 
 import '../../settings.scss';
 import './private.scss';
 
 const messages = defineMessages({
   notPublisherYet: {
-    id: 'Settings.notPublisherYet',
+    id: 'PrivateData.notPublisherYet',
     defaultMessage: 'You are not a publisher yet.'
   },
   publisherNeedInfo: {
-    id: 'Settings.publisherNeedInfo',
+    id: 'PrivateData.publisherNeedInfo',
     defaultMessage: 'We need the following information so that we can connect you to a Publisher of listings that align with your interests.'
   },
   localArea: {
-    id: 'Settings.localArea',
+    id: 'PrivateData.localArea',
     defaultMessage: 'Local area.'
   },
   byCategoryType: {
-    id: 'Settings.byCategoryType',
+    id: 'PrivateData.byCategoryType',
     defaultMessage: 'By Category / Type'
   },
   publisherName: {
-    id: 'Settings.publisherName',
+    id: 'PrivateData.publisherName',
     defaultMessage: 'Publisher Name'
   },
   country: {
-    id: 'Settings.country',
+    id: 'PrivateData.country',
     defaultMessage: 'Country'
   },
   startTyping: {
-    id: 'Settings.startTyping',
+    id: 'PrivateData.startTyping',
     defaultMessage: 'Start typing...'
   },
   apply: {
-    id: 'Settings.apply',
+    id: 'PrivateData.apply',
     defaultMessage: 'APPLY'
   },
+  updateSuccess: {
+    id: 'PrivateData.updateSuccess',
+    defaultMessage: 'Successfully updated'
+  },
+  update: {
+    id: 'PrivateData.update',
+    defaultMessage: 'Update'
+  }
 });
 
 const PriorityTypes = Object.freeze({
@@ -57,12 +66,27 @@ class PrivateData extends Component {
     super(props);
 
     this.onChangePriority = this.onChangePriority.bind(this);
+    this.submitPrivateData = this.submitPrivateData.bind(this);
+    this.submitPublisherData = this.submitPublisherData.bind(this);
+    this.privateDataForm = this.privateDataForm.bind(this);
+    this.publisherForm = this.publisherForm.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.accountSettingsActions.getPrivateData();
+  }
+
+  submitPrivateData(values) {
+    const { formatMessage } = this.props.intl;
+    this.props.accountSettingsActions.updatePrivateData(values);
+    toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
   }
 
   privateDataForm() {
+    const { handleSubmit } = this.props;
     return (
       <div className="private-form">
-        <Form onSubmit={this.onSubmit} className="mail-form-container">
+        <Form onSubmit={handleSubmit(this.submitPrivateData)} className="mail-form-container">
           <div className="form-group">
             <span>Email</span>
             <Field
@@ -123,9 +147,14 @@ class PrivateData extends Component {
     this.props.accountSettingsActions.changePriority(priority);
   }
 
+  submitPublisherData(values) {
+    console.log(values);
+  }
+
   publisherForm() {
     const { priority } = this.props.account;
     const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
 
     return (
       <div className="publisher-form">
@@ -135,7 +164,7 @@ class PrivateData extends Component {
             {formatMessage(messages.publisherNeedInfo)}
           </p>
         </div>
-        <Form onSubmit={this.onSubmit} className="mail-form-container">
+        <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
           <div className="form-group">
             <span>Search Priority</span>
             <div className="field radios-container">
@@ -224,13 +253,16 @@ class PrivateData extends Component {
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
     changePriority: PropTypes.func,
-  }),
+    getPrivateData: PropTypes.func,
+    updatePrivateData: PropTypes.func
+  }).isRequired,
   account: PropTypes.shape({
     priority: PropTypes.string,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  handleSubmit: PropTypes.func.isRequired
 };
 
 PrivateData.defaultProps = {
@@ -241,10 +273,17 @@ PrivateData.defaultProps = {
 
 export default compose(
   connect(
-    state => ({ ...state.default }),
+    state => ({
+      ...state.default,
+      initialValues: {
+        ...state.default.account.privateData
+      }
+    }),
     (dispatch) => ({
       accountSettingsActions: bindActionCreators({
         changePriority,
+        getPrivateData,
+        updatePrivateData
       }, dispatch),
     }),
   ),

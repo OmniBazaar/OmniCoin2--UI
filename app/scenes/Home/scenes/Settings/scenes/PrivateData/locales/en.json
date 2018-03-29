@@ -1,10 +1,12 @@
 {
-  "Settings.notPublisherYet": "You are not a publisher yet.",
-  "Settings.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.",
-  "Settings.localArea": "Local Area",
-  "Settings.byCategoryType": "By Category / Type",
-  "Settings.publisherName": "Publisher Name",
-  "Settings.country": "Country",
-  "Settings.startTyping": "Start typing...",
-  "Settings.apply": "APPLY"
+  "PrivateData.notPublisherYet": "You are not a publisher yet.",
+  "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.",
+  "PrivateData.localArea": "Local Area",
+  "PrivateData.byCategoryType": "By Category / Type",
+  "PrivateData.publisherName": "Publisher Name",
+  "PrivateData.country": "Country",
+  "PrivateData.startTyping": "Start typing...",
+  "PrivateData.apply": "APPLY",
+  "PrivateData.updateSuccess": "Successfully updated",
+  "PrivateData.update": "Update"
 }

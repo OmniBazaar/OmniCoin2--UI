@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 
+import AccountSettingsStorage from './accountStorage';
 import {
   setReferrer,
   setPublisher,
@@ -17,6 +18,8 @@ import {
   getVotes,
   sortVotesData,
   updatePublicData,
+  getPrivateData,
+  updatePrivateData
 } from './accountActions';
 
 const defaultState = {
@@ -41,7 +44,8 @@ const defaultState = {
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
-  error: null
+  error: null,
+  privateData: AccountSettingsStorage.getPrivateData(),
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -95,6 +99,20 @@ const reducer = handleActions({
       ...state,
       loading: true,
       error: null
+    };
+  },
+  [getPrivateData](state, { payload: {} }) {
+    const data = AccountSettingsStorage.getPrivateData();
+    return {
+      ...state,
+      privateData: data,
+    };
+  },
+  [updatePrivateData](state, { payload: { data } }) {
+    AccountSettingsStorage.updatePrivateData(data);
+    return {
+      ...state,
+      privateData: data
     };
   },
   UPDATE_PUBLIC_DATA_SUCCEEDED: (state, action) => ({
@@ -239,7 +257,7 @@ const reducer = handleActions({
       sortVoteDirection,
       sortVoteColumn,
     };
-  },
+  }
 }, defaultState);
 
 export default reducer;
