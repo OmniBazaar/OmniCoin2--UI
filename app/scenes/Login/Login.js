@@ -6,14 +6,14 @@ import { bindActionCreators } from 'redux';
 import Background from '../../components/Background/Background';
 import LoginForm from './components/LoginForm/LoginForm';
 import './login.scss';
-import { accountLookup } from '../../services/blockchain/auth/authActions';
+import { getAccount } from '../../services/blockchain/auth/authActions';
 
 
 class Login extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.currentUser) {
       this.props.history.push('/');
-      this.props.authActions.accountLookup(nextProps.auth.currentUser.username);
+      this.props.authActions.getAccount(nextProps.auth.currentUser.username);
     }
   }
 
@@ -30,7 +30,7 @@ class Login extends Component {
 export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
-    authActions: bindActionCreators({ accountLookup }, dispatch),
+    authActions: bindActionCreators({ getAccount }, dispatch),
   })
 )(Login);
 

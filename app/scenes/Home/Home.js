@@ -41,7 +41,7 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
-import { accountLookup } from '../../services/blockchain/auth/authActions';
+import { getAccount } from '../../services/blockchain/auth/authActions';
 
 const iconSize = 20;
 
@@ -51,7 +51,7 @@ class Home extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
-      this.props.authActions.accountLookup(this.props.auth.currentUser.username);
+      this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
   }
 
@@ -60,7 +60,6 @@ class Home extends Component {
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
-
 
 
   renderAccountSettings() {
@@ -196,7 +195,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
-    authActions: bindActionCreators({ accountLookup }, dispatch)
+    authActions: bindActionCreators({ getAccount }, dispatch)
   })
 )(Home);
 
@@ -207,7 +206,6 @@ Home.propTypes = {
       password: PropTypes.string
     }),
     error: PropTypes.shape({}),
-    accountExists: PropTypes.bool,
     loading: PropTypes.bool
   }),
   menuActions: PropTypes.shape({

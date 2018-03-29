@@ -1,13 +1,12 @@
 import {
   put,
   takeLatest,
-  call,
   select,
   all,
-  takeEvery
 } from 'redux-saga/effects';
-import { TransactionBuilder, ChainStore } from 'omnibazaarjs/es';
+import { TransactionBuilder } from 'omnibazaarjs/es';
 
+import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 
 export function* accountSubscriber() {
   yield all([
@@ -16,12 +15,33 @@ export function* accountSubscriber() {
 }
 
 export function* updatePublicData() {
- // const state = (yield select()).default.account;
- console.log("State", yield select());
+  const { account } = (yield select()).default;
+  try {
+    yield updateAccount({
+      is_a_publisher: account.publisher,
+      is_an_escrow: account.escrow,
+      referrer: account.referrer
+    });
+    yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
+  } catch (e) {
+    yield put({ type: 'UPDATE_PUBLIC_DATA_FAILED', error: e });
+  }
 }
 
 
 export function* updateAccount(payload) {
-  const state = (yield select()).default;
+  const { currentUser, account } = (yield select()).default.auth;
+  const tr = new TransactionBuilder();
+  tr.add_type_operation(
+    'account_update',
+    {
+      account: account.get('id'),
+      ...payload
+    }
+  );
+  const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+  tr.add_signer(activeKey.privKey, activeKey.privKey.toPublicKey().toPublicKeyString('BTS'));
+  tr.set_required_fees();
+  return yield tr.broadcast();
 }
 

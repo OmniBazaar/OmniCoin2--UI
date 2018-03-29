@@ -207,7 +207,6 @@ LoginForm.propTypes = {
       password: PropTypes.string
     }),
     error: PropTypes.shape({}),
-    accountExists: PropTypes.bool,
     loading: PropTypes.bool
   }),
   authActions: PropTypes.shape({

@@ -2,11 +2,10 @@ import { defineMessages } from 'react-intl';
 import {
   put,
   takeEvery,
-  takeLatest,
-  call
+  call,
+  all
 } from 'redux-saga/effects';
-import { FetchChain } from 'omnibazaarjs/es';
-import {Apis} from "omnibazaarjs-ws";
+import { FetchChain, ChainStore } from 'omnibazaarjs/es';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { faucetAddresses } from '../settings';
@@ -25,18 +24,11 @@ const messages = defineMessages({
 
 
 export function* subscriber() {
-  yield takeEvery(
-    'LOGIN',
-    login
-  );
-  yield takeEvery(
-    'SIGNUP',
-    signup
-  );
-  yield takeLatest(
-    'ACCOUNT_LOOKUP',
-    accountLookup
-  );
+  yield all([
+    takeEvery('LOGIN', login),
+    takeEvery('SIGNUP', signup),
+    takeEvery('GET_ACCOUNT', getAccount)
+  ]);
 }
 
 export function* login(action) {
@@ -123,16 +115,12 @@ export function* signup(action) {
 }
 
 
-export function* accountLookup({payload: {username}}) {
+export function* getAccount({ payload: { username } }) {
   try {
-    const result = yield Apis.instance().db_api().exec("lookup_accounts", [username, 1]);
-    if (result && result[0][0] === username) {
-      console.log("RESULT FETCH", result[0][1]);
-      yield put({type: "ACCOUNT_LOOKUP_SUCCEEDED", accountId: result[0][1]});
-    } else {
-      yield put({type: "ACCOUNT_LOOKUP_FAILED", error: "Account not found"});
-    }
-  } catch(e) {
-    yield put({ type: "ACCOUNT_LOOKUP_FAILED", error: e});
+    ChainStore.resetCache();
+    const result = yield call(FetchChain, 'getAccount', username);
+    yield put({ type: 'GET_ACCOUNT_SUCCEEDED', account: result });
+  } catch (e) {
+    yield put({ type: 'GET_ACCOUNT_FAILED', error: messages.noAccount });
   }
 }
