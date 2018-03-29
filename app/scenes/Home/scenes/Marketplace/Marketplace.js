@@ -45,6 +45,7 @@ const iconSizeSmall = 12;
 const featureListings = [
   {
     id: 1,
+    date: '2018-01-05',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -53,6 +54,7 @@ const featureListings = [
   },
   {
     id: 2,
+    date: '2017-01-05',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -61,6 +63,7 @@ const featureListings = [
   },
   {
     id: 3,
+    date: '2017-11-05',
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -69,6 +72,7 @@ const featureListings = [
   },
   {
     id: 4,
+    date: '2018-03-05',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -77,6 +81,7 @@ const featureListings = [
   },
   {
     id: 5,
+    date: '2018-03-05',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -85,6 +90,7 @@ const featureListings = [
   },
   {
     id: 6,
+    date: '2018-02-05',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -93,6 +99,7 @@ const featureListings = [
   },
   {
     id: 7,
+    date: '2018-01-01',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -101,6 +108,7 @@ const featureListings = [
   },
   {
     id: 8,
+    date: '2018-02-02',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -109,6 +117,7 @@ const featureListings = [
   },
   {
     id: 9,
+    date: '2018-03-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -117,6 +126,7 @@ const featureListings = [
   },
   {
     id: 10,
+    date: '2018-02-02',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -125,6 +135,7 @@ const featureListings = [
   },
   {
     id: 11,
+    date: '2018-03-12',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -133,6 +144,7 @@ const featureListings = [
   },
   {
     id: 12,
+    date: '2018-01-22',
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -141,121 +153,16 @@ const featureListings = [
   },
   {
     id: 13,
+    date: '2018-02-16',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
     description: 'Beautiful brand new Ferrari car.',
     image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-];
-
-const forSaleListings = [
-  {
-    id: 1,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jewelry',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 2,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 3,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 4,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 5,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 6,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 7,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 8,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 9,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 10,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 11,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 12,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 13,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
   },
   {
     id: 14,
+    date: '2018-02-18',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -264,6 +171,7 @@ const forSaleListings = [
   },
   {
     id: 15,
+    date: '2018-03-19',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -272,6 +180,7 @@ const forSaleListings = [
   },
   {
     id: 16,
+    date: '2018-03-20',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -280,6 +189,7 @@ const forSaleListings = [
   },
   {
     id: 17,
+    date: '2018-03-21',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -288,6 +198,7 @@ const forSaleListings = [
   },
   {
     id: 18,
+    date: '2018-03-08',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -296,6 +207,7 @@ const forSaleListings = [
   },
   {
     id: 19,
+    date: '2018-03-08',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -304,6 +216,7 @@ const forSaleListings = [
   },
   {
     id: 20,
+    date: '2018-03-08',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -312,6 +225,7 @@ const forSaleListings = [
   },
   {
     id: 21,
+    date: '2018-03-08',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -320,6 +234,7 @@ const forSaleListings = [
   },
   {
     id: 22,
+    date: '2018-03-21',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -328,6 +243,7 @@ const forSaleListings = [
   },
   {
     id: 23,
+    date: '2018-03-21',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -336,6 +252,7 @@ const forSaleListings = [
   },
   {
     id: 24,
+    date: '2018-03-08',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -344,6 +261,7 @@ const forSaleListings = [
   },
   {
     id: 25,
+    date: '2018-03-21',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -352,6 +270,7 @@ const forSaleListings = [
   },
   {
     id: 26,
+    date: '2018-03-21',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -360,6 +279,7 @@ const forSaleListings = [
   },
   {
     id: 27,
+    date: '2018-03-08',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -368,6 +288,7 @@ const forSaleListings = [
   },
   {
     id: 28,
+    date: '2018-03-08',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -376,6 +297,7 @@ const forSaleListings = [
   },
   {
     id: 29,
+    date: '2018-03-21',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -384,6 +306,7 @@ const forSaleListings = [
   },
   {
     id: 30,
+    date: '2018-03-08',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -392,6 +315,7 @@ const forSaleListings = [
   },
   {
     id: 31,
+    date: '2018-03-21',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -400,6 +324,7 @@ const forSaleListings = [
   },
   {
     id: 32,
+    date: '2018-03-21',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -408,6 +333,307 @@ const forSaleListings = [
   },
   {
     id: 33,
+    date: '2018-03-08',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+];
+
+const forSaleListings = [
+  {
+    id: 1,
+    date: '2018-01-05',
+    title: 'Farco Jevellery',
+    category: 'For sale',
+    subCategory: 'Jewelry',
+    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
+    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
+  },
+  {
+    id: 2,
+    date: '2018-03-08',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 3,
+    date: '2018-03-08',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 4,
+    date: '2018-03-08',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 5,
+    date: '2018-03-21',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 6,
+    date: '2018-03-21',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 7,
+    date: '2018-01-15',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 8,
+    date: '2018-03-21',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 9,
+    date: '2018-03-21',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 10,
+    date: '2018-03-21',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 11,
+    date: '2018-03-21',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 12,
+    date: '2018-03-21',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 13,
+    date: '2018-02-12',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 14,
+    date: '2018-03-21',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 15,
+    date: '2018-03-11',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 16,
+    date: '2017-01-21',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 17,
+    date: '2018-03-21',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 18,
+    date: '2018-01-15',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 19,
+    date: '2018-01-15',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 20,
+    date: '2018-01-15',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 21,
+    date: '2018-01-05',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 22,
+    date: '2018-01-05',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 23,
+    date: '2018-03-21',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 24,
+    date: '2018-01-15',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 25,
+    date: '2018-01-05',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 26,
+    date: '2018-01-05',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 27,
+    date: '2018-01-15',
+    title: 'Suzuki Bandit 2000',
+    category: 'For sale',
+    subCategory: 'Motor Cycle',
+    description: 'Awesome bike.',
+    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
+  },
+  {
+    id: 28,
+    date: '2018-01-15',
+    title: 'UX Designer',
+    category: 'For sale',
+    subCategory: 'Design',
+    description: 'We need someone to make a design for an awesome application.',
+    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
+  },
+  {
+    id: 29,
+    date: '2018-01-15',
+    title: 'Mega Plumber',
+    category: 'For sale',
+    subCategory: 'Home',
+    description: 'We are looking for a plumber to work at our offices.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
+  },
+  {
+    id: 30,
+    date: '2018-01-15',
+    title: 'Lonely Star',
+    category: 'For sale',
+    subCategory: 'Others',
+    description: 'For sale this beautiful yacht.',
+    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
+  },
+  {
+    id: 31,
+    date: '2018-01-15',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 32,
+    date: '2018-01-15',
+    title: 'Ferrari',
+    category: 'For sale',
+    subCategory: 'Car',
+    description: 'Beautiful brand new Ferrari car.',
+    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
+  },
+  {
+    id: 33,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -416,6 +642,7 @@ const forSaleListings = [
   },
   {
     id: 34,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -424,6 +651,7 @@ const forSaleListings = [
   },
   {
     id: 35,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -432,6 +660,7 @@ const forSaleListings = [
   },
   {
     id: 36,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -440,6 +669,7 @@ const forSaleListings = [
   },
   {
     id: 37,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -448,6 +678,7 @@ const forSaleListings = [
   },
   {
     id: 38,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -456,6 +687,7 @@ const forSaleListings = [
   },
   {
     id: 39,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -464,6 +696,7 @@ const forSaleListings = [
   },
   {
     id: 40,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -472,6 +705,7 @@ const forSaleListings = [
   },
   {
     id: 41,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -480,6 +714,7 @@ const forSaleListings = [
   },
   {
     id: 42,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -488,6 +723,7 @@ const forSaleListings = [
   },
   {
     id: 43,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -496,6 +732,7 @@ const forSaleListings = [
   },
   {
     id: 44,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -504,6 +741,7 @@ const forSaleListings = [
   },
   {
     id: 45,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -512,6 +750,7 @@ const forSaleListings = [
   },
   {
     id: 46,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -520,6 +759,7 @@ const forSaleListings = [
   },
   {
     id: 47,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -528,6 +768,7 @@ const forSaleListings = [
   },
   {
     id: 48,
+    date: '2018-01-15',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jewelry',
@@ -536,6 +777,7 @@ const forSaleListings = [
   },
   {
     id: 49,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -544,6 +786,7 @@ const forSaleListings = [
   },
   {
     id: 50,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -552,6 +795,7 @@ const forSaleListings = [
   },
   {
     id: 51,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -560,6 +804,7 @@ const forSaleListings = [
   },
   {
     id: 52,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -568,6 +813,7 @@ const forSaleListings = [
   },
   {
     id: 53,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -576,6 +822,7 @@ const forSaleListings = [
   },
   {
     id: 54,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -584,6 +831,7 @@ const forSaleListings = [
   },
   {
     id: 55,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -592,6 +840,7 @@ const forSaleListings = [
   },
   {
     id: 56,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -600,6 +849,7 @@ const forSaleListings = [
   },
   {
     id: 57,
+    date: '2018-03-14',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -608,6 +858,7 @@ const forSaleListings = [
   },
   {
     id: 58,
+    date: '2018-02-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -616,6 +867,7 @@ const forSaleListings = [
   },
   {
     id: 59,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -624,6 +876,7 @@ const forSaleListings = [
   },
   {
     id: 60,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -632,6 +885,7 @@ const forSaleListings = [
   },
   {
     id: 61,
+    date: '2017-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -640,6 +894,7 @@ const forSaleListings = [
   },
   {
     id: 62,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -648,6 +903,7 @@ const forSaleListings = [
   },
   {
     id: 63,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -656,6 +912,7 @@ const forSaleListings = [
   },
   {
     id: 64,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -664,6 +921,7 @@ const forSaleListings = [
   },
   {
     id: 65,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -672,6 +930,7 @@ const forSaleListings = [
   },
   {
     id: 66,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -680,6 +939,7 @@ const forSaleListings = [
   },
   {
     id: 67,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -688,6 +948,7 @@ const forSaleListings = [
   },
   {
     id: 68,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -696,6 +957,7 @@ const forSaleListings = [
   },
   {
     id: 69,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -704,6 +966,7 @@ const forSaleListings = [
   },
   {
     id: 70,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -712,6 +975,7 @@ const forSaleListings = [
   },
   {
     id: 71,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -720,6 +984,7 @@ const forSaleListings = [
   },
   {
     id: 72,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -728,6 +993,7 @@ const forSaleListings = [
   },
   {
     id: 73,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -736,6 +1002,7 @@ const forSaleListings = [
   },
   {
     id: 74,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -744,6 +1011,7 @@ const forSaleListings = [
   },
   {
     id: 75,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -752,6 +1020,7 @@ const forSaleListings = [
   },
   {
     id: 76,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -760,6 +1029,7 @@ const forSaleListings = [
   },
   {
     id: 77,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -768,6 +1038,7 @@ const forSaleListings = [
   },
   {
     id: 78,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -776,6 +1047,7 @@ const forSaleListings = [
   },
   {
     id: 79,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -784,6 +1056,7 @@ const forSaleListings = [
   },
   {
     id: 80,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -792,6 +1065,7 @@ const forSaleListings = [
   },
   {
     id: 81,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -800,6 +1074,7 @@ const forSaleListings = [
   },
   {
     id: 82,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -808,6 +1083,7 @@ const forSaleListings = [
   },
   {
     id: 83,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -816,6 +1092,7 @@ const forSaleListings = [
   },
   {
     id: 84,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -824,6 +1101,7 @@ const forSaleListings = [
   },
   {
     id: 85,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -832,6 +1110,7 @@ const forSaleListings = [
   },
   {
     id: 86,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -840,6 +1119,7 @@ const forSaleListings = [
   },
   {
     id: 87,
+    date: '2018-01-14',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -848,6 +1128,7 @@ const forSaleListings = [
   },
   {
     id: 88,
+    date: '2018-01-12',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -856,6 +1137,7 @@ const forSaleListings = [
   },
   {
     id: 89,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -864,6 +1146,7 @@ const forSaleListings = [
   },
   {
     id: 90,
+    date: '2018-01-17',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -872,6 +1155,7 @@ const forSaleListings = [
   },
   {
     id: 91,
+    date: '2018-01-18',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -880,6 +1164,7 @@ const forSaleListings = [
   },
   {
     id: 92,
+    date: '2018-01-20',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -888,6 +1173,7 @@ const forSaleListings = [
   },
   {
     id: 93,
+    date: '2017-12-20',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -896,6 +1182,7 @@ const forSaleListings = [
   },
   {
     id: 94,
+    date: '2017-12-20',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -904,6 +1191,7 @@ const forSaleListings = [
   },
   {
     id: 95,
+    date: '2018-03-08',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -912,6 +1200,7 @@ const forSaleListings = [
   },
   {
     id: 96,
+    date: '2017-12-20',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -920,6 +1209,7 @@ const forSaleListings = [
   },
   {
     id: 97,
+    date: '2017-12-20',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -928,6 +1218,7 @@ const forSaleListings = [
   },
   {
     id: 98,
+    date: '2018-03-20',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -936,6 +1227,7 @@ const forSaleListings = [
   },
   {
     id: 99,
+    date: '2017-12-20',
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -944,6 +1236,7 @@ const forSaleListings = [
   },
   {
     id: 100,
+    date: '2018-03-20',
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -955,6 +1248,7 @@ const forSaleListings = [
 const jobsListings = [
   {
     id: 1,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -963,6 +1257,7 @@ const jobsListings = [
   },
   {
     id: 2,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -971,6 +1266,7 @@ const jobsListings = [
   },
   {
     id: 3,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -979,6 +1275,7 @@ const jobsListings = [
   },
   {
     id: 4,
+    date: '2018-01-15',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -987,6 +1284,7 @@ const jobsListings = [
   },
   {
     id: 5,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -995,6 +1293,7 @@ const jobsListings = [
   },
   {
     id: 6,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -1006,6 +1305,7 @@ const jobsListings = [
 const rentalsListings = [
   {
     id: 1,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1014,6 +1314,7 @@ const rentalsListings = [
   },
   {
     id: 2,
+    date: '2018-01-15',
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -1022,6 +1323,7 @@ const rentalsListings = [
   },
   {
     id: 3,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1030,6 +1332,7 @@ const rentalsListings = [
   },
   {
     id: 4,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1046,6 +1349,7 @@ const rentalsListings = [
   },
   {
     id: 6,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1057,6 +1361,7 @@ const rentalsListings = [
 const servicesListings = [
   {
     id: 5,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1065,6 +1370,7 @@ const servicesListings = [
   },
   {
     id: 6,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1073,6 +1379,7 @@ const servicesListings = [
   },
   {
     id: 7,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1081,6 +1388,7 @@ const servicesListings = [
   },
   {
     id: 8,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1089,6 +1397,7 @@ const servicesListings = [
   },
   {
     id: 9,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1097,6 +1406,7 @@ const servicesListings = [
   },
   {
     id: 10,
+    date: '2018-01-15',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -1108,6 +1418,7 @@ const servicesListings = [
 const cryptoBazaarListings = [
   {
     id: 6,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1116,6 +1427,7 @@ const cryptoBazaarListings = [
   },
   {
     id: 7,
+    date: '2018-01-15',
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1124,6 +1436,7 @@ const cryptoBazaarListings = [
   },
   {
     id: 8,
+    date: '2018-01-15',
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1132,6 +1445,7 @@ const cryptoBazaarListings = [
   },
   {
     id: 9,
+    date: '2018-01-15',
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1140,6 +1454,7 @@ const cryptoBazaarListings = [
   },
   {
     id: 10,
+    date: '2018-01-15',
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -1148,6 +1463,7 @@ const cryptoBazaarListings = [
   },
   {
     id: 11,
+    date: '2018-01-15',
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',

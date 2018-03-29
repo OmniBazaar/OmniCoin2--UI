@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Icon, Tab, Dropdown, Input } from 'semantic-ui-react';
 import Menu from '../Menu/Menu';
+import CategoryTable from '../CategoryTable/CategoryTable';
+import FeatureTable from '../FeatureTable/FeatureTable';
+import NewArrivalsTable from '../NewArrivalsTable/NewArrivalsTable';
 import {
   saleCategories,
   servicesCategories,
@@ -97,10 +100,30 @@ class CategoryListing extends Component {
     );
   }
 
+  filterList(listData, selectedTab) {
+    let result = listData;
+    switch (selectedTab) {
+      case CategoriesTypes.NEW_ARRIVALS:
+        result = listData.sort((a, b) => {
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.date) - new Date(a.date);
+        });
+        break;
+      default:
+        result = listData;
+    }
+
+    console.log(result);
+
+    return result;
+  }
+
   getCategoryData() {
     const {
       parentCategory,
       activeCategory,
+      featureListFiltered,
       forSaleList,
       servicesList,
       jobsList,
@@ -112,61 +135,48 @@ class CategoryListing extends Component {
       category = CategoryListing.getValue(parentCategory);
     }
 
+    let listData = forSaleList;
     switch (category) {
+      case CategoriesTypes.FEATURED:
+        listData = featureListFiltered;
+        break;
       case CategoriesTypes.FOR_SALE:
-        return forSaleList;
+        listData = forSaleList;
+        break;
       case CategoriesTypes.SERVICES:
-        return servicesList;
+        listData = servicesList;
+        break;
       case CategoriesTypes.JOBS:
-        return jobsList;
+        listData = jobsList;
+        break;
       case CategoriesTypes.CRYPTO_BAZAAR:
-        return cryptoBazaarList;
+        listData = cryptoBazaarList;
+        break;
       default:
-        return forSaleList;
+        listData = forSaleList;
+        break;
     }
+
+    // return this.filterList(listData, selectedTab);
+    return listData;
   }
 
-  getListing(type) {
-    const categoryList = this.getCategoryData();
+  getListingTable(selectedTab) {
+    const categoryList = this.getCategoryData(selectedTab);
+    const rowsPerPage = 3;
+    const columns = 6;
 
     return (
-      <div className="items">
-        {categoryList.map((item) => {
-          const style = { backgroundImage: `url(${item.image})` };
-          let { description } = item;
-          description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-
-          return (
-            <div key={`fl-item-${item.id}`} className="item">
-              <div
-                className="img-wrapper"
-                style={style}
-                onClick={this.onClickItem}
-                onKeyDown={this.onClickItem}
-                tabIndex={0}
-                role="link"
-              />
-              <span
-                className="title"
-                onClick={this.onClickItem}
-                role="link"
-                onKeyDown={this.onClickItem}
-                tabIndex={0}
-              >
-                {item.title}
-              </span>
-              <span className="subtitle">
-                {item.category}
-                <span>
-                  <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                </span>
-                {item.subCategory}
-              </span>
-              <span className="description">{description}</span>
-            </div>
-          );
-        })}
-      </div>
+      <CategoryTable
+        categoryData={categoryList}
+        rowsPerPage={rowsPerPage * columns}
+        tableProps={{
+          sortable: true,
+          compact: true,
+          basic: 'very',
+          size: 'small'
+        }}
+      />
     );
   }
 
@@ -179,19 +189,51 @@ class CategoryListing extends Component {
           panes={[
             {
               menuItem: 'Featured',
-              render: () => <Tab.Pane>{this.getListing('featured')}</Tab.Pane>,
+              render: () => {
+                const categoryList = this.getCategoryData();
+                return (
+                  <Tab.Pane>
+                    <FeatureTable
+                      categoryData={categoryList}
+                      rowsPerPage={3 * 6}
+                      tableProps={{
+                        sortable: false,
+                        compact: true,
+                        basic: 'very',
+                        size: 'small'
+                      }}
+                    />
+                  </Tab.Pane>
+                );
+              }
             },
             {
               menuItem: 'New Arrivals',
-              render: () => <Tab.Pane>{this.getListing('new')}</Tab.Pane>,
+              render: () => {
+                const categoryList = this.getCategoryData();
+                return (
+                  <Tab.Pane>
+                    <NewArrivalsTable
+                      categoryData={categoryList}
+                      rowsPerPage={3 * 6}
+                      tableProps={{
+                        sortable: false,
+                        compact: true,
+                        basic: 'very',
+                        size: 'small'
+                      }}
+                    />
+                  </Tab.Pane>
+                );
+              }
             },
             {
               menuItem: 'Lowest Price',
-              render: () => <Tab.Pane>{this.getListing('lowest')}</Tab.Pane>,
+              render: () => <Tab.Pane>{this.getListingTable('lowest')}</Tab.Pane>,
             },
             {
               menuItem: 'Highest Price',
-              render: () => <Tab.Pane>{this.getListing('highest')}</Tab.Pane>,
+              render: () => <Tab.Pane>{this.getListingTable('highest')}</Tab.Pane>,
             },
           ]}
         />
