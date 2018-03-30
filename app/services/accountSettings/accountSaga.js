@@ -24,6 +24,7 @@ export function* updatePublicData() {
     });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
+    console.log("ERR", e);
     yield put({ type: 'UPDATE_PUBLIC_DATA_FAILED', error: e });
   }
 }

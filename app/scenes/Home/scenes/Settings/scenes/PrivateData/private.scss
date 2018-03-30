@@ -1,19 +1,10 @@
 @import '../../../../../../styles/index';
 
 .private-data {
-  .field {
-    flex: 3;
+  .button--green-bg {
+    flex: 2 1 0;
+    margin-left: 0.45em;
   }
-
-  .submit-group {
-    margin-top: 20px;
-
-    button {
-      flex: 0.5;
-      margin-left: -5px;
-    }
-  }
-
   .publisher-form {
     margin-top: 20px;
 

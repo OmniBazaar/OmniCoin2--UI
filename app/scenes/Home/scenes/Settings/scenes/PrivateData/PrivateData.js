@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
 import { changePriority, getPrivateData, updatePrivateData } from '../../../../../../services/accountSettings/accountActions';
 
@@ -36,6 +37,10 @@ const messages = defineMessages({
   country: {
     id: 'PrivateData.country',
     defaultMessage: 'Country'
+  },
+  city: {
+    id: 'PrivateData.city',
+    defaultMessage: 'City'
   },
   startTyping: {
     id: 'PrivateData.startTyping',
@@ -72,9 +77,23 @@ class PrivateData extends Component {
     this.publisherForm = this.publisherForm.bind(this);
   }
 
+  state = {
+    country: '',
+    city: ''
+  };
+
   componentWillMount() {
     this.props.accountSettingsActions.getPrivateData();
   }
+
+  selectCountry(val) {
+    this.setState({ country: val });
+  }
+
+  selectCity(val) {
+    this.setState({ city: val });
+  }
+
 
   submitPrivateData(values) {
     const { formatMessage } = this.props.intl;
@@ -131,11 +150,10 @@ class PrivateData extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group submit-group">
+          <div className="form-group">
             <span />
-            <div className="field">
-              <Button type="submit" content="UPDATE" className="button--green-bg" />
-            </div>
+            <Button type="submit" content="UPDATE" className="button--green-bg" />
+            <div className="col-1" />
             <div className="col-1" />
           </div>
         </Form>
@@ -208,31 +226,25 @@ class PrivateData extends Component {
           </div>
           <div className="form-group">
             <span>{formatMessage(messages.country)}</span>
-            <Field
-              type="text"
-              name="country"
-              placeholder={formatMessage(messages.country)}
-              component="input"
-              className="textfield"
-            />
+            <CountryDropdown
+              value={this.state.country}
+              classes="ui dropdown textfield"
+              onChange={(val) => this.selectCountry(val)} />
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>City</span>
-            <Field
-              type="text"
-              name="city"
-              placeholder={formatMessage(messages.startTyping)}
-              component="input"
-              className="textfield"
-            />
+            <span>{formatMessage(messages.city)}</span>
+            <RegionDropdown
+              country={this.state.country}
+              value={this.state.city}
+              classes="ui dropdown textfield"
+              onChange={(val) => this.selectCity(val)} />
             <div className="col-1" />
           </div>
-          <div className="form-group submit-group">
+          <div className="form-group">
             <span />
-            <div className="field">
-              <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
-            </div>
+            <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
+            <div className="col-1" />
             <div className="col-1" />
           </div>
         </Form>
