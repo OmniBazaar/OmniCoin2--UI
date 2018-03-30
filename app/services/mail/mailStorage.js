@@ -18,8 +18,7 @@ export function getMessage(user, messageFolder, uuid) {
   const mailObject = JSON.parse(localStorage.getItem('mail'));
   try {
     return mailObject[user][messageFolder][uuid];
-  }
-  catch(err) {
+  } catch (err) {
     return null;
   }
 }

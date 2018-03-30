@@ -13,11 +13,13 @@ import marketplaceReducer from './marketplace/marketplaceReducer';
 import lowestPriceReducer from './marketplace/lowestPriceReducer';
 import highestPriceReducer from './marketplace/highestPriceReducer';
 import newArrivalsReducer from './marketplace/newArrivalsReducer';
+import blockchainWallet from './blockchain/wallet/walletReducer';
 
 export default combineReducers({
   auth: authReducer,
   mail: mailReducer,
   wallet: walletReducer,
+  blockchainWallet,
   processorsStandby: processorsStandbyReducer,
   processorsTop: processorsTopReducer,
   connection: connectionReducer,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Icon, Popup } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
@@ -18,7 +18,6 @@ import Marketplace from './scenes/Marketplace/Marketplace';
 import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
 import Preferences from './scenes/Preferences/Preferences';
-import SettingsMenu from './components/AccountFooter/components/SettingsMenu/SettingsMenu';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
@@ -42,12 +41,19 @@ import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
+import { getAccount } from '../../services/blockchain/auth/authActions';
 
 const iconSize = 20;
 
 
 class Home extends Component {
   state = { visible: true };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.connection.node && !this.props.connection.node) {
+      this.props.authActions.getAccount(this.props.auth.currentUser.username);
+    }
+  }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
@@ -199,6 +205,7 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
+    authActions: bindActionCreators({ getAccount }, dispatch)
   })
 )(Home);
 
@@ -209,7 +216,6 @@ Home.propTypes = {
       password: PropTypes.string
     }),
     error: PropTypes.shape({}),
-    accountExists: PropTypes.bool,
     loading: PropTypes.bool
   }),
   menuActions: PropTypes.shape({

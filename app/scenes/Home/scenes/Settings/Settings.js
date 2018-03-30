@@ -17,6 +17,8 @@ import Vote from './scenes/Vote/Vote';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import { showDetailsModal } from '../../../../services/accountSettings/accountActions';
+import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
+
 import './settings.scss';
 
 const iconSize = 20;
@@ -61,6 +63,11 @@ class Settings extends Component {
     super(props);
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
+    this.getBalance = this.getBalance.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.walletActions.getAccountBalance(this.props.auth.account);
   }
 
   close = () => {
@@ -73,10 +80,19 @@ class Settings extends Component {
     this.props.accountSettingsActions.showDetailsModal();
   }
 
+  getBalance() {
+    const { formatMessage } = this.props.intl;
+    const { balance } = this.props.blockchainWallet;
+    if (balance && balance.balance) {
+      return balance.balance / 100000;
+    }
+    return 0;
+  }
+
   sideMenu() {
     const { formatMessage } = this.props.intl;
     const { username } = this.props.auth.currentUser;
-
+    const { account } = this.props.auth;
     return (
       <div>
         <div className="info">
@@ -87,7 +103,7 @@ class Settings extends Component {
               <div className="badge-tag">{formatMessage(messages.registered)}</div>
             </div>
             <span className="username">{username || 'Username'}</span>
-            <span className="accountId">{formatMessage(messages.accountId)}: 234234</span>
+            <span className="accountId">{formatMessage(messages.accountId)}: {account.get('id')}</span>
           </div>
         </div>
         <div className="info">
@@ -96,7 +112,9 @@ class Settings extends Component {
             <div className="title">
               <span>{formatMessage(messages.currentBalance)}</span>
             </div>
-            <span className="balance">658,482.55 {formatMessage(messages.xom)}</span>
+            <span className="balance">
+              {this.getBalance()} {formatMessage(messages.xom)}
+            </span>
           </div>
         </div>
       </div>
@@ -191,11 +209,18 @@ Settings.propTypes = {
   accountSettingsActions: PropTypes.shape({
     showDetailsModal: PropTypes.func,
   }),
+  walletActions: PropTypes.shape({
+    getAccountBalance: PropTypes.func
+  }),
   onClose: PropTypes.func,
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
-    })
+    }),
+    account: PropTypes.shape({})
+  }),
+  blockchainWallet: PropTypes.shape({
+    balance: PropTypes.shape({})
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -212,6 +237,12 @@ Settings.defaultProps = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    accountSettingsActions: bindActionCreators({ getCurrentUser, showDetailsModal }, dispatch),
+    accountSettingsActions: bindActionCreators({
+      getCurrentUser,
+      showDetailsModal
+    }, dispatch),
+    walletActions: bindActionCreators({
+      getAccountBalance
+    }, dispatch),
   }),
 )(injectIntl(Settings));

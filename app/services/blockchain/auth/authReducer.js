@@ -7,15 +7,16 @@ import {
   login,
   logout,
   getCurrentUser,
-  accountLookup,
-  requestPcIds
+  requestPcIds,
+  getAccount
 } from './authActions';
 
 const defaultState = {
   currentUser: null,
+  account: null,
   error: null,
-  accountExists: false,
   loading: false,
+  isAccountLoading: false
 };
 
 const reducer = handleActions({
@@ -50,9 +51,10 @@ const reducer = handleActions({
       loading: true,
     };
   },
-  [accountLookup](state, { payload: { username } }) {
+  [getAccount](state, { payload: { username } }) {
     return {
-      ...state
+      ...state,
+      isAccountLoading: true
     };
   },
   [requestPcIds](state, { payload: {} }) {
@@ -92,16 +94,18 @@ const reducer = handleActions({
     error: action.error,
     loading: false
   }),
-  ACCOUNT_LOOKUP: (state, action) => ({
+  GET_ACCOUNT_SUCCEEDED: (state, { account }) => ({
     ...state,
-    accountExists: false,
-    loading: true
+    account,
+    error: null,
+    isAccountLoading: false
   }),
-  ACCOUNT_LOOKUP_SUCCEEDED: (state, action) => ({
+  GET_ACCOUNT_FAILED: (state, { error }) => ({
     ...state,
-    accountExists: action.result,
-    loading: false
-  }),
+    account: null,
+    error,
+    isAccountLoading: false
+  })
 }, defaultState);
 
 export default reducer;
