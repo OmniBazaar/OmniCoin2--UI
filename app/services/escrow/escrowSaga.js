@@ -15,14 +15,14 @@ function* loadEscrowTransactions(action) {
   // some dummy transactions
   const dummyTransactions = [
     {
-      transactionID: 'a',
-      amount: 'a',
-      parties: 'a'
+      transactionID: '1',
+      amount: '10',
+      parties: 'Zak'
     },
     {
-      transactionID: 'b',
-      amount: 'c',
-      parties: 'a'
+      transactionID: '2',
+      amount: '20',
+      parties: 'Alvin'
     }
   ];
 

@@ -41,12 +41,19 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
+import { getAccount } from '../../services/blockchain/auth/authActions';
 
 const iconSize = 20;
 
 
 class Home extends Component {
   state = { visible: true };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.connection.node && !this.props.connection.node) {
+      this.props.authActions.getAccount(this.props.auth.currentUser.username);
+    }
+  }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
@@ -188,6 +195,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
+    authActions: bindActionCreators({ getAccount }, dispatch)
   })
 )(Home);
 
@@ -198,7 +206,6 @@ Home.propTypes = {
       password: PropTypes.string
     }),
     error: PropTypes.shape({}),
-    accountExists: PropTypes.bool,
     loading: PropTypes.bool
   }),
   menuActions: PropTypes.shape({

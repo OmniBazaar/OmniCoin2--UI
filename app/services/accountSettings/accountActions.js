@@ -15,6 +15,7 @@ const {
   setRescan,
   getVotes,
   sortVotesData,
+  updatePublicData,
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -30,6 +31,7 @@ const {
   SET_RESCAN: () => ({}),
   GET_VOTES: (votes) => ({ votes }),
   SORT_VOTES_DATA: (sortVoteColumn) => ({ sortVoteColumn }),
+  UPDATE_PUBLIC_DATA: () => ({}),
 });
 
 export {
@@ -46,5 +48,6 @@ export {
   showDetailsModal,
   setRescan,
   getVotes,
-  sortVotesData
+  sortVotesData,
+  updatePublicData,
 };
