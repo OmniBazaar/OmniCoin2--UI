@@ -9,20 +9,19 @@ import {
   TableCell,
   TableRow,
   Pagination,
-  Icon,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import numberWithCommas from '../../../../../../utils/numeric';
 
 import {
-  setActivePageFeature,
-  setPaginationFeature,
-} from '../../../../../../services/marketplace/marketplaceActions';
+  setActivePageLowestPrice,
+  setPaginationLowestPrice,
+  getLowestPriceList,
+} from '../../../../../../services/marketplace/lowestPriceActions';
 
 import '../../marketplace.scss';
 import '../CategoryListing/listings.scss';
-import './table.scss';
-
-const iconSizeSmall = 12;
 
 const messages = defineMessages({
   firstItem: {
@@ -59,9 +58,10 @@ const messages = defineMessages({
   },
 });
 
-class CategoryListing extends Component {
+class LowestPriceTable extends Component {
   componentDidMount() {
-    this.props.marketplaceActions.setPaginationFeature(this.props.rowsPerPage);
+    this.props.marketplaceActions.getLowestPriceList(this.props.categoryData);
+    this.props.marketplaceActions.setPaginationLowestPrice(this.props.rowsPerPage);
   }
 
   onClickItem() {
@@ -69,26 +69,25 @@ class CategoryListing extends Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    this.props.marketplaceActions.setActivePageFeature(activePage);
+    this.props.marketplaceActions.setActivePageLowestPrice(activePage);
   };
 
   render() {
-    const { props } = this;
-    let { categoryData } = props;
     const { formatMessage } = this.props.intl;
     const {
-      activePageFeature,
-      totalPagesFeature
-    } = this.props.marketplace;
-    const rows = _.chunk(categoryData, 6);
+      activePageLowestPrice,
+      totalPagesLowestPrice,
+      lowestPriceListFiltered
+    } = this.props.lowestPrice;
+    const rows = _.chunk(lowestPriceListFiltered, 6);
 
     return (
       <div className="data-table">
         <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableBody>
-              {rows.map(row => {
-                return (
+              {rows.map(row =>
+                (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
                       const style = { backgroundImage: `url(${item.image})` };
@@ -111,34 +110,27 @@ class CategoryListing extends Component {
                             onKeyDown={this.onClickItem}
                             tabIndex={0}
                           >
-                            {item.id} - {item.title}
-                          </span>
-                          <span className="subtitle">
-                            {item.category}
-                            <span>
-                              <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                            </span>
-                            {item.subCategory}
+                            {item.title}
                           </span>
                           <span className="description">{description}</span>
+                          <span className="price">$ {numberWithCommas(item.price)}</span>
                         </TableCell>
                       );
                     })}
                   </TableRow>
-                );
-              })}
+                ))}
             </TableBody>
           </Table>
         </div>
         <div className="top-detail bottom">
           <div className="pagination-container">
             <Pagination
-              activePage={activePageFeature}
+              activePage={activePageLowestPrice}
               boundaryRange={1}
               onPageChange={this.handlePaginationChange}
               size="mini"
               siblingRange={1}
-              totalPages={totalPagesFeature}
+              totalPages={totalPagesLowestPrice}
               firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
               lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
               prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
@@ -151,13 +143,37 @@ class CategoryListing extends Component {
   }
 }
 
+LowestPriceTable.propTypes = {
+  marketplaceActions: PropTypes.shape({
+    setActivePageLowestPrice: PropTypes.func,
+    getLowestPriceList: PropTypes.func,
+    setPaginationLowestPrice: PropTypes.func,
+  }),
+  lowestPrice: PropTypes.shape({
+    activePageLowestPrice: PropTypes.number,
+    totalPagesLowestPrice: PropTypes.number,
+    lowestPriceListFiltered: PropTypes.array,
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
+  rowsPerPage: PropTypes.number,
+};
+
+LowestPriceTable.defaultProps = {
+  marketplaceActions: {},
+  lowestPrice: {},
+  intl: {},
+  rowsPerPage: 0
+};
+
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     marketplaceActions: bindActionCreators({
-      setActivePageFeature,
-      setPaginationFeature,
+      getLowestPriceList,
+      setActivePageLowestPrice,
+      setPaginationLowestPrice,
     }, dispatch),
   }),
-)(injectIntl(CategoryListing));
-
+)(injectIntl(LowestPriceTable));

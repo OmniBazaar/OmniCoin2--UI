@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import { Icon, Tab, Dropdown, Input } from 'semantic-ui-react';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Icon, Tab, Dropdown } from 'semantic-ui-react';
 import Menu from '../Menu/Menu';
-import CategoryTable from '../CategoryTable/CategoryTable';
 import FeatureTable from '../FeatureTable/FeatureTable';
 import NewArrivalsTable from '../NewArrivalsTable/NewArrivalsTable';
+import LowestPriceTable from '../LowestPriceTable/LowestPriceTable';
+import HighestPriceTable from '../HighestPriceTable/HighestPriceTable';
 import {
   saleCategories,
   servicesCategories,
@@ -23,6 +23,25 @@ import { CategoriesTypes } from '../../constants';
 import './listings.scss';
 
 const iconSizeSmall = 12;
+
+const messages = defineMessages({
+  featured: {
+    id: 'Marketplace.featured',
+    defaultMessage: 'Featured'
+  },
+  newArrivals: {
+    id: 'Marketplace.newArrivals',
+    defaultMessage: 'New Arrivals'
+  },
+  lowestPrice: {
+    id: 'Marketplace.lowestPrice',
+    defaultMessage: 'Lowest Price'
+  },
+  highestPrice: {
+    id: 'Marketplace.highestPrice',
+    defaultMessage: 'Highest Price'
+  },
+});
 
 class CategoryListing extends Component {
   static getValue(category) {
@@ -100,30 +119,11 @@ class CategoryListing extends Component {
     );
   }
 
-  filterList(listData, selectedTab) {
-    let result = listData;
-    switch (selectedTab) {
-      case CategoriesTypes.NEW_ARRIVALS:
-        result = listData.sort((a, b) => {
-          // Turn your strings into dates, and then subtract them
-          // to get a value that is either negative, positive, or zero.
-          return new Date(b.date) - new Date(a.date);
-        });
-        break;
-      default:
-        result = listData;
-    }
-
-    console.log(result);
-
-    return result;
-  }
-
   getCategoryData() {
     const {
       parentCategory,
       activeCategory,
-      featureListFiltered,
+      featureList,
       forSaleList,
       servicesList,
       jobsList,
@@ -138,7 +138,7 @@ class CategoryListing extends Component {
     let listData = forSaleList;
     switch (category) {
       case CategoriesTypes.FEATURED:
-        listData = featureListFiltered;
+        listData = featureList;
         break;
       case CategoriesTypes.FOR_SALE:
         listData = forSaleList;
@@ -157,30 +157,13 @@ class CategoryListing extends Component {
         break;
     }
 
-    // return this.filterList(listData, selectedTab);
     return listData;
   }
 
-  getListingTable(selectedTab) {
-    const categoryList = this.getCategoryData(selectedTab);
-    const rowsPerPage = 3;
-    const columns = 6;
-
-    return (
-      <CategoryTable
-        categoryData={categoryList}
-        rowsPerPage={rowsPerPage * columns}
-        tableProps={{
-          sortable: true,
-          compact: true,
-          basic: 'very',
-          size: 'small'
-        }}
-      />
-    );
-  }
-
   renderListing() {
+    const { formatMessage } = this.props.intl;
+    const categoryList = this.getCategoryData();
+
     return (
       <div className="list-container">
         <Tab
@@ -188,52 +171,72 @@ class CategoryListing extends Component {
           menu={{ secondary: true, pointing: true }}
           panes={[
             {
-              menuItem: 'Featured',
-              render: () => {
-                const categoryList = this.getCategoryData();
-                return (
-                  <Tab.Pane>
-                    <FeatureTable
-                      categoryData={categoryList}
-                      rowsPerPage={3 * 6}
-                      tableProps={{
-                        sortable: false,
-                        compact: true,
-                        basic: 'very',
-                        size: 'small'
-                      }}
-                    />
-                  </Tab.Pane>
-                );
-              }
+              menuItem: formatMessage(messages.featured),
+              render: () => (
+                <Tab.Pane>
+                  <FeatureTable
+                    categoryData={categoryList}
+                    rowsPerPage={3 * 6}
+                    tableProps={{
+                      sortable: false,
+                      compact: true,
+                      basic: 'very',
+                      size: 'small'
+                    }}
+                  />
+                </Tab.Pane>
+              )
             },
             {
-              menuItem: 'New Arrivals',
-              render: () => {
-                const categoryList = this.getCategoryData();
-                return (
-                  <Tab.Pane>
-                    <NewArrivalsTable
-                      categoryData={categoryList}
-                      rowsPerPage={3 * 6}
-                      tableProps={{
-                        sortable: false,
-                        compact: true,
-                        basic: 'very',
-                        size: 'small'
-                      }}
-                    />
-                  </Tab.Pane>
-                );
-              }
+              menuItem: formatMessage(messages.newArrivals),
+              render: () => (
+                <Tab.Pane>
+                  <NewArrivalsTable
+                    categoryData={categoryList}
+                    rowsPerPage={3 * 6}
+                    tableProps={{
+                      sortable: false,
+                      compact: true,
+                      basic: 'very',
+                      size: 'small'
+                    }}
+                  />
+                </Tab.Pane>
+              )
             },
             {
-              menuItem: 'Lowest Price',
-              render: () => <Tab.Pane>{this.getListingTable('lowest')}</Tab.Pane>,
+              menuItem: formatMessage(messages.lowestPrice),
+              render: () => (
+                <Tab.Pane>
+                  <LowestPriceTable
+                    categoryData={categoryList}
+                    rowsPerPage={3 * 6}
+                    tableProps={{
+                      sortable: false,
+                      compact: true,
+                      basic: 'very',
+                      size: 'small'
+                    }}
+                  />
+                </Tab.Pane>
+              ),
             },
             {
-              menuItem: 'Highest Price',
-              render: () => <Tab.Pane>{this.getListingTable('highest')}</Tab.Pane>,
+              menuItem: formatMessage(messages.highestPrice),
+              render: () => (
+                <Tab.Pane>
+                  <HighestPriceTable
+                    categoryData={categoryList}
+                    rowsPerPage={3 * 6}
+                    tableProps={{
+                      sortable: false,
+                      compact: true,
+                      basic: 'very',
+                      size: 'small'
+                    }}
+                  />
+                </Tab.Pane>
+              ),
             },
           ]}
         />
@@ -242,8 +245,6 @@ class CategoryListing extends Component {
   }
 
   render() {
-    const { formatMessage } = this.props.intl;
-
     return (
       <div className="marketplace-container category-listing">
         <div className="header">
@@ -262,6 +263,7 @@ CategoryListing.propTypes = {
   marketplace: PropTypes.shape({
     parentCategory: PropTypes.string,
     activeCategory: PropTypes.string,
+    featureList: PropTypes.string,
     forSaleList: PropTypes.array,
     servicesList: PropTypes.array,
     jobsList: PropTypes.array,

@@ -9,21 +9,19 @@ import {
   TableCell,
   TableRow,
   Pagination,
-  Icon,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import numberWithCommas from '../../../../../../utils/numeric';
 
 import {
   setActivePageNewArrivals,
   setPaginationNewArrivals,
   getNewArrivalsList,
-} from '../../../../../../services/marketplace/marketplaceActions';
+} from '../../../../../../services/marketplace/newArrivalsActions';
 
 import '../../marketplace.scss';
 import '../CategoryListing/listings.scss';
-
-const iconSizeSmall = 12;
 
 const messages = defineMessages({
   firstItem: {
@@ -80,7 +78,7 @@ class NewArrivalsTable extends Component {
       activePageNewArrivals,
       totalPagesNewArrivals,
       newArrivalsListFiltered
-    } = this.props.marketplace;
+    } = this.props.newArrivals;
     const rows = _.chunk(newArrivalsListFiltered, 6);
 
     return (
@@ -112,16 +110,10 @@ class NewArrivalsTable extends Component {
                             onKeyDown={this.onClickItem}
                             tabIndex={0}
                           >
-                            {item.date} - {item.title}
-                          </span>
-                          <span className="subtitle">
-                            {item.category}
-                            <span>
-                              <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                            </span>
-                            {item.subCategory}
+                            {item.title}
                           </span>
                           <span className="description">{description}</span>
+                          <span className="price">$ {numberWithCommas(item.price)}</span>
                         </TableCell>
                       );
                     })}
@@ -157,7 +149,7 @@ NewArrivalsTable.propTypes = {
     getNewArrivalsList: PropTypes.func,
     setPaginationNewArrivals: PropTypes.func,
   }),
-  marketplace: PropTypes.shape({
+  newArrivals: PropTypes.shape({
     activePageNewArrivals: PropTypes.number,
     totalPagesNewArrivals: PropTypes.number,
     newArrivalsListFiltered: PropTypes.array,
@@ -185,4 +177,3 @@ export default connect(
     }, dispatch),
   }),
 )(injectIntl(NewArrivalsTable));
-

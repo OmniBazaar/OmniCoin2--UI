@@ -46,6 +46,7 @@ const featureListings = [
   {
     id: 1,
     date: '2018-01-05',
+    price: 6840,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -55,6 +56,7 @@ const featureListings = [
   {
     id: 2,
     date: '2017-01-05',
+    price: 6840,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -64,6 +66,7 @@ const featureListings = [
   {
     id: 3,
     date: '2017-11-05',
+    price: 6840,
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -73,6 +76,7 @@ const featureListings = [
   {
     id: 4,
     date: '2018-03-05',
+    price: 6840,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -82,6 +86,7 @@ const featureListings = [
   {
     id: 5,
     date: '2018-03-05',
+    price: 36840,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -91,6 +96,7 @@ const featureListings = [
   {
     id: 6,
     date: '2018-02-05',
+    price: 87240,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -100,6 +106,7 @@ const featureListings = [
   {
     id: 7,
     date: '2018-01-01',
+    price: 6840,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -109,6 +116,7 @@ const featureListings = [
   {
     id: 8,
     date: '2018-02-02',
+    price: 6840,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -118,6 +126,7 @@ const featureListings = [
   {
     id: 9,
     date: '2018-03-15',
+    price: 6840,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -127,6 +136,7 @@ const featureListings = [
   {
     id: 10,
     date: '2018-02-02',
+    price: 6840,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -136,6 +146,7 @@ const featureListings = [
   {
     id: 11,
     date: '2018-03-12',
+    price: 6840,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -145,6 +156,7 @@ const featureListings = [
   {
     id: 12,
     date: '2018-01-22',
+    price: 6840,
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -154,6 +166,7 @@ const featureListings = [
   {
     id: 13,
     date: '2018-02-16',
+    price: 6840,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -163,6 +176,7 @@ const featureListings = [
   {
     id: 14,
     date: '2018-02-18',
+    price: 6840,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -172,6 +186,7 @@ const featureListings = [
   {
     id: 15,
     date: '2018-03-19',
+    price: 6840,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -181,6 +196,7 @@ const featureListings = [
   {
     id: 16,
     date: '2018-03-20',
+    price: 3550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -190,6 +206,7 @@ const featureListings = [
   {
     id: 17,
     date: '2018-03-21',
+    price: 1550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -199,6 +216,7 @@ const featureListings = [
   {
     id: 18,
     date: '2018-03-08',
+    price: 5550,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -208,6 +226,7 @@ const featureListings = [
   {
     id: 19,
     date: '2018-03-08',
+    price: 5550,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -217,6 +236,7 @@ const featureListings = [
   {
     id: 20,
     date: '2018-03-08',
+    price: 5550,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -226,6 +246,7 @@ const featureListings = [
   {
     id: 21,
     date: '2018-03-08',
+    price: 5550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -235,6 +256,7 @@ const featureListings = [
   {
     id: 22,
     date: '2018-03-21',
+    price: 465550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -244,6 +266,7 @@ const featureListings = [
   {
     id: 23,
     date: '2018-03-21',
+    price: 5550,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -253,6 +276,7 @@ const featureListings = [
   {
     id: 24,
     date: '2018-03-08',
+    price: 3550,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -262,6 +286,7 @@ const featureListings = [
   {
     id: 25,
     date: '2018-03-21',
+    price: 345550,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -271,6 +296,7 @@ const featureListings = [
   {
     id: 26,
     date: '2018-03-21',
+    price: 4550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -280,6 +306,7 @@ const featureListings = [
   {
     id: 27,
     date: '2018-03-08',
+    price: 2550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -289,6 +316,7 @@ const featureListings = [
   {
     id: 28,
     date: '2018-03-08',
+    price: 6840,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -298,6 +326,7 @@ const featureListings = [
   {
     id: 29,
     date: '2018-03-21',
+    price: 3550,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -307,6 +336,7 @@ const featureListings = [
   {
     id: 30,
     date: '2018-03-08',
+    price: 12550,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -316,6 +346,7 @@ const featureListings = [
   {
     id: 31,
     date: '2018-03-21',
+    price: 5550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -325,6 +356,7 @@ const featureListings = [
   {
     id: 32,
     date: '2018-03-21',
+    price: 5550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -334,6 +366,7 @@ const featureListings = [
   {
     id: 33,
     date: '2018-03-08',
+    price: 5550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -346,6 +379,7 @@ const forSaleListings = [
   {
     id: 1,
     date: '2018-01-05',
+    price: 5550,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jewelry',
@@ -355,6 +389,7 @@ const forSaleListings = [
   {
     id: 2,
     date: '2018-03-08',
+    price: 5550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -363,6 +398,7 @@ const forSaleListings = [
   },
   {
     id: 3,
+    price: 10550,
     date: '2018-03-08',
     title: 'UX Designer',
     category: 'For sale',
@@ -373,6 +409,7 @@ const forSaleListings = [
   {
     id: 4,
     date: '2018-03-08',
+    price: 850,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -382,6 +419,7 @@ const forSaleListings = [
   {
     id: 5,
     date: '2018-03-21',
+    price: 9550,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -391,6 +429,7 @@ const forSaleListings = [
   {
     id: 6,
     date: '2018-03-21',
+    price: 1550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -400,6 +439,7 @@ const forSaleListings = [
   {
     id: 7,
     date: '2018-01-15',
+    price: 2050,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -409,6 +449,7 @@ const forSaleListings = [
   {
     id: 8,
     date: '2018-03-21',
+    price: 1550,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -418,6 +459,7 @@ const forSaleListings = [
   {
     id: 9,
     date: '2018-03-21',
+    price: 5028,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -427,6 +469,7 @@ const forSaleListings = [
   {
     id: 10,
     date: '2018-03-21',
+    price: 6505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -436,6 +479,7 @@ const forSaleListings = [
   {
     id: 11,
     date: '2018-03-21',
+    price: 6505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -445,6 +489,7 @@ const forSaleListings = [
   {
     id: 12,
     date: '2018-03-21',
+    price: 3550,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -454,6 +499,7 @@ const forSaleListings = [
   {
     id: 13,
     date: '2018-02-12',
+    price: 6505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -463,6 +509,7 @@ const forSaleListings = [
   {
     id: 14,
     date: '2018-03-21',
+    price: 6505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -472,6 +519,7 @@ const forSaleListings = [
   {
     id: 15,
     date: '2018-03-11',
+    price: 6505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -481,6 +529,7 @@ const forSaleListings = [
   {
     id: 16,
     date: '2017-01-21',
+    price: 6505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -490,6 +539,7 @@ const forSaleListings = [
   {
     id: 17,
     date: '2018-03-21',
+    price: 6505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -499,6 +549,7 @@ const forSaleListings = [
   {
     id: 18,
     date: '2018-01-15',
+    price: 6505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -508,6 +559,7 @@ const forSaleListings = [
   {
     id: 19,
     date: '2018-01-15',
+    price: 6505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -517,6 +569,7 @@ const forSaleListings = [
   {
     id: 20,
     date: '2018-01-15',
+    price: 6505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -526,6 +579,7 @@ const forSaleListings = [
   {
     id: 21,
     date: '2018-01-05',
+    price: 3550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -535,6 +589,7 @@ const forSaleListings = [
   {
     id: 22,
     date: '2018-01-05',
+    price: 6505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -544,6 +599,7 @@ const forSaleListings = [
   {
     id: 23,
     date: '2018-03-21',
+    price: 6505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -553,6 +609,7 @@ const forSaleListings = [
   {
     id: 24,
     date: '2018-01-15',
+    price: 6505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -562,6 +619,7 @@ const forSaleListings = [
   {
     id: 25,
     date: '2018-01-05',
+    price: 6505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -571,6 +629,7 @@ const forSaleListings = [
   {
     id: 26,
     date: '2018-01-05',
+    price: 6505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -580,6 +639,7 @@ const forSaleListings = [
   {
     id: 27,
     date: '2018-01-15',
+    price: 16505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -589,6 +649,7 @@ const forSaleListings = [
   {
     id: 28,
     date: '2018-01-15',
+    price: 2505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -598,6 +659,7 @@ const forSaleListings = [
   {
     id: 29,
     date: '2018-01-15',
+    price: 6905,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -607,6 +669,7 @@ const forSaleListings = [
   {
     id: 30,
     date: '2018-01-15',
+    price: 6505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -616,6 +679,7 @@ const forSaleListings = [
   {
     id: 31,
     date: '2018-01-15',
+    price: 3550,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -625,6 +689,7 @@ const forSaleListings = [
   {
     id: 32,
     date: '2018-01-15',
+    price: 6505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -634,6 +699,7 @@ const forSaleListings = [
   {
     id: 33,
     date: '2018-01-15',
+    price: 6505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -643,6 +709,7 @@ const forSaleListings = [
   {
     id: 34,
     date: '2018-01-15',
+    price: 2505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -652,6 +719,7 @@ const forSaleListings = [
   {
     id: 35,
     date: '2018-01-15',
+    price: 2505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -661,6 +729,7 @@ const forSaleListings = [
   {
     id: 36,
     date: '2018-01-15',
+    price: 2505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -670,6 +739,7 @@ const forSaleListings = [
   {
     id: 37,
     date: '2018-01-15',
+    price: 2505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -679,6 +749,7 @@ const forSaleListings = [
   {
     id: 38,
     date: '2018-01-15',
+    price: 2505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -688,6 +759,7 @@ const forSaleListings = [
   {
     id: 39,
     date: '2018-01-15',
+    price: 2505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -697,6 +769,7 @@ const forSaleListings = [
   {
     id: 40,
     date: '2018-01-15',
+    price: 3505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -706,6 +779,7 @@ const forSaleListings = [
   {
     id: 41,
     date: '2018-01-15',
+    price: 300505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -715,6 +789,7 @@ const forSaleListings = [
   {
     id: 42,
     date: '2018-01-15',
+    price: 3505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -724,6 +799,7 @@ const forSaleListings = [
   {
     id: 43,
     date: '2018-01-15',
+    price: 20505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -733,6 +809,7 @@ const forSaleListings = [
   {
     id: 44,
     date: '2018-01-15',
+    price: 3505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -742,6 +819,7 @@ const forSaleListings = [
   {
     id: 45,
     date: '2018-01-15',
+    price: 3505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -751,6 +829,7 @@ const forSaleListings = [
   {
     id: 46,
     date: '2018-01-15',
+    price: 3505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -760,6 +839,7 @@ const forSaleListings = [
   {
     id: 47,
     date: '2018-01-15',
+    price: 3505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -769,6 +849,7 @@ const forSaleListings = [
   {
     id: 48,
     date: '2018-01-15',
+    price: 3505,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jewelry',
@@ -778,6 +859,7 @@ const forSaleListings = [
   {
     id: 49,
     date: '2018-01-15',
+    price: 3505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -787,6 +869,7 @@ const forSaleListings = [
   {
     id: 50,
     date: '2018-01-15',
+    price: 3505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -796,6 +879,7 @@ const forSaleListings = [
   {
     id: 51,
     date: '2018-01-15',
+    price: 3505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -805,6 +889,7 @@ const forSaleListings = [
   {
     id: 52,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -814,6 +899,7 @@ const forSaleListings = [
   {
     id: 53,
     date: '2018-01-15',
+    price: 504505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -823,6 +909,7 @@ const forSaleListings = [
   {
     id: 54,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -832,6 +919,7 @@ const forSaleListings = [
   {
     id: 55,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -841,6 +929,7 @@ const forSaleListings = [
   {
     id: 56,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -850,6 +939,7 @@ const forSaleListings = [
   {
     id: 57,
     date: '2018-03-14',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -859,6 +949,7 @@ const forSaleListings = [
   {
     id: 58,
     date: '2018-02-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -868,6 +959,7 @@ const forSaleListings = [
   {
     id: 59,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -877,6 +969,7 @@ const forSaleListings = [
   {
     id: 60,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -886,6 +979,7 @@ const forSaleListings = [
   {
     id: 61,
     date: '2017-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -895,6 +989,7 @@ const forSaleListings = [
   {
     id: 62,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -904,6 +999,7 @@ const forSaleListings = [
   {
     id: 63,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -913,6 +1009,7 @@ const forSaleListings = [
   {
     id: 64,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -922,6 +1019,7 @@ const forSaleListings = [
   {
     id: 65,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -931,6 +1029,7 @@ const forSaleListings = [
   {
     id: 66,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -940,6 +1039,7 @@ const forSaleListings = [
   {
     id: 67,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -949,6 +1049,7 @@ const forSaleListings = [
   {
     id: 68,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -958,6 +1059,7 @@ const forSaleListings = [
   {
     id: 69,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -967,6 +1069,7 @@ const forSaleListings = [
   {
     id: 70,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -976,6 +1079,7 @@ const forSaleListings = [
   {
     id: 71,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -985,6 +1089,7 @@ const forSaleListings = [
   {
     id: 72,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -994,6 +1099,7 @@ const forSaleListings = [
   {
     id: 73,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1003,6 +1109,7 @@ const forSaleListings = [
   {
     id: 74,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1012,6 +1119,7 @@ const forSaleListings = [
   {
     id: 75,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1021,6 +1129,7 @@ const forSaleListings = [
   {
     id: 76,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -1030,6 +1139,7 @@ const forSaleListings = [
   {
     id: 77,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1039,6 +1149,7 @@ const forSaleListings = [
   {
     id: 78,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1048,6 +1159,7 @@ const forSaleListings = [
   {
     id: 79,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1057,6 +1169,7 @@ const forSaleListings = [
   {
     id: 80,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1066,6 +1179,7 @@ const forSaleListings = [
   {
     id: 81,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1075,6 +1189,7 @@ const forSaleListings = [
   {
     id: 82,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -1084,6 +1199,7 @@ const forSaleListings = [
   {
     id: 83,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1093,6 +1209,7 @@ const forSaleListings = [
   {
     id: 84,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1102,6 +1219,7 @@ const forSaleListings = [
   {
     id: 85,
     date: '2018-01-15',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1111,6 +1229,7 @@ const forSaleListings = [
   {
     id: 86,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1120,6 +1239,7 @@ const forSaleListings = [
   {
     id: 87,
     date: '2018-01-14',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -1129,6 +1249,7 @@ const forSaleListings = [
   {
     id: 88,
     date: '2018-01-12',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1138,6 +1259,7 @@ const forSaleListings = [
   {
     id: 89,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1147,6 +1269,7 @@ const forSaleListings = [
   {
     id: 90,
     date: '2018-01-17',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1156,6 +1279,7 @@ const forSaleListings = [
   {
     id: 91,
     date: '2018-01-18',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1165,6 +1289,7 @@ const forSaleListings = [
   {
     id: 92,
     date: '2018-01-20',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -1174,6 +1299,7 @@ const forSaleListings = [
   {
     id: 93,
     date: '2017-12-20',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1183,6 +1309,7 @@ const forSaleListings = [
   {
     id: 94,
     date: '2017-12-20',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1192,6 +1319,7 @@ const forSaleListings = [
   {
     id: 95,
     date: '2018-03-08',
+    price: 4505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1201,6 +1329,7 @@ const forSaleListings = [
   {
     id: 96,
     date: '2017-12-20',
+    price: 4505,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1210,6 +1339,7 @@ const forSaleListings = [
   {
     id: 97,
     date: '2017-12-20',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1219,6 +1349,7 @@ const forSaleListings = [
   {
     id: 98,
     date: '2018-03-20',
+    price: 1405,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1228,6 +1359,7 @@ const forSaleListings = [
   {
     id: 99,
     date: '2017-12-20',
+    price: 1205,
     title: 'UX Designer',
     category: 'For sale',
     subCategory: 'Design',
@@ -1237,6 +1369,7 @@ const forSaleListings = [
   {
     id: 100,
     date: '2018-03-20',
+    price: 1300,
     title: 'Mega Plumber',
     category: 'For sale',
     subCategory: 'Home',
@@ -1249,6 +1382,7 @@ const jobsListings = [
   {
     id: 1,
     date: '2018-01-15',
+    price: 3505,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1258,6 +1392,7 @@ const jobsListings = [
   {
     id: 2,
     date: '2018-01-15',
+    price: 53305,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1267,6 +1402,7 @@ const jobsListings = [
   {
     id: 3,
     date: '2018-01-15',
+    price: 20505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1276,6 +1412,7 @@ const jobsListings = [
   {
     id: 4,
     date: '2018-01-15',
+    price: 14505,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -1285,6 +1422,7 @@ const jobsListings = [
   {
     id: 5,
     date: '2018-01-15',
+    price: 94505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1294,6 +1432,7 @@ const jobsListings = [
   {
     id: 6,
     date: '2018-01-15',
+    price: 2505,
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -1306,6 +1445,7 @@ const rentalsListings = [
   {
     id: 1,
     date: '2018-01-15',
+    price: 566505,
     title: 'Suzuki Bandit 2000',
     category: 'For sale',
     subCategory: 'Motor Cycle',
@@ -1315,6 +1455,7 @@ const rentalsListings = [
   {
     id: 2,
     date: '2018-01-15',
+    price: 4505,
     title: 'UX Designer',
     category: 'Jobs',
     subCategory: 'Design',
@@ -1324,6 +1465,7 @@ const rentalsListings = [
   {
     id: 3,
     date: '2018-01-15',
+    price: 2505,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1342,6 +1484,7 @@ const rentalsListings = [
   {
     id: 5,
     title: 'Ferrari',
+    price: 804505,
     category: 'For sale',
     subCategory: 'Car',
     description: 'Beautiful brand new Ferrari car.',
@@ -1350,6 +1493,7 @@ const rentalsListings = [
   {
     id: 6,
     date: '2018-01-15',
+    price: 1505,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1362,6 +1506,7 @@ const servicesListings = [
   {
     id: 5,
     date: '2018-01-15',
+    price: 478505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1371,6 +1516,7 @@ const servicesListings = [
   {
     id: 6,
     date: '2018-01-15',
+    price: 904505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1380,6 +1526,7 @@ const servicesListings = [
   {
     id: 7,
     date: '2018-01-15',
+    price: 4505,
     title: 'Mega Plumber',
     category: 'Services',
     subCategory: 'Home',
@@ -1389,6 +1536,7 @@ const servicesListings = [
   {
     id: 8,
     date: '2018-01-15',
+    price: 4505,
     title: 'Lonely Star',
     category: 'For sale',
     subCategory: 'Others',
@@ -1398,6 +1546,7 @@ const servicesListings = [
   {
     id: 9,
     date: '2018-01-15',
+    price: 4505,
     title: 'Ferrari',
     category: 'For sale',
     subCategory: 'Car',
@@ -1407,6 +1556,7 @@ const servicesListings = [
   {
     id: 10,
     date: '2018-01-15',
+    price: 4505,
     title: 'Farco Jevellery',
     category: 'For sale',
     subCategory: 'Jevellery',
@@ -1788,6 +1938,7 @@ class Marketplace extends Component {
    */
   viewCategory = (categoryId) => {
     if (this.props.marketplaceActions.setActiveCategory) {
+      console.log('HEERREEE', categoryId);
       this.props.marketplaceActions.setActiveCategory(categoryId);
     }
   };

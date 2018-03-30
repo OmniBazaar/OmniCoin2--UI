@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import hash from 'object-hash';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
   Table,
@@ -11,14 +10,15 @@ import {
   TableRow,
   Pagination,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import numberWithCommas from '../../../../../../utils/numeric';
 
 import {
-  setActivePageFeature,
-  setPaginationFeature,
-  getFeatureList,
-} from '../../../../../../services/marketplace/marketplaceActions';
+  setActivePageHighestPrice,
+  setPaginationHighestPrice,
+  getHighestPriceList,
+} from '../../../../../../services/marketplace/highestPriceActions';
 
 import '../../marketplace.scss';
 import '../CategoryListing/listings.scss';
@@ -58,10 +58,10 @@ const messages = defineMessages({
   },
 });
 
-class FeatureTable extends Component {
+class HighestPriceTable extends Component {
   componentDidMount() {
-    this.props.marketplaceActions.getFeatureList(this.props.categoryData);
-    this.props.marketplaceActions.setPaginationFeature(this.props.rowsPerPage);
+    this.props.marketplaceActions.getHighestPriceList(this.props.categoryData);
+    this.props.marketplaceActions.setPaginationHighestPrice(this.props.rowsPerPage);
   }
 
   onClickItem() {
@@ -69,17 +69,17 @@ class FeatureTable extends Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    this.props.marketplaceActions.setActivePageFeature(activePage);
+    this.props.marketplaceActions.setActivePageHighestPrice(activePage);
   };
 
   render() {
     const { formatMessage } = this.props.intl;
     const {
-      activePageFeature,
-      totalPagesFeature,
-      featureListFiltered
-    } = this.props.marketplace;
-    const rows = _.chunk(featureListFiltered, 6);
+      activePageHighestPrice,
+      totalPagesHighestPrice,
+      highestPriceListFiltered
+    } = this.props.highestPrice;
+    const rows = _.chunk(highestPriceListFiltered, 6);
 
     return (
       <div className="data-table">
@@ -125,12 +125,12 @@ class FeatureTable extends Component {
         <div className="top-detail bottom">
           <div className="pagination-container">
             <Pagination
-              activePage={activePageFeature}
+              activePage={activePageHighestPrice}
               boundaryRange={1}
               onPageChange={this.handlePaginationChange}
               size="mini"
               siblingRange={1}
-              totalPages={totalPagesFeature}
+              totalPages={totalPagesHighestPrice}
               firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
               lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
               prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
@@ -143,16 +143,16 @@ class FeatureTable extends Component {
   }
 }
 
-FeatureTable.propTypes = {
+HighestPriceTable.propTypes = {
   marketplaceActions: PropTypes.shape({
-    getFeatureList: PropTypes.func,
-    setPaginationFeature: PropTypes.func,
-    setActivePageFeature: PropTypes.func,
+    setActivePageHighestPrice: PropTypes.func,
+    getHighestPriceList: PropTypes.func,
+    setPaginationHighestPrice: PropTypes.func,
   }),
-  marketplace: PropTypes.shape({
-    activePageFeature: PropTypes.number,
-    totalPagesFeature: PropTypes.number,
-    featureListFiltered: PropTypes.array,
+  highestPrice: PropTypes.shape({
+    activePageHighestPrice: PropTypes.number,
+    totalPagesHighestPrice: PropTypes.number,
+    highestPriceListFiltered: PropTypes.array,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -160,9 +160,9 @@ FeatureTable.propTypes = {
   rowsPerPage: PropTypes.number,
 };
 
-FeatureTable.defaultProps = {
+HighestPriceTable.defaultProps = {
   marketplaceActions: {},
-  marketplace: {},
+  highestPrice: {},
   intl: {},
   rowsPerPage: 0
 };
@@ -171,9 +171,9 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     marketplaceActions: bindActionCreators({
-      setActivePageFeature,
-      setPaginationFeature,
-      getFeatureList,
+      setActivePageHighestPrice,
+      setPaginationHighestPrice,
+      getHighestPriceList,
     }, dispatch),
   }),
-)(injectIntl(FeatureTable));
+)(injectIntl(HighestPriceTable));

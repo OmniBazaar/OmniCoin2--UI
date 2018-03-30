@@ -8,11 +8,7 @@ import classNames from 'classnames';
 
 import AddIcon from '../../images/btn-add-listing.svg';
 import SearchIcon from '../../images/btn-search-norm.svg';
-import SearchHoverIcon from '../../images/btn-search-hover.svg';
-import SearchPressIcon from '../../images/btn-search-press.svg';
 import UserIcon from '../../images/btn-user-menu-norm.svg';
-import UserHoverIcon from '../../images/btn-user-menu-hover.svg';
-import UserPressIcon from '../../images/btn-user-menu-press.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
 
 import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
@@ -68,6 +64,16 @@ const messages = defineMessages({
 });
 
 class Menu extends Component {
+  static getValue(category) {
+    const arr = category.split('.');
+    let categoryName = category;
+    if (arr.length > 1) {
+      categoryName = arr[1];
+    }
+
+    return categoryName;
+  }
+
   menuTitle(category) {
     const { props } = this;
     const { formatMessage } = this.props.intl;
@@ -110,7 +116,11 @@ class Menu extends Component {
 
   viewCategory = (categoryId, parent) => {
     if (this.props.marketplaceActions.setActiveCategory) {
-      this.props.marketplaceActions.setActiveCategory(categoryId, parent);
+      const category = categoryId !== mainCategories.home.id ?
+        Menu.getValue(categoryId) : categoryId;
+      const parentValue = parent ? Menu.getValue(parent) : null;
+
+      this.props.marketplaceActions.setActiveCategory(category, parentValue);
     }
   };
 
@@ -465,7 +475,9 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
-  setActiveCategory: PropTypes.func,
+  marketplaceActions: PropTypes.shape({
+    setActiveCategory: PropTypes.func,
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -473,7 +485,7 @@ Menu.propTypes = {
 
 Menu.defaultProps = {
   intl: {},
-  setActiveCategory: () => {},
+  marketplaceActions: {},
 };
 
 export default connect(

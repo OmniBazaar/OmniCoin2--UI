@@ -10,6 +10,9 @@ import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
+import lowestPriceReducer from './marketplace/lowestPriceReducer';
+import highestPriceReducer from './marketplace/highestPriceReducer';
+import newArrivalsReducer from './marketplace/newArrivalsReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -23,4 +26,7 @@ export default combineReducers({
   account: accountReducer,
   preferences: preferencesReducer,
   marketplace: marketplaceReducer,
+  lowestPrice: lowestPriceReducer,
+  highestPrice: highestPriceReducer,
+  newArrivals: newArrivalsReducer,
 });
