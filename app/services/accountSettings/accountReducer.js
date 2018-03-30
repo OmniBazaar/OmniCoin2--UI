@@ -8,6 +8,8 @@ import {
   setTransactionProcessor,
   setEscrow,
   changePriority,
+  changeCountry,
+  changeCity,
   getRecentTransactions,
   setActivePage,
   filterData,
@@ -19,7 +21,9 @@ import {
   sortVotesData,
   updatePublicData,
   getPrivateData,
-  updatePrivateData
+  updatePrivateData,
+  getPublisherData,
+  updatePublisherData
 } from './accountActions';
 
 const defaultState = {
@@ -27,7 +31,6 @@ const defaultState = {
   publisher: false,
   transactionProcessor: false,
   escrow: false,
-  priority: 'local',
   recentTransactions: [],
   recentTransactionsFiltered: [],
   sortDirection: 'descending',
@@ -45,7 +48,19 @@ const defaultState = {
   sortVoteColumn: 'processor',
   loading: false,
   error: null,
-  privateData: AccountSettingsStorage.getPrivateData(),
+  privateData: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    website: ''
+  },
+  publisherData: {
+    priority: 'local',
+    country: '',
+    city: '',
+    category: '',
+    name: '',
+  },
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -84,8 +99,29 @@ const reducer = handleActions({
   [changePriority](state, { payload: { priority } }) {
     return {
       ...state,
-      priority
+     publisherData: {
+       ...state.publisherData,
+       priority
+     }
     };
+  },
+  [changeCountry](state, { payload: { country }}) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        country
+      }
+    }
+  },
+  [changeCity](state, { payload: { city }}) {
+    return  {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        city
+      }
+    }
   },
   [showDetailsModal](state, { payload: { detailSelected } }) {
     return {
@@ -114,6 +150,20 @@ const reducer = handleActions({
       ...state,
       privateData: data
     };
+  },
+  [getPublisherData](state, { payload: { } }) {
+    console.log('PUBLISHER DATA FROM GET', AccountSettingsStorage.getPublisherData());
+    return {
+      ...state,
+      publisherData: AccountSettingsStorage.getPublisherData()
+    }
+  },
+  [updatePublisherData](state, { payload: { data } }) {
+    AccountSettingsStorage.updatePublisherData(data);
+    return {
+      ...state,
+      publisherData: data
+    }
   },
   UPDATE_PUBLIC_DATA_SUCCEEDED: (state, action) => ({
     ...state,

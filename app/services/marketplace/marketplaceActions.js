@@ -1,6 +1,7 @@
 import { createActions } from 'redux-actions';
 
 const {
+  getCategoriesList,
   getFeatureList,
   getForSaleList,
   getServicesList,
@@ -12,6 +13,7 @@ const {
   getJobsCategories,
   getCryptoCategories
 } = createActions({
+  GET_CATEGORIES_LIST: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
   GET_FOR_SALE_LIST: (forSaleList) => ({ forSaleList }),
   GET_SERVICES_LIST: (servicesList) => ({ servicesList }),
@@ -25,6 +27,7 @@ const {
 });
 
 export {
+  getCategoriesList,
   getFeatureList,
   getForSaleList,
   getServicesList,

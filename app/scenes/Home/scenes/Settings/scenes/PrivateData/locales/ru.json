@@ -8,5 +8,7 @@
   "PrivateData.startTyping": "Start typing...",
   "PrivateData.apply": "APPLY",
   "PrivateData.updateSuccess": "Successfully updated",
-  "PrivateData.update": "Update"
+  "PrivateData.update": "Update",
+  "PrivateData.city": "City"
+
 }

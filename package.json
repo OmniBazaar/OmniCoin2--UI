@@ -200,6 +200,7 @@
     "omnibazaarjs-ws": "^1.0.1",
     "react": "^16.2.0",
     "react-copy-to-clipboard": "^5.0.1",
+    "react-country-region-selector": "^1.2.3",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^4.0.0-beta.13",
     "react-intl": "^2.4.0",

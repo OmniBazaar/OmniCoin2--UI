@@ -6,6 +6,8 @@ const {
   setTransactionProcessor,
   setEscrow,
   changePriority,
+  changeCountry,
+  changeCity,
   getRecentTransactions,
   setActivePage,
   setPagination,
@@ -17,13 +19,17 @@ const {
   sortVotesData,
   updatePublicData,
   getPrivateData,
-  updatePrivateData
+  updatePrivateData,
+  getPublisherData,
+  updatePublisherData
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
   SET_TRANSACTION_PROCESSOR: () => ({}),
   SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
+  CHANGE_COUNTRY: (country) => ({country}),
+  CHANGE_CITY: (city) => ({city}),
   GET_RECENT_TRANSACTIONS: (recentTransactions) => ({ recentTransactions }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
@@ -35,7 +41,9 @@ const {
   SORT_VOTES_DATA: (sortVoteColumn) => ({ sortVoteColumn }),
   UPDATE_PUBLIC_DATA: () => ({}),
   GET_PRIVATE_DATA: () => ({}),
-  UPDATE_PRIVATE_DATA: (data) => ({ data })
+  UPDATE_PRIVATE_DATA: (data) => ({ data }),
+  GET_PUBLISHER_DATA: () => ({}),
+  UPDATE_PUBLISHER_DATA: (data) => ({ data }),
 });
 
 export {
@@ -44,6 +52,8 @@ export {
   setTransactionProcessor,
   setEscrow,
   changePriority,
+  changeCountry,
+  changeCity,
   getRecentTransactions,
   setActivePage,
   setPagination,
@@ -55,5 +65,7 @@ export {
   sortVotesData,
   updatePublicData,
   getPrivateData,
-  updatePrivateData
+  updatePrivateData,
+  getPublisherData,
+  updatePublisherData
 };

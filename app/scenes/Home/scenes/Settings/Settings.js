@@ -16,7 +16,11 @@ import Keys from './scenes/Keys/Keys';
 import Vote from './scenes/Vote/Vote';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
-import { showDetailsModal } from '../../../../services/accountSettings/accountActions';
+import {
+  showDetailsModal,
+  getPrivateData,
+  getPublisherData
+} from '../../../../services/accountSettings/accountActions';
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
 import './settings.scss';
@@ -64,6 +68,11 @@ class Settings extends Component {
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
     this.getBalance = this.getBalance.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.accountSettingsActions.getPrivateData();
+    this.props.accountSettingsActions.getPublisherData();
   }
 
   componentDidMount() {
@@ -208,6 +217,9 @@ class Settings extends Component {
 Settings.propTypes = {
   accountSettingsActions: PropTypes.shape({
     showDetailsModal: PropTypes.func,
+    getPrivateData: PropTypes.func,
+    getPublisherData: PropTypes.func,
+    getCurrentUser: PropTypes.func
   }),
   walletActions: PropTypes.shape({
     getAccountBalance: PropTypes.func
@@ -239,7 +251,9 @@ export default connect(
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
-      showDetailsModal
+      showDetailsModal,
+      getPrivateData,
+      getPublisherData
     }, dispatch),
     walletActions: bindActionCreators({
       getAccountBalance

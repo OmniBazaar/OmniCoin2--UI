@@ -9,7 +9,8 @@ import {
   getForSaleCategories,
   getServicesCategories,
   getJobsCategories,
-  getCryptoCategories
+  getCryptoCategories,
+  getCategoriesList
 } from './marketplaceActions';
 
 const defaultState = {
@@ -24,6 +25,10 @@ const defaultState = {
   rentalsList: [],
   cryptoBazaarList: [],
 };
+
+const messages = {
+
+}
 
 const reducer = handleActions({
   [getFeatureList](state, { payload: { featureList } }) {
@@ -85,6 +90,11 @@ const reducer = handleActions({
       ...state,
       cryptoCategories
     };
+  },
+  [getCategoriesList](state, { payload: { } }) {
+    return {
+      ...state
+    }
   }
 }, defaultState);
 

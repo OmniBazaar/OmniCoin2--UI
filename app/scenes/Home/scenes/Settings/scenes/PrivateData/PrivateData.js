@@ -6,8 +6,15 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
-import { changePriority, getPrivateData, updatePrivateData } from '../../../../../../services/accountSettings/accountActions';
+import {
+  changePriority,
+  changeCountry,
+  changeCity,
+  updatePrivateData,
+  updatePublisherData
+} from '../../../../../../services/accountSettings/accountActions';
 
 import '../../settings.scss';
 import './private.scss';
@@ -37,6 +44,10 @@ const messages = defineMessages({
     id: 'PrivateData.country',
     defaultMessage: 'Country'
   },
+  city: {
+    id: 'PrivateData.city',
+    defaultMessage: 'City'
+  },
   startTyping: {
     id: 'PrivateData.startTyping',
     defaultMessage: 'Start typing...'
@@ -52,6 +63,22 @@ const messages = defineMessages({
   update: {
     id: 'PrivateData.update',
     defaultMessage: 'Update'
+  },
+  email: {
+    id: 'PrivateData.email',
+    defaultMessage: 'Email'
+  },
+  firstName: {
+    id: 'PrivateData.firstName',
+    defaultMessage: 'First name'
+  },
+  lastName: {
+    id: 'PrivateData.lastName',
+    defaultMessage: 'Last name'
+  },
+  website: {
+    id: 'PrivateData.website',
+    defaultMessage: 'Website'
   }
 });
 
@@ -66,14 +93,12 @@ class PrivateData extends Component {
     super(props);
 
     this.onChangePriority = this.onChangePriority.bind(this);
+    this.onChangeCity = this.onChangeCity.bind(this);
+    this.onChangeCountry = this.onChangeCountry.bind(this);
     this.submitPrivateData = this.submitPrivateData.bind(this);
     this.submitPublisherData = this.submitPublisherData.bind(this);
     this.privateDataForm = this.privateDataForm.bind(this);
     this.publisherForm = this.publisherForm.bind(this);
-  }
-
-  componentWillMount() {
-    this.props.accountSettingsActions.getPrivateData();
   }
 
   submitPrivateData(values) {
@@ -84,11 +109,12 @@ class PrivateData extends Component {
 
   privateDataForm() {
     const { handleSubmit } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <div className="private-form">
         <Form onSubmit={handleSubmit(this.submitPrivateData)} className="mail-form-container">
           <div className="form-group">
-            <span>Email</span>
+            <span>{formatMessage(messages.email)}</span>
             <Field
               type="text"
               name="email"
@@ -99,7 +125,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>First Name</span>
+            <span>{formatMessage(messages.firstName)}</span>
             <Field
               type="text"
               name="firstname"
@@ -110,7 +136,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>Last Name</span>
+            <span>{formatMessage(messages.lastName)}</span>
             <Field
               type="text"
               name="lastname"
@@ -121,7 +147,7 @@ class PrivateData extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>Website</span>
+            <span>{formatMessage(messages.website)}</span>
             <Field
               type="text"
               name="website"
@@ -131,11 +157,10 @@ class PrivateData extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group submit-group">
+          <div className="form-group">
             <span />
-            <div className="field">
-              <Button type="submit" content="UPDATE" className="button--green-bg" />
-            </div>
+            <Button type="submit" content="UPDATE" className="button--green-bg" />
+            <div className="col-1" />
             <div className="col-1" />
           </div>
         </Form>
@@ -147,15 +172,65 @@ class PrivateData extends Component {
     this.props.accountSettingsActions.changePriority(priority);
   }
 
-  submitPublisherData(values) {
-    console.log(values);
+  onChangeCountry(country) {
+    this.props.accountSettingsActions.changeCountry(country);
+  }
+
+  onChangeCity(city) {
+    this.props.accountSettingsActions.changeCity(city);
+  }
+
+  submitPublisherData() {
+    const { formatMessage } = this.props.intl;
+    this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
+    toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
+  }
+
+  renderPublisherFormFields() {
+    const { publisherData } = this.props.account;
+    const { formatMessage } = this.props.intl;
+    switch(publisherData.priority) {
+      case PriorityTypes.LOCAL_DATA:
+        return (
+          <div>
+            <div className="form-group">
+              <span>{formatMessage(messages.country)}</span>
+              <CountryDropdown
+                value={publisherData.country}
+                classes="ui dropdown textfield"
+                onChange={this.onChangeCountry} />
+              <div className="col-1" />
+            </div>
+            <div className="form-group">
+              <span>{formatMessage(messages.city)}</span>
+              <RegionDropdown
+                country={publisherData.country}
+                value={publisherData.city}
+                classes="ui dropdown textfield"
+                onChange={this.onChangeCity} />
+              <div className="col-1" />
+            </div>
+          </div>
+        );
+      case PriorityTypes.BY_CATEGORY:
+        return (
+          <div>
+
+          </div>
+        );
+      case PriorityTypes.PUBLISHER:
+        return (
+          <div>
+
+          </div>
+        )
+    }
   }
 
   publisherForm() {
-    const { priority } = this.props.account;
+    const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-
     return (
       <div className="publisher-form">
         <div className="header">
@@ -174,7 +249,7 @@ class PrivateData extends Component {
                   name={PriorityTypes.LOCAL_DATA}
                   component="input"
                   type="radio"
-                  checked={priority === PriorityTypes.LOCAL_DATA}
+                  checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
                   value={PriorityTypes.LOCAL_DATA}
                 />
                 <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
@@ -186,7 +261,7 @@ class PrivateData extends Component {
                   name={PriorityTypes.BY_CATEGORY}
                   component="input"
                   type="radio"
-                  checked={priority === PriorityTypes.BY_CATEGORY}
+                  checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
                   value={PriorityTypes.BY_CATEGORY}
                 />
                 <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
@@ -198,7 +273,7 @@ class PrivateData extends Component {
                   name={PriorityTypes.PUBLISHER}
                   component="input"
                   type="radio"
-                  checked={priority === PriorityTypes.PUBLISHER}
+                  checked={publisherData.priority === PriorityTypes.PUBLISHER}
                   value={PriorityTypes.PUBLISHER}
                 />
                 <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
@@ -206,33 +281,11 @@ class PrivateData extends Component {
             </div>
             <div className="col-1" />
           </div>
+          {this.renderPublisherFormFields()}
           <div className="form-group">
-            <span>{formatMessage(messages.country)}</span>
-            <Field
-              type="text"
-              name="country"
-              placeholder={formatMessage(messages.country)}
-              component="input"
-              className="textfield"
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
-            <span>City</span>
-            <Field
-              type="text"
-              name="city"
-              placeholder={formatMessage(messages.startTyping)}
-              component="input"
-              className="textfield"
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group submit-group">
             <span />
-            <div className="field">
-              <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
-            </div>
+            <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
+            <div className="col-1" />
             <div className="col-1" />
           </div>
         </Form>
@@ -253,8 +306,8 @@ class PrivateData extends Component {
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
     changePriority: PropTypes.func,
-    getPrivateData: PropTypes.func,
-    updatePrivateData: PropTypes.func
+    updatePrivateData: PropTypes.func,
+    updatePublisherData: PropTypes.func
   }).isRequired,
   account: PropTypes.shape({
     priority: PropTypes.string,
@@ -282,8 +335,10 @@ export default compose(
     (dispatch) => ({
       accountSettingsActions: bindActionCreators({
         changePriority,
-        getPrivateData,
-        updatePrivateData
+        changeCountry,
+        changeCity,
+        updatePrivateData,
+        updatePublisherData
       }, dispatch),
     }),
   ),
