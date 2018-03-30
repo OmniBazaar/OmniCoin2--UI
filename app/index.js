@@ -21,7 +21,9 @@ import * as reducers from './services/reducer';
 import {
   connectionSubscriber,
   authSubscriber,
-  mailSubscriber
+  mailSubscriber,
+  accountSubscriber,
+  walletSubscriber
 } from './services/saga';
 
 addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
@@ -49,8 +51,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 if (localStorage.getItem('currentUser')) {
   try {
-    JSON.parse(localStorage.getItem('currentUser'))
-  } catch(e) {
+    JSON.parse(localStorage.getItem('currentUser'));
+  } catch (e) {
     localStorage.clear();
   }
 }
@@ -63,6 +65,8 @@ const store = createStore(
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
+sagaMiddleware.run(accountSubscriber);
+sagaMiddleware.run(walletSubscriber);
 
 ReactDOM.render(
   (

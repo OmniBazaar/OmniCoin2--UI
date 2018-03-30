@@ -8,8 +8,8 @@ const {
   login,
   logout,
   signup,
-  accountLookup,
-  requestPcIds
+  requestPcIds,
+  getAccount
 } = createActions({
   GET_CURRENT_USER: () => ({}),
   LOGIN: (username, password) => ({ username, password }),
@@ -19,8 +19,8 @@ const {
       username, password, referrer, macAddress, harddriveId
     }
   ),
-  ACCOUNT_LOOKUP: (username) => ({ username }),
-  REQUEST_PC_IDS: () => ({})
+  REQUEST_PC_IDS: () => ({}),
+  GET_ACCOUNT: (username) => ({ username })
 });
 
 
@@ -29,6 +29,6 @@ export {
   login,
   logout,
   signup,
-  accountLookup,
-  requestPcIds
+  requestPcIds,
+  getAccount
 };

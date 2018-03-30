@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { getCurrentUser } from '../../services/blockchain/auth/authActions';
 import SignupForm from './components/SignupForm/SignupForm';
 import Background from '../../components/Background/Background';
 import './signup.scss';
+import { getAccount } from '../../services/blockchain/auth/authActions';
 
 class Signup extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.currentUser) {
       this.props.history.push('/');
+      this.props.authActions.getAccount(nextProps.auth.currentUser.username);
     }
   }
 
@@ -27,7 +28,7 @@ class Signup extends Component {
 export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
-    authActions: bindActionCreators({ getCurrentUser }, dispatch),
+    authActions: bindActionCreators({ getAccount }, dispatch),
   }),
 )(Signup);
 
@@ -38,7 +39,6 @@ Signup.propTypes = {
       password: PropTypes.string
     }),
     error: PropTypes.shape({}),
-    accountExists: PropTypes.bool,
     loading: PropTypes.bool
   })
 };

@@ -10,11 +10,13 @@ import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
+import blockchainWallet from './blockchain/wallet/walletReducer';
 
 export default combineReducers({
   auth: authReducer,
   mail: mailReducer,
   wallet: walletReducer,
+  blockchainWallet,
   processorsStandby: processorsStandbyReducer,
   processorsTop: processorsTopReducer,
   connection: connectionReducer,
