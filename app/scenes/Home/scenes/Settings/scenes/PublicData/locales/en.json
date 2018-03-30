@@ -8,5 +8,6 @@
   "Settings.processorBody": "TRANSACTION PROCESSOR: Transaction Processors are paid OmniCoins for processing the transactions of the other user in the marketplace. Because this is a well-paid and highly-responsible position, Transaction Processor are selected only from the most active participants in the marketplace. Referring new users, publishing listings for others, being known and trusted by other users, and having a good reputation in the marketplace all count toward being recognized as an \"active participant\" and qualifying to be a Transaction Processor.",
   "Settings.escrowTitle": "I'm willing to perform the duties of an Escrow Agent.",
   "Settings.escrowBody": "ESCROW: Escrow Agents help ensure that marketplace transactions are carried out honestly and fairly. When you choose to become an Escrow Agent, you agree to settle disputes that may arise between buyers and sellers. If you are called upon to settle a dispute, you must review the evidence provided by both sides and make an impartial decision about whether to return funds to the buyer or release them to the seller. You receive a fee (in OmniCoins) from every transaction for which you are chosen as the escrow agent, regardless of whether or not you are called upon to settle a dispute.",
-  "Settings.updateTransactionFee": "Update data transaction fee: "
+  "Settings.updateTransactionFee": "Update data transaction fee: ",
+  "Settings.update": "Update"
 }

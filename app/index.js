@@ -23,6 +23,8 @@ import {
   authSubscriber,
   mailSubscriber,
   escrowSubscriber
+  accountSubscriber,
+  walletSubscriber
 } from './services/saga';
 
 addLocaleData([...en, ...es, ...fr, ...it]);
@@ -65,6 +67,8 @@ sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
 sagaMiddleware.run(escrowSubscriber);
+sagaMiddleware.run(accountSubscriber);
+sagaMiddleware.run(walletSubscriber);
 
 ReactDOM.render(
   (

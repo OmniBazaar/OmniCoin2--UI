@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 import {
@@ -16,6 +16,7 @@ import {
   setRescan,
   getVotes,
   sortVotesData,
+  updatePublicData,
 } from './accountActions';
 
 const defaultState = {
@@ -39,6 +40,8 @@ const defaultState = {
   votesFiltered: [],
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
+  loading: false,
+  error: null
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -87,6 +90,23 @@ const reducer = handleActions({
       detailSelected,
     };
   },
+  [updatePublicData](state, { payload: { } }) {
+    return {
+      ...state,
+      loading: true,
+      error: null
+    };
+  },
+  UPDATE_PUBLIC_DATA_SUCCEEDED: (state, action) => ({
+    ...state,
+    loading: false,
+    error: null
+  }),
+  UPDATE_PUBLIC_DATA_FAILED: (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  }),
   [setRescan](state) {
     return {
       ...state,
@@ -100,6 +120,7 @@ const reducer = handleActions({
       recentTransactionsFiltered: recentTransactions,
     };
   },
+
   [filterData](state, { payload: { filterText } }) {
     const data = state.recentTransactions;
     const activePage = 1;

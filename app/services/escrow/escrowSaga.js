@@ -21,26 +21,25 @@ function* loadEscrowTransactions(action) {
   };
 
   const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
-
+  
   yield put({
     type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
     transactions: dummyTransactions
   });
 }
 
-function* loadEscrowAgents(action) {
-  const { username } = action.payload;
 
-  // get the agents here
-  const dummyAgents = {
-    agentX: {
-      username: 'agentX',
-      approved: false
-    }
-  };
+function* loadEscrowAgents({payload: {start, limit, search_term}}) {
+  try {
+    const result = yield (Apis.instance().db_api().exec('get_current_escrows', [start, limit, search_term]));
+    const isAnythingLeft = limit - start === result.length;
+    yield put({
+      type: 'LOAD_ESCROW_AGENTS_DONE',
+      agents: result.map(name => {name}),
+      isAnythingLeft
+    });
+  } catch (e) {
+    console.log("SOME ERROR", e);
+  }
 
-  yield put({
-    type: 'LOAD_ESCROW_AGENTS_DONE',
-    agents: dummyAgents
-  });
 }

@@ -60,6 +60,8 @@ const agents = [
   }
 ];
 
+const limit = 5;
+
 class MyEscrowAgents extends Component {
 
   constructor(props) {
@@ -69,16 +71,20 @@ class MyEscrowAgents extends Component {
     this.handleApproveClick = this.handleApproveClick.bind(this);
     this.renderAgents = this.renderAgents.bind(this);
     this.toggleSelectAgent = this.toggleSelectAgent.bind(this);
+    this.onPageChange = this.onPageChange.bind(this);
   }
 
   state = {
     isApproved: false,
     myFreezedAgents: [],
-    searchTerm: ''
+    searchTerm: '',
+    page: 1,
+    totalPages: 1,
+    activePage: 1
   };
 
   componentWillMount() {
-    this.props.escrowActions.loadMyEscrowAgents();
+    this.props.escrowActions.loadMyEscrowAgents(0, limit, this.state.searchTerm);
   }
 
   componentDidMount() {
@@ -156,6 +162,14 @@ class MyEscrowAgents extends Component {
     });
   }
 
+
+  onPageChange(page) {
+    if (page > this.state.totalPages && this.props.isAnythingLeft) {
+      const start = limit * (page - 1);
+      this.props.escrowActions.loadMyEscrowAgents(start, start + limit, this.state.searchTerm);
+    }
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     return (
@@ -192,7 +206,11 @@ class MyEscrowAgents extends Component {
           </ul>
         </div>
         <div className="bottom">
-          <Pagination />
+          <Pagination
+            activePage={this.state.activePage}
+            onPageChange={this.onPageChange}
+            totalPages={this.state.totalPages}
+          />
         </div>
       </div>
     )

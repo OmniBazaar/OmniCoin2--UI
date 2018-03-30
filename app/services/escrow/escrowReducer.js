@@ -67,7 +67,11 @@ const reducer = handleActions({
 
   LOAD_ESCROW_AGENTS_DONE: (state, action) => ({
     ...state,
-    agents: action.agents
+    agents: [
+      ...state.agents,
+      ...action.agents
+    ],
+    isAnythingLeft: action.isAnythingLeft
   })
 
 }, defaultState);

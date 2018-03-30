@@ -69,7 +69,7 @@
       tr {
         &:nth-child(2n) {
           td {
-            background-color: lighten($lighter-blue, 2%) !important;
+            background-color: lighten($lighter-blue, 2%);
           }
         }
 
