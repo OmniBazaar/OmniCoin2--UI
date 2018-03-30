@@ -11,7 +11,7 @@ import MyEscrowSettings from './scenes/MyEscrowSettings/MyEscrowSettings';
 import MyEscrowTransactions from './scenes/MyEscrowTransactions/MyEscrowTransactions';
 import Header from '../../../../components/Header/index';
 
-import { loadEscrowTransactions, loadEscrowAgents, getEscrowSettings } from '../../../../services/escrow/escrowActions';
+import { loadEscrowTransactions, getEscrowSettings } from '../../../../services/escrow/escrowActions';
 import './escrow.scss';
 
 const messages = defineMessages({
@@ -36,7 +36,6 @@ class Escrow extends Component {
 
   componentDidMount() {
     this.props.escrowActions.loadEscrowTransactions();
-    this.props.escrowActions.loadEscrowAgents();
     this.props.escrowActions.getEscrowSettings();
   }
 
@@ -85,7 +84,7 @@ class Escrow extends Component {
 Escrow.propTypes = {
   escrowActions: PropTypes.shape({
     loadEscrowTransactions: PropTypes.func,
-    loadEscrowAgents: PropTypes.func,
+    loadMyEscrowAgents: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -102,7 +101,6 @@ export default connect(
   (dispatch) => ({
     escrowActions: bindActionCreators({
       loadEscrowTransactions,
-      loadEscrowAgents,
       getEscrowSettings
     }, dispatch),
   }),

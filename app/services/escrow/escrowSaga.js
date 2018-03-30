@@ -1,10 +1,14 @@
-import { put, takeEvery, call, all } from 'redux-saga/effects';
+import { put, takeEvery, call, all, takeLatest } from 'redux-saga/effects';
+import { FetchChain, ChainStore } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import { updateAccount } from '../accountSettings/accountSaga';
 
 export function* escrowSubscriber() {
   yield all([
     takeEvery('LOAD_ESCROW_TRANSACTIONS', loadEscrowTransactions),
-    takeEvery('LOAD_ESCROW_AGENTS', loadEscrowAgents)
+    takeLatest('LOAD_ESCROW_AGENTS', loadEscrowAgents),
+    takeEvery('LOAD_MY_ESCROW_AGENTS', loadMyEscrowAgents),
+    takeEvery('SET_MY_ESCROW_AGENTS', setMyEscrowAgents)
   ]);
 }
 
@@ -20,8 +24,8 @@ function* loadEscrowTransactions(action) {
     }
   };
 
-  const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
-  
+//  const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
+
   yield put({
     type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
     transactions: dummyTransactions
@@ -31,15 +35,39 @@ function* loadEscrowTransactions(action) {
 
 function* loadEscrowAgents({payload: {start, limit, search_term}}) {
   try {
-    const result = yield (Apis.instance().db_api().exec('get_current_escrows', [start, limit, search_term]));
+    const result = yield (Apis.instance().db_api().exec('filter_current_escrows', [start, limit, search_term]));
     const isAnythingLeft = limit - start === result.length;
     yield put({
-      type: 'LOAD_ESCROW_AGENTS_DONE',
-      agents: result.map(name => {name}),
+      type: 'LOAD_ESCROW_AGENTS_SUCCEEDED',
+      agents: result,
       isAnythingLeft
     });
   } catch (e) {
+    yield put({
+      type: 'LOAD_ESCROW_AGENTS_FAILED',
+      error: e
+    });
     console.log("SOME ERROR", e);
   }
+}
+
+function* loadMyEscrowAgents({payload: {username}}) {
+  try {
+    ChainStore.resetCache();
+    const result = yield call(FetchChain, 'getAccount', username);
+    yield put({
+      type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
+      myAgents: result.get('escrows').map(name => { return {name} }),
+    })
+  } catch (e) {
+    yield put({
+      type: 'LOAD_MY_ESCROW_AGENTS_FAILED',
+      error: e
+    });
+    console.log('ERROR ', e);
+  }
+}
+
+function* setMyEscrowAgents({payload: {agents}}) {
 
 }

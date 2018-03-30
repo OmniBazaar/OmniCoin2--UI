@@ -22,7 +22,7 @@ import {
   connectionSubscriber,
   authSubscriber,
   mailSubscriber,
-  escrowSubscriber
+  escrowSubscriber,
   accountSubscriber,
   walletSubscriber
 } from './services/saga';

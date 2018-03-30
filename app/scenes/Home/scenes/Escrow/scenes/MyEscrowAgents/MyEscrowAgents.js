@@ -13,7 +13,9 @@ import  {
   loadMyEscrowAgents,
   addOrUpdateAgents,
   setMyEscrowAgents,
-  removeMyEscrowAgents
+  removeMyEscrowAgents,
+  clearEscrowAgents,
+  loadEscrowAgents
 } from '../../../../../../services/escrow/escrowActions';
 
 import './my-escrow-agents.scss';
@@ -45,20 +47,6 @@ const messages = defineMessages({
   }
 });
 
-const agents = [
-  {
-    name: "agent1"
-  },
-  {
-    name: "agent2"
-  },
-  {
-    name: "agent3"
-  },
-  {
-    name: "agent4"
-  }
-];
 
 const limit = 5;
 
@@ -84,7 +72,8 @@ class MyEscrowAgents extends Component {
   };
 
   componentWillMount() {
-    this.props.escrowActions.loadMyEscrowAgents(0, limit, this.state.searchTerm);
+    this.props.escrowActions.loadEscrowAgents(0, limit, this.state.searchTerm);
+    this.props.escrowActions.loadMyEscrowAgents(this.props.auth.currentUser.username);
   }
 
   componentDidMount() {
@@ -95,12 +84,12 @@ class MyEscrowAgents extends Component {
 
   componentWillUnmount() {
     this.props.escrowActions.setMyEscrowAgents(this.state.myFreezedAgents);
+    this.props.escrowActions.clearEscrowAgents();
   }
 
   renderAgents() {
-    if (this.state.searchTerm) {
-      return agents.map((agent) => {
-          const isSelected = !!this.props.escrow.myAgents.find(escrow => escrow.name === agent.name);
+      return this.props.escrow.agents.map((agent) => {
+          const isSelected = !!this.props.escrow.myAgents.find(item => item.name === agent.name);
           return (
             <li key={agent.name}>
               <AgentItem
@@ -112,27 +101,21 @@ class MyEscrowAgents extends Component {
           );
         }
       )
-    } else {
-      return agents.filter(agent => {
-        return !!this.props.escrow.myAgents.find(escrow => escrow.name === agent.name);
-      }).map(agent => {
-        return (
-          <li key={agent.name}>
-            <AgentItem
-              isSelected={true}
-              toggleSelect={() => this.toggleSelectAgent(agent)}
-              name={agent.name}
-            />
-          </li>
-        );
-      })
-    }
   }
 
   handleSearchChange(e, data) {
+    if (this.state.searchTerm !== data.value)  {
+      this.props.escrowActions.clearEscrowAgents();
+      this.setState({
+        page: 1,
+        totalPages: 1,
+        activePage: 1
+      })
+    }
     this.setState({
       searchTerm: data.value
     });
+    this.props.escrowActions.loadEscrowAgents(0, limit, this.state.searchTerm);
   }
 
   handleClearClick() {
@@ -163,9 +146,9 @@ class MyEscrowAgents extends Component {
   }
 
 
-  onPageChange(page) {
+  onPageChange(e, {activePage}) {
     if (page > this.state.totalPages && this.props.isAnythingLeft) {
-      const start = limit * (page - 1);
+      const start = limit * (activePage - 1);
       this.props.escrowActions.loadMyEscrowAgents(start, start + limit, this.state.searchTerm);
     }
   }
@@ -224,7 +207,9 @@ export default connect(
       loadMyEscrowAgents,
       addOrUpdateAgents,
       setMyEscrowAgents,
-      removeMyEscrowAgents
+      removeMyEscrowAgents,
+      clearEscrowAgents,
+      loadEscrowAgents
     }, dispatch),
   }),
 )(injectIntl(MyEscrowAgents));

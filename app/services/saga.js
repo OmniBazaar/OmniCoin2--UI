@@ -9,7 +9,7 @@ export {
   connectionSubscriber,
   authSubscriber,
   mailSubscriber,
-  escrowSubscriber
+  escrowSubscriber,
   accountSubscriber,
   walletSubscriber
 };
