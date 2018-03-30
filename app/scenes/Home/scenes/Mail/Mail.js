@@ -210,16 +210,18 @@ class Mail extends Component {
       return <div />;
     }
 
+    const creationTime = new Date(message.creation_time * 1000).toLocaleString();
+
     return (
       <div className="mail-message">
         <div className="message-header">
           <div className="top-detail">
-            <div className="from">{message.from}</div>
-            <div className="date">{message.date}</div>
+            <div className="from">{message.user}</div>
+            <div className="date">{creationTime}</div>
           </div>
           <div className="mail-title">
             <div className="title">
-              {message.title}
+              {message.subject}
             </div>
             <div>
               { this.props.mail.activeFolder === MailTypes.INBOX &&
@@ -284,7 +286,7 @@ class Mail extends Component {
             <div className="mail-items">
               {this._renderItems()}
             </div>
-            <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{ position: 'relative' }}>
+            <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{ position: 'relative' }} className="second-split-pane">
               <div className="mail-messages">
                 {this._renderMessages()}
               </div>

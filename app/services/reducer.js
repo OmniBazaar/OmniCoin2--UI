@@ -10,6 +10,7 @@ import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
 import escrowReducer from './escrow/escrowReducer';
+import marketplaceReducer from './marketplace/marketplaceReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
   menu: menuReducer,
   account: accountReducer,
   preferences: preferencesReducer,
-  escrow: escrowReducer
+  escrow: escrowReducer,
+  marketplace: marketplaceReducer
 });
