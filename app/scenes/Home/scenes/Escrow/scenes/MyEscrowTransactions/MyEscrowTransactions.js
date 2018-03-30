@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -49,7 +49,7 @@ class MyEscrowTransactions extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-   
+
     let headerName  = this.state.lastHeaderClicked;
     let asc = this.state.sortAsc[headerName];
 
@@ -101,48 +101,47 @@ class MyEscrowTransactions extends Component {
   }
 
   render() {
-
     const { formatMessage } = this.props.intl;
 
-    return (<div className="table-container">
-    <Table
-      sortable="true"
-      compact="true"
-      basic="very"
-      striped="true"
-      size="small"
-    >
-    <TableHeader>
-      <TableRow>
-
-        <TableHeaderCell 
-            sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
-            onClick={this.handleHeaderClick.bind(this, 'transactionID')}>
-            {formatMessage(messages.transactionID)}
-        </TableHeaderCell>
-        
-        <TableHeaderCell sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
-            sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
-            onClick={this.handleHeaderClick.bind(this, 'amount')}>
-            {formatMessage(messages.amount)}
-        </TableHeaderCell>
-
-        <TableHeaderCell sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
-             sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
-             onClick={this.handleHeaderClick.bind(this, 'parties')}>
-             {formatMessage(messages.parties)}
-        </TableHeaderCell>
-
-      </TableRow>
-    </TableHeader>
-
-    <TableBody>
-      {this.renderRows()}
-    </TableBody>
-
-    
-  </Table>
-  </div>);
+    return (
+      <div className="data-table">
+        <div className="table-container">
+          <Table
+            sortable="true"
+            compact="true"
+            basic="very"
+            striped="true"
+            size="small"
+          >
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell
+                  sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
+                  onClick={this.handleHeaderClick.bind(this, 'transactionID')}
+                >
+                  {formatMessage(messages.transactionID)}
+                </TableHeaderCell>
+                <TableHeaderCell
+                  sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
+                  onClick={this.handleHeaderClick.bind(this, 'amount')}
+                >
+                  {formatMessage(messages.amount)}
+                </TableHeaderCell>
+                <TableHeaderCell
+                  sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
+                  onClick={this.handleHeaderClick.bind(this, 'parties')}
+                >
+                  {formatMessage(messages.parties)}
+                </TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {this.renderRows()}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
   }
 }
 
