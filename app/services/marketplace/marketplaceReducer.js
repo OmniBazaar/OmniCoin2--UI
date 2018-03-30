@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import {
   getFeatureList,
   setPaginationFeature,
@@ -40,7 +40,7 @@ const reducer = handleActions({
       featureListFiltered: featureList
     };
   },
-  [combineActions(setPaginationFeature)](state, { payload: { rowsPerPageFeature } }) {
+  [setPaginationFeature](state, { payload: { rowsPerPageFeature } }) {
     const data = state.featureList;
     const { activePageFeature } = state;
     const totalPagesFeature = getTotalPages(data, rowsPerPageFeature);
@@ -53,7 +53,7 @@ const reducer = handleActions({
       featureListFiltered: currentData,
     };
   },
-  [combineActions(setActivePageFeature)](state, { payload: { activePageFeature } }) {
+  [setActivePageFeature](state, { payload: { activePageFeature } }) {
     const data = state.featureList;
     if (activePageFeature !== state.activePageFeature) {
       const { rowsPerPageFeature } = state;

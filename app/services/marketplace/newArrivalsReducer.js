@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
   getNewArrivalsList,
@@ -30,7 +30,7 @@ const reducer = handleActions({
       newArrivalsListFiltered: sortedData
     };
   },
-  [combineActions(setPaginationNewArrivals)](state, { payload: { rowsPerPageNewArrivals } }) {
+  [setPaginationNewArrivals](state, { payload: { rowsPerPageNewArrivals } }) {
     const data = state.newArrivalsList;
     const { activePageNewArrivals } = state;
     const totalPagesNewArrivals = getTotalPages(data, rowsPerPageNewArrivals);
@@ -43,7 +43,7 @@ const reducer = handleActions({
       newArrivalsListFiltered: currentData,
     };
   },
-  [combineActions(setActivePageNewArrivals)](state, { payload: { activePageNewArrivals } }) {
+  [setActivePageNewArrivals](state, { payload: { activePageNewArrivals } }) {
     const data = state.newArrivalsList;
     if (activePageNewArrivals !== state.activePageNewArrivals) {
       const { rowsPerPageNewArrivals } = state;

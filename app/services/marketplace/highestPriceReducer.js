@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
   getHighestPriceList,
@@ -30,7 +30,7 @@ const reducer = handleActions({
       highestPriceListFiltered: sortedData
     };
   },
-  [combineActions(setPaginationHighestPrice)](state, { payload: { rowsPerPageHighestPrice } }) {
+  [setPaginationHighestPrice](state, { payload: { rowsPerPageHighestPrice } }) {
     const data = state.highestPriceList;
     const { activePageHighestPrice } = state;
     const totalPagesHighestPrice = getTotalPages(data, rowsPerPageHighestPrice);
@@ -43,7 +43,7 @@ const reducer = handleActions({
       highestPriceListFiltered: currentData,
     };
   },
-  [combineActions(setActivePageHighestPrice)](state, { payload: { activePageHighestPrice } }) {
+  [setActivePageHighestPrice](state, { payload: { activePageHighestPrice } }) {
     const data = state.highestPriceList;
     if (activePageHighestPrice !== state.activePageHighestPrice) {
       const { rowsPerPageHighestPrice } = state;

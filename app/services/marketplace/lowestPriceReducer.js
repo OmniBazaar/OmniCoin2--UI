@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
   getLowestPriceList,
@@ -30,7 +30,7 @@ const reducer = handleActions({
       lowestPriceListFiltered: sortedData
     };
   },
-  [combineActions(setPaginationLowestPrice)](state, { payload: { rowsPerPageLowestPrice } }) {
+  [setPaginationLowestPrice](state, { payload: { rowsPerPageLowestPrice } }) {
     const data = state.lowestPriceList;
     const { activePageLowestPrice } = state;
     const totalPagesLowestPrice = getTotalPages(data, rowsPerPageLowestPrice);
@@ -43,7 +43,7 @@ const reducer = handleActions({
       lowestPriceListFiltered: currentData,
     };
   },
-  [combineActions(setActivePageLowestPrice)](state, { payload: { activePageLowestPrice } }) {
+  [setActivePageLowestPrice](state, { payload: { activePageLowestPrice } }) {
     const data = state.lowestPriceList;
     if (activePageLowestPrice !== state.activePageLowestPrice) {
       const { rowsPerPageLowestPrice } = state;
