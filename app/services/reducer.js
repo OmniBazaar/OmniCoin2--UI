@@ -11,6 +11,9 @@ import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
 import escrowReducer from './escrow/escrowReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
+import lowestPriceReducer from './marketplace/lowestPriceReducer';
+import highestPriceReducer from './marketplace/highestPriceReducer';
+import newArrivalsReducer from './marketplace/newArrivalsReducer';
 import blockchainWallet from './blockchain/wallet/walletReducer';
 
 export default combineReducers({
@@ -26,5 +29,8 @@ export default combineReducers({
   account: accountReducer,
   preferences: preferencesReducer,
   escrow: escrowReducer,
-  marketplace: marketplaceReducer
+  marketplace: marketplaceReducer,
+  lowestPrice: lowestPriceReducer,
+  highestPrice: highestPriceReducer,
+  newArrivals: newArrivalsReducer,
 });

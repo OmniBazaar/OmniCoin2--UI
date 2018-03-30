@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Icon, Popup } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
@@ -18,7 +18,6 @@ import Marketplace from './scenes/Marketplace/Marketplace';
 import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
 import Preferences from './scenes/Preferences/Preferences';
-import SettingsMenu from './components/AccountFooter/components/SettingsMenu/SettingsMenu';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
@@ -41,6 +40,7 @@ import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
+import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
 
 const iconSize = 20;
@@ -82,6 +82,12 @@ class Home extends Component {
     }
   }
 
+  setActiveCategory = () => {
+    if (this.props.menuActions.setActiveCategory) {
+      this.props.menuActions.setActiveCategory('Marketplace.home');
+    }
+  };
+
   render() {
     const { visible } = this.state;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
@@ -121,7 +127,7 @@ class Home extends Component {
                     defaultMessage="Wallet"
                   />
                 </NavLink>
-                <NavLink to="/marketplace" activeClassName="active" className="menu-item">
+                <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
                   <Image src={MarketplaceIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.marketplace"
@@ -194,7 +200,11 @@ class Home extends Component {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    menuActions: bindActionCreators({ showSettingsModal, showPreferencesModal }, dispatch),
+    menuActions: bindActionCreators({
+      showSettingsModal,
+      showPreferencesModal,
+      setActiveCategory
+    }, dispatch),
     authActions: bindActionCreators({ getAccount }, dispatch)
   })
 )(Home);
@@ -210,7 +220,8 @@ Home.propTypes = {
   }),
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
-    showPreferencesModal: PropTypes.func
+    showPreferencesModal: PropTypes.func,
+    setActiveCategory: PropTypes.func
   })
 
 };
