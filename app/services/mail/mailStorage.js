@@ -16,7 +16,12 @@ export function storeMessage(mailObject, user, messageFolder) {
 
 export function getMessage(user, messageFolder, uuid) {
   const mailObject = JSON.parse(localStorage.getItem('mail'));
-  return mailObject[user][messageFolder][uuid];
+  try {
+    return mailObject[user][messageFolder][uuid];
+  }
+  catch(err) {
+    return null;
+  }
 }
 
 export function deleteMessage(user, messageFolder, uuid) {
