@@ -3,10 +3,10 @@ const publisherDataKey = 'publisherKeySettings';
 
 class AccountSettingsStorage {
   static init(key) {
-    switch(key) {
+    switch (key) {
       case privateDataKey:
-        localStorage.
-          setItem(privateDataKey, JSON.stringify({
+        localStorage
+          .setItem(privateDataKey, JSON.stringify({
             email: '',
             firstname: '',
             lastname: '',
@@ -23,7 +23,6 @@ class AccountSettingsStorage {
         }));
         break;
       default:
-        return;
     }
   }
 

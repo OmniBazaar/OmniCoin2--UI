@@ -28,7 +28,7 @@ import {
 
 addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
 
-const language = 'en';//(navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+const language = 'en';// (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
 
 const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 

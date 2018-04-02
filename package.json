@@ -194,6 +194,7 @@
     "electron-debug": "^1.5.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "ip": "^1.1.5",
     "lodash": "^4.17.5",
     "object-hash": "^1.2.0",
     "omnibazaarjs": "^1.0.3",

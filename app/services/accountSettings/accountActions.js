@@ -8,6 +8,8 @@ const {
   changePriority,
   changeCountry,
   changeCity,
+  changeCategory,
+  changePublisherName,
   getRecentTransactions,
   setActivePage,
   setPagination,
@@ -21,15 +23,19 @@ const {
   getPrivateData,
   updatePrivateData,
   getPublisherData,
-  updatePublisherData
+  updatePublisherData,
+  getPublishers,
+  changeIpAddress
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
   SET_TRANSACTION_PROCESSOR: () => ({}),
   SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
-  CHANGE_COUNTRY: (country) => ({country}),
-  CHANGE_CITY: (city) => ({city}),
+  CHANGE_COUNTRY: (country) => ({ country }),
+  CHANGE_CITY: (city) => ({ city }),
+  CHANGE_CATEGORY: (category) => ({ category }),
+  CHANGE_PUBLISHER_NAME: (publisher) => ({ publisher }),
   GET_RECENT_TRANSACTIONS: (recentTransactions) => ({ recentTransactions }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
@@ -44,6 +50,8 @@ const {
   UPDATE_PRIVATE_DATA: (data) => ({ data }),
   GET_PUBLISHER_DATA: () => ({}),
   UPDATE_PUBLISHER_DATA: (data) => ({ data }),
+  GET_PUBLISHERS: () => ({}),
+  CHANGE_IP_ADDRESS: (ip) => ({ ip }),
 });
 
 export {
@@ -54,6 +62,8 @@ export {
   changePriority,
   changeCountry,
   changeCity,
+  changeCategory,
+  changePublisherName,
   getRecentTransactions,
   setActivePage,
   setPagination,
@@ -67,5 +77,7 @@ export {
   getPrivateData,
   updatePrivateData,
   getPublisherData,
-  updatePublisherData
+  updatePublisherData,
+  getPublishers,
+  changeIpAddress
 };

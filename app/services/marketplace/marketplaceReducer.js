@@ -1,4 +1,6 @@
 import { handleActions } from 'redux-actions';
+import { defineMessages } from 'react-intl';
+
 import {
   getFeatureList,
   getForSaleList,
@@ -10,7 +12,7 @@ import {
   getServicesCategories,
   getJobsCategories,
   getCryptoCategories,
-  getCategoriesList
+  getCategories
 } from './marketplaceActions';
 
 const defaultState = {
@@ -24,11 +26,39 @@ const defaultState = {
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
+  categories: {}
 };
 
-const messages = {
-
-}
+const messages = defineMessages({
+  community: {
+    id: 'Categories.community',
+    defaultMessage: 'Community'
+  },
+  housing: {
+    id: 'Categories.housing',
+    defaultMessage: 'Housing'
+  },
+  forSale: {
+    id: 'Categories.forSale',
+    defaultMessage: 'For Sale'
+  },
+  jobs: {
+    id: 'Categories.jobs',
+    defaultMessage: 'Jobs'
+  },
+  services: {
+    id: 'Categories.services',
+    defaultMessage: 'Services'
+  },
+  gigs: {
+    id: 'Categories.gigs',
+    defaultMessage: 'Gigs'
+  },
+  cryptoBazaar: {
+    id: 'Categories.cryptoBazaar',
+    defaultMessage: 'CryptoBazaar'
+  }
+});
 
 const reducer = handleActions({
   [getFeatureList](state, { payload: { featureList } }) {
@@ -91,10 +121,11 @@ const reducer = handleActions({
       cryptoCategories
     };
   },
-  [getCategoriesList](state, { payload: { } }) {
+  [getCategories](state, { payload: { } }) {
     return {
-      ...state
-    }
+      ...state,
+      categories: messages
+    };
   }
 }, defaultState);
 

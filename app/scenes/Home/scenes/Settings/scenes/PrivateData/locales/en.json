@@ -9,5 +9,7 @@
   "PrivateData.apply": "APPLY",
   "PrivateData.updateSuccess": "Successfully updated",
   "PrivateData.update": "Update",
-  "PrivateData.city": "City"
+  "PrivateData.city": "City",
+  "PrivateData.publisherPlaceholder": "Select publisher...",
+  "PrivateData.publisher": "Publisher"
 }

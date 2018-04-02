@@ -3,7 +3,7 @@ import { bindActionCreators, compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -12,9 +12,14 @@ import {
   changePriority,
   changeCountry,
   changeCity,
+  changePublisherName,
+  changeCategory,
   updatePrivateData,
-  updatePublisherData
+  updatePublisherData,
+  getPublishers
 } from '../../../../../../services/accountSettings/accountActions';
+
+import { getCategories } from '../../../../../../services/marketplace/marketplaceActions';
 
 import '../../settings.scss';
 import './private.scss';
@@ -79,6 +84,22 @@ const messages = defineMessages({
   website: {
     id: 'PrivateData.website',
     defaultMessage: 'Website'
+  },
+  categoriesPlaceholder: {
+    id: 'PrivateData.categoriesPlaceholder',
+    defaultMessage: 'Select category...'
+  },
+  category: {
+    id: 'PrivateData.category',
+    defaultMessage: 'Category'
+  },
+  publisherPlaceholder: {
+    id: 'PrivateData.publisherPlaceholder',
+    defaultMessage: 'Select publisher...'
+  },
+  publisher: {
+    id: 'PrivateData.publisher',
+    defaultMessage: 'Publisher'
   }
 });
 
@@ -95,10 +116,17 @@ class PrivateData extends Component {
     this.onChangePriority = this.onChangePriority.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
+    this.onChangeCategory = this.onChangeCategory.bind(this);
+    this.onChangePublisherName = this.onChangePublisherName.bind(this);
     this.submitPrivateData = this.submitPrivateData.bind(this);
     this.submitPublisherData = this.submitPublisherData.bind(this);
     this.privateDataForm = this.privateDataForm.bind(this);
     this.publisherForm = this.publisherForm.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.marketplaceActions.getCategories();
+    this.props.accountSettingsActions.getPublishers();
   }
 
   submitPrivateData(values) {
@@ -180,6 +208,14 @@ class PrivateData extends Component {
     this.props.accountSettingsActions.changeCity(city);
   }
 
+  onChangeCategory(e, data) {
+    this.props.accountSettingsActions.changeCategory(data.value);
+  }
+
+  onChangePublisherName(e, data) {
+    this.props.accountSettingsActions.changePublisherName(data.value);
+  }
+
   submitPublisherData() {
     const { formatMessage } = this.props.intl;
     this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
@@ -187,9 +223,10 @@ class PrivateData extends Component {
   }
 
   renderPublisherFormFields() {
-    const { publisherData } = this.props.account;
+    const { publisherData, publishers } = this.props.account;
     const { formatMessage } = this.props.intl;
-    switch(publisherData.priority) {
+    const categoriesKeys = Object.keys(this.props.marketplace.categories);
+    switch (publisherData.priority) {
       case PriorityTypes.LOCAL_DATA:
         return (
           <div>
@@ -198,7 +235,8 @@ class PrivateData extends Component {
               <CountryDropdown
                 value={publisherData.country}
                 classes="ui dropdown textfield"
-                onChange={this.onChangeCountry} />
+                onChange={this.onChangeCountry}
+              />
               <div className="col-1" />
             </div>
             <div className="form-group">
@@ -207,23 +245,53 @@ class PrivateData extends Component {
                 country={publisherData.country}
                 value={publisherData.city}
                 classes="ui dropdown textfield"
-                onChange={this.onChangeCity} />
+                onChange={this.onChangeCity}
+              />
               <div className="col-1" />
             </div>
           </div>
         );
       case PriorityTypes.BY_CATEGORY:
         return (
-          <div>
-
+          <div className="form-group" key="category">
+            <span>{formatMessage(messages.category)}</span>
+            <Dropdown
+              placeholder={formatMessage(messages.categoriesPlaceholder)}
+              defaultValue={publisherData.category}
+              fluid
+              selection
+              options={categoriesKeys.map(el => ({
+                  key: el,
+                  value: el,
+                  text: formatMessage(this.props.marketplace.categories[el]),
+              }))}
+              onChange={this.onChangeCategory}
+            />
+            <div className="col-1" />
           </div>
         );
       case PriorityTypes.PUBLISHER:
         return (
-          <div>
-
+          <div className="form-group" key="publisher">
+            <span>{formatMessage(messages.publisherName)}</span>
+            <Dropdown
+              placeholder={formatMessage(messages.publisherPlaceholder)}
+              defaultValue={publisherData.publisherName}
+              loading={publishers.loading}
+              fluid
+              selection
+              options={publishers.names.map(el => ({
+                  key: el,
+                  value: el,
+                  text: el
+                }))}
+              onChange={this.onChangePublisherName}
+            />
+            <div className="col-1" />
           </div>
-        )
+        );
+      default:
+        return null;
     }
   }
 
@@ -297,7 +365,7 @@ class PrivateData extends Component {
     return (
       <div className="private-data">
         {this.privateDataForm()}
-        {this.publisherForm()}
+        {!this.props.auth.account.get('is_a_publisher') && this.publisherForm()}
       </div>
     );
   }
@@ -306,12 +374,30 @@ class PrivateData extends Component {
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
     changePriority: PropTypes.func,
+    changeCountry: PropTypes.func,
+    changeCity: PropTypes.func,
+    changeCategory: PropTypes.func,
+    changePublisherName: PropTypes.func,
     updatePrivateData: PropTypes.func,
-    updatePublisherData: PropTypes.func
+    updatePublisherData: PropTypes.func,
+    getPublishers: PropTypes.func
+  }).isRequired,
+  marketplaceActions: PropTypes.shape({
+    getCategories: PropTypes.func
   }).isRequired,
   account: PropTypes.shape({
     priority: PropTypes.string,
+    publisherData: PropTypes.shape({}),
+    publishers: PropTypes.array,
   }),
+  marketplace: PropTypes.shape({
+    categories: PropTypes.array
+  }).isRequired,
+  auth: PropTypes.shape({
+    account: PropTypes.shape({
+      get: PropTypes.func
+    })
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -337,9 +423,15 @@ export default compose(
         changePriority,
         changeCountry,
         changeCity,
+        changeCategory,
+        changePublisherName,
         updatePrivateData,
-        updatePublisherData
+        updatePublisherData,
+        getPublishers
       }, dispatch),
+      marketplaceActions: bindActionCreators({
+        getCategories
+      }, dispatch)
     }),
   ),
   reduxForm({
