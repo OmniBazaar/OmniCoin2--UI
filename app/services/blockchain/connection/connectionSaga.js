@@ -5,7 +5,6 @@ import {
   call
 } from 'redux-saga/effects';
 
-
 import { nodesAddresses as nodes } from '../settings';
 import { dynGlobalObject, createConnection } from '../utils/miscellaneous';
 

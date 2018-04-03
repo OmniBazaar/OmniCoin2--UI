@@ -3,30 +3,31 @@ import { defineMessages } from 'react-intl';
 
 import {
   getFeatureList,
+  setPaginationFeature,
+  setActivePageFeature,
   getForSaleList,
   getServicesList,
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
-  getForSaleCategories,
-  getServicesCategories,
-  getJobsCategories,
-  getCryptoCategories,
   getCategories
+  setActiveCategory
 } from './marketplaceActions';
 
 const defaultState = {
-  forSaleCategories: [],
-  servicesCategories: [],
-  jobsCategories: [],
-  cryptoCategories: [],
   featureList: [],
+  featureListFiltered: [],
+  activePageFeature: 1,
+  totalPagesFeature: 1,
+  rowsPerPageFeature: 3 * 6,
   forSaleList: [],
   servicesList: [],
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
-  categories: {}
+  categories: {},
+  activeCategory: 'Marketplace.home',
+  parentCategory: null
 };
 
 const messages = defineMessages({
@@ -60,11 +61,48 @@ const messages = defineMessages({
   }
 });
 
+const sliceData = (data, activePage, rowsPerPage) => (
+  data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+);
+
+const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
+
 const reducer = handleActions({
   [getFeatureList](state, { payload: { featureList } }) {
     return {
       ...state,
-      featureList
+      featureList,
+      featureListFiltered: featureList
+    };
+  },
+  [setPaginationFeature](state, { payload: { rowsPerPageFeature } }) {
+    const data = state.featureList;
+    const { activePageFeature } = state;
+    const totalPagesFeature = getTotalPages(data, rowsPerPageFeature);
+    const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
+
+    return {
+      ...state,
+      totalPagesFeature,
+      rowsPerPageFeature,
+      featureListFiltered: currentData,
+    };
+  },
+  [setActivePageFeature](state, { payload: { activePageFeature } }) {
+    const data = state.featureList;
+    if (activePageFeature !== state.activePageFeature) {
+      const { rowsPerPageFeature } = state;
+      const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
+
+      return {
+        ...state,
+        activePageFeature,
+        featureListFiltered: currentData,
+      };
+    }
+
+    return {
+      ...state,
     };
   },
   [getForSaleList](state, { payload: { forSaleList } }) {
@@ -97,28 +135,11 @@ const reducer = handleActions({
       cryptoBazaarList
     };
   },
-  [getForSaleCategories](state, { payload: { forSaleCategories } }) {
+  [setActiveCategory](state, { payload: { activeCategory, parentCategory } }) {
     return {
       ...state,
-      forSaleCategories
-    };
-  },
-  [getServicesCategories](state, { payload: { servicesCategories } }) {
-    return {
-      ...state,
-      servicesCategories
-    };
-  },
-  [getJobsCategories](state, { payload: { jobsCategories } }) {
-    return {
-      ...state,
-      jobsCategories
-    };
-  },
-  [getCryptoCategories](state, { payload: { cryptoCategories } }) {
-    return {
-      ...state,
-      cryptoCategories
+      activeCategory,
+      parentCategory
     };
   },
   [getCategories](state, { payload: { } }) {

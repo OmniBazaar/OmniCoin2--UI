@@ -22,6 +22,7 @@ import {
   connectionSubscriber,
   authSubscriber,
   mailSubscriber,
+  escrowSubscriber,
   accountSubscriber,
   walletSubscriber
 } from './services/saga';
@@ -63,6 +64,7 @@ const store = createStore(
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
+sagaMiddleware.run(escrowSubscriber);
 sagaMiddleware.run(accountSubscriber);
 sagaMiddleware.run(walletSubscriber);
 

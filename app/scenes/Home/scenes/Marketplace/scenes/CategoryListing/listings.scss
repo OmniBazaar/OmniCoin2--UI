@@ -1,0 +1,44 @@
+@import '../../../../../../styles/index';
+
+.category-listing {
+  .top-header {
+    font-size: 24px;
+    color: $primary-blue;
+    margin: 30px 20px 10px;
+    display: block;
+
+    .ui.dropdown {
+      font-size: 14px;
+      min-width: 200px;
+    }
+
+    .content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .category-title {
+        display: flex;
+      }
+    }
+
+    .parent {
+      display: flex;
+    }
+
+    .long.arrow {
+      height: auto;
+      font-size: 10px;
+      margin: 0 15px;
+      color: $secondary-gray;
+    }
+  }
+
+  .body {
+    padding: 0 !important;
+
+    .tabs {
+      border: none;
+    }
+  }
+}

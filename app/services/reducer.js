@@ -9,7 +9,11 @@ import processorsTopReducer from './processors/processorsTopReducer';
 import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
+import escrowReducer from './escrow/escrowReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
+import lowestPriceReducer from './marketplace/lowestPriceReducer';
+import highestPriceReducer from './marketplace/highestPriceReducer';
+import newArrivalsReducer from './marketplace/newArrivalsReducer';
 import blockchainWallet from './blockchain/wallet/walletReducer';
 
 export default combineReducers({
@@ -24,5 +28,9 @@ export default combineReducers({
   menu: menuReducer,
   account: accountReducer,
   preferences: preferencesReducer,
+  escrow: escrowReducer,
   marketplace: marketplaceReducer,
+  lowestPrice: lowestPriceReducer,
+  highestPrice: highestPriceReducer,
+  newArrivals: newArrivalsReducer,
 });
