@@ -1,12 +1,18 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
+import ip from 'ip';
 
+import AccountSettingsStorage from './accountStorage';
 import {
   setReferrer,
   setPublisher,
   setTransactionProcessor,
   setEscrow,
   changePriority,
+  changeCountry,
+  changeCity,
+  changeCategory,
+  changePublisherName,
   getRecentTransactions,
   setActivePage,
   filterData,
@@ -17,6 +23,12 @@ import {
   getVotes,
   sortVotesData,
   updatePublicData,
+  getPrivateData,
+  updatePrivateData,
+  getPublisherData,
+  updatePublisherData,
+  getPublishers,
+  changeIpAddress
 } from './accountActions';
 
 const defaultState = {
@@ -24,7 +36,6 @@ const defaultState = {
   publisher: false,
   transactionProcessor: false,
   escrow: false,
-  priority: 'local',
   recentTransactions: [],
   recentTransactionsFiltered: [],
   sortDirection: 'descending',
@@ -41,7 +52,26 @@ const defaultState = {
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
-  error: null
+  error: null,
+  privateData: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    website: ''
+  },
+  publisherData: {
+    priority: 'local',
+    country: '',
+    city: '',
+    category: '',
+    publisherName: '',
+  },
+  publishers: {
+    names: [],
+    loading: false,
+    error: null
+  },
+  ipAddress: ip.address()
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -80,7 +110,46 @@ const reducer = handleActions({
   [changePriority](state, { payload: { priority } }) {
     return {
       ...state,
-      priority
+      publisherData: {
+        ...state.publisherData,
+        priority
+      }
+    };
+  },
+  [changeCountry](state, { payload: { country } }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        country
+      }
+    };
+  },
+  [changeCity](state, { payload: { city } }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        city
+      }
+    };
+  },
+  [changeCategory](state, { payload: { category } }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        category
+      }
+    };
+  },
+  [changePublisherName](state, { payload: { publisher } }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        publisherName: publisher
+      }
     };
   },
   [showDetailsModal](state, { payload: { detailSelected } }) {
@@ -88,6 +157,33 @@ const reducer = handleActions({
       ...state,
       showDetails: !state.showDetails,
       detailSelected,
+    };
+  },
+  [getPrivateData](state, { payload: {} }) {
+    const data = AccountSettingsStorage.getPrivateData();
+    return {
+      ...state,
+      privateData: data,
+    };
+  },
+  [updatePrivateData](state, { payload: { data } }) {
+    AccountSettingsStorage.updatePrivateData(data);
+    return {
+      ...state,
+      privateData: data
+    };
+  },
+  [getPublisherData](state, { payload: { } }) {
+    return {
+      ...state,
+      publisherData: AccountSettingsStorage.getPublisherData()
+    };
+  },
+  [updatePublisherData](state, { payload: { data } }) {
+    AccountSettingsStorage.updatePublisherData(data);
+    return {
+      ...state,
+      publisherData: data
     };
   },
   [updatePublicData](state, { payload: { } }) {
@@ -106,6 +202,31 @@ const reducer = handleActions({
     ...state,
     loading: false,
     error
+  }),
+  [getPublishers](state, { payload: { } }) {
+    return {
+      ...state,
+      publishers: {
+        ...state.publishers,
+        loading: true
+      }
+    };
+  },
+  GET_PUBLISHERS_SUCCEEDED: (state, { publishers }) => ({
+    ...state,
+    publishers: {
+      names: publishers,
+      loading: false,
+      error: null
+    }
+  }),
+  GET_PUBLISHERS_FAILED: (state, { error }) => ({
+    ...state,
+    publishers: {
+      names: [],
+      loading: false,
+      error
+    }
   }),
   [setRescan](state) {
     return {
@@ -240,6 +361,12 @@ const reducer = handleActions({
       sortVoteColumn,
     };
   },
+  [changeIpAddress](state, { payload: { ip } }) {
+    return {
+      ...state,
+      ipAddress: ip
+    };
+  }
 }, defaultState);
 
 export default reducer;

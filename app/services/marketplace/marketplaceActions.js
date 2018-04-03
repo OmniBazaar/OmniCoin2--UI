@@ -1,6 +1,7 @@
 import { createActions } from 'redux-actions';
 
 const {
+  getCategories,
   getFeatureList,
   setPaginationFeature,
   setActivePageFeature,
@@ -11,6 +12,7 @@ const {
   getCryptoBazaarList,
   setActiveCategory,
 } = createActions({
+  GET_CATEGORIES: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
   SET_PAGINATION_FEATURE: (rowsPerPageFeature) => ({ rowsPerPageFeature }),
   SET_ACTIVE_PAGE_FEATURE: (activePageFeature) => ({ activePageFeature }),
@@ -23,6 +25,7 @@ const {
 });
 
 export {
+  getCategories,
   getFeatureList,
   setPaginationFeature,
   setActivePageFeature,

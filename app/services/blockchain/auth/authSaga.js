@@ -105,7 +105,9 @@ export function* signup(action) {
     } else {
       const { error } = resJson;
       console.log('ERROR', error);
-      const e = error.base && error.base.length && error.base.length > 0 ? error.base[0] : JSON.stringify(error);
+      const e = error.base && error.base.length && error.base.length > 0
+        ? error.base[0]
+        : JSON.stringify(error);
       yield put({ type: 'SIGNUP_FAILED', error: e });
     }
   } catch (e) {
