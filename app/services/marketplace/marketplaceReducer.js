@@ -10,7 +10,7 @@ import {
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
-  getCategories
+  getCategories,
   setActiveCategory
 } from './marketplaceActions';
 
