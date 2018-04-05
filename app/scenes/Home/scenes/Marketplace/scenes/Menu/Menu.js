@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
+import { NavLink, Link } from 'react-router-dom';
 
 import AddIcon from '../../images/btn-add-listing.svg';
 import SearchIcon from '../../images/btn-search-norm.svg';
@@ -103,14 +104,16 @@ class Menu extends Component {
     const parent = parentCategory ? parentCategory.id : null;
 
     return (
-      <span
-        onClick={() => this.viewCategory(type, parent)}
-        onKeyDown={() => this.viewCategory(type, parent)}
-        tabIndex={0}
-        role="link"
-      >
-        {formatMessage(category)}
-      </span>
+      <NavLink to="/marketplace">
+        <span
+          onClick={() => this.viewCategory(type, parent)}
+          onKeyDown={() => this.viewCategory(type, parent)}
+          tabIndex={0}
+          role="link"
+        >
+          {formatMessage(category)}
+        </span>
+      </NavLink>
     );
   }
 
@@ -445,14 +448,16 @@ class Menu extends Component {
       <div className="menu">
         <ul>
           <li className={optionMenuClass}>
-            <span
-              onClick={() => this.viewCategory(mainCategories.home.id)}
-              onKeyDown={() => this.viewCategory(mainCategories.home.id)}
-              tabIndex={0}
-              role="link"
-            >
-              {formatMessage(mainCategories.home)}
-            </span>
+            <NavLink to="/marketplace">
+              <span
+                onClick={() => this.viewCategory(mainCategories.home.id)}
+                onKeyDown={() => this.viewCategory(mainCategories.home.id)}
+                tabIndex={0}
+                role="link"
+              >
+                {formatMessage(mainCategories.home)}
+              </span>
+            </NavLink>
           </li>
           {this.renderForSaleSubMenu()}
           {this.renderServicesSubMenu()}

@@ -1,0 +1,16 @@
+{
+  "Listing.seller": "Seller",
+  "Listing.editListing": "EDIT LISTING",
+  "Listing.delete": "DELETE",
+  "Listing.available": "Available:",
+  "Listing.itemDescription": "Item Description",
+  "Listing.preferredContact": "Preferred Contact",
+  "Listing.name": "Name",
+  "Listing.city": "City",
+  "Listing.postalCode": "Postal Code",
+  "Listing.address": "Address",
+  "Listing.listingDate": "Listing date",
+  "Listing.condition": "Condition",
+  "Listing.cityLocation": "City of Specific Location",
+  "Listing.itemPrice": "Item Price"
+}

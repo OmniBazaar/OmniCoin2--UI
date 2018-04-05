@@ -2,27 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Tab, Dropdown } from 'semantic-ui-react';
+import { Tab, Dropdown } from 'semantic-ui-react';
 import Menu from '../Menu/Menu';
 import FeatureTable from '../FeatureTable/FeatureTable';
 import NewArrivalsTable from '../NewArrivalsTable/NewArrivalsTable';
 import LowestPriceTable from '../LowestPriceTable/LowestPriceTable';
 import HighestPriceTable from '../HighestPriceTable/HighestPriceTable';
-import {
-  saleCategories,
-  servicesCategories,
-  jobsCategories,
-  cryptoCategories,
-  moreCategories,
-  aboutCategories,
-  mainCategories
-} from '../../categories';
+import CategoryHeader from '../CategoryHeader';
 
 import { CategoriesTypes } from '../../constants';
 
 import './listings.scss';
-
-const iconSizeSmall = 12;
 
 const messages = defineMessages({
   featured: {
@@ -54,37 +44,7 @@ class CategoryListing extends Component {
     return categoryName;
   }
 
-  getCategoryName(category, parent) {
-    const { formatMessage } = this.props.intl;
-    const categoryName = CategoryListing.getValue(category);
-
-    if (!parent) {
-      return formatMessage(mainCategories[categoryName]);
-    }
-
-    const parentName = CategoryListing.getValue(parent);
-
-    switch (parentName) {
-      case CategoriesTypes.FOR_SALE:
-        return formatMessage(saleCategories[categoryName]);
-      case CategoriesTypes.SERVICES:
-        return formatMessage(servicesCategories[categoryName]);
-      case CategoriesTypes.JOBS:
-        return formatMessage(jobsCategories[categoryName]);
-      case CategoriesTypes.CRYPTO_BAZAAR:
-        return formatMessage(cryptoCategories[categoryName]);
-      case CategoriesTypes.MORE:
-        return formatMessage(moreCategories[categoryName]);
-      case CategoriesTypes.ABOUT:
-        return formatMessage(aboutCategories[categoryName]);
-      default:
-        return categoryName;
-    }
-  }
-
   renderCategoryHeader() {
-    const { parentCategory, activeCategory } = this.props.marketplace;
-
     const options = [
       { key: 1, text: 'USD', value: 'usd' },
       { key: 2, text: 'EURO', value: 'euro' },
@@ -94,15 +54,7 @@ class CategoryListing extends Component {
     return (
       <div className="top-header">
         <div className="content">
-          <div className="category-title">
-            {parentCategory ?
-              <div className="parent">
-                <span>{this.getCategoryName(parentCategory)}</span>
-                <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-              </div>
-              : null}
-            <span>{this.getCategoryName(activeCategory, parentCategory)}</span>
-          </div>
+          <CategoryHeader />
           <div className="currency">
             <Dropdown
               button

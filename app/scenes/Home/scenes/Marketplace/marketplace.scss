@@ -22,7 +22,12 @@
 
     .title,
     .menu,
-    .badges {
+    .badges,
+    .menu li a {
+      color: $white;
+    }
+
+    .submenu {
       color: $white;
     }
 
@@ -465,6 +470,7 @@
       margin-bottom: 5px;
 
       span {
+        color: $dark-gray;
         line-height: 23px;
         max-width: 130px;
         cursor: pointer;
@@ -511,6 +517,14 @@
           text-align: center;
           margin-top: 20px;
           font-size: 17px;
+        }
+
+        a.active span {
+          color: $dark-gray;
+
+          &:hover {
+            color: $primary-blue;
+          }
         }
       }
 
