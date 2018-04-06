@@ -1,8 +1,16 @@
 import { handleActions } from 'redux-actions';
-import { getListingDetail } from './listingActions';
+import {
+  getListingDetail,
+  setActiveCurrency
+} from './listingActions';
+
+const CoinTypes = Object.freeze({
+  OMNI_COIN: 'OmniCoin',
+});
 
 const defaultState = {
   listingDetail: {},
+  activeCurrency: CoinTypes.OMNI_COIN,
 };
 
 const reducer = handleActions({
@@ -10,6 +18,12 @@ const reducer = handleActions({
     return {
       ...state,
       listingDetail
+    };
+  },
+  [setActiveCurrency](state, { payload: { activeCurrency } }) {
+    return {
+      ...state,
+      activeCurrency
     };
   },
 }, defaultState);

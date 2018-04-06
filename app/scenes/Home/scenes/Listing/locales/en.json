@@ -12,5 +12,9 @@
   "Listing.listingDate": "Listing date",
   "Listing.condition": "Condition",
   "Listing.cityLocation": "City of Specific Location",
-  "Listing.itemPrice": "Item Price"
+  "Listing.itemPrice": "Item Price",
+  "Listing.selectCurrency": "Select Payment Currency",
+  "Listing.buyNow": "BUY NOW",
+  "Listing.report": "REPORT",
+  "Listing.addToFavorites": "ADD TO FAVORITES"
 }

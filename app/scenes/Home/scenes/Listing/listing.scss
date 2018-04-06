@@ -129,6 +129,36 @@
         margin-top: 25px;
         display: flex;
         justify-content: space-between;
+
+        .buy-wrapper {
+          display: flex;
+
+          button {
+            margin-right: 15px;
+          }
+
+          span.react-numeric-input {
+            width: 90px;
+
+            b {
+              border: none !important;
+              background-color: $lighter-blue !important;
+
+              i {
+                background: $primary-green !important;
+              }
+            }
+          }
+
+          input {
+            height: 100%;
+            width: 100%;
+            border: none;
+            background-color: $lighter-blue;
+            font-size: 14px !important;
+            font-family: 'Titillium Web', sans-serif;
+          }
+        }
       }
 
       .availability {

@@ -6,6 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import ReactStars from 'react-stars';
 import { Image, Button, Popup } from 'semantic-ui-react';
+import NumericInput from 'react-numeric-input';
 
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
@@ -22,6 +23,8 @@ import './listing.scss';
 import { getListingDetail } from '../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
+
+const isUserOwner = false;
 
 const listing = {
   id: 1,
@@ -120,6 +123,22 @@ const messages = defineMessages({
     id: 'Listing.itemPrice',
     defaultMessage: 'Item Price'
   },
+  selectCurrency: {
+    id: 'Listing.selectCurrency',
+    defaultMessage: 'Select Payment Currency'
+  },
+  buyNow: {
+    id: 'Listing.buyNow',
+    defaultMessage: 'BUY NOW'
+  },
+  report: {
+    id: 'Listing.report',
+    defaultMessage: 'REPORT'
+  },
+  addToFavorites: {
+    id: 'Listing.addToFavorites',
+    defaultMessage: 'ADD TO FAVORITES'
+  },
 });
 
 class Listing extends Component {
@@ -162,26 +181,26 @@ class Listing extends Component {
         <div className="contact-popup">
           <div className="info">
             <span>{formatMessage(messages.preferredContact)}</span>
-            <span className="value">Phone: {listingDetail.seller.phone}</span>
+            <span className="value">Phone: {listingDetail.seller ? listingDetail.seller.phone : null}</span>
           </div>
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.name)}</span>
-              <span className="value">{listingDetail.seller.name}</span>
+              <span className="value">{listingDetail.seller ? listingDetail.seller.name : null}</span>
             </div>
             <div className="info">
               <span>{formatMessage(messages.city)}</span>
-              <span className="value">{listingDetail.seller.city}</span>
+              <span className="value">{listingDetail.seller ? listingDetail.seller.city : null}</span>
             </div>
           </div>
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.postalCode)}</span>
-              <span className="value">{listingDetail.seller.postalCode}</span>
+              <span className="value">{listingDetail.seller ? listingDetail.seller.postalCode : null}</span>
             </div>
             <div className="info">
               <span>{formatMessage(messages.address)}</span>
-              <span className="value">{listingDetail.seller.address}</span>
+              <span className="value">{listingDetail.seller ? listingDetail.seller.address : null}</span>
             </div>
           </div>
         </div>
@@ -189,15 +208,162 @@ class Listing extends Component {
     );
   }
 
-  render() {
-    const { props } = this;
-    const { listingDetail } = props.listing;
+  renderOwnerButtons() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="buttons-wrapper">
+        <Button
+          onClick={() => this.editListing()}
+          content={formatMessage(messages.editListing)}
+          className="button--green-bg"
+        />
+        <Button
+          onClick={() => this.deleteListing()}
+          content={formatMessage(messages.delete)}
+          className="button--gray-text"
+        />
+      </div>
+    );
+  }
+
+  buyItem = () => {
+  };
+
+  addToFavorites = () => {
+  };
+
+  reportListing = () => {
+  };
+
+  setItemsAmount = (valueAsNumber) => {
+  };
+
+  renderUserButtons(amountAvailable) {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="buttons-wrapper">
+        <div className="buy-wrapper">
+          <Button
+            onClick={() => this.buyItem()}
+            content={formatMessage(messages.buyNow)}
+            className="button--green-bg"
+          />
+          <NumericInput
+            mobile
+            className="form-control"
+            min={0}
+            value={0}
+            max={amountAvailable}
+            onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
+          />
+        </div>
+        <Button
+          onClick={() => this.addToFavorites()}
+          content={formatMessage(messages.addToFavorites)}
+          className="button--transparent"
+        />
+        <Button
+          onClick={() => this.reportListing()}
+          content={formatMessage(messages.report)}
+          className="button--gray-text"
+        />
+      </div>
+    );
+  }
+
+  renderGallery(listingDetail) {
+    return (
+      <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
+        <ImageGallery
+          items={listingDetail.images}
+          showPlayButton={false}
+          showFullscreenButton={false}
+        />
+      </div>
+    );
+  }
+
+  renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
       status: true,
       green: listingDetail.status === 'active',
       red: listingDetail.status === 'inactive',
     });
+
+    return (
+      <div className="item-description">
+        <div>
+          <span className={statusClass}>{listingDetail.status}</span>
+        </div>
+        <span className="title">{listingDetail.name}</span>
+        <div className="seller-wrapper">
+          <span>{formatMessage(messages.seller)}</span>
+          <div className="seller-info">
+            {this.renderUser(listingDetail)}
+            <span className="rating">
+              {listingDetail.seller ?
+                <ReactStars
+                  count={5}
+                  size={16}
+                  value={listingDetail.seller.rating}
+                  color1="#f9d596"
+                  color2="#fbae3c"
+                  edit={false}
+                />
+                : null}
+            </span>
+            <div className="votes">
+              <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
+              <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
+            </div>
+          </div>
+        </div>
+        <div className="details-wrapper">
+          <div className="info">
+            <span>{formatMessage(messages.listingDate)}</span>
+            <span className="value">{listingDetail.date}</span>
+          </div>
+          <div className="info">
+            <span>{formatMessage(messages.condition)}</span>
+            <span className="value">{listingDetail.condition}</span>
+          </div>
+          <div className="info">
+            <span>{formatMessage(messages.cityLocation)}</span>
+            <span className="value">{listingDetail.location}</span>
+          </div>
+        </div>
+        <div className="price-wrapper">
+          <span>
+            {isUserOwner ?
+              formatMessage(messages.itemPrice)
+              :
+              formatMessage(messages.selectCurrency)
+            }
+          </span>
+          <PriceItem amount="154.50" coinLabel={CoinTypes.OMNI_COIN} currency={CoinTypes.OMNI_CURRENCY} isUserOwner={isUserOwner} />
+          <PriceItem amount="0.000000000485" coinLabel={CoinTypes.BIT_COIN} currency={CoinTypes.BIT_CURRENCY} isUserOwner={isUserOwner} />
+          <PriceItem amount="4.50" coinLabel={CoinTypes.LOCAL} currency={CoinTypes.LOCAL_CURRENCY} isUserOwner={isUserOwner} />
+        </div>
+        {isUserOwner ?
+          this.renderOwnerButtons()
+          :
+          this.renderUserButtons(listingDetail.amountAvailable)
+        }
+        <div className="availability">
+          <span>{formatMessage(messages.available)}</span>
+          <span>{listingDetail.amountAvailable}</span>
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    const { props } = this;
+    const { listingDetail } = props.listing;
+    const { formatMessage } = this.props.intl;
 
     /*
     const listingId = props.match.params.id;
@@ -216,77 +382,8 @@ class Listing extends Component {
             </div>
           </div>
           <div className="listing-body">
-            <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
-              <ImageGallery
-                items={listingDetail.images}
-                showPlayButton={false}
-                showFullscreenButton={false}
-              />
-            </div>
-            <div className="item-description">
-              <div>
-                <span className={statusClass}>{listingDetail.status}</span>
-              </div>
-              <span className="title">{listingDetail.name}</span>
-              <div className="seller-wrapper">
-                <span>{formatMessage(messages.seller)}</span>
-                <div className="seller-info">
-                  {this.renderUser(listingDetail)}
-                  <span className="rating">
-                    {listingDetail.seller ?
-                      <ReactStars
-                        count={5}
-                        size={16}
-                        value={listingDetail.seller.rating}
-                        color1="#f9d596"
-                        color2="#fbae3c"
-                        edit={false}
-                      />
-                    : null}
-                  </span>
-                  <div className="votes">
-                    <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
-                    <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="details-wrapper">
-                <div className="info">
-                  <span>{formatMessage(messages.listingDate)}</span>
-                  <span className="value">{listingDetail.date}</span>
-                </div>
-                <div className="info">
-                  <span>{formatMessage(messages.condition)}</span>
-                  <span className="value">{listingDetail.condition}</span>
-                </div>
-                <div className="info">
-                  <span>{formatMessage(messages.cityLocation)}</span>
-                  <span className="value">{listingDetail.location}</span>
-                </div>
-              </div>
-              <div className="price-wrapper">
-                <span>{formatMessage(messages.itemPrice)}</span>
-                <PriceItem amount="154.50" coinLabel={CoinTypes.OMNI_COIN} currency={CoinTypes.OMNI_CURRENCY} />
-                <PriceItem amount="0.000000000485" coinLabel={CoinTypes.BIT_COIN} currency={CoinTypes.BIT_CURRENCY} />
-                <PriceItem amount="4.50" coinLabel={CoinTypes.LOCAL} currency={CoinTypes.LOCAL_CURRENCY} />
-              </div>
-              <div className="buttons-wrapper">
-                <Button
-                  onClick={() => this.editListing()}
-                  content={formatMessage(messages.editListing)}
-                  className="button--green-bg"
-                />
-                <Button
-                  onClick={() => this.deleteListing()}
-                  content={formatMessage(messages.delete)}
-                  className="button--gray-text"
-                />
-              </div>
-              <div className="availability">
-                <span>{formatMessage(messages.available)}</span>
-                <span>{listingDetail.amountAvailable}</span>
-              </div>
-            </div>
+            {this.renderGallery(listingDetail)}
+            {this.renderItemDetails(listingDetail)}
           </div>
           <div className="listing-description">
             <span className="title">{formatMessage(messages.itemDescription)}</span>
