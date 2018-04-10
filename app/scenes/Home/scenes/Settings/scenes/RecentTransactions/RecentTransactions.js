@@ -26,6 +26,7 @@ import {
   showDetailsModal,
 } from '../../../../../../services/accountSettings/accountActions';
 
+
 import IncomingIcon from './images/ui-arrow-incoming.svg';
 import OutgoingIcon from './images/ui-arrow-aoutgoing.svg';
 import './recent.scss';
@@ -239,9 +240,9 @@ class RecentTransactions extends Component {
     this.onCloseDetails = this.onCloseDetails.bind(this);
   }
 
-  componentDidMount() {
-    this.props.accountSettingsActions.getRecentTransactions(recentTransactionsData);
-    this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
+  componentWillMount() {
+    this.props.accountSettingsActions.getRecentTransactions();
+   // this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
   }
 
   handleFilterChange = (e) => {
@@ -334,7 +335,7 @@ class RecentTransactions extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentTransactionsFiltered.map(row =>
+                {recentTransactionsFiltered && recentTransactionsFiltered.map(row =>
                   (
                     <TableRow key={hash(row)}>
                       <TableCell>{row.date}</TableCell>

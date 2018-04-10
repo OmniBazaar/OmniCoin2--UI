@@ -38,7 +38,7 @@ export default connect((state) => {
   } = state.default.connection;
   return {
     isConnected: !error && !isLoading,
-    block: !!dynGlobalObject && dynGlobalObject.head_block_number,
+    block: !!dynGlobalObject ? dynGlobalObject.head_block_number : null,
     latency
   };
 })(ChainFooter);

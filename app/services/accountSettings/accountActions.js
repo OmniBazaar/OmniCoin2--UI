@@ -36,7 +36,7 @@ const {
   CHANGE_CITY: (city) => ({ city }),
   CHANGE_CATEGORY: (category) => ({ category }),
   CHANGE_PUBLISHER_NAME: (publisher) => ({ publisher }),
-  GET_RECENT_TRANSACTIONS: (recentTransactions) => ({ recentTransactions }),
+  GET_RECENT_TRANSACTIONS: () => ({ }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SORT_DATA: (sortColumn) => ({ sortColumn }),

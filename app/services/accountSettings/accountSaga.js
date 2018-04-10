@@ -2,9 +2,10 @@ import {
   put,
   takeLatest,
   select,
-  all
+  all,
+  call
 } from 'redux-saga/effects';
-import { TransactionBuilder } from 'omnibazaarjs/es';
+import { TransactionBuilder, ChainStore } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
@@ -13,6 +14,7 @@ export function* accountSubscriber() {
   yield all([
     takeLatest('UPDATE_PUBLIC_DATA', updatePublicData),
     takeLatest('GET_PUBLISHERS', getPublishers),
+    takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions)
   ]);
 }
 
@@ -65,3 +67,20 @@ export function* updateAccount(payload) {
   return yield tr.broadcast();
 }
 
+export function* getRecentTransactions() {
+  const {account} = (yield select()).default.auth;
+  try {
+    const result  = yield ChainStore.fetchRecentHistory(account);
+    console.log('Result ', result);
+    let history = [];
+    let h = result.get("history");
+    let seen_ops = new Set();
+    history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
+    history = history.filter(el => !!el.op[1].amount);
+    yield put({type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: history});
+  } catch (e) {
+    console.log('ERROR', e);
+    yield put({type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e})
+  }
+
+}

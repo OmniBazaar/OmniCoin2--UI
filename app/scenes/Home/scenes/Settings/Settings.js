@@ -15,6 +15,8 @@ import TransactionDetails from './scenes/RecentTransactions/components/Transacti
 import Keys from './scenes/Keys/Keys';
 import Vote from './scenes/Vote/Vote';
 
+import { TransactionBuilder, ChainStore } from 'omnibazaarjs/es';
+
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
   showDetailsModal,
