@@ -166,8 +166,8 @@ class PublicData extends Component {
 
   updatePublicData() {
     const { formatMessage } = this.props.intl;
-    const { ipAddress } = this.props.account;
-    if (!ip.isPublic(ipAddress)) {
+    const { ipAddress, publisher } = this.props.account;
+    if (publisher && !ip.isPublic(ipAddress)) {
       toastr.error(formatMessage(messages.update), formatMessage(messages.invalidIp));
       return;
     }
