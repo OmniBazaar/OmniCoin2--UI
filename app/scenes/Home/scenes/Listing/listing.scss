@@ -177,6 +177,12 @@
       margin-top: 12px;
     }
   }
+
+  &.category-listing {
+    .body .tabs .ui.segment.active {
+      padding: 10px !important;
+    }
+  }
 }
 
 .contact-popup {

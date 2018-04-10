@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Dropdown } from 'semantic-ui-react';
+import { Tab } from 'semantic-ui-react';
 import Menu from '../Menu/Menu';
 import FeatureTable from '../FeatureTable/FeatureTable';
 import NewArrivalsTable from '../NewArrivalsTable/NewArrivalsTable';
 import LowestPriceTable from '../LowestPriceTable/LowestPriceTable';
 import HighestPriceTable from '../HighestPriceTable/HighestPriceTable';
 import CategoryHeader from '../CategoryHeader';
+import CurrencyDropdown from '../../../../components/CurrencyDropdown/CurrencyDropdown';
 
 import { CategoriesTypes } from '../../constants';
 
@@ -44,28 +45,12 @@ class CategoryListing extends Component {
     return categoryName;
   }
 
-  renderCategoryHeader() {
-    const options = [
-      { key: 1, text: 'USD', value: 'usd' },
-      { key: 2, text: 'EURO', value: 'euro' },
-      { key: 3, text: 'POUND', value: 'pound' },
-    ];
-
+  static renderCategoryHeader() {
     return (
       <div className="top-header">
         <div className="content">
           <CategoryHeader />
-          <div className="currency">
-            <Dropdown
-              button
-              className="icon"
-              floating
-              labeled
-              icon="dollar"
-              options={options}
-              placeholder="CURRENCY"
-            />
-          </div>
+          <CurrencyDropdown />
         </div>
       </div>
     );
@@ -203,7 +188,7 @@ class CategoryListing extends Component {
           <Menu />
         </div>
         <div className="body">
-          {this.renderCategoryHeader()}
+          {CategoryListing.renderCategoryHeader()}
           {this.renderListing()}
         </div>
       </div>

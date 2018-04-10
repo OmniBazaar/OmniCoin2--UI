@@ -157,13 +157,15 @@
     }
 
     .list-container {
-      .button {
+      .ui.button--blue,
+      .ui.button--gray-text {
         padding: 0;
         margin: 0 19px;
       }
 
       @media (max-width: 1290px) {
-        .button {
+        .ui.button--blue,
+        .ui.button--gray-text {
           margin: 0 10px;
         }
       }
@@ -200,6 +202,7 @@
             font-weight: bold;
             margin-top: 4px;
             cursor: pointer;
+            color: $dark-gray;
           }
 
           .subtitle {
@@ -546,6 +549,14 @@
   .link-menu {
     line-height: 30px;
     cursor: pointer;
+
+    a {
+      color: $dark-gray;
+
+      &:hover {
+        color: $primary-blue;
+      }
+    }
   }
 }
 
@@ -606,6 +617,16 @@ li {
 
       td {
         background-color: transparent !important;
+      }
+    }
+
+    .actions {
+      display: flex;
+      margin-top: 5px;
+      justify-content: flex-start;
+
+      button.ui.button.button--blue {
+        margin: 0;
       }
     }
   }

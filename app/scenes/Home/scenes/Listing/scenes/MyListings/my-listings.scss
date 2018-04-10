@@ -1,0 +1,30 @@
+.my-listings {
+  position: relative;
+
+  .filters {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    display: flex;
+
+    .categories {
+      min-width: 150px;
+
+      .icon {
+        float: right;
+      }
+    }
+  }
+
+  .items {
+    .item {
+      .title {
+        font-size: 16px;
+      }
+
+      .price {
+        margin-bottom: 8px;
+      }
+    }
+  }
+}

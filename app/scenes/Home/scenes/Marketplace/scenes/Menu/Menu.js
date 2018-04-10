@@ -25,6 +25,8 @@ import {
   mainCategories
 } from '../../categories';
 
+import './menu.scss';
+
 const logoWidth = 200;
 const iconSizeBig = 25;
 const iconSizeMedium = 15;
@@ -429,6 +431,9 @@ class Menu extends Component {
         className="user-menu"
       >
         <div className="link-menu">{formatMessage(userMenu.recentSearches)}</div>
+        <div className="link-menu">
+          <NavLink to="/listings">{formatMessage(userMenu.myListings)}</NavLink>
+        </div>
         <div className="link-menu">{formatMessage(userMenu.myPurchases)}</div>
         <div className="link-menu">{formatMessage(userMenu.favoriteListings)}</div>
         <div className="link-menu">{formatMessage(userMenu.newListingDefaults)}</div>

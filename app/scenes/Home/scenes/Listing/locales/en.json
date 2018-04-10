@@ -16,5 +16,6 @@
   "Listing.selectCurrency": "Select Payment Currency",
   "Listing.buyNow": "BUY NOW",
   "Listing.report": "REPORT",
-  "Listing.addToFavorites": "ADD TO FAVORITES"
+  "Listing.addToFavorites": "ADD TO FAVORITES",
+  "Listing.allCategories": "All Categories"
 }

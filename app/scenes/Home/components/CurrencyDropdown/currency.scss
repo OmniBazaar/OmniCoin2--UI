@@ -1,0 +1,15 @@
+.currency {
+  &.dropdown {
+    display: flex;
+    align-items: center;
+
+    .button {
+      min-width: 200px;
+      font-size: 14px;
+    }
+
+    span {
+      margin-right: 10px;
+    }
+  }
+}

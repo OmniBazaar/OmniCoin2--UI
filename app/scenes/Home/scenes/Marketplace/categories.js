@@ -538,6 +538,10 @@ const userMenu = defineMessages({
     id: 'Marketplace.resyncWithServer',
     defaultMessage: 'Resync with Server'
   },
+  myListings: {
+    id: 'Marketplace.myListings',
+    defaultMessage: 'My Listings'
+  },
 });
 
 export {
