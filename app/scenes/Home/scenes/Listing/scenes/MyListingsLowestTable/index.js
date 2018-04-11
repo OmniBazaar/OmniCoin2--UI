@@ -29,43 +29,43 @@ import '../../../Marketplace/scenes/CategoryListing/listings.scss';
 
 const messages = defineMessages({
   firstItem: {
-    id: 'Settings.firstItem',
+    id: 'Listing.firstItem',
     defaultMessage: 'First item'
   },
   lastItem: {
-    id: 'Settings.lastItem',
+    id: 'Listing.lastItem',
     defaultMessage: 'Last item'
   },
   previousItem: {
-    id: 'Settings.previousItem',
+    id: 'Listing.previousItem',
     defaultMessage: 'Previous item'
   },
   nextItem: {
-    id: 'Settings.nextItem',
+    id: 'Listing.nextItem',
     defaultMessage: 'Next item'
   },
   first: {
-    id: 'Settings.first',
+    id: 'Listing.first',
     defaultMessage: 'First'
   },
   last: {
-    id: 'Settings.last',
+    id: 'Listing.last',
     defaultMessage: 'Last'
   },
   prev: {
-    id: 'Settings.prev',
+    id: 'Listing.prev',
     defaultMessage: 'Prev'
   },
   next: {
-    id: 'Settings.next',
+    id: 'Listing.next',
     defaultMessage: 'Next'
   },
   edit: {
-    id: 'Settings.edit',
+    id: 'Listing.edit',
     defaultMessage: 'EDIT'
   },
   delete: {
-    id: 'Settings.delete',
+    id: 'Listing.delete',
     defaultMessage: 'DELETE'
   },
 });

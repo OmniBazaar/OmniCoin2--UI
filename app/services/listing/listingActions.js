@@ -14,7 +14,12 @@ const {
   setActivePageMyListingsLowest,
   getMyListingsHighest,
   setPaginationMyListingsHighest,
-  setActivePageMyListingsHighest
+  setActivePageMyListingsHighest,
+  setBitcoinPrice,
+  setOmnicoinPrice,
+  setContinuous,
+  addImage,
+  removeImage
 } = createActions({
   GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
@@ -36,6 +41,11 @@ const {
     ({ rowsPerPageMyListingsHighest }),
   SET_ACTIVE_PAGE_MY_LISTINGS_HIGHEST: (activePageMyListingsHighest) =>
     ({ activePageMyListingsHighest }),
+  SET_BITCOIN_PRICE: () => ({}),
+  SET_OMNICOIN_PRICE: () => ({}),
+  SET_CONTINUOUS: () => ({}),
+  ADD_IMAGE: (image) => ({ image }),
+  REMOVE_IMAGE: (imageIndex) => ({ imageIndex }),
 });
 
 export {
@@ -52,5 +62,10 @@ export {
   setActivePageMyListingsLowest,
   getMyListingsHighest,
   setPaginationMyListingsHighest,
-  setActivePageMyListingsHighest
+  setActivePageMyListingsHighest,
+  setBitcoinPrice,
+  setOmnicoinPrice,
+  setContinuous,
+  addImage,
+  removeImage
 };

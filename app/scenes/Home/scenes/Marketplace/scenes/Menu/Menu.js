@@ -472,10 +472,12 @@ class Menu extends Component {
           {this.renderAboutSubMenu()}
         </ul>
         <div className="options">
-          <Button icon className="button--green-bg">
-            <Image src={AddIcon} width={iconSizeMedium} height={iconSizeMedium} />
-            {formatMessage(messages.addListing)}
-          </Button>
+          <NavLink to="/add-listing">
+            <Button icon className="button--green-bg">
+              <Image src={AddIcon} width={iconSizeMedium} height={iconSizeMedium} />
+              {formatMessage(messages.addListing)}
+            </Button>
+          </NavLink>
           <Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />
           {this.renderUserMenu()}
         </div>

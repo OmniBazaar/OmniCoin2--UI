@@ -1,6 +1,7 @@
 {
   "Listing.seller": "Seller",
   "Listing.editListing": "EDIT LISTING",
+  "Listing.edit": "EDIT",
   "Listing.delete": "DELETE",
   "Listing.available": "Available:",
   "Listing.itemDescription": "Item Description",
@@ -17,5 +18,19 @@
   "Listing.buyNow": "BUY NOW",
   "Listing.report": "REPORT",
   "Listing.addToFavorites": "ADD TO FAVORITES",
-  "Listing.allCategories": "All Categories"
+  "Listing.allCategories": "All Categories",
+  "Listing.myListings": "My Listings",
+  "Listing.createListing": "Create Listing",
+  "Listing.firstItem": "First item",
+  "Listing.lastItem": "Last item",
+  "Listing.previousItem": "Previous item",
+  "Listing.nextItem": "Next item",
+  "Listing.first": "First",
+  "Listing.last": "Last",
+  "Listing.prev": "Prev",
+  "Listing.next": "Next",
+  "Listing.byDate": "By Date",
+  "Listing.lowestPrice": "Lowest Price",
+  "Listing.highestPrice": "Highest Price",
+  "Listing.marketplace": "Marketplace"
 }

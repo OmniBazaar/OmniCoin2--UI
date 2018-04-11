@@ -14,7 +14,12 @@ import {
   setActivePageMyListingsLowest,
   getMyListingsHighest,
   setPaginationMyListingsHighest,
-  setActivePageMyListingsHighest
+  setActivePageMyListingsHighest,
+  setBitcoinPrice,
+  setContinuous,
+  setOmnicoinPrice,
+  addImage,
+  removeImage
 } from './listingActions';
 
 const CoinTypes = Object.freeze({
@@ -44,6 +49,10 @@ const defaultState = {
   totalPagesMyListingsHighest: 1,
   listingDetail: {},
   activeCurrency: CoinTypes.OMNI_COIN,
+  bitcoinPrice: false,
+  omnicoinPrice: false,
+  isContinuous: false,
+  addedImages: []
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -202,7 +211,11 @@ const reducer = handleActions({
     const data = _.sortBy(state.myListingsByDate, ['price']).reverse();
     if (activePageMyListingsHighest !== state.activePageMyListingsHighest) {
       const { rowsPerPageMyListingsHighest } = state;
-      const currentData = sliceData(data, activePageMyListingsHighest, rowsPerPageMyListingsHighest);
+      const currentData = sliceData(
+        data,
+        activePageMyListingsHighest,
+        rowsPerPageMyListingsHighest
+      );
 
       return {
         ...state,
@@ -213,6 +226,39 @@ const reducer = handleActions({
 
     return {
       ...state,
+    };
+  },
+  [setBitcoinPrice](state) {
+    return {
+      ...state,
+      bitcoinPrice: !state.bitcoinPrice
+    };
+  },
+  [setOmnicoinPrice](state) {
+    return {
+      ...state,
+      omnicoinPrice: !state.omnicoinPrice
+    };
+  },
+  [setContinuous](state) {
+    return {
+      ...state,
+      isContinuous: !state.isContinuous
+    };
+  },
+  [addImage](state, { payload: { image } }) {
+    return {
+      ...state,
+      addedImages: [...state.addedImages, image]
+    };
+  },
+  [removeImage](state, { payload: { imageIndex } }) {
+    return {
+      ...state,
+      addedImages: [
+        ...state.addedImages.slice(0, imageIndex),
+        ...state.addedImages.slice(imageIndex + 1)
+      ],
     };
   },
 }, defaultState);
