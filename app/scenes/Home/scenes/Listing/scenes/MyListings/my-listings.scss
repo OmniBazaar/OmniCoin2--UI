@@ -1,29 +1,46 @@
-.my-listings {
-  position: relative;
+@import '../../../../../../styles/index';
 
-  .filters {
-    position: absolute;
-    right: 0;
-    top: 15px;
-    display: flex;
-
-    .categories {
-      min-width: 150px;
-
-      .icon {
-        float: right;
-      }
+.listing.container {
+  .top-header {
+    .child {
+      color: $dark-gray;
+    }
+    .long.arrow {
+      height: auto;
+      font-size: 15px;
+      margin: 0 10px;
+      color: $primary-gray;
+      font-weight: 100;
     }
   }
 
-  .items {
-    .item {
-      .title {
-        font-size: 16px;
-      }
+  .my-listings {
+    position: relative;
 
-      .price {
-        margin-bottom: 8px;
+    .filters {
+      position: absolute;
+      right: 0;
+      top: 15px;
+      display: flex;
+
+      .categories {
+        min-width: 150px;
+
+        .icon {
+          float: right;
+        }
+      }
+    }
+
+    .items {
+      .item {
+        .title {
+          font-size: 16px;
+        }
+
+        .price {
+          margin-bottom: 8px;
+        }
       }
     }
   }

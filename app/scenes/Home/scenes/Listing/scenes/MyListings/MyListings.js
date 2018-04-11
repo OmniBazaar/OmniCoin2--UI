@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Dropdown } from 'semantic-ui-react';
+import { Tab, Dropdown, Icon } from 'semantic-ui-react';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
@@ -11,7 +11,6 @@ import MyListingsDateTable from '../MyListingsDateTable';
 import MyListingsLowestTable from '../MyListingsLowestTable';
 import MyListingsHighestTable from '../MyListingsHighestTable';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import CategoryHeader from '../../../Marketplace/scenes/CategoryHeader';
 import CurrencyDropdown from '../../../../components/CurrencyDropdown/CurrencyDropdown';
 
 import './my-listings.scss';
@@ -20,6 +19,8 @@ import { getMyListings, setPaginationMyListings } from '../../../../../../servic
 
 import '../../../Marketplace/marketplace.scss';
 import '../../../Marketplace/scenes/CategoryListing/listings.scss';
+
+const iconSize = 42;
 
 const myListings = [
   {
@@ -403,6 +404,14 @@ const messages = defineMessages({
     id: 'Settings.allCategories',
     defaultMessage: 'All Categories'
   },
+  marketplace: {
+    id: 'Settings.marketplace',
+    defaultMessage: 'Marketplace'
+  },
+  myListings: {
+    id: 'Settings.myListings',
+    defaultMessage: 'My Listings'
+  },
 });
 
 const options = [
@@ -494,15 +503,23 @@ class MyListings extends Component {
   }
 
   render() {
+    const { formatMessage } = this.props.intl;
+
     return (
-      <div className="marketplace-container category-listing listing">
+      <div className="marketplace-container category-listing listing container">
         <div className="header">
           <Menu />
         </div>
         <div className="body">
           <div className="top-header">
             <div className="content">
-              <CategoryHeader />
+              <div className="category-title">
+                <div className="parent">
+                  <span>{formatMessage(messages.marketplace)}</span>
+                  <Icon name="long arrow right" width={iconSize} height={iconSize} />
+                </div>
+                <span className="child">{formatMessage(messages.myListings)}</span>
+              </div>
             </div>
           </div>
           <div className="listing-body">
