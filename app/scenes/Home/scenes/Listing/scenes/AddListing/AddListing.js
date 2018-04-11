@@ -34,12 +34,172 @@ const iconSizeSmall = 15;
 
 const messages = defineMessages({
   myListings: {
-    id: 'Listing.myListings',
+    id: 'MyListings.myListings',
     defaultMessage: 'My Listings'
   },
   createListing: {
-    id: 'Listing.createListing',
+    id: 'MyListings.createListing',
     defaultMessage: 'Create Listing'
+  },
+  primaryInfo: {
+    id: 'MyListings.primaryInfo',
+    defaultMessage: 'Primary Info'
+  },
+  importListings: {
+    id: 'MyListings.importListings',
+    defaultMessage: 'IMPORT LISTINGS'
+  },
+  listingTitle: {
+    id: 'MyListings.listingTitle',
+    defaultMessage: 'Listing Title'
+  },
+  pleaseEnter: {
+    id: 'MyListings.pleaseEnter',
+    defaultMessage: 'Please enter'
+  },
+  placing: {
+    id: 'MyListings.placing',
+    defaultMessage: 'Placing'
+  },
+  type: {
+    id: 'MyListings.type',
+    defaultMessage: 'Type'
+  },
+  category: {
+    id: 'MyListings.category',
+    defaultMessage: 'Category'
+  },
+  subCategory: {
+    id: 'MyListings.subCategory',
+    defaultMessage: 'Sub-category'
+  },
+  pricing: {
+    id: 'MyListings.pricing',
+    defaultMessage: 'Pricing'
+  },
+  currency: {
+    id: 'MyListings.currency',
+    defaultMessage: 'Currency'
+  },
+  pricePerItem: {
+    id: 'MyListings.pricePerItem',
+    defaultMessage: 'Price per item'
+  },
+  na: {
+    id: 'MyListings.na',
+    defaultMessage: 'N/A'
+  },
+  bitcoinPrice: {
+    id: 'MyListings.bitcoinPrice',
+    defaultMessage: 'Add Bitcoin Price'
+  },
+  omnicoinPrice: {
+    id: 'MyListings.omnicoinPrice',
+    defaultMessage: 'Add Omnicoin Price'
+  },
+  additionalInfo: {
+    id: 'MyListings.additionalInfo',
+    defaultMessage: 'Additional Info'
+  },
+  condition: {
+    id: 'MyListings.condition',
+    defaultMessage: 'Condition'
+  },
+  numberAvailable: {
+    id: 'MyListings.numberAvailable',
+    defaultMessage: 'Number Available'
+  },
+  unitsOfMeasure: {
+    id: 'MyListings.unitsOfMeasure',
+    defaultMessage: 'Units of Measure'
+  },
+  listingDates: {
+    id: 'MyListings.listingDates',
+    defaultMessage: 'Listing Dates'
+  },
+  optional: {
+    id: 'MyListings.optional',
+    defaultMessage: '(Optional)'
+  },
+  from: {
+    id: 'MyListings.from',
+    defaultMessage: 'From'
+  },
+  to: {
+    id: 'MyListings.to',
+    defaultMessage: 'To'
+  },
+  continuous: {
+    id: 'MyListings.continuous',
+    defaultMessage: 'continuous'
+  },
+  images: {
+    id: 'MyListings.images',
+    defaultMessage: 'Images'
+  },
+  listingImages: {
+    id: 'MyListings.listingImages',
+    defaultMessage: 'Listing Images'
+  },
+  description: {
+    id: 'MyListings.description',
+    defaultMessage: 'Description'
+  },
+  keywordsSearch: {
+    id: 'MyListings.keywordsSearch',
+    defaultMessage: 'Keywords for search engine'
+  },
+  keywordCommas: {
+    id: 'MyListings.keywordCommas',
+    defaultMessage: 'Keywords separated by commas'
+  },
+  owner: {
+    id: 'MyListings.owner',
+    defaultMessage: 'Owner'
+  },
+  ownerDetails: {
+    id: 'MyListings.ownerDetails',
+    defaultMessage: 'Owner Details'
+  },
+  ownerName: {
+    id: 'MyListings.ownerName',
+    defaultMessage: 'Owner Name'
+  },
+  preferredContact: {
+    id: 'MyListings.preferredContact',
+    defaultMessage: 'Preferred contact'
+  },
+  enterPreferredContact: {
+    id: 'MyListings.enterPreferredContact',
+    defaultMessage: 'Enter preferred contact'
+  },
+  location: {
+    id: 'MyListings.location',
+    defaultMessage: 'Location'
+  },
+  country: {
+    id: 'MyListings.country',
+    defaultMessage: 'Country'
+  },
+  address: {
+    id: 'MyListings.address',
+    defaultMessage: 'Address'
+  },
+  city: {
+    id: 'MyListings.city',
+    defaultMessage: 'City'
+  },
+  state: {
+    id: 'MyListings.state',
+    defaultMessage: 'State'
+  },
+  postalCode: {
+    id: 'MyListings.postalCode',
+    defaultMessage: 'Postal Code'
+  },
+  createListingCaps: {
+    id: 'MyListings.createListingCaps',
+    defaultMessage: 'CREATE LISTING'
   },
 });
 
@@ -126,26 +286,28 @@ class AddListing extends Component {
     return addedImages.map((image, index) => (
       <div key={hash(image)} className="img-container">
         <Image src={RemoveIcon} width={iconSizeLarge} height={iconSizeLarge} className="remove-icon" onClick={() => this.removeImage(index)} />
-        <img alt="" id="target" src={image} width={132} height={100} className="added-img" />
+        <img alt="" src={image} width={132} height={100} className="added-img" />
       </div>
     ));
   }
 
   addListingForm() {
+    const { formatMessage } = this.props.intl;
+
     return (
       <Form className="add-listing-form">
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
-              <span className="title">Primary Info</span>
+              <span className="title">{formatMessage(messages.primaryInfo)}</span>
             </Grid.Column>
             <Grid.Column width={4} floated="right">
-              <Button content="IMPORT LISTINGS" className="button--primary" />
+              <Button content={formatMessage(messages.importListings)} className="button--primary" />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Listing Title</span>
+              <span>{formatMessage(messages.listingTitle)}</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
@@ -153,19 +315,19 @@ class AddListing extends Component {
                 name="listingTitle"
                 component="input"
                 className="textfield"
-                placeholder="Please enter"
+                placeholder={formatMessage(messages.pleaseEnter)}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Placing</span>
+              <span>{formatMessage(messages.placing)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Type"
+                placeholder={formatMessage(messages.type)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -173,7 +335,7 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Category"
+                placeholder={formatMessage(messages.category)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -181,20 +343,20 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Sub-category"
+                placeholder={formatMessage(messages.subCategory)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Pricing</span>
+              <span>{formatMessage(messages.pricing)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Type"
+                placeholder={formatMessage(messages.currency)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -202,10 +364,10 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="pricePerItem"
-                placeholder="Price per item"
+                placeholder={formatMessage(messages.pricePerItem)}
                 component={this.renderLabeledField}
                 className="textfield"
-                buttonText="N/A"
+                buttonText={formatMessage(messages.na)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -218,7 +380,7 @@ class AddListing extends Component {
                     <Image src={this.getBitcoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleBitcoinPrice} />
                   </div>
                   <div className="description-text">
-                    Add Bitcoin Price
+                    {formatMessage(messages.bitcoinPrice)}
                   </div>
                 </div>
               </div>
@@ -230,7 +392,7 @@ class AddListing extends Component {
                     <Image src={this.getOmnicoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleOmnicoinPrice} />
                   </div>
                   <div className="description-text">
-                    Add Omnicoin Price
+                    {formatMessage(messages.omnicoinPrice)}
                   </div>
                 </div>
               </div>
@@ -238,13 +400,13 @@ class AddListing extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Additional Info</span>
+              <span>{formatMessage(messages.additionalInfo)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Condition"
+                placeholder={formatMessage(messages.condition)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -254,27 +416,27 @@ class AddListing extends Component {
                 name="numberAvailable"
                 component="input"
                 className="textfield"
-                placeholder="Number available"
+                placeholder={formatMessage(messages.numberAvailable)}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Units of Measure"
+                placeholder={formatMessage(messages.unitsOfMeasure)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Listing Dates (Optional)</span>
+              <span>{formatMessage(messages.listingDates)} {formatMessage(messages.optional)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
                 type="text"
                 name="fromDate"
-                placeholder="From"
+                placeholder={formatMessage(messages.from)}
                 component={this.renderCalendarField}
                 className="textfield"
               />
@@ -283,7 +445,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="toDate"
-                placeholder="To"
+                placeholder={formatMessage(messages.to)}
                 component={this.renderCalendarField}
                 className="textfield"
               />
@@ -301,7 +463,7 @@ class AddListing extends Component {
                     />
                   </div>
                   <div className="description-text">
-                    Continuous
+                    {formatMessage(messages.continuous)}
                   </div>
                 </div>
               </div>
@@ -310,13 +472,15 @@ class AddListing extends Component {
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
-              <span className="title">Images</span>
+              <span className="title">{formatMessage(messages.images)}</span>
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>Listing Images (Optional)</span>
+              <span>
+                {formatMessage(messages.listingImages)} {formatMessage(messages.optional)}
+              </span>
             </Grid.Column>
             <Grid.Column width={12}>
               <input
@@ -336,48 +500,48 @@ class AddListing extends Component {
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
-              <span className="title">Description</span>
+              <span className="title">{formatMessage(messages.description)}</span>
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Keywords for search engine</span>
+              <span>{formatMessage(messages.keywordsSearch)}</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
                 type="text"
-                name="listingTitle"
+                name="keywords"
                 component="input"
                 className="textfield"
-                placeholder="Keywords separated by commas"
+                placeholder={formatMessage(messages.keywordCommas)}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>Description</span>
+              <span>{formatMessage(messages.description)}</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
                 type="textarea"
-                name="listingTitle"
+                name="description"
                 component="textarea"
                 className="textfield"
-                placeholder="Please enter"
+                placeholder={formatMessage(messages.pleaseEnter)}
               />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
-              <span className="title">Owner</span>
+              <span className="title">{formatMessage(messages.owner)}</span>
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Owner Details</span>
+              <span>{formatMessage(messages.ownerDetails)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
@@ -385,14 +549,14 @@ class AddListing extends Component {
                 name="ownerName"
                 component="input"
                 className="textfield"
-                placeholder="Owner Name"
+                placeholder={formatMessage(messages.ownerName)}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Preferred contact"
+                placeholder={formatMessage(messages.preferredContact)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -402,20 +566,20 @@ class AddListing extends Component {
                 name="preferredContactDetail"
                 component="input"
                 className="textfield"
-                placeholder="Enter preferred contact"
+                placeholder={formatMessage(messages.enterPreferredContact)}
               />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Location</span>
+              <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
                 compact
                 selection
-                placeholder="Country"
+                placeholder={formatMessage(messages.country)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -425,7 +589,7 @@ class AddListing extends Component {
                 name="address"
                 component="input"
                 className="textfield"
-                placeholder="Address"
+                placeholder={formatMessage(messages.address)}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -434,7 +598,7 @@ class AddListing extends Component {
                 name="city"
                 component="input"
                 className="textfield"
-                placeholder="City"
+                placeholder={formatMessage(messages.city)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -445,7 +609,7 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="State"
+                placeholder={formatMessage(messages.state)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -455,14 +619,14 @@ class AddListing extends Component {
                 name="postalCode"
                 component="input"
                 className="textfield"
-                placeholder="Postal Code"
+                placeholder={formatMessage(messages.postalCode)}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button content="CREATE LISTING" className="button--green-bg" />
+              <Button content={formatMessage(messages.createListingCaps)} className="button--green-bg" />
             </Grid.Column>
           </Grid.Row>
         </Grid>

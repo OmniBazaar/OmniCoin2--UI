@@ -436,7 +436,9 @@ class Menu extends Component {
         </div>
         <div className="link-menu">{formatMessage(userMenu.myPurchases)}</div>
         <div className="link-menu">{formatMessage(userMenu.favoriteListings)}</div>
-        <div className="link-menu">{formatMessage(userMenu.newListingDefaults)}</div>
+        <div className="link-menu">
+          <NavLink to="/listings-defaults">{formatMessage(userMenu.newListingDefaults)}</NavLink>
+        </div>
         <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
       </Popup>
     );

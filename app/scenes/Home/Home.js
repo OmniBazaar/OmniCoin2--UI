@@ -24,6 +24,7 @@ import Wallet from './scenes/Wallet/Wallet';
 import Listing from './scenes/Listing/Listing';
 import MyListings from './scenes/Listing/scenes/MyListings/MyListings';
 import AddListing from './scenes/Listing/scenes/AddListing/AddListing';
+import MyListingsDefaults from './scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
@@ -195,6 +196,7 @@ class Home extends Component {
             <Route path="/listing/:id/:name" render={(props) => <Listing {...props} />} />
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
+            <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
           </div>
           <ChainFooter />
         </div>

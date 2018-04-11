@@ -1,6 +1,7 @@
 @import '../../../../../../styles/index';
 
-.add-listing {
+.add-listing,
+.listing-defaults {
   .top-header {
     .child {
       color: $dark-gray;
@@ -118,5 +119,11 @@
         flex: 3;
       }
     }
+  }
+}
+
+.listing-defaults {
+  .category-title {
+    margin-bottom: 15px;
   }
 }
