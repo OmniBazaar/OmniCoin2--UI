@@ -9,7 +9,8 @@ export function* escrowSubscriber() {
     takeEvery('LOAD_ESCROW_TRANSACTIONS', loadEscrowTransactions),
     takeLatest('LOAD_ESCROW_AGENTS', loadEscrowAgents),
     takeEvery('LOAD_MY_ESCROW_AGENTS', loadMyEscrowAgents),
-    takeEvery('SET_MY_ESCROW_AGENTS', setMyEscrowAgents)
+    takeEvery('SET_MY_ESCROW_AGENTS', setMyEscrowAgents),
+    takeEvery('GET_ESCROW_AGENTS_COUNT', getEscrowAgentsCount)
   ]);
 }
 
@@ -26,7 +27,7 @@ function* loadEscrowTransactions(action) {
   }];
 
 
-//  const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
+  //  const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
 
 
   yield put({
@@ -53,32 +54,30 @@ function* loadEscrowTransactions(action) {
 }
 
 
-function* loadEscrowAgents({payload: {start, limit, search_term}}) {
+function* loadEscrowAgents({ payload: { start, limit, search_term } }) {
   try {
     const result = yield (Apis.instance().db_api().exec('filter_current_escrows', [start, limit, search_term]));
-    const isAnythingLeft = limit - start === result.length;
     yield put({
       type: 'LOAD_ESCROW_AGENTS_SUCCEEDED',
-      agents: result,
-      isAnythingLeft
+      agents: result
     });
   } catch (e) {
     yield put({
       type: 'LOAD_ESCROW_AGENTS_FAILED',
       error: e
     });
-    console.log("SOME ERROR", e);
+    console.log('SOME ERROR', e);
   }
 }
 
-function* loadMyEscrowAgents({payload: {username}}) {
+function* loadMyEscrowAgents({ payload: { username } }) {
   try {
     ChainStore.resetCache();
     const result = yield call(FetchChain, 'getAccount', username);
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
-      myAgents: result.get('escrows').map(name => { return {name} }),
-    })
+      myAgents: result.get('escrows').map(name => ({ name })),
+    });
   } catch (e) {
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_FAILED',
@@ -88,6 +87,21 @@ function* loadMyEscrowAgents({payload: {username}}) {
   }
 }
 
-function* setMyEscrowAgents({payload: {agents}}) {
+function* setMyEscrowAgents({ payload: { agents } }) {
 
+}
+
+function* getEscrowAgentsCount() {
+  try {
+    yield put({
+      type: 'GET_ESCROW_AGENTS_SUCCEEDED',
+      count: 4
+    });
+  } catch (e) {
+    console.log('ERROR ', e);
+    yield put({
+      type: 'GET_ESCROW_AGENTS_FAILED',
+      error: e
+    });
+  }
 }

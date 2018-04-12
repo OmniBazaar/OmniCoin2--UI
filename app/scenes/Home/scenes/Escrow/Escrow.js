@@ -39,7 +39,6 @@ const messages = defineMessages({
 });
 
 class Escrow extends Component {
-
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
     this.props.escrowActions.loadEscrowTransactions(username);

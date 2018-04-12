@@ -38,12 +38,11 @@ const messages = defineMessages({
 });
 
 class MyEscrowSettings extends Component {
-
   constructor(props) {
     super(props);
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.save = this.save.bind(this);
-    this.checkboxes = {}
+    this.checkboxes = {};
   }
 
   renderMenuItem(text, id, value) {
@@ -55,7 +54,7 @@ class MyEscrowSettings extends Component {
         />
         <span>{text}</span>
       </div>
-    )
+    );
   }
 
   save() {
@@ -70,7 +69,7 @@ class MyEscrowSettings extends Component {
       transactionProcessor: second.state.isChecked,
       activeTransactionProcessor: third.state.isChecked
     });
-    toastr.success(formatMessage(messages.saved), formatMessage(messages.saved))
+    toastr.success(formatMessage(messages.saved), formatMessage(messages.saved));
   }
 
   render() {
@@ -85,9 +84,9 @@ class MyEscrowSettings extends Component {
         <div className="title">
           <span>{formatMessage(messages.title)}</span>
         </div>
-        {this.renderMenuItem(formatMessage(messages.firstCategory), "first", positiveRating)}
-        {this.renderMenuItem(formatMessage(messages.secondCategory), "second", transactionProcessor)}
-        {this.renderMenuItem(formatMessage(messages.thirdCategory), "third", activeTransactionProcessor)}
+        {this.renderMenuItem(formatMessage(messages.firstCategory), 'first', positiveRating)}
+        {this.renderMenuItem(formatMessage(messages.secondCategory), 'second', transactionProcessor)}
+        {this.renderMenuItem(formatMessage(messages.thirdCategory), 'third', activeTransactionProcessor)}
         <Button
           content={formatMessage(messages.save)}
           onClick={this.save}

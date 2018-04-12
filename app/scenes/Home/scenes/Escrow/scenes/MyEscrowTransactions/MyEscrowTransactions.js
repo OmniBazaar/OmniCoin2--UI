@@ -7,7 +7,8 @@ import {
   TableCell,
   TableHeaderCell,
   TableRow,
-  TableHeader, } from 'semantic-ui-react'
+  TableHeader,
+} from 'semantic-ui-react';
 
 import './my-escrow-transactions.scss';
 
@@ -29,75 +30,65 @@ const messages = defineMessages({
 });
 
 class MyEscrowTransactions extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
       transactions: props.escrow.transactions,
       sortAsc: {
-          transactionID: false,
-          amount: false,
-          parties: false
+        transactionID: false,
+        amount: false,
+        parties: false
       },
       lastHeaderClicked: 'transactionID'
-    }
+    };
   }
 
   componentDidMount() {
 
   }
 
-  componentWillReceiveProps(nextProps){
-
-    let headerName  = this.state.lastHeaderClicked;
-    let asc = this.state.sortAsc[headerName];
+  componentWillReceiveProps(nextProps) {
+    const headerName = this.state.lastHeaderClicked;
+    const asc = this.state.sortAsc[headerName];
 
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => {
-          return (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1);
-      })
+      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
     });
   }
 
-  sortColumn(headerName, asc){
+  sortColumn(headerName, asc) {
     this.setState({
       ...this.state,
       sortAsc: {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => {
-          return (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1);
-      })
+      transactions: this.state.transactions.slice().sort((transA, transB) => (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
     });
   }
 
   handleHeaderClick(headerName) {
-    let newHeaderSortAsc = !this.state.sortAsc[headerName];
+    const newHeaderSortAsc = !this.state.sortAsc[headerName];
     this.setState({
       ...this.state,
       sortAsc: {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => {
-          return (transA[headerName].localeCompare(transB[headerName])) * (newHeaderSortAsc ? 1 : -1);
-      }),
+      transactions: this.state.transactions.slice().sort((transA, transB) => (transA[headerName].localeCompare(transB[headerName])) * (newHeaderSortAsc ? 1 : -1)),
       lastHeaderClicked: headerName
     });
   }
 
   renderRows() {
-    return this.state.transactions.map((escrowObject) => {
-      return (
-        <TableRow key={escrowObject.transactionID}>
-          <TableCell>{escrowObject.transactionID}</TableCell>
-          <TableCell>{escrowObject.amount}</TableCell>
-          <TableCell>{escrowObject.parties}</TableCell>
-        </TableRow>
-      );
-    });
+    return this.state.transactions.map((escrowObject) => (
+      <TableRow key={escrowObject.transactionID}>
+        <TableCell>{escrowObject.transactionID}</TableCell>
+        <TableCell>{escrowObject.amount}</TableCell>
+        <TableCell>{escrowObject.parties}</TableCell>
+      </TableRow>
+    ));
   }
 
   render() {
@@ -145,6 +136,4 @@ class MyEscrowTransactions extends Component {
   }
 }
 
-export default connect(
-  state => ({ ...state.default })
-)(injectIntl(MyEscrowTransactions));
+export default connect(state => ({ ...state.default }))(injectIntl(MyEscrowTransactions));

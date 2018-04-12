@@ -27,7 +27,7 @@ export function* updatePublicData() {
     payload = {
       ...payload,
       publisher_ip: account.ipAddress
-    }
+    };
   }
   try {
     yield updateAccount(payload);

@@ -28,7 +28,7 @@ class Checkbox extends Component {
   componentDidMount() {
     this.setState({
       isChecked: this.props.value
-    })
+    });
   }
 
   getIcon() {
@@ -41,7 +41,7 @@ class Checkbox extends Component {
     }
     this.setState({
       isChecked: !this.state.isChecked
-    })
+    });
   }
 
   render() {
@@ -52,9 +52,10 @@ class Checkbox extends Component {
           width={this.props.width}
           height={this.props.height}
           className="checkbox"
-          onClick={this.handleClick} />
+          onClick={this.handleClick}
+        />
       </div>
-    )
+    );
   }
 }
 

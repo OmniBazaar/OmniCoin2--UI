@@ -9,7 +9,6 @@ import './agent-item.scss';
 const iconSize = 20;
 
 class AgentItem extends Component {
-
   render() {
     const {
       isSelected,
@@ -29,7 +28,7 @@ class AgentItem extends Component {
           onChecked={toggleSelect}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -42,9 +41,8 @@ AgentItem.propTypes = {
 AgentItem.defaultProps = {
   isSelected: false,
   toggleSelect: null,
-  name: "Agent"
+  name: 'Agent'
 };
 
 export default AgentItem;
-
 

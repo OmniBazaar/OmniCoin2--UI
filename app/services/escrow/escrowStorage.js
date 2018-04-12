@@ -5,10 +5,9 @@ export default class EscrowStorage {
     const escrows = localStorage.getItem(key);
     if (escrows) {
       return JSON.parse(escrows);
-    } else {
-      localStorage.setItem(key, JSON.stringify([]));
-      return [];
     }
+    localStorage.setItem(key, JSON.stringify([]));
+    return [];
   }
 
   static setSelectedAgents(agents) {
@@ -17,13 +16,12 @@ export default class EscrowStorage {
 
   static addOrUpdateAgent(agent) {
     let escrows = EscrowStorage.getSelectedAgents();
-    if(escrows.find(item => agent.name === item.name)) {
+    if (escrows.find(item => agent.name === item.name)) {
       escrows = escrows.map(item => {
         if (item.name === agent.name) {
           return agent;
-        } else {
-          return item;
         }
+        return item;
       });
     } else {
       escrows.push(agent);
@@ -37,10 +35,8 @@ export default class EscrowStorage {
   }
 
   static removeAgents(agents) {
-    let selectedAgents = this.getSelectedAgents();
-    let afterRemove = selectedAgents.filter(agent => {
-      return !agents.find(rmAgent => rmAgent.name === agent.name);
-    });
+    const selectedAgents = this.getSelectedAgents();
+    const afterRemove = selectedAgents.filter(agent => !agents.find(rmAgent => rmAgent.name === agent.name));
     EscrowStorage.setSelectedAgents(afterRemove);
     return afterRemove;
   }
@@ -56,7 +52,7 @@ export default class EscrowStorage {
         positiveRating: false,
         transactionProcessor: false,
         activeTransactionProcessor: false
-      }))
+      }));
     }
     return JSON.parse(localStorage.getItem(settingsKey));
   }

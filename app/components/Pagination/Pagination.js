@@ -3,7 +3,7 @@ import { Pagination } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import './pagination.scss'
+import './pagination.scss';
 
 const messages = defineMessages({
   ariaFirst: {
@@ -41,7 +41,7 @@ const messages = defineMessages({
 });
 class CustomPagination extends Component {
   render() {
-    const  {
+    const {
       activePage,
       onPageChange,
       totalPages
