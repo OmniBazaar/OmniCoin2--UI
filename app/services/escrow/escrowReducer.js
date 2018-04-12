@@ -17,8 +17,7 @@ const defaultState = {
   transactions: [],
   agents: [],
   myAgents: [],
-  escrowSettings: {
-  },
+  settings: null,
   error: null
 };
 

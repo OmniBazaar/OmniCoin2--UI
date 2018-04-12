@@ -44,6 +44,7 @@ class Escrow extends Component {
     const { username } = this.props.auth.currentUser;
     this.props.escrowActions.loadEscrowTransactions(username);
     this.props.escrowActions.loadMyEscrowAgents(username);
+    this.props.escrowActions.getEscrowSettings();
   }
 
   render() {
