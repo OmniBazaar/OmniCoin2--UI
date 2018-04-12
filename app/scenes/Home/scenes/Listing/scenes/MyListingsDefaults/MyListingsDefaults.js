@@ -5,23 +5,20 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
-import DatePicker from 'react-datepicker';
 import hash from 'object-hash';
 
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
-import CalendarIcon from '../../../../images/icn-calendar.svg';
 import AddIcon from '../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../images/btn-remove-image-norm+press.svg';
 
 import {
-  setBitcoinPrice,
-  setOmnicoinPrice,
-  setContinuous,
-  addImage,
-  removeImage
-} from '../../../../../../services/listing/listingActions';
+  setBitcoinPriceDefaults,
+  setOmnicoinPriceDefaults,
+  addImageDefaults,
+  removeImageDefaults
+} from '../../../../../../services/listing/listingDefaultsActions';
 
 import '../AddListing/add-listing.scss';
 
@@ -30,7 +27,6 @@ require('react-datepicker/dist/react-datepicker-cssmodules.css');
 const iconSize = 42;
 const iconSizeLarge = 23;
 const iconSizeMedium = 20;
-const iconSizeSmall = 15;
 
 const messages = defineMessages({
   myListings: {
@@ -45,6 +41,70 @@ const messages = defineMessages({
     id: 'ListingsDefaults.defaultsNote',
     defaultMessage: 'Pre-defined information for all new listings you are creating.'
   },
+  type: {
+    id: 'ListingsDefaults.type',
+    defaultMessage: 'Type'
+  },
+  category: {
+    id: 'ListingsDefaults.category',
+    defaultMessage: 'Category'
+  },
+  subCategory: {
+    id: 'ListingsDefaults.subCategory',
+    defaultMessage: 'Sub-category'
+  },
+  localCurrency: {
+    id: 'ListingsDefaults.localCurrency',
+    defaultMessage: 'Local Currency'
+  },
+  selectCoin: {
+    id: 'ListingsDefaults.selectCoin',
+    defaultMessage: 'Select Coin'
+  },
+  addBitcoinPrice: {
+    id: 'ListingsDefaults.addBitcoinPrice',
+    defaultMessage: 'Add Bitcoin Price'
+  },
+  addOmnicoinPrice: {
+    id: 'ListingsDefaults.addOmnicoinPrice',
+    defaultMessage: 'Add Omnicoin Price'
+  },
+  description: {
+    id: 'ListingsDefaults.description',
+    defaultMessage: 'Description'
+  },
+  pleaseEnter: {
+    id: 'ListingsDefaults.pleaseEnter',
+    defaultMessage: 'Please enter'
+  },
+  listingImages: {
+    id: 'ListingsDefaults.listingImages',
+    defaultMessage: 'Listing Images'
+  },
+  optional: {
+    id: 'ListingsDefaults.optional',
+    defaultMessage: '(Optional)'
+  },
+  location: {
+    id: 'ListingsDefaults.location',
+    defaultMessage: 'Location'
+  },
+  address: {
+    id: 'ListingsDefaults.address',
+    defaultMessage: 'Address'
+  },
+  city: {
+    id: 'ListingsDefaults.city',
+    defaultMessage: 'City'
+  },
+  postalCode: {
+    id: 'ListingsDefaults.postalCode',
+    defaultMessage: 'Postal Code'
+  },
+  saveDefaults: {
+    id: 'ListingsDefaults.saveDefaults',
+    defaultMessage: 'SAVE DEFAULTS'
+  },
 });
 
 const placingTypeOptions = [
@@ -55,62 +115,27 @@ const placingTypeOptions = [
   },
 ];
 
-class AddListing extends Component {
+class MyListingsDefaults extends Component {
   getBitcoinIcon() {
-    return this.props.listing.bitcoinPrice ? CheckPreNom : CheckNormal;
+    return this.props.listingDefaults.bitcoinPriceDefaults ? CheckPreNom : CheckNormal;
   }
 
   getOmnicoinIcon() {
-    return this.props.listing.omnicoinPrice ? CheckPreNom : CheckNormal;
+    return this.props.listingDefaults.omnicoinPriceDefaults ? CheckPreNom : CheckNormal;
   }
 
-  getContinuousIcon() {
-    return this.props.listing.isContinuous ? CheckPreNom : CheckNormal;
-  }
-
-  toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPrice();
-  toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPrice();
-  toggleContinuous = () => this.props.listingActions.setContinuous();
+  toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPriceDefaults();
+  toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPriceDefaults();
 
   onSubmit() {
     console.log('');
   }
 
-  renderLabeledField = ({
-    input, placeholder, buttonText
-  }) => (
-    <div className="hybrid-input">
-      <input
-        {...input}
-        type="text"
-        className="textfield"
-        placeholder={placeholder}
-      />
-      <Button className="copy-btn button--gray-text">
-        {buttonText}
-      </Button>
-    </div>
-  );
-
-  renderCalendarField = ({
-    placeholder
-  }) => (
-    <div className="hybrid-input">
-      <DatePicker
-        placeholderText={placeholder}
-        onChange={this.handleChange}
-      />
-      <Button className="copy-btn button--gray-text">
-        <Image src={CalendarIcon} width={iconSizeSmall} height={iconSizeSmall} />
-      </Button>
-    </div>
-  );
-
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.props.listingActions.addImage(e.target.result);
+        this.props.listingActions.addImageDefaults(e.target.result);
       };
       reader.readAsDataURL(event.target.files[0]);
     }
@@ -121,13 +146,13 @@ class AddListing extends Component {
   };
 
   removeImage = (index) => {
-    this.props.listingActions.removeImage(index);
+    this.props.listingActions.removeImageDefaults(index);
   };
 
   addedImages() {
-    const { addedImages } = this.props.listing;
+    const { addedImagesDefaults } = this.props.listingDefaults;
 
-    return addedImages.map((image, index) => (
+    return addedImagesDefaults.map((image, index) => (
       <div key={hash(image)} className="img-container">
         <Image src={RemoveIcon} width={iconSizeLarge} height={iconSizeLarge} className="remove-icon" onClick={() => this.removeImage(index)} />
         <img alt="" id="target" src={image} width={132} height={100} className="added-img" />
@@ -154,7 +179,7 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Type"
+                placeholder={formatMessage(messages.type)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -162,7 +187,7 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Category"
+                placeholder={formatMessage(messages.category)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -170,7 +195,7 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Sub-category"
+                placeholder={formatMessage(messages.subCategory)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
@@ -183,18 +208,16 @@ class AddListing extends Component {
               <Dropdown
                 compact
                 selection
-                placeholder="Type"
+                placeholder={formatMessage(messages.localCurrency)}
                 options={placingTypeOptions}
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <Field
-                type="text"
-                name="pricePerItem"
-                placeholder="Price per item"
-                component={this.renderLabeledField}
-                className="textfield"
-                buttonText="N/A"
+              <Dropdown
+                compact
+                selection
+                placeholder={formatMessage(messages.selectCoin)}
+                options={placingTypeOptions}
               />
             </Grid.Column>
           </Grid.Row>
@@ -207,7 +230,7 @@ class AddListing extends Component {
                     <Image src={this.getBitcoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleBitcoinPrice} />
                   </div>
                   <div className="description-text">
-                    Add Bitcoin Price
+                    {formatMessage(messages.addBitcoinPrice)}
                   </div>
                 </div>
               </div>
@@ -219,7 +242,7 @@ class AddListing extends Component {
                     <Image src={this.getOmnicoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleOmnicoinPrice} />
                   </div>
                   <div className="description-text">
-                    Add Omnicoin Price
+                    {formatMessage(messages.addOmnicoinPrice)}
                   </div>
                 </div>
               </div>
@@ -228,7 +251,7 @@ class AddListing extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>Description</span>
+              <span>{formatMessage(messages.description)}</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
@@ -236,14 +259,16 @@ class AddListing extends Component {
                 name="listingTitle"
                 component="textarea"
                 className="textfield"
-                placeholder="Please enter"
+                placeholder={formatMessage(messages.pleaseEnter)}
               />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>Listing Images (Optional)</span>
+              <span>
+                {formatMessage(messages.listingImages)} {formatMessage(messages.optional)}
+              </span>
             </Grid.Column>
             <Grid.Column width={12}>
               <input
@@ -263,7 +288,7 @@ class AddListing extends Component {
 
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Location</span>
+              <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
@@ -271,7 +296,7 @@ class AddListing extends Component {
                 name="address"
                 component="input"
                 className="textfield"
-                placeholder="Address"
+                placeholder={formatMessage(messages.address)}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -280,7 +305,7 @@ class AddListing extends Component {
                 name="city"
                 component="input"
                 className="textfield"
-                placeholder="City"
+                placeholder={formatMessage(messages.city)}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -289,7 +314,7 @@ class AddListing extends Component {
                 name="postalCode"
                 component="input"
                 className="textfield"
-                placeholder="Postal Code"
+                placeholder={formatMessage(messages.postalCode)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -297,7 +322,7 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button content="SAVE DEFAULTS" className="button--green-bg" />
+              <Button content={formatMessage(messages.saveDefaults)} className="button--green-bg" />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -334,28 +359,26 @@ class AddListing extends Component {
   }
 }
 
-AddListing.propTypes = {
+MyListingsDefaults.propTypes = {
   listingActions: PropTypes.shape({
-    setBitcoinPrice: PropTypes.func,
-    setOmnicoinPrice: PropTypes.func,
-    setContinuous: PropTypes.func,
-    addImage: PropTypes.func,
-    removeImage: PropTypes.func,
+    setBitcoinPriceDefaults: PropTypes.func,
+    setOmnicoinPriceDefaults: PropTypes.func,
+    addImageDefaults: PropTypes.func,
+    removeImageDefaults: PropTypes.func,
   }),
-  listing: PropTypes.shape({
-    bitcoinPrice: PropTypes.bool,
-    omnicoinPrice: PropTypes.bool,
-    isContinuous: PropTypes.bool,
-    addedImages: PropTypes.arrayOf(PropTypes.string),
+  listingDefaults: PropTypes.shape({
+    bitcoinPriceDefaults: PropTypes.bool,
+    omnicoinPriceDefaults: PropTypes.bool,
+    addedImagesDefaults: PropTypes.arrayOf(PropTypes.string),
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
 };
 
-AddListing.defaultProps = {
+MyListingsDefaults.defaultProps = {
   listingActions: {},
-  listing: {},
+  listingDefaults: {},
   intl: {},
 };
 
@@ -364,11 +387,10 @@ export default compose(
     state => ({ ...state.default }),
     (dispatch) => ({
       listingActions: bindActionCreators({
-        setBitcoinPrice,
-        setOmnicoinPrice,
-        setContinuous,
-        addImage,
-        removeImage
+        setBitcoinPriceDefaults,
+        setOmnicoinPriceDefaults,
+        addImageDefaults,
+        removeImageDefaults
       }, dispatch),
     }),
   ),
@@ -376,4 +398,4 @@ export default compose(
     form: 'addListingForm',
     destroyOnUnmount: true,
   }),
-)(injectIntl(AddListing));
+)(injectIntl(MyListingsDefaults));
