@@ -1,0 +1,18 @@
+{
+  "ImportListings.myListings": "My Listings",
+  "ImportListings.importListings": "Import Listings",
+  "ImportListings.files": "Files",
+  "ImportListings.listingsVendor": "Listings Vendor",
+  "ImportListings.filesToImport": "Files to Import",
+  "ImportListings.addFiles": "ADD FILES",
+  "ImportListings.removeAll": "REMOVE ALL",
+  "ImportListings.importedData": "Imported Data",
+  "ImportListings.listingType": "Listing Type",
+  "ImportListings.category": "Category",
+  "ImportListings.subCategory": "Sub Category",
+  "ImportListings.contactType": "Contact Type",
+  "ImportListings.contactInfo": "Contact Info",
+  "ImportListings.title": "Title",
+  "ImportListings.price": "Price",
+  "ImportListings.currency": "Currency"
+}

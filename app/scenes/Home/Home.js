@@ -25,6 +25,7 @@ import Listing from './scenes/Listing/Listing';
 import MyListings from './scenes/Listing/scenes/MyListings/MyListings';
 import AddListing from './scenes/Listing/scenes/AddListing/AddListing';
 import MyListingsDefaults from './scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
+import ImportListings from './scenes/Listing/scenes/ImportListings/ImportListings';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
@@ -197,6 +198,7 @@ class Home extends Component {
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
             <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
+            <Route path="/import-listings" render={(props) => <ImportListings {...props} />} />
           </div>
           <ChainFooter />
         </div>

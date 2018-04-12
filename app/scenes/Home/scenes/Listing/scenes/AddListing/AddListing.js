@@ -7,6 +7,7 @@ import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import DatePicker from 'react-datepicker';
 import hash from 'object-hash';
+import { NavLink } from 'react-router-dom';
 
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
@@ -302,7 +303,9 @@ class AddListing extends Component {
               <span className="title">{formatMessage(messages.primaryInfo)}</span>
             </Grid.Column>
             <Grid.Column width={4} floated="right">
-              <Button content={formatMessage(messages.importListings)} className="button--primary" />
+              <NavLink to="/import-listings">
+                <Button content={formatMessage(messages.importListings)} className="button--primary" />
+              </NavLink>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
