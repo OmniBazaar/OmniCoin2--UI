@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Input, Icon, Button, Loader } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { debounce, clone } from 'lodash';
+import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { toastr } from 'react-redux-toastr';
+import cn from 'classnames';
 
 import AgentItem from './components/AgentItem/AgentItem';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -45,11 +46,15 @@ const messages = defineMessages({
   agentsApproved: {
     id: 'MyEscrowAgents.agentsApproved',
     defaultMessage: 'Agents successfully approved'
+  },
+  error: {
+    id: 'MyEscrowAgents.error',
+    defaultMessage: 'Error'
   }
 });
 
 
-const limit = 3;
+const limit = 2;
 
 class MyEscrowAgents extends Component {
   constructor(props) {
@@ -64,10 +69,8 @@ class MyEscrowAgents extends Component {
   }
 
   state = {
-    isApproved: false,
-    myFreezedAgents: [],
     searchTerm: '',
-    totalPages: 1,
+    totalPages: Math.ceil(this.props.escrow.agentsCount / limit),
     activePage: 1
   };
 
@@ -77,28 +80,32 @@ class MyEscrowAgents extends Component {
     this.props.escrowActions.getEscrowAgentsCount();
   }
 
-  componentDidMount() {
-    this.setState({
-      myFreezedAgents: clone(this.props.escrow.myAgents)
-    });
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.escrow.agentsCount != this.props.escrow.agentsCount) {
+    const { formatMessage } = this.props.intl;
+    if (nextProps.escrow.agentsCount !== this.props.escrow.agentsCount) {
       this.setState({
         totalPages: Math.ceil(nextProps.escrow.agentsCount / limit)
       });
     }
+    if (!nextProps.escrow.updating && nextProps.escrow.updating !== this.props.escrow.updating) {
+      if (!nextProps.escrow.error) {
+        toastr.success(formatMessage(messages.approve), formatMessage(messages.agentsApproved));
+      } else {
+        toastr.error(formatMessage(messages.error), nextProps.escrow.error);
+      }
+    }
+    if (!nextProps.escrow.loading && nextProps.escrow.error !== this.props.escrow.error) {
+      toastr.error(formatMessage(messages.error), nextProps.escrow.error);
+    }
   }
 
   componentWillUnmount() {
-    this.props.escrowActions.setMyEscrowAgents(this.state.myFreezedAgents);
     this.props.escrowActions.clearEscrowAgents();
   }
 
   renderAgents() {
     return this.props.escrow.agents.map((agent) => {
-      const isSelected = !!this.props.escrow.myAgents.find(item => item.name === agent.name);
+      const isSelected = !!this.props.escrow.myAgents.find(item => item.id === agent.id);
       return (
         <li key={agent.name}>
           <AgentItem
@@ -134,23 +141,15 @@ class MyEscrowAgents extends Component {
   }
 
   handleApproveClick() {
-    const { formatMessage } = this.props.intl;
-    this.setState({
-      isApproved: true,
-      myFreezedAgents: clone(this.props.escrow.myAgents)
-    });
-    toastr.success(formatMessage(messages.approve), formatMessage(messages.agentsApproved));
+    this.props.escrowActions.setMyEscrowAgents(this.props.escrow.myAgents);
   }
 
   toggleSelectAgent(agent) {
-    if (this.props.escrow.myAgents.find(item => item.name === agent.name)) {
+    if (this.props.escrow.myAgents.find(item => item.id === agent.id)) {
       this.props.escrowActions.removeMyEscrowAgents([agent]);
     } else {
       this.props.escrowActions.addOrUpdateAgents([agent]);
     }
-    this.setState({
-      isApproved: false
-    });
   }
 
 
@@ -166,7 +165,10 @@ class MyEscrowAgents extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { loading } = this.props.escrow;
+    const {
+      loading,
+      updating
+    } = this.props.escrow;
     return (
       <div className="escrow-agents">
         <div className="top">
@@ -187,7 +189,7 @@ class MyEscrowAgents extends Component {
           </div>
           <Button
             content={formatMessage(messages.approveChanges)}
-            className="button--green-bg"
+            className={cn('button--green-bg', updating ? 'loading' : '')}
             onClick={this.handleApproveClick}
           />
         </div>
@@ -215,6 +217,35 @@ class MyEscrowAgents extends Component {
     );
   }
 }
+
+MyEscrowAgents.propTypes = {
+  escrowActions: PropTypes.shape({
+    loadEscrowAgents: PropTypes.func,
+    loadMyEscrowAgents: PropTypes.func,
+    getEscrowAgentsCount: PropTypes.func,
+    setMyEscrowAgents: PropTypes.func,
+    removeMyEscrowAgents: PropTypes.func,
+    addOrUpdateAgents: PropTypes.func,
+    clearEscrowAgents: PropTypes.func
+  }).isRequired,
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }).isRequired,
+  escrow: PropTypes.shape({
+    myAgents: PropTypes.array,
+    agentsCount: PropTypes.number,
+    updating: PropTypes.bool,
+    loading: PropTypes.bool,
+    error: PropTypes.shape({}),
+    agents: PropTypes.array
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }).isRequired
+};
+
 
 export default connect(
   state => ({ ...state.default }),

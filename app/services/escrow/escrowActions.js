@@ -14,7 +14,7 @@ const {
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
-  LOAD_ESCROW_AGENTS: (start, limit, search_term) => ({ start, limit, search_term }),
+  LOAD_ESCROW_AGENTS: (start, limit, searchTerm) => ({ start, limit, searchTerm }),
   ADD_OR_UPDATE_AGENTS: (agents) => ({ agents }),
   SET_MY_ESCROW_AGENTS: (agents) => ({ agents }),
   REMOVE_MY_ESCROW_AGENTS: (agents) => ({ agents }),

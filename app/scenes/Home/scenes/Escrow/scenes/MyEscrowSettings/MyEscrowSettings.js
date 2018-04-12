@@ -49,7 +49,7 @@ class MyEscrowSettings extends Component {
     return (
       <div className="menu-item">
         <Checkbox
-          ref={(checkbox) => this.checkboxes[id] = checkbox}
+          ref={(checkbox) => { this.checkboxes[id] = checkbox; }}
           value={value}
         />
         <span>{text}</span>
@@ -96,6 +96,22 @@ class MyEscrowSettings extends Component {
     );
   }
 }
+
+MyEscrowSettings.propTypes = {
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }).isRequired,
+  escrowActions: PropTypes.shape({
+    updateEscrowSettings: PropTypes.func,
+  }).isRequired,
+  escrow: PropTypes.shape({
+    settings: PropTypes.shape({
+      positiveRating: PropTypes.bool,
+      transactionProcessor: PropTypes.bool,
+      activeTransactionProcessor: PropTypes.bool
+    })
+  }).isRequired
+};
 
 export default connect(
   state => ({ ...state.default }),

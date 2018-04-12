@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { unionBy } from 'lodash';
 import {
   loadEscrowTransactions,
@@ -21,26 +21,29 @@ const defaultState = {
   myAgents: [],
   settings: null,
   error: null,
-  loading: false
+  loading: false,
+  updating: false
 };
 
 const reducer = handleActions({
   [removeMyEscrowAgents](state, { payload: { agents } }) {
     return {
       ...state,
-      myAgents: state.myAgents.filter(el => !agents.includes(el))
+      myAgents: state.myAgents.filter(el => !agents.find(agent => agent.id === el.id))
     };
   },
   [setMyEscrowAgents](state, { payload: { agents } }) {
     return {
       ...state,
-      myAgents: agents
+      error: null,
+      myAgents: agents,
+      updating: true
     };
   },
   [addOrUpdateAgents](state, { payload: { agents } }) {
     return {
       ...state,
-      myAgents: unionBy(state.myAgents, agents, (el) => el.name)
+      myAgents: unionBy(state.myAgents, agents, (el) => el.id)
     };
   },
   [getEscrowSettings](state) {
@@ -59,25 +62,34 @@ const reducer = handleActions({
   [clearEscrowAgents](state) {
     return {
       ...state,
-      agents: []
+      agents: [],
+      myAgents: []
     };
   },
   [loadMyEscrowAgents](state) {
     return {
       ...state,
+      error: null,
       loading: true
     };
   },
   [loadEscrowAgents](state) {
     return {
       ...state,
+      error: null,
       loading: true
     };
   },
   [getEscrowAgentsCount](state) {
     return {
       ...state,
+      error: null,
       loading: true
+    };
+  },
+  [loadEscrowTransactions](state) {
+    return {
+      ...state
     };
   },
   LOAD_ESCROW_TRANSACTIONS_DONE: (state, action) => ({
@@ -114,6 +126,15 @@ const reducer = handleActions({
     ...state,
     error: action.error,
     loading: false
+  }),
+  SET_MY_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
+    ...state,
+    updating: false
+  }),
+  SET_MY_ESCROW_AGENTS_FAILED: (state, action) => ({
+    ...state,
+    error: action.error,
+    updating: false
   })
 }, defaultState);
 

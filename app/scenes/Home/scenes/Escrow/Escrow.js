@@ -92,10 +92,16 @@ Escrow.propTypes = {
   escrowActions: PropTypes.shape({
     loadEscrowTransactions: PropTypes.func,
     loadMyEscrowAgents: PropTypes.func,
+    getEscrowSettings: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  })
+  }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
 };
 
 Escrow.defaultProps = {
