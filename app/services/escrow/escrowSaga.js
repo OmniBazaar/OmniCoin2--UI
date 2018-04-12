@@ -105,3 +105,18 @@ function* getEscrowAgentsCount() {
     });
   }
 }
+
+function* getEscrowAgentsCount() {
+  try {
+    yield put({
+      type: 'GET_ESCROW_AGENTS_SUCCEEDED',
+      count: 4
+    })
+  } catch (e) {
+    console.log('ERROR ', e);
+    yield put({
+      type: 'GET_ESCROW_AGENTS_FAILED',
+      error: e
+    })
+  }
+}
