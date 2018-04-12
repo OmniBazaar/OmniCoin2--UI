@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Icon, Button } from 'semantic-ui-react';
+import { Input, Icon, Button, Loader } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { debounce, clone } from "lodash";
@@ -15,7 +15,8 @@ import  {
   setMyEscrowAgents,
   removeMyEscrowAgents,
   clearEscrowAgents,
-  loadEscrowAgents
+  loadEscrowAgents,
+  getEscrowAgentsCount
 } from '../../../../../../services/escrow/escrowActions';
 
 import './my-escrow-agents.scss';
@@ -48,13 +49,13 @@ const messages = defineMessages({
 });
 
 
-const limit = 5;
+const limit = 3;
 
 class MyEscrowAgents extends Component {
 
   constructor(props) {
     super(props);
-    this.handleSearchChange = debounce(this.handleSearchChange.bind(this), 500);
+    this.handleSearchChange = debounce(this.handleSearchChange.bind(this), 200);
     this.handleClearClick = this.handleClearClick.bind(this);
     this.handleApproveClick = this.handleApproveClick.bind(this);
     this.renderAgents = this.renderAgents.bind(this);
@@ -66,7 +67,6 @@ class MyEscrowAgents extends Component {
     isApproved: false,
     myFreezedAgents: [],
     searchTerm: '',
-    page: 1,
     totalPages: 1,
     activePage: 1
   };
@@ -74,12 +74,22 @@ class MyEscrowAgents extends Component {
   componentWillMount() {
     this.props.escrowActions.loadEscrowAgents(0, limit, this.state.searchTerm);
     this.props.escrowActions.loadMyEscrowAgents(this.props.auth.currentUser.username);
+    this.props.escrowActions.getEscrowAgentsCount();
   }
 
   componentDidMount() {
     this.setState({
       myFreezedAgents: clone(this.props.escrow.myAgents)
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('LOADING ', nextProps.escrow.loading);
+    if (nextProps.escrow.agentsCount != this.props.escrow.agentsCount) {
+      this.setState({
+        totalPages: Math.ceil(nextProps.escrow.agentsCount / limit)
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -107,8 +117,6 @@ class MyEscrowAgents extends Component {
     if (this.state.searchTerm !== data.value)  {
       this.props.escrowActions.clearEscrowAgents();
       this.setState({
-        page: 1,
-        totalPages: 1,
         activePage: 1
       })
     }
@@ -147,14 +155,19 @@ class MyEscrowAgents extends Component {
 
 
   onPageChange(e, {activePage}) {
-    if (page > this.state.totalPages && this.props.isAnythingLeft) {
+    console.log('Active page', activePage, this.state.totalPages);
+    if (activePage <= this.state.totalPages) {
       const start = limit * (activePage - 1);
-      this.props.escrowActions.loadMyEscrowAgents(start, start + limit, this.state.searchTerm);
+      this.props.escrowActions.loadEscrowAgents(start, limit, this.state.searchTerm);
+      this.setState({
+        activePage
+      })
     }
   }
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { loading } = this.props.escrow;
     return (
       <div className="escrow-agents">
         <div className="top">
@@ -184,9 +197,13 @@ class MyEscrowAgents extends Component {
           <span>{formatMessage(messages.approve)}</span>
         </div>
         <div className="content">
-          <ul style={{listStyleType: "none"}}>
-            {this.renderAgents()}
-          </ul>
+          {loading ?
+            <Loader active inline="centered"/>
+            :
+            <ul style={{listStyleType: "none"}}>
+              {this.renderAgents()}
+            </ul>
+          }
         </div>
         <div className="bottom">
           <Pagination
@@ -209,7 +226,8 @@ export default connect(
       setMyEscrowAgents,
       removeMyEscrowAgents,
       clearEscrowAgents,
-      loadEscrowAgents
+      loadEscrowAgents,
+      getEscrowAgentsCount
     }, dispatch),
   }),
 )(injectIntl(MyEscrowAgents));

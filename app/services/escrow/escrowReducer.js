@@ -9,16 +9,19 @@ import {
   getEscrowSettings,
   updateEscrowSettings,
   clearEscrowAgents,
-  loadMyEscrowAgents
+  loadMyEscrowAgents,
+  getEscrowAgentsCount
 } from './escrowActions';
 import EscrowStorage from './escrowStorage';
 
 const defaultState = {
   transactions: [],
   agents: [],
+  agentsCount: 0,
   myAgents: [],
   settings: null,
-  error: null
+  error: null,
+  loading: false
 };
 
 const reducer = handleActions({
@@ -61,39 +64,57 @@ const reducer = handleActions({
   },
   [loadMyEscrowAgents](state) {
       return {
-        ...state
+        ...state,
+        loading: true
       }
   },
   [loadEscrowAgents](state) {
     return {
-      ...state
+      ...state,
+      loading: true
+    }
+  },
+  [getEscrowAgentsCount](state) {
+    return {
+      ...state,
+      loading: true
     }
   },
   LOAD_ESCROW_TRANSACTIONS_DONE: (state, action) => ({
     ...state,
-    transactions: action.transactions
+    transactions: action.transactions,
+    loading: false
   }),
   LOAD_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
     ...state,
-    agents: [
-      ...state.agents,
-      ...action.agents
-    ],
-    isAnythingLeft: action.isAnythingLeft
+    agents: action.agents,
+    loading: false
   }),
   LOAD_ESCROW_AGENTS_FAILED: (state, action) => ({
     ...state,
-    error: action.error
+    error: action.error,
+    loading: false
   }),
   LOAD_MY_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
     ...state,
-    myAgents: action.myAgents
+    myAgents: action.myAgents,
+    loading: false
   }),
   LOAD_MY_ESCROW_AGENTS_FAILED: (state, action) => ({
     ...state,
-    error: action.error
+    error: action.error,
+    loading: false
+  }),
+  GET_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
+    ...state,
+    agentsCount: action.count,
+    loading: false
+  }),
+  GET_ESCROW_AGENTS_FAILED: (state, action) => ({
+    ...state,
+    error: action.error,
+    loading: false
   })
-
 }, defaultState);
 
 export default reducer;
