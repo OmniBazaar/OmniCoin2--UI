@@ -14,11 +14,10 @@ import {
 import EscrowStorage from './escrowStorage';
 
 const defaultState = {
-  transactions: {},
+  transactions: [],
   agents: [],
   myAgents: [],
   escrowSettings: {
-
   },
   error: null
 };

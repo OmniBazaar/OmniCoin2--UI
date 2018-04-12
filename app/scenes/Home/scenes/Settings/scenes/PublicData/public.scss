@@ -16,6 +16,16 @@
       }
     }
 
+    .ip {
+      display: flex;
+      margin-bottom: 30px;
+      align-items: center;
+      input {
+        margin-left: 20px;
+        flex: 1;
+      }
+    }
+
     .check-container {
       display: flex;
 

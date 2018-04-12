@@ -1,4 +1,6 @@
 import { handleActions } from 'redux-actions';
+import { defineMessages } from 'react-intl';
+
 import {
   getFeatureList,
   setPaginationFeature,
@@ -8,7 +10,8 @@ import {
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
-  setActiveCategory,
+  getCategories,
+  setActiveCategory
 } from './marketplaceActions';
 
 const defaultState = {
@@ -22,9 +25,41 @@ const defaultState = {
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
+  categories: {},
   activeCategory: 'Marketplace.home',
   parentCategory: null
 };
+
+const messages = defineMessages({
+  community: {
+    id: 'Categories.community',
+    defaultMessage: 'Community'
+  },
+  housing: {
+    id: 'Categories.housing',
+    defaultMessage: 'Housing'
+  },
+  forSale: {
+    id: 'Categories.forSale',
+    defaultMessage: 'For Sale'
+  },
+  jobs: {
+    id: 'Categories.jobs',
+    defaultMessage: 'Jobs'
+  },
+  services: {
+    id: 'Categories.services',
+    defaultMessage: 'Services'
+  },
+  gigs: {
+    id: 'Categories.gigs',
+    defaultMessage: 'Gigs'
+  },
+  cryptoBazaar: {
+    id: 'Categories.cryptoBazaar',
+    defaultMessage: 'CryptoBazaar'
+  }
+});
 
 const sliceData = (data, activePage, rowsPerPage) => (
   data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
@@ -105,6 +140,12 @@ const reducer = handleActions({
       ...state,
       activeCategory,
       parentCategory
+    };
+  },
+  [getCategories](state, { payload: { } }) {
+    return {
+      ...state,
+      categories: messages
     };
   }
 }, defaultState);
