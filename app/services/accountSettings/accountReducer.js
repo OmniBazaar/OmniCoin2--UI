@@ -243,6 +243,7 @@ const reducer = handleActions({
   },
   GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
     return {
+      ...state,
       loading: false,
       error: null,
       recentTransactions: transactions,
@@ -251,6 +252,7 @@ const reducer = handleActions({
   },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => {
     return {
+      ...state,
       loading: false,
       error
     }

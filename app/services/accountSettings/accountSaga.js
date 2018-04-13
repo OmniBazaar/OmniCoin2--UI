@@ -70,7 +70,7 @@ export function* updateAccount(payload) {
 export function* getRecentTransactions() {
   const {account} = (yield select()).default.auth;
   try {
-    const result  = yield ChainStore.fetchRecentHistory(account);
+    const result  = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account);
     console.log('Result ', result);
     let history = [];
     let h = result.get("history");

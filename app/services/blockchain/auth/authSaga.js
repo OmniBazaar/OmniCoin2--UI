@@ -119,7 +119,6 @@ export function* signup(action) {
 
 export function* getAccount({ payload: { username } }) {
   try {
-    ChainStore.resetCache();
     const result = yield call(FetchChain, 'getAccount', username);
     yield put({ type: 'GET_ACCOUNT_SUCCEEDED', account: result });
   } catch (e) {
