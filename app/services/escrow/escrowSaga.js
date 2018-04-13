@@ -15,27 +15,9 @@ export function* escrowSubscriber() {
 }
 
 function* loadEscrowTransactions(action) {
-  // const { username } = action.payload;
-
-  // some dummy transaction
-  const dummyTransactions = [{
-    123: {
-      transactionID: '123',
-      amount: '10.0',
-      parties: 'You, AAA, BBB'
-    }
-  }];
-
-
-  //  const result = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
-
-
-  yield put({
-    type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
-    transactions: dummyTransactions
-  });
-
-  /* use this code once we have some escrow transactions on node
+ 
+  const { username } = action.payload;
+    
   try
   {
     const escrowObjects = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
@@ -50,7 +32,7 @@ function* loadEscrowTransactions(action) {
       type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
       transactions: []
     });
-  } */
+  }
 }
 
 
