@@ -54,7 +54,7 @@ const messages = defineMessages({
 });
 
 
-const limit = 2;
+const limit = 5;
 
 class MyEscrowAgents extends Component {
   constructor(props) {
@@ -75,7 +75,12 @@ class MyEscrowAgents extends Component {
   };
 
   componentWillMount() {
-    this.props.escrowActions.loadEscrowAgents(0, limit, this.state.searchTerm);
+    this.props.escrowActions.loadEscrowAgents(
+      0,
+      limit,
+      this.state.searchTerm,
+      this.props.escrow.settings
+    );
     this.props.escrowActions.loadMyEscrowAgents(this.props.auth.currentUser.username);
     this.props.escrowActions.getEscrowAgentsCount();
   }
@@ -128,7 +133,7 @@ class MyEscrowAgents extends Component {
     this.setState({
       searchTerm: value
     });
-    this.props.escrowActions.loadEscrowAgents(0, limit, value);
+    this.props.escrowActions.loadEscrowAgents(0, limit, value, this.props.escrow.settings);
   }
 
   handleSearchChange(e, data) {
@@ -156,7 +161,12 @@ class MyEscrowAgents extends Component {
   onPageChange(e, { activePage }) {
     if (activePage <= this.state.totalPages) {
       const start = limit * (activePage - 1);
-      this.props.escrowActions.loadEscrowAgents(start, limit, this.state.searchTerm);
+      this.props.escrowActions.loadEscrowAgents(
+        start,
+        limit,
+        this.state.searchTerm,
+        this.props.escrow.settings
+      );
       this.setState({
         activePage
       });
@@ -174,7 +184,7 @@ class MyEscrowAgents extends Component {
         <div className="top">
           <div>
             <Input
-              ref={el => this.searchInput = el}
+              ref={el => (this.searchInput = el)}
               icon={<Icon name="search" />}
               iconPosition="left"
               placeholder={formatMessage(messages.search)}
@@ -239,7 +249,8 @@ MyEscrowAgents.propTypes = {
     updating: PropTypes.bool,
     loading: PropTypes.bool,
     error: PropTypes.shape({}),
-    agents: PropTypes.array
+    agents: PropTypes.array,
+    settings: PropTypes.shape({})
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func

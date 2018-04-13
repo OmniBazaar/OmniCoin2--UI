@@ -97,6 +97,11 @@ const reducer = handleActions({
     transactions: action.transactions,
     loading: false
   }),
+  LOAD_ESCROW_TRANSACTIONS_FAILED: (state, action) => ({
+    ...state,
+    error: action.error,
+    loading: false
+  }),
   LOAD_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
     ...state,
     agents: action.agents,
@@ -117,12 +122,12 @@ const reducer = handleActions({
     error: action.error,
     loading: false
   }),
-  GET_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
+  GET_ESCROW_AGENTS_COUNT_SUCCEEDED: (state, action) => ({
     ...state,
     agentsCount: action.count,
     loading: false
   }),
-  GET_ESCROW_AGENTS_FAILED: (state, action) => ({
+  GET_ESCROW_AGENTS_COUNT_FAILED: (state, action) => ({
     ...state,
     error: action.error,
     loading: false

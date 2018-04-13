@@ -15,30 +15,40 @@ export function* escrowSubscriber() {
 }
 
 function* loadEscrowTransactions(action) {
- 
   const { username } = action.payload;
-    
-  try
-  {
+
+  try {
     const escrowObjects = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
 
     yield put({
       type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
       transactions: parseTransactionsFromNode(escrowObjects)
     });
-  }
-  catch (err) {
+  } catch (e) {
     yield put({
-      type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
-      transactions: []
+      type: 'LOAD_ESCROW_TRANSACTIONS_FAILED',
+      error: e
     });
   }
 }
 
 
-function* loadEscrowAgents({ payload: { start, limit, searchTerm } }) {
+function* loadEscrowAgents({
+  payload: {
+    start, limit, searchTerm, filters
+  }
+}) {
   try {
-    const result = yield (Apis.instance().db_api().exec('filter_current_escrows', [start, limit, searchTerm]));
+    const result = yield (Apis.instance().db_api().exec('filter_current_escrows', [
+      start,
+      limit,
+      searchTerm,
+      {
+        any_user_i_give_pos_rating: filters.positiveRating,
+        any_user_i_votes_as_trans_proc: filters.transactionProcessor,
+        any_user_who_is_trans_proc: filters.activeTransactionProcessor
+      }
+    ]));
     yield put({
       type: 'LOAD_ESCROW_AGENTS_SUCCEEDED',
       agents: result
@@ -71,7 +81,6 @@ function* loadMyEscrowAgents({ payload: { username } }) {
 
 function* setMyEscrowAgents({ payload: { agents } }) {
   try {
-    console.log('UPDATING AGENTS ', agents);
     const result = yield updateAccount({
       escrows: agents.map(agent => agent.id)
     });
@@ -90,14 +99,15 @@ function* setMyEscrowAgents({ payload: { agents } }) {
 
 function* getEscrowAgentsCount() {
   try {
+    const result = yield Apis.instance().db_api().exec('get_number_of_escrows', []);
     yield put({
-      type: 'GET_ESCROW_AGENTS_SUCCEEDED',
-      count: 4
+      type: 'GET_ESCROW_AGENTS_COUNT_SUCCEEDED',
+      count: result
     });
   } catch (e) {
     console.log('ERROR ', e);
     yield put({
-      type: 'GET_ESCROW_AGENTS_FAILED',
+      type: 'GET_ESCROW_AGENTS_COUNT_FAILED',
       error: e
     });
   }

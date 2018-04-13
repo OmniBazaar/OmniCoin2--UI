@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 import {
   Table,
   TableBody,
@@ -12,7 +13,6 @@ import {
 
 import './my-escrow-transactions.scss';
 
-import { loadEscrowTransactions } from '../../../../../../services/escrow/escrowActions';
 
 const messages = defineMessages({
   transactionID: {
@@ -44,16 +44,16 @@ class MyEscrowTransactions extends Component {
     };
   }
 
-  componentDidMount() {
-
-  }
 
   componentWillReceiveProps(nextProps) {
     const headerName = this.state.lastHeaderClicked;
     const asc = this.state.sortAsc[headerName];
 
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
+      transactions: nextProps.escrow.transactions.slice().sort(
+        (transA, transB) =>
+        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1)
+      )
     });
   }
 
@@ -64,7 +64,9 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
+      transactions: this.state.transactions.slice().sort(
+        (transA, transB) =>
+        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
     });
   }
 
@@ -135,5 +137,14 @@ class MyEscrowTransactions extends Component {
     );
   }
 }
+
+MyEscrowTransactions.propTypes = {
+  escrow: PropTypes.shape({
+    transactions: PropTypes.array
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }).isRequired
+};
 
 export default connect(state => ({ ...state.default }))(injectIntl(MyEscrowTransactions));

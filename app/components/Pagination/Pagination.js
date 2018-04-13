@@ -40,10 +40,20 @@ const messages = defineMessages({
   }
 });
 class CustomPagination extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePageChange = this.handlePageChange.bind(this);
+  }
+
+  handlePageChange(e, data) {
+    if (data.activePage !== this.props.activePage) {
+      this.props.onPageChange(e, data);
+    }
+  }
+
   render() {
     const {
       activePage,
-      onPageChange,
       totalPages
     } = this.props;
     const { formatMessage } = this.props.intl;
@@ -52,7 +62,7 @@ class CustomPagination extends Component {
         <Pagination
           activePage={activePage}
           boundaryRange={1}
-          onPageChange={onPageChange}
+          onPageChange={this.handlePageChange}
           size="mini"
           siblingRange={1}
           totalPages={totalPages}
