@@ -17,7 +17,7 @@ class AccountFooter extends Component {
   getPubKey() {
     const { username, password } = this.props.auth.currentUser;
     const key = generateKeyFromPassword(username, 'active', password);
-    return key.privKey.toPublicKey().toPublicKeyString('BTS');
+    return key.pubKey;
   }
 
   renderTrigger() {
