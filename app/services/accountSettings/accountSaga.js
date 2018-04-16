@@ -29,7 +29,7 @@ export function* updatePublicData() {
     payload = {
       ...payload,
       publisher_ip: account.ipAddress
-    }
+    };
   }
   try {
     yield updateAccount(payload);
@@ -62,7 +62,7 @@ export function* updateAccount(payload) {
     }
   );
   const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-  tr.add_signer(activeKey.privKey, activeKey.privKey.toPublicKey().toPublicKeyString('BTS'));
+  tr.add_signer(activeKey.privKey, activeKey.pubKey);
   tr.set_required_fees();
   return yield tr.broadcast();
 }

@@ -1,0 +1,55 @@
+@import "../../../../../../styles/colors";
+
+.escrow-agents {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .search-input i {
+      color: $primary-blue;
+    }
+  }
+  .labels {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 7px;
+    margin-top: 5px;
+  }
+
+  .content {
+    .loader {
+      margin-bottom: 10px;
+    }
+    ul {
+      padding: 0 2px;
+      li {
+        margin: 5px 0;
+      }
+    }
+  }
+
+
+  .bottom {
+    .pagination.menu {
+      border: none !important;
+      box-shadow: none !important;
+
+      a.item {
+        background-color: lighten($lighter-blue, 3%) !important;
+        &.active {
+          background-color: darken($lighter-blue, 4%) !important;
+        }
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+  }
+
+}

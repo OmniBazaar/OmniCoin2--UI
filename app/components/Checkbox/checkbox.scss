@@ -1,0 +1,12 @@
+.check-container {
+  display: flex;
+
+  .checkbox {
+    min-width: 20px;
+
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+  }
+}

@@ -11,7 +11,12 @@ import MyEscrowSettings from './scenes/MyEscrowSettings/MyEscrowSettings';
 import MyEscrowTransactions from './scenes/MyEscrowTransactions/MyEscrowTransactions';
 import Header from '../../../../components/Header/index';
 
-import { loadEscrowTransactions, loadEscrowAgents } from '../../../../services/escrow/escrowActions';
+import {
+  loadEscrowTransactions,
+  loadEscrowAgents,
+  loadMyEscrowAgents,
+  getEscrowSettings
+} from '../../../../services/escrow/escrowActions';
 import './escrow.scss';
 
 const messages = defineMessages({
@@ -34,11 +39,11 @@ const messages = defineMessages({
 });
 
 class Escrow extends Component {
-
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
     this.props.escrowActions.loadEscrowTransactions(username);
-    this.props.escrowActions.loadEscrowAgents(username);
+    this.props.escrowActions.loadMyEscrowAgents(username);
+    this.props.escrowActions.getEscrowSettings();
   }
 
   render() {
@@ -86,11 +91,17 @@ class Escrow extends Component {
 Escrow.propTypes = {
   escrowActions: PropTypes.shape({
     loadEscrowTransactions: PropTypes.func,
-    loadEscrowAgents: PropTypes.func,
+    loadMyEscrowAgents: PropTypes.func,
+    getEscrowSettings: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  })
+  }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
 };
 
 Escrow.defaultProps = {
@@ -103,6 +114,8 @@ export default connect(
   (dispatch) => ({
     escrowActions: bindActionCreators({
       loadEscrowTransactions,
+      loadMyEscrowAgents,
+      getEscrowSettings,
       loadEscrowAgents
     }, dispatch),
   }),
