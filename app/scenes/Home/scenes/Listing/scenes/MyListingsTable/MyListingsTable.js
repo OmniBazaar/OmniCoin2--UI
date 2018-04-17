@@ -9,23 +9,24 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Pagination,
   Icon,
   Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 
 import {
-  getMyListingsLowest,
-  setPaginationMyListingsLowest,
-  setActivePageMyListingsLowest
+  setPaginationMyListings,
+  setActivePageMyListings,
+  sortMyListingsBy
 } from '../../../../../../services/listing/listingActions';
 import { numberWithCommas } from '../../../../../../utils/numeric';
 
 import '../../../Marketplace/marketplace.scss';
 import '../../../Marketplace/scenes/CategoryListing/listings.scss';
+import './my-listings-table.scss';
 
 const messages = defineMessages({
   firstItem: {
@@ -72,16 +73,17 @@ const messages = defineMessages({
 
 const iconSizeSmall = 12;
 
-class MyListingsLowestTable extends Component {
+class MyListingsTable extends Component {
   componentDidMount() {
-    this.props.listingActions.getMyListingsLowest(this.props.myListings);
-    this.props.listingActions.setPaginationMyListingsLowest(3 * 6);
+    this.props.listingActions.sortMyListingsBy(this.props.sortBy, this.props.sortDirection);
+    this.props.listingActions.setPaginationMyListings(this.props.rowsPerPage);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.myListings !== nextProps.myListings) {
-      this.props.listingActions.getMyListingsLowest(nextProps.myListings);
-      this.props.listingActions.setPaginationMyListingsLowest(3 * 6);
+    if (this.props.sortBy !== nextProps.sortBy ||
+        this.props.sortDirection !== nextProps.sortDirection) {
+      this.props.listingActions.sortMyListingsBy(nextProps.sortBy, nextProps.sortDirection);
+      this.props.listingActions.setPaginationMyListings(this.props.rowsPerPage);
     }
   }
 
@@ -92,17 +94,17 @@ class MyListingsLowestTable extends Component {
   };
 
   handlePaginationChange = (e, { activePage }) => {
-    this.props.listingActions.setActivePageMyListingsLowest(activePage);
+    this.props.listingActions.setActivePageMyListings(activePage);
   };
 
   render() {
     const { formatMessage } = this.props.intl;
     const {
-      activePageMyListingsLowest,
-      totalPagesMyListingsLowest,
-      myListingsLowestFiltered
+      activePageMyListings,
+      totalPagesMyListings,
+      myListingsFiltered
     } = this.props.listing;
-    const rows = _.chunk(myListingsLowestFiltered, 6);
+    const rows = _.chunk(myListingsFiltered, 6);
 
     return (
       <div className="data-table">
@@ -159,16 +161,9 @@ class MyListingsLowestTable extends Component {
         <div className="top-detail bottom">
           <div className="pagination-container">
             <Pagination
-              activePage={activePageMyListingsLowest}
-              boundaryRange={1}
+              activePage={activePageMyListings}
               onPageChange={this.handlePaginationChange}
-              size="mini"
-              siblingRange={1}
-              totalPages={totalPagesMyListingsLowest}
-              firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
-              lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
-              prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
-              nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
+              totalPages={totalPagesMyListings}
             />
           </div>
         </div>
@@ -177,16 +172,16 @@ class MyListingsLowestTable extends Component {
   }
 }
 
-MyListingsLowestTable.propTypes = {
+MyListingsTable.propTypes = {
   listingActions: PropTypes.shape({
-    getMyListingsLowest: PropTypes.func,
-    setPaginationMyListingsLowest: PropTypes.func,
-    setActivePageMyListingsLowest: PropTypes.func,
+    setPaginationMyListings: PropTypes.func,
+    setActivePageMyListings: PropTypes.func,
+    sortMyListingsBy: PropTypes.func,
   }),
   listing: PropTypes.shape({
-    activePageMyListingsLowest: PropTypes.number,
-    totalPagesMyListingsLowest: PropTypes.number,
-    myListingsLowestFiltered: PropTypes.array,
+    activePageMyListings: PropTypes.number,
+    totalPagesMyListings: PropTypes.number,
+    myListingsFiltered: PropTypes.array,
   }),
   myListings: PropTypes.arrayOf(PropTypes.object),
   tableProps: PropTypes.shape({
@@ -198,23 +193,29 @@ MyListingsLowestTable.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  sortBy: PropTypes.string,
+  sortDirection: PropTypes.string,
+  rowsPerPage: PropTypes.number,
 };
 
-MyListingsLowestTable.defaultProps = {
+MyListingsTable.defaultProps = {
   listingActions: {},
   listing: {},
   myListings: [],
   tableProps: {},
   intl: {},
+  sortBy: '',
+  sortDirection: '',
+  rowsPerPage: 0,
 };
 
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      getMyListingsLowest,
-      setPaginationMyListingsLowest,
-      setActivePageMyListingsLowest
+      setActivePageMyListings,
+      setPaginationMyListings,
+      sortMyListingsBy
     }, dispatch),
   }),
-)(injectIntl(MyListingsLowestTable));
+)(injectIntl(MyListingsTable));

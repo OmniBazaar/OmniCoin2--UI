@@ -7,9 +7,7 @@ import { Tab, Dropdown, Icon } from 'semantic-ui-react';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
-import MyListingsDateTable from '../MyListingsDateTable/MyListingsDateTable';
-import MyListingsLowestTable from '../MyListingsLowestTable';
-import MyListingsHighestTable from '../MyListingsHighestTable';
+import MyListingsTable from '../MyListingsTable/MyListingsTable';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CurrencyDropdown from '../../../../components/CurrencyDropdown/CurrencyDropdown';
 
@@ -449,8 +447,10 @@ class MyListings extends Component {
               menuItem: formatMessage(messages.byDate),
               render: () => (
                 <Tab.Pane>
-                  <MyListingsDateTable
+                  <MyListingsTable
                     myListings={myListingsList}
+                    sortBy="date"
+                    sortDirection="descending"
                     rowsPerPage={3 * 6}
                     tableProps={{
                       sortable: false,
@@ -466,8 +466,10 @@ class MyListings extends Component {
               menuItem: formatMessage(messages.lowestPrice),
               render: () => (
                 <Tab.Pane>
-                  <MyListingsLowestTable
+                  <MyListingsTable
                     myListings={myListingsList}
+                    sortBy="price"
+                    sortDirection="ascending"
                     rowsPerPage={3 * 6}
                     tableProps={{
                       sortable: false,
@@ -483,8 +485,10 @@ class MyListings extends Component {
               menuItem: formatMessage(messages.highestPrice),
               render: () => (
                 <Tab.Pane>
-                  <MyListingsHighestTable
+                  <MyListingsTable
                     myListings={myListingsList}
+                    sortBy="price"
+                    sortDirection="descending"
                     rowsPerPage={3 * 6}
                     tableProps={{
                       sortable: false,
