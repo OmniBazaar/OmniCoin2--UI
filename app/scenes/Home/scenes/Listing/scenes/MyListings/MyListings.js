@@ -7,7 +7,7 @@ import { Tab, Dropdown, Icon } from 'semantic-ui-react';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
-import MyListingsDateTable from '../MyListingsDateTable';
+import MyListingsDateTable from '../MyListingsDateTable/MyListingsDateTable';
 import MyListingsLowestTable from '../MyListingsLowestTable';
 import MyListingsHighestTable from '../MyListingsHighestTable';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';

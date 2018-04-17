@@ -7,7 +7,7 @@ import { Icon, Form, Dropdown, Button, Grid } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import ImportedFilesTable from './components/ImportedFilesTable';
+import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
 import {
   importFile,
   removeFile,

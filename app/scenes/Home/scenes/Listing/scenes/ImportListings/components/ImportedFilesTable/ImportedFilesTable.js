@@ -12,9 +12,9 @@ import {
   TableHeaderCell,
 } from 'semantic-ui-react';
 import hash from 'object-hash';
-import { numberWithCommas } from '../../../../../../../utils/numeric';
+import { numberWithCommas } from '../../../../../../../../utils/numeric';
 
-import { sortImportData } from '../../../../../../../services/listing/importActions';
+import { sortImportData } from '../../../../../../../../services/listing/importActions';
 
 const messages = defineMessages({
   listingType: {
