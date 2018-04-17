@@ -18,14 +18,19 @@ export function* accountSubscriber() {
 
 export function* updatePublicData() {
   const { account } = (yield select()).default;
-  console.log('IP ADDRESS ', account.ipAddress);
-  try {
-    yield updateAccount({
-      is_a_publisher: account.publisher,
-      is_an_escrow: account.escrow,
-      referrer: account.referrer,
+  let payload = {
+    is_a_publisher: account.publisher,
+    is_an_escrow: account.escrow,
+    referrer: account.referrer,
+  };
+  if (account.publisher) {
+    payload = {
+      ...payload,
       publisher_ip: account.ipAddress
-    });
+    };
+  }
+  try {
+    yield updateAccount(payload);
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
     console.log('ERR', e);
@@ -55,7 +60,7 @@ export function* updateAccount(payload) {
     }
   );
   const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-  tr.add_signer(activeKey.privKey, activeKey.privKey.toPublicKey().toPublicKeyString('BTS'));
+  tr.add_signer(activeKey.privKey, activeKey.pubKey);
   tr.set_required_fees();
   return yield tr.broadcast();
 }

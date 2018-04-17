@@ -43,7 +43,7 @@ export function* login(action) {
     const key = generateKeyFromPassword(username, roles[0], password);
     roles.forEach(role => {
       account.getIn([role, 'key_auths']).forEach(auth => {
-        if (auth.get(0) === key.privKey.toPublicKey().toPublicKeyString('BTS')) {
+        if (auth.get(0) === key.pubKey) {
           isAuthorized = true;
         }
       });
@@ -84,9 +84,9 @@ export function* signup(action) {
       body: JSON.stringify({
         account: {
           name: username,
-          owner_key: ownerKey.privKey.toPublicKey().toPublicKeyString('BTS'),
-          active_key: activeKey.privKey.toPublicKey().toPublicKeyString('BTS'),
-          memo_key: activeKey.privKey.toPublicKey().toPublicKeyString('BTS'),
+          owner_key: ownerKey.pubKey,
+          active_key: activeKey.pubKey,
+          memo_key: activeKey.pubKey,
           referrer,
           harddrive_id: localStorage.getItem('hardDriveId'),
           mac_address: localStorage.getItem('macAddress')

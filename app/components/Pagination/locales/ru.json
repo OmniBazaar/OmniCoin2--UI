@@ -1,0 +1,10 @@
+{
+  "Pagination.ariaFirst": "Первая",
+  "Pagination.contentFirst": "<< Первая",
+  "Pagination.ariaLast": "Последняя",
+  "Pagination.contentLast": "Последняя >>",
+  "Pagination.ariaPrev": "Предпоследняя",
+  "Pagination.contentPrev": "< Предпоследняя",
+  "Pagination.ariaNext": "Следующая",
+  "Pagination.contentNext": "Следующая >"
+}
