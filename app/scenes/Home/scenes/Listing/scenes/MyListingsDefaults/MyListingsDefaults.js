@@ -12,6 +12,8 @@ import AddIcon from '../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../images/btn-remove-image-norm+press.svg';
 import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
+import { getFileExtension } from '../../../../../../utils/file';
+
 import {
   setBitcoinPriceDefaults,
   setOmnicoinPriceDefaults,
@@ -127,12 +129,6 @@ const placingTypeOptions = [
 ];
 
 class MyListingsDefaults extends Component {
-  static getFileExtension(event) {
-    const fileName = event.target.files[0].name;
-    const idxDot = fileName.lastIndexOf('.') + 1;
-    return fileName.substr(idxDot, fileName.length).toLowerCase();
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -150,7 +146,7 @@ class MyListingsDefaults extends Component {
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      const extFile = MyListingsDefaults.getFileExtension(event);
+      const extFile = getFileExtension(event);
 
       if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
         reader.onload = (e) => {

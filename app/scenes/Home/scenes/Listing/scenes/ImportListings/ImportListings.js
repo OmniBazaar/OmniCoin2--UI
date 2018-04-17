@@ -14,6 +14,8 @@ import {
   removeAllFiles
 } from '../../../../../../services/listing/importActions';
 
+import { getFileExtension } from '../../../../../../utils/file';
+
 import './import-listings.scss';
 
 const iconSize = 42;
@@ -74,12 +76,6 @@ const messages = defineMessages({
 });
 
 class ImportListings extends Component {
-  static getFileExtension(event) {
-    const fileName = event.target.files[0].name;
-    const idxDot = fileName.lastIndexOf('.') + 1;
-    return fileName.substr(idxDot, fileName.length).toLowerCase();
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -118,7 +114,7 @@ class ImportListings extends Component {
   importFile(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      const extFile = ImportListings.getFileExtension(event);
+      const extFile = getFileExtension(event);
       if (extFile === 'txt') {
         reader.onload = (e) => {
           // e.target.result

@@ -10,6 +10,7 @@ import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
 
 import Checkbox from '../../../../../../components/Checkbox/Checkbox';
+import { getFileExtension } from '../../../../../../utils/file';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CalendarIcon from '../../../../images/icn-calendar.svg';
 import AddIcon from '../../../../images/btn-add-image.svg';
@@ -224,12 +225,6 @@ const placingTypeOptions = [
 ];
 
 class AddListing extends Component {
-  static getFileExtension(event) {
-    const fileName = event.target.files[0].name;
-    const idxDot = fileName.lastIndexOf('.') + 1;
-    return fileName.substr(idxDot, fileName.length).toLowerCase();
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -278,7 +273,7 @@ class AddListing extends Component {
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      const extFile = AddListing.getFileExtension(event);
+      const extFile = getFileExtension(event);
 
       if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
         reader.onload = (e) => {
