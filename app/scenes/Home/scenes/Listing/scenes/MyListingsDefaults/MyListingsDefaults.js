@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import hash from 'object-hash';
 
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import CheckNormal from '../../../../images/ch-box-0-norm.svg';
-import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
 import AddIcon from '../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../images/btn-remove-image-norm+press.svg';
+import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import {
   setBitcoinPriceDefaults,
@@ -105,6 +104,18 @@ const messages = defineMessages({
     id: 'ListingsDefaults.saveDefaults',
     defaultMessage: 'SAVE DEFAULTS'
   },
+  warning: {
+    id: 'ListingsDefaults.warning',
+    defaultMessage: 'Warning'
+  },
+  ok: {
+    id: 'ListingsDefaults.ok',
+    defaultMessage: 'Ok'
+  },
+  onlyImagesMsg: {
+    id: 'ListingsDefaults.onlyImagesMsg',
+    defaultMessage: 'Only jpg/jpeg and png files are allowed.'
+  },
 });
 
 const placingTypeOptions = [
@@ -116,12 +127,17 @@ const placingTypeOptions = [
 ];
 
 class MyListingsDefaults extends Component {
-  getBitcoinIcon() {
-    return this.props.listingDefaults.bitcoinPriceDefaults ? CheckPreNom : CheckNormal;
+  static getFileExtension(event) {
+    const fileName = event.target.files[0].name;
+    const idxDot = fileName.lastIndexOf('.') + 1;
+    return fileName.substr(idxDot, fileName.length).toLowerCase();
   }
 
-  getOmnicoinIcon() {
-    return this.props.listingDefaults.omnicoinPriceDefaults ? CheckPreNom : CheckNormal;
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
   }
 
   toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPriceDefaults();
@@ -134,10 +150,16 @@ class MyListingsDefaults extends Component {
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        this.props.listingActions.addImageDefaults(e.target.result);
-      };
-      reader.readAsDataURL(event.target.files[0]);
+      const extFile = MyListingsDefaults.getFileExtension(event);
+
+      if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
+        reader.onload = (e) => {
+          this.props.listingActions.addImageDefaults(e.target.result);
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      } else {
+        this.setState({ open: true });
+      }
     }
   }
 
@@ -226,9 +248,11 @@ class MyListingsDefaults extends Component {
             <Grid.Column width={4}>
               <div className="check-form field">
                 <div className="description">
-                  <div className="check-container">
-                    <Image src={this.getBitcoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleBitcoinPrice} />
-                  </div>
+                  <Checkbox
+                    width={iconSizeMedium}
+                    height={iconSizeMedium}
+                    onChecked={this.toggleBitcoinPrice}
+                  />
                   <div className="description-text">
                     {formatMessage(messages.addBitcoinPrice)}
                   </div>
@@ -238,9 +262,11 @@ class MyListingsDefaults extends Component {
             <Grid.Column width={4}>
               <div className="check-form field">
                 <div className="description">
-                  <div className="check-container">
-                    <Image src={this.getOmnicoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleOmnicoinPrice} />
-                  </div>
+                  <Checkbox
+                    width={iconSizeMedium}
+                    height={iconSizeMedium}
+                    onChecked={this.toggleOmnicoinPrice}
+                  />
                   <div className="description-text">
                     {formatMessage(messages.addOmnicoinPrice)}
                   </div>
@@ -276,6 +302,7 @@ class MyListingsDefaults extends Component {
                 type="file"
                 onChange={this.onImageChange.bind(this)}
                 className="filetype"
+                accept="image/*"
               />
               <div className="images-wrapper">
                 {this.addedImages()}
@@ -330,6 +357,30 @@ class MyListingsDefaults extends Component {
     );
   }
 
+  closeWarning() {
+    this.setState({ open: false });
+  }
+
+  showWarningMessage() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()}>
+        <Modal.Header>
+          {formatMessage(messages.warning)}
+        </Modal.Header>
+        <Modal.Content>
+          <p className="modal-content">{formatMessage(messages.onlyImagesMsg)}</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button positive onClick={() => this.closeWarning()}>
+            {formatMessage(messages.ok)}
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
 
@@ -354,6 +405,7 @@ class MyListingsDefaults extends Component {
             {this.defaultsForm()}
           </div>
         </div>
+        {this.showWarningMessage()}
       </div>
     );
   }

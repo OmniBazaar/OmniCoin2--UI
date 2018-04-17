@@ -14,5 +14,8 @@
   "ImportListings.contactInfo": "Contact Info",
   "ImportListings.title": "Title",
   "ImportListings.price": "Price",
-  "ImportListings.currency": "Currency"
+  "ImportListings.currency": "Currency",
+  "ImportListings.warning": "Warning",
+  "ImportListings.ok": "Ok",
+  "ImportListings.onlyTextFileMsg": "Only txt files are allowed."
 }

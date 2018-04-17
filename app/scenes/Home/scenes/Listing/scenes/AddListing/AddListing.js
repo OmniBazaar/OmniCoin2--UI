@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import DatePicker from 'react-datepicker';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
 
+import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import CheckNormal from '../../../../images/ch-box-0-norm.svg';
-import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
 import CalendarIcon from '../../../../images/icn-calendar.svg';
 import AddIcon from '../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../images/btn-remove-image-norm+press.svg';
@@ -202,6 +201,18 @@ const messages = defineMessages({
     id: 'MyListings.createListingCaps',
     defaultMessage: 'CREATE LISTING'
   },
+  warning: {
+    id: 'MyListings.warning',
+    defaultMessage: 'Warning'
+  },
+  ok: {
+    id: 'MyListings.ok',
+    defaultMessage: 'Ok'
+  },
+  onlyImagesMsg: {
+    id: 'MyListings.onlyImagesMsg',
+    defaultMessage: 'Only jpg/jpeg and png files are allowed.'
+  },
 });
 
 const placingTypeOptions = [
@@ -213,16 +224,17 @@ const placingTypeOptions = [
 ];
 
 class AddListing extends Component {
-  getBitcoinIcon() {
-    return this.props.listing.bitcoinPrice ? CheckPreNom : CheckNormal;
+  static getFileExtension(event) {
+    const fileName = event.target.files[0].name;
+    const idxDot = fileName.lastIndexOf('.') + 1;
+    return fileName.substr(idxDot, fileName.length).toLowerCase();
   }
 
-  getOmnicoinIcon() {
-    return this.props.listing.omnicoinPrice ? CheckPreNom : CheckNormal;
-  }
-
-  getContinuousIcon() {
-    return this.props.listing.isContinuous ? CheckPreNom : CheckNormal;
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
   }
 
   toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPrice();
@@ -266,10 +278,14 @@ class AddListing extends Component {
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        this.props.listingActions.addImage(e.target.result);
-      };
-      reader.readAsDataURL(event.target.files[0]);
+      const extFile = AddListing.getFileExtension(event);
+
+      if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
+        reader.onload = (e) => {
+          this.props.listingActions.addImage(e.target.result);
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
     }
   }
 
@@ -379,9 +395,11 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <div className="check-form field">
                 <div className="description">
-                  <div className="check-container">
-                    <Image src={this.getBitcoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleBitcoinPrice} />
-                  </div>
+                  <Checkbox
+                    width={iconSizeMedium}
+                    height={iconSizeMedium}
+                    onChecked={this.toggleBitcoinPrice}
+                  />
                   <div className="description-text">
                     {formatMessage(messages.bitcoinPrice)}
                   </div>
@@ -391,9 +409,11 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <div className="check-form field">
                 <div className="description">
-                  <div className="check-container">
-                    <Image src={this.getOmnicoinIcon()} width={iconSizeMedium} height={iconSizeMedium} className="checkbox" onClick={this.toggleOmnicoinPrice} />
-                  </div>
+                  <Checkbox
+                    width={iconSizeMedium}
+                    height={iconSizeMedium}
+                    onChecked={this.toggleOmnicoinPrice}
+                  />
                   <div className="description-text">
                     {formatMessage(messages.omnicoinPrice)}
                   </div>
@@ -456,15 +476,11 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <div className="check-form field">
                 <div className="description">
-                  <div className="check-container">
-                    <Image
-                      src={this.getContinuousIcon()}
-                      width={iconSizeMedium}
-                      height={iconSizeMedium}
-                      className="checkbox"
-                      onClick={this.toggleContinuous}
-                    />
-                  </div>
+                  <Checkbox
+                    width={iconSizeMedium}
+                    height={iconSizeMedium}
+                    onChecked={this.toggleContinuous}
+                  />
                   <div className="description-text">
                     {formatMessage(messages.continuous)}
                   </div>
@@ -491,6 +507,7 @@ class AddListing extends Component {
                 type="file"
                 onChange={this.onImageChange.bind(this)}
                 className="filetype"
+                accept="image/*"
               />
               <div className="images-wrapper">
                 {this.addedImages()}
@@ -637,6 +654,30 @@ class AddListing extends Component {
     );
   }
 
+  closeWarning() {
+    this.setState({ open: false });
+  }
+
+  showWarningMessage() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()}>
+        <Modal.Header>
+          {formatMessage(messages.warning)}
+        </Modal.Header>
+        <Modal.Content>
+          <p className="modal-content">{formatMessage(messages.onlyImagesMsg)}</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button positive onClick={() => this.closeWarning()}>
+            {formatMessage(messages.ok)}
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
 
@@ -661,6 +702,7 @@ class AddListing extends Component {
             {this.addListingForm()}
           </div>
         </div>
+        {this.showWarningMessage()}
       </div>
     );
   }

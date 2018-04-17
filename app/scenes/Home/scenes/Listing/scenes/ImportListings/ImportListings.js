@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Icon, Form, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
@@ -59,9 +59,34 @@ const messages = defineMessages({
     id: 'ImportListings.importedData',
     defaultMessage: 'Imported Data'
   },
+  warning: {
+    id: 'ImportListings.warning',
+    defaultMessage: 'Warning'
+  },
+  ok: {
+    id: 'ImportListings.ok',
+    defaultMessage: 'Ok'
+  },
+  onlyTextFileMsg: {
+    id: 'ImportListings.onlyTextFileMsg',
+    defaultMessage: 'Only txt files are allowed.'
+  },
 });
 
 class ImportListings extends Component {
+  static getFileExtension(event) {
+    const fileName = event.target.files[0].name;
+    const idxDot = fileName.lastIndexOf('.') + 1;
+    return fileName.substr(idxDot, fileName.length).toLowerCase();
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+  }
+
   removeFile(index) {
     this.props.listingActions.removeFile(index);
   }
@@ -93,23 +118,28 @@ class ImportListings extends Component {
   importFile(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        // e.target.result
-        const filename = this.inputElement.files[0].name;
-        const file = {
-          title: filename,
-          content: 'The content for this txt file.',
-          type: 'Amazon',
-          category: 'Category',
-          subCategory: 'Sub-category',
-          contactType: 'Contact Type',
-          contactInfo: 'Contact Info',
-          price: 15,
-          currency: 'USD',
+      const extFile = ImportListings.getFileExtension(event);
+      if (extFile === 'txt') {
+        reader.onload = (e) => {
+          // e.target.result
+          const filename = this.inputElement.files[0].name;
+          const file = {
+            title: filename,
+            content: 'The content for this txt file.',
+            type: 'Amazon',
+            category: 'Category',
+            subCategory: 'Sub-category',
+            contactType: 'Contact Type',
+            contactInfo: 'Contact Info',
+            price: 15,
+            currency: 'USD',
+          };
+          this.props.listingActions.importFile(file);
         };
-        this.props.listingActions.importFile(file);
-      };
-      reader.readAsDataURL(event.target.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
+      } else {
+        this.setState({ open: true });
+      }
     }
   }
 
@@ -156,6 +186,7 @@ class ImportListings extends Component {
                   type="file"
                   onChange={this.importFile.bind(this)}
                   className="filetype"
+                  accept=".txt"
                 />
                 <Button content={formatMessage(messages.addFiles)} className="button--primary" onClick={() => this.onClickImportFile()} />
                 <Button content={formatMessage(messages.removeAll)} className="button--blue removeAll" onClick={() => this.onClickRemoveAll()} />
@@ -170,6 +201,30 @@ class ImportListings extends Component {
           </Grid.Row>
         </Grid>
       </Form>
+    );
+  }
+
+  closeWarning() {
+    this.setState({ open: false });
+  }
+
+  showWarningMessage() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()}>
+        <Modal.Header>
+          {formatMessage(messages.warning)}
+        </Modal.Header>
+        <Modal.Content>
+          <p className="modal-content">{formatMessage(messages.onlyTextFileMsg)}</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button positive onClick={() => this.closeWarning()}>
+            {formatMessage(messages.ok)}
+          </Button>
+        </Modal.Actions>
+      </Modal>
     );
   }
 
@@ -217,6 +272,7 @@ class ImportListings extends Component {
             <Button content={formatMessage(messages.importListings).toUpperCase()} className="button--green-bg" />
           </div>
         </div>
+        {this.showWarningMessage()}
       </div>
     );
   }

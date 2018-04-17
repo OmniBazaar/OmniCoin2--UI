@@ -40,5 +40,8 @@
   "MyListings.city": "City",
   "MyListings.state": "State",
   "MyListings.postalCode": "Postal Code",
-  "MyListings.createListingCaps": "CREATE LISTING"
+  "MyListings.createListingCaps": "CREATE LISTING",
+  "MyListings.warning": "Warning",
+  "MyListings.ok": "Ok",
+  "MyListings.onlyImagesMsg": "Only jpg/jpeg and png files are allowed."
 }

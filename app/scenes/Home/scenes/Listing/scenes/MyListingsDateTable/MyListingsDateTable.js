@@ -9,13 +9,13 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Pagination,
   Icon,
   Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 
 import {
   getMyListingsByDate,
@@ -155,15 +155,8 @@ class MyListingsDateTable extends Component {
           <div className="pagination-container">
             <Pagination
               activePage={activePageMyListingsByDate}
-              boundaryRange={1}
               onPageChange={this.handlePaginationChange}
-              size="mini"
-              siblingRange={1}
               totalPages={totalPagesMyListingsByDate}
-              firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
-              lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
-              prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
-              nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
             />
           </div>
         </div>
