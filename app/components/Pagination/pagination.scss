@@ -1,0 +1,27 @@
+@import '../../styles/colors';
+
+.pagination-container {
+  align-items: center;
+  justify-content: flex-end;
+  display: flex;
+
+  .pagination.menu {
+    border: none !important;
+    box-shadow: none !important;
+
+    a.item {
+      background-color: $lighter-blue !important;
+      color: $primary-blue !important;
+      font-weight: bold;
+      font-size: 12px;
+
+      &.active {
+        background-color: darken($lighter-blue, 7%) !important;
+      }
+
+      &:focus {
+        outline: 0;
+      }
+    }
+  }
+}

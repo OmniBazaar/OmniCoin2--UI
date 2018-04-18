@@ -10,13 +10,16 @@ async function dynGlobalObject() {
 }
 
 async function createConnection(node) {
-  const urls = nodes.map(node => node.url);
+  const urls = nodes.map(item => item.url);
   const connectionManager = new Manager({ url: node.url, urls });
   const connectionStart = new Date().getTime();
-  const { node: connectedNode, latency } = await connectionManager.connectWithFallback(true).then(() => {
+  const {
+    node: connectedNode,
+    latency
+  } = await connectionManager.connectWithFallback(true).then(() => {
     const url = Apis.instance().url;
     return {
-      node: nodes.find(node => node.url === url),
+      node: nodes.find(item => item.url === url),
       latency: new Date().getTime() - connectionStart
     };
   });

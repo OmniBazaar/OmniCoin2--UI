@@ -21,14 +21,15 @@ import * as reducers from './services/reducer';
 import {
   connectionSubscriber,
   authSubscriber,
-  mailSubscriber
+  mailSubscriber,
+  escrowSubscriber,
+  accountSubscriber,
+  walletSubscriber
 } from './services/saga';
 
-addLocaleData([...en, ...es, ...fr, ...it, ...ru]);
+addLocaleData([...en, ...es, ...fr, ...it]);
 
-const language = (navigator.languages && navigator.languages[0]) ||
-  navigator.language ||
-  navigator.userLanguage;
+const language = 'en';// (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
 
 const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
@@ -49,8 +50,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 if (localStorage.getItem('currentUser')) {
   try {
-    JSON.parse(localStorage.getItem('currentUser'))
-  } catch(e) {
+    JSON.parse(localStorage.getItem('currentUser'));
+  } catch (e) {
     localStorage.clear();
   }
 }
@@ -63,11 +64,17 @@ const store = createStore(
 sagaMiddleware.run(connectionSubscriber);
 sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
+sagaMiddleware.run(escrowSubscriber);
+sagaMiddleware.run(accountSubscriber);
+sagaMiddleware.run(walletSubscriber);
 
 ReactDOM.render(
   (
     <AppContainer>
-      <IntlProvider locale={language} messages={messages}>
+      <IntlProvider
+        locale={language}
+        messages={messages}
+      >
         <App store={store} />
       </IntlProvider>
     </AppContainer>
@@ -80,7 +87,10 @@ if (module.hot) {
     render(
       (
         <AppContainer>
-          <IntlProvider locale={language} messages={messages}>
+          <IntlProvider
+            locale={language}
+            messages={messages}
+          >
             <NextApp store={store} />
           </IntlProvider>
         </AppContainer>

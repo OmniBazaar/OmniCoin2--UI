@@ -2,10 +2,10 @@ import { defineMessages } from 'react-intl';
 import {
   put,
   takeEvery,
-  takeLatest,
-  call
+  call,
+  all
 } from 'redux-saga/effects';
-import { FetchChain } from 'omnibazaarjs/es';
+import { FetchChain, ChainStore } from 'omnibazaarjs/es';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { faucetAddresses } from '../settings';
@@ -24,18 +24,11 @@ const messages = defineMessages({
 
 
 export function* subscriber() {
-  yield takeEvery(
-    'LOGIN',
-    login
-  );
-  yield takeEvery(
-    'SIGNUP',
-    signup
-  );
-  yield takeLatest(
-    'ACCOUNT_LOOKUP',
-    accountLookup
-  );
+  yield all([
+    takeEvery('LOGIN', login),
+    takeEvery('SIGNUP', signup),
+    takeEvery('GET_ACCOUNT', getAccount)
+  ]);
 }
 
 export function* login(action) {
@@ -112,7 +105,9 @@ export function* signup(action) {
     } else {
       const { error } = resJson;
       console.log('ERROR', error);
-      const e = error.base && error.base.length && error.base.length > 0 ? error.base[0] : JSON.stringify(error);
+      const e = error.base && error.base.length && error.base.length > 0
+        ? error.base[0]
+        : JSON.stringify(error);
       yield put({ type: 'SIGNUP_FAILED', error: e });
     }
   } catch (e) {
@@ -122,12 +117,12 @@ export function* signup(action) {
 }
 
 
-export function* accountLookup(action) {
-  const { username } = action.payload;
+export function* getAccount({ payload: { username } }) {
   try {
-    const account = yield FetchChain('getAccount', username);
-    yield put({ type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: true });
+    ChainStore.resetCache();
+    const result = yield call(FetchChain, 'getAccount', username);
+    yield put({ type: 'GET_ACCOUNT_SUCCEEDED', account: result });
   } catch (e) {
-    yield put({ type: 'ACCOUNT_LOOKUP_SUCCEEDED', result: false });
+    yield put({ type: 'GET_ACCOUNT_FAILED', error: messages.noAccount });
   }
 }

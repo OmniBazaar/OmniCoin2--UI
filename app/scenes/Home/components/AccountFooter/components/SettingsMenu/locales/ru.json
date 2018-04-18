@@ -1,2 +1,5 @@
 {
+  "SettingsMenu.accountSettings": "Account Settings",
+  "SettingsMenu.preferences": "Preferences",
+  "SettingsMenu.logout": "Logout"
 }

@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Image } from 'semantic-ui-react';
+import { Button, Image, Input } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
+import ip from 'ip';
+import { debounce } from 'lodash';
 
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
 
-import { getCurrentUser } from '../../../../../../services/blockchain/auth/authActions';
+import { getCurrentUser, getAccount } from '../../../../../../services/blockchain/auth/authActions';
+import { getAccountBalance } from '../../../../../../services/blockchain/wallet/walletActions';
+
 import {
   setReferrer,
   setPublisher,
   setTransactionProcessor,
   setEscrow,
+  updatePublicData,
+  changeIpAddress
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -81,13 +88,25 @@ const messages = defineMessages({
     id: 'Settings.updateTransactionFee',
     defaultMessage: 'Update data transaction fee: '
   },
+  update: {
+    id: 'Settings.update',
+    defaultMessage: 'Update'
+  },
+  successUpdate: {
+    id: 'Settings.successUpdate',
+    defaultMessage: 'Updated successfully'
+  },
+  failedUpdate: {
+    id: 'Settings.failedUpdate',
+    defaultMessage: 'Failed to update account'
+  },
+  invalidIp: {
+    id: 'Settings.invalidIp',
+    defaultMessage: 'IP address is invalid'
+  }
 });
 
 class PublicData extends Component {
-  static updatePublicData() {
-    console.log('Update data');
-  }
-
   constructor(props) {
     super(props);
 
@@ -95,6 +114,64 @@ class PublicData extends Component {
     this.togglePublisher = this.togglePublisher.bind(this);
     this.toggleTransactionProcessor = this.toggleTransactionProcessor.bind(this);
     this.toggleEscrow = this.toggleEscrow.bind(this);
+    this.updatePublicData = this.updatePublicData.bind(this);
+    this.freezeSettings = this.freezeSettings.bind(this);
+    this.onChangeIpAddress = debounce(this.onChangeIpAddress.bind(this), 500);
+  }
+
+  componentWillMount() {
+    const { account } = this.props.auth;
+    if (account.get('is_a_publisher') !== this.props.account.publisher) {
+      this.togglePublisher();
+    }
+    if (account.get('is_an_escrow') !== this.props.account.escrow) {
+      this.toggleEscrow();
+    }
+    if (account.get('publisher_ip')) {
+      this.props.accountSettingsActions.changeIpAddress(account.get('publisher_ip'));
+    }
+    // todo add TransactionProcessor and referrer
+    this.freezeSettings();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+    if (this.props.account.loading && !nextProps.account.loading) {
+      if (nextProps.account.error) {
+        toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
+      } else {
+        toastr.success(formatMessage(messages.update), formatMessage(messages.successUpdate));
+        this.props.walletActions.getAccountBalance(this.props.auth.account);
+        this.freezeSettings();
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.authActions.getAccount(this.props.auth.currentUser.username);
+  }
+
+  freezeSettings() {
+    const {
+      referrer,
+      publisher,
+      transactionProcessor,
+      escrow
+    } = this.props.account;
+
+    this.settings = {
+      referrer, publisher, transactionProcessor, escrow
+    };
+  }
+
+  updatePublicData() {
+    const { formatMessage } = this.props.intl;
+    const { ipAddress, publisher } = this.props.account;
+    if (publisher && !ip.isPublic(ipAddress)) {
+      toastr.error(formatMessage(messages.update), formatMessage(messages.invalidIp));
+      return;
+    }
+    this.props.accountSettingsActions.updatePublicData();
   }
 
   toggleReferrer() {
@@ -129,9 +206,13 @@ class PublicData extends Component {
     return this.props.account.escrow ? CheckPreNom : CheckNormal;
   }
 
+  onChangeIpAddress(event, data) {
+    this.props.accountSettingsActions.changeIpAddress(data.value);
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
-
+    const { account } = this.props;
     return (
       <div className="check-form">
         <div className="description">
@@ -157,6 +238,15 @@ class PublicData extends Component {
             </div>
           </div>
         </div>
+        {account.publisher &&
+          <div className="ip">
+            <span>IP: </span>
+            <Input
+              defaultValue={this.props.account.ipAddress}
+              onChange={this.onChangeIpAddress}
+            />
+          </div>
+        }
         <div className="description">
           <div className="check-container">
             <Image src={this.getTransactionIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleTransactionProcessor} />
@@ -180,10 +270,15 @@ class PublicData extends Component {
           </div>
         </div>
         <div className="bottom-detail">
-          <Button content="UPDATE" onClick={PublicData.updatePublicData} className="button--green-bg" />
+          <Button
+            loading={account.loading}
+            content={formatMessage(messages.update)}
+            onClick={this.updatePublicData}
+            className="button--green-bg"
+          />
           <div className="labels">
             <span>{formatMessage(messages.updateTransactionFee)}</span>
-            <span className="amount">5 XOM</span>
+            <span className="amount">20 XOM</span>
           </div>
         </div>
       </div>
@@ -197,16 +292,35 @@ PublicData.propTypes = {
     setPublisher: PropTypes.func,
     setTransactionProcessor: PropTypes.func,
     setEscrow: PropTypes.func,
+    updatePublicData: PropTypes.func,
+    changeIpAddress: PropTypes.func
   }),
+  authActions: PropTypes.shape({
+    getAccount: PropTypes.func
+  }).isRequired,
+  walletActions: PropTypes.shape({
+    getAccountBalance: PropTypes.func
+  }).isRequired,
   account: PropTypes.shape({
     referrer: PropTypes.bool,
     publisher: PropTypes.bool,
     transactionProcessor: PropTypes.bool,
     escrow: PropTypes.bool,
+    loading: PropTypes.bool,
+    error: PropTypes.string
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  auth: PropTypes.shape({
+    account: PropTypes.shape({
+      ipAddress: PropTypes.string
+    }),
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    })
+  }).isRequired
 };
 
 PublicData.defaultProps = {
@@ -216,7 +330,9 @@ PublicData.defaultProps = {
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({
+    ...state.default,
+  }),
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
@@ -224,6 +340,14 @@ export default connect(
       setPublisher,
       setTransactionProcessor,
       setEscrow,
+      updatePublicData,
+      changeIpAddress
+    }, dispatch),
+    walletActions: bindActionCreators({
+      getAccountBalance
+    }, dispatch),
+    authActions: bindActionCreators({
+      getAccount
     }, dispatch),
   }),
 )(injectIntl(PublicData));

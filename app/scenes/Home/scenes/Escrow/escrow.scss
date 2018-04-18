@@ -1,0 +1,8 @@
+.escrow {
+    .tabs {
+      height: 100%;
+      .active.tab {
+        height: calc(100% - 67px);
+      }
+    }
+}
