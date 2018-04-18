@@ -2,5 +2,7 @@
   "Transfer.transfer": "Transfer",
   "Transfer.from": "From",
   "Transfer.to": "To",
-  "Transfer.TRANSFER": "TRANSFER"
+  "Transfer.TRANSFER": "TRANSFER",
+  "Transfer.fieldRequired": "This field is required",
+  "Transfer.accountDoNotExist": "Account doesn't exist"
 }

@@ -2,14 +2,20 @@ import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Form, Select, TextArea, Checkbox } from 'semantic-ui-react';
+import { required } from 'redux-form-validators';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import { FetchChain } from 'omnibazaarjs/es';
 
 import Header from '../../../../components/Header';
 import './transfer.scss';
 
 const messages = defineMessages({
+  accountDoNotExist: {
+    id: 'Transfer.accountDoNotExist',
+    defaultMessage: 'Account doesn\'t exist'
+  },
   transfer: {
     id: 'Transfer.transfer',
     defaultMessage: 'Transfer'
@@ -25,6 +31,10 @@ const messages = defineMessages({
   TRANSFER: {
     id: 'Transfer.TRANSFER',
     defaultMessage: 'TRANSFER'
+  },
+  fieldRequired: {
+    id: 'Transfer.fieldRequired',
+    defaultMessage: 'This field is required'
   }
 });
 
@@ -43,7 +53,54 @@ const walletOptions = [
   }
 ];
 
+const reputationOptions = [
+  {
+    key: '1',
+    value: '1',
+    text: 'All text',
+    description: 'Description'
+  },
+];
 class Transfer extends Component {
+  static asyncValidate = async (values) => {
+    try {
+      const account = await FetchChain('getAccount', values.to_name);
+      console.log(account);
+    } catch (e) {
+      console.log('ERR', e);
+      throw { to_name: messages.accountDoNotExist };
+    }
+  };
+
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+    this.state = this.getInitialState(props);
+  }
+
+  getInitialState() {
+    return {
+      from_name: '',
+      to_name: '',
+      from_account: null,
+      to_account: null,
+      orig_account: null,
+      amount: '',
+      asset_id: null,
+      asset: null,
+      memo: '',
+      error: null,
+      propose: false,
+      propose_account: '',
+      feeAsset: null,
+      fee_asset_id: '1.3.0',
+      feeAmount: 0,
+      feeStatus: {},
+      maxAmount: false,
+      hidden: false
+    };
+  }
+
   renderDropdownUnitsField = ({
     input, placeholder, buttonText
   }) => {
@@ -72,46 +129,62 @@ class Transfer extends Component {
   };
 
   renderUnitsField = ({
-    input, placeholder, buttonText, buttonClass
-  }) => (
-    <div className="transfer-input">
-      <input
-        {...input}
-        type="text"
-        className="textfield"
-        placeholder={placeholder}
-      />
-      <Button className={['copy-btn button--gray-text address-button', buttonClass].join(' ')}>
-        {buttonText}
-      </Button>
-    </div>
-  );
+    input, placeholder, buttonText, buttonClass, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <input
+          {...input}
+          type="text"
+          className="textfield"
+          placeholder={placeholder}
+        />
+        <Button className={['copy-btn button--gray-text address-button', buttonClass].join(' ')}>
+          {buttonText}
+        </Button>
+      </div>
+    );
+  };
 
   renderSelectField = ({
-    input, placeholder
-  }) => (
-    <div className="transfer-input">
-      <Select
-        {...input}
-        type="text"
-        className="textfield"
-        placeholder={placeholder}
-      />
-    </div>
-  );
+    input, placeholder, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <Select
+          {...input}
+          type="text"
+          className="textfield"
+          placeholder={placeholder}
+          options={reputationOptions}
+        />
+      </div>
+    );
+  };
 
   renderMemoField = ({
-    input, placeholder
-  }) => (
-    <div className="transfer-input">
-      <TextArea
-        {...input}
-        autoHeight={false}
-        className="text-area"
-        placeholder={placeholder}
-      />
-    </div>
-  );
+    input, placeholder, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <TextArea
+          {...input}
+          autoHeight={false}
+          className="text-area"
+          placeholder={placeholder}
+        />
+      </div>
+    );
+  };
   renderEscrowField = ({
     input, label
   }) => (
@@ -128,6 +201,8 @@ class Transfer extends Component {
 
   transferForm() {
     const { formatMessage } = this.props.intl;
+    const number = value =>
+      (value && isNaN(Number(value)) ? 'Must be a number' : undefined);
     return (
       <div className="transfer-form">
         <Form onSubmit={this.onSubmit} className="transfer-form-container">
@@ -149,12 +224,15 @@ class Transfer extends Component {
             <span>Account Name or Public Key</span>
             <Field
               type="text"
-              name="logout"
+              name="to_name"
               placeholder="Press enter"
               component={this.renderUnitsField}
               className="textfield1"
               buttonClass="button--green"
               buttonText="ADDRESS BOOK"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) })
+              ]}
             />
             <div className="col-1" />
           </div>
@@ -163,11 +241,15 @@ class Transfer extends Component {
             <span>Amount</span>
             <Field
               type="text"
-              name="logout"
+              name="amount"
               placeholder="0.0"
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="XOM"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) }),
+                number
+              ]}
             />
             <div className="col-1" />
           </div>
@@ -175,7 +257,7 @@ class Transfer extends Component {
             <span>Reputation</span>
             <Field
               type="text"
-              name="logout"
+              name="reputation"
               placeholder="0.0"
               component={this.renderSelectField}
             />
@@ -188,6 +270,7 @@ class Transfer extends Component {
               name="memo"
               placeholder="Please enter"
               component={this.renderMemoField}
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <div className="col-1" />
           </div>
@@ -213,7 +296,12 @@ class Transfer extends Component {
       </div>
     );
   }
-
+  submit(values) {
+    const { to_name, reputation, memo } = values;
+    console.log(to_name);
+    console.log(reputation);
+    console.log(memo);
+  }
   render() {
     const { formatMessage } = this.props.intl;
     return (
@@ -236,6 +324,8 @@ Transfer.defaultProps = {
 };
 
 export default compose(connect(state => ({ ...state.default }), null), reduxForm({
-  form: 'preferencesForm',
+  form: 'transferForm',
+  asyncValidate: Transfer.asyncValidate,
+  asyncBlurFields: ['to_name'],
   destroyOnUnmount: true,
 }))(injectIntl(Transfer));
