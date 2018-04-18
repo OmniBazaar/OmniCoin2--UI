@@ -204,10 +204,12 @@ class Settings extends Component {
                 role="link"
                 tabIndex={0}
               />
-              <TransactionDetails
-                showCompose={props.account.showDetails}
-                onClose={this.onCloseDetails}
-              />
+              {props.account.showDetails &&
+                <TransactionDetails
+                  showCompose={props.account.showDetails}
+                  onClose={this.onCloseDetails}
+                />
+              }
             </div>
           </div>
         </Modal.Content>

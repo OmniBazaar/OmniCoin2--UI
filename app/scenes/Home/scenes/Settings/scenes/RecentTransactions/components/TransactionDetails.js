@@ -4,6 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import dateformat from 'dateformat';
 import { Button } from 'semantic-ui-react';
 
 const messages = defineMessages({
@@ -97,7 +98,6 @@ class TransactionDetails extends Component {
       details: true,
       visible: props.account.showDetails,
     });
-
     return (
       <div className={containerClass}>
         <div className="top-detail">
@@ -111,22 +111,18 @@ class TransactionDetails extends Component {
           <div className="top-container">
             <div className="item">
               <span>{formatMessage(messages.block)}</span>
-              <span className="code primary-blue">#587987</span>
+              <span className="code primary-blue">{detailSelected.blockNum}</span>
             </div>
             <div className="item">
               <span>{formatMessage(messages.transaction)}</span>
-              <span className="code">#1</span>
-            </div>
-            <div className="item">
-              <span>{formatMessage(messages.next)}</span>
-              <span className="code primary-blue">#2</span>
+              <span className="code">{detailSelected.trxInBlock}</span>
             </div>
           </div>
           <div className="item">
             <span>
               {formatMessage(messages.timeStamp)} <span className="time-zone">(GMT +2)</span>
             </span>
-            <span className="date">{detailSelected ? detailSelected.date : ''}</span>
+            <span className="date">{detailSelected ? dateformat(detailSelected.date, '	yyyy-mm-dd HH:MM:ss') : ''}</span>
           </div>
         </div>
         <div className="separator" />

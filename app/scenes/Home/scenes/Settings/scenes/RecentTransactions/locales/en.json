@@ -1,13 +1,4 @@
 {
-  "Settings.firstItem": "First item",
-  "Settings.lastItem": "Last item",
-  "Settings.previousItem": "Previous item",
-  "Settings.nextItem": "Next item",
-  "Settings.first": "First",
-  "Settings.last": "Last",
-  "Settings.prev": "Prev",
-  "Settings.next": "Next",
-  "Settings.date": "Date",
   "Settings.memo": "Memo",
   "Settings.amount": "Amount",
   "Settings.fee": "Fee",

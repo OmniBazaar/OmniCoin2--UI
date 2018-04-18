@@ -5,10 +5,23 @@ import {
   all,
   call
 } from 'redux-saga/effects';
-import { TransactionBuilder, ChainStore } from 'omnibazaarjs/es';
+import { TransactionBuilder, ChainStore, FetchChain } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 
-import { generateKeyFromPassword } from '../blockchain/utils/wallet';
+
+import {
+  generateKeyFromPassword,
+  decodeMemo,
+  getAccountById
+} from '../blockchain/utils/wallet';
+
+import HistoryStorage from './historyStorage';
+
+import {
+  getGlobalObject,
+  getDynGlobalObject,
+  calcBlockTime
+} from '../blockchain/utils/miscellaneous';
 
 export function* accountSubscriber() {
   yield all([
@@ -68,19 +81,46 @@ export function* updateAccount(payload) {
 }
 
 export function* getRecentTransactions() {
-  const {account} = (yield select()).default.auth;
+  const { account, currentUser } = (yield select()).default.auth;
+  const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+  const [globalObject, dynGlobalObject] = yield Promise.all([
+    getGlobalObject(),
+    getDynGlobalObject()
+  ]);
   try {
-    const result  = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account);
-    console.log('Result ', result);
+    const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account);
     let history = [];
-    let h = result.get("history");
-    let seen_ops = new Set();
+    const h = result.get('history');
+    const seen_ops = new Set();
     history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
     history = history.filter(el => !!el.op[1].amount);
-    yield put({type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: history});
+    const historyStorage = new HistoryStorage(currentUser.username);
+    for (let i = 0; i < history.length; ++i) {
+      const el = history[i];
+      if (historyStorage.exists(el.id)) continue;
+      const [from, to] = yield Promise.all([
+        FetchChain('getAccount', el.op[1].from),
+        FetchChain('getAccount', el.op[1].to)
+      ]);
+      historyStorage.addOperation({
+        id: el.id,
+        blockNum: el.block_num,
+        opInTrx: el.op_in_trx,
+        trxInBlock: el.trx_in_block,
+        date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
+        fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
+        from: from.get('name'),
+        to: to.get('name'),
+        memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
+        amount: el.op[1].amount.amount / 100000,
+        fee: el.op[1].fee.amount / 100000,
+        type: from.get('name') === currentUser.username ? HistoryStorage.OperationTypes.withdraw : HistoryStorage.OperationTypes.deposit
+      });
+    }
+    historyStorage.save();
+    yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
   } catch (e) {
     console.log('ERROR', e);
-    yield put({type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e})
+    yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });
   }
-
 }

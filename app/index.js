@@ -7,6 +7,7 @@ import { reducer as formReducer } from 'redux-form';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import { AppContainer } from 'react-hot-loader';
 import { IntlProvider, addLocaleData } from 'react-intl';
+import { ChainConfig } from 'omnibazaarjs-ws';
 import en from 'react-intl/locale-data/en';
 import es from 'react-intl/locale-data/es';
 import fr from 'react-intl/locale-data/fr';
@@ -26,6 +27,8 @@ import {
   accountSubscriber,
   walletSubscriber
 } from './services/saga';
+
+ChainConfig.address_prefix = 'BTS';
 
 addLocaleData([...en, ...es, ...fr, ...it]);
 

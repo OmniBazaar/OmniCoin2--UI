@@ -6,7 +6,7 @@ import {
 } from 'redux-saga/effects';
 
 import { nodesAddresses as nodes } from '../settings';
-import { dynGlobalObject, createConnection } from '../utils/miscellaneous';
+import { getDynGlobalObject as getDynObject, createConnection } from '../utils/miscellaneous';
 
 export function* subscriber() {
   yield takeEvery(
@@ -30,7 +30,7 @@ export function* connectToNode({ payload: { node } }) {
 
 export function* getDynGlobalObject() {
   try {
-    const result = yield call(dynGlobalObject);
+    const result = yield call(getDynObject);
     yield put({ type: 'DYN_GLOBAL_OBJECT_SUCCEEDED', dynGlobalObject: result });
   } catch (e) {
     yield put({ type: 'DYN_GLOBAL_OBJECT_FAILED', error: e.message });

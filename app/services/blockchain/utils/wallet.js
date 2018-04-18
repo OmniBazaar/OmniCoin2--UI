@@ -1,4 +1,5 @@
-import { PrivateKey, } from 'omnibazaarjs/es';
+import { PrivateKey, Aes } from 'omnibazaarjs/es';
+import { Apis } from 'omnibazaarjs-ws';
 
 function generateKeyFromPassword(accountName, role, password) {
   const seed = accountName + role + password;
@@ -7,4 +8,21 @@ function generateKeyFromPassword(accountName, role, password) {
   return { privKey, pubKey };
 }
 
-export { generateKeyFromPassword };
+function decodeMemo(memo, key) {
+  return Aes.decrypt_with_checksum(
+    key.privKey,
+    key.pubKey !== memo.from ? memo.from : memo.to,
+    memo.nonce,
+    memo.message
+  ).toString('utf-8');
+}
+
+async function getAccountById(id) {
+  return (await Apis.instance().db_api().exec('get_objects', [[id]]))[0];
+}
+
+export {
+  generateKeyFromPassword,
+  decodeMemo,
+  getAccountById
+};

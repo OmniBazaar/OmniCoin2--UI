@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
+import dateformat from 'dateformat';
 import {
   Table,
   TableBody,
@@ -11,11 +12,15 @@ import {
   TableHeaderCell,
   TableRow,
   TableHeader,
-  Pagination,
   Input,
   Icon,
   Image,
+  Loader,
+  Dimmer
 } from 'semantic-ui-react';
+import { debounce } from 'lodash';
+
+import Pagination from '../../../../../../components/Pagination/Pagination';
 
 import {
   getRecentTransactions,
@@ -37,38 +42,6 @@ const iconSizeToHeight = 16;
 
 
 const messages = defineMessages({
-  firstItem: {
-    id: 'Settings.firstItem',
-    defaultMessage: 'First item'
-  },
-  lastItem: {
-    id: 'Settings.lastItem',
-    defaultMessage: 'Last item'
-  },
-  previousItem: {
-    id: 'Settings.previousItem',
-    defaultMessage: 'Previous item'
-  },
-  nextItem: {
-    id: 'Settings.nextItem',
-    defaultMessage: 'Next item'
-  },
-  first: {
-    id: 'Settings.first',
-    defaultMessage: 'First'
-  },
-  last: {
-    id: 'Settings.last',
-    defaultMessage: 'Last'
-  },
-  prev: {
-    id: 'Settings.prev',
-    defaultMessage: 'Prev'
-  },
-  next: {
-    id: 'Settings.next',
-    defaultMessage: 'Next'
-  },
   date: {
     id: 'Settings.date',
     defaultMessage: 'Date'
@@ -95,160 +68,28 @@ const messages = defineMessages({
   },
 });
 
-const recentTransactionsData = [
-  {
-    id: 'b4f24567',
-    date: 'Nov 15, 2017, 9:28 PM',
-    from: 'Unknown',
-    to: '',
-    memo: 'Welcome bonus',
-    amount: 1.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: [
-      {
-        id: 1,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 2,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 3,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 4,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 5,
-        type: 'withdraw',
-        amount: 2000.00
-      }
-    ]
-  },
-  {
-    id: 'f5f24567',
-    date: 'Dec 1, 2017, 7:04 PM',
-    from: '',
-    to: 'Eugen L',
-    memo: '',
-    amount: 10.50,
-    fee: 5.0,
-    balance: 10500.50,
-    operations: [
-      {
-        id: 1,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 2,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 3,
-        type: 'deposit',
-        amount: 16.00
-      },
-      {
-        id: 4,
-        type: 'withdraw',
-        amount: 2000.00
-      }
-    ]
-  },
-  {
-    id: 'g6g35678',
-    date: 'Dec 5, 2017, 5:11 PM',
-    from: 'Unknown',
-    to: '',
-    memo: '',
-    amount: 10.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: []
-  },
-  {
-    id: 'a1f01567',
-    date: 'Dec 6, 2017, 8:01 AM',
-    from: '',
-    to: 'Emma',
-    memo: '',
-    amount: 10.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: []
-  },
-  {
-    id: 'za1f2456',
-    date: 'Dec 8, 2017, 8:01 AM',
-    from: '',
-    to: 'Jessica',
-    memo: '',
-    amount: 10.50,
-    fee: 5.0,
-    balance: 10500.50,
-    operations: []
-  },
-  {
-    id: 'h7f2453r',
-    date: 'Dec 10, 2017, 10:16 AM',
-    from: '',
-    to: 'to',
-    memo: '',
-    amount: 10.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: []
-  },
-  {
-    id: 'n3o84256',
-    date: 'Dec 10, 2017, 11:33 AM',
-    from: 'Stella',
-    to: '',
-    memo: '',
-    amount: 10.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: []
-  },
-  {
-    id: 'y9q98467',
-    date: 'Dec 12, 2017, 09:33 AM',
-    from: 'Stella',
-    to: 'Unknown',
-    memo: '',
-    amount: 10.50,
-    fee: 0,
-    balance: 10500.50,
-    operations: []
-  },
-];
 
 class RecentTransactions extends Component {
   constructor(props) {
     super(props);
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
+    this.handleFilterChange = debounce(this.handleFilterChange.bind(this), 200);
   }
 
   componentWillMount() {
     this.props.accountSettingsActions.getRecentTransactions();
-   // this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
   }
 
-  handleFilterChange = (e) => {
-    const { value } = e.target;
-    this.props.accountSettingsActions.filterData(value);
-  };
+  componentWillReceiveProps(nextProps) {
+    if (this.props.account.loading && !nextProps.account.loading) {
+      this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
+    }
+  }
+
+  handleFilterChange(e, data) {
+    this.props.accountSettingsActions.filterData(data.value);
+  }
 
   sortData = (clickedColumn) => () => {
     this.props.accountSettingsActions.sortData(clickedColumn);
@@ -260,13 +101,8 @@ class RecentTransactions extends Component {
 
   onClickDetails = (detailId) => {
     const { recentTransactions } = this.props.account;
-    const filteredData = [];
-
-    recentTransactions.forEach((o) => {
-      if (o.id === detailId) return filteredData.push(o);
-    });
-
-    this.props.accountSettingsActions.showDetailsModal(filteredData[0]);
+    const transaction = recentTransactions.find(el => el.id === detailId);
+    this.props.accountSettingsActions.showDetailsModal(transaction);
   };
 
   onCloseDetails() {
@@ -279,7 +115,8 @@ class RecentTransactions extends Component {
       sortDirection,
       totalPages,
       sortColumn,
-      recentTransactionsFiltered
+      recentTransactionsFiltered,
+      loading
     } = this.props.account;
     const { formatMessage } = this.props.intl;
 
@@ -297,82 +134,110 @@ class RecentTransactions extends Component {
             <div className="pagination-container">
               <Pagination
                 activePage={activePage}
-                boundaryRange={1}
                 onPageChange={this.handlePaginationChange}
-                size="mini"
-                siblingRange={1}
                 totalPages={totalPages}
-                firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
-                lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
-                prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
-                nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
               />
             </div>
           </div>
           <div className="table-container">
+            {loading ? <Loader active inline="centered" /> :
             <Table {...this.props.tableProps}>
               <TableHeader>
                 <TableRow>
-                  <TableHeaderCell key="date" sorted={sortColumn === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
+                  <TableHeaderCell
+                    key="date"
+                    sorted={sortColumn === 'date' ? sortDirection : null}
+                    onClick={this.sortData('date')}
+                  >
                     {formatMessage(messages.date)} (GMT+2)
                   </TableHeaderCell>
-                  <TableHeaderCell key="fromto" className="from-to" sorted={sortColumn === 'fromto' ? sortDirection : null} onClick={this.sortData('fromto')}>
+                  <TableHeaderCell
+                    key="fromto"
+                    className="from-to"
+                    sorted={sortColumn === 'fromTo' ? sortDirection : null}
+                    onClick={this.sortData('fromTo')}
+                  >
                     <Image src={IncomingIcon} width={iconSize} height={iconSize} className="from-icon" />From
                     <Image src={OutgoingIcon} width={iconToSize} height={iconSizeToHeight} className="to-icon" />To
                   </TableHeaderCell>
-                  <TableHeaderCell key="memo" sorted={sortColumn === 'memo' ? sortDirection : null} onClick={this.sortData('memo')}>
+                  <TableHeaderCell
+                    key="memo"
+                    sorted={sortColumn === 'memo' ? sortDirection : null}
+                    onClick={this.sortData('memo')}
+                  >
                     {formatMessage(messages.memo)}
                   </TableHeaderCell>
-                  <TableHeaderCell key="amount" sorted={sortColumn === 'amount' ? sortDirection : null} onClick={this.sortData('amount')}>
+                  <TableHeaderCell
+                    key="amount"
+                    sorted={sortColumn === 'amount' ? sortDirection : null}
+                    onClick={this.sortData('amount')}
+                  >
                     {formatMessage(messages.amount)}
                   </TableHeaderCell>
-                  <TableHeaderCell key="fee" sorted={sortColumn === 'fee' ? sortDirection : null} onClick={this.sortData('fee')}>
+                  <TableHeaderCell
+                    key="fee"
+                    sorted={sortColumn === 'fee' ? sortDirection : null}
+                    onClick={this.sortData('fee')}
+                  >
                     {formatMessage(messages.fee)}
                   </TableHeaderCell>
-                  <TableHeaderCell key="balance" sorted={sortColumn === 'balance' ? sortDirection : null} onClick={this.sortData('balance')}>
+                  <TableHeaderCell
+                    key="balance"
+                    sorted={sortColumn === 'balance' ? sortDirection : null}
+                    onClick={this.sortData('balance')}
+                  >
                     {formatMessage(messages.balance)}
                   </TableHeaderCell>
+                  <TableHeaderCell />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {recentTransactionsFiltered && recentTransactionsFiltered.map(row =>
-                  (
-                    <TableRow key={hash(row)}>
-                      <TableCell>{row.date}</TableCell>
-                      <TableCell>{row.from} {row.to}</TableCell>
-                      <TableCell>{row.memo}</TableCell>
-                      <TableCell>{row.amount}</TableCell>
-                      <TableCell>{row.fee}</TableCell>
-                      <TableCell className="balance">
-                        {row.balance}
-                        <span
-                          className="link"
-                          onClick={() => this.onClickDetails(row.id)}
-                          onKeyDown={() => this.onClickDetails(row.id)}
-                          role="link"
-                          tabIndex={0}
-                        >
-                          {formatMessage(messages.details)}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                      (
+                        <TableRow key={hash(row)}>
+                          <TableCell>{dateformat(row.date, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
+                          <TableCell>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                              <Image
+                                src={row.fromTo === row.from ? IncomingIcon : OutgoingIcon}
+                                width={iconSize}
+                                height={iconSize}
+                                className="from-icon"
+                              />
+                              <span> {row.fromTo} </span>
+                            </div>
+                          </TableCell>
+                          <TableCell>{row.memo}</TableCell>
+                          <TableCell>{row.amount}</TableCell>
+                          <TableCell>{row.fee}</TableCell>
+                          <TableCell className="balance">
+                            {row.balance}
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className="link"
+                              onClick={() => this.onClickDetails(row.id)}
+                              onKeyDown={() => this.onClickDetails(row.id)}
+                              role="link"
+                              tabIndex={0}
+                            >
+                              {formatMessage(messages.details)}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    }
               </TableBody>
             </Table>
+              }
           </div>
+
           <div className="top-detail bottom">
             <div className="pagination-container">
               <Pagination
                 activePage={activePage}
-                boundaryRange={1}
                 onPageChange={this.handlePaginationChange}
-                size="mini"
-                siblingRange={1}
                 totalPages={totalPages}
-                firstItem={{ ariaLabel: formatMessage(messages.firstItem), content: `<< ${formatMessage(messages.first)}` }}
-                lastItem={{ ariaLabel: formatMessage(messages.lastItem), content: `${formatMessage(messages.last)} >>` }}
-                prevItem={{ ariaLabel: formatMessage(messages.previousItem), content: `< ${formatMessage(messages.prev)}` }}
-                nextItem={{ ariaLabel: formatMessage(messages.nextItem), content: `${formatMessage(messages.next)} >` }}
               />
             </div>
           </div>

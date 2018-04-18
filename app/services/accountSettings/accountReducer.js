@@ -241,22 +241,17 @@ const reducer = handleActions({
       error: null
     };
   },
-  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
-    return {
-      ...state,
-      loading: false,
-      error: null,
-      recentTransactions: transactions,
-      recentTransactionsFiltered: transactions
-    }
-  },
-  GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => {
-    return {
-      ...state,
-      loading: false,
-      error
-    }
-  },
+  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => ({
+    ...state,
+    loading: false,
+    error: null,
+    recentTransactions: transactions,
+  }),
+  GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  }),
   [filterData](state, { payload: { filterText } }) {
     const data = state.recentTransactions;
     const activePage = 1;
