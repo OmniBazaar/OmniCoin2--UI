@@ -18,36 +18,36 @@ import { sortImportData } from '../../../../../../../../services/listing/importA
 
 const messages = defineMessages({
   listingType: {
-    id: 'ImportListings.listingType',
+    id: 'ImportedFilesTable.listingType',
     defaultMessage: 'Listing Type'
   },
   category: {
-    id: 'ImportListings.category',
+    id: 'ImportedFilesTable.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'ImportListings.subCategory',
+    id: 'ImportedFilesTable.subCategory',
     defaultMessage: 'Sub Category'
   },
   contactType: {
-    id: 'ImportListings.contactType',
+    id: 'ImportedFilesTable.contactType',
     defaultMessage: 'Contact Type'
   },
   contactInfo: {
-    id: 'ImportListings.contactInfo',
+    id: 'ImportedFilesTable.contactInfo',
     defaultMessage: 'Contact Info'
   },
   title: {
-    id: 'ImportListings.title',
+    id: 'ImportedFilesTable.title',
     defaultMessage: 'Title'
   },
   price: {
-    id: 'ImportListings.price',
+    id: 'ImportedFilesTable.price',
     defaultMessage: 'Price'
   },
   currency: {
-    id: 'ImportListings.Currency',
-    defaultMessage: 'currency'
+    id: 'ImportedFilesTable.currency',
+    defaultMessage: 'Currency'
   },
 });
 

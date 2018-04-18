@@ -15,58 +15,26 @@ import {
 import hash from 'object-hash';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
-import Pagination from '../../../../../../components/Pagination/Pagination';
+import Pagination from '../../../../../../../components/Pagination/Pagination';
 
 import {
   setPaginationMyListings,
   setActivePageMyListings,
   sortMyListingsBy
-} from '../../../../../../services/listing/listingActions';
-import { numberWithCommas } from '../../../../../../utils/numeric';
+} from '../../../../../../../services/listing/listingActions';
+import { numberWithCommas } from '../../../../../../../utils/numeric';
 
-import '../../../Marketplace/marketplace.scss';
-import '../../../Marketplace/scenes/CategoryListing/listings.scss';
+import '../../../../Marketplace/marketplace.scss';
+import '../../../../Marketplace/scenes/CategoryListing/listings.scss';
 import './my-listings-table.scss';
 
 const messages = defineMessages({
-  firstItem: {
-    id: 'Listing.firstItem',
-    defaultMessage: 'First item'
-  },
-  lastItem: {
-    id: 'Listing.lastItem',
-    defaultMessage: 'Last item'
-  },
-  previousItem: {
-    id: 'Listing.previousItem',
-    defaultMessage: 'Previous item'
-  },
-  nextItem: {
-    id: 'Listing.nextItem',
-    defaultMessage: 'Next item'
-  },
-  first: {
-    id: 'Listing.first',
-    defaultMessage: 'First'
-  },
-  last: {
-    id: 'Listing.last',
-    defaultMessage: 'Last'
-  },
-  prev: {
-    id: 'Listing.prev',
-    defaultMessage: 'Prev'
-  },
-  next: {
-    id: 'Listing.next',
-    defaultMessage: 'Next'
-  },
   edit: {
-    id: 'Listing.edit',
+    id: 'MyListingsTable.edit',
     defaultMessage: 'EDIT'
   },
   delete: {
-    id: 'Listing.delete',
+    id: 'MyListingsTable.delete',
     defaultMessage: 'DELETE'
   },
 });

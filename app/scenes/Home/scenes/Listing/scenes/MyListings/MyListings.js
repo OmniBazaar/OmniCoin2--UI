@@ -7,7 +7,7 @@ import { Tab, Dropdown, Icon } from 'semantic-ui-react';
 
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
-import MyListingsTable from '../MyListingsTable/MyListingsTable';
+import MyListingsTable from '../components/MyListingsTable/MyListingsTable';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CurrencyDropdown from '../../../../components/CurrencyDropdown/CurrencyDropdown';
 
@@ -354,60 +354,28 @@ const myListings = [
 ];
 
 const messages = defineMessages({
-  firstItem: {
-    id: 'Listing.firstItem',
-    defaultMessage: 'First item'
-  },
-  lastItem: {
-    id: 'Listing.lastItem',
-    defaultMessage: 'Last item'
-  },
-  previousItem: {
-    id: 'Listing.previousItem',
-    defaultMessage: 'Previous item'
-  },
-  nextItem: {
-    id: 'Listing.nextItem',
-    defaultMessage: 'Next item'
-  },
-  first: {
-    id: 'Listing.first',
-    defaultMessage: 'First'
-  },
-  last: {
-    id: 'Listing.last',
-    defaultMessage: 'Last'
-  },
-  prev: {
-    id: 'Listing.prev',
-    defaultMessage: 'Prev'
-  },
-  next: {
-    id: 'Listing.next',
-    defaultMessage: 'Next'
-  },
   byDate: {
-    id: 'Listing.byDate',
+    id: 'MyListings.byDate',
     defaultMessage: 'By Date'
   },
   lowestPrice: {
-    id: 'Listing.lowestPrice',
+    id: 'MyListings.lowestPrice',
     defaultMessage: 'Lowest Price'
   },
   highestPrice: {
-    id: 'Listing.highestPrice',
+    id: 'MyListings.highestPrice',
     defaultMessage: 'Highest Price'
   },
   allCategories: {
-    id: 'Listing.allCategories',
+    id: 'MyListings.allCategories',
     defaultMessage: 'All Categories'
   },
   marketplace: {
-    id: 'Listing.marketplace',
+    id: 'MyListings.marketplace',
     defaultMessage: 'Marketplace'
   },
   myListings: {
-    id: 'Listing.myListings',
+    id: 'MyListings.myListings',
     defaultMessage: 'My Listings'
   },
 });

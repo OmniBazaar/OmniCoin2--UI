@@ -35,183 +35,183 @@ const iconSizeSmall = 15;
 
 const messages = defineMessages({
   myListings: {
-    id: 'MyListings.myListings',
+    id: 'AddListing.myListings',
     defaultMessage: 'My Listings'
   },
   createListing: {
-    id: 'MyListings.createListing',
+    id: 'AddListing.createListing',
     defaultMessage: 'Create Listing'
   },
   primaryInfo: {
-    id: 'MyListings.primaryInfo',
+    id: 'AddListing.primaryInfo',
     defaultMessage: 'Primary Info'
   },
   importListings: {
-    id: 'MyListings.importListings',
+    id: 'AddListing.importListings',
     defaultMessage: 'IMPORT LISTINGS'
   },
   listingTitle: {
-    id: 'MyListings.listingTitle',
+    id: 'AddListing.listingTitle',
     defaultMessage: 'Listing Title'
   },
   pleaseEnter: {
-    id: 'MyListings.pleaseEnter',
+    id: 'AddListing.pleaseEnter',
     defaultMessage: 'Please enter'
   },
   placing: {
-    id: 'MyListings.placing',
+    id: 'AddListing.placing',
     defaultMessage: 'Placing'
   },
   type: {
-    id: 'MyListings.type',
+    id: 'AddListing.type',
     defaultMessage: 'Type'
   },
   category: {
-    id: 'MyListings.category',
+    id: 'AddListing.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'MyListings.subCategory',
+    id: 'AddListing.subCategory',
     defaultMessage: 'Sub-category'
   },
   pricing: {
-    id: 'MyListings.pricing',
+    id: 'AddListing.pricing',
     defaultMessage: 'Pricing'
   },
   currency: {
-    id: 'MyListings.currency',
+    id: 'AddListing.currency',
     defaultMessage: 'Currency'
   },
   pricePerItem: {
-    id: 'MyListings.pricePerItem',
+    id: 'AddListing.pricePerItem',
     defaultMessage: 'Price per item'
   },
   na: {
-    id: 'MyListings.na',
+    id: 'AddListing.na',
     defaultMessage: 'N/A'
   },
   bitcoinPrice: {
-    id: 'MyListings.bitcoinPrice',
+    id: 'AddListing.bitcoinPrice',
     defaultMessage: 'Add Bitcoin Price'
   },
   omnicoinPrice: {
-    id: 'MyListings.omnicoinPrice',
+    id: 'AddListing.omnicoinPrice',
     defaultMessage: 'Add Omnicoin Price'
   },
   additionalInfo: {
-    id: 'MyListings.additionalInfo',
+    id: 'AddListing.additionalInfo',
     defaultMessage: 'Additional Info'
   },
   condition: {
-    id: 'MyListings.condition',
+    id: 'AddListing.condition',
     defaultMessage: 'Condition'
   },
   numberAvailable: {
-    id: 'MyListings.numberAvailable',
+    id: 'AddListing.numberAvailable',
     defaultMessage: 'Number Available'
   },
   unitsOfMeasure: {
-    id: 'MyListings.unitsOfMeasure',
+    id: 'AddListing.unitsOfMeasure',
     defaultMessage: 'Units of Measure'
   },
   listingDates: {
-    id: 'MyListings.listingDates',
+    id: 'AddListing.listingDates',
     defaultMessage: 'Listing Dates'
   },
   optional: {
-    id: 'MyListings.optional',
+    id: 'AddListing.optional',
     defaultMessage: '(Optional)'
   },
   from: {
-    id: 'MyListings.from',
+    id: 'AddListing.from',
     defaultMessage: 'From'
   },
   to: {
-    id: 'MyListings.to',
+    id: 'AddListing.to',
     defaultMessage: 'To'
   },
   continuous: {
-    id: 'MyListings.continuous',
+    id: 'AddListing.continuous',
     defaultMessage: 'continuous'
   },
   images: {
-    id: 'MyListings.images',
+    id: 'AddListing.images',
     defaultMessage: 'Images'
   },
   listingImages: {
-    id: 'MyListings.listingImages',
+    id: 'AddListing.listingImages',
     defaultMessage: 'Listing Images'
   },
   description: {
-    id: 'MyListings.description',
+    id: 'AddListing.description',
     defaultMessage: 'Description'
   },
   keywordsSearch: {
-    id: 'MyListings.keywordsSearch',
+    id: 'AddListing.keywordsSearch',
     defaultMessage: 'Keywords for search engine'
   },
   keywordCommas: {
-    id: 'MyListings.keywordCommas',
+    id: 'AddListing.keywordCommas',
     defaultMessage: 'Keywords separated by commas'
   },
   owner: {
-    id: 'MyListings.owner',
+    id: 'AddListing.owner',
     defaultMessage: 'Owner'
   },
   ownerDetails: {
-    id: 'MyListings.ownerDetails',
+    id: 'AddListing.ownerDetails',
     defaultMessage: 'Owner Details'
   },
   ownerName: {
-    id: 'MyListings.ownerName',
+    id: 'AddListing.ownerName',
     defaultMessage: 'Owner Name'
   },
   preferredContact: {
-    id: 'MyListings.preferredContact',
+    id: 'AddListing.preferredContact',
     defaultMessage: 'Preferred contact'
   },
   enterPreferredContact: {
-    id: 'MyListings.enterPreferredContact',
+    id: 'AddListing.enterPreferredContact',
     defaultMessage: 'Enter preferred contact'
   },
   location: {
-    id: 'MyListings.location',
+    id: 'AddListing.location',
     defaultMessage: 'Location'
   },
   country: {
-    id: 'MyListings.country',
+    id: 'AddListing.country',
     defaultMessage: 'Country'
   },
   address: {
-    id: 'MyListings.address',
+    id: 'AddListing.address',
     defaultMessage: 'Address'
   },
   city: {
-    id: 'MyListings.city',
+    id: 'AddListing.city',
     defaultMessage: 'City'
   },
   state: {
-    id: 'MyListings.state',
+    id: 'AddListing.state',
     defaultMessage: 'State'
   },
   postalCode: {
-    id: 'MyListings.postalCode',
+    id: 'AddListing.postalCode',
     defaultMessage: 'Postal Code'
   },
   createListingCaps: {
-    id: 'MyListings.createListingCaps',
+    id: 'AddListing.createListingCaps',
     defaultMessage: 'CREATE LISTING'
   },
   warning: {
-    id: 'MyListings.warning',
+    id: 'AddListing.warning',
     defaultMessage: 'Warning'
   },
   ok: {
-    id: 'MyListings.ok',
+    id: 'AddListing.ok',
     defaultMessage: 'Ok'
   },
   onlyImagesMsg: {
-    id: 'MyListings.onlyImagesMsg',
+    id: 'AddListing.onlyImagesMsg',
     defaultMessage: 'Only jpg/jpeg and png files are allowed.'
   },
 });
