@@ -14,8 +14,7 @@ import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
 import Keys from './scenes/Keys/Keys';
 import Vote from './scenes/Vote/Vote';
-
-import { TransactionBuilder, ChainStore } from 'omnibazaarjs/es';
+import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
@@ -25,7 +24,6 @@ import {
 } from '../../../../services/accountSettings/accountActions';
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
-import './settings.scss';
 
 const iconSize = 20;
 

@@ -12,7 +12,6 @@ import { Apis } from 'omnibazaarjs-ws';
 import {
   generateKeyFromPassword,
   decodeMemo,
-  getAccountById
 } from '../blockchain/utils/wallet';
 
 import HistoryStorage from './historyStorage';
@@ -91,31 +90,32 @@ export function* getRecentTransactions() {
     const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account);
     let history = [];
     const h = result.get('history');
-    const seen_ops = new Set();
-    history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
+    const seenOps = new Set();
+    history = history.concat(h.toJS().filter(op => !seenOps.has(op.id) && seenOps.add(op.id)));
     history = history.filter(el => !!el.op[1].amount);
     const historyStorage = new HistoryStorage(currentUser.username);
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
-      if (historyStorage.exists(el.id)) continue;
-      const [from, to] = yield Promise.all([
-        FetchChain('getAccount', el.op[1].from),
-        FetchChain('getAccount', el.op[1].to)
-      ]);
-      historyStorage.addOperation({
-        id: el.id,
-        blockNum: el.block_num,
-        opInTrx: el.op_in_trx,
-        trxInBlock: el.trx_in_block,
-        date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
-        fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
-        from: from.get('name'),
-        to: to.get('name'),
-        memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
-        amount: el.op[1].amount.amount / 100000,
-        fee: el.op[1].fee.amount / 100000,
-        type: from.get('name') === currentUser.username ? HistoryStorage.OperationTypes.withdraw : HistoryStorage.OperationTypes.deposit
-      });
+      if (!historyStorage.exists(el.id)) {
+        const [from, to] = yield Promise.all([
+          FetchChain('getAccount', el.op[1].from),
+          FetchChain('getAccount', el.op[1].to)
+        ]);
+        historyStorage.addOperation({
+          id: el.id,
+          blockNum: el.block_num,
+          opInTrx: el.op_in_trx,
+          trxInBlock: el.trx_in_block,
+          date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
+          fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
+          from: from.get('name'),
+          to: to.get('name'),
+          memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
+          amount: el.op[1].amount.amount / 100000,
+          fee: el.op[1].fee.amount / 100000,
+          type: from.get('name') === currentUser.username ? HistoryStorage.OperationTypes.withdraw : HistoryStorage.OperationTypes.deposit
+        });
+      }
     }
     historyStorage.save();
     yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });

@@ -17,12 +17,7 @@ function decodeMemo(memo, key) {
   ).toString('utf-8');
 }
 
-async function getAccountById(id) {
-  return (await Apis.instance().db_api().exec('get_objects', [[id]]))[0];
-}
-
 export {
   generateKeyFromPassword,
   decodeMemo,
-  getAccountById
 };

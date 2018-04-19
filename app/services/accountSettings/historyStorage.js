@@ -25,11 +25,13 @@ class HistoryStorage {
     return JSON.parse(localStorage.getItem(key + this.accountName));
   }
 
-  updateBalances(transactions) {
+  static updateBalances(transactions) {
     if (transactions.length) {
       transactions[transactions.length - 1].balance = transactions[transactions.length - 1].amount;
       for (let i = transactions.length - 2; i >= 0; --i) {
-        transactions[i].balance = transactions[i + 1].balance + transactions[i].balance + transactions[i].amount;
+        transactions[i].balance = transactions[i + 1].balance
+                                  + transactions[i].balance
+                                  + transactions[i].amount;
         transactions[i].amount = Math.abs(transactions[i].amount);
       }
     }
@@ -50,8 +52,8 @@ class HistoryStorage {
 
   getHistory() {
     const transactions = {};
-    for (const key in this.cache) {
-      const op = this.cache[key];
+    Object.keys(this.cache).forEach(i => {
+      const op = this.cache[i];
       const trxKey = `${op.blockNum}${op.trxInBlock}`;
       if (!transactions[trxKey]) {
         transactions[trxKey] = {
@@ -77,9 +79,9 @@ class HistoryStorage {
         transactions[trxKey].balance -= op.fee;
       }
       transactions[trxKey].operations.push(op);
-    }
+    });
     const sortedTransactions = orderBy(Object.values(transactions), ['date'], ['desc']);
-    return this.updateBalances(sortedTransactions);
+    return HistoryStorage.updateBalances(sortedTransactions);
   }
 
   save() {
