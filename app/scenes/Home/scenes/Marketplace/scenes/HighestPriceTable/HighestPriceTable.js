@@ -12,7 +12,7 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import numberWithCommas from '../../../../../../utils/numeric';
+import { numberWithCommas } from '../../../../../../utils/numeric';
 
 import {
   setActivePageHighestPrice,

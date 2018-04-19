@@ -12,7 +12,7 @@ import {
   Pagination,
 } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
-import numberWithCommas from '../../../../../../utils/numeric';
+import { numberWithCommas } from '../../../../../../utils/numeric';
 
 import {
   setActivePageFeature,
@@ -64,9 +64,9 @@ class FeatureTable extends Component {
     this.props.marketplaceActions.setPaginationFeature(this.props.rowsPerPage);
   }
 
-  onClickItem() {
-    console.log('');
-  }
+  onClickItem = (item) => {
+    // console.log('View detail CATEGORY here', this.props.marketplace.activeCategory);
+  };
 
   handlePaginationChange = (e, { activePage }) => {
     this.props.marketplaceActions.setActivePageFeature(activePage);
@@ -98,16 +98,16 @@ class FeatureTable extends Component {
                           <div
                             className="img-wrapper"
                             style={style}
-                            onClick={this.onClickItem}
+                            onClick={() => this.onClickItem(item)}
                             onKeyDown={this.onClickItem}
                             tabIndex={0}
                             role="link"
                           />
                           <span
                             className="title"
-                            onClick={this.onClickItem}
+                            onClick={() => this.onClickItem(item)}
                             role="link"
-                            onKeyDown={this.onClickItem}
+                            onKeyDown={() => this.onClickItem(item)}
                             tabIndex={0}
                           >
                             {item.title}

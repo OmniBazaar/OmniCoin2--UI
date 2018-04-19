@@ -1,0 +1,9 @@
+@import '../../../../../../styles/index';
+
+.user-menu {
+  .link-menu {
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+}

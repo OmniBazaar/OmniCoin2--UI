@@ -67,6 +67,7 @@ $closed-side-bar-size: 70px;
     height: calc(100vh - 1.5em);
     overflow-y: auto;
     overflow-x: hidden;
+    display: flex;
   }
   .chain-footer {
     height: 1.5em;

@@ -15,6 +15,9 @@ import lowestPriceReducer from './marketplace/lowestPriceReducer';
 import highestPriceReducer from './marketplace/highestPriceReducer';
 import newArrivalsReducer from './marketplace/newArrivalsReducer';
 import blockchainWallet from './blockchain/wallet/walletReducer';
+import listingReducer from './listing/listingReducer';
+import listingDefaultsReducer from './listing/listingDefaultsReducer';
+import importReducer from './listing/importReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -33,4 +36,7 @@ export default combineReducers({
   lowestPrice: lowestPriceReducer,
   highestPrice: highestPriceReducer,
   newArrivals: newArrivalsReducer,
+  listing: listingReducer,
+  listingDefaults: listingDefaultsReducer,
+  listingImport: importReducer,
 });
