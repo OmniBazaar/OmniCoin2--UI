@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
-import { Button, Image, Popup } from 'semantic-ui-react';
+import { Button, Image, Popup, Form, Dropdown, Icon, Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
+import { Field, reduxForm } from 'redux-form';
+import hash from 'object-hash';
+
+import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import AddIcon from '../../images/btn-add-listing.svg';
 import SearchIcon from '../../images/btn-search-norm.svg';
 import UserIcon from '../../images/btn-user-menu-norm.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
 
-import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
+import {
+  setActiveCategory,
+  setExtendedSearch,
+  getRecentSearches
+} from '../../../../../../services/marketplace/marketplaceActions';
 
 import {
   saleCategories,
@@ -30,41 +38,88 @@ import './menu.scss';
 const logoWidth = 200;
 const iconSizeBig = 25;
 const iconSizeMedium = 15;
+const iconSizeSmall = 12;
+
+const recentSearchesList = [
+  {
+    id: 1,
+    search: 'car',
+    filters: ['USA', 'Lowest price', 'Newest'],
+  },
+  {
+    id: 2,
+    search: 'motorcycles',
+    filters: ['USA', 'Lowest price', 'Newest'],
+  },
+  {
+    id: 3,
+    search: 'cars',
+    filters: ['USA', 'Lowest price'],
+  },
+  {
+    id: 4,
+    search: 'jewelry',
+    filters: [],
+  },
+];
 
 const messages = defineMessages({
   addListing: {
-    id: 'Marketplace.addListing',
+    id: 'Menu.addListing',
     defaultMessage: 'ADD LISTING'
   },
   community: {
-    id: 'Marketplace.community',
+    id: 'Menu.community',
     defaultMessage: 'Community'
   },
   housing: {
-    id: 'Marketplace.housing',
+    id: 'Menu.housing',
     defaultMessage: 'Housing'
   },
   gigs: {
-    id: 'Marketplace.gigs',
+    id: 'Menu.gigs',
     defaultMessage: 'Gigs'
   },
   quickLinks: {
-    id: 'Marketplace.quickLinks',
+    id: 'Menu.quickLinks',
     defaultMessage: 'Quick Links'
   },
   support: {
-    id: 'Marketplace.support',
+    id: 'Menu.support',
     defaultMessage: 'Support'
   },
   usefulLinks: {
-    id: 'Marketplace.usefulLinks',
+    id: 'Menu.usefulLinks',
     defaultMessage: 'Useful Links'
   },
   omniLink: {
-    id: 'Marketplace.omniLink',
+    id: 'Menu.omniLink',
     defaultMessage: 'omnibazaar.com'
   },
+  recent: {
+    id: 'Menu.recent',
+    defaultMessage: 'Recent'
+  },
+  extendedSearch: {
+    id: 'Menu.extendedSearch',
+    defaultMessage: 'Extended Search'
+  },
+  viewAll: {
+    id: 'Menu.viewAll',
+    defaultMessage: 'VIEW ALL'
+  },
+  default: {
+    id: 'Menu.default',
+    defaultMessage: 'Default'
+  },
 });
+
+const options = [
+  { key: 1, text: 'All Categories', value: 'all' },
+  { key: 2, text: 'Category 1', value: 'category1' },
+  { key: 3, text: 'Category 2', value: 'category2' },
+  { key: 4, text: 'Category 3', value: 'category3' },
+];
 
 class Menu extends Component {
   static getValue(category) {
@@ -75,6 +130,10 @@ class Menu extends Component {
     }
 
     return categoryName;
+  }
+
+  componentDidMount() {
+    this.props.marketplaceActions.getRecentSearches(recentSearchesList);
   }
 
   menuTitle(category) {
@@ -444,6 +503,124 @@ class Menu extends Component {
     );
   }
 
+  renderSelectField = ({
+    input, placeholder, dropdownPlaceholder
+  }) => (
+    <div className="hybrid-input">
+      <input
+        {...input}
+        type="text"
+        className="textfield"
+        placeholder={placeholder}
+      />
+      <div className="search-actions">
+        <Dropdown
+          labeled
+          defaultValue="all"
+          options={options}
+          placeholder={dropdownPlaceholder}
+          selection
+          className="icon button--gray-text select-btn"
+        />
+        <Button
+          content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+          className="button--primary search-btn"
+        />
+      </div>
+    </div>
+  );
+
+  toggleExtendedSearch = () => this.props.marketplaceActions.setExtendedSearch();
+
+  renderFilters(filters) {
+    const { formatMessage } = this.props.intl;
+
+    if (filters.length === 0) {
+      return (
+        <span>{formatMessage(messages.default)}</span>
+      );
+    }
+
+    return (
+      filters.map((filter, index) => {
+        const comma = filters.length - 1 !== index ? ', ' : '';
+        return (
+          <span key={hash(filter)}>{`${filter}${comma}`}</span>
+        );
+      })
+    );
+  }
+
+  recentSearches() {
+    const { recentSearches } = this.props.marketplace;
+    return (
+      recentSearches.map((search) => (
+        <Grid.Row key={hash(search)}>
+          <Grid.Column width={8}>
+            <span className="blue-text">{search.search}</span>
+          </Grid.Column>
+          <Grid.Column width={8}>
+            <span className="gray-text">{this.renderFilters(search.filters)}</span>
+          </Grid.Column>
+        </Grid.Row>
+      ))
+    );
+  }
+
+  renderSearchMenu() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Popup
+        trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
+        hoverable
+        basic
+        on="click"
+        position="bottom center"
+        wide="very"
+        hideOnScroll
+        className="search-menu"
+      >
+        <Form className="search-form">
+          <Field
+            type="text"
+            name="Test"
+            placeholder="Search"
+            dropdownPlaceholder="Categories"
+            component={this.renderSelectField}
+            className="textfield"
+          />
+        </Form>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <span className="gray-text">{formatMessage(messages.recent)}</span>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <div className="check-wrapper">
+                <Checkbox
+                  width={iconSizeMedium}
+                  height={iconSizeMedium}
+                  onChecked={this.toggleExtendedSearch}
+                />
+                <div className="description-text">
+                  {formatMessage(messages.extendedSearch)}
+                </div>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+          {this.recentSearches()}
+          <Grid.Row>
+            <Grid.Column width={12} />
+            <Grid.Column width={4} className="right">
+              <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Popup>
+    );
+  }
+
   render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
@@ -480,7 +657,7 @@ class Menu extends Component {
               {formatMessage(messages.addListing)}
             </Button>
           </NavLink>
-          <Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />
+          {this.renderSearchMenu()}
           {this.renderUserMenu()}
         </div>
       </div>
@@ -489,8 +666,13 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
+  marketplace: PropTypes.shape({
+    recentSearches: PropTypes.array
+  }),
   marketplaceActions: PropTypes.shape({
     setActiveCategory: PropTypes.func,
+    setExtendedSearch: PropTypes.func,
+    getRecentSearches: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -499,14 +681,23 @@ Menu.propTypes = {
 
 Menu.defaultProps = {
   intl: {},
+  marketplace: {},
   marketplaceActions: {},
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    marketplaceActions: bindActionCreators({
-      setActiveCategory,
-    }, dispatch),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      marketplaceActions: bindActionCreators({
+        setActiveCategory,
+        setExtendedSearch,
+        getRecentSearches
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'searchForm',
+    destroyOnUnmount: true,
   }),
 )(injectIntl(Menu));

@@ -11,6 +11,8 @@ const {
   getRentalsList,
   getCryptoBazaarList,
   setActiveCategory,
+  setExtendedSearch,
+  getRecentSearches,
 } = createActions({
   GET_CATEGORIES: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
@@ -22,6 +24,8 @@ const {
   GET_RENTALS_LIST: (rentalsList) => ({ rentalsList }),
   GET_CRYPTO_BAZAAR_LIST: (cryptoBazaarList) => ({ cryptoBazaarList }),
   SET_ACTIVE_CATEGORY: (activeCategory, parentCategory) => ({ activeCategory, parentCategory }),
+  SET_EXTENDED_SEARCH: () => ({}),
+  GET_RECENT_SEARCHES: (recentSearches) => ({ recentSearches }),
 });
 
 export {
@@ -34,5 +38,7 @@ export {
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
-  setActiveCategory
+  setActiveCategory,
+  setExtendedSearch,
+  getRecentSearches
 };

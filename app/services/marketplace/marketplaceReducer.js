@@ -11,7 +11,9 @@ import {
   getRentalsList,
   getCryptoBazaarList,
   getCategories,
-  setActiveCategory
+  setActiveCategory,
+  setExtendedSearch,
+  getRecentSearches
 } from './marketplaceActions';
 
 const defaultState = {
@@ -25,9 +27,11 @@ const defaultState = {
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
+  recentSearches: [],
   categories: {},
   activeCategory: 'Marketplace.home',
-  parentCategory: null
+  parentCategory: null,
+  extendedSearch: false
 };
 
 const messages = defineMessages({
@@ -147,7 +151,19 @@ const reducer = handleActions({
       ...state,
       categories: messages
     };
-  }
+  },
+  [setExtendedSearch](state) {
+    return {
+      ...state,
+      extendedSearch: !state.extendedSearch
+    };
+  },
+  [getRecentSearches](state, { payload: { recentSearches } }) {
+    return {
+      ...state,
+      recentSearches
+    };
+  },
 }, defaultState);
 
 export default reducer;
