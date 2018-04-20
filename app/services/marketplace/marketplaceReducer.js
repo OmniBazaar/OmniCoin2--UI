@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { defineMessages } from 'react-intl';
+import _ from 'lodash';
 
 import {
   getFeatureList,
@@ -146,7 +147,7 @@ const reducer = handleActions({
       parentCategory
     };
   },
-  [getCategories](state, { payload: { } }) {
+  [getCategories](state) {
     return {
       ...state,
       categories: messages
@@ -159,9 +160,10 @@ const reducer = handleActions({
     };
   },
   [getRecentSearches](state, { payload: { recentSearches } }) {
+    const sortedData = _.sortBy(recentSearches, ['date']).reverse();
     return {
       ...state,
-      recentSearches
+      recentSearches: sortedData
     };
   },
 }, defaultState);

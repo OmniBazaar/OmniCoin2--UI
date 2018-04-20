@@ -5,7 +5,7 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import hash from 'object-hash';
 
@@ -39,25 +39,30 @@ const logoWidth = 200;
 const iconSizeBig = 25;
 const iconSizeMedium = 15;
 const iconSizeSmall = 12;
+const maxSearches = 5;
 
 const recentSearchesList = [
   {
     id: 1,
+    date: '2018-04-19',
     search: 'car',
     filters: ['USA', 'Lowest price', 'Newest'],
   },
   {
     id: 2,
+    date: '2018-04-19',
     search: 'motorcycles',
     filters: ['USA', 'Lowest price', 'Newest'],
   },
   {
     id: 3,
+    date: '2018-04-20',
     search: 'cars',
     filters: ['USA', 'Lowest price'],
   },
   {
     id: 4,
+    date: '2018-04-20',
     search: 'jewelry',
     filters: [],
   },
@@ -522,10 +527,12 @@ class Menu extends Component {
           selection
           className="icon button--gray-text select-btn"
         />
-        <Button
-          content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-          className="button--primary search-btn"
-        />
+        <NavLink to="/search-results">
+          <Button
+            content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+            className="button--primary search-btn"
+          />
+        </NavLink>
       </div>
     </div>
   );
@@ -554,7 +561,7 @@ class Menu extends Component {
   recentSearches() {
     const { recentSearches } = this.props.marketplace;
     return (
-      recentSearches.map((search) => (
+      recentSearches.slice(0, maxSearches).map((search) => (
         <Grid.Row key={hash(search)}>
           <Grid.Column width={8}>
             <span className="blue-text">{search.search}</span>
@@ -584,7 +591,7 @@ class Menu extends Component {
         <Form className="search-form">
           <Field
             type="text"
-            name="Test"
+            name="search"
             placeholder="Search"
             dropdownPlaceholder="Categories"
             component={this.renderSelectField}
