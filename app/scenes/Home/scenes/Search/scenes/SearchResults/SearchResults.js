@@ -16,8 +16,7 @@ import {
   setExtendedSearch,
   getSearchResults,
   setPaginationSearchResults,
-  filterSearchResults,
-  setSearchText
+  filterSearchResults
 } from '../../../../../../services/search/searchActions';
 
 import './search-results.scss';
@@ -626,8 +625,7 @@ export default compose(
         setExtendedSearch,
         getSearchResults,
         setPaginationSearchResults,
-        filterSearchResults,
-        setSearchText
+        filterSearchResults
       }, dispatch),
     }),
   ),

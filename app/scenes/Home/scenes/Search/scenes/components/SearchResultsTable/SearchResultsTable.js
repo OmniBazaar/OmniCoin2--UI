@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import _ from 'lodash';
 import {
   Table,
   TableBody,
   TableCell,
   TableRow,
-  Icon,
-  Button
+  Icon
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 

@@ -494,7 +494,9 @@ class Menu extends Component {
         hideOnScroll
         className="user-menu"
       >
-        <div className="link-menu">{formatMessage(userMenu.recentSearches)}</div>
+        <div className="link-menu">
+          <NavLink to="/recent-searches">{formatMessage(userMenu.recentSearches)}</NavLink>
+        </div>
         <div className="link-menu">
           <NavLink to="/listings">{formatMessage(userMenu.myListings)}</NavLink>
         </div>
