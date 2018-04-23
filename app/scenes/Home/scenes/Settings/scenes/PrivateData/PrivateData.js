@@ -100,6 +100,10 @@ const messages = defineMessages({
   publisher: {
     id: 'PrivateData.publisher',
     defaultMessage: 'Publisher'
+  },
+  searchPriority: {
+    id: 'PrivateData.searchPriority',
+    defaultMessage: 'Search Priority'
   }
 });
 
@@ -309,7 +313,7 @@ class PrivateData extends Component {
         </div>
         <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
           <div className="form-group">
-            <span>Search Priority</span>
+            <span>{formatMessage(messages.searchPriority)}</span>
             <div className="field radios-container">
               <div className="radio-wrapper">
                 <Field

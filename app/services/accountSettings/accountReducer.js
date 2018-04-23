@@ -234,14 +234,24 @@ const reducer = handleActions({
       rescanBlockchain: !state.rescanBlockchain,
     };
   },
-  [getRecentTransactions](state, { payload: { recentTransactions } }) {
+  [getRecentTransactions](state) {
     return {
       ...state,
-      recentTransactions,
-      recentTransactionsFiltered: recentTransactions,
+      loading: true,
+      error: null
     };
   },
-
+  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => ({
+    ...state,
+    loading: false,
+    error: null,
+    recentTransactions: transactions,
+  }),
+  GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  }),
   [filterData](state, { payload: { filterText } }) {
     const data = state.recentTransactions;
     const activePage = 1;
