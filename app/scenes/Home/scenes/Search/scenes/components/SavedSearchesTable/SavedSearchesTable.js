@@ -14,38 +14,38 @@ import {
 } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { sortRecentSearches } from '../../../../../../../services/search/searchActions';
+import { sortSavedSearches } from '../../../../../../../services/search/searchActions';
 
 const messages = defineMessages({
   default: {
-    id: 'RecentSearchesTable.default',
+    id: 'SavedSearchesTable.default',
     defaultMessage: 'Default'
   },
   date: {
-    id: 'RecentSearchesTable.date',
+    id: 'SavedSearchesTable.date',
     defaultMessage: 'Date'
   },
   search: {
-    id: 'RecentSearchesTable.search',
+    id: 'SavedSearchesTable.search',
     defaultMessage: 'Search'
   },
   parameters: {
-    id: 'RecentSearchesTable.parameters',
+    id: 'SavedSearchesTable.parameters',
     defaultMessage: 'Parameters'
   },
-  save: {
-    id: 'RecentSearchesTable.save',
-    defaultMessage: 'SAVE'
+  delete: {
+    id: 'SavedSearchesTable.delete',
+    defaultMessage: 'DELETE'
   },
   view: {
-    id: 'RecentSearchesTable.view',
+    id: 'SavedSearchesTable.view',
     defaultMessage: 'VIEW'
   },
 });
 
-class RecentSearchesTable extends Component {
+class SavedSearchesTable extends Component {
   sortData = (clickedColumn) => () => {
-    this.props.searchActions.sortRecentSearches(clickedColumn);
+    this.props.searchActions.sortSavedSearches(clickedColumn);
   };
 
   renderFilters(filters) {
@@ -70,9 +70,9 @@ class RecentSearchesTable extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const {
-      sortColumnRecent,
-      sortDirectionRecent,
-      recentSearches
+      sortColumnSaved,
+      sortDirectionSaved,
+      savedSearches
     } = this.props.search;
 
     return (
@@ -81,27 +81,27 @@ class RecentSearchesTable extends Component {
           <Table {...this.props.tableProps}>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell key="date" sorted={sortColumnRecent === 'date' ? sortDirectionRecent : null} onClick={this.sortData('date')}>
+                <TableHeaderCell key="date" sorted={sortColumnSaved === 'date' ? sortDirectionSaved : null} onClick={this.sortData('date')}>
                   {formatMessage(messages.date)}
                 </TableHeaderCell>
-                <TableHeaderCell key="search" sorted={sortColumnRecent === 'search' ? sortDirectionRecent : null} onClick={this.sortData('search')}>
+                <TableHeaderCell key="search" sorted={sortColumnSaved === 'search' ? sortDirectionSaved : null} onClick={this.sortData('search')}>
                   {formatMessage(messages.search)}
                 </TableHeaderCell>
-                <TableHeaderCell key="filters" sorted={sortColumnRecent === 'filters' ? sortDirectionRecent : null} onClick={this.sortData('filters')}>
+                <TableHeaderCell key="filters" sorted={sortColumnSaved === 'filters' ? sortDirectionSaved : null} onClick={this.sortData('filters')}>
                   {formatMessage(messages.parameters)}
                 </TableHeaderCell>
-                <TableHeaderCell key="actions" sorted={sortColumnRecent === 'actions' ? sortDirectionRecent : null} onClick={this.sortData('actions')} />
+                <TableHeaderCell key="actions" sorted={sortColumnSaved === 'actions' ? sortDirectionSaved : null} onClick={this.sortData('actions')} />
               </TableRow>
             </TableHeader>
             <TableBody>
-              {recentSearches.map(row =>
+              {savedSearches.map(row =>
                 (
                   <TableRow key={hash(row)}>
                     <TableCell>{row.date}</TableCell>
                     <TableCell><a>{row.search}</a></TableCell>
                     <TableCell>{this.renderFilters(row.filters)}</TableCell>
                     <TableCell className="actions">
-                      <Button content={formatMessage(messages.save)} className="button--blue-text save-btn" />
+                      <Button content={formatMessage(messages.delete)} className="button--blue-text save-btn" />
                       <Button content={formatMessage(messages.view)} className="button--blue-text view-btn" />
                     </TableCell>
                   </TableRow>
@@ -114,14 +114,14 @@ class RecentSearchesTable extends Component {
   }
 }
 
-RecentSearchesTable.propTypes = {
+SavedSearchesTable.propTypes = {
   searchActions: PropTypes.shape({
-    sortRecentSearches: PropTypes.func,
+    sortSavedSearches: PropTypes.func,
   }),
   search: PropTypes.shape({
-    sortColumnRecent: PropTypes.string,
-    sortDirectionRecent: PropTypes.string,
-    recentSearches: PropTypes.array,
+    sortColumnSaved: PropTypes.string,
+    sortDirectionSaved: PropTypes.string,
+    savedSearches: PropTypes.array,
   }),
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
@@ -134,7 +134,7 @@ RecentSearchesTable.propTypes = {
   }),
 };
 
-RecentSearchesTable.defaultProps = {
+SavedSearchesTable.defaultProps = {
   searchActions: {},
   search: {},
   tableProps: {},
@@ -145,7 +145,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     searchActions: bindActionCreators({
-      sortRecentSearches
+      sortSavedSearches
     }, dispatch)
   })
-)(injectIntl(RecentSearchesTable));
+)(injectIntl(SavedSearchesTable));

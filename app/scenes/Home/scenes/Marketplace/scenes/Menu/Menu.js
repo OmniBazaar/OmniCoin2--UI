@@ -584,7 +584,7 @@ class Menu extends Component {
         trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
         hoverable
         basic
-        on="click"
+        on="hover"
         position="bottom center"
         wide="very"
         hideOnScroll
@@ -622,7 +622,9 @@ class Menu extends Component {
           <Grid.Row>
             <Grid.Column width={12} />
             <Grid.Column width={4} className="right">
-              <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
+              <NavLink to="/saved-searches">
+                <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
+              </NavLink>
             </Grid.Column>
           </Grid.Row>
         </Grid>

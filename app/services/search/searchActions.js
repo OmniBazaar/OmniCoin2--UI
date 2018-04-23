@@ -8,7 +8,9 @@ const {
   setActivePageSearchResults,
   filterSearchResults,
   getRecentSearches,
-  sortRecentSearches
+  sortRecentSearches,
+  getSavedSearches,
+  sortSavedSearches,
 } = createActions({
   SET_EXTENDED_SEARCH: () => ({}),
   GET_SEARCH_RESULTS: (searchResults) => ({ searchResults }),
@@ -18,6 +20,8 @@ const {
   FILTER_SEARCH_RESULTS: (searchText) => ({ searchText }),
   GET_RECENT_SEARCHES: (recentSearches) => ({ recentSearches }),
   SORT_RECENT_SEARCHES: (sortColumnRecent) => ({ sortColumnRecent }),
+  GET_SAVED_SEARCHES: (savedSearches) => ({ savedSearches }),
+  SORT_SAVED_SEARCHES: (sortColumnSaved) => ({ sortColumnSaved }),
 });
 
 export {
@@ -28,5 +32,7 @@ export {
   setActivePageSearchResults,
   filterSearchResults,
   getRecentSearches,
-  sortRecentSearches
+  sortRecentSearches,
+  getSavedSearches,
+  sortSavedSearches
 };

@@ -9,12 +9,15 @@ import {
   setActivePageSearchResults,
   filterSearchResults,
   getRecentSearches,
-  sortRecentSearches
+  sortRecentSearches,
+  getSavedSearches,
+  sortSavedSearches
 } from './searchActions';
 
 const defaultState = {
   extendedSearch: false,
   recentSearches: [],
+  savedSearches: [],
   searchResults: [],
   searchResultsFiltered: [],
   activePageSearchResults: 1,
@@ -23,6 +26,8 @@ const defaultState = {
   searchText: '',
   sortColumnRecent: 'date',
   sortDirectionRecent: 'descending',
+  sortColumnSaved: 'date',
+  sortDirectionSaved: 'descending',
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -147,6 +152,32 @@ const reducer = handleActions({
       recentSearches: sortedData,
       sortDirectionRecent,
       sortColumnRecent,
+    };
+  },
+  [getSavedSearches](state, { payload: { savedSearches } }) {
+    const sortedData = _.sortBy(savedSearches, ['date']).reverse();
+    return {
+      ...state,
+      savedSearches: sortedData
+    };
+  },
+  [sortSavedSearches](state, { payload: { sortColumnSaved } }) {
+    let sortDirectionSaved = state.sortDirectionSaved === 'ascending' ? 'descending' : 'ascending';
+    const sortBy = _.sortBy(state.recentSearches, [sortColumnSaved]);
+    let sortedData = [];
+
+    if (state.sortColumnSaved !== sortColumnSaved) {
+      sortedData = sortBy.reverse();
+      sortDirectionSaved = 'ascending';
+    } else {
+      sortedData = sortDirectionSaved === 'ascending' ? sortBy.reverse() : sortBy;
+    }
+
+    return {
+      ...state,
+      savedSearches: sortedData,
+      sortDirectionSaved,
+      sortColumnSaved,
     };
   },
 }, defaultState);
