@@ -40,3 +40,7 @@
 .primary-blue {
   color: $primary-blue !important;
 }
+
+.ui.dimmer .ui.loader:before {
+  border-color: $primary-blue !important;
+}

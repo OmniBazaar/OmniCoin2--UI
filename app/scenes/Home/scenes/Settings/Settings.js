@@ -14,6 +14,7 @@ import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
 import Keys from './scenes/Keys/Keys';
 import Vote from './scenes/Vote/Vote';
+import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
@@ -23,7 +24,6 @@ import {
 } from '../../../../services/accountSettings/accountActions';
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
-import './settings.scss';
 
 const iconSize = 20;
 
@@ -202,10 +202,12 @@ class Settings extends Component {
                 role="link"
                 tabIndex={0}
               />
-              <TransactionDetails
-                showCompose={props.account.showDetails}
-                onClose={this.onCloseDetails}
-              />
+              {props.account.showDetails &&
+                <TransactionDetails
+                  showCompose={props.account.showDetails}
+                  onClose={this.onCloseDetails}
+                />
+              }
             </div>
           </div>
         </Modal.Content>
