@@ -25,7 +25,8 @@ import {
   mailSubscriber,
   escrowSubscriber,
   accountSubscriber,
-  walletSubscriber
+  walletSubscriber,
+  processorsSubscriber
 } from './services/saga';
 
 ChainConfig.address_prefix = 'BTS';
@@ -70,6 +71,7 @@ sagaMiddleware.run(mailSubscriber);
 sagaMiddleware.run(escrowSubscriber);
 sagaMiddleware.run(accountSubscriber);
 sagaMiddleware.run(walletSubscriber);
+sagaMiddleware.run(processorsSubscriber);
 
 ReactDOM.render(
   (

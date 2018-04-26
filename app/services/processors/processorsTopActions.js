@@ -7,7 +7,7 @@ const {
   setActivePageTop,
   setPaginationTop
 } = createActions({
-  GET_TOP_PROCESSORS: (topProcessors) => ({ topProcessors }),
+  GET_TOP_PROCESSORS: () => ({}),
   SORT_DATA_TOP: (sortColumnTop) => ({ sortColumnTop }),
   FILTER_DATA_TOP: (filterTextTop) => ({ filterTextTop }),
   SET_ACTIVE_PAGE_TOP: (activePageTop) => ({ activePageTop }),

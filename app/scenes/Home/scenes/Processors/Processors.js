@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import { Tab } from 'semantic-ui-react';
 import Header from '../../../../components/Header';
-import TopProcessors from './component/TopProcessors';
-import StandByProcessors from './component/StandByProcessors';
-import Badge from './component/Badge';
+import TopProcessors from './components/TopProcessors/TopProcessors';
+import StandByProcessors from './components/StandByProcessors/StandByProcessors';
+import Badge from './components/Badge/Badge';
 
 import './processors.scss';
 

@@ -18,6 +18,8 @@ const defaultState = {
   totalPagesStandBy: 1,
   rowsPerPageStandBy: 10,
   filterTextStandBy: '',
+  loading: false,
+  error: null
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -29,13 +31,28 @@ const getTotalPages = (data, rowsPerPage) => (
 );
 
 const reducer = handleActions({
-  [combineActions(getStandbyProcessors)](state, { payload: { standbyProcessors } }) {
+  [getStandbyProcessors](state) {
     return {
       ...state,
-      standbyProcessors
+      loading: true,
+      error: null
     };
   },
-  [combineActions(setPaginationStandBy)](state, { payload: { rowsPerPageStandBy } }) {
+  GET_STANDBY_PROCESSORS_SUCCEEDED: (state, { standbyProcessors }) => {
+    return {
+      ...state,
+      standbyProcessors,
+      loading: false
+    }
+  },
+  GET_TOP_PROCESSORS_FAILED: (state, { error }) => {
+    return {
+      ...state,
+      error,
+      loading: false
+    }
+  },
+  [setPaginationStandBy](state, { payload: { rowsPerPageStandBy } }) {
     const data = state.standbyProcessors;
     const { activePageStandBy } = state;
     const totalPagesStandBy = getTotalPages(data, rowsPerPageStandBy);
@@ -48,7 +65,7 @@ const reducer = handleActions({
       standbyProcessorsFiltered: currentData,
     };
   },
-  [combineActions(filterDataStandBy)](state, { payload: { filterTextStandBy } }) {
+  [filterDataStandBy](state, { payload: { filterTextStandBy } }) {
     const data = state.standbyProcessors;
     const activePageStandBy = 1;
     const { rowsPerPageStandBy, totalPagesStandBy } = state;
@@ -83,7 +100,7 @@ const reducer = handleActions({
       standbyProcessorsFiltered: currentData,
     };
   },
-  [combineActions(setPaginationStandBy)](state, { payload: { rowsPerPageStandBy } }) {
+  [setPaginationStandBy](state, { payload: { rowsPerPageStandBy } }) {
     const data = state.standbyProcessors;
     const { activePageStandBy } = state;
     const totalPagesStandBy = getTotalPages(data, rowsPerPageStandBy);
@@ -96,7 +113,7 @@ const reducer = handleActions({
       standbyProcessorsFiltered: currentData,
     };
   },
-  [combineActions(setActivePageStandBy)](state, { payload: { activePageStandBy } }) {
+  [setActivePageStandBy](state, { payload: { activePageStandBy } }) {
     const data = state.standbyProcessors;
     if (activePageStandBy !== state.activePageStandBy) {
       const { rowsPerPageStandBy } = state;
@@ -113,11 +130,15 @@ const reducer = handleActions({
       ...state,
     };
   },
-  [combineActions(sortDataStandBy)](state, { payload: { sortColumnStandBy } }) {
+  [sortDataStandBy](state, { payload: { sortColumnStandBy } }) {
     const { filterTextStandBy } = state;
     let sortDirectionStandBy = state.sortDirectionStandBy === 'ascending' ? 'descending' : 'ascending';
-    const sortByFilter = _.sortBy(state.standbyProcessorsFiltered, [sortColumnStandBy]);
-    const sortByData = _.sortBy(state.standbyProcessors, [sortColumnStandBy]);
+    const sortByFilter = _.sortBy(state.standbyProcessorsFiltered,
+      [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
+    );
+    const sortByData = _.sortBy(state.standbyProcessors,
+      [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
+    );
     const sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
     let sortedData = [];
 

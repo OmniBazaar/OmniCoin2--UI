@@ -7,7 +7,7 @@ const {
   setActivePageStandBy,
   setPaginationStandBy
 } = createActions({
-  GET_STANDBY_PROCESSORS: (standbyProcessors) => ({ standbyProcessors }),
+  GET_STANDBY_PROCESSORS: () => ({ }),
   SORT_DATA_STAND_BY: (sortColumnStandBy) => ({ sortColumnStandBy }),
   FILTER_DATA_STAND_BY: (filterTextStandBy) => ({ filterTextStandBy }),
   SET_ACTIVE_PAGE_STAND_BY: (activePageStandBy) => ({ activePageStandBy }),

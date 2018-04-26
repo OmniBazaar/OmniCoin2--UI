@@ -9,3 +9,7 @@ a, .link {
     color: darken($primary-blue, 10%);
   }
 }
+
+.ui.loader:before {
+  border-color: $primary-blue !important;
+}
