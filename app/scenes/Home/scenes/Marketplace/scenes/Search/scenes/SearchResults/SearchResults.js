@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Button, Form, Tab, Dropdown } from 'semantic-ui-react';
+import { Icon, Button, Form, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
-import SearchResultsTable from '../components/SearchResultsTable/SearchResultsTable';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 
@@ -14,7 +13,6 @@ import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
 import {
   getSearchResults,
-  setPaginationSearchResults,
   filterSearchResults
 } from '../../../../../../../../services/search/searchActions';
 
@@ -408,7 +406,6 @@ const searchResultsList = [
 class SearchResults extends Component {
   componentDidMount() {
     this.props.searchActions.getSearchResults(searchResultsList);
-    this.props.searchActions.setPaginationSearchResults(3 * 6);
   }
 
   // setSearchText = () => this.props.searchActions.setSearchText();
@@ -440,7 +437,7 @@ class SearchResults extends Component {
 
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
-    const { searchResults } = this.props.search;
+    const { searchResultsFiltered } = this.props.search;
 
     return (
       <div className="list-container search-filters">
@@ -456,7 +453,7 @@ class SearchResults extends Component {
           <CurrencyDropdown />
         </div>
         <TabsData
-          data={searchResults}
+          data={searchResultsFiltered}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -537,11 +534,10 @@ class SearchResults extends Component {
 SearchResults.propTypes = {
   search: PropTypes.shape({
     recentSearches: PropTypes.array,
-    searchResults: PropTypes.array
+    searchResultsFiltered: PropTypes.array
   }),
   searchActions: PropTypes.shape({
     getSearchResults: PropTypes.func,
-    setPaginationSearchResults: PropTypes.func,
     filterSearchResults: PropTypes.func,
   }),
   intl: PropTypes.shape({
@@ -561,7 +557,6 @@ export default compose(
     (dispatch) => ({
       searchActions: bindActionCreators({
         getSearchResults,
-        setPaginationSearchResults,
         filterSearchResults
       }, dispatch),
     }),

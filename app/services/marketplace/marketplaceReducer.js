@@ -4,8 +4,6 @@ import _ from 'lodash';
 
 import {
   getFeatureList,
-  setPaginationFeature,
-  setActivePageFeature,
   getForSaleList,
   getServicesList,
   getJobsList,
@@ -16,15 +14,11 @@ import {
   getRecentSearches,
   setPaginationGridTable,
   sortGridTableBy,
-  setActivePageGridTable
+  setActivePageGridTable,
 } from './marketplaceActions';
 
 const defaultState = {
   featureList: [],
-  featureListFiltered: [],
-  activePageFeature: 1,
-  totalPagesFeature: 1,
-  rowsPerPageFeature: 3 * 6,
   forSaleList: [],
   servicesList: [],
   jobsList: [],
@@ -34,7 +28,6 @@ const defaultState = {
   categories: {},
   activeCategory: 'Marketplace.home',
   parentCategory: null,
-
   gridTableData: [],
   gridTableDataFiltered: [],
   activePageGridTable: 1,
@@ -83,38 +76,7 @@ const reducer = handleActions({
   [getFeatureList](state, { payload: { featureList } }) {
     return {
       ...state,
-      featureList,
-      featureListFiltered: featureList
-    };
-  },
-  [setPaginationFeature](state, { payload: { rowsPerPageFeature } }) {
-    const data = state.featureList;
-    const { activePageFeature } = state;
-    const totalPagesFeature = getTotalPages(data, rowsPerPageFeature);
-    const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
-
-    return {
-      ...state,
-      totalPagesFeature,
-      rowsPerPageFeature,
-      featureListFiltered: currentData,
-    };
-  },
-  [setActivePageFeature](state, { payload: { activePageFeature } }) {
-    const data = state.featureList;
-    if (activePageFeature !== state.activePageFeature) {
-      const { rowsPerPageFeature } = state;
-      const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
-
-      return {
-        ...state,
-        activePageFeature,
-        featureListFiltered: currentData,
-      };
-    }
-
-    return {
-      ...state,
+      featureList
     };
   },
   [getForSaleList](state, { payload: { forSaleList } }) {

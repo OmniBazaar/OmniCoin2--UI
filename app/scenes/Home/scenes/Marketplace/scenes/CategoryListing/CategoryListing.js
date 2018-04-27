@@ -2,14 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab } from 'semantic-ui-react';
 import Menu from '../Menu/Menu';
-import FeatureTable from '../FeatureTable/FeatureTable';
-import NewArrivalsTable from '../NewArrivalsTable/NewArrivalsTable';
-import LowestPriceTable from '../LowestPriceTable/LowestPriceTable';
-import HighestPriceTable from '../HighestPriceTable/HighestPriceTable';
 import CategoryHeader from '../CategoryHeader';
 import CurrencyDropdown from '../../../../components/CurrencyDropdown/CurrencyDropdown';
+import TabsData from '../../components/TabsData/TabsData';
 
 import { CategoriesTypes } from '../../constants';
 
@@ -103,78 +99,29 @@ class CategoryListing extends Component {
 
     return (
       <div className="list-container">
-        <Tab
-          className="tabs"
-          menu={{ secondary: true, pointing: true }}
-          panes={[
+        <TabsData
+          data={categoryList}
+          tabs={[
             {
-              menuItem: formatMessage(messages.featured),
-              render: () => (
-                <Tab.Pane>
-                  <FeatureTable
-                    categoryData={categoryList}
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              )
+              title: formatMessage(messages.featured),
+              sortBy: 'date',
+              sortDirection: 'ascending'
             },
             {
-              menuItem: formatMessage(messages.newArrivals),
-              render: () => (
-                <Tab.Pane>
-                  <NewArrivalsTable
-                    categoryData={categoryList}
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              )
+              title: formatMessage(messages.newArrivals),
+              sortBy: 'date',
+              sortDirection: 'descending'
             },
             {
-              menuItem: formatMessage(messages.lowestPrice),
-              render: () => (
-                <Tab.Pane>
-                  <LowestPriceTable
-                    categoryData={categoryList}
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              ),
+              title: formatMessage(messages.lowestPrice),
+              sortBy: 'price',
+              sortDirection: 'ascending'
             },
             {
-              menuItem: formatMessage(messages.highestPrice),
-              render: () => (
-                <Tab.Pane>
-                  <HighestPriceTable
-                    categoryData={categoryList}
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              ),
-            },
+              title: formatMessage(messages.highestPrice),
+              sortBy: 'price',
+              sortDirection: 'descending'
+            }
           ]}
         />
       </div>
@@ -200,7 +147,7 @@ CategoryListing.propTypes = {
   marketplace: PropTypes.shape({
     parentCategory: PropTypes.string,
     activeCategory: PropTypes.string,
-    featureList: PropTypes.string,
+    featureList: PropTypes.array,
     forSaleList: PropTypes.array,
     servicesList: PropTypes.array,
     jobsList: PropTypes.array,

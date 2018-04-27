@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import _ from 'lodash';
 import {
   Table,
   TableBody,
   TableCell,
   TableRow,
-  Icon
+  Icon,
+  Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 
@@ -25,7 +26,28 @@ import { numberWithCommas } from '../../../../../../utils/numeric';
 
 const iconSizeSmall = 12;
 
+const messages = defineMessages({
+  edit: {
+    id: 'GridTable.edit',
+    defaultMessage: 'EDIT'
+  },
+  delete: {
+    id: 'GridTable.delete',
+    defaultMessage: 'DELETE'
+  },
+});
+
+
 class GridTable extends Component {
+  componentDidMount() {
+    this.props.gridTableActions.sortGridTableBy(
+      this.props.data,
+      this.props.sortBy,
+      this.props.sortDirection
+    );
+    this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data ||
         this.props.sortBy !== nextProps.sortBy ||
@@ -39,6 +61,9 @@ class GridTable extends Component {
     }
   }
 
+  onClickItem = (item) => {
+  };
+
   handlePaginationChange = (e, { activePage }) => {
     this.props.gridTableActions.setActivePageGridTable(activePage);
   };
@@ -50,6 +75,7 @@ class GridTable extends Component {
       gridTableDataFiltered
     } = this.props.marketplace;
     const rows = _.chunk(gridTableDataFiltered, 6);
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className="data-table">
@@ -91,6 +117,13 @@ class GridTable extends Component {
                           </span>
                           <span className="description">{description}</span>
                           <span className="price">$ {numberWithCommas(item.price)}</span>
+                          {this.props.showActions ?
+                            <div className="actions">
+                              <Button content={formatMessage(messages.edit)} className="button--blue" />
+                              <Button content={formatMessage(messages.delete)} className="button--gray-text" />
+                            </div>
+                            : null
+                          }
                         </TableCell>
                       );
                     })}
@@ -117,13 +150,14 @@ GridTable.propTypes = {
   sortBy: PropTypes.string,
   sortDirection: PropTypes.string,
   rowsPerPage: PropTypes.number,
+  showActions: PropTypes.bool,
+  data: PropTypes.arrayOf(PropTypes.object),
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
     compact: PropTypes.bool,
     basic: PropTypes.string,
     size: PropTypes.string
   }),
-  data: PropTypes.arrayOf(PropTypes.object),
   marketplace: PropTypes.shape({
     activePageGridTable: PropTypes.number,
     totalPagesGridTable: PropTypes.number,
@@ -145,6 +179,7 @@ GridTable.defaultProps = {
   tableProps: {},
   data: [],
   rowsPerPage: 3 * 6,
+  showActions: false,
   sortBy: '',
   sortDirection: '',
   gridTableActions: {},

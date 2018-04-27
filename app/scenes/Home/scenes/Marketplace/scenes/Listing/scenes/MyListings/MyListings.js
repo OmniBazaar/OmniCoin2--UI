@@ -3,18 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Dropdown, Icon } from 'semantic-ui-react';
-
+import { Dropdown, Icon } from 'semantic-ui-react';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
-import MyListingsTable from '../components/MyListingsTable/MyListingsTable';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
+import TabsData from '../../../../components/TabsData/TabsData';
+import { getMyListings } from '../../../../../../../../services/listing/listingActions';
 
 import './my-listings.scss';
-
-import { getMyListings, setPaginationMyListings } from '../../../../../../../../services/listing/listingActions';
-
 import '../../../../../Marketplace/marketplace.scss';
 import '../../../../../Marketplace/scenes/CategoryListing/listings.scss';
 
@@ -388,7 +385,6 @@ const options = [
 class MyListings extends Component {
   componentDidMount() {
     this.props.listingActions.getMyListings(myListings);
-    this.props.listingActions.setPaginationMyListings(3 * 6);
   }
 
   renderMyListings() {
@@ -407,66 +403,24 @@ class MyListings extends Component {
           />
           <CurrencyDropdown />
         </div>
-        <Tab
-          className="tabs"
-          menu={{ secondary: true, pointing: true }}
-          panes={[
+        <TabsData
+          data={myListingsList}
+          showActions
+          tabs={[
             {
-              menuItem: formatMessage(messages.byDate),
-              render: () => (
-                <Tab.Pane>
-                  <MyListingsTable
-                    myListings={myListingsList}
-                    sortBy="date"
-                    sortDirection="descending"
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              )
+              title: formatMessage(messages.byDate),
+              sortBy: 'date',
+              sortDirection: 'descending'
             },
             {
-              menuItem: formatMessage(messages.lowestPrice),
-              render: () => (
-                <Tab.Pane>
-                  <MyListingsTable
-                    myListings={myListingsList}
-                    sortBy="price"
-                    sortDirection="ascending"
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              )
+              title: formatMessage(messages.lowestPrice),
+              sortBy: 'price',
+              sortDirection: 'ascending'
             },
             {
-              menuItem: formatMessage(messages.highestPrice),
-              render: () => (
-                <Tab.Pane>
-                  <MyListingsTable
-                    myListings={myListingsList}
-                    sortBy="price"
-                    sortDirection="descending"
-                    rowsPerPage={3 * 6}
-                    tableProps={{
-                      sortable: false,
-                      compact: true,
-                      basic: 'very',
-                      size: 'small'
-                    }}
-                  />
-                </Tab.Pane>
-              ),
+              title: formatMessage(messages.highestPrice),
+              sortBy: 'price',
+              sortDirection: 'descending'
             }
           ]}
         />
@@ -506,7 +460,6 @@ class MyListings extends Component {
 MyListings.propTypes = {
   listingActions: PropTypes.shape({
     getMyListings: PropTypes.func,
-    setPaginationMyListings: PropTypes.func,
   }),
   listing: PropTypes.shape({
     myListings: PropTypes.array,
@@ -526,8 +479,7 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      getMyListings,
-      setPaginationMyListings
+      getMyListings
     }, dispatch),
   }),
 )(injectIntl(MyListings));
