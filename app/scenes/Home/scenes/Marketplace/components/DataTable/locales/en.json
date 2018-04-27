@@ -1,0 +1,9 @@
+{
+  "DataTable.default": "Default",
+  "DataTable.date": "Date",
+  "DataTable.search": "Search",
+  "DataTable.parameters": "Parameters",
+  "DataTable.save": "SAVE",
+  "DataTable.delete": "DELETE",
+  "DataTable.view": "VIEW"
+}

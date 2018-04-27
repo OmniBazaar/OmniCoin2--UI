@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import SavedSearchesTable from '../components/SavedSearchesTable/SavedSearchesTable';
+import DataTable from '../../../../components/DataTable/DataTable';
 
 import { getSavedSearches } from '../../../../../../../../services/search/searchActions';
 
@@ -46,28 +46,13 @@ const savedSearchesList = [
 ];
 
 class SavedSearches extends Component {
-  static renderRecentSearches() {
-    return (
-      <div className="list-container">
-        <SavedSearchesTable
-          tableProps={{
-            sortable: true,
-            compact: true,
-            basic: 'very',
-            striped: true,
-            size: 'small'
-          }}
-        />
-      </div>
-    );
-  }
-
   componentDidMount() {
     this.props.searchActions.getSavedSearches(savedSearchesList);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { savedSearches } = this.props.search;
 
     return (
       <div className="marketplace-container category-listing recent-searches">
@@ -82,7 +67,22 @@ class SavedSearches extends Component {
               </div>
             </div>
           </div>
-          {SavedSearches.renderRecentSearches()}
+          <div className="list-container">
+            <DataTable
+              data={savedSearches}
+              sortBy="date"
+              sortDirection="descending"
+              tableProps={{
+                sortable: true,
+                compact: true,
+                basic: 'very',
+                striped: true,
+                size: 'small'
+              }}
+              showDeleteButton
+              showViewButton
+            />
+          </div>
         </div>
       </div>
     );
@@ -96,11 +96,15 @@ SavedSearches.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  search: PropTypes.shape({
+    savedSearches: PropTypes.array
+  }),
 };
 
 SavedSearches.defaultProps = {
   searchActions: {},
   intl: {},
+  search: {},
 };
 
 export default connect(

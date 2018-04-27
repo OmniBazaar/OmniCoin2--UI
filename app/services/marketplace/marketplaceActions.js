@@ -14,6 +14,7 @@ const {
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
+  sortDataTableBy
 } = createActions({
   GET_CATEGORIES: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
@@ -29,6 +30,7 @@ const {
   SORT_GRID_TABLE_BY: (gridTableData, sortGridBy, sortGridDirection) =>
     ({ gridTableData, sortGridBy, sortGridDirection }),
   SET_ACTIVE_PAGE_GRID_TABLE: (activePageGridTable) => ({ activePageGridTable }),
+  SORT_DATA_TABLE_BY: (dataTableData, sortTableBy) => ({ dataTableData, sortTableBy }),
 });
 
 export {
@@ -44,4 +46,5 @@ export {
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
+  sortDataTableBy
 };

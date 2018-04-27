@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import RecentSearchesTable from '../components/RecentSearchesTable/RecentSearchesTable';
+import DataTable from '../../../../components/DataTable/DataTable';
 
 import { getRecentSearches } from '../../../../../../../../services/search/searchActions';
 
@@ -52,6 +52,7 @@ class RecentSearches extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { recentSearches } = this.props.search;
 
     return (
       <div className="marketplace-container category-listing recent-searches">
@@ -67,7 +68,10 @@ class RecentSearches extends Component {
             </div>
           </div>
           <div className="list-container">
-            <RecentSearchesTable
+            <DataTable
+              data={recentSearches}
+              sortBy="date"
+              sortDirection="descending"
               tableProps={{
                 sortable: true,
                 compact: true,
@@ -75,6 +79,8 @@ class RecentSearches extends Component {
                 striped: true,
                 size: 'small'
               }}
+              showSaveButton
+              showViewButton
             />
           </div>
         </div>
@@ -87,12 +93,16 @@ RecentSearches.propTypes = {
   searchActions: PropTypes.shape({
     getRecentSearches: PropTypes.func,
   }),
+  search: PropTypes.shape({
+    recentSearches: PropTypes.array
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
 };
 
 RecentSearches.defaultProps = {
+  search: {},
   searchActions: {},
   intl: {},
 };

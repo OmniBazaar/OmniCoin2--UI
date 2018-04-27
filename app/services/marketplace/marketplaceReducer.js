@@ -15,6 +15,7 @@ import {
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
+  sortDataTableBy
 } from './marketplaceActions';
 
 const defaultState = {
@@ -33,6 +34,9 @@ const defaultState = {
   activePageGridTable: 1,
   totalPagesGridTable: 1,
   rowsPerPageGridTable: 3 * 6,
+  dataTableData: [],
+  sortTableBy: 'date',
+  sortTableDirection: 'descending'
 };
 
 const messages = defineMessages({
@@ -170,6 +174,26 @@ const reducer = handleActions({
 
     return {
       ...state,
+    };
+  },
+  [sortDataTableBy](state, { payload: { dataTableData, sortTableBy } }) {
+    let sortDirection = state.sortTableDirection === 'ascending' ? 'descending' : 'ascending';
+
+    const sortBy = _.sortBy(dataTableData, [sortTableBy]);
+    let sortedData = [];
+
+    if (state.sortTableBy !== sortTableBy) {
+      sortedData = sortBy.reverse();
+      sortDirection = 'ascending';
+    } else {
+      sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+    }
+
+    return {
+      ...state,
+      dataTableData: sortedData,
+      sortTableDirection: sortDirection,
+      sortTableBy,
     };
   },
 }, defaultState);
