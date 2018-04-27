@@ -2,7 +2,6 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 import {
-  setExtendedSearch,
   getSearchResults,
   setPaginationSearchResults,
   sortSearchResultsBy,
@@ -15,7 +14,6 @@ import {
 } from './searchActions';
 
 const defaultState = {
-  extendedSearch: false,
   recentSearches: [],
   savedSearches: [],
   searchResults: [],
@@ -37,12 +35,6 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
 const reducer = handleActions({
-  [setExtendedSearch](state) {
-    return {
-      ...state,
-      extendedSearch: !state.extendedSearch
-    };
-  },
   [getSearchResults](state, { payload: { searchResults } }) {
     return {
       ...state,

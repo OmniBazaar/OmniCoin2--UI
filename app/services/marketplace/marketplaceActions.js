@@ -11,8 +11,11 @@ const {
   getRentalsList,
   getCryptoBazaarList,
   setActiveCategory,
-  setExtendedSearch,
   getRecentSearches,
+
+  setPaginationGridTable,
+  sortGridTableBy,
+  setActivePageGridTable
 } = createActions({
   GET_CATEGORIES: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
@@ -24,8 +27,11 @@ const {
   GET_RENTALS_LIST: (rentalsList) => ({ rentalsList }),
   GET_CRYPTO_BAZAAR_LIST: (cryptoBazaarList) => ({ cryptoBazaarList }),
   SET_ACTIVE_CATEGORY: (activeCategory, parentCategory) => ({ activeCategory, parentCategory }),
-  SET_EXTENDED_SEARCH: () => ({}),
   GET_RECENT_SEARCHES: (recentSearches) => ({ recentSearches }),
+  SET_PAGINATION_GRID_TABLE: (rowsPerPageGridTable) => ({ rowsPerPageGridTable }),
+  SORT_GRID_TABLE_BY: (gridTableData, sortGridBy, sortGridDirection) =>
+    ({ gridTableData, sortGridBy, sortGridDirection }),
+  SET_ACTIVE_PAGE_GRID_TABLE: (activePageGridTable) => ({ activePageGridTable }),
 });
 
 export {
@@ -39,6 +45,8 @@ export {
   getRentalsList,
   getCryptoBazaarList,
   setActiveCategory,
-  setExtendedSearch,
-  getRecentSearches
+  getRecentSearches,
+  setPaginationGridTable,
+  sortGridTableBy,
+  setActivePageGridTable
 };

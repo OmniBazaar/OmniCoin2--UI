@@ -18,7 +18,6 @@ import OmniLogo from '../../images/omni-logo-about.svg';
 
 import {
   setActiveCategory,
-  setExtendedSearch,
   getRecentSearches
 } from '../../../../../../services/marketplace/marketplaceActions';
 
@@ -539,8 +538,6 @@ class Menu extends Component {
     </div>
   );
 
-  toggleExtendedSearch = () => this.props.marketplaceActions.setExtendedSearch();
-
   renderFilters(filters) {
     const { formatMessage } = this.props.intl;
 
@@ -610,7 +607,6 @@ class Menu extends Component {
                 <Checkbox
                   width={iconSizeMedium}
                   height={iconSizeMedium}
-                  onChecked={this.toggleExtendedSearch}
                 />
                 <div className="description-text">
                   {formatMessage(messages.extendedSearch)}
@@ -682,7 +678,6 @@ Menu.propTypes = {
   }),
   marketplaceActions: PropTypes.shape({
     setActiveCategory: PropTypes.func,
-    setExtendedSearch: PropTypes.func,
     getRecentSearches: PropTypes.func,
   }),
   intl: PropTypes.shape({
@@ -702,7 +697,6 @@ export default compose(
     (dispatch) => ({
       marketplaceActions: bindActionCreators({
         setActiveCategory,
-        setExtendedSearch,
         getRecentSearches
       }, dispatch),
     }),

@@ -1,7 +1,6 @@
 import { createActions } from 'redux-actions';
 
 const {
-  setExtendedSearch,
   getSearchResults,
   setPaginationSearchResults,
   sortSearchResultsBy,
@@ -12,7 +11,6 @@ const {
   getSavedSearches,
   sortSavedSearches,
 } = createActions({
-  SET_EXTENDED_SEARCH: () => ({}),
   GET_SEARCH_RESULTS: (searchResults) => ({ searchResults }),
   SET_PAGINATION_SEARCH_RESULTS: (rowsPerPageSearchResults) => ({ rowsPerPageSearchResults }),
   SORT_SEARCH_RESULTS_BY: (sortSearchBy, sortSearchDirection) => ({ sortSearchBy, sortSearchDirection }),
@@ -25,7 +23,6 @@ const {
 });
 
 export {
-  setExtendedSearch,
   getSearchResults,
   setPaginationSearchResults,
   sortSearchResultsBy,

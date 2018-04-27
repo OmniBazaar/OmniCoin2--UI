@@ -13,8 +13,10 @@ import {
   getCryptoBazaarList,
   getCategories,
   setActiveCategory,
-  setExtendedSearch,
-  getRecentSearches
+  getRecentSearches,
+  setPaginationGridTable,
+  sortGridTableBy,
+  setActivePageGridTable
 } from './marketplaceActions';
 
 const defaultState = {
@@ -32,7 +34,12 @@ const defaultState = {
   categories: {},
   activeCategory: 'Marketplace.home',
   parentCategory: null,
-  extendedSearch: false
+
+  gridTableData: [],
+  gridTableDataFiltered: [],
+  activePageGridTable: 1,
+  totalPagesGridTable: 1,
+  rowsPerPageGridTable: 3 * 6,
 };
 
 const messages = defineMessages({
@@ -153,17 +160,54 @@ const reducer = handleActions({
       categories: messages
     };
   },
-  [setExtendedSearch](state) {
-    return {
-      ...state,
-      extendedSearch: !state.extendedSearch
-    };
-  },
   [getRecentSearches](state, { payload: { recentSearches } }) {
     const sortedData = _.sortBy(recentSearches, ['date']).reverse();
     return {
       ...state,
       recentSearches: sortedData
+    };
+  },
+
+  [setPaginationGridTable](state, { payload: { rowsPerPageGridTable } }) {
+    const data = state.gridTableData;
+    const { activePageGridTable } = state;
+    const totalPagesGridTable = getTotalPages(data, rowsPerPageGridTable);
+    const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+
+    return {
+      ...state,
+      totalPagesGridTable,
+      rowsPerPageGridTable,
+      gridTableDataFiltered: currentData,
+    };
+  },
+  [sortGridTableBy](state, { payload: { gridTableData, sortGridBy, sortGridDirection } }) {
+    let sortedData = _.sortBy(gridTableData, [sortGridBy]);
+    if (sortGridDirection === 'descending') {
+      sortedData = sortedData.reverse();
+    }
+
+    return {
+      ...state,
+      gridTableData: sortedData,
+      gridTableDataFiltered: sortedData
+    };
+  },
+  [setActivePageGridTable](state, { payload: { activePageGridTable } }) {
+    const data = state.gridTableData;
+    if (activePageGridTable !== state.activePageGridTable) {
+      const { rowsPerPageGridTable } = state;
+      const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+
+      return {
+        ...state,
+        activePageGridTable,
+        gridTableDataFiltered: currentData,
+      };
+    }
+
+    return {
+      ...state,
     };
   },
 }, defaultState);
