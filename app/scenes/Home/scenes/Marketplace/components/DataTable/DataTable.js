@@ -169,6 +169,9 @@ DataTable.propTypes = {
     formatMessage: PropTypes.func,
   }),
   data: PropTypes.arrayOf(PropTypes.object),
+  showSaveButton: PropTypes.bool,
+  showDeleteButton: PropTypes.bool,
+  showViewButton: PropTypes.bool
 };
 
 DataTable.defaultProps = {
@@ -179,6 +182,9 @@ DataTable.defaultProps = {
   data: [],
   sortBy: '',
   sortDirection: '',
+  showSaveButton: false,
+  showDeleteButton: false,
+  showViewButton: false
 };
 
 export default connect(
