@@ -2,6 +2,7 @@ import {
   Apis,
   Manager
 } from 'omnibazaarjs-ws';
+import { FetchChain } from 'omnibazaarjs/es';
 
 import { nodesAddresses as nodes } from '../settings';
 
@@ -11,6 +12,11 @@ async function getDynGlobalObject() {
 
 async function getGlobalObject() {
   return (await Apis.instance().db_api().exec('get_objects', [['2.0.0']]))[0];
+}
+
+async function fetchAccount(username) {
+  const cachedAccount = await FetchChain('getAccount', username);
+  return (await Apis.instance().db_api().exec('get_objects', [[cachedAccount.get('id')]]))[0];
 }
 
 async function createConnection(node) {
@@ -46,5 +52,6 @@ export {
   getDynGlobalObject,
   getGlobalObject,
   createConnection,
-  calcBlockTime
+  calcBlockTime,
+  fetchAccount
 };

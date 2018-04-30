@@ -69,14 +69,18 @@ export function* updateAccount(payload) {
   tr.add_type_operation(
     'account_update',
     {
-      account: account.get('id'),
+      account: account['id'],
       ...payload
     }
   );
   const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   tr.add_signer(activeKey.privKey, activeKey.pubKey);
-  tr.set_required_fees();
-  return yield tr.broadcast();
+  yield Promise.all([
+    tr.set_required_fees(),
+    tr.update_head_block()
+  ]).then(
+    () => tr.broadcast()
+  );
 }
 
 export function* getRecentTransactions() {
@@ -87,7 +91,7 @@ export function* getRecentTransactions() {
     getDynGlobalObject()
   ]);
   try {
-    const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account);
+    const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account['id']);
     let history = [];
     const h = result.get('history');
     const seenOps = new Set();
