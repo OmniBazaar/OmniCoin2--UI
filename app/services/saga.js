@@ -5,6 +5,7 @@ import { escrowSubscriber } from './escrow/escrowSaga';
 import { accountSubscriber } from './accountSettings/accountSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
+
 export {
   connectionSubscriber,
   authSubscriber,

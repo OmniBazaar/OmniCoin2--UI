@@ -18,6 +18,7 @@ import blockchainWallet from './blockchain/wallet/walletReducer';
 import listingReducer from './listing/listingReducer';
 import listingDefaultsReducer from './listing/listingDefaultsReducer';
 import importReducer from './listing/importReducer';
+import bitcoinReducer from './blockchain/bitcoin/bitcoinReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -39,4 +40,5 @@ export default combineReducers({
   listing: listingReducer,
   listingDefaults: listingDefaultsReducer,
   listingImport: importReducer,
+  bitcoin: bitcoinReducer
 });

@@ -19,15 +19,41 @@
 
     .tabs {
       padding-bottom: 10px;
+      .content {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+      }
+      .no-wallet-yet {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+      }
     }
 
     .ui {
       &.segment.active {
         display: flex;
-
+        align-items: center;
+        .add-icon {
+          display: flex;
+          flex-basis: 380px;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          margin-top: 20px;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
         .wallet-detail {
           flex-basis: 380px;
           margin-right: 20px;
+          margin-top: 20px;
           border-radius: 3px;
           background-color: $lighter-blue;
           background-position: right bottom;

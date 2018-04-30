@@ -5,16 +5,27 @@ const {
   getWallets,
   makePayment,
   getBalance,
+  addAddress,
+  toggleModal,
+  toggleAddAddressModal
 } = createActions({
-  CREATE_WALLET: (password, privKey, label, email) => ({ password, privKey, label, email }),
-  GET_WALLETS: (password) => ({ password }),
-  MAKE_PAYMENT: (password, to, amount, from, fee) => ({ password, to, amount, from, fee }),
-  GET_BALANCE: (password, address) => ({ password, address })
+  CREATE_WALLET: (password, label, email) => ({ password, label, email }),
+  GET_WALLETS: (guid, password) => ({ guid, password }),
+  MAKE_PAYMENT: (guid, password, to, amount, from, fee) => ({
+    guid, password, to, amount, from, fee
+  }),
+  GET_BALANCE: (guid, password, address) => ({ guid, password, address }),
+  ADD_ADDRESS: (guid, password, label) => ({ guid, password, label }),
+  TOGGLE_MODAL: () => ({ }),
+  TOGGLE_ADD_ADDRESS_MODAL: () => ({ })
 });
 
 export {
   createWallet,
   getWallets,
   makePayment,
-  getBalance
-}
+  getBalance,
+  addAddress,
+  toggleModal,
+  toggleAddAddressModal
+};
