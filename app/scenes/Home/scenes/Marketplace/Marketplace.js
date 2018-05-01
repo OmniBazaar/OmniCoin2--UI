@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Image, Icon } from 'semantic-ui-react';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -1691,10 +1692,6 @@ class Marketplace extends Component {
     this.props.marketplaceActions.getCryptoBazaarList(cryptoBazaarListings);
   }
 
-  onClickItem = () => {
-    console.log('View detail');
-  };
-
   listItems(items, size) {
     return (
       items.slice(0, size).map((item) => {
@@ -1704,23 +1701,14 @@ class Marketplace extends Component {
 
         return (
           <div key={`fl-item-${item.id}`} className="item">
-            <div
-              className="img-wrapper"
-              style={style}
-              onClick={this.onClickItem}
-              onKeyDown={this.onClickItem}
-              tabIndex={0}
-              role="link"
-            />
-            <span
-              className="title"
-              onClick={this.onClickItem}
-              role="link"
-              onKeyDown={this.onClickItem}
-              tabIndex={0}
-            >
-              {item.title}
-            </span>
+            <Link to={`listing/${item.id}/test`}>
+              <div className="img-wrapper" style={style} />
+            </Link>
+            <Link to={`listing/${item.id}/test`}>
+              <span className="title" >
+                {item.title}
+              </span>
+            </Link>
             <span className="subtitle">
               {item.category}
               <span>
@@ -1938,7 +1926,6 @@ class Marketplace extends Component {
    */
   viewCategory = (categoryId) => {
     if (this.props.marketplaceActions.setActiveCategory) {
-      console.log('HEERREEE', categoryId);
       this.props.marketplaceActions.setActiveCategory(categoryId);
     }
   };
@@ -1954,11 +1941,13 @@ class Marketplace extends Component {
       <div className="list-container">
         <div className="top-detail">
           <span className="heading">{title}</span>
-          <Button
-            onClick={() => this.viewCategory(type)}
-            content={formatMessage(messages.seeAll)}
-            className="button--blue"
-          />
+          <NavLink to="/marketplace">
+            <Button
+              onClick={() => this.viewCategory(type)}
+              content={formatMessage(messages.seeAll)}
+              className="button--blue"
+            />
+          </NavLink>
         </div>
         <div className="items">
           {this.listItems(itemsList, maxDisplay)}

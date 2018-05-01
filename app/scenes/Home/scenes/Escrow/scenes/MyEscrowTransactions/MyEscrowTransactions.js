@@ -50,10 +50,8 @@ class MyEscrowTransactions extends Component {
     const asc = this.state.sortAsc[headerName];
 
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort(
-        (transA, transB) =>
-        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1)
-      )
+      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) =>
+        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
     });
   }
 
@@ -64,8 +62,7 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort(
-        (transA, transB) =>
+      transactions: this.state.transactions.slice().sort((transA, transB) =>
         (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
     });
   }

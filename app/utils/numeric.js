@@ -6,4 +6,15 @@ const numberWithCommas = (number) => {
   return '0.00';
 };
 
-export default numberWithCommas;
+const integerWithCommas = (number) => {
+  if (number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  return '0';
+};
+
+export {
+  numberWithCommas,
+  integerWithCommas
+};

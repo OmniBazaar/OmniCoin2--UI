@@ -349,7 +349,6 @@ class Transfer extends Component {
     const {
       to_name, amount, memo, reputation
     } = values;
-    ChainConfig.address_prefix = 'BTS';
     Promise.all([
       FetchChain('getAccount', sender_name),
       FetchChain('getAccount', to_name),
@@ -376,7 +375,7 @@ class Transfer extends Component {
         tr.add_type_operation('transfer', {
           from: sender_name.get('id'),
           to: to_name.get('id'),
-          reputation_vote: reputation,
+          reputation_vote: parseInt(reputation),
           memo: memo_object,
           amount: {
             asset_id: '1.3.0',

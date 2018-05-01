@@ -21,6 +21,11 @@ import Preferences from './scenes/Preferences/Preferences';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
+import Listing from './scenes/Listing/Listing';
+import MyListings from './scenes/Listing/scenes/MyListings/MyListings';
+import AddListing from './scenes/Listing/scenes/AddListing/AddListing';
+import MyListingsDefaults from './scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
+import ImportListings from './scenes/Listing/scenes/ImportListings/ImportListings';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
@@ -189,6 +194,11 @@ class Home extends Component {
             <Route path="/support" render={(props) => <Support {...props} />} />
             <Route path="/transfer" render={(props) => <Transfer {...props} />} />
             <Route path="/wallet" render={(props) => <Wallet {...props} />} />
+            <Route path="/listing/:id/:name" render={(props) => <Listing {...props} />} />
+            <Route path="/listings" render={(props) => <MyListings {...props} />} />
+            <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
+            <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
+            <Route path="/import-listings" render={(props) => <ImportListings {...props} />} />
           </div>
           <ChainFooter />
         </div>
