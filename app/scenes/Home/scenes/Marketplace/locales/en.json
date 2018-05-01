@@ -144,5 +144,20 @@
   "Marketplace.myPurchases": "My Purchases",
   "Marketplace.favoriteListings": "Favorite Listings",
   "Marketplace.newListingDefaults": "New Listing Defaults",
-  "Marketplace.resyncWithServer": "Resync with Server"
+  "Marketplace.resyncWithServer": "Resync with Server",
+  "Marketplace.twitter": "Twitter",
+  "Marketplace.youtube": "Youtube",
+  "Marketplace.removingMiddlemen": "Removing Middlemen and Bankers from E-commerce",
+  "Marketplace.omniIn60": "OmniBazaar in 60 seconds",
+  "Marketplace.omniWalkThrough": "OmniBazaar Walk-through",
+  "Marketplace.forum": "Forum",
+  "Marketplace.documentation": "Documentation",
+  "Marketplace.technology": "Technology",
+  "Marketplace.whitePaper": "White Paper",
+  "Marketplace.news": "News",
+  "Marketplace.blockExplorer": "Block Explorer",
+  "Marketplace.downloadLink": "Download Link",
+  "Marketplace.register": "Register",
+  "Marketplace.telegram": "Telegram",
+  "Marketplace.reddit": "Reddit"
 }

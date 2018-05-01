@@ -100,13 +100,13 @@ class Menu extends Component {
     );
   }
 
-  renderOption(category, parentCategory) {
+  renderOption(category, parentCategory, path, isExternal) {
     const { formatMessage } = this.props.intl;
     const type = category.id;
     const parent = parentCategory ? parentCategory.id : null;
 
-    return (
-      <NavLink to="/marketplace">
+    const menuItem = (
+      <div>
         <span
           onClick={() => this.viewCategory(type, parent)}
           onKeyDown={() => this.viewCategory(type, parent)}
@@ -115,7 +115,21 @@ class Menu extends Component {
         >
           {formatMessage(category)}
         </span>
-      </NavLink>
+      </div>
+    );
+
+    if (!isExternal) {
+      return (
+        <NavLink to={path || '/marketplace'}>
+          {menuItem}
+        </NavLink>
+      );
+    }
+
+    return (
+      <a href={path} target="_blank">
+        {menuItem}
+      </a>
     );
   }
 
@@ -385,30 +399,33 @@ class Menu extends Component {
           <div className="submenu">
             <p className="title">{formatMessage(messages.quickLinks)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.home, mainCategories.about)}
-              {this.renderOption(aboutCategories.features, mainCategories.about)}
-              {this.renderOption(aboutCategories.theTeam, mainCategories.about)}
-              {this.renderOption(aboutCategories.roadmap, mainCategories.about)}
-              {this.renderOption(aboutCategories.downloads, mainCategories.about)}
+              {this.renderOption(aboutCategories.twitter, mainCategories.about, 'https://twitter.com/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.youtube, mainCategories.about, 'https://www.youtube.com/channel/UCTbkLcypGrEeUKjZtxcGCBg', true)}
+              {this.renderOption(aboutCategories.removingMiddlemen, mainCategories.about, 'http://youtu.be/grMhv_Z5hBA', true)}
+              {this.renderOption(aboutCategories.omniIn60, mainCategories.about, 'http://youtu.be/Emq7drTI_Qc', true)}
+              {this.renderOption(aboutCategories.omniWalkThrough, mainCategories.about, 'https://youtu.be/MOXyY90j2fY', true)}
+              {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.support)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.tutorialVideos, mainCategories.about)}
-              {this.renderOption(aboutCategories.community, mainCategories.about)}
-              {this.renderOption(aboutCategories.slack, mainCategories.about)}
-              {this.renderOption(aboutCategories.blog, mainCategories.about)}
-              {this.renderOption(aboutCategories.contact, mainCategories.about)}
+              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
+              {this.renderOption(aboutCategories.documentation, mainCategories.about, 'http://support.omnibazaar.com/knowledgebase/', true)}
+              {this.renderOption(aboutCategories.technology, mainCategories.about, 'http://omnibazaar.com/index.php/support/technology', true)}
+              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://omnibazaar.com/index.php/support/white-paper', true)}
+              {this.renderOption(aboutCategories.news, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
             </div>
           </div>
           <div className="submenu">
             <p className="title">{formatMessage(messages.usefulLinks)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.privacyPolicy, mainCategories.about)}
-              {this.renderOption(aboutCategories.termsOfUse, mainCategories.about)}
-              {this.renderOption(aboutCategories.webWallet, mainCategories.about)}
-              {this.renderOption(aboutCategories.ominCoinExplorer, mainCategories.about)}
+              {this.renderOption(aboutCategories.news, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
+              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, '', true)}
+              {this.renderOption(aboutCategories.downloadLink, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
+              {this.renderOption(aboutCategories.register, mainCategories.about, 'http://eepurl.com/M708n', true)}
+              {this.renderOption(aboutCategories.telegram, mainCategories.about, 'https://t.me/RealOmniCoin', true)}
+              {this.renderOption(aboutCategories.reddit, mainCategories.about, 'https://www.reddit.com/r/OmniBazaar', true)}
             </div>
           </div>
         </div>
