@@ -6,7 +6,8 @@ import { required } from 'redux-form-validators';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { FetchChain } from 'omnibazaarjs/es';
+import { Apis, ChainConfig } from 'omnibazaarjs-ws';
+import { ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder } from 'omnibazaarjs/es';
 
 import Header from '../../../../components/Header';
 import './transfer.scss';
@@ -56,16 +57,72 @@ const walletOptions = [
 const reputationOptions = [
   {
     key: '1',
-    value: '1',
-    text: 'All text',
-    description: 'Description'
+    value: '0',
+    text: '-5',
   },
+  {
+    key: '2',
+    value: '1',
+    text: '-4',
+  },
+  {
+    key: '3',
+    value: '2',
+    text: '-3',
+  },
+  {
+    key: '4',
+    value: '3',
+    text: '-2',
+  },
+  {
+    key: '5',
+    value: '4',
+    text: '-1',
+  },
+  {
+    key: '6',
+    value: '5',
+    text: '0',
+  },
+  {
+    key: '7',
+    value: '6',
+    text: '1',
+  },
+  {
+    key: '8',
+    value: '7',
+    text: '2',
+  },
+  {
+    key: '9',
+    value: '8',
+    text: '3',
+  },
+  {
+    key: '10',
+    value: '9',
+    text: '4',
+  },
+  {
+    key: '11',
+    value: '10',
+    text: '5',
+  }
 ];
+
+function generateKeyFromPassword(accountName, role, password) {
+  const seed = accountName + role + password;
+  const privKey = PrivateKey.fromSeed(seed);
+  const pubKey = privKey.toPublicKey().toString();
+  return { privKey, pubKey };
+}
+
 class Transfer extends Component {
   static asyncValidate = async (values) => {
     try {
       const account = await FetchChain('getAccount', values.to_name);
-      console.log(account);
     } catch (e) {
       console.log('ERR', e);
       throw { to_name: messages.accountDoNotExist };
@@ -74,8 +131,8 @@ class Transfer extends Component {
 
   constructor(props) {
     super(props);
-    this.submit = this.submit.bind(this);
-    this.state = this.getInitialState(props);
+    this.submitTransfer = this.submitTransfer.bind(this);
+    this.state = this.getInitialState();
   }
 
   getInitialState() {
@@ -159,10 +216,13 @@ class Transfer extends Component {
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
           {...input}
+          value={input.value}
           type="text"
           className="textfield"
           placeholder={placeholder}
           options={reputationOptions}
+          defaultValue="5"
+          onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
     );
@@ -201,24 +261,12 @@ class Transfer extends Component {
 
   transferForm() {
     const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
     const number = value =>
       (value && isNaN(Number(value)) ? 'Must be a number' : undefined);
     return (
       <div className="transfer-form">
-        <Form onSubmit={this.onSubmit} className="transfer-form-container">
-          <p className="title">{formatMessage(messages.from)}</p>
-          <div className="form-group">
-            <span>Select Wallet</span>
-            <Field
-              type="text"
-              name="logout"
-              placeholder="placeholder1"
-              component={this.renderDropdownUnitsField}
-              className="textfield1"
-              buttonText="XOM"
-            />
-            <div className="col-1" />
-          </div>
+        <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
             <span>Account Name or Public Key</span>
@@ -258,7 +306,7 @@ class Transfer extends Component {
             <Field
               type="text"
               name="reputation"
-              placeholder="0.0"
+              placeholder="0"
               component={this.renderSelectField}
             />
             <div className="col-1" />
@@ -296,11 +344,57 @@ class Transfer extends Component {
       </div>
     );
   }
-  submit(values) {
-    const { to_name, reputation, memo } = values;
-    console.log(to_name);
-    console.log(reputation);
-    console.log(memo);
+  submitTransfer(values) {
+    const sender_name = this.props.auth.currentUser.username;
+    const {
+      to_name, amount, memo, reputation
+    } = values;
+    ChainConfig.address_prefix = 'BTS';
+    Promise.all([
+      FetchChain('getAccount', sender_name),
+      FetchChain('getAccount', to_name),
+    ]).then(result => {
+      try {
+        const [sender_name, to_name] = result;
+        const key1 = generateKeyFromPassword(sender_name, 'active', this.props.auth.currentUser.password);
+        const tr = new TransactionBuilder();
+        const memoFromKey = sender_name.getIn(['options', 'memo_key']);
+        const memoToKey = to_name.getIn(['options', 'memo_key']);
+        const nonce = TransactionHelper.unique_nonce_uint64();
+
+        const memo_object = {
+          from: memoFromKey,
+          to: memoToKey,
+          nonce,
+          message: Aes.encrypt_with_checksum(
+            key1.privKey,
+            memoToKey,
+            nonce,
+            memo
+          )
+        };
+        tr.add_type_operation('transfer', {
+          from: sender_name.get('id'),
+          to: to_name.get('id'),
+          reputation_vote: reputation,
+          memo: memo_object,
+          amount: {
+            asset_id: '1.3.0',
+            amount
+          },
+        });
+        Promise.all([
+          tr.set_required_fees(),
+          tr.update_head_block()
+        ]).then(() => {
+          tr.add_signer(key1.privKey, key1.privKey.toPublicKey().toPublicKeyString('BTS'));
+          tr.broadcast();
+        });
+        console.log('done');
+      } catch (e) {
+        console.log(e);
+      }
+    });
   }
   render() {
     const { formatMessage } = this.props.intl;
@@ -316,7 +410,8 @@ class Transfer extends Component {
 Transfer.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  })
+  }),
+  handleSubmit: PropTypes.func.isRequired
 };
 
 Transfer.defaultProps = {
