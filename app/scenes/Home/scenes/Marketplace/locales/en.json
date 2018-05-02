@@ -159,5 +159,10 @@
   "Marketplace.downloadLink": "Download Link",
   "Marketplace.register": "Register",
   "Marketplace.telegram": "Telegram",
-  "Marketplace.reddit": "Reddit"
+  "Marketplace.reddit": "Reddit",
+  "Marketplace.knowledgeBase": "Knowledge Base",
+  "Marketplace.connections": "Connections",
+  "Marketplace.downloadOmniBazaar": "Download OmniBazaar",
+  "Marketplace.newsletter": "Newsletter",
+  "Marketplace.telegramOmniBazaar": "OmniBazaar Telegram"
 }

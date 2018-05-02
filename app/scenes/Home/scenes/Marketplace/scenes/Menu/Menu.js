@@ -397,35 +397,32 @@ class Menu extends Component {
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.quickLinks)}</p>
+            <p className="title">{formatMessage(aboutCategories.community)}</p>
             <div className="sub-categories">
+              {this.renderOption(aboutCategories.telegramOmniBazaar, mainCategories.about, 'https://t.me/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.telegramOmniCoin, mainCategories.about, 'https://t.me/RealOmniCoin', true)}
+              {this.renderOption(aboutCategories.reddit, mainCategories.about, 'https://www.reddit.com/r/OmniBazaar', true)}
               {this.renderOption(aboutCategories.twitter, mainCategories.about, 'https://twitter.com/OmniBazaar', true)}
               {this.renderOption(aboutCategories.youtube, mainCategories.about, 'https://www.youtube.com/channel/UCTbkLcypGrEeUKjZtxcGCBg', true)}
-              {this.renderOption(aboutCategories.removingMiddlemen, mainCategories.about, 'http://youtu.be/grMhv_Z5hBA', true)}
-              {this.renderOption(aboutCategories.omniIn60, mainCategories.about, 'http://youtu.be/Emq7drTI_Qc', true)}
-              {this.renderOption(aboutCategories.omniWalkThrough, mainCategories.about, 'https://youtu.be/MOXyY90j2fY', true)}
-              {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.support)}</p>
+            <p className="title">{formatMessage(aboutCategories.documentation)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
-              {this.renderOption(aboutCategories.documentation, mainCategories.about, 'http://support.omnibazaar.com/knowledgebase/', true)}
+              {this.renderOption(aboutCategories.knowledgeBase, mainCategories.about, 'http://support.omnibazaar.com/knowledgebase/', true)}
+              {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
               {this.renderOption(aboutCategories.technology, mainCategories.about, 'http://omnibazaar.com/index.php/support/technology', true)}
               {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://omnibazaar.com/index.php/support/white-paper', true)}
-              {this.renderOption(aboutCategories.news, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.usefulLinks)}</p>
+            <p className="title">{formatMessage(aboutCategories.connections)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.news, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
+              {this.renderOption(aboutCategories.downloadOmniBazaar, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
               {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, '', true)}
-              {this.renderOption(aboutCategories.downloadLink, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
-              {this.renderOption(aboutCategories.register, mainCategories.about, 'http://eepurl.com/M708n', true)}
-              {this.renderOption(aboutCategories.telegram, mainCategories.about, 'https://t.me/RealOmniCoin', true)}
-              {this.renderOption(aboutCategories.reddit, mainCategories.about, 'https://www.reddit.com/r/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
+              {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
+              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
             </div>
           </div>
         </div>

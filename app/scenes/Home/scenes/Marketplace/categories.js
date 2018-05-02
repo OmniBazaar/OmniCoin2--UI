@@ -511,6 +511,14 @@ const aboutCategories = defineMessages({
     id: 'Marketplace.register',
     defaultMessage: 'Register'
   },
+  telegramOmniBazaar: {
+    id: 'Marketplace.telegramOmniBazaar',
+    defaultMessage: 'OmniBazaar Telegram'
+  },
+  telegramOmniCoin: {
+    id: 'Marketplace.telegramOmniCoin',
+    defaultMessage: 'OmniCoin Telegram'
+  },
   telegram: {
     id: 'Marketplace.telegram',
     defaultMessage: 'Telegram'
@@ -570,6 +578,22 @@ const aboutCategories = defineMessages({
   ominCoinExplorer: {
     id: 'Marketplace.ominCoinExplorer',
     defaultMessage: 'OmniCoin Explorer'
+  },
+  knowledgeBase: {
+    id: 'Marketplace.knowledgeBase',
+    defaultMessage: 'Knowledge Base'
+  },
+  connections: {
+    id: 'Marketplace.connections',
+    defaultMessage: 'Connections'
+  },
+  downloadOmniBazaar: {
+    id: 'Marketplace.downloadOmniBazaar',
+    defaultMessage: 'Download OmniBazaar'
+  },
+  newsletter: {
+    id: 'Marketplace.newsletter',
+    defaultMessage: 'Newsletter'
   },
 });
 
