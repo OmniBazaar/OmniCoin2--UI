@@ -78,6 +78,8 @@ class LoginForm extends Component {
         showUsernameInput: true
       });
     }
+
+    this.props.initialize({ username: this.props.auth.lastLoginUserName });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,6 +88,10 @@ class LoginForm extends Component {
       const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error)
         : nextProps.auth.error;
       toastr.error(formatMessage(messages.error), content);
+    }
+
+    if(nextProps.auth.lastLoginUserName!==this.props.auth.lastLoginUserName){
+      this.props.initialize({ username: nextProps.auth.lastLoginUserName });
     }
   }
 
@@ -206,6 +212,7 @@ LoginForm.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     }),
+    lastLoginUserName: PropTypes.string,
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
