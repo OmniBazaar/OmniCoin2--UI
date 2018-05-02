@@ -1,9 +1,86 @@
 @import '../../../../../../styles/index';
 
-.user-menu {
+.user-menu,
+.search-menu {
   .link-menu {
+    line-height: 30px;
+    cursor: pointer;
+
     &:hover {
       color: $primary-blue;
+    }
+  }
+}
+
+.search-menu {
+  .search-form {
+    input.textfield {
+      border: none !important;
+      min-width: 380px;
+    }
+
+    .search-actions {
+      position: absolute !important;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin-right: 5px;
+
+      .select-btn {
+        border: none;
+        color: $gray !important;
+        right: 25px;
+
+        .dropdown.icon:before {
+          font-size: 16px;
+        }
+      }
+
+      .search-btn {
+        margin: 3px 4px;
+        padding: 5px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+
+  .grid {
+    margin-top: 7px !important;
+    .row {
+      padding: 6px 0 !important;
+      border-bottom: 1px solid $border-gray;
+
+      .gray-text {
+        color: $primary-gray;
+      }
+
+      .blue-text {
+        color: $primary-blue;
+      }
+
+      .right {
+        text-align: right;
+        .view-all {
+          padding: 0;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .check-wrapper {
+    display: flex;
+    align-items: center;
+
+    .check-container {
+      margin-right: 8px;
     }
   }
 }
