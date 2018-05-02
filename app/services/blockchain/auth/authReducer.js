@@ -8,7 +8,8 @@ import {
   logout,
   getCurrentUser,
   requestPcIds,
-  getAccount
+  getAccount,
+  getLastLoginUserName
 } from './authActions';
 
 const defaultState = {
@@ -16,7 +17,8 @@ const defaultState = {
   account: null,
   error: null,
   loading: false,
-  isAccountLoading: false
+  isAccountLoading: false,
+  lastLoginUserName: null
 };
 
 const reducer = handleActions({
@@ -63,6 +65,13 @@ const reducer = handleActions({
       localStorage.setItem('macAddress', arg.macAddress);
     });
     ipcRenderer.send('get-pc-ids', null);
+  },
+  [getLastLoginUserName]: (state, { payload: {} })=>{
+    let user=JSON.parse(localStorage.getItem('currentUser'));
+    return {
+      ...state,
+      lastLoginUserName: user?user.username:null
+    };
   },
   LOGIN_FAILED: (state, action) => ({
     ...state,

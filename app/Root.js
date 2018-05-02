@@ -9,14 +9,15 @@ import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import { requestPcIds } from './services/blockchain/auth/authActions';
-import { getCurrentUser } from './services/blockchain/auth/authActions';
+import { getCurrentUser, getLastLoginUserName } from './services/blockchain/auth/authActions';
 
 
 class Root extends Component {
   componentWillMount() {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
-    this.props.authActions.getCurrentUser();
+     // this.props.authActions.getCurrentUser();
+    this.props.authActions.getLastLoginUserName();
   }
 
   componentDidMount() {
@@ -44,6 +45,6 @@ export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
     connectionActions: bindActionCreators({ connectToNode, getDynGlobalObject }, dispatch),
-    authActions: bindActionCreators({ requestPcIds, getCurrentUser }, dispatch)
+    authActions: bindActionCreators({ requestPcIds, getCurrentUser, getLastLoginUserName }, dispatch)
   }),
 )(Root);

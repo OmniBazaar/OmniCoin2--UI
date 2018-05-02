@@ -98,11 +98,19 @@ class Home extends Component {
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
-      return (<Redirect
-        to={{
-                  pathname: '/signup',
-              }}
-      />);
+      if(!this.props.auth.lastLoginUserName){
+        return (<Redirect
+          to={{
+                    pathname: '/signup',
+                }}
+        />);
+      }else{
+        return (<Redirect
+          to={{
+                    pathname: '/login',
+                }}
+        />);
+      }
     }
     return (
       <div className="home-container">
@@ -225,6 +233,7 @@ Home.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     }),
+    lastLoginUserName: PropTypes.string,
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
