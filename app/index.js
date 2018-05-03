@@ -25,6 +25,7 @@ import {
   mailSubscriber,
   escrowSubscriber,
   accountSubscriber,
+  transferSubscriber,
   walletSubscriber
 } from './services/saga';
 
@@ -69,6 +70,7 @@ sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
 sagaMiddleware.run(escrowSubscriber);
 sagaMiddleware.run(accountSubscriber);
+sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 
 ReactDOM.render(

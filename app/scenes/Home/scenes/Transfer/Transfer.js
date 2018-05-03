@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Form, Select, TextArea, Checkbox } from 'semantic-ui-react';
-import { required } from 'redux-form-validators';
+import { required, initialize } from 'redux-form-validators';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -11,6 +11,7 @@ import { ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, Transaction
 
 import Header from '../../../../components/Header';
 import './transfer.scss';
+import { submitTransfer } from '../../../../services/transfer/transferActions';
 
 const messages = defineMessages({
   accountDoNotExist: {
@@ -112,12 +113,6 @@ const reputationOptions = [
   }
 ];
 
-function generateKeyFromPassword(accountName, role, password) {
-  const seed = accountName + role + password;
-  const privKey = PrivateKey.fromSeed(seed);
-  const pubKey = privKey.toPublicKey().toString();
-  return { privKey, pubKey };
-}
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
@@ -128,34 +123,21 @@ class Transfer extends Component {
       throw { to_name: messages.accountDoNotExist };
     }
   };
+  handleInitialize() {
+    const initData = {
+      'reputation': '5',
+    };
+
+    this.props.initialize(initData);
+  }
 
   constructor(props) {
     super(props);
     this.submitTransfer = this.submitTransfer.bind(this);
-    this.state = this.getInitialState();
   }
 
-  getInitialState() {
-    return {
-      from_name: '',
-      to_name: '',
-      from_account: null,
-      to_account: null,
-      orig_account: null,
-      amount: '',
-      asset_id: null,
-      asset: null,
-      memo: '',
-      error: null,
-      propose: false,
-      propose_account: '',
-      feeAsset: null,
-      fee_asset_id: '1.3.0',
-      feeAmount: 0,
-      feeStatus: {},
-      maxAmount: false,
-      hidden: false
-    };
+  componentDidMount() {
+    this.handleInitialize();
   }
 
   renderDropdownUnitsField = ({
@@ -221,7 +203,6 @@ class Transfer extends Component {
           className="textfield"
           placeholder={placeholder}
           options={reputationOptions}
-          defaultValue="5"
           onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
@@ -344,57 +325,10 @@ class Transfer extends Component {
       </div>
     );
   }
-  submitTransfer(values) {
-    const sender_name = this.props.auth.currentUser.username;
-    const {
-      to_name, amount, memo, reputation
-    } = values;
-    Promise.all([
-      FetchChain('getAccount', sender_name),
-      FetchChain('getAccount', to_name),
-    ]).then(result => {
-      try {
-        const [sender_name, to_name] = result;
-        const key1 = generateKeyFromPassword(sender_name, 'active', this.props.auth.currentUser.password);
-        const tr = new TransactionBuilder();
-        const memoFromKey = sender_name.getIn(['options', 'memo_key']);
-        const memoToKey = to_name.getIn(['options', 'memo_key']);
-        const nonce = TransactionHelper.unique_nonce_uint64();
-
-        const memo_object = {
-          from: memoFromKey,
-          to: memoToKey,
-          nonce,
-          message: Aes.encrypt_with_checksum(
-            key1.privKey,
-            memoToKey,
-            nonce,
-            memo
-          )
-        };
-        tr.add_type_operation('transfer', {
-          from: sender_name.get('id'),
-          to: to_name.get('id'),
-          reputation_vote: parseInt(reputation),
-          memo: memo_object,
-          amount: {
-            asset_id: '1.3.0',
-            amount
-          },
-        });
-        Promise.all([
-          tr.set_required_fees(),
-          tr.update_head_block()
-        ]).then(() => {
-          tr.add_signer(key1.privKey, key1.privKey.toPublicKey().toPublicKeyString('BTS'));
-          tr.broadcast();
-        });
-        console.log('done');
-      } catch (e) {
-        console.log(e);
-      }
-    });
+  submitTransfer() {
+    this.props.transferActions.submitTransfer();
   }
+
   render() {
     const { formatMessage } = this.props.intl;
     return (
@@ -407,9 +341,13 @@ class Transfer extends Component {
 }
 
 Transfer.propTypes = {
+  transferActions: PropTypes.shape({
+    submitTransfer: PropTypes.func
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  initialize: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired
 };
 
@@ -417,9 +355,19 @@ Transfer.defaultProps = {
   intl: {}
 };
 
-export default compose(connect(state => ({ ...state.default }), null), reduxForm({
-  form: 'transferForm',
-  asyncValidate: Transfer.asyncValidate,
-  asyncBlurFields: ['to_name'],
-  destroyOnUnmount: true,
-}))(injectIntl(Transfer));
+export default compose(
+  connect(null,
+    (dispatch) => ({
+      transferActions: bindActionCreators({
+        submitTransfer
+      }, dispatch),
+      initialize
+    })
+  ),
+  reduxForm({
+    form: 'transferForm',
+    asyncValidate: Transfer.asyncValidate,
+    asyncBlurFields: ['to_name'],
+    destroyOnUnmount: true,
+  })
+)(injectIntl(Transfer));
