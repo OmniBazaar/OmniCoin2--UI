@@ -5,8 +5,7 @@ import {
   call,
   all
 } from 'redux-saga/effects';
-import { FetchChain, ChainStore } from 'omnibazaarjs/es';
-import { Apis } from 'omnibazaarjs-ws';
+import { FetchChain } from 'omnibazaarjs/es';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
@@ -124,7 +123,7 @@ export function* getAccount({ payload: { username } }) {
     const account = yield call(fetchAccount, username);
     yield put({ type: 'GET_ACCOUNT_SUCCEEDED', account });
   } catch (e) {
-    console.log("ERROR ", e);
+    console.log('ERROR ', e);
     yield put({ type: 'GET_ACCOUNT_FAILED', error: messages.noAccount });
   }
 }

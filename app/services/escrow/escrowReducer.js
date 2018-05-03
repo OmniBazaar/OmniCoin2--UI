@@ -132,7 +132,7 @@ const reducer = handleActions({
     error: action.error,
     loading: false
   }),
-  SET_MY_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
+  SET_MY_ESCROW_AGENTS_SUCCEEDED: (state) => ({
     ...state,
     updating: false
   }),

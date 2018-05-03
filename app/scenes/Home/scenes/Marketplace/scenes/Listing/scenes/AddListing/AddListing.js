@@ -236,10 +236,6 @@ class AddListing extends Component {
   toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPrice();
   toggleContinuous = () => this.props.listingActions.setContinuous();
 
-  onSubmit() {
-    console.log('');
-  }
-
   renderLabeledField = ({
     input, placeholder, buttonText
   }) => (

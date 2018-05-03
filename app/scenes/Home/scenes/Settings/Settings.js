@@ -111,7 +111,7 @@ class Settings extends Component {
               <div className="badge-tag">{formatMessage(messages.registered)}</div>
             </div>
             <span className="username">{username || 'Username'}</span>
-            <span className="accountId">{formatMessage(messages.accountId)}: {account['id']}</span>
+            <span className="accountId">{formatMessage(messages.accountId)}: {account.id}</span>
           </div>
         </div>
         <div className="info">
@@ -245,6 +245,8 @@ Settings.defaultProps = {
   onClose: () => {},
   auth: {},
   intl: {},
+  walletActions: {},
+  blockchainWallet: {}
 };
 
 export default connect(

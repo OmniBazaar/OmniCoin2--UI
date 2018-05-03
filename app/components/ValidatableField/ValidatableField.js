@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 
 const Field = ({
   input, placeholder, type, meta: {
-    asyncValidating, touched, error
+    touched, error
   }, intl
 }) => {
   const errorMessage = error && error.id ? intl.formatMessage(error) : error;

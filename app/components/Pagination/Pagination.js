@@ -92,12 +92,18 @@ CustomPagination.propTypes = {
   activePage: PropTypes.number,
   onPageChange: PropTypes.func,
   totalPages: PropTypes.number,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  })
 };
 
 CustomPagination.defaultProps = {
   activePage: 1,
   onPageChange: null,
-  totalPages: 1
+  totalPages: 1,
+  intl: {
+    formatMessage: (msg)=>''
+  }
 };
 
 export default injectIntl(CustomPagination);

@@ -116,7 +116,7 @@ class ImportListings extends Component {
       const reader = new FileReader();
       const extFile = getFileExtension(event);
       if (extFile === 'txt') {
-        reader.onload = (e) => {
+        reader.onload = () => {
           // e.target.result
           const filename = this.inputElement.files[0].name;
           const file = {

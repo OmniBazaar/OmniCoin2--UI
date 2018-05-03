@@ -1,5 +1,4 @@
 import { put, takeEvery, call, all, takeLatest } from 'redux-saga/effects';
-import { FetchChain, ChainStore } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseTransactionsFromNode } from './escrowUtils';
@@ -68,7 +67,7 @@ function* loadMyEscrowAgents({ payload: { username } }) {
     const result = yield call(fetchAccount, username);
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
-      myAgents: result['escrows'].toJS().map(item => ({ id: item })),
+      myAgents: result.escrows.toJS().map(item => ({ id: item })),
     });
   } catch (e) {
     yield put({

@@ -139,10 +139,6 @@ class MyListingsDefaults extends Component {
   toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPriceDefaults();
   toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPriceDefaults();
 
-  onSubmit() {
-    console.log('');
-  }
-
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();

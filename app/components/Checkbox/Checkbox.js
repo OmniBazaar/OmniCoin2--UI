@@ -11,11 +11,11 @@ class Checkbox extends Component {
     super(props);
     this.getIcon = this.getIcon.bind(this);
     this.handleClick = this.handleClick.bind(this);
-  }
 
-  state = {
-    isChecked: false
-  };
+    this.state={
+      isChecked: props.value
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
@@ -23,12 +23,6 @@ class Checkbox extends Component {
         isChecked: nextProps.value
       });
     }
-  }
-
-  componentDidMount() {
-    this.setState({
-      isChecked: this.props.value
-    });
   }
 
   getIcon() {
