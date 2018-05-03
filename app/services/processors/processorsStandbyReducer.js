@@ -7,11 +7,13 @@ import {
   filterDataStandBy,
   setActivePageStandBy,
   setPaginationStandBy,
+  toggleProcessor
 } from './processorsStandbyActions';
 
 const defaultState = {
   standbyProcessors: [],
   standbyProcessorsFiltered: [],
+  toggledProcessorsIds: [],
   activePageStandBy: 1,
   sortDirectionStandBy: 'descending',
   sortColumnStandBy: 'rank',
@@ -50,6 +52,11 @@ const reducer = handleActions({
       ...state,
       error,
       loading: false
+    }
+  },
+  [toggleProcessor](state, { payload: { processorId }}) {
+    return {
+      ...state,
     }
   },
   [setPaginationStandBy](state, { payload: { rowsPerPageStandBy } }) {

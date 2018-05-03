@@ -75,13 +75,11 @@ class StandByProcessors extends Component {
             className="filter-input"
             onChange={this.handleFilterChange}
           />
-          <div className="pagination-container">
-            <Pagination
-              activePage={activePageStandBy}
-              onPageChange={this.handlePaginationChange}
-              totalPages={totalPagesStandBy}
-            />
-          </div>
+          <Pagination
+            activePage={activePageStandBy}
+            onPageChange={this.handlePaginationChange}
+            totalPages={totalPagesStandBy}
+          />
         </div>
         <div className="table-container">
           {loading ? <Loader active inline="centered"/> :
@@ -137,8 +135,14 @@ StandByProcessors.defaultProps = {
     totalPagesStandBy: 1,
     rowsPerPageStandBy: 10,
   },
-  tableProps: {},
-  rowsPerPage: 5,
+  tableProps: {
+    sortable: true,
+    compact: true,
+    basic: 'very',
+    striped: true,
+    size: 'small'
+  },
+  rowsPerPage: 4,
 };
 
 export default connect(

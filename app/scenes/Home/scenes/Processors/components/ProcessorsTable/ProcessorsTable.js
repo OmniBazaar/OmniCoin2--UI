@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { defineMessages, injectIntl } from 'react-intl';
 import {
   Table,
   TableBody,
@@ -12,45 +12,74 @@ import {
   Icon,
   Image,
 } from 'semantic-ui-react';
-
 import hash from 'object-hash';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 
-import DislikeIcon from '../../../../images/btn-dislike.svg';
 import LikeIcon from '../../../../images/btn-like.svg';
-import DotsIcon from '../../../../images/btn-meehh.svg';
-
 
 const iconSize = 18;
 
+const messages = defineMessages({
+  rank: {
+    id: 'ProcessorsTable.rank',
+    defaultMessage: 'Rank'
+  },
+  name: {
+    id: 'ProcessorsTable.name',
+    defaultMessage: 'Name'
+  },
+  approval: {
+    id: 'ProcessorsTable.approval',
+    defaultMessage: 'Approval',
+  },
+  reliability: {
+    id: 'ProcessorsTable.reliability',
+    defaultMessage: 'Reliability'
+  },
+  reputation: {
+    id: 'ProcessorsTable.reputation',
+    defaultMessage: 'Reputation'
+  },
+  referralScore: {
+    id: 'ProcessorsTable.referralScore',
+    defaultMessage: 'Referral Score'
+  },
+  publisherScore: {
+    id: 'ProcessorsTable.publisherScore',
+    defaultMessage: 'Publisher Score'
+  },
+  netScore: {
+    id: 'ProcessorsTable.netScore',
+    defaultMessage: 'Net Score'
+  },
+  approve: {
+    id: 'ProcessorsTable.approve',
+    defaultMessage: 'Approve'
+  }
+});
 class ProcessorsTable extends Component {
 
-  static renderVote() {
-    return (
-      <div className="votes">
-        <Image src={LikeIcon} width={iconSize} height={iconSize} />
-        <Image src={DotsIcon} width={iconSize} height={iconSize} />
-        <Image src={DislikeIcon} width={iconSize} height={iconSize} />
-      </div>
-    );
+  componentWillReceiveProps(nextProps) {
+    console.log('DATA ', nextProps.data);
   }
 
-  static renderVoteValue(approve) {
-    const vote = approve ? LikeIcon : DislikeIcon;
+  renderApprove = (row) => {
+    const vote = cn({
+      votes: true,
+      voted: !!row.approve
+    });
     return (
-      <div className="votes voted">
-        <span>Voted </span>
-        <Image src={vote} width={iconSize} height={iconSize} />
+      <div className={vote}>
+        <Image
+          src={LikeIcon}
+          width={iconSize}
+          height={iconSize}
+          onClick={() => this.props.toggle(row.id)}
+        />
       </div>
     );
-  }
-
-  static renderApprove(approve) {
-    if (approve !== null && approve !== '') {
-      return ProcessorsTable.renderVoteValue(approve);
-    }
-    return ProcessorsTable.renderVote();
-  }
+  };
 
   render() {
     const {
@@ -59,37 +88,38 @@ class ProcessorsTable extends Component {
       sortData,
       data
     } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <div className="table-container">
         <Table {...this.props.tableProps}>
           <TableHeader>
             <TableRow>
               <TableHeaderCell key="rank" sorted={sortColumn === 'rank' ? sortDirection : null} onClick={sortData('rank')}>
-                Rank
+                {formatMessage(messages.rank)}
               </TableHeaderCell>
               <TableHeaderCell key="name" sorted={sortColumn === 'name' ? sortDirection : null} onClick={sortData('name')}>
-                Name
+                {formatMessage(messages.name)}
               </TableHeaderCell>
               <TableHeaderCell key="approval" sorted={sortColumn === 'trust_score' ? sortDirection : null} onClick={sortData('trust_score')}>
-                Approval
+                {formatMessage(messages.approval)}
               </TableHeaderCell>
               <TableHeaderCell key="reliability" sorted={sortColumn === 'reliability_score' ? sortDirection : null} onClick={sortData('reliability_score')}>
-                Reliability
+                {formatMessage(messages.reliability)}
               </TableHeaderCell>
               <TableHeaderCell key="reputation" sorted={sortColumn === 'reputation_score' ? sortDirection : null} onClick={sortData('reputation_score')}>
-                Reputation
+                {formatMessage(messages.reputation)}
               </TableHeaderCell>
               <TableHeaderCell key="referralScore" sorted={sortColumn === 'referral_score' ? sortDirection : null} onClick={sortData('referral_score')}>
-                Referral Score
+                {formatMessage(messages.referralScore)}
               </TableHeaderCell>
               <TableHeaderCell key="publisherScore" sorted={sortColumn === 'listings_score' ? sortDirection : null} onClick={sortData('listings_score')}>
-                Publisher Score
+                {formatMessage(messages.publisherScore)}
               </TableHeaderCell>
               <TableHeaderCell key="netScore" sorted={sortColumn === 'pop_score' ? sortDirection : null} onClick={sortData('pop_score')}>
-                Net Score
+                {formatMessage(messages.netScore)}
               </TableHeaderCell>
               <TableHeaderCell key="approve" sorted={sortColumn === 'approve' ? sortDirection : null} onClick={sortData('approve')}>
-                Approve
+                {formatMessage(messages.approve)}
               </TableHeaderCell>
             </TableRow>
           </TableHeader>
@@ -106,7 +136,7 @@ class ProcessorsTable extends Component {
                   <TableCell>{row.listings_score / 100}%</TableCell>
                   <TableCell>{row.pop_score / 100}%</TableCell>
                   <TableCell>
-                    {ProcessorsTable.renderApprove(row.approve)}
+                    {this.renderApprove(row)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -127,7 +157,8 @@ ProcessorsTable.propTypes = {
   },
   data: PropTypes.array,
   sortColumn: PropTypes.string,
-  sortDirection: PropTypes.string
+  sortDirection: PropTypes.string,
+  toggle: PropTypes.func
 };
 
 PropTypes.defaultProps = {
@@ -138,7 +169,8 @@ PropTypes.defaultProps = {
     striped: true,
     size: 'small'
   },
-  data: []
+  data: [],
+  toggle: () => {}
 };
 
-export default ProcessorsTable;
+export default injectIntl(ProcessorsTable);

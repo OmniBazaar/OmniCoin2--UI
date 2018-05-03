@@ -7,11 +7,15 @@ import {
   filterDataTop,
   setActivePageTop,
   setPaginationTop,
+  toggleProcessor,
+  commitProcessors,
+  rollbackProcessors
 } from './processorsTopActions';
 
 const defaultState = {
   topProcessors: [],
   topProcessorsFiltered: [],
+  toggledProcessors: [],
   activePageTop: 1,
   sortDirectionTop: 'descending',
   sortColumnTop: 'rank',
@@ -146,6 +150,41 @@ const reducer = handleActions({
       sortColumnTop,
     };
   },
+  [toggleProcessor](state, { payload: { processorId }}) {
+    let tp = state.toggledProcessors;
+    if (state.toggledProcessors.includes(processorId)) {
+      tp = _.without(state.toggledProcessors, processorId);
+    } else {
+      tp = _.union(state.toggledProcessors, [processorId]);
+    }
+    return {
+      ...state,
+      toggledProcessors: tp,
+      topProcessors: state.topProcessors.map(processor => {
+        if (processor.id === processorId) {
+          processor.approve = !processor.approve;
+        }
+        return processor;
+      }),
+    }
+  },
+  [commitProcessors](state) {
+    return {
+      ...state
+    }
+  },
+  [rollbackProcessors](state) {
+    return {
+      ...state,
+      topProcessors: state.topProcessors.map(processor => {
+        if (state.toggledProcessors.includes(processor.id)) {
+          processor.approve = !processor.approve;
+        }
+        return processor;
+      }),
+      toggledProcessors: []
+    }
+  }
 }, defaultState);
 
 export default reducer;

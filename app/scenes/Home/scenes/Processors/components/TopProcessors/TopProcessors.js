@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import hash from 'object-hash';
 import {
   Table,
   TableBody,
@@ -13,7 +12,8 @@ import {
   Input,
   Icon,
   Image,
-  Loader
+  Loader,
+  Button
 } from 'semantic-ui-react';
 import { debounce } from 'lodash';
 
@@ -25,8 +25,11 @@ import {
   setActivePageTop,
   setPaginationTop,
   getTopProcessors,
+  toggleProcessor,
+  rollbackProcessors,
+  commitProcessors
 } from '../../../../../../services/processors/processorsTopActions';
-
+import VoteButtons from '../VoteButtons/VoteButtons';
 
 class TopProcessors extends Component {
 
@@ -77,13 +80,16 @@ class TopProcessors extends Component {
             className="filter-input"
             onChange={this.handleFilterChange}
           />
-          <div className="pagination-container">
-            <Pagination
-              activePage={activePageTop}
-              onPageChange={this.handlePaginationChange}
-              totalPages={totalPagesTop}
-            />
-          </div>
+          <Pagination
+            activePage={activePageTop}
+            onPageChange={this.handlePaginationChange}
+            totalPages={totalPagesTop}
+          />
+          <VoteButtons
+            onCancelClicked={() => this.props.processorsTopActions.rollbackProcessors()}
+            onVoteClicked={() => this.props.processorsTopActions.commitProcessors()}
+            disabled={!this.props.processorsTop.toggledProcessors.length}
+          />
         </div>
         <div className="table-container">
           {loading ? <Loader active inline="centered"/> :
@@ -93,6 +99,7 @@ class TopProcessors extends Component {
               sortDirection={sortDirectionTop}
               sortData={this.sortData}
               data={topProcessorsFiltered}
+              toggle={this.props.processorsTopActions.toggleProcessor}
             />
           }
         </div>
@@ -123,6 +130,7 @@ TopProcessors.propTypes = {
     sortColumnTop: PropTypes.string,
     sortDirectionTop: PropTypes.string,
     totalPagesTop: PropTypes.number,
+    toggledProcessors: PropTypes.array
   }),
   rowsPerPage: PropTypes.number,
 };
@@ -136,8 +144,15 @@ TopProcessors.defaultProps = {
     sortColumnTop: 'rank',
     sortDirectionTop: 'descending',
     totalPagesTop: 1,
+    toggledProcessors: []
   },
-  tableProps: {},
+  tableProps: {
+    sortable: true,
+    compact: true,
+    basic: 'very',
+    striped: true,
+    size: 'small'
+  },
   rowsPerPage: 5,
 };
 
@@ -149,7 +164,10 @@ export default connect(
       filterDataTop,
       setActivePageTop,
       setPaginationTop,
-      getTopProcessors
+      getTopProcessors,
+      toggleProcessor,
+      rollbackProcessors,
+      commitProcessors
     }, dispatch),
   }),
 )(TopProcessors);
