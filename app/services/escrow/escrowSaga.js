@@ -67,7 +67,7 @@ function* loadMyEscrowAgents({ payload: { username } }) {
     const result = yield call(fetchAccount, username);
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
-      myAgents: result.escrows.toJS().map(item => ({ id: item })),
+      myAgents: result.escrows.map(item => ({ id: item })),
     });
   } catch (e) {
     yield put({
