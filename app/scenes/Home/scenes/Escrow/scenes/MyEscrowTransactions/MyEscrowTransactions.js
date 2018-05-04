@@ -75,7 +75,7 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => 
+      transactions: this.state.transactions.slice().sort((transA, transB) =>
         (transA[headerName].localeCompare(transB[headerName])) * (newHeaderSortAsc ? 1 : -1)),
       lastHeaderClicked: headerName
     });

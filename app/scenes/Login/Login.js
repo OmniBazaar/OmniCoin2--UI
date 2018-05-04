@@ -36,10 +36,21 @@ export default connect(
 
 Login.propTypes = {
   authActions: PropTypes.shape({
-    getCurrentUser: PropTypes.func
+    getCurrentUser: PropTypes.func,
+    getAccount: PropTypes.func
+  }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func
   })
 };
 
 Login.defaultProps = {
-  authActions: null
+  authActions: null,
+  history: {},
+  auth: {}
 };

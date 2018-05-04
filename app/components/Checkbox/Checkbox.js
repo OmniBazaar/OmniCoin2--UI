@@ -12,9 +12,9 @@ class Checkbox extends Component {
     this.getIcon = this.getIcon.bind(this);
     this.handleClick = this.handleClick.bind(this);
 
-    this.state={
+    this.state = {
       isChecked: props.value
-    }
+    };
   }
 
   componentWillReceiveProps(nextProps) {

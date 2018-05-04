@@ -69,7 +69,7 @@ export function* updateAccount(payload) {
   tr.add_type_operation(
     'account_update',
     {
-      account: account['id'],
+      account: account.id,
       ...payload
     }
   );
@@ -78,9 +78,7 @@ export function* updateAccount(payload) {
   yield Promise.all([
     tr.set_required_fees(),
     tr.update_head_block()
-  ]).then(
-    () => tr.broadcast()
-  );
+  ]).then(() => tr.broadcast());
 }
 
 export function* getRecentTransactions() {
@@ -91,7 +89,7 @@ export function* getRecentTransactions() {
     getDynGlobalObject()
   ]);
   try {
-    const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account['id']);
+    const result = yield call(ChainStore.fetchRecentHistory.bind(ChainStore), account.id);
     let history = [];
     const h = result.get('history');
     const seenOps = new Set();

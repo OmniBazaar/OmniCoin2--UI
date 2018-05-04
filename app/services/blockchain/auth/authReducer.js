@@ -1,5 +1,5 @@
 
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { ipcRenderer } from 'electron';
 
 import {
@@ -22,7 +22,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [getCurrentUser](state, { payload: {} }) {
+  [getCurrentUser](state) {
     return {
       ...state,
       currentUser: JSON.parse(localStorage.getItem('currentUser'))
@@ -35,7 +35,7 @@ const reducer = handleActions({
       loading: true
     };
   },
-  [logout](state, { payload: {} }) {
+  [logout](state) {
     localStorage.removeItem('currentUser');
     return {
       ...state,
@@ -59,18 +59,18 @@ const reducer = handleActions({
       isAccountLoading: true
     };
   },
-  [requestPcIds](state, { payload: {} }) {
+  [requestPcIds](state) {
     ipcRenderer.once('receive-pc-ids', (event, arg) => {
       localStorage.setItem('hardDriveId', arg.hardDriveId);
       localStorage.setItem('macAddress', arg.macAddress);
     });
     ipcRenderer.send('get-pc-ids', null);
   },
-  [getLastLoginUserName]: (state, { payload: {} })=>{
-    let user=JSON.parse(localStorage.getItem('currentUser'));
+  [getLastLoginUserName]: (state) => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
     return {
       ...state,
-      lastLoginUserName: user?user.username:null
+      lastLoginUserName: user ? user.username : null
     };
   },
   LOGIN_FAILED: (state, action) => ({

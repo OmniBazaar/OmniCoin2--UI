@@ -2,21 +2,20 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
-import { requestPcIds } from './services/blockchain/auth/authActions';
-import { getCurrentUser, getLastLoginUserName } from './services/blockchain/auth/authActions';
+import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/blockchain/auth/authActions';
 
 
 class Root extends Component {
   componentWillMount() {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
-     // this.props.authActions.getCurrentUser();
     this.props.authActions.getLastLoginUserName();
   }
 
@@ -41,10 +40,35 @@ class Root extends Component {
   }
 }
 
+Root.propTypes = {
+  connectionActions: PropTypes.shape({
+    connectToNode: PropTypes.func,
+    getDynGlobalObject: PropTypes.func
+  }),
+  authActions: PropTypes.shape({
+    requestPcIds: PropTypes.func,
+    getLastLoginUserName: PropTypes.func,
+    getCurrentUser: PropTypes.func
+  }),
+  settings: PropTypes.shape({
+    activeNode: PropTypes.object
+  })
+};
+
+Root.defaultProps = {
+  connectionActions: {},
+  authActions: {},
+  settings: {}
+};
+
 export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
-    connectionActions: bindActionCreators({ connectToNode, getDynGlobalObject }, dispatch),
-    authActions: bindActionCreators({ requestPcIds, getCurrentUser, getLastLoginUserName }, dispatch)
+    connectionActions: bindActionCreators({
+      connectToNode, getDynGlobalObject
+    }, dispatch),
+    authActions: bindActionCreators({
+      requestPcIds, getCurrentUser, getLastLoginUserName
+    }, dispatch)
   }),
 )(Root);

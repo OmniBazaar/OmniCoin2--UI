@@ -101,9 +101,7 @@ CustomPagination.defaultProps = {
   activePage: 1,
   onPageChange: null,
   totalPages: 1,
-  intl: {
-    formatMessage: (msg)=>''
-  }
+  intl: {}
 };
 
 export default injectIntl(CustomPagination);
