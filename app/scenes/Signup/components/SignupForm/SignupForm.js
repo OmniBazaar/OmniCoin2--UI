@@ -278,24 +278,16 @@ class SignupForm extends Component {
   }
 }
 
-SignupForm = withRouter(SignupForm);
-
-SignupForm = reduxForm({
-  form: 'signupForm',
-  validate: SignupForm.validate,
-  asyncValidate: SignupForm.asyncValidate,
-  asyncBlurFields: ['username', 'referrer'],
-  destroyOnUnmount: true,
-})(SignupForm);
-
-SignupForm = injectIntl(SignupForm);
-
-export default connect(
-  (state) => ({ ...state.default }),
-  (dispatch) => ({
-    authActions: bindActionCreators({ signup }, dispatch),
-  })
-)(SignupForm);
+SignupForm.defaultProps = {
+  auth: null,
+  authActions: null,
+  initialize: null,
+  intl: {},
+  history: {},
+  handleSubmit: null,
+  valid: false,
+  asyncValidating: false
+};
 
 SignupForm.propTypes = {
   auth: PropTypes.shape({
@@ -323,13 +315,22 @@ SignupForm.propTypes = {
   asyncValidating: PropTypes.bool
 };
 
-SignupForm.defaultProps = {
-  auth: null,
-  authActions: null,
-  initialize: null,
-  intl: {},
-  history: {},
-  handleSubmit: null,
-  valid: false,
-  asyncValidating: false
-};
+SignupForm = withRouter(SignupForm);
+
+SignupForm = reduxForm({
+  form: 'signupForm',
+  validate: SignupForm.validate,
+  asyncValidate: SignupForm.asyncValidate,
+  asyncBlurFields: ['username', 'referrer'],
+  destroyOnUnmount: true,
+})(SignupForm);
+
+SignupForm = injectIntl(SignupForm);
+
+export default connect(
+  (state) => ({ ...state.default }),
+  (dispatch) => ({
+    authActions: bindActionCreators({ signup }, dispatch),
+  })
+)(SignupForm);
+
