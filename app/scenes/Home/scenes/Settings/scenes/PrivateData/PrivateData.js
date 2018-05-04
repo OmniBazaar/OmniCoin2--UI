@@ -369,7 +369,7 @@ class PrivateData extends Component {
     return (
       <div className="private-data">
         {this.privateDataForm()}
-        {!this.props.auth.account.get('is_a_publisher') && this.publisherForm()}
+        {!this.props.auth.account['is_a_publisher'] && this.publisherForm()}
       </div>
     );
   }
@@ -399,7 +399,8 @@ PrivateData.propTypes = {
   }).isRequired,
   auth: PropTypes.shape({
     account: PropTypes.shape({
-      get: PropTypes.func
+      get: PropTypes.func,
+      is_a_publisher: PropTypes.bool
     })
   }).isRequired,
   intl: PropTypes.shape({
@@ -409,7 +410,6 @@ PrivateData.propTypes = {
 };
 
 PrivateData.defaultProps = {
-  accountSettingsActions: {},
   account: {},
   intl: {},
 };

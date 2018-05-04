@@ -184,7 +184,7 @@ class MyEscrowAgents extends Component {
         <div className="top">
           <div>
             <Input
-              ref={el => (this.searchInput = el)}
+              ref={el => { this.searchInput = el; }}
               icon={<Icon name="search" />}
               iconPosition="left"
               placeholder={formatMessage(messages.search)}

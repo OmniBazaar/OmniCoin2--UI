@@ -1,4 +1,4 @@
-import { put, takeEvery, call, all } from 'redux-saga/effects';
+import { put, takeEvery, all } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import {
   storeMessage,

@@ -29,7 +29,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [combineActions(showComposeModal)](state, { payload: { showCompose } }) {
+  [combineActions(showComposeModal)](state) {
     return {
       ...state,
       reply: false,
@@ -48,14 +48,14 @@ const reducer = handleActions({
       activeMessage
     };
   },
-  [combineActions(showReplyModal)](state, { payload: { reply } }) {
+  [combineActions(showReplyModal)](state) {
     return {
       ...state,
       reply: true,
       showCompose: !state.showCompose
     };
   },
-  [combineActions(sendMail)](state, { payload: { mailSent } }) {
+  [combineActions(sendMail)](state) {
     return {
       ...state
     };

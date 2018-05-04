@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 import {
   saleCategories,
   servicesCategories,
@@ -71,5 +72,20 @@ class CategoryHeader extends Component {
     );
   }
 }
+
+CategoryHeader.propTypes = {
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }),
+  marketplace: PropTypes.shape({
+    parentCategory: PropTypes.string,
+    activeCategory: PropTypes.string
+  })
+};
+
+CategoryHeader.defaultProps = {
+  intl: {},
+  marketplace: {}
+};
 
 export default connect(state => ({ ...state.default }))(injectIntl(CategoryHeader));

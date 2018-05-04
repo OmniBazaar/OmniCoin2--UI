@@ -1,33 +1,42 @@
 import { handleActions } from 'redux-actions';
 import { defineMessages } from 'react-intl';
+import _ from 'lodash';
 
 import {
   getFeatureList,
-  setPaginationFeature,
-  setActivePageFeature,
   getForSaleList,
   getServicesList,
   getJobsList,
   getRentalsList,
   getCryptoBazaarList,
   getCategories,
-  setActiveCategory
+  setActiveCategory,
+  getRecentSearches,
+  setPaginationGridTable,
+  sortGridTableBy,
+  setActivePageGridTable,
+  sortDataTableBy
 } from './marketplaceActions';
 
 const defaultState = {
   featureList: [],
-  featureListFiltered: [],
-  activePageFeature: 1,
-  totalPagesFeature: 1,
-  rowsPerPageFeature: 3 * 6,
   forSaleList: [],
   servicesList: [],
   jobsList: [],
   rentalsList: [],
   cryptoBazaarList: [],
+  recentSearches: [],
   categories: {},
   activeCategory: 'Marketplace.home',
-  parentCategory: null
+  parentCategory: null,
+  gridTableData: [],
+  gridTableDataFiltered: [],
+  activePageGridTable: 1,
+  totalPagesGridTable: 1,
+  rowsPerPageGridTable: 3 * 6,
+  dataTableData: [],
+  sortTableBy: 'date',
+  sortTableDirection: 'descending'
 };
 
 const messages = defineMessages({
@@ -71,38 +80,7 @@ const reducer = handleActions({
   [getFeatureList](state, { payload: { featureList } }) {
     return {
       ...state,
-      featureList,
-      featureListFiltered: featureList
-    };
-  },
-  [setPaginationFeature](state, { payload: { rowsPerPageFeature } }) {
-    const data = state.featureList;
-    const { activePageFeature } = state;
-    const totalPagesFeature = getTotalPages(data, rowsPerPageFeature);
-    const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
-
-    return {
-      ...state,
-      totalPagesFeature,
-      rowsPerPageFeature,
-      featureListFiltered: currentData,
-    };
-  },
-  [setActivePageFeature](state, { payload: { activePageFeature } }) {
-    const data = state.featureList;
-    if (activePageFeature !== state.activePageFeature) {
-      const { rowsPerPageFeature } = state;
-      const currentData = sliceData(data, activePageFeature, rowsPerPageFeature);
-
-      return {
-        ...state,
-        activePageFeature,
-        featureListFiltered: currentData,
-      };
-    }
-
-    return {
-      ...state,
+      featureList
     };
   },
   [getForSaleList](state, { payload: { forSaleList } }) {
@@ -142,12 +120,82 @@ const reducer = handleActions({
       parentCategory
     };
   },
-  [getCategories](state, { payload: { } }) {
+  [getCategories](state) {
     return {
       ...state,
       categories: messages
     };
-  }
+  },
+  [getRecentSearches](state, { payload: { recentSearches } }) {
+    const sortedData = _.sortBy(recentSearches, ['date']).reverse();
+    return {
+      ...state,
+      recentSearches: sortedData
+    };
+  },
+
+  [setPaginationGridTable](state, { payload: { rowsPerPageGridTable } }) {
+    const data = state.gridTableData;
+    const { activePageGridTable } = state;
+    const totalPagesGridTable = getTotalPages(data, rowsPerPageGridTable);
+    const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+
+    return {
+      ...state,
+      totalPagesGridTable,
+      rowsPerPageGridTable,
+      gridTableDataFiltered: currentData,
+    };
+  },
+  [sortGridTableBy](state, { payload: { gridTableData, sortGridBy, sortGridDirection } }) {
+    let sortedData = _.sortBy(gridTableData, [sortGridBy]);
+    if (sortGridDirection === 'descending') {
+      sortedData = sortedData.reverse();
+    }
+
+    return {
+      ...state,
+      gridTableData: sortedData,
+      gridTableDataFiltered: sortedData
+    };
+  },
+  [setActivePageGridTable](state, { payload: { activePageGridTable } }) {
+    const data = state.gridTableData;
+    if (activePageGridTable !== state.activePageGridTable) {
+      const { rowsPerPageGridTable } = state;
+      const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+
+      return {
+        ...state,
+        activePageGridTable,
+        gridTableDataFiltered: currentData,
+      };
+    }
+
+    return {
+      ...state,
+    };
+  },
+  [sortDataTableBy](state, { payload: { dataTableData, sortTableBy } }) {
+    let sortDirection = state.sortTableDirection === 'ascending' ? 'descending' : 'ascending';
+
+    const sortBy = _.sortBy(dataTableData, [sortTableBy]);
+    let sortedData = [];
+
+    if (state.sortTableBy !== sortTableBy) {
+      sortedData = sortBy.reverse();
+      sortDirection = 'ascending';
+    } else {
+      sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+    }
+
+    return {
+      ...state,
+      dataTableData: sortedData,
+      sortTableDirection: sortDirection,
+      sortTableBy,
+    };
+  },
 }, defaultState);
 
 export default reducer;

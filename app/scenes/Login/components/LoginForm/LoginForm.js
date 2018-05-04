@@ -78,6 +78,8 @@ class LoginForm extends Component {
         showUsernameInput: true
       });
     }
+
+    this.props.initialize({ username: this.props.auth.lastLoginUserName });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,6 +88,10 @@ class LoginForm extends Component {
       const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error)
         : nextProps.auth.error;
       toastr.error(formatMessage(messages.error), content);
+    }
+
+    if (nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName) {
+      this.props.initialize({ username: nextProps.auth.lastLoginUserName });
     }
   }
 
@@ -201,20 +207,35 @@ export default connect(
 
 
 LoginForm.propTypes = {
+  initialize: PropTypes.func,
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string
     }),
-    error: PropTypes.shape({}),
+    lastLoginUserName: PropTypes.string,
+    error: PropTypes.shape({
+      id: PropTypes.string
+    }),
     loading: PropTypes.bool
   }),
   authActions: PropTypes.shape({
     login: PropTypes.func
-  })
+  }),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
+  asyncValidating: PropTypes.bool
 };
 
 LoginForm.defaultProps = {
+  initialize: null,
   auth: null,
-  authActions: null
+  authActions: null,
+  intl: {},
+  history: {},
+  asyncValidating: false
 };

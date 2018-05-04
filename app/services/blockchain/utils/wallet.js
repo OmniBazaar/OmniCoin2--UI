@@ -1,5 +1,4 @@
 import { PrivateKey, Aes } from 'omnibazaarjs/es';
-import { Apis } from 'omnibazaarjs-ws';
 
 function generateKeyFromPassword(accountName, role, password) {
   const seed = accountName + role + password;

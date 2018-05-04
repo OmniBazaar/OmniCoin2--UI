@@ -73,11 +73,16 @@ SettingsMenu.propTypes = {
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func
+  }),
+  authActions: PropTypes.shape({
+    logout: PropTypes.func
   })
 };
 
 SettingsMenu.defaultProps = {
   intl: {},
+  menuActions: {},
+  authActions: {}
 };
 
 export default connect(

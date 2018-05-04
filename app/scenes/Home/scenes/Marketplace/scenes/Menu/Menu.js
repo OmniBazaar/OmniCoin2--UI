@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import { Button, Image, Popup } from 'semantic-ui-react';
+import { Button, Image, Popup, Form, Dropdown, Icon, Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { Field, reduxForm } from 'redux-form';
+import hash from 'object-hash';
+
+import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import AddIcon from '../../images/btn-add-listing.svg';
 import SearchIcon from '../../images/btn-search-norm.svg';
 import UserIcon from '../../images/btn-user-menu-norm.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
 
-import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
+import {
+  setActiveCategory,
+  getRecentSearches
+} from '../../../../../../services/marketplace/marketplaceActions';
 
 import {
   saleCategories,
@@ -30,41 +37,93 @@ import './menu.scss';
 const logoWidth = 200;
 const iconSizeBig = 25;
 const iconSizeMedium = 15;
+const iconSizeSmall = 12;
+const maxSearches = 5;
+
+const recentSearchesList = [
+  {
+    id: 1,
+    date: '2018-04-19',
+    search: 'car',
+    filters: ['USA', 'Lowest price', 'Newest'],
+  },
+  {
+    id: 2,
+    date: '2018-04-19',
+    search: 'motorcycles',
+    filters: ['USA', 'Lowest price', 'Newest'],
+  },
+  {
+    id: 3,
+    date: '2018-04-20',
+    search: 'cars',
+    filters: ['USA', 'Lowest price'],
+  },
+  {
+    id: 4,
+    date: '2018-04-20',
+    search: 'jewelry',
+    filters: [],
+  },
+];
 
 const messages = defineMessages({
   addListing: {
-    id: 'Marketplace.addListing',
+    id: 'Menu.addListing',
     defaultMessage: 'ADD LISTING'
   },
   community: {
-    id: 'Marketplace.community',
+    id: 'Menu.community',
     defaultMessage: 'Community'
   },
   housing: {
-    id: 'Marketplace.housing',
+    id: 'Menu.housing',
     defaultMessage: 'Housing'
   },
   gigs: {
-    id: 'Marketplace.gigs',
+    id: 'Menu.gigs',
     defaultMessage: 'Gigs'
   },
   quickLinks: {
-    id: 'Marketplace.quickLinks',
+    id: 'Menu.quickLinks',
     defaultMessage: 'Quick Links'
   },
   support: {
-    id: 'Marketplace.support',
+    id: 'Menu.support',
     defaultMessage: 'Support'
   },
   usefulLinks: {
-    id: 'Marketplace.usefulLinks',
+    id: 'Menu.usefulLinks',
     defaultMessage: 'Useful Links'
   },
   omniLink: {
-    id: 'Marketplace.omniLink',
+    id: 'Menu.omniLink',
     defaultMessage: 'omnibazaar.com'
   },
+  recent: {
+    id: 'Menu.recent',
+    defaultMessage: 'Recent'
+  },
+  extendedSearch: {
+    id: 'Menu.extendedSearch',
+    defaultMessage: 'Extended Search'
+  },
+  viewAll: {
+    id: 'Menu.viewAll',
+    defaultMessage: 'VIEW ALL'
+  },
+  default: {
+    id: 'Menu.default',
+    defaultMessage: 'Default'
+  },
 });
+
+const options = [
+  { key: 1, text: 'All Categories', value: 'all' },
+  { key: 2, text: 'Category 1', value: 'category1' },
+  { key: 3, text: 'Category 2', value: 'category2' },
+  { key: 4, text: 'Category 3', value: 'category3' },
+];
 
 class Menu extends Component {
   static getValue(category) {
@@ -75,6 +134,10 @@ class Menu extends Component {
     }
 
     return categoryName;
+  }
+
+  componentDidMount() {
+    this.props.marketplaceActions.getRecentSearches(recentSearchesList);
   }
 
   menuTitle(category) {
@@ -100,13 +163,13 @@ class Menu extends Component {
     );
   }
 
-  renderOption(category, parentCategory) {
+  renderOption(category, parentCategory, path, isExternal) {
     const { formatMessage } = this.props.intl;
     const type = category.id;
     const parent = parentCategory ? parentCategory.id : null;
 
-    return (
-      <NavLink to="/marketplace">
+    const menuItem = (
+      <div>
         <span
           onClick={() => this.viewCategory(type, parent)}
           onKeyDown={() => this.viewCategory(type, parent)}
@@ -115,7 +178,21 @@ class Menu extends Component {
         >
           {formatMessage(category)}
         </span>
-      </NavLink>
+      </div>
+    );
+
+    if (!isExternal) {
+      return (
+        <NavLink to={path || '/marketplace'}>
+          {menuItem}
+        </NavLink>
+      );
+    }
+
+    return (
+      <a href={path} target="_blank">
+        {menuItem}
+      </a>
     );
   }
 
@@ -383,32 +460,32 @@ class Menu extends Component {
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.quickLinks)}</p>
+            <p className="title">{formatMessage(aboutCategories.community)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.home, mainCategories.about)}
-              {this.renderOption(aboutCategories.features, mainCategories.about)}
-              {this.renderOption(aboutCategories.theTeam, mainCategories.about)}
-              {this.renderOption(aboutCategories.roadmap, mainCategories.about)}
-              {this.renderOption(aboutCategories.downloads, mainCategories.about)}
+              {this.renderOption(aboutCategories.telegramOmniBazaar, mainCategories.about, 'https://t.me/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.telegramOmniCoin, mainCategories.about, 'https://t.me/RealOmniCoin', true)}
+              {this.renderOption(aboutCategories.reddit, mainCategories.about, 'https://www.reddit.com/r/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.twitter, mainCategories.about, 'https://twitter.com/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.youtube, mainCategories.about, 'https://www.youtube.com/channel/UCTbkLcypGrEeUKjZtxcGCBg', true)}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.support)}</p>
+            <p className="title">{formatMessage(aboutCategories.documentation)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.tutorialVideos, mainCategories.about)}
-              {this.renderOption(aboutCategories.community, mainCategories.about)}
-              {this.renderOption(aboutCategories.slack, mainCategories.about)}
-              {this.renderOption(aboutCategories.blog, mainCategories.about)}
-              {this.renderOption(aboutCategories.contact, mainCategories.about)}
+              {this.renderOption(aboutCategories.knowledgeBase, mainCategories.about, 'http://support.omnibazaar.com/knowledgebase/', true)}
+              {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
+              {this.renderOption(aboutCategories.technology, mainCategories.about, 'http://omnibazaar.com/index.php/support/technology', true)}
+              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://omnibazaar.com/index.php/support/white-paper', true)}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.usefulLinks)}</p>
+            <p className="title">{formatMessage(aboutCategories.connections)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.privacyPolicy, mainCategories.about)}
-              {this.renderOption(aboutCategories.termsOfUse, mainCategories.about)}
-              {this.renderOption(aboutCategories.webWallet, mainCategories.about)}
-              {this.renderOption(aboutCategories.ominCoinExplorer, mainCategories.about)}
+              {this.renderOption(aboutCategories.downloadOmniBazaar, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
+              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, '', true)}
+              {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
+              {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
+              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
             </div>
           </div>
         </div>
@@ -430,7 +507,9 @@ class Menu extends Component {
         hideOnScroll
         className="user-menu"
       >
-        <div className="link-menu">{formatMessage(userMenu.recentSearches)}</div>
+        <div className="link-menu">
+          <NavLink to="/recent-searches">{formatMessage(userMenu.recentSearches)}</NavLink>
+        </div>
         <div className="link-menu">
           <NavLink to="/listings">{formatMessage(userMenu.myListings)}</NavLink>
         </div>
@@ -440,6 +519,125 @@ class Menu extends Component {
           <NavLink to="/listings-defaults">{formatMessage(userMenu.newListingDefaults)}</NavLink>
         </div>
         <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
+      </Popup>
+    );
+  }
+
+  renderSelectField = ({
+    input, placeholder, dropdownPlaceholder
+  }) => (
+    <div className="hybrid-input">
+      <input
+        {...input}
+        type="text"
+        className="textfield"
+        placeholder={placeholder}
+      />
+      <div className="search-actions">
+        <Dropdown
+          labeled
+          defaultValue="all"
+          options={options}
+          placeholder={dropdownPlaceholder}
+          selection
+          className="icon button--gray-text select-btn"
+        />
+        <NavLink to="/search-results">
+          <Button
+            content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+            className="button--primary search-btn"
+          />
+        </NavLink>
+      </div>
+    </div>
+  );
+
+  renderFilters(filters) {
+    const { formatMessage } = this.props.intl;
+
+    if (filters.length === 0) {
+      return (
+        <span>{formatMessage(messages.default)}</span>
+      );
+    }
+
+    return (
+      filters.map((filter, index) => {
+        const comma = filters.length - 1 !== index ? ', ' : '';
+        return (
+          <span key={hash(filter)}>{`${filter}${comma}`}</span>
+        );
+      })
+    );
+  }
+
+  recentSearches() {
+    const { recentSearches } = this.props.marketplace;
+    return (
+      recentSearches.slice(0, maxSearches).map((search) => (
+        <Grid.Row key={hash(search)}>
+          <Grid.Column width={8}>
+            <span className="blue-text">{search.search}</span>
+          </Grid.Column>
+          <Grid.Column width={8}>
+            <span className="gray-text">{this.renderFilters(search.filters)}</span>
+          </Grid.Column>
+        </Grid.Row>
+      ))
+    );
+  }
+
+  renderSearchMenu() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Popup
+        trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
+        hoverable
+        basic
+        on="hover"
+        position="bottom center"
+        wide="very"
+        hideOnScroll
+        className="search-menu"
+      >
+        <Form className="search-form">
+          <Field
+            type="text"
+            name="search"
+            placeholder="Search"
+            dropdownPlaceholder="Categories"
+            component={this.renderSelectField}
+            className="textfield"
+          />
+        </Form>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <span className="gray-text">{formatMessage(messages.recent)}</span>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <div className="check-wrapper">
+                <Checkbox
+                  width={iconSizeMedium}
+                  height={iconSizeMedium}
+                />
+                <div className="description-text">
+                  {formatMessage(messages.extendedSearch)}
+                </div>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+          {this.recentSearches()}
+          <Grid.Row>
+            <Grid.Column width={12} />
+            <Grid.Column width={4} className="right">
+              <NavLink to="/saved-searches">
+                <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
+              </NavLink>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Popup>
     );
   }
@@ -480,7 +678,7 @@ class Menu extends Component {
               {formatMessage(messages.addListing)}
             </Button>
           </NavLink>
-          <Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />
+          {this.renderSearchMenu()}
           {this.renderUserMenu()}
         </div>
       </div>
@@ -489,8 +687,12 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
+  marketplace: PropTypes.shape({
+    recentSearches: PropTypes.array
+  }),
   marketplaceActions: PropTypes.shape({
     setActiveCategory: PropTypes.func,
+    getRecentSearches: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -499,14 +701,22 @@ Menu.propTypes = {
 
 Menu.defaultProps = {
   intl: {},
+  marketplace: {},
   marketplaceActions: {},
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    marketplaceActions: bindActionCreators({
-      setActiveCategory,
-    }, dispatch),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      marketplaceActions: bindActionCreators({
+        setActiveCategory,
+        getRecentSearches
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'searchForm',
+    destroyOnUnmount: true,
   }),
 )(injectIntl(Menu));

@@ -121,14 +121,14 @@ class PublicData extends Component {
 
   componentWillMount() {
     const { account } = this.props.auth;
-    if (account.get('is_a_publisher') !== this.props.account.publisher) {
+    if (account['is_a_publisher'] !== this.props.account.publisher) {
       this.togglePublisher();
     }
-    if (account.get('is_an_escrow') !== this.props.account.escrow) {
+    if (account['is_an_escrow'] !== this.props.account.escrow) {
       this.toggleEscrow();
     }
-    if (account.get('publisher_ip')) {
-      this.props.accountSettingsActions.changeIpAddress(account.get('publisher_ip'));
+    if (account['publisher_ip']) {
+      this.props.accountSettingsActions.changeIpAddress(account['publisher_ip']);
     }
     // todo add TransactionProcessor and referrer
     this.freezeSettings();
@@ -307,7 +307,8 @@ PublicData.propTypes = {
     transactionProcessor: PropTypes.bool,
     escrow: PropTypes.bool,
     loading: PropTypes.bool,
-    error: PropTypes.string
+    error: PropTypes.string,
+    ipAddress: PropTypes.string
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

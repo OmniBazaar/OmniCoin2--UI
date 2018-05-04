@@ -21,11 +21,14 @@ import Preferences from './scenes/Preferences/Preferences';
 import Support from './scenes/Support/Support';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
-import Listing from './scenes/Listing/Listing';
-import MyListings from './scenes/Listing/scenes/MyListings/MyListings';
-import AddListing from './scenes/Listing/scenes/AddListing/AddListing';
-import MyListingsDefaults from './scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
-import ImportListings from './scenes/Listing/scenes/ImportListings/ImportListings';
+import Listing from './scenes/Marketplace/scenes/Listing/Listing';
+import MyListings from './scenes/Marketplace/scenes/Listing/scenes/MyListings/MyListings';
+import AddListing from './scenes/Marketplace/scenes/Listing/scenes/AddListing/AddListing';
+import MyListingsDefaults from './scenes/Marketplace/scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
+import ImportListings from './scenes/Marketplace/scenes/Listing/scenes/ImportListings/ImportListings';
+import SearchResults from './scenes/Marketplace/scenes/Search/scenes/SearchResults/SearchResults';
+import RecentSearches from './scenes/Marketplace/scenes/Search/scenes/RecentSearches/RecentSearches';
+import SavedSearches from './scenes/Marketplace/scenes/Search/scenes/SavedSearches/SavedSearches';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
@@ -98,10 +101,18 @@ class Home extends Component {
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
+      if (!this.props.auth.lastLoginUserName) {
+        return (<Redirect
+          to={{
+            pathname: '/signup',
+          }}
+        />);
+      }
+
       return (<Redirect
         to={{
-                  pathname: '/signup',
-              }}
+          pathname: '/login',
+        }}
       />);
     }
     return (
@@ -199,6 +210,9 @@ class Home extends Component {
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
             <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
             <Route path="/import-listings" render={(props) => <ImportListings {...props} />} />
+            <Route path="/search-results" render={(props) => <SearchResults {...props} />} />
+            <Route path="/recent-searches" render={(props) => <RecentSearches {...props} />} />
+            <Route path="/saved-searches" render={(props) => <SavedSearches {...props} />} />
           </div>
           <ChainFooter />
         </div>
@@ -220,11 +234,15 @@ export default connect(
 )(Home);
 
 Home.propTypes = {
+  connection: PropTypes.shape({
+    node: PropTypes.object
+  }),
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string
     }),
+    lastLoginUserName: PropTypes.string,
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
@@ -232,11 +250,15 @@ Home.propTypes = {
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func,
     setActiveCategory: PropTypes.func
+  }),
+  authActions: PropTypes.shape({
+    getAccount: PropTypes.func
   })
-
 };
 
 Home.defaultProps = {
+  connection: {},
   auth: null,
-  menuActions: null
+  menuActions: null,
+  authActions: {}
 };

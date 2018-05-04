@@ -459,9 +459,73 @@ const moreCategories = defineMessages({
 });
 
 const aboutCategories = defineMessages({
-  home: {
-    id: 'Marketplace.home',
-    defaultMessage: 'Home'
+  twitter: {
+    id: 'Marketplace.twitter',
+    defaultMessage: 'Twitter'
+  },
+  youtube: {
+    id: 'Marketplace.youtube',
+    defaultMessage: 'Youtube'
+  },
+  removingMiddlemen: {
+    id: 'Marketplace.removingMiddlemen',
+    defaultMessage: 'Removing Middlemen and Bankers from E-commerce'
+  },
+  omniIn60: {
+    id: 'Marketplace.omniIn60',
+    defaultMessage: 'OmniBazaar in 60 seconds'
+  },
+  omniWalkThrough: {
+    id: 'Marketplace.omniWalkThrough',
+    defaultMessage: 'OmniBazaar Walk-through'
+  },
+  forum: {
+    id: 'Marketplace.forum',
+    defaultMessage: 'Forum'
+  },
+  documentation: {
+    id: 'Marketplace.documentation',
+    defaultMessage: 'Documentation'
+  },
+  technology: {
+    id: 'Marketplace.technology',
+    defaultMessage: 'Technology'
+  },
+  whitePaper: {
+    id: 'Marketplace.whitePaper',
+    defaultMessage: 'White Paper'
+  },
+  news: {
+    id: 'Marketplace.news',
+    defaultMessage: 'News'
+  },
+  blockExplorer: {
+    id: 'Marketplace.blockExplorer',
+    defaultMessage: 'Block Explorer'
+  },
+  downloadLink: {
+    id: 'Marketplace.downloadLink',
+    defaultMessage: 'Download Link'
+  },
+  register: {
+    id: 'Marketplace.register',
+    defaultMessage: 'Register'
+  },
+  telegramOmniBazaar: {
+    id: 'Marketplace.telegramOmniBazaar',
+    defaultMessage: 'OmniBazaar Telegram'
+  },
+  telegramOmniCoin: {
+    id: 'Marketplace.telegramOmniCoin',
+    defaultMessage: 'OmniCoin Telegram'
+  },
+  telegram: {
+    id: 'Marketplace.telegram',
+    defaultMessage: 'Telegram'
+  },
+  reddit: {
+    id: 'Marketplace.reddit',
+    defaultMessage: 'Reddit'
   },
   features: {
     id: 'Marketplace.features',
@@ -514,6 +578,22 @@ const aboutCategories = defineMessages({
   ominCoinExplorer: {
     id: 'Marketplace.ominCoinExplorer',
     defaultMessage: 'OmniCoin Explorer'
+  },
+  knowledgeBase: {
+    id: 'Marketplace.knowledgeBase',
+    defaultMessage: 'Knowledge Base'
+  },
+  connections: {
+    id: 'Marketplace.connections',
+    defaultMessage: 'Connections'
+  },
+  downloadOmniBazaar: {
+    id: 'Marketplace.downloadOmniBazaar',
+    defaultMessage: 'Download OmniBazaar'
+  },
+  newsletter: {
+    id: 'Marketplace.newsletter',
+    defaultMessage: 'Newsletter'
   },
 });
 

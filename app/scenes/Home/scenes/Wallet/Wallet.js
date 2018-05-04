@@ -4,11 +4,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Tab } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 import Header from '../../../../components/Header';
 import { WalletDetail } from './component/WalletDetail';
-import { Tab } from 'semantic-ui-react';
-
 import { CoinTypes } from './constants';
 
 import {
@@ -137,6 +137,17 @@ class Wallet extends Component {
     );
   }
 }
+
+Wallet.propTypes = {
+  walletActions: PropTypes.shape({
+    getBitcoinWallets: PropTypes.func,
+    getOmniCoinWallets: PropTypes.func
+  })
+};
+
+Wallet.defaultProps = {
+  walletActions: {}
+};
 
 export default connect(
   state => ({ ...state.default }),

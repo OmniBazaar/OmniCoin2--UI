@@ -11,9 +11,9 @@
  * @flow
  */
 import { app, BrowserWindow, ipcMain } from 'electron';
-import MenuBuilder from './menu';
 import { machineId } from 'node-machine-id';
 import getmac from 'getmac';
+import MenuBuilder from './menu';
 
 let mainWindow = null;
 
@@ -69,7 +69,7 @@ app.on('ready', async () => {
         macAddress += Math.random();
         hardDriveId += Math.random();
       }
-      ipcMain.on('get-pc-ids', (event, arg) => {
+      ipcMain.on('get-pc-ids', (event) => {
         event.sender.send('receive-pc-ids', { macAddress, hardDriveId });
       });
     });

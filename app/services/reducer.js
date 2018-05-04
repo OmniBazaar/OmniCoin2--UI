@@ -11,13 +11,11 @@ import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
 import escrowReducer from './escrow/escrowReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
-import lowestPriceReducer from './marketplace/lowestPriceReducer';
-import highestPriceReducer from './marketplace/highestPriceReducer';
-import newArrivalsReducer from './marketplace/newArrivalsReducer';
 import blockchainWallet from './blockchain/wallet/walletReducer';
 import listingReducer from './listing/listingReducer';
 import listingDefaultsReducer from './listing/listingDefaultsReducer';
 import importReducer from './listing/importReducer';
+import searchReducer from './search/searchReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -33,10 +31,8 @@ export default combineReducers({
   preferences: preferencesReducer,
   escrow: escrowReducer,
   marketplace: marketplaceReducer,
-  lowestPrice: lowestPriceReducer,
-  highestPrice: highestPriceReducer,
-  newArrivals: newArrivalsReducer,
   listing: listingReducer,
   listingDefaults: listingDefaultsReducer,
   listingImport: importReducer,
+  search: searchReducer,
 });

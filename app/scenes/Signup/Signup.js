@@ -10,9 +10,11 @@ import { getAccount } from '../../services/blockchain/auth/authActions';
 
 class Signup extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.currentUser) {
-      this.props.history.push('/');
-      this.props.authActions.getAccount(nextProps.auth.currentUser.username);
+    if (
+      nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName
+      && nextProps.auth.lastLoginUserName
+    ) {
+      this.props.history.push('/login');
     }
   }
 
@@ -38,11 +40,16 @@ Signup.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     }),
+    lastLoginUserName: PropTypes.string,
     error: PropTypes.shape({}),
     loading: PropTypes.bool
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func
   })
 };
 
 Signup.defaultProps = {
-  auth: null
+  auth: null,
+  history: {}
 };

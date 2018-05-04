@@ -159,7 +159,7 @@ const reducer = handleActions({
       detailSelected,
     };
   },
-  [getPrivateData](state, { payload: {} }) {
+  [getPrivateData](state) {
     const data = AccountSettingsStorage.getPrivateData();
     return {
       ...state,
@@ -173,7 +173,7 @@ const reducer = handleActions({
       privateData: data
     };
   },
-  [getPublisherData](state, { payload: { } }) {
+  [getPublisherData](state) {
     return {
       ...state,
       publisherData: AccountSettingsStorage.getPublisherData()
@@ -186,14 +186,14 @@ const reducer = handleActions({
       publisherData: data
     };
   },
-  [updatePublicData](state, { payload: { } }) {
+  [updatePublicData](state) {
     return {
       ...state,
       loading: true,
       error: null
     };
   },
-  UPDATE_PUBLIC_DATA_SUCCEEDED: (state, action) => ({
+  UPDATE_PUBLIC_DATA_SUCCEEDED: (state) => ({
     ...state,
     loading: false,
     error: null
@@ -203,7 +203,7 @@ const reducer = handleActions({
     loading: false,
     error
   }),
-  [getPublishers](state, { payload: { } }) {
+  [getPublishers](state) {
     return {
       ...state,
       publishers: {

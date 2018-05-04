@@ -15,8 +15,7 @@ import {
   Input,
   Icon,
   Image,
-  Loader,
-  Dimmer
+  Loader
 } from 'semantic-ui-react';
 import { debounce } from 'lodash';
 
@@ -270,6 +269,7 @@ RecentTransactions.propTypes = {
     totalPages: 1,
     sortColumn: 'date',
     sortDirection: 'descending',
+    loading: PropTypes.bool
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

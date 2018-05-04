@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Form, Select, TextArea, Checkbox } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
@@ -53,10 +53,10 @@ class Transfer extends Component {
         <Select
           {...input}
           value={input.value}
-          onChange={function (param, data) {
-          const szDescription = data.options.find(o => o.value === data.value);
-          xomAmount.ref.innerHTML = szDescription.description;
-        }}
+          onChange={(param, data) => {
+            const szDescription = data.options.find(o => o.value === data.value);
+            xomAmount.ref.innerHTML = szDescription.description;
+          }}
           options={walletOptions}
           placeholder={placeholder}
           fluid
