@@ -7,9 +7,6 @@ import {
   TableHeaderCell,
   TableRow,
   TableHeader,
-  Pagination,
-  Input,
-  Icon,
   Image,
 } from 'semantic-ui-react';
 import hash from 'object-hash';
@@ -59,11 +56,6 @@ const messages = defineMessages({
   }
 });
 class ProcessorsTable extends Component {
-
-  componentWillReceiveProps(nextProps) {
-    console.log('DATA ', nextProps.data);
-  }
-
   renderApprove = (row) => {
     const vote = cn({
       votes: true,
@@ -128,7 +120,7 @@ class ProcessorsTable extends Component {
               (
                 <TableRow key={hash(row)}>
                   <TableCell>{row.rank}</TableCell>
-                  <TableCell><a>{row.witness_account['name']}</a></TableCell>
+                  <TableCell><a>{row.witness_account.name}</a></TableCell>
                   <TableCell>{row.trust_score / 100}%</TableCell>
                   <TableCell>{row.reliability_score / 100}%</TableCell>
                   <TableCell>{row.reputation_score / 100}%</TableCell>
@@ -158,10 +150,14 @@ ProcessorsTable.propTypes = {
   data: PropTypes.array,
   sortColumn: PropTypes.string,
   sortDirection: PropTypes.string,
-  toggle: PropTypes.func
+  toggle: PropTypes.func.isRequired,
+  sortData: PropTypes.func.isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  })
 };
 
-PropTypes.defaultProps = {
+ProcessorsTable.defaultProps = {
   tableProps: {
     sortable: true,
     compact: true,
@@ -170,6 +166,8 @@ PropTypes.defaultProps = {
     size: 'small'
   },
   data: [],
+  sortDirection: 'descending',
+  sortColumn: 'rank',
   toggle: () => {}
 };
 

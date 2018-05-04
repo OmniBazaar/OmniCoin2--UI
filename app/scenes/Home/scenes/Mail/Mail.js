@@ -186,9 +186,11 @@ class Mail extends Component {
         const creationTime = new Date(message.creation_time * 1000).toLocaleString();
 
         return (
-          <div key={`item-${index}`}
+          <div
+            key={`item-${index}`}
             className={containerClass}
-            onClick={() => self.clickedEmail(message, index)}>
+            onClick={() => self.clickedEmail(message, index)}
+          >
             <div className="top-detail">
               <div className="from">{message.user}</div>
               <div className="date">{creationTime}</div>

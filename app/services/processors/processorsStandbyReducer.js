@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 import {
@@ -7,13 +7,15 @@ import {
   filterDataStandBy,
   setActivePageStandBy,
   setPaginationStandBy,
-  toggleProcessor
+  commitProcessorsStandBy,
+  rollbackProcessorsStandBy,
+  toggleProcessorStandBy
 } from './processorsStandbyActions';
 
 const defaultState = {
   standbyProcessors: [],
   standbyProcessorsFiltered: [],
-  toggledProcessorsIds: [],
+  toggledProcessors: [],
   activePageStandBy: 1,
   sortDirectionStandBy: 'descending',
   sortColumnStandBy: 'rank',
@@ -37,27 +39,39 @@ const reducer = handleActions({
     return {
       ...state,
       loading: true,
-      error: null
+      error: null,
+      toggledProcessors: [],
+      standbyProcessors: [],
+      standbyProcessorsFiltered: []
     };
   },
-  GET_STANDBY_PROCESSORS_SUCCEEDED: (state, { standbyProcessors }) => {
+  GET_STANDBY_PROCESSORS_SUCCEEDED: (state, { standbyProcessors }) => ({
+    ...state,
+    standbyProcessors,
+    loading: false
+  }),
+  GET_TOP_PROCESSORS_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  }),
+  [toggleProcessorStandBy](state, { payload: { processorId } }) {
+    let tp = state.toggledProcessors;
+    if (state.toggledProcessors.includes(processorId)) {
+      tp = _.without(state.toggledProcessors, processorId);
+    } else {
+      tp = _.union(state.toggledProcessors, [processorId]);
+    }
     return {
       ...state,
-      standbyProcessors,
-      loading: false
-    }
-  },
-  GET_TOP_PROCESSORS_FAILED: (state, { error }) => {
-    return {
-      ...state,
-      error,
-      loading: false
-    }
-  },
-  [toggleProcessor](state, { payload: { processorId }}) {
-    return {
-      ...state,
-    }
+      toggledProcessors: tp,
+      standbyProcessors: state.standbyProcessors.map(processor => {
+        if (processor.id === processorId) {
+          processor.approve = !processor.approve;
+        }
+        return processor;
+      }),
+    };
   },
   [setPaginationStandBy](state, { payload: { rowsPerPageStandBy } }) {
     const data = state.standbyProcessors;
@@ -84,7 +98,7 @@ const reducer = handleActions({
         const values = Object.values(o);
         const result = _.map(values, (val) => {
           if (val) {
-            if (val.toString().indexOf(filterTextStandBy) !== -1) return o;
+            if (JSON.stringify(val).indexOf(filterTextStandBy) !== -1) return o;
           }
         });
         return _.without(result, undefined)[0];
@@ -140,10 +154,12 @@ const reducer = handleActions({
   [sortDataStandBy](state, { payload: { sortColumnStandBy } }) {
     const { filterTextStandBy } = state;
     let sortDirectionStandBy = state.sortDirectionStandBy === 'ascending' ? 'descending' : 'ascending';
-    const sortByFilter = _.sortBy(state.standbyProcessorsFiltered,
+    const sortByFilter = _.sortBy(
+      state.standbyProcessorsFiltered,
       [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
     );
-    const sortByData = _.sortBy(state.standbyProcessors,
+    const sortByData = _.sortBy(
+      state.standbyProcessors,
       [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
     );
     const sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
@@ -166,6 +182,40 @@ const reducer = handleActions({
       sortColumnStandBy,
     };
   },
+  [commitProcessorsStandBy](state) {
+    return {
+      ...state,
+      voting: true,
+      error: null
+    };
+  },
+  COMMIT_STANDBY_PROCESSORS_SUCCEEDED(state) {
+    return {
+      ...state,
+      voting: false,
+      error: null,
+      toggledProcessors: []
+    };
+  },
+  COMMIT_STANDBY_PROCESSORS_FAILED(state, { error }) {
+    return {
+      ...state,
+      voting: false,
+      error
+    };
+  },
+  [rollbackProcessorsStandBy](state) {
+    return {
+      ...state,
+      standbyProcessors: state.standbyProcessors.map(processor => {
+        if (state.toggledProcessors.includes(processor.id)) {
+          processor.approve = !processor.approve;
+        }
+        return processor;
+      }),
+      toggledProcessors: []
+    };
+  }
 }, defaultState);
 
 export default reducer;

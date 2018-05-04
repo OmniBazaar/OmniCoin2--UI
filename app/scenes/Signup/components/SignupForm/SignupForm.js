@@ -132,8 +132,8 @@ class SignupForm extends Component {
     if (nextProps.auth.error && !this.props.auth.error) {
       const content = (
         nextProps.auth.error.id
-        ? formatMessage(nextProps.auth.error)
-        : nextProps.auth.error
+          ? formatMessage(nextProps.auth.error)
+          : nextProps.auth.error
       );
       toastr.error(formatMessage(messages.error), content);
     }

@@ -7,9 +7,9 @@ import {
   filterDataTop,
   setActivePageTop,
   setPaginationTop,
-  toggleProcessor,
-  commitProcessors,
-  rollbackProcessors
+  toggleProcessorTop,
+  commitProcessorsTop,
+  rollbackProcessorsTop
 } from './processorsTopActions';
 
 const defaultState = {
@@ -40,36 +40,34 @@ const reducer = handleActions({
     return {
       ...state,
       loading: true,
-      error: null
+      error: null,
+      toggledProcessors: [],
+      topProcessors: [],
+      topProcessorsFiltered: [],
     };
   },
-  GET_TOP_PROCESSORS_SUCCEEDED: (state, { topProcessors }) => {
-    return {
-      ...state,
-      topProcessors,
-      loading: false
-    }
-  },
-  GET_TOP_PROCESSORS_FAILED: (state, { error }) => {
-    return {
-      ...state,
-      error,
-      loading: false
-    }
-  },
+  GET_TOP_PROCESSORS_SUCCEEDED: (state, { topProcessors }) => ({
+    ...state,
+    topProcessors,
+    loading: false
+  }),
+  GET_TOP_PROCESSORS_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  }),
   [filterDataTop](state, { payload: { filterTextTop } }) {
     const data = state.topProcessors;
     const activePageTop = 1;
     const { rowsPerPageTop, totalPagesTop } = state;
     let totalPages = totalPagesTop;
     let currentData = [];
-
     if (filterTextTop !== '') {
       let filteredData = _.map(data, (o) => {
         const values = Object.values(o);
         const result = _.map(values, (val) => {
           if (val) {
-            if (val.toString().indexOf(filterTextTop) !== -1) return o;
+            if (JSON.stringify(val).indexOf(filterTextTop) !== -1) return o;
           }
         });
         return _.without(result, undefined)[0];
@@ -124,10 +122,12 @@ const reducer = handleActions({
   [sortDataTop](state, { payload: { sortColumnTop } }) {
     const { filterTextTop } = state;
     let sortDirectionTop = state.sortDirectionTop === 'ascending' ? 'descending' : 'ascending';
-    const sortByFilter = _.sortBy(state.topProcessorsFiltered,
+    const sortByFilter = _.sortBy(
+      state.topProcessorsFiltered,
       [sortColumnTop !== 'name' ? sortColumnTop : 'witness_account.name']
     );
-    const sortByData = _.sortBy(state.topProcessors,
+    const sortByData = _.sortBy(
+      state.topProcessors,
       [sortColumnTop !== 'name' ? sortColumnTop : 'witness_account.name']
     );
     const sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
@@ -150,7 +150,7 @@ const reducer = handleActions({
       sortColumnTop,
     };
   },
-  [toggleProcessor](state, { payload: { processorId }}) {
+  [toggleProcessorTop](state, { payload: { processorId } }) {
     let tp = state.toggledProcessors;
     if (state.toggledProcessors.includes(processorId)) {
       tp = _.without(state.toggledProcessors, processorId);
@@ -166,31 +166,31 @@ const reducer = handleActions({
         }
         return processor;
       }),
-    }
+    };
   },
-  [commitProcessors](state) {
+  [commitProcessorsTop](state) {
     return {
       ...state,
       voting: true,
       error: null
-    }
+    };
   },
-  COMMIT_PROCESSORS_SUCCEEDED(state) {
+  COMMIT_TOP_PROCESSORS_SUCCEEDED(state) {
     return {
       ...state,
       voting: false,
       error: null,
       toggledProcessors: []
-    }
+    };
   },
-  COMMIT_PROCESSORS_FAILED(state, { error }) {
+  COMMIT_TOP_PROCESSORS_FAILED(state, { error }) {
     return {
       ...state,
       voting: false,
       error
-    }
+    };
   },
-  [rollbackProcessors](state) {
+  [rollbackProcessorsTop](state) {
     return {
       ...state,
       topProcessors: state.topProcessors.map(processor => {
@@ -200,7 +200,7 @@ const reducer = handleActions({
         return processor;
       }),
       toggledProcessors: []
-    }
+    };
   }
 }, defaultState);
 

@@ -3,15 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeaderCell,
-  TableRow,
-  TableHeader,
   Input,
   Icon,
-  Image,
   Loader
 } from 'semantic-ui-react';
 import { debounce } from 'lodash';
@@ -24,7 +17,11 @@ import {
   setActivePageStandBy,
   setPaginationStandBy,
   getStandbyProcessors,
+  toggleProcessorStandBy,
+  commitProcessorsStandBy,
+  rollbackProcessorsStandBy
 } from '../../../../../../services/processors/processorsStandbyActions';
+import VoteButtons from '../VoteButtons/VoteButtons';
 
 
 class StandByProcessors extends Component {
@@ -43,9 +40,9 @@ class StandByProcessors extends Component {
     }
   }
 
-  handleFilterChange(e, data)  {
+  handleFilterChange(e, data) {
     this.props.processorsStandbyActions.filterDataStandBy(data.value);
-  };
+  }
 
   sortData = (clickedColumn) => () => {
     this.props.processorsStandbyActions.sortDataStandBy(clickedColumn);
@@ -62,8 +59,17 @@ class StandByProcessors extends Component {
       totalPagesStandBy,
       sortColumnStandBy,
       standbyProcessorsFiltered,
-      loading
+      loading,
+      toggledProcessors,
+      voting,
     } = this.props.processorsStandby;
+
+    const {
+      toggleProcessorStandBy,
+      commitProcessorsStandBy,
+      rollbackProcessorsStandBy
+    } = this.props.processorsStandbyActions;
+
 
     return (
       <div className="data-table">
@@ -80,16 +86,23 @@ class StandByProcessors extends Component {
             onPageChange={this.handlePaginationChange}
             totalPages={totalPagesStandBy}
           />
+          <VoteButtons
+            onCancelClicked={() => rollbackProcessorsStandBy()}
+            onVoteClicked={() => commitProcessorsStandBy()}
+            disabled={!toggledProcessors.length}
+            loading={voting}
+          />
         </div>
         <div className="table-container">
-          {loading ? <Loader active inline="centered"/> :
-            <ProcessorsTable
-              tableProps={this.props.tableProps}
-              sortColumn={sortColumnStandBy}
-              sortDirection={sortDirectionStandBy}
-              sortData={this.sortData}
-              data={standbyProcessorsFiltered}
-            />
+          {loading ? <Loader active inline="centered" /> :
+          <ProcessorsTable
+            tableProps={this.props.tableProps}
+            sortColumn={sortColumnStandBy}
+            sortDirection={sortDirectionStandBy}
+            sortData={this.sortData}
+            data={standbyProcessorsFiltered}
+            toggle={toggleProcessorStandBy}
+          />
           }
         </div>
       </div>
@@ -104,6 +117,9 @@ StandByProcessors.propTypes = {
     setPaginationStandBy: PropTypes.func,
     filterDataStandBy: PropTypes.func,
     sortDataStandBy: PropTypes.func,
+    toggleProcessorStandBy: PropTypes.func,
+    commitProcessorsStandBy: PropTypes.func,
+    rollbackProcessorsStandBy: PropTypes.func
   }),
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
@@ -120,6 +136,9 @@ StandByProcessors.propTypes = {
     sortColumnStandBy: PropTypes.string,
     totalPagesStandBy: PropTypes.number,
     rowsPerPageStandBy: PropTypes.number,
+    loading: PropTypes.bool,
+    toggledProcessors: PropTypes.array,
+    voting: PropTypes.bool,
   }),
   rowsPerPage: PropTypes.number,
 };
@@ -153,7 +172,10 @@ export default connect(
       filterDataStandBy,
       setActivePageStandBy,
       setPaginationStandBy,
-      getStandbyProcessors
+      getStandbyProcessors,
+      toggleProcessorStandBy,
+      commitProcessorsStandBy,
+      rollbackProcessorsStandBy
     }, dispatch),
   }),
 )(StandByProcessors);

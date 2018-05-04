@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Button
-} from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
@@ -37,7 +35,7 @@ class VoteButtons extends Component {
           content={formatMessage(messages.vote)}
         />
       </div>
-    )
+    );
   }
 }
 

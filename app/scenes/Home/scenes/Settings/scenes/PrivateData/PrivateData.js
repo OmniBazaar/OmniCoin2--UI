@@ -369,7 +369,7 @@ class PrivateData extends Component {
     return (
       <div className="private-data">
         {this.privateDataForm()}
-        {!this.props.auth.account['is_a_publisher'] && this.publisherForm()}
+        {!this.props.auth.account.is_a_publisher && this.publisherForm()}
       </div>
     );
   }

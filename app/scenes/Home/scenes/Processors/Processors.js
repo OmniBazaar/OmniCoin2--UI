@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
+import PropTypes from 'prop-types';
 
 import { Tab } from 'semantic-ui-react';
 import Header from '../../../../components/Header';
@@ -16,7 +17,7 @@ const messages = defineMessages({
     defaultMessage: 'Top Processors'
   },
   standbyProcessors: {
-    id: "Processors.standbyProcessors",
+    id: 'Processors.standbyProcessors',
     defaultMessage: 'Standby Processors'
   },
   success: {
@@ -36,12 +37,19 @@ const messages = defineMessages({
 class Processors extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
-    if ((this.props.processorsTop.voting && !nextProps.processorsTop.voting && !nextProps.processorsTop.error)
-      || (this.props.processorsStandby.voting && !nextProps.processorsStandby.voting && !nextProps.processorsStandby.error)) {
+    if (
+      (this.props.processorsTop.voting
+          && !nextProps.processorsTop.voting
+          && !nextProps.processorsTop.error)
+          ||
+        (this.props.processorsStandby.voting
+          && !nextProps.processorsStandby.voting
+          && !nextProps.processorsStandby.error)
+    ) {
       toastr.success(formatMessage(messages.success), formatMessage(messages.voteSuccess));
     }
     if (nextProps.processorsTop.error && !this.props.processorsTop.error) {
-      toastr.error(formatMessage(messages.error), nextProps.processorsTop.error)
+      toastr.error(formatMessage(messages.error), nextProps.processorsTop.error);
     }
     if (nextProps.processorsStandby.error && !this.props.processorsStandby.error) {
       toastr.error(formatMessage(messages.error), nextProps.processorsStandby.error);
@@ -59,11 +67,11 @@ class Processors extends Component {
             panes={[
               {
                 menuItem: formatMessage(messages.topProcessors),
-                render: () => <Tab.Pane><TopProcessors/></Tab.Pane>
+                render: () => <Tab.Pane><TopProcessors /></Tab.Pane>
               },
               {
                 menuItem: formatMessage(messages.standbyProcessors),
-                render: () => <Tab.Pane><StandByProcessors/></Tab.Pane>,
+                render: () => <Tab.Pane><StandByProcessors /></Tab.Pane>,
               },
             ]}
           />
@@ -72,7 +80,23 @@ class Processors extends Component {
     );
   }
 }
+Processors.propTypes = {
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }),
+  processorsTop: PropTypes.shape({
+    voting: PropTypes.bool,
+    error: PropTypes.string
+  }),
+  processorsStandby: PropTypes.shape({
+    voting: PropTypes.bool,
+    error: PropTypes.string
+  })
+};
 
-export default connect(
-  state => ({ ...state.default })
-)(injectIntl(Processors));
+Processors.defaultProps = {
+  intl: {},
+  processorsTop: {},
+  processorsStandby: {}
+};
+export default connect(state => ({ ...state.default }))(injectIntl(Processors));
