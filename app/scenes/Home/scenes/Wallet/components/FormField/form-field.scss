@@ -1,0 +1,18 @@
+.form-field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  input {
+    width: 350px !important;
+  }
+  .email-tooltip {
+    width: 350px;
+    font-size: smaller;
+    color: lighten(black, 40%)
+  }
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

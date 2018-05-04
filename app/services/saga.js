@@ -5,6 +5,7 @@ import { escrowSubscriber } from './escrow/escrowSaga';
 import { accountSubscriber } from './accountSettings/accountSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
+import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
 
 export {
   connectionSubscriber,
@@ -13,5 +14,6 @@ export {
   escrowSubscriber,
   accountSubscriber,
   walletSubscriber,
-  processorsSubscriber
+  processorsSubscriber,
+  bitcoinSubscriber
 };

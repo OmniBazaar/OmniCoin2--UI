@@ -16,6 +16,7 @@ import listingReducer from './listing/listingReducer';
 import listingDefaultsReducer from './listing/listingDefaultsReducer';
 import importReducer from './listing/importReducer';
 import searchReducer from './search/searchReducer';
+import bitcoinReducer from './blockchain/bitcoin/bitcoinReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   listingDefaults: listingDefaultsReducer,
   listingImport: importReducer,
   search: searchReducer,
+  bitcoin: bitcoinReducer
 });

@@ -14,6 +14,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { machineId } from 'node-machine-id';
 import getmac from 'getmac';
 import MenuBuilder from './menu';
+import bitcoincli from 'blockchain-wallet-service';
 
 let mainWindow = null;
 
@@ -61,6 +62,11 @@ app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
+
+  bitcoincli.start({
+    port: 3000,
+    bind: 'localhost'
+  });
 
   getmac.getMac((err, macAddress) => {
     if (err) throw err;

@@ -22,6 +22,7 @@ export default class Header extends Component {
           <Button
             content={props.buttonContent}
             onClick={props.onClick}
+            loading={props.loading}
             className={containerClass}
           />
         : null }

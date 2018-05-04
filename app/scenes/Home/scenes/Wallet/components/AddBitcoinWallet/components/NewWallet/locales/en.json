@@ -1,0 +1,9 @@
+{
+  "NewWallet.createPassword": "Create Password for Wallet Access",
+  "NewWallet.repeatPassword": "Repeat Password for Wallet Access",
+  "NewWallet.email": "Email for Restore Access",
+  "NewWallet.message": "Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.",
+  "NewWallet.createWallet": "CREATE WALLET",
+  "NewWallet.cancel": "CANCEL",
+  "NewWallet.enter": "Please enter"
+}

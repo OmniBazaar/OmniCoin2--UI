@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { connect, } from './connectionActions';
+import { connect } from './connectionActions';
 
 const defaultState = {
   node: null,

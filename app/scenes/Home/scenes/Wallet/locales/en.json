@@ -1,0 +1,8 @@
+{
+  "Wallet.quickStart": "Quick-start Guide! (Please read...)",
+  "Wallet.welcome": "Welcome to OmniBazaar!",
+  "Wallet.launch": "If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched, configured and populated in the background. This process will take a few minutes ~ about the same amount of time it will take you to read this orientation page.",
+  "Wallet.addWallet": "ADD WALLET",
+  "Wallet.noWalletYet": "You haven't added a wallet yet",
+  "Wallet.error": "Error"
+}
