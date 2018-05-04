@@ -23,6 +23,7 @@ const defaultState = {
   rowsPerPageTop: 10,
   filterTextTop: '',
   loading: false,
+  voting: false,
   error: null
 };
 
@@ -96,7 +97,6 @@ const reducer = handleActions({
     const { activePageTop } = state;
     const totalPagesTop = getTotalPages(data, rowsPerPageTop);
     const currentData = sliceData(data, activePageTop, rowsPerPageTop);
-    console.log('Current data ', currentData);
     return {
       ...state,
       totalPagesTop,
@@ -170,7 +170,24 @@ const reducer = handleActions({
   },
   [commitProcessors](state) {
     return {
-      ...state
+      ...state,
+      voting: true,
+      error: null
+    }
+  },
+  COMMIT_PROCESSORS_SUCCEEDED(state) {
+    return {
+      ...state,
+      voting: false,
+      error: null,
+      toggledProcessors: []
+    }
+  },
+  COMMIT_PROCESSORS_FAILED(state, { error }) {
+    return {
+      ...state,
+      voting: false,
+      error
     }
   },
   [rollbackProcessors](state) {

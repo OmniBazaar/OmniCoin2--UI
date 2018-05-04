@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
 import {
   Table,
   TableBody,
@@ -89,6 +90,7 @@ class TopProcessors extends Component {
             onCancelClicked={() => this.props.processorsTopActions.rollbackProcessors()}
             onVoteClicked={() => this.props.processorsTopActions.commitProcessors()}
             disabled={!this.props.processorsTop.toggledProcessors.length}
+            loading={this.props.processorsTop.voting}
           />
         </div>
         <div className="table-container">

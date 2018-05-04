@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import { toastr } from 'react-redux-toastr';
 
 import { Tab } from 'semantic-ui-react';
 import Header from '../../../../components/Header';
@@ -17,10 +18,35 @@ const messages = defineMessages({
   standbyProcessors: {
     id: "Processors.standbyProcessors",
     defaultMessage: 'Standby Processors'
+  },
+  success: {
+    id: 'Processors.success',
+    defaultMessage: 'Success'
+  },
+  voteSuccess: {
+    id: 'Processors.voteSuccess',
+    defaultMessage: 'Voted successfully!'
+  },
+  error: {
+    id: 'Processors.error',
+    defaultMessage: 'Error'
   }
 });
 
 class Processors extends Component {
+  componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+    if ((this.props.processorsTop.voting && !nextProps.processorsTop.voting && !nextProps.processorsTop.error)
+      || (this.props.processorsStandby.voting && !nextProps.processorsStandby.voting && !nextProps.processorsStandby.error)) {
+      toastr.success(formatMessage(messages.success), formatMessage(messages.voteSuccess));
+    }
+    if (nextProps.processorsTop.error && !this.props.processorsTop.error) {
+      toastr.error(formatMessage(messages.error), nextProps.processorsTop.error)
+    }
+    if (nextProps.processorsStandby.error && !this.props.processorsStandby.error) {
+      toastr.error(formatMessage(messages.error), nextProps.processorsStandby.error);
+    }
+  }
   render() {
     const { formatMessage } = this.props.intl;
     return (
