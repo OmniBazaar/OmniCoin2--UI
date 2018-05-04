@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default (width, height) =>
-  (<svg viewBox="0 0 18 15">
+export default (width, height) => (
+  <svg viewBox="0 0 18 15">
     <defs />
     <g id="Layer_2">
       <g id="Layer_1-2">
@@ -9,4 +9,5 @@ export default (width, height) =>
         <polyline className="cls-1" points="0.5 0.5 9 8 17 1" />
       </g>
     </g>
-  </svg>);
+  </svg>
+);

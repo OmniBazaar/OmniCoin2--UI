@@ -58,7 +58,6 @@ PriceItem.propTypes = {
   amount: PropTypes.string,
   currency: PropTypes.string,
   coinLabel: PropTypes.string,
-  active: PropTypes.bool,
   isUserOwner: PropTypes.bool,
   listing: PropTypes.shape({
     activeCurrency: PropTypes.bool
@@ -72,7 +71,6 @@ PriceItem.defaultProps = {
   amount: '0',
   currency: '',
   coinLabel: '',
-  active: false,
   isUserOwner: false,
   listing: {},
   listingActions: {},

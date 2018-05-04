@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 import { Button, Image } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -135,7 +136,9 @@ class Mail extends Component {
       });
 
       // calculate is there some new emails
-      const sumReducer = (accumulator, currentMessage) => accumulator + (currentMessage.read_status ? 0 : 1);
+      const sumReducer = (accumulator, currentMessage) => (
+        accumulator + (currentMessage.read_status ? 0 : 1)
+      );
       const numberOfUnreadMessagesInFolder = props.mail.messages[folder.type].reduce(sumReducer, 0);
 
       return (
@@ -156,7 +159,10 @@ class Mail extends Component {
       this.props.mailActions.mailSetRead(
         this.props.auth.currentUser.username,
         this.props.mail.activeFolder, message.uuid, () => {
-          this.props.mailActions.loadFolder(this.props.auth.currentUser.username, this.props.mail.activeFolder);
+          this.props.mailActions.loadFolder(
+            this.props.auth.currentUser.username,
+            this.props.mail.activeFolder
+          );
         }
       );
     }
@@ -180,7 +186,9 @@ class Mail extends Component {
         const creationTime = new Date(message.creation_time * 1000).toLocaleString();
 
         return (
-          <div key={`item-${index}`} className={containerClass} onClick={() => self.clickedEmail(message, index)}>
+          <div key={`item-${index}`}
+            className={containerClass}
+            onClick={() => self.clickedEmail(message, index)}>
             <div className="top-detail">
               <div className="from">{message.user}</div>
               <div className="date">{creationTime}</div>
@@ -244,7 +252,8 @@ class Mail extends Component {
 
   onClickDelete() {
     if (this.props.mail.activeMessage >= 0) {
-      const messageObjToDelete = this.props.mail.messages[this.props.mail.activeFolder][this.props.mail.activeMessage];
+      const messageObjToDelete =
+        this.props.mail.messages[this.props.mail.activeFolder][this.props.mail.activeMessage];
       this.props.mailActions.deleteMail(
         this.props.auth.currentUser.username,
         this.props.mail.activeFolder,
@@ -303,6 +312,36 @@ class Mail extends Component {
     );
   }
 }
+
+Mail.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
+  mailActions: PropTypes.shape({
+    showComposeModal: PropTypes.func,
+    subscribeForMail: PropTypes.func,
+    mailReceived: PropTypes.func,
+    deleteMail: PropTypes.func,
+    loadFolder: PropTypes.func,
+    mailSetRead: PropTypes.func,
+    setActiveFolder: PropTypes.func,
+    setActiveMessage: PropTypes.func,
+    showReplyModal: PropTypes.func
+  }),
+  mail: PropTypes.shape({
+    messages: PropTypes.object,
+    activeFolder: PropTypes.string,
+    activeMessage: PropTypes.string
+  })
+};
+
+Mail.defaultProps = {
+  auth: {},
+  mailActions: {},
+  mail: {}
+};
 
 export default connect(
   state => ({ ...state.default }),

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Icon, Button, Image } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import CheckBox from '../../../../../../../../components/Checkbox/Checkbox';

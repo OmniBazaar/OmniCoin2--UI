@@ -42,7 +42,7 @@ class Compose extends Component {
 
   onSubmit(values) {
     const {
-      sender, recipient, subject, body
+      recipient, subject, body
     } = values;
     this.props.mailActions.sendMail(
       this.props.auth.currentUser.username,
@@ -70,7 +70,6 @@ class Compose extends Component {
   }
 
   render() {
-    const props = this.props;
     const containerClass = classNames({
       visible: true,
       'compose-container': true
@@ -133,6 +132,37 @@ class Compose extends Component {
     );
   }
 }
+
+Compose.propTypes = {
+  mail: PropTypes.shape({
+    messages: PropTypes.object,
+    activeFolder: PropTypes.string,
+    activeMessage: PropTypes.string,
+    reply: PropTypes.bool
+  }),
+  initialize: PropTypes.func,
+  onClose: PropTypes.func,
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
+  mailActions: PropTypes.shape({
+    sendMail: PropTypes.func,
+    loadFolder: PropTypes.func,
+    confirmationReceived: PropTypes.func
+  }),
+  handleSubmit: PropTypes.func
+};
+
+Compose.defaultProps = {
+  mail: {},
+  initialize: null,
+  onClose: null,
+  auth: {},
+  mailActions: {},
+  handleSubmit: null
+};
 
 Compose = reduxForm({
   form: 'sendMailForm',

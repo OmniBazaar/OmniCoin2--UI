@@ -106,7 +106,8 @@ Escrow.propTypes = {
 
 Escrow.defaultProps = {
   escrowActions: {},
-  intl: {}
+  intl: {},
+  auth: {}
 };
 
 export default connect(

@@ -101,19 +101,19 @@ class Home extends Component {
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
-      if(!this.props.auth.lastLoginUserName){
+      if (!this.props.auth.lastLoginUserName) {
         return (<Redirect
           to={{
-                    pathname: '/signup',
-                }}
-        />);
-      }else{
-        return (<Redirect
-          to={{
-                    pathname: '/login',
-                }}
+            pathname: '/signup',
+          }}
         />);
       }
+
+      return (<Redirect
+        to={{
+          pathname: '/login',
+        }}
+      />);
     }
     return (
       <div className="home-container">
@@ -234,6 +234,9 @@ export default connect(
 )(Home);
 
 Home.propTypes = {
+  connection: PropTypes.shape({
+    node: PropTypes.object
+  }),
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
@@ -247,11 +250,15 @@ Home.propTypes = {
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func,
     setActiveCategory: PropTypes.func
+  }),
+  authActions: PropTypes.shape({
+    getAccount: PropTypes.func
   })
-
 };
 
 Home.defaultProps = {
+  connection: {},
   auth: null,
-  menuActions: null
+  menuActions: null,
+  authActions: {}
 };

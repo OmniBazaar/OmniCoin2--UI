@@ -8,7 +8,7 @@ export function storeMessage(mailObject, user, messageFolder) {
 
   if (!mailFolder[user][messageFolder]) { mailFolder[user][messageFolder] = {}; }
 
-  const uuid = mailObject.uuid;
+  const { uuid } = mailObject;
   mailFolder[user][messageFolder][uuid] = { ...mailObject };
 
   localStorage.setItem('mail', JSON.stringify(mailFolder));
@@ -44,7 +44,10 @@ export function getMessagesFromFolder(user, messageFolder) {
         case MailTypes.INBOX: email.user = email.sender; break;
         case MailTypes.OUTBOX: email.user = email.recipient; break;
         case MailTypes.SENT: email.user = email.recipient; break;
-        case MailTypes.DELETED: email.user = (email.sender == user ? email.recipient : email.sender); break;
+        case MailTypes.DELETED:
+          email.user = (email.sender === user ? email.recipient : email.sender);
+          break;
+        default: break;
       }
       return email;
     });

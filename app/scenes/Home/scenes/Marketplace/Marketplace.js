@@ -2058,6 +2058,7 @@ Marketplace.propTypes = {
     getRentalsList: PropTypes.func,
     getServicesList: PropTypes.func,
     getCryptoBazaarList: PropTypes.func,
+    setActiveCategory: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

@@ -61,7 +61,7 @@ class GridTable extends Component {
     }
   }
 
-  onClickItem = (item) => {
+  onClickItem = () => {
   };
 
   handlePaginationChange = (e, { activePage }) => {

@@ -307,7 +307,8 @@ PublicData.propTypes = {
     transactionProcessor: PropTypes.bool,
     escrow: PropTypes.bool,
     loading: PropTypes.bool,
-    error: PropTypes.string
+    error: PropTypes.string,
+    ipAddress: PropTypes.string
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

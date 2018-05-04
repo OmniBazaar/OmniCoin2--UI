@@ -14,7 +14,9 @@ const {
   mailSetRead
 } = createActions({
   SHOW_COMPOSE_MODAL: (showCompose) => ({ showCompose }),
-  SUBSCRIBE_FOR_MAIL: (reciever, afterMailStoredCallback) => ({ reciever, afterMailStoredCallback }),
+  SUBSCRIBE_FOR_MAIL: (reciever, afterMailStoredCallback) => ({
+    reciever, afterMailStoredCallback
+  }),
   MAIL_RECEIVED: (uuid) => ({ uuid }),
   CONFIRMATION_RECEIVED: (uuid) => ({ uuid }),
   LOAD_FOLDER: (user, messageFolder) => ({ user, messageFolder }),

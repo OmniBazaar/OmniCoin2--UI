@@ -9,7 +9,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [getAccountBalance](state, { payload: { account } }) {
+  [getAccountBalance](state) {
     return {
       ...state,
       loading: true,

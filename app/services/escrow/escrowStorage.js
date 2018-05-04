@@ -36,7 +36,9 @@ export default class EscrowStorage {
 
   static removeAgents(agents) {
     const selectedAgents = this.getSelectedAgents();
-    const afterRemove = selectedAgents.filter(agent => !agents.find(rmAgent => rmAgent.name === agent.name));
+    const afterRemove = selectedAgents.filter(agent => (
+      !agents.find(rmAgent => rmAgent.name === agent.name)
+    ));
     EscrowStorage.setSelectedAgents(afterRemove);
     return afterRemove;
   }

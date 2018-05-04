@@ -130,7 +130,11 @@ class SignupForm extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
-      const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error) : nextProps.auth.error;
+      const content = (
+        nextProps.auth.error.id
+        ? formatMessage(nextProps.auth.error)
+        : nextProps.auth.error
+      );
       toastr.error(formatMessage(messages.error), content);
     }
   }
@@ -299,15 +303,33 @@ SignupForm.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     }),
-    error: PropTypes.shape({}),
+    error: PropTypes.shape({
+      id: PropTypes.string
+    }),
     loading: PropTypes.bool
   }),
   authActions: PropTypes.shape({
-    login: PropTypes.func
-  })
+    signup: PropTypes.func
+  }),
+  initialize: PropTypes.func,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
+  handleSubmit: PropTypes.func,
+  valid: PropTypes.bool,
+  asyncValidating: PropTypes.bool
 };
 
 SignupForm.defaultProps = {
   auth: null,
-  authActions: null
+  authActions: null,
+  initialize: null,
+  intl: {},
+  history: {},
+  handleSubmit: null,
+  valid: false,
+  asyncValidating: false
 };

@@ -49,4 +49,18 @@ class AccountFooter extends Component {
     );
   }
 }
-export default connect(state => ({ ...state.default }), )(AccountFooter);
+
+AccountFooter.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    })
+  })
+};
+
+AccountFooter.defaultProps = {
+  auth: {}
+};
+
+export default connect(state => ({ ...state.default }))(AccountFooter);
