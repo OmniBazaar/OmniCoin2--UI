@@ -11,5 +11,8 @@
   "PrivateData.update": "Update",
   "PrivateData.city": "City",
   "PrivateData.publisherPlaceholder": "Select publisher...",
-  "PrivateData.publisher": "Publisher"
+  "PrivateData.publisher": "Publisher",
+  "PrivateData.keywords": "Keywords for listing your want to see",
+  "PrivateData.addKeyword": "Add keyword",
+  "PrivateData.keywordLabel": "Keywords"
 }

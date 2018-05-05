@@ -7,13 +7,16 @@ import { Button, Form, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import cn from 'classnames';
+import TagsInput from '../../../../../../components/TagsInput';
+import PriorityTypes from '../../../../../../common/SearchPriorityType';
 
 import {
   changePriority,
   changeCountry,
   changeCity,
   changePublisherName,
-  changeCategory,
+  changeKeywords,
   updatePrivateData,
   updatePublisherData,
   getPublishers
@@ -104,13 +107,19 @@ const messages = defineMessages({
   searchPriority: {
     id: 'PrivateData.searchPriority',
     defaultMessage: 'Search Priority'
+  },
+  keywords: {
+    id: 'PrivateData.keywords',
+    defaultMessage: 'Keywords for listing your want to see'
+  },
+  addKeyword: {
+    id: 'PrivateData.addKeyword',
+    defaultMessage: 'Add keyword'
+  },
+  keywordLabel: {
+    id: 'PrivateData.keywordLabel',
+    defaultMessage: 'Keywords'
   }
-});
-
-const PriorityTypes = Object.freeze({
-  LOCAL_DATA: 'local',
-  BY_CATEGORY: 'category',
-  PUBLISHER: 'publisher',
 });
 
 class PrivateData extends Component {
@@ -120,7 +129,7 @@ class PrivateData extends Component {
     this.onChangePriority = this.onChangePriority.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
-    this.onChangeCategory = this.onChangeCategory.bind(this);
+    this.onChangeKeywords = this.onChangeKeywords.bind(this);
     this.onChangePublisherName = this.onChangePublisherName.bind(this);
     this.submitPrivateData = this.submitPrivateData.bind(this);
     this.submitPublisherData = this.submitPublisherData.bind(this);
@@ -212,8 +221,8 @@ class PrivateData extends Component {
     this.props.accountSettingsActions.changeCity(city);
   }
 
-  onChangeCategory(e, data) {
-    this.props.accountSettingsActions.changeCategory(data.value);
+  onChangeKeywords(keywords) {
+    this.props.accountSettingsActions.changeKeywords(keywords);
   }
 
   onChangePublisherName(e, data) {
@@ -248,6 +257,8 @@ class PrivateData extends Component {
               <RegionDropdown
                 country={publisherData.country}
                 value={publisherData.city}
+                defaultOptionLabel=''
+                blankOptionLabel=''
                 classes="ui dropdown textfield"
                 onChange={this.onChangeCity}
               />
@@ -256,21 +267,19 @@ class PrivateData extends Component {
           </div>
         );
       case PriorityTypes.BY_CATEGORY:
+        let keywords=publisherData.keywords;
+        if(!keywords) keywords=[];
         return (
-          <div className="form-group" key="category">
-            <span>{formatMessage(messages.category)}</span>
-            <Dropdown
-              placeholder={formatMessage(messages.categoriesPlaceholder)}
-              defaultValue={publisherData.category}
-              fluid
-              selection
-              options={categoriesKeys.map(el => ({
-                  key: el,
-                  value: el,
-                  text: formatMessage(this.props.marketplace.categories[el]),
-              }))}
-              onChange={this.onChangeCategory}
-            />
+          <div className="form-group keyword-container" key="category">
+            <span>{formatMessage(messages.keywordLabel)}</span>
+            <TagsInput value={keywords}
+              inputProps={{
+                className: cn('react-tagsinput-input', {empty: keywords.length ? false : true}),
+                placeholder: (
+                  formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
+                )
+              }}
+              onChange={this.onChangeKeywords.bind(this)} />
             <div className="col-1" />
           </div>
         );
@@ -312,9 +321,9 @@ class PrivateData extends Component {
           </p>
         </div>
         <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
-          <div className="form-group">
+          <div className="form-group publisher-container">
             <span>{formatMessage(messages.searchPriority)}</span>
-            <div className="field radios-container">
+            <div className="radios-container">
               <div className="radio-wrapper">
                 <Field
                   onClick={() => { this.onChangePriority(PriorityTypes.LOCAL_DATA); }}
@@ -427,7 +436,7 @@ export default compose(
         changePriority,
         changeCountry,
         changeCity,
-        changeCategory,
+        changeKeywords,
         changePublisherName,
         updatePrivateData,
         updatePublisherData,

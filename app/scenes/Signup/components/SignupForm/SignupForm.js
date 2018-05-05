@@ -13,6 +13,7 @@ import { key, FetchChain } from 'omnibazaarjs/es';
 import PropTypes from 'prop-types';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import TagsInput from '../../../../components/TagsInput';
+import PriorityTypes from '../../../../common/SearchPriorityType';
 
 import { signup } from '../../../../services/blockchain/auth/authActions';
 
@@ -108,11 +109,6 @@ const messages = defineMessages({
     id: 'SignupForm.addKeyword',
     'defaultMessage': 'Add keyword'
   }
-});
-
-const PriorityTypes = Object.freeze({
-  LOCAL_DATA: 'local',
-  BY_CATEGORY: 'category'
 });
 
 class SignupForm extends Component {

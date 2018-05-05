@@ -49,8 +49,8 @@ const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
 if (process.env.NODE_ENV !== 'production') {
-  // const logger = createLogger();
-  // middleware.push(logger);
+  const logger = createLogger();
+  middleware.push(logger);
 }
 
 if (localStorage.getItem('currentUser')) {
