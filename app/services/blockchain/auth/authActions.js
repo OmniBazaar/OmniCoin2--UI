@@ -15,9 +15,9 @@ const {
   GET_CURRENT_USER: () => ({}),
   LOGIN: (username, password) => ({ username, password }),
   LOGOUT: () => ({}),
-  SIGNUP: (username, password, referrer, macAddress, harddriveId) => (
+  SIGNUP: (username, password, referrer, searchPriorityData, macAddress, harddriveId) => (
     {
-      username, password, referrer, macAddress, harddriveId
+      username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
   REQUEST_PC_IDS: () => ({}),

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Form, Divider, Icon } from 'semantic-ui-react';
@@ -11,6 +11,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { defineMessages, injectIntl } from 'react-intl';
 import { key, FetchChain } from 'omnibazaarjs/es';
 import PropTypes from 'prop-types';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import TagsInput from '../../../../components/TagsInput';
 
 import { signup } from '../../../../services/blockchain/auth/authActions';
 
@@ -77,7 +79,40 @@ const messages = defineMessages({
   error: {
     id: 'SignupForm.error',
     defaultMessage: 'Error'
+  },
+  searchPriority: {
+    id: 'SignupForm.searchPriority',
+    defaultMessage: 'Marketplace Search priority'
+  },
+  localArea: {
+    id: 'SignupForm.localArea',
+    defaultMessage: 'Local Area'
+  },
+  byCategoryType: {
+    id: 'SignupForm.byCategoryType',
+    defaultMessage: 'By Category/Type'
+  },
+  country: {
+    id: 'SignupForm.country',
+    defaultMessage: 'Your Country'
+  },
+  city: {
+    id: 'SignupForm.city',
+    defaultMessage: 'Your City'
+  },
+  keywords: {
+    id: 'SignupForm.keywords',
+    defaultMessage: 'Keywords for listing your want to see'
+  },
+  addKeyword: {
+    id: 'SignupForm.addKeyword',
+    'defaultMessage': 'Add keyword'
   }
+});
+
+const PriorityTypes = Object.freeze({
+  LOCAL_DATA: 'local',
+  BY_CATEGORY: 'category'
 });
 
 class SignupForm extends Component {
@@ -123,7 +158,8 @@ class SignupForm extends Component {
 
   componentWillMount() {
     this.props.initialize({
-      password: (`P${key.get_random_key().toWif()}`).substr(0, 45)
+      password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
+      searchPriority: PriorityTypes.LOCAL_DATA
     });
   }
 
@@ -139,16 +175,34 @@ class SignupForm extends Component {
     }
   }
 
+  onChangeCountry(country) {
+    this.props.formActions.change('country', country);
+  }
+
+  onChangeCity(city) {
+    this.props.formActions.change('city', city);
+  }
+
+  onChangeKeywords(keywords){
+    this.props.formActions.change('keywords', keywords);
+  }
+
   signIn() {
     this.props.history.push('/login');
   }
 
   submit(values) {
-    const { username, password, referrer } = values;
+    const { username, password, referrer, searchPriority, country, city, keywords } = values;
     this.props.authActions.signup(
       username,
       password,
       referrer,
+      {
+        priority: searchPriority,
+        country,
+        city,
+        keywords
+      },
       null,
       null,
     );
@@ -210,6 +264,85 @@ class SignupForm extends Component {
       ]
     );
   };
+
+
+  renderSearchPriority(){
+    const { formatMessage } = this.props.intl;
+    return (
+      <div>
+        <div className="search-priority">
+          <div>{formatMessage(messages.searchPriority)}</div>
+          <div className="radios-container">
+            <div className="radio-wrapper">
+              <Field
+                name='searchPriority'
+                component="input"
+                type="radio"
+                value={PriorityTypes.LOCAL_DATA}
+              />
+              <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+            </div>
+
+            <div className="radio-wrapper">
+              <Field
+                name='searchPriority'
+                component="input"
+                type="radio"
+                value={PriorityTypes.BY_CATEGORY}
+              />
+              <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+            </div>
+          </div>
+
+          {this.renderSearchPriorityFormFields()}
+        </div>
+      </div>
+    );
+  }
+
+  renderSearchPriorityFormFields() {
+    const { searchPriority } = this.props.formValues;
+    const { formatMessage } = this.props.intl;
+
+    switch (searchPriority) {
+      case PriorityTypes.LOCAL_DATA:
+        const {country, city} = this.props.formValues;
+        return (
+          <div className='location-container'>
+            <CountryDropdown
+                value={country}
+                defaultOptionLabel={formatMessage(messages.country)}
+                classes="ui dropdown textfield"
+                onChange={this.onChangeCountry.bind(this)}
+              />
+            <RegionDropdown
+                country={country}
+                value={city}
+                defaultOptionLabel={formatMessage(messages.city)}
+                blankOptionLabel={formatMessage(messages.city)}
+                classes="ui dropdown textfield"
+                onChange={this.onChangeCity.bind(this)}
+              />
+          </div>
+        );
+      case PriorityTypes.BY_CATEGORY:
+        let {keywords} = this.props.formValues;
+        if(!keywords) keywords = [];
+        return (
+          <TagsInput value={keywords}
+              inputProps={{
+                className: cn('react-tagsinput-input', {empty: keywords.length ? false : true}),
+                placeholder: (
+                  formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
+                )
+              }}
+              onChange={this.onChangeKeywords.bind(this)} />
+        );
+      default:
+        return null;
+    }
+  }
+
   render() {
     const {
       handleSubmit, valid, auth, asyncValidating
@@ -246,6 +379,7 @@ class SignupForm extends Component {
           name="referrer"
           component={this.renderReferrerField}
         />
+        {this.renderSearchPriority()}
         <div className="agreement-terms">
           <Field
             type="checkbox"
@@ -286,7 +420,9 @@ SignupForm.defaultProps = {
   history: {},
   handleSubmit: null,
   valid: false,
-  asyncValidating: false
+  asyncValidating: false,
+  formValues: {},
+  formActions: {}
 };
 
 SignupForm.propTypes = {
@@ -312,7 +448,11 @@ SignupForm.propTypes = {
   }),
   handleSubmit: PropTypes.func,
   valid: PropTypes.bool,
-  asyncValidating: PropTypes.bool
+  asyncValidating: PropTypes.string,
+  formValues: PropTypes.object,
+  formActions: PropTypes.shape({
+    change: PropTypes.func
+  })
 };
 
 SignupForm = withRouter(SignupForm);
@@ -322,15 +462,21 @@ SignupForm = reduxForm({
   validate: SignupForm.validate,
   asyncValidate: SignupForm.asyncValidate,
   asyncBlurFields: ['username', 'referrer'],
-  destroyOnUnmount: true,
+  destroyOnUnmount: true
 })(SignupForm);
 
 SignupForm = injectIntl(SignupForm);
 
 export default connect(
-  (state) => ({ ...state.default }),
+  (state) => ({
+    ...state.default,
+    formValues: getFormValues('signupForm')(state),
+  }),
   (dispatch) => ({
     authActions: bindActionCreators({ signup }, dispatch),
+    formActions: bindActionCreators({
+      change: (field, value)=>change('signupForm', field, value)
+    }, dispatch)
   })
 )(SignupForm);
 

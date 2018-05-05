@@ -28,7 +28,8 @@ import {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  changeSearchPriorityData
 } from './accountActions';
 
 const defaultState = {
@@ -65,6 +66,7 @@ const defaultState = {
     city: '',
     category: '',
     publisherName: '',
+    keywords: []
   },
   publishers: {
     names: [],
@@ -150,6 +152,17 @@ const reducer = handleActions({
         ...state.publisherData,
         publisherName: publisher
       }
+    };
+  },
+  [changeSearchPriorityData](state, { payload: { data } }) {
+    let publisherData = {
+        ...state.publisherData,
+        ...data
+    };
+    AccountSettingsStorage.updatePublisherData(publisherData);
+    return {
+      ...state,
+      publisherData
     };
   },
   [showDetailsModal](state, { payload: { detailSelected } }) {

@@ -25,7 +25,8 @@ const {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  changeSearchPriorityData
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -52,6 +53,7 @@ const {
   UPDATE_PUBLISHER_DATA: (data) => ({ data }),
   GET_PUBLISHERS: () => ({}),
   CHANGE_IP_ADDRESS: (ip) => ({ ip }),
+  CHANGE_SEARCH_PRIORITY_DATA: (data)=>({data})
 });
 
 export {
@@ -79,5 +81,6 @@ export {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  changeSearchPriorityData
 };

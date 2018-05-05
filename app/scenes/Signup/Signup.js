@@ -11,8 +11,12 @@ import { getAccount } from '../../services/blockchain/auth/authActions';
 class Signup extends Component {
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName
-      && nextProps.auth.lastLoginUserName
+      (
+        nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName
+        && nextProps.auth.lastLoginUserName
+      ) || (
+        nextProps.auth.currentUser !== this.props.auth.currentUser
+      )
     ) {
       this.props.history.push('/login');
     }
