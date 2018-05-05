@@ -29,6 +29,7 @@ import ImportListings from './scenes/Marketplace/scenes/Listing/scenes/ImportLis
 import SearchResults from './scenes/Marketplace/scenes/Search/scenes/SearchResults/SearchResults';
 import RecentSearches from './scenes/Marketplace/scenes/Search/scenes/RecentSearches/RecentSearches';
 import SavedSearches from './scenes/Marketplace/scenes/Search/scenes/SavedSearches/SavedSearches';
+import SearchPriority from './scenes/Marketplace/scenes/Search/scenes/SearchPriority/SearchPriority';
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
@@ -213,6 +214,7 @@ class Home extends Component {
             <Route path="/search-results" render={(props) => <SearchResults {...props} />} />
             <Route path="/recent-searches" render={(props) => <RecentSearches {...props} />} />
             <Route path="/saved-searches" render={(props) => <SavedSearches {...props} />} />
+            <Route path="/search-priority" render={(props) => <SearchPriority {...props} />} />
           </div>
           <ChainFooter />
         </div>

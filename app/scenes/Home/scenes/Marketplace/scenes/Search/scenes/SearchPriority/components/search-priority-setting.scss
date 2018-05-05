@@ -1,0 +1,42 @@
+.search-priority-setting {
+  .button--green-bg {
+    flex: 2 1 0;
+    margin-left: 0.45em;
+  }
+  
+  .publisher-form {
+    margin-top: 20px;
+
+    .publisher-container{
+      margin-bottom: 20px;
+    }
+
+    .header {
+      margin-bottom: 30px;
+      .title {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .radios-container {
+    display: flex;
+    flex: 2.86;
+    justify-content: space-between;
+
+    .radio-wrapper {
+      /*flex: 1;*/
+      line-height: 20px;
+
+      .checkbox-inline {
+        margin-left: 15px;
+      }
+    }
+  },
+
+  .keyword-container {
+    .react-tagsinput{
+      flex: 2.86;
+    }    
+  }
+}

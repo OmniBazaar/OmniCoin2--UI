@@ -138,7 +138,6 @@ class PrivateData extends Component {
   }
 
   componentWillMount() {
-    this.props.marketplaceActions.getCategories();
     this.props.accountSettingsActions.getPublishers();
   }
 
