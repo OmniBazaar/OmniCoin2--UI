@@ -8,21 +8,11 @@ import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import cn from 'classnames';
-import TagsInput from '../../../../../../components/TagsInput';
-import PriorityTypes from '../../../../../../common/SearchPriorityType';
+import SearchPrioritySetting from '../../../Marketplace/scenes/Search/scenes/SearchPriority/components/SearchPrioritySetting';
 
 import {
-  changePriority,
-  changeCountry,
-  changeCity,
-  changePublisherName,
-  changeKeywords,
-  updatePrivateData,
-  updatePublisherData,
-  getPublishers
+  updatePrivateData
 } from '../../../../../../services/accountSettings/accountActions';
-
-import { getCategories } from '../../../../../../services/marketplace/marketplaceActions';
 
 import '../../settings.scss';
 import './private.scss';
@@ -35,34 +25,6 @@ const messages = defineMessages({
   publisherNeedInfo: {
     id: 'PrivateData.publisherNeedInfo',
     defaultMessage: 'We need the following information so that we can connect you to a Publisher of listings that align with your interests.'
-  },
-  localArea: {
-    id: 'PrivateData.localArea',
-    defaultMessage: 'Local area.'
-  },
-  byCategoryType: {
-    id: 'PrivateData.byCategoryType',
-    defaultMessage: 'By Category / Type'
-  },
-  publisherName: {
-    id: 'PrivateData.publisherName',
-    defaultMessage: 'Publisher Name'
-  },
-  country: {
-    id: 'PrivateData.country',
-    defaultMessage: 'Country'
-  },
-  city: {
-    id: 'PrivateData.city',
-    defaultMessage: 'City'
-  },
-  startTyping: {
-    id: 'PrivateData.startTyping',
-    defaultMessage: 'Start typing...'
-  },
-  apply: {
-    id: 'PrivateData.apply',
-    defaultMessage: 'APPLY'
   },
   updateSuccess: {
     id: 'PrivateData.updateSuccess',
@@ -87,38 +49,6 @@ const messages = defineMessages({
   website: {
     id: 'PrivateData.website',
     defaultMessage: 'Website'
-  },
-  categoriesPlaceholder: {
-    id: 'PrivateData.categoriesPlaceholder',
-    defaultMessage: 'Select category...'
-  },
-  category: {
-    id: 'PrivateData.category',
-    defaultMessage: 'Category'
-  },
-  publisherPlaceholder: {
-    id: 'PrivateData.publisherPlaceholder',
-    defaultMessage: 'Select publisher...'
-  },
-  publisher: {
-    id: 'PrivateData.publisher',
-    defaultMessage: 'Publisher'
-  },
-  searchPriority: {
-    id: 'PrivateData.searchPriority',
-    defaultMessage: 'Search Priority'
-  },
-  keywords: {
-    id: 'PrivateData.keywords',
-    defaultMessage: 'Keywords for listing your want to see'
-  },
-  addKeyword: {
-    id: 'PrivateData.addKeyword',
-    defaultMessage: 'Add keyword'
-  },
-  keywordLabel: {
-    id: 'PrivateData.keywordLabel',
-    defaultMessage: 'Keywords'
   }
 });
 
@@ -126,19 +56,10 @@ class PrivateData extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangePriority = this.onChangePriority.bind(this);
-    this.onChangeCity = this.onChangeCity.bind(this);
-    this.onChangeCountry = this.onChangeCountry.bind(this);
-    this.onChangeKeywords = this.onChangeKeywords.bind(this);
-    this.onChangePublisherName = this.onChangePublisherName.bind(this);
+    
     this.submitPrivateData = this.submitPrivateData.bind(this);
-    this.submitPublisherData = this.submitPublisherData.bind(this);
     this.privateDataForm = this.privateDataForm.bind(this);
     this.publisherForm = this.publisherForm.bind(this);
-  }
-
-  componentWillMount() {
-    this.props.accountSettingsActions.getPublishers();
   }
 
   submitPrivateData(values) {
@@ -208,107 +129,7 @@ class PrivateData extends Component {
     );
   }
 
-  onChangePriority(priority) {
-    this.props.accountSettingsActions.changePriority(priority);
-  }
-
-  onChangeCountry(country) {
-    this.props.accountSettingsActions.changeCountry(country);
-  }
-
-  onChangeCity(city) {
-    this.props.accountSettingsActions.changeCity(city);
-  }
-
-  onChangeKeywords(keywords) {
-    this.props.accountSettingsActions.changeKeywords(keywords);
-  }
-
-  onChangePublisherName(e, data) {
-    this.props.accountSettingsActions.changePublisherName(data.value);
-  }
-
-  submitPublisherData() {
-    const { formatMessage } = this.props.intl;
-    this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
-    toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
-  }
-
-  renderPublisherFormFields() {
-    const { publisherData, publishers } = this.props.account;
-    const { formatMessage } = this.props.intl;
-    const categoriesKeys = Object.keys(this.props.marketplace.categories);
-    switch (publisherData.priority) {
-      case PriorityTypes.LOCAL_DATA:
-        return (
-          <div>
-            <div className="form-group">
-              <span>{formatMessage(messages.country)}</span>
-              <CountryDropdown
-                value={publisherData.country}
-                classes="ui dropdown textfield"
-                onChange={this.onChangeCountry}
-              />
-              <div className="col-1" />
-            </div>
-            <div className="form-group">
-              <span>{formatMessage(messages.city)}</span>
-              <RegionDropdown
-                country={publisherData.country}
-                value={publisherData.city}
-                defaultOptionLabel=''
-                blankOptionLabel=''
-                classes="ui dropdown textfield"
-                onChange={this.onChangeCity}
-              />
-              <div className="col-1" />
-            </div>
-          </div>
-        );
-      case PriorityTypes.BY_CATEGORY:
-        let keywords=publisherData.keywords;
-        if(!keywords) keywords=[];
-        return (
-          <div className="form-group keyword-container" key="category">
-            <span>{formatMessage(messages.keywordLabel)}</span>
-            <TagsInput value={keywords}
-              inputProps={{
-                className: cn('react-tagsinput-input', {empty: keywords.length ? false : true}),
-                placeholder: (
-                  formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
-                )
-              }}
-              onChange={this.onChangeKeywords.bind(this)} />
-            <div className="col-1" />
-          </div>
-        );
-      case PriorityTypes.PUBLISHER:
-        return (
-          <div className="form-group" key="publisher">
-            <span>{formatMessage(messages.publisherName)}</span>
-            <Dropdown
-              placeholder={formatMessage(messages.publisherPlaceholder)}
-              defaultValue={publisherData.publisherName}
-              loading={publishers.loading}
-              fluid
-              selection
-              options={publishers.names.map(el => ({
-                  key: el,
-                  value: el,
-                  text: el
-                }))}
-              onChange={this.onChangePublisherName}
-            />
-            <div className="col-1" />
-          </div>
-        );
-      default:
-        return null;
-    }
-  }
-
   publisherForm() {
-    const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     return (
@@ -319,56 +140,7 @@ class PrivateData extends Component {
             {formatMessage(messages.publisherNeedInfo)}
           </p>
         </div>
-        <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
-          <div className="form-group publisher-container">
-            <span>{formatMessage(messages.searchPriority)}</span>
-            <div className="radios-container">
-              <div className="radio-wrapper">
-                <Field
-                  onClick={() => { this.onChangePriority(PriorityTypes.LOCAL_DATA); }}
-                  name={PriorityTypes.LOCAL_DATA}
-                  component="input"
-                  type="radio"
-                  checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
-                  value={PriorityTypes.LOCAL_DATA}
-                />
-                <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
-              </div>
-
-              <div className="radio-wrapper">
-                <Field
-                  onClick={() => { this.onChangePriority(PriorityTypes.BY_CATEGORY); }}
-                  name={PriorityTypes.BY_CATEGORY}
-                  component="input"
-                  type="radio"
-                  checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
-                  value={PriorityTypes.BY_CATEGORY}
-                />
-                <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
-              </div>
-
-              <div className="radio-wrapper">
-                <Field
-                  onClick={() => { this.onChangePriority(PriorityTypes.PUBLISHER); }}
-                  name={PriorityTypes.PUBLISHER}
-                  component="input"
-                  type="radio"
-                  checked={publisherData.priority === PriorityTypes.PUBLISHER}
-                  value={PriorityTypes.PUBLISHER}
-                />
-                <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
-              </div>
-            </div>
-            <div className="col-1" />
-          </div>
-          {this.renderPublisherFormFields()}
-          <div className="form-group">
-            <span />
-            <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
-            <div className="col-1" />
-            <div className="col-1" />
-          </div>
-        </Form>
+        <SearchPrioritySetting />
       </div>
     );
   }
@@ -385,25 +157,7 @@ class PrivateData extends Component {
 
 PrivateData.propTypes = {
   accountSettingsActions: PropTypes.shape({
-    changePriority: PropTypes.func,
-    changeCountry: PropTypes.func,
-    changeCity: PropTypes.func,
-    changeCategory: PropTypes.func,
-    changePublisherName: PropTypes.func,
-    updatePrivateData: PropTypes.func,
-    updatePublisherData: PropTypes.func,
-    getPublishers: PropTypes.func
-  }).isRequired,
-  marketplaceActions: PropTypes.shape({
-    getCategories: PropTypes.func
-  }).isRequired,
-  account: PropTypes.shape({
-    priority: PropTypes.string,
-    publisherData: PropTypes.shape({}),
-    publishers: PropTypes.array,
-  }),
-  marketplace: PropTypes.shape({
-    categories: PropTypes.array
+    updatePrivateData: PropTypes.func
   }).isRequired,
   auth: PropTypes.shape({
     account: PropTypes.shape({
@@ -432,17 +186,7 @@ export default compose(
     }),
     (dispatch) => ({
       accountSettingsActions: bindActionCreators({
-        changePriority,
-        changeCountry,
-        changeCity,
-        changeKeywords,
-        changePublisherName,
-        updatePrivateData,
-        updatePublisherData,
-        getPublishers
-      }, dispatch),
-      marketplaceActions: bindActionCreators({
-        getCategories
+        updatePrivateData
       }, dispatch)
     }),
   ),
