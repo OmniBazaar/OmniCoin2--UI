@@ -27,7 +27,8 @@ import {
   accountSubscriber,
   walletSubscriber,
   processorsSubscriber,
-  bitcoinSubscriber
+  bitcoinSubscriber,
+  transferSubscriber,
 } from './services/saga';
 
 ChainConfig.address_prefix = 'BTS';
@@ -71,6 +72,7 @@ sagaMiddleware.run(authSubscriber);
 sagaMiddleware.run(mailSubscriber);
 sagaMiddleware.run(escrowSubscriber);
 sagaMiddleware.run(accountSubscriber);
+sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);

@@ -105,9 +105,9 @@ JSONStream@^0.8.4:
     jsonparse "0.0.5"
     through ">=2.2.7 <3"
 
-"ReconnectingWebSocket@git+https://github.com/bitshares/reconnecting-websocket.git":
+"ReconnectingWebSocket@git+https://github.com/bitshares/reconnecting-websocket":
   version "1.0.1"
-  resolved "git+https://github.com/bitshares/reconnecting-websocket.git#464ed2e54eb37b90b7f4f8532427ac2753d87148"
+  resolved "git+https://github.com/bitshares/reconnecting-websocket#464ed2e54eb37b90b7f4f8532427ac2753d87148"
 
 abab@^1.0.4:
   version "1.0.4"
@@ -8780,6 +8780,10 @@ run-async@^2.2.0:
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
   dependencies:
     is-promise "^2.1.0"
+
+run-git-command@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/run-git-command/-/run-git-command-1.0.1.tgz#25b91e09bdd90a49d8c02b2d11cab2a9a03c43f0"
 
 run-queue@^1.0.0, run-queue@^1.0.3:
   version "1.0.3"
