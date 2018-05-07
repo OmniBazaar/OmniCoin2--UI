@@ -23,7 +23,7 @@ class Compose extends Component {
     if (this.props.mail.reply) {
       const message = this.getActiveMessage();
       this.props.initialize({
-        recipient: message.user,
+        recipient: message.sender,
         subject: `RE: ${message.subject}`,
       });
     }
