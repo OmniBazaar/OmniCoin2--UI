@@ -7,6 +7,7 @@ import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Apis, ChainConfig } from 'omnibazaarjs-ws';
+import { toastr } from 'react-redux-toastr';
 import { ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder } from 'omnibazaarjs/es';
 
 import Header from '../../../../components/Header';
@@ -37,7 +38,43 @@ const messages = defineMessages({
   fieldRequired: {
     id: 'Transfer.fieldRequired',
     defaultMessage: 'This field is required'
-  }
+  },
+  accountNameOrPublicKey: {
+    id: 'Transfer.accountNameOrPublicKey',
+    defaultMessage: 'Account Name or Public Key'
+  },
+  pleaseEnter: {
+    id: 'Transfer.pleaseEnter',
+    defaultMessage: 'Please enter'
+  },
+  amount: {
+    id: 'Transfer.amount',
+    defaultMessage: 'Amount'
+  },
+  reputation: {
+    id: 'Transfer.reputation',
+    defaultMessage: 'Reputation'
+  },
+  memo: {
+    id: 'Transfer.memo',
+    defaultMessage: 'Memo'
+  },
+  transferSecurity: {
+    id: 'Transfer.transferSecurity',
+    defaultMessage: 'Transfer Security'
+  },
+  useEscrowService: {
+    id: 'Transfer.useEscrowService',
+    defaultMessage: 'Use SecureSend (Escrow Service)'
+  },
+  successTransfer: {
+    id: 'Settings.successUpdate',
+    defaultMessage: 'Transferred successfully'
+  },
+  failedTransfer: {
+    id: 'Settings.failedUpdate',
+    defaultMessage: 'Failed to transfer'
+  },
 });
 
 const walletOptions = [
@@ -55,64 +92,20 @@ const walletOptions = [
   }
 ];
 
-const reputationOptions = [
-  {
-    key: '1',
-    value: '0',
-    text: '-5',
-  },
-  {
-    key: '2',
-    value: '1',
-    text: '-4',
-  },
-  {
-    key: '3',
-    value: '2',
-    text: '-3',
-  },
-  {
-    key: '4',
-    value: '3',
-    text: '-2',
-  },
-  {
-    key: '5',
-    value: '4',
-    text: '-1',
-  },
-  {
-    key: '6',
-    value: '5',
-    text: '0',
-  },
-  {
-    key: '7',
-    value: '6',
-    text: '1',
-  },
-  {
-    key: '8',
-    value: '7',
-    text: '2',
-  },
-  {
-    key: '9',
-    value: '8',
-    text: '3',
-  },
-  {
-    key: '10',
-    value: '9',
-    text: '4',
-  },
-  {
-    key: '11',
-    value: '10',
-    text: '5',
-  }
-];
+const reputationOptions = () => {
+  const options = [];
 
+  for (let index = 0; index < 11; index++) {
+    const option = {
+      key: index,
+      value: index,
+      text: index - 5
+    };
+    options.push(option);
+  }
+
+  return options;
+};
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
@@ -125,7 +118,7 @@ class Transfer extends Component {
   };
   handleInitialize() {
     const initData = {
-      'reputation': '5',
+      reputation: 5,
     };
 
     this.props.initialize(initData);
@@ -138,6 +131,17 @@ class Transfer extends Component {
 
   componentDidMount() {
     this.handleInitialize();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+    if (this.props.transfer.loading && !nextProps.transfer.loading) {
+      if (nextProps.transfer.error) {
+        toastr.error(formatMessage(messages.transfer), nextProps.transfer.error);
+      } else {
+        toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
+      }
+    }
   }
 
   renderDropdownUnitsField = ({
@@ -202,7 +206,7 @@ class Transfer extends Component {
           type="text"
           className="textfield"
           placeholder={placeholder}
-          options={reputationOptions}
+          options={reputationOptions()}
           onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
@@ -242,7 +246,7 @@ class Transfer extends Component {
 
   transferForm() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
+    const { handleSubmit, transfer } = this.props;
     const number = value =>
       (value && isNaN(Number(value)) ? 'Must be a number' : undefined);
     return (
@@ -250,15 +254,15 @@ class Transfer extends Component {
         <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>Account Name or Public Key</span>
+            <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
             <Field
               type="text"
               name="to_name"
-              placeholder="Press enter"
+              placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderUnitsField}
               className="textfield1"
               buttonClass="button--green"
-              buttonText="ADDRESS BOOK"
+              buttonText=""
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -267,11 +271,12 @@ class Transfer extends Component {
           </div>
           <p className="title">{formatMessage(messages.transfer)}</p>
           <div className="form-group">
-            <span>Amount</span>
+            <span>{formatMessage(messages.amount)}</span>
             <Field
               type="text"
               name="amount"
               placeholder="0.0"
+              sl
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="XOM"
@@ -283,7 +288,7 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>Reputation</span>
+            <span>{formatMessage(messages.reputation)}</span>
             <Field
               type="text"
               name="reputation"
@@ -293,23 +298,23 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>Memo</span>
+            <span>{formatMessage(messages.memo)}</span>
             <Field
               type="text"
               name="memo"
-              placeholder="Please enter"
+              placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderMemoField}
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>Transfer Security</span>
+            <span>{formatMessage(messages.transferSecurity)}</span>
             <div className="transfer-input">
               <Field
                 name="use_escrow"
                 component={this.renderEscrowField}
-                label="Use SecureSend (Escrow Service)"
+                label={formatMessage(messages.useEscrowService)}
               />
             </div>
             <div className="col-1" />
@@ -317,7 +322,7 @@ class Transfer extends Component {
           <div className="form-group">
             <span />
             <div className="field left floated">
-              <Button type="submit" content={formatMessage(messages.TRANSFER)} className="button--green-bg" />
+              <Button type="submit" loading={transfer.loading} content={formatMessage(messages.TRANSFER)} className="button--green-bg" />
             </div>
             <div className="col-1" />
           </div>
@@ -325,8 +330,8 @@ class Transfer extends Component {
       </div>
     );
   }
-  submitTransfer() {
-    this.props.transferActions.submitTransfer();
+  submitTransfer(values) {
+    this.props.transferActions.submitTransfer(values);
   }
 
   render() {
@@ -348,15 +353,23 @@ Transfer.propTypes = {
     formatMessage: PropTypes.func,
   }),
   initialize: PropTypes.func,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  transfer: PropTypes.shape({
+    loading: PropTypes.bool,
+    error: PropTypes.string
+  })
 };
 
 Transfer.defaultProps = {
-  intl: {}
+  transferActions: {},
+  intl: {},
+  initialize: {},
+  transfer: {},
 };
 
 export default compose(
-  connect(null,
+  connect(
+    state => ({ ...state.default }),
     (dispatch) => ({
       transferActions: bindActionCreators({
         submitTransfer

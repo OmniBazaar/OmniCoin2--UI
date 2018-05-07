@@ -3,7 +3,7 @@ import { createActions } from 'redux-actions';
 const {
   submitTransfer
 } = createActions({
-  SUBMIT_TRANSFER: () => ({})
+  SUBMIT_TRANSFER: (data) => ({ data })
 });
 
 export { submitTransfer };

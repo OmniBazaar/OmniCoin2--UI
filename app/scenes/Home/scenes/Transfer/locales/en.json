@@ -4,5 +4,14 @@
   "Transfer.to": "To",
   "Transfer.TRANSFER": "TRANSFER",
   "Transfer.fieldRequired": "This field is required",
-  "Transfer.accountDoNotExist": "Account doesn't exist"
+  "Transfer.accountDoNotExist": "Account doesn't exist",
+  "Transfer.accountNameOrPublicKey": "Account Name or Public Key",
+  "Transfer.pleaseEnter": "Please enter",
+  "Transfer.amount": "Amount",
+  "Transfer.reputation": "Reputation",
+  "Transfer.memo": "Memo",
+  "Transfer.transferSecurity":"Transfer Security",
+  "Transfer.useEscrowService":"Use SecureSend (Escrow Service)",
+  "Transfer.successTransfer":"Transferred successfully",
+  "Transfer.failedTransfer":"Failed to transfer"
 }
