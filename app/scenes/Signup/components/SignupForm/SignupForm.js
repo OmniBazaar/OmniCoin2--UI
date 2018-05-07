@@ -12,6 +12,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { key, FetchChain } from 'omnibazaarjs/es';
 import PropTypes from 'prop-types';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import Checkbox from '../../../../components/Checkbox/Checkbox';
 import TagsInput from '../../../../components/TagsInput';
 import PriorityTypes from '../../../../common/SearchPriorityType';
 
@@ -19,6 +20,8 @@ import { signup } from '../../../../services/blockchain/auth/authActions';
 
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
+
+const checkboxSize = 15;
 
 const messages = defineMessages({
   usernameExists: {
@@ -179,8 +182,12 @@ class SignupForm extends Component {
     this.props.formActions.change('city', city);
   }
 
-  onChangeKeywords(keywords){
+  onChangeKeywords(keywords) {
     this.props.formActions.change('keywords', keywords);
+  }
+
+  onTermAndConditionCheck(isChecked) {
+    this.props.formActions.change('agreementTerms', isChecked);
   }
 
   signIn() {
@@ -260,6 +267,23 @@ class SignupForm extends Component {
       ]
     );
   };
+
+  renderTermField = () => {
+    const { formatMessage } = this.props.intl;
+    return (
+      [
+        <div className="agreement-terms">
+          <Checkbox
+            width={checkboxSize}
+            height={checkboxSize}
+            onChecked={this.onTermAndConditionCheck.bind(this)}
+          />
+          <span>{ formatMessage(messages.agree) } </span>
+          <a href="#">{ formatMessage(messages.termsAndCond) }</a>
+        </div>
+      ]
+    );
+  }
 
 
   renderSearchPriority(){
@@ -341,8 +365,9 @@ class SignupForm extends Component {
 
   render() {
     const {
-      handleSubmit, valid, auth, asyncValidating
+      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
     } = this.props;
+    const agreementTerms = {formValues};
     const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
     const { formatMessage } = this.props.intl;
     return (
@@ -376,18 +401,13 @@ class SignupForm extends Component {
           component={this.renderReferrerField}
         />
         {this.renderSearchPriority()}
-        <div className="agreement-terms">
-          <Field
-            type="checkbox"
-            name="agreementTerms"
-            component="input"
-          />
-          <span>{ formatMessage(messages.agree) } </span>
-          <a href="#">{ formatMessage(messages.termsAndCond) }</a>
-        </div>
+        <Field
+          name="agreementTerms"
+          component={this.renderTermField}
+        />
         <Button
           content={formatMessage(messages.signup)}
-          disabled={!valid || auth.loading || !!asyncValidating}
+          disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating}
           color="green"
           className={btnClass}
           type="submit"
@@ -466,7 +486,7 @@ SignupForm = injectIntl(SignupForm);
 export default connect(
   (state) => ({
     ...state.default,
-    formValues: getFormValues('signupForm')(state),
+    formValues: getFormValues('signupForm')(state)
   }),
   (dispatch) => ({
     authActions: bindActionCreators({ signup }, dispatch),
