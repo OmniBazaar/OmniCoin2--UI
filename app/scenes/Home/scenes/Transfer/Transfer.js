@@ -6,9 +6,8 @@ import { required, initialize } from 'redux-form-validators';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Apis, ChainConfig } from 'omnibazaarjs-ws';
 import { toastr } from 'react-redux-toastr';
-import { ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder } from 'omnibazaarjs/es';
+import { FetchChain } from 'omnibazaarjs/es';
 
 import Header from '../../../../components/Header';
 import './transfer.scss';
@@ -110,19 +109,12 @@ const reputationOptions = () => {
 class Transfer extends Component {
   static asyncValidate = async (values) => {
     try {
-      const account = await FetchChain('getAccount', values.to_name);
+      await FetchChain('getAccount', values.to_name);
     } catch (e) {
       console.log('ERR', e);
       throw { to_name: messages.accountDoNotExist };
     }
   };
-  handleInitialize() {
-    const initData = {
-      reputation: 5,
-    };
-
-    this.props.initialize(initData);
-  }
 
   constructor(props) {
     super(props);
@@ -144,6 +136,14 @@ class Transfer extends Component {
     }
   }
 
+  handleInitialize() {
+    const initData = {
+      reputation: 5,
+    };
+
+    this.props.initialize(initData);
+  }
+
   renderDropdownUnitsField = ({
     input, placeholder, buttonText
   }) => {
@@ -153,7 +153,7 @@ class Transfer extends Component {
         <Select
           {...input}
           value={input.value}
-          onChange={function (param, data) {
+          onChange={(param, data) => {
           const szDescription = data.options.find(o => o.value === data.value);
           xomAmount.ref.innerHTML = szDescription.description;
         }}
@@ -330,7 +330,7 @@ class Transfer extends Component {
     );
   }
   submitTransfer(paramValues) {
-    let values = paramValues;
+    const values = paramValues;
     if (values.memo === undefined || values.memo === null) {
       values.memo = '';
     }

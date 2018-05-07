@@ -1,11 +1,14 @@
-import { Apis, ChainConfig } from 'omnibazaarjs-ws';
-import { ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder } from 'omnibazaarjs/es';
+import {
+  FetchChain,
+  TransactionHelper,
+  Aes,
+  TransactionBuilder
+} from 'omnibazaarjs/es';
 import {
   put,
   takeLatest,
   select,
   all,
-  call
 } from 'redux-saga/effects';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
