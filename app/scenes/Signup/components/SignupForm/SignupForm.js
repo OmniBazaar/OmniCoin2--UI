@@ -12,6 +12,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { key, FetchChain } from 'omnibazaarjs/es';
 import PropTypes from 'prop-types';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import Radio from '../../../../components/Radio/Radio';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import TagsInput from '../../../../components/TagsInput';
 import PriorityTypes from '../../../../common/SearchPriorityType';
@@ -21,7 +22,7 @@ import { signup } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
 
-const checkboxSize = 15;
+const inputCustomSize = 15;
 
 const messages = defineMessages({
   usernameExists: {
@@ -190,6 +191,10 @@ class SignupForm extends Component {
     this.props.formActions.change('agreementTerms', isChecked);
   }
 
+  onChangeSearchPriority(priority) {
+    this.props.formActions.change('searchPriority', priority);
+  }
+
   signIn() {
     this.props.history.push('/login');
   }
@@ -274,8 +279,8 @@ class SignupForm extends Component {
       [
         <div className="agreement-terms">
           <Checkbox
-            width={checkboxSize}
-            height={checkboxSize}
+            width={inputCustomSize}
+            height={inputCustomSize}
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{ formatMessage(messages.agree) } </span>
@@ -288,27 +293,30 @@ class SignupForm extends Component {
 
   renderSearchPriority(){
     const { formatMessage } = this.props.intl;
+    const { searchPriority } = this.props.formValues;
     return (
       <div>
         <div className="search-priority">
           <div>{formatMessage(messages.searchPriority)}</div>
           <div className="radios-container">
             <div className="radio-wrapper">
-              <Field
-                name='searchPriority'
-                component="input"
-                type="radio"
+              <Radio
+                width={20}
+                height={20}
                 value={PriorityTypes.LOCAL_DATA}
+                checked={searchPriority === PriorityTypes.LOCAL_DATA}
+                onChecked={this.onChangeSearchPriority.bind(this)}
               />
               <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
             </div>
 
             <div className="radio-wrapper">
-              <Field
-                name='searchPriority'
-                component="input"
-                type="radio"
+              <Radio
+                width={20}
+                height={20}
                 value={PriorityTypes.BY_CATEGORY}
+                checked={searchPriority === PriorityTypes.BY_CATEGORY}
+                onChecked={this.onChangeSearchPriority.bind(this)}
               />
               <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
             </div>

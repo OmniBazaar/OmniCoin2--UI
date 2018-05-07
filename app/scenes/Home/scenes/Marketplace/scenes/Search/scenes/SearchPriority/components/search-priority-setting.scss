@@ -27,9 +27,11 @@
     .radio-wrapper {
       /*flex: 1;*/
       line-height: 20px;
+      display: flex;
+      flex-direction: row;
 
       .checkbox-inline {
-        margin-left: 15px;
+        margin-left: 10px;
       }
     }
   },

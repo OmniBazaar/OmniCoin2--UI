@@ -9,6 +9,7 @@ import cn from 'classnames';
 import { Button, Form, Dropdown } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
 
+import Radio from '../../../../../../../../../components/Radio/Radio';
 import TagsInput from '../../../../../../../../../components/TagsInput';
 import PriorityTypes from '../../../../../../../../../common/SearchPriorityType';
 import {
@@ -208,38 +209,35 @@ class SearchPrioritySetting extends Component {
 		        <span>{formatMessage(messages.searchPriority)}</span>
 		        <div className="radios-container">
 		          <div className="radio-wrapper">
-		            <Field
-		              onClick={() => { this.onChangePriority(PriorityTypes.LOCAL_DATA); }}
-		              name={PriorityTypes.LOCAL_DATA}
-		              component="input"
-		              type="radio"
-		              checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
-		              value={PriorityTypes.LOCAL_DATA}
-		              />
+                <Radio
+                  width={20}
+                  height={20}
+                  value={PriorityTypes.LOCAL_DATA}
+                  checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
+                  onChecked={this.onChangePriority}
+                />
 		            <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
 		          </div>
 
 		          <div className="radio-wrapper">
-		            <Field
-		              onClick={() => { this.onChangePriority(PriorityTypes.BY_CATEGORY); }}
-		              name={PriorityTypes.BY_CATEGORY}
-		              component="input"
-		              type="radio"
-		              checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
-		              value={PriorityTypes.BY_CATEGORY}
-		              />
+                <Radio
+                  width={20}
+                  height={20}
+                  value={PriorityTypes.BY_CATEGORY}
+                  checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
+                  onChecked={this.onChangePriority}
+                />
 		            <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
 		          </div>
 
 		          <div className="radio-wrapper">
-		            <Field
-		              onClick={() => { this.onChangePriority(PriorityTypes.PUBLISHER); }}
-		              name={PriorityTypes.PUBLISHER}
-		              component="input"
-		              type="radio"
-		              checked={publisherData.priority === PriorityTypes.PUBLISHER}
-		              value={PriorityTypes.PUBLISHER}
-		              />
+                <Radio
+                  width={20}
+                  height={20}
+                  value={PriorityTypes.PUBLISHER}
+                  checked={publisherData.priority === PriorityTypes.PUBLISHER}
+                  onChecked={this.onChangePriority}
+                />
 		            <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
 		          </div>
 		        </div>
@@ -271,11 +269,8 @@ SearchPrioritySetting.propTypes = {
   account: PropTypes.shape({
     priority: PropTypes.string,
     publisherData: PropTypes.shape({}),
-    publishers: PropTypes.array,
+    publishers: PropTypes.object,
   }),
-  marketplace: PropTypes.shape({
-    categories: PropTypes.array
-  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),

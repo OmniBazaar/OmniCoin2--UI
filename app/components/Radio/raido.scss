@@ -1,0 +1,13 @@
+.radio-container {
+  display: flex;
+  cursor: pointer;
+
+  .radio {
+    min-width: 20px;
+
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+  }
+}
