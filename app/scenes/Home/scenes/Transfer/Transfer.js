@@ -304,7 +304,6 @@ class Transfer extends Component {
               name="memo"
               placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderMemoField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <div className="col-1" />
           </div>
@@ -330,7 +329,11 @@ class Transfer extends Component {
       </div>
     );
   }
-  submitTransfer(values) {
+  submitTransfer(paramValues) {
+    let values = paramValues;
+    if (values.memo === undefined || values.memo === null) {
+      values.memo = '';
+    }
     this.props.transferActions.submitTransfer(values);
   }
 

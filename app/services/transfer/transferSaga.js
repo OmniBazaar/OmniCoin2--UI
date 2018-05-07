@@ -18,12 +18,11 @@ export function* transferSubscriber() {
 
 export function* submitTransfer(data) {
   const { currentUser } = (yield select()).default.auth;
-  console.log(yield select());
   const sender_name_str = currentUser.username;
-  const to_name_str = (yield select()).default.transfer.to_name;
+  const to_name_str = data.payload.data.to_name;
   const {
     amount, memo, reputation
-  } = (yield select()).default.transfer;
+  } = data.payload.data;
 
   try {
     const [sender_name, to_name] = yield Promise.all([
