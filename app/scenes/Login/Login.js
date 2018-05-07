@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 
 import Background from '../../components/Background/Background';
 import LoginForm from './components/LoginForm/LoginForm';
@@ -12,13 +13,20 @@ import { getAccount } from '../../services/blockchain/auth/authActions';
 class Login extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.currentUser) {
-      this.props.history.push('/');
       this.props.authActions.getAccount(nextProps.auth.currentUser.username);
     }
   }
 
 
   render() {
+    if (this.props.auth.currentUser) {
+      return (<Redirect
+        to={{
+          pathname: '/',
+        }}
+      />);
+    }
+
     return (
       <Background>
         <LoginForm />

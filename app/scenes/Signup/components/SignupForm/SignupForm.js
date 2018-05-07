@@ -464,7 +464,7 @@ SignupForm.propTypes = {
   }),
   handleSubmit: PropTypes.func,
   valid: PropTypes.bool,
-  asyncValidating: PropTypes.string,
+  asyncValidating: PropTypes.bool,
   formValues: PropTypes.object,
   formActions: PropTypes.shape({
     change: PropTypes.func

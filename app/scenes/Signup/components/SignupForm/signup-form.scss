@@ -17,9 +17,15 @@
       border-bottom-right-radius: 0 !important;
       border-top-right-radius: 0 !important;
       border-right: none !important;
+      width: auto;
+      flex: 1;
     }
     .button {
-      width: 60px;
+      position: relative;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 48px;
       border: 1px solid rgba(34,36,38,.15);
       border-bottom-right-radius: 0.28571429rem !important;
       border-top-right-radius: 0.28571429rem !important;
@@ -29,6 +35,7 @@
       border-left: none;
       background: white;
       color: $primary-blue;
+      padding-left: 0;
     }
     .icon {
       margin: 0;
