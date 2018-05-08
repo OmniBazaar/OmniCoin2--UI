@@ -10,6 +10,9 @@ import { FetchChain } from 'omnibazaarjs/es';
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
 import { faucetAddresses } from '../settings';
+import {
+  changeSearchPriorityData
+} from '../../accountSettings/accountActions';
 
 
 const messages = defineMessages({
@@ -70,7 +73,8 @@ export function* signup(action) {
   const {
     username,
     password,
-    referrer
+    referrer,
+    searchPriorityData
   } = action.payload;
   const ownerKey = generateKeyFromPassword(username, 'owner', password);
   const activeKey = generateKeyFromPassword(username, 'active', password);
@@ -96,6 +100,7 @@ export function* signup(action) {
     });
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
+      yield put(changeSearchPriorityData(searchPriorityData));
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {

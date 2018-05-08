@@ -38,6 +38,10 @@ import {
   setActiveCategory
 } from '../../../../services/marketplace/marketplaceActions';
 
+import {
+  getPublisherData
+} from '../../../../services/accountSettings/accountActions';
+
 import './marketplace.scss';
 
 const iconSize = 20;
@@ -1679,6 +1683,10 @@ const messages = defineMessages({
 });
 
 class Marketplace extends Component {
+  componentWillMount() {
+    this.props.accountActions.getPublisherData();
+  }
+
   componentDidMount() {
     this.fetchFeatureList();
   }
@@ -2060,6 +2068,9 @@ Marketplace.propTypes = {
     getCryptoBazaarList: PropTypes.func,
     setActiveCategory: PropTypes.func
   }),
+  accountActions: PropTypes.shape({
+    getPublisherData: PropTypes.func
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -2082,5 +2093,8 @@ export default connect(
       getCryptoBazaarList,
       setActiveCategory
     }, dispatch),
+    accountActions: bindActionCreators({
+      getPublisherData
+    }, dispatch)
   }),
 )(injectIntl(Marketplace));

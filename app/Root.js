@@ -17,6 +17,7 @@ class Root extends Component {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
     this.props.authActions.getLastLoginUserName();
+    // this.props.authActions.getCurrentUser();
   }
 
   componentDidMount() {

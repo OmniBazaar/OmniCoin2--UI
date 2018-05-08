@@ -2,6 +2,8 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import ip from 'ip';
 
+import PriorityTypes from '../../common/SearchPriorityType';
+
 import AccountSettingsStorage from './accountStorage';
 import {
   setReferrer,
@@ -13,6 +15,7 @@ import {
   changeCity,
   changeCategory,
   changePublisherName,
+  changeKeywords,
   getRecentTransactions,
   setActivePage,
   filterData,
@@ -28,7 +31,8 @@ import {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  changeSearchPriorityData
 } from './accountActions';
 
 const defaultState = {
@@ -65,6 +69,7 @@ const defaultState = {
     city: '',
     category: '',
     publisherName: '',
+    keywords: []
   },
   publishers: {
     names: [],
@@ -81,6 +86,43 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => (
   Math.ceil(data.length / rowsPerPage)
 );
+
+const savePublisherData = data => {
+  let newData = {
+    ...data
+  };
+
+  switch (newData.priority) {
+    case PriorityTypes.LOCAL_DATA:
+      newData = {
+        keywords: [],
+        publisherName: ''
+      };
+      break;
+    case PriorityTypes.BY_CATEGORY:
+      newData = {
+        country: '',
+        city: '',
+        publisherName: ''
+      };
+      break;
+    case PriorityTypes.PUBLISHER:
+      newData = {
+        country: '',
+        city: '',
+        keywords: []
+      };
+      break;
+  }
+
+  data = {
+    ...data,
+    ...newData
+  };
+  AccountSettingsStorage.updatePublisherData(data);
+
+  return data;
+}
 
 const reducer = handleActions({
   [setReferrer](state) {
@@ -152,6 +194,26 @@ const reducer = handleActions({
       }
     };
   },
+  [changeKeywords](state, { payload: { keywords } }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        keywords: keywords ? keywords : []
+      }
+    };
+  },
+  [changeSearchPriorityData](state, { payload: { data } }) {
+    let publisherData = {
+        ...state.publisherData,
+        ...data
+    };
+    let newData = savePublisherData(publisherData);
+    return {
+      ...state,
+      publisherData: newData
+    };
+  },
   [showDetailsModal](state, { payload: { detailSelected } }) {
     return {
       ...state,
@@ -180,10 +242,10 @@ const reducer = handleActions({
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
-    AccountSettingsStorage.updatePublisherData(data);
+    const newData = savePublisherData(data);
     return {
       ...state,
-      publisherData: data
+      publisherData: newData
     };
   },
   [updatePublicData](state) {

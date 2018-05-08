@@ -622,6 +622,10 @@ const userMenu = defineMessages({
     id: 'Marketplace.myListings',
     defaultMessage: 'My Listings'
   },
+  searchPriority: {
+    id: 'Marketplace.searchPriority',
+    defaultMessage: 'Search Priority'
+  }
 });
 
 export {

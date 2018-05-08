@@ -1,0 +1,16 @@
+{
+  "SearchPrioritySetting.localArea": "Local Area",
+  "SearchPrioritySetting.byCategoryType": "By Category / Type",
+  "SearchPrioritySetting.publisherName": "Publisher Name",
+  "SearchPrioritySetting.country": "Country",
+  "SearchPrioritySetting.startTyping": "Start typing...",
+  "SearchPrioritySetting.apply": "APPLY",
+  "SearchPrioritySetting.updateSuccess": "Successfully updated",
+  "SearchPrioritySetting.update": "Update",
+  "SearchPrioritySetting.city": "City",
+  "SearchPrioritySetting.publisherPlaceholder": "Select publisher...",
+  "SearchPrioritySetting.publisher": "Publisher",
+  "SearchPrioritySetting.keywords": "Keywords for listing your want to see",
+  "SearchPrioritySetting.addKeyword": "Add keyword",
+  "SearchPrioritySetting.keywordLabel": "Keywords"
+}

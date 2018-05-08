@@ -13,5 +13,12 @@
   "SignupForm.signup": "Sign up",
   "SignupForm.signin": "Sign in",
   "SignupForm.haveAccount": "Already have an account?",
-  "SignupForm.error": "Error"
+  "SignupForm.error": "Error",
+  "SignupForm.searchPriority": "Marketplace Search priority",
+  "SignupForm.localArea": "Local Area",
+  "SignupForm.byCategoryType": "By Category/Type",
+  "SignupForm.country": "Your Country",
+  "SignupForm.city": "Your City",
+  "SignupForm.keywords": "Keywords for listing your want to see",
+  "SignupForm.addKeyword": "Add keyword"
 }
