@@ -49,10 +49,10 @@ const reducer = combineReducers({
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
-if (process.env.NODE_ENV !== 'production') {
-  const logger = createLogger();
-  middleware.push(logger);
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   const logger = createLogger();
+//   middleware.push(logger);
+// }
 
 if (localStorage.getItem('currentUser')) {
   try {

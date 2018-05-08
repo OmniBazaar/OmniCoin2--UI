@@ -29,6 +29,16 @@ const messages = defineMessages({
   }
 });
 
+const comparator = (transA, transB, headerName, asc) => {
+  let compA = transA[headerName].toString();
+  let compB = transB[headerName].toString();
+  if (headerName === 'amount') {
+    compA = transA[headerName].amount.toString();
+    compB = transB[headerName].amount.toString();
+  }
+  return compA.localeCompare(compB) * (asc ? 1 : -1);
+};
+
 class MyEscrowTransactions extends Component {
   constructor(props) {
     super(props);
@@ -50,8 +60,10 @@ class MyEscrowTransactions extends Component {
     const asc = this.state.sortAsc[headerName];
 
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) =>
-        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
+      transactions: nextProps.escrow.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, asc)
+      ),
+      lastHeaderClicked: headerName
     });
   }
 
@@ -62,9 +74,11 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) =>
-        (transA[headerName].localeCompare(transB[headerName])) * (asc ? 1 : -1))
-    });
+      transactions: this.state.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, asc)
+      ),
+      lastHeaderClicked: headerName
+    })
   }
 
   handleHeaderClick(headerName) {
@@ -75,8 +89,9 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) =>
-        (transA[headerName].localeCompare(transB[headerName])) * (newHeaderSortAsc ? 1 : -1)),
+      transactions: this.state.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)
+      ),
       lastHeaderClicked: headerName
     });
   }
@@ -85,7 +100,7 @@ class MyEscrowTransactions extends Component {
     return this.state.transactions.map((escrowObject) => (
       <TableRow key={escrowObject.transactionID}>
         <TableCell>{escrowObject.transactionID}</TableCell>
-        <TableCell>{escrowObject.amount}</TableCell>
+        <TableCell>{escrowObject.amount.amount / 100000} XOM</TableCell>
         <TableCell>{escrowObject.parties}</TableCell>
       </TableRow>
     ));

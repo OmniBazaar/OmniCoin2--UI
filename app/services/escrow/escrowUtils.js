@@ -2,15 +2,12 @@
 const parseTransactionsFromNode = (escrowObjects) => {
   const escrowTransactions = [];
 
-  let transactionCounter = 1;
-
   escrowObjects.forEach((escrowObject) => {
     escrowTransactions.push({
-      transactionID: transactionCounter,
+      transactionID: escrowObject.id,
       amount: escrowObject.amount,
-      parties: `You, ${escrowObject.byuer}, ${escrowObject.seller}`
+      parties: `You, ${escrowObject.buyer}, ${escrowObject.seller}`
     });
-    transactionCounter++;
   });
 
   return escrowTransactions;
