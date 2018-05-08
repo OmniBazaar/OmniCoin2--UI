@@ -4,7 +4,6 @@
 
 $compose-width: 38%;
 
-
 .container {
   display: flex;
   flex-direction: column;
@@ -31,6 +30,10 @@ $compose-width: 38%;
     .second-split-pane .Pane1 {
       width: auto !important;
       min-width: 260px;
+    }
+
+    .Pane.vertical.Pane1 {
+      overflow: auto;
     }
 
     .mail-items {
