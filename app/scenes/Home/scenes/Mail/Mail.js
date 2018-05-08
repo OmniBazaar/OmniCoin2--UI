@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { Button, Image } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -56,6 +57,30 @@ const folders = [
 const iconSize = 20;
 
 class Mail extends Component {
+  static renderFolderIcon(folderType) {
+    let icon;
+    switch (folderType) {
+      case MailTypes.INBOX:
+        icon = InboxIcon;
+        break;
+      case MailTypes.OUTBOX:
+        icon = OutboxIcon;
+        break;
+      case MailTypes.SENT:
+        icon = SentIcon;
+        break;
+      case MailTypes.DELETED:
+        icon = DeletedIcon;
+        break;
+      default:
+        icon = InboxIcon;
+    }
+
+    return (
+      <Image src={icon} width={iconSize} height={iconSize} />
+    );
+  }
+
   constructor(props) {
     super(props);
 
@@ -97,34 +122,10 @@ class Mail extends Component {
     });
   }
 
-  _renderFolderIcon(folderType) {
-    let icon;
-    switch (folderType) {
-      case MailTypes.INBOX:
-        icon = InboxIcon;
-        break;
-      case MailTypes.OUTBOX:
-        icon = OutboxIcon;
-        break;
-      case MailTypes.SENT:
-        icon = SentIcon;
-        break;
-      case MailTypes.DELETED:
-        icon = DeletedIcon;
-        break;
-      default:
-        icon = InboxIcon;
-    }
-
-    return (
-      <Image src={icon} width={iconSize} height={iconSize} />
-    );
-  }
-
   /**
    * Renders folders for mail: inbox, outbox, sent, etc
    */
-  _renderItems() {
+  renderItems() {
     const { props } = this;
     const self = this;
 
@@ -143,7 +144,7 @@ class Mail extends Component {
 
       return (
         <div key={`folder-${index}`} className={containerClass} onClick={() => self.changeFolder(folder.type)}>
-          {self._renderFolderIcon(folder.type)}
+          {Mail.renderFolderIcon(folder.type)}
           <span>{folder.label}</span>
           <span className="amount">{numberOfUnreadMessagesInFolder > 0 ? numberOfUnreadMessagesInFolder : ''}</span>
         </div>
@@ -171,12 +172,14 @@ class Mail extends Component {
   /**
    * Renders the list of emails
    */
-  _renderMessages() {
+  renderMessages() {
     const { props } = this;
     const self = this;
+    const emailData = props.mail.messages[props.mail.activeFolder];
 
-    if (props.mail.messages[props.mail.activeFolder].length > 0) {
-      return props.mail.messages[props.mail.activeFolder].map((message, index) => {
+    if (emailData.length > 0) {
+      const sortedData = _.sortBy(emailData, ['creation_time']).reverse();
+      return sortedData.map((message, index) => {
         const containerClass = classNames({
           'mail-summary': true,
           active: props.mail.activeMessage === index,
@@ -212,8 +215,7 @@ class Mail extends Component {
     }
   }
 
-
-  _renderMessage() {
+  renderMessage() {
     const message = this.getMessage();
 
     if (!message) {
@@ -235,7 +237,7 @@ class Mail extends Component {
             </div>
             <div>
               { this.props.mail.activeFolder === MailTypes.INBOX &&
-                <Button content="REPLY" onClick={this.onClickReply} className="button--transparent" />
+              <Button content="REPLY" onClick={this.onClickReply} className="button--transparent" />
               }
               <Button content="DELETE" onClick={this.onClickDelete} className="button--transparent" />
             </div>
@@ -295,13 +297,13 @@ class Mail extends Component {
         <div className="body">
           <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{ position: 'relative' }}>
             <div className="mail-items">
-              {this._renderItems()}
+              {this.renderItems()}
             </div>
             <SplitPane split="vertical" minSize={50} defaultSize={defaultSize} style={{ position: 'relative' }} className="second-split-pane">
               <div className="mail-messages">
-                {this._renderMessages()}
+                {this.renderMessages()}
               </div>
-              {this._renderMessage()}
+              {this.renderMessage()}
             </SplitPane>
           </SplitPane>
         </div>

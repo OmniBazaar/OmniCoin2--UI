@@ -2,15 +2,67 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { setActiveFolder, sendMail, confirmationReceived, loadFolder } from '../../../../services/mail/mailActions';
 import MailTypes from '../../../../services/mail/mailTypes';
 
 import './mail.scss';
+
+const mailMessages = defineMessages({
+  compose: {
+    id: 'Mail.compose',
+    defaultMessage: 'Compose'
+  },
+  close: {
+    id: 'Mail.close',
+    defaultMessage: 'CLOSE'
+  },
+  newMessage: {
+    id: 'Mail.newMessage',
+    defaultMessage: 'New Message'
+  },
+  to: {
+    id: 'Mail.to',
+    defaultMessage: 'To'
+  },
+  subject: {
+    id: 'Mail.subject',
+    defaultMessage: 'Subject'
+  },
+  enterSubject: {
+    id: 'Mail.enterSubject',
+    defaultMessage: 'Enter subject'
+  },
+  startTyping: {
+    id: 'Mail.startTyping',
+    defaultMessage: 'Start typing'
+  },
+  message: {
+    id: 'Mail.message',
+    defaultMessage: 'Message'
+  },
+  enterMessage: {
+    id: 'Mail.enterMessage',
+    defaultMessage: 'Enter message'
+  },
+  send: {
+    id: 'Mail.send',
+    defaultMessage: 'SEND'
+  },
+  cancel: {
+    id: 'Mail.cancel',
+    defaultMessage: 'CANCEL'
+  },
+  addressBook: {
+    id: 'Mail.addressBook',
+    defaultMessage: 'ADDRESS BOOK'
+  },
+});
 
 class Compose extends Component {
   constructor(props) {
@@ -76,44 +128,46 @@ class Compose extends Component {
     });
 
     const { handleSubmit } = this.props;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className={containerClass}>
         <div className="top-detail">
-          <span>Compose</span>
-          <Button content="CLOSE" onClick={this.closeCompose} className="button--transparent" />
+          <span>{formatMessage(mailMessages.compose)}</span>
+          <Button content={formatMessage(mailMessages.close)} onClick={this.closeCompose} className="button--transparent" />
         </div>
         <div>
           <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="mail-form-container">
-            <p className="title">New Message</p>
+            <p className="title">{formatMessage(mailMessages.newMessage)}</p>
             <div>
               <div className="form-group address-wrap">
-                <label>To</label>
+                <label>{formatMessage(mailMessages.to)}</label>
                 <Field
                   type="text"
                   name="recipient"
-                  placeholder="Start typing"
+                  placeholder={formatMessage(mailMessages.startTyping)}
                   component="input"
                   className="textfield"
+                  autoFocus
                 />
-                <Button type="button" content="ADDRESS BOOK" onClick={this.onClickAddress} className="button--green address-button" />
+                <Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" />
               </div>
               <div className="form-group">
-                <label>Subject</label>
+                <label>{formatMessage(mailMessages.subject)}</label>
                 <Field
                   type="text"
                   name="subject"
-                  placeholder="Enter subject"
+                  placeholder={formatMessage(mailMessages.enterSubject)}
                   component="input"
                   className="textfield"
                 />
               </div>
               <div className="form-group">
-                <label>Message</label>
+                <label>{formatMessage(mailMessages.message)}</label>
                 <Field
                   type="text"
                   name="body"
-                  placeholder="Enter message"
+                  placeholder={formatMessage(mailMessages.enterMessage)}
                   component="textarea"
                   className="textfield"
                 />
@@ -121,8 +175,8 @@ class Compose extends Component {
               <div className="form-group submit-group">
                 <label />
                 <div className="field">
-                  <Button type="button" content="CANCEL" onClick={this.closeCompose} className="button--transparent" />
-                  <Button type="submit" content="SEND" className="button--primary" />
+                  <Button type="button" content={formatMessage(mailMessages.cancel)} onClick={this.closeCompose} className="button--transparent" />
+                  <Button type="submit" content={formatMessage(mailMessages.send)} className="button--primary" />
                 </div>
               </div>
             </div>
@@ -152,7 +206,10 @@ Compose.propTypes = {
     loadFolder: PropTypes.func,
     confirmationReceived: PropTypes.func
   }),
-  handleSubmit: PropTypes.func
+  handleSubmit: PropTypes.func,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 
 Compose.defaultProps = {
@@ -161,19 +218,21 @@ Compose.defaultProps = {
   onClose: null,
   auth: {},
   mailActions: {},
-  handleSubmit: null
+  handleSubmit: null,
+  intl: {}
 };
 
-Compose = reduxForm({
-  form: 'sendMailForm',
-  destroyOnUnmount: true,
-})(Compose);
-
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    mailActions: bindActionCreators({
-      setActiveFolder, sendMail, confirmationReceived, loadFolder
-    }, dispatch),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      mailActions: bindActionCreators({
+        setActiveFolder, sendMail, confirmationReceived, loadFolder
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'sendMailForm',
+    destroyOnUnmount: true,
   }),
-)(Compose);
+)(injectIntl(Compose));
