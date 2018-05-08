@@ -12,8 +12,6 @@ import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
 import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
-import Keys from './scenes/Keys/Keys';
-import Vote from './scenes/Vote/Vote';
 import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
@@ -170,27 +168,6 @@ class Settings extends Component {
                          }}
                        />
                      </Tab.Pane>),
-                 },
-                 {
-                   menuItem: 'Keys',
-                   render: () => <Tab.Pane className="keys-tab"><Keys /></Tab.Pane>,
-                 },
-                 {
-                   menuItem: 'Vote',
-                   render: () => (
-                     <Tab.Pane>
-                       <Vote
-                         rowsPerPage={5}
-                         tableProps={{
-                           sortable: true,
-                           compact: true,
-                           basic: 'very',
-                           striped: true,
-                           size: 'small'
-                         }}
-                       />
-                     </Tab.Pane>
-                   ),
                  },
                 ]}
               />
