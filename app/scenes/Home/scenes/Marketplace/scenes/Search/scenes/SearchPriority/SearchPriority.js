@@ -14,28 +14,28 @@ const messages = defineMessages({
 });
 
 class SearchPriority extends Component {
-  render(){
+  render() {
   	const { formatMessage } = this.props.intl;
   	return (
-  		<div className="marketplace-container category-listing search-priority-container">
-	        <div className="header">
-	          <Menu />
-	        </div>
-	        <div className="body">
-	          <div className="top-header">
-	            <div className="content">
-	              <div className="category-title">
-	                {formatMessage(messages.searchPriority)}
-	              </div>
-	            </div>
-	          </div>
-
-			  <div className='body-content'>
-			  	<SearchPrioritySetting />
-		      </div>
-	        </div>
+    <div className="marketplace-container category-listing search-priority-container">
+      <div className="header">
+        <Menu />
+      </div>
+      <div className="body">
+        <div className="top-header">
+          <div className="content">
+            <div className="category-title">
+              {formatMessage(messages.searchPriority)}
+            </div>
+          </div>
         </div>
-	);  	
+
+        <div className="body-content">
+          <SearchPrioritySetting />
+        </div>
+      </div>
+    </div>
+    );
   }
 }
 

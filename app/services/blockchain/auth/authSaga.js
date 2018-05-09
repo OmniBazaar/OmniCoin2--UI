@@ -10,9 +10,7 @@ import { FetchChain } from 'omnibazaarjs/es';
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
 import { faucetAddresses } from '../settings';
-import {
-  changeSearchPriorityData
-} from '../../accountSettings/accountActions';
+import { changeSearchPriorityData } from '../../accountSettings/accountActions';
 
 
 const messages = defineMessages({

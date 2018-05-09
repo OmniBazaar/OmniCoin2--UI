@@ -122,7 +122,7 @@ const savePublisherData = data => {
   AccountSettingsStorage.updatePublisherData(data);
 
   return data;
-}
+};
 
 const reducer = handleActions({
   [setReferrer](state) {
@@ -199,16 +199,16 @@ const reducer = handleActions({
       ...state,
       publisherData: {
         ...state.publisherData,
-        keywords: keywords ? keywords : []
+        keywords: keywords || []
       }
     };
   },
   [changeSearchPriorityData](state, { payload: { data } }) {
-    let publisherData = {
-        ...state.publisherData,
-        ...data
+    const publisherData = {
+      ...state.publisherData,
+      ...data
     };
-    let newData = savePublisherData(publisherData);
+    const newData = savePublisherData(publisherData);
     return {
       ...state,
       publisherData: newData

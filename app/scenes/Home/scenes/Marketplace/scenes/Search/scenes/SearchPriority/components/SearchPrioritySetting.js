@@ -146,8 +146,8 @@ class SearchPrioritySetting extends Component {
               <RegionDropdown
                 country={publisherData.country}
                 value={publisherData.city}
-                defaultOptionLabel=''
-                blankOptionLabel=''
+                defaultOptionLabel=""
+                blankOptionLabel=""
                 classes="ui dropdown textfield"
                 onChange={this.onChangeCity}
               />
@@ -156,19 +156,21 @@ class SearchPrioritySetting extends Component {
           </div>
         );
       case PriorityTypes.BY_CATEGORY:
-        let keywords=publisherData.keywords;
-        if(!keywords) keywords=[];
+        let keywords = publisherData.keywords;
+        if (!keywords) keywords = [];
         return (
           <div className="form-group keyword-container" key="category">
             <span>{formatMessage(messages.keywordLabel)}</span>
-            <TagsInput value={keywords}
+            <TagsInput
+              value={keywords}
               inputProps={{
-                className: cn('react-tagsinput-input', {empty: keywords.length ? false : true}),
+                className: cn('react-tagsinput-input', { empty: !keywords.length }),
                 placeholder: (
                   formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
                 )
               }}
-              onChange={this.onChangeKeywords.bind(this)} />
+              onChange={this.onChangeKeywords.bind(this)}
+            />
             <div className="col-1" />
           </div>
         );
@@ -197,18 +199,18 @@ class SearchPrioritySetting extends Component {
     }
   }
 
-  render(){
+  render() {
   	const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
 
     return (
-	    <div className='search-priority-setting'>
-			<Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
-		      <div className="form-group publisher-container">
-		        <span>{formatMessage(messages.searchPriority)}</span>
-		        <div className="radios-container">
-		          <div className="radio-wrapper">
+      <div className="search-priority-setting">
+        <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
+          <div className="form-group publisher-container">
+            <span>{formatMessage(messages.searchPriority)}</span>
+            <div className="radios-container">
+              <div className="radio-wrapper">
                 <Radio
                   width={20}
                   height={20}
@@ -216,10 +218,10 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
                   onChecked={this.onChangePriority}
                 />
-		            <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
-		          </div>
+                <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+              </div>
 
-		          <div className="radio-wrapper">
+              <div className="radio-wrapper">
                 <Radio
                   width={20}
                   height={20}
@@ -227,10 +229,10 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
                   onChecked={this.onChangePriority}
                 />
-		            <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
-		          </div>
+                <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+              </div>
 
-		          <div className="radio-wrapper">
+              <div className="radio-wrapper">
                 <Radio
                   width={20}
                   height={20}
@@ -238,20 +240,20 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.PUBLISHER}
                   onChecked={this.onChangePriority}
                 />
-		            <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
-		          </div>
-		        </div>
-		        <div className="col-1" />
-		      </div>
-		      {this.renderPublisherFormFields()}
-		      <div className="form-group">
-		        <span />
-		        <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
-		        <div className="col-1" />
-		        <div className="col-1" />
-		      </div>
-	        </Form>
-	    </div>
+                <span className="checkbox-inline">{formatMessage(messages.publisherName)}</span>
+              </div>
+            </div>
+            <div className="col-1" />
+          </div>
+          {this.renderPublisherFormFields()}
+          <div className="form-group">
+            <span />
+            <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
+            <div className="col-1" />
+            <div className="col-1" />
+          </div>
+        </Form>
+      </div>
     );
   }
 }

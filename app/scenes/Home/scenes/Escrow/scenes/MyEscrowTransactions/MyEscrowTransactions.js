@@ -9,6 +9,7 @@ import {
   TableHeaderCell,
   TableRow,
   TableHeader,
+  Loader
 } from 'semantic-ui-react';
 
 import './my-escrow-transactions.scss';
@@ -26,6 +27,10 @@ const messages = defineMessages({
   parties: {
     id: 'MyEscrowTransactions.parties',
     defaultMessage: 'Parties'
+  },
+  expirationTime: {
+    id: 'MyEscrowTransactions.expirationTime',
+    defaultMessage: 'Expiration time'
   }
 });
 
@@ -60,9 +65,7 @@ class MyEscrowTransactions extends Component {
     const asc = this.state.sortAsc[headerName];
 
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, asc)
-      ),
+      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
       lastHeaderClicked: headerName
     });
   }
@@ -74,11 +77,9 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, asc)
-      ),
+      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
       lastHeaderClicked: headerName
-    })
+    });
   }
 
   handleHeaderClick(headerName) {
@@ -89,9 +90,7 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)
-      ),
+      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)),
       lastHeaderClicked: headerName
     });
   }
@@ -102,16 +101,18 @@ class MyEscrowTransactions extends Component {
         <TableCell>{escrowObject.transactionID}</TableCell>
         <TableCell>{escrowObject.amount.amount / 100000} XOM</TableCell>
         <TableCell>{escrowObject.parties}</TableCell>
+        <TableCell>{escrowObject.expirationTime}</TableCell>
       </TableRow>
     ));
   }
 
   render() {
     const { formatMessage } = this.props.intl;
-
+    const { loading } = this.props.escrow;
     return (
       <div className="data-table">
-        <div className="table-container">
+        <div className="table-container" style={{ marginTop: '-15px' }}>
+          {loading ? <Loader active inline="centered" /> :
           <Table
             sortable="true"
             compact="true"
@@ -139,12 +140,19 @@ class MyEscrowTransactions extends Component {
                 >
                   {formatMessage(messages.parties)}
                 </TableHeaderCell>
+                <TableHeaderCell
+                  sorted={this.state.sortAsc.expirationTime ? 'ascending' : 'descending'}
+                  onClick={this.handleHeaderClick.bind(this, 'expirationTime')}
+                >
+                  {formatMessage(messages.expirationTime)}
+                </TableHeaderCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {this.renderRows()}
             </TableBody>
           </Table>
+          }
         </div>
       </div>
     );

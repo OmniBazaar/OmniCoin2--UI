@@ -38,9 +38,7 @@ import {
   setActiveCategory
 } from '../../../../services/marketplace/marketplaceActions';
 
-import {
-  getPublisherData
-} from '../../../../services/accountSettings/accountActions';
+import { getPublisherData } from '../../../../services/accountSettings/accountActions';
 
 import './marketplace.scss';
 

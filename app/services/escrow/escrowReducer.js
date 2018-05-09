@@ -89,7 +89,8 @@ const reducer = handleActions({
   },
   [loadEscrowTransactions](state) {
     return {
-      ...state
+      ...state,
+      loading: true
     };
   },
   LOAD_ESCROW_TRANSACTIONS_DONE: (state, action) => ({

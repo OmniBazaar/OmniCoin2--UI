@@ -111,7 +111,7 @@ const messages = defineMessages({
   },
   addKeyword: {
     id: 'SignupForm.addKeyword',
-    'defaultMessage': 'Add keyword'
+    defaultMessage: 'Add keyword'
   }
 });
 
@@ -200,7 +200,9 @@ class SignupForm extends Component {
   }
 
   submit(values) {
-    const { username, password, referrer, searchPriority, country, city, keywords } = values;
+    const {
+      username, password, referrer, searchPriority, country, city, keywords
+    } = values;
     this.props.authActions.signup(
       username,
       password,
@@ -291,7 +293,7 @@ class SignupForm extends Component {
   }
 
 
-  renderSearchPriority(){
+  renderSearchPriority() {
     const { formatMessage } = this.props.intl;
     const { searchPriority } = this.props.formValues;
     return (
@@ -334,37 +336,39 @@ class SignupForm extends Component {
 
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
-        const {country, city} = this.props.formValues;
+        const { country, city } = this.props.formValues;
         return (
-          <div className='location-container'>
+          <div className="location-container">
             <CountryDropdown
-                value={country}
-                defaultOptionLabel={formatMessage(messages.country)}
-                classes="ui dropdown textfield"
-                onChange={this.onChangeCountry.bind(this)}
-              />
+              value={country}
+              defaultOptionLabel={formatMessage(messages.country)}
+              classes="ui dropdown textfield"
+              onChange={this.onChangeCountry.bind(this)}
+            />
             <RegionDropdown
-                country={country}
-                value={city}
-                defaultOptionLabel={formatMessage(messages.city)}
-                blankOptionLabel={formatMessage(messages.city)}
-                classes="ui dropdown textfield"
-                onChange={this.onChangeCity.bind(this)}
-              />
+              country={country}
+              value={city}
+              defaultOptionLabel={formatMessage(messages.city)}
+              blankOptionLabel={formatMessage(messages.city)}
+              classes="ui dropdown textfield"
+              onChange={this.onChangeCity.bind(this)}
+            />
           </div>
         );
       case PriorityTypes.BY_CATEGORY:
-        let {keywords} = this.props.formValues;
-        if(!keywords) keywords = [];
+        let { keywords } = this.props.formValues;
+        if (!keywords) keywords = [];
         return (
-          <TagsInput value={keywords}
-              inputProps={{
-                className: cn('react-tagsinput-input', {empty: keywords.length ? false : true}),
+          <TagsInput
+            value={keywords}
+            inputProps={{
+                className: cn('react-tagsinput-input', { empty: !keywords.length }),
                 placeholder: (
                   formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
                 )
               }}
-              onChange={this.onChangeKeywords.bind(this)} />
+            onChange={this.onChangeKeywords.bind(this)}
+          />
         );
       default:
         return null;
@@ -375,7 +379,7 @@ class SignupForm extends Component {
     const {
       handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
     } = this.props;
-    const agreementTerms = {formValues};
+    const agreementTerms = { formValues };
     const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
     const { formatMessage } = this.props.intl;
     return (
@@ -499,7 +503,7 @@ export default connect(
   (dispatch) => ({
     authActions: bindActionCreators({ signup }, dispatch),
     formActions: bindActionCreators({
-      change: (field, value)=>change('signupForm', field, value)
+      change: (field, value) => change('signupForm', field, value)
     }, dispatch)
   })
 )(SignupForm);

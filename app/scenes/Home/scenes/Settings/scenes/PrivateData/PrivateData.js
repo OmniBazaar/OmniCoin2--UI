@@ -10,9 +10,7 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import cn from 'classnames';
 import SearchPrioritySetting from '../../../Marketplace/scenes/Search/scenes/SearchPriority/components/SearchPrioritySetting';
 
-import {
-  updatePrivateData
-} from '../../../../../../services/accountSettings/accountActions';
+import { updatePrivateData } from '../../../../../../services/accountSettings/accountActions';
 
 import '../../settings.scss';
 import './private.scss';
@@ -56,7 +54,7 @@ class PrivateData extends Component {
   constructor(props) {
     super(props);
 
-    
+
     this.submitPrivateData = this.submitPrivateData.bind(this);
     this.privateDataForm = this.privateDataForm.bind(this);
     this.publisherForm = this.publisherForm.bind(this);

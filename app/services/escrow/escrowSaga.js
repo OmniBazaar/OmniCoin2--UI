@@ -1,7 +1,7 @@
 import { put, takeEvery, call, all, takeLatest } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { updateAccount } from '../accountSettings/accountSaga';
-import { parseTransactionsFromNode } from './escrowUtils';
+import { parseEscrowTransactions } from './escrowUtils';
 import { fetchAccount } from '../blockchain/utils/miscellaneous';
 
 export function* escrowSubscriber() {
@@ -16,13 +16,11 @@ export function* escrowSubscriber() {
 
 function* loadEscrowTransactions(action) {
   const { username } = action.payload;
-
   try {
     const escrowObjects = yield (Apis.instance().db_api().exec('get_escrow_objects', [username]));
-
     yield put({
       type: 'LOAD_ESCROW_TRANSACTIONS_DONE',
-      transactions: parseTransactionsFromNode(escrowObjects)
+      transactions: yield call(parseEscrowTransactions, escrowObjects, username)
     });
   } catch (e) {
     yield put({
