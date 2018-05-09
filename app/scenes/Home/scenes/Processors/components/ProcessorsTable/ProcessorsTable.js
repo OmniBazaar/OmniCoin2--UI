@@ -11,11 +11,8 @@ import {
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 import PropTypes from 'prop-types';
-import cn from 'classnames';
 
-import LikeIcon from '../../../../images/btn-like.svg';
-
-const iconSize = 18;
+import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
 
 const messages = defineMessages({
   rank: {
@@ -56,29 +53,13 @@ const messages = defineMessages({
   }
 });
 class ProcessorsTable extends Component {
-  renderApprove = (row) => {
-    const vote = cn({
-      votes: true,
-      voted: !!row.approve
-    });
-    return (
-      <div className={vote}>
-        <Image
-          src={LikeIcon}
-          width={iconSize}
-          height={iconSize}
-          onClick={() => this.props.toggle(row.id)}
-        />
-      </div>
-    );
-  };
-
   render() {
     const {
       sortColumn,
       sortDirection,
       sortData,
-      data
+      data,
+      toggle
     } = this.props;
     const { formatMessage } = this.props.intl;
     return (
@@ -128,7 +109,11 @@ class ProcessorsTable extends Component {
                   <TableCell>{row.listings_score / 100}%</TableCell>
                   <TableCell>{row.pop_score / 100}%</TableCell>
                   <TableCell>
-                    {this.renderApprove(row)}
+                    <VotingToggle
+                      type="up"
+                      onToggle={() => toggle(row.id)}
+                      isToggled={!!row.approve}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

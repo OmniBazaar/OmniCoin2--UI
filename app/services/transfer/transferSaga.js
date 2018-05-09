@@ -16,6 +16,7 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 export function* transferSubscriber() {
   yield all([
     takeLatest('SUBMIT_TRANSFER', submitTransfer),
+    takeLatest('CREATE_ESCROW_TRANSACTION', createEscrowTransaction)
   ]);
 }
 
@@ -65,7 +66,20 @@ export function* submitTransfer(data) {
     tr.add_signer(key1.privKey, key1.privKey.toPublicKey().toPublicKeyString('BTS'));
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
-  } catch (e) {
-    yield put({ type: 'UPDATE_TRANSFER_FAILED', error: e });
+  } catch (error) {
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+  }
+}
+
+export function* createEscrowTransaction({
+  payload:
+  {
+    expirationTime, buyer, seller, escrow, amount, transferToEscrow
+  }
+}) {
+  try {
+    yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
+  } catch (error) {
+    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error });
   }
 }

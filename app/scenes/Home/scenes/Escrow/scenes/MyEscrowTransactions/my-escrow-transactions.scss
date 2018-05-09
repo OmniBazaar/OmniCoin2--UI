@@ -1,1 +1,6 @@
 @import '../../../../../../styles/_datatable.scss';
+.finalize {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}

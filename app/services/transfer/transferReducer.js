@@ -1,6 +1,9 @@
 import { handleActions } from 'redux-actions';
 
-import { submitTransfer } from './transferActions';
+import {
+  submitTransfer,
+  createEscrowTransaction
+} from './transferActions';
 
 const defaultState = {
   from_name: '',
@@ -12,7 +15,8 @@ const defaultState = {
   feeStatus: {},
   maxAmount: false,
   hidden: false,
-  reputation: 5
+  reputation: 5,
+  loading: false
 };
 
 const reducer = handleActions({
@@ -29,11 +33,27 @@ const reducer = handleActions({
     loading: false,
     error: null
   }),
-  UPDATE_TRANSFER_FAILED: (state, { error }) => ({
+  SUBMIT_TRANSFER_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
     error
   }),
+  [createEscrowTransaction](state) {
+    return {
+      ...state,
+      loading: true,
+      error: null
+    };
+  },
+  CREATE_ESCROW_TRANSACTION_SUCCEEDED: (state) => ({
+    ...state,
+    loading: false
+  }),
+  CREATE_ESCROW_TRANSACTION_FAILED: (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  })
 }, defaultState);
 
 export default reducer;
