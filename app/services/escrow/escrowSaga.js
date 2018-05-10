@@ -125,13 +125,11 @@ function* getEscrowAgentsCount() {
 function* releaseEscrowTransaction({ payload: { escrowObject } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const res = yield Promise.all([
+    const [payingAcc, buyerAcc, escrowAcc]  = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
       FetchChain('getAccount', escrowObject.buyer),
       FetchChain('getAccount', escrowObject.escrow)
     ]);
-    const [payingAcc, buyerAcc, escrowAcc] = res;
-    console.log('RESULT ', escrowObject);
     const tr = new TransactionBuilder();
     tr.add_type_operation('escrow_release_operation', {
       fee_paying_account: payingAcc.get('id'),
@@ -154,12 +152,11 @@ function* releaseEscrowTransaction({ payload: { escrowObject } }) {
 function* returnEscrowTransaction({ payload: { escrowObject } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const res = yield Promise.all([
+    const [payingAcc, sellerAcc, escrowAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
       FetchChain('getAccount', escrowObject.seller),
       FetchChain('getAccount', escrowObject.escrow)
     ]);
-    const [payingAcc, sellerAcc, escrowAcc] = res;
     const tr = new TransactionBuilder();
     tr.add_type_operation('escrow_return_operation', {
       fee_paying_account: payingAcc.get('id'),

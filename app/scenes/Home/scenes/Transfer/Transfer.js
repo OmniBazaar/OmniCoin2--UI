@@ -1,17 +1,34 @@
 import React, { Component } from 'react';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Form, Select, TextArea, Checkbox } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Select,
+  TextArea,
+  Loader
+} from 'semantic-ui-react';
 import { required, initialize } from 'redux-form-validators';
-import { Field, reduxForm } from 'redux-form';
+import {
+  Field,
+  reduxForm,
+  formValueSelector,
+  change
+} from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { FetchChain } from 'omnibazaarjs/es';
 
+import Checkbox from '../../../../components/Checkbox/Checkbox';
 import Header from '../../../../components/Header';
 import './transfer.scss';
-import { submitTransfer } from '../../../../services/transfer/transferActions';
+import {
+  submitTransfer,
+  getCommonEscrows,
+  createEscrowTransaction
+} from '../../../../services/transfer/transferActions';
+
 
 const messages = defineMessages({
   accountDoNotExist: {
@@ -67,13 +84,65 @@ const messages = defineMessages({
     defaultMessage: 'Use SecureSend (Escrow Service)'
   },
   successTransfer: {
-    id: 'Settings.successUpdate',
+    id: 'Transfer.successUpdate',
     defaultMessage: 'Transferred successfully'
   },
   failedTransfer: {
-    id: 'Settings.failedUpdate',
+    id: 'Transfer.failedUpdate',
     defaultMessage: 'Failed to transfer'
   },
+  selectEscrow: {
+    id: 'Transfer.selectEscrow',
+    defaultMessage: 'Select escrow'
+  },
+  transferToEscrow: {
+    id: 'Transfer.transferToEscrow',
+    defaultMessage: 'Transfer to escrow'
+  },
+  expirationTime: {
+    id: 'Transfer.expirationTime',
+    defaultMessage: 'Expiration time'
+  },
+  oneDay: {
+    id: 'Transfer.oneDay',
+    defaultMessage: '1 day'
+  },
+  threeDays: {
+    id: 'Transfer.threeDays',
+    defaultMessage: '3 days'
+  },
+  oneWeek: {
+    id: 'Transfer.oneWeek',
+    defaultMessage: '1 week'
+  },
+  twoWeeks: {
+    id: 'Transfer.twoWeeks',
+    defaultMessage: '2 weeks'
+  },
+  oneMonth: {
+    id: 'Transfer.oneMonth',
+    defaultMessage: '1 month'
+  },
+  threeMonths: {
+    id: 'Transfer.threeMonths',
+    defaultMessage: '3 months'
+  },
+  escrowFee: {
+    id: 'Transfer.escrowFee',
+    defaultMessage: 'Escrow Fee: 0.1%(0,00 XOM)'
+  },
+  transferToEscrowLabel: {
+    id: 'Transfer.transferToEscrowLabel',
+    defaultMessage: 'Funds will be kept on escrow account'
+  },
+  warning: {
+    id: 'Transfer.warning',
+    defaultMessage: 'Warning'
+  },
+  escrowsNotFound: {
+    id: 'Transfer.escrowNotFound',
+    defaultMessage: 'Unfortunately you don\'t any have common escrows with the specified account',
+  }
 });
 
 const walletOptions = [
@@ -91,34 +160,81 @@ const walletOptions = [
   }
 ];
 
-const reputationOptions = () => {
-  const options = [];
-
-  for (let index = 0; index < 11; index++) {
-    const option = {
-      key: index,
-      value: index,
-      text: index - 5
-    };
-    options.push(option);
-  }
-
-  return options;
-};
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
     try {
-      await FetchChain('getAccount', values.to_name);
+      await FetchChain('getAccount', values.toName);
     } catch (e) {
       console.log('ERR', e);
-      throw { to_name: messages.accountDoNotExist };
+      throw { toName: messages.accountDoNotExist };
     }
   };
+
+  static reputationOptions() {
+    const options = [];
+
+    for (let index = 0; index < 11; index++) {
+      const option = {
+        key: index,
+        value: index,
+        text: index - 5
+      };
+      options.push(option);
+    }
+
+    return options;
+  };
+
+  static escrowOptions(escrows) {
+    return escrows.map(escrow => ({
+        key: escrow.id,
+        value: escrow.id,
+        text: escrow.name
+      })
+    )
+  }
+
+  static expirationTimeOptions(formatMessage) {
+    return [
+      {
+        key: 0,
+        value: 60 * 60 * 24,
+        text: formatMessage(messages.oneDay)
+      },
+      {
+        key: 1,
+        value: 60 * 60 * 24 * 3,
+        text: formatMessage(messages.threeDays)
+      },
+      {
+        key: 2,
+        value: 60 * 60 * 24 * 7,
+        text: formatMessage(messages.oneWeek)
+      },
+      {
+        key: 3,
+        value: 60 * 60 * 24 * 14,
+        text: formatMessage(messages.twoWeeks)
+      },
+      {
+        key: 4,
+        value: 60 * 60 * 24 * 30,
+        text: formatMessage(messages.oneMonth)
+      },
+      {
+        key: 5,
+        value: 60 * 60 * 24 * 90,
+        text: formatMessage(messages.threeMonths)
+      }
+    ]
+  }
 
   constructor(props) {
     super(props);
     this.submitTransfer = this.submitTransfer.bind(this);
+    this.handleEscrowTransactionChecked = this.handleEscrowTransactionChecked.bind(this);
+    this.hideEscrow = this.hideEscrow.bind(this);
   }
 
   componentDidMount() {
@@ -134,14 +250,33 @@ class Transfer extends Component {
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
+    if (!nextProps.transfer.gettingCommonEscrows
+        && nextProps.transferForm.useEscrow
+        && nextProps.transfer.commonEscrows.length === 0
+    ) {
+      this.hideEscrow();
+      toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+    } else if (!nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow) {
+      this.initializeEscrow(nextProps.transfer.commonEscrows);
+    }
   }
 
   handleInitialize() {
-    const initData = {
+    this.props.initialize({
       reputation: 5,
-    };
+    });
+  }
 
-    this.props.initialize(initData);
+  initializeEscrow(escrows) {
+    const escrowOptions = Transfer.escrowOptions(escrows);
+    const expirationTimeOptions = Transfer.expirationTimeOptions(this.props.intl.formatMessage);
+    this.props.changeFieldValue('escrow', escrowOptions[0].value);
+    this.props.changeFieldValue('expirationTime', expirationTimeOptions[0].value);
+    this.props.changeFieldValue('transferToEscrow', false);
+  }
+
+  hideEscrow() {
+    setTimeout(() => this.props.changeFieldValue('useEscrow', false), 200);
   }
 
   renderDropdownUnitsField = ({
@@ -171,6 +306,27 @@ class Transfer extends Component {
     );
   };
 
+  renderAccountNameField = ({
+    input, placeholder, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    if (errorMessage && this.props.transferForm.useEscrow) {
+      this.hideEscrow();
+    }
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <input
+          {...input}
+          type="text"
+          className="textfield"
+          placeholder={placeholder}
+        />
+      </div>
+    );
+  };
+
   renderUnitsField = ({
     input, placeholder, buttonText, buttonClass, meta: { touched, error }
   }) => {
@@ -192,8 +348,9 @@ class Transfer extends Component {
     );
   };
 
+
   renderSelectField = ({
-    input, placeholder, meta: { touched, error }
+    input, options, meta: { touched, error }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
@@ -201,12 +358,10 @@ class Transfer extends Component {
       <div className="transfer-input">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
-          {...input}
-          value={input.value}
           type="text"
           className="textfield"
-          placeholder={placeholder}
-          options={reputationOptions()}
+          defaultValue={options[0].value}
+          options={options}
           onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
@@ -230,23 +385,40 @@ class Transfer extends Component {
       </div>
     );
   };
-  renderEscrowField = ({
-    input, label
-  }) => (
-    <div className="transfer-input">
-      <Checkbox
-        {...input}
-        label={label}
-      />
-      <span className="escrow-fee">
-        Escrow Fee: 0.1%(0,00 XOM)
-      </span>
-    </div>
-  );
+
+  handleEscrowTransactionChecked(value) {
+    const { currentUser } = this.props.auth;
+    if (value) {
+      this.props.transferActions.getCommonEscrows(this.props.transferForm.toName, currentUser.username);
+    }
+  }
+
+  renderCheckboxField = ({ input, label, onCheck }) => {
+    return (
+      <div className="transfer-input" style={{display: 'flex'}}>
+        <Checkbox
+          value={input.value}
+          onChecked={(value) => {
+            input.onChange(value);
+            if (onCheck) {
+              onCheck(value);
+            }
+          }}
+        />
+        <span className="label">
+          {label}
+        </span>
+      </div>
+    );
+  };
 
   transferForm() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit, transfer } = this.props;
+    const {
+      gettingCommonEscrows,
+      commonEscrows
+    } = this.props.transfer;
     const number = value =>
       (value && isNaN(Number(value)) ? 'Must be a number' : undefined);
     return (
@@ -257,12 +429,10 @@ class Transfer extends Component {
             <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
             <Field
               type="text"
-              name="to_name"
+              name="toName"
               placeholder={formatMessage(messages.pleaseEnter)}
-              component={this.renderUnitsField}
+              component={this.renderAccountNameField}
               className="textfield1"
-              buttonClass="button--green"
-              buttonText=""
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -276,7 +446,6 @@ class Transfer extends Component {
               type="text"
               name="amount"
               placeholder="0.0"
-              sl
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="XOM"
@@ -292,7 +461,7 @@ class Transfer extends Component {
             <Field
               type="text"
               name="reputation"
-              placeholder="0"
+              options={Transfer.reputationOptions()}
               component={this.renderSelectField}
             />
             <div className="col-1" />
@@ -311,13 +480,59 @@ class Transfer extends Component {
             <span>{formatMessage(messages.transferSecurity)}</span>
             <div className="transfer-input">
               <Field
-                name="use_escrow"
-                component={this.renderEscrowField}
-                label={formatMessage(messages.useEscrowService)}
+                name="useEscrow"
+                component={this.renderCheckboxField}
+                onCheck={this.handleEscrowTransactionChecked}
+                label={formatMessage(messages.escrowFee)}
               />
             </div>
             <div className="col-1" />
           </div>
+          {gettingCommonEscrows &&
+            <div className="form-group">
+              <Loader active inline="centered"/>
+            </div>
+          }
+          {commonEscrows.length !== 0 && this.props.transferForm.useEscrow && (
+              [
+                <div className="form-group">
+                <span>{formatMessage(messages.selectEscrow)}</span>
+                <div className="transfer-input">
+                  <Field
+                    type="text"
+                    name="escrow"
+                    options={Transfer.escrowOptions(commonEscrows)}
+                    component={this.renderSelectField}
+                  />
+                </div>
+                <div className="col-1" />
+                </div>,
+                <div className="form-group">
+                  <span>{formatMessage(messages.expirationTime)}</span>
+                  <div className="transfer-input">
+                    <Field
+                      type="text"
+                      name="expirationTime"
+                      options={Transfer.expirationTimeOptions(formatMessage)}
+                      component={this.renderSelectField}
+                    />
+                  </div>
+                  <div className="col-1" />
+                </div>,
+                <div className="form-group">
+                  <span>{formatMessage(messages.transferToEscrow)}</span>
+                  <div className="transfer-input">
+                    <Field
+                      name="transferToEscrow"
+                      component={this.renderCheckboxField}
+                      label={formatMessage(messages.transferToEscrowLabel)}
+                    />
+                  </div>
+                  <div className="col-1" />
+                </div>
+              ]
+            )
+          }
           <div className="form-group">
             <span />
             <div className="field left floated">
@@ -330,11 +545,24 @@ class Transfer extends Component {
     );
   }
   submitTransfer(paramValues) {
-    const values = paramValues;
-    if (values.memo === undefined || values.memo === null) {
-      values.memo = '';
+    const values = {
+      ...paramValues,
+      memo: paramValues.memo ? paramValues.memo : ''
+    };
+
+    if (values.useEscrow) {
+      const { currentUser } = this.props.auth;
+      this.props.transferActions.createEscrowTransaction(
+        values.expirationTime,
+        currentUser.username,
+        values.toName,
+        values.escrow,
+        values.amount,
+        values.transferToEscrow
+      );
+    } else {
+      this.props.transferActions.submitTransfer(values);
     }
-    this.props.transferActions.submitTransfer(values);
   }
 
   render() {
@@ -370,20 +598,36 @@ Transfer.defaultProps = {
   transfer: {},
 };
 
+const selector = formValueSelector('transferForm');
+
 export default compose(
   connect(
-    state => ({ ...state.default }),
+    state => ({
+      ...state.default,
+      transferForm: {
+        toName: selector(state, 'toName'),
+        useEscrow: selector(state, 'useEscrow')
+      }
+    }),
     (dispatch) => ({
       transferActions: bindActionCreators({
-        submitTransfer
+        submitTransfer,
+        getCommonEscrows,
+        createEscrowTransaction
       }, dispatch),
-      initialize
+      initialize,
+      changeFieldValue: (field, value) => {
+        dispatch(change('transferForm', field, value))
+      }
     })
   ),
   reduxForm({
     form: 'transferForm',
+    keepDirtyOnReinitialize: true,
+    enableReinitialize: true,
+    fields: ['toName', 'useEscrow'],
     asyncValidate: Transfer.asyncValidate,
-    asyncBlurFields: ['to_name'],
+    asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
   })
 )(injectIntl(Transfer));
