@@ -7,6 +7,7 @@ import { transferSubscriber } from './transfer/transferSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
+import { dhtSubscriber } from './blockchain/dht/dhtSaga';
 
 export {
   connectionSubscriber,
@@ -18,4 +19,5 @@ export {
   processorsSubscriber,
   bitcoinSubscriber,
   transferSubscriber,
+  dhtSubscriber,
 };

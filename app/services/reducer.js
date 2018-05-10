@@ -18,6 +18,7 @@ import importReducer from './listing/importReducer';
 import searchReducer from './search/searchReducer';
 import bitcoinReducer from './blockchain/bitcoin/bitcoinReducer';
 import transferReducer from './transfer/transferReducer';
+import dhtReducer from './blockchain/dht/dhtReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -38,5 +39,6 @@ export default combineReducers({
   listingImport: importReducer,
   search: searchReducer,
   bitcoin: bitcoinReducer,
+  dht: dhtReducer,
   transfer: transferReducer
 });
