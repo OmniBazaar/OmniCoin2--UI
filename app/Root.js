@@ -10,7 +10,7 @@ import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/blockchain/auth/authActions';
-import { dhtConnect } from './services/blockchain/dht/dhtActions';
+import { dhtConnect } from './services/search/dht/dhtActions';
 
 class Root extends Component {
   componentWillMount() {
