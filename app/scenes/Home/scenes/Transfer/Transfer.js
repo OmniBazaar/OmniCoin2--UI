@@ -8,12 +8,13 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, initialize } from 'redux-form-validators';
+import { required, numericality } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
   formValueSelector,
-  change
+  change,
+  initialize
 } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -142,6 +143,10 @@ const messages = defineMessages({
   escrowsNotFound: {
     id: 'Transfer.escrowNotFound',
     defaultMessage: 'Unfortunately you don\'t any have any common escrows with the specified account',
+  },
+  numberRequired: {
+    id: 'Transfer.numberRequired',
+    defaultMessage: 'Number required'
   }
 });
 
@@ -416,8 +421,6 @@ class Transfer extends Component {
       gettingCommonEscrows,
       commonEscrows
     } = this.props.transfer;
-    const number = value =>
-      (value && isNaN(Number(value)) ? 'Must be a number' : undefined);
     return (
       <div className="transfer-form">
         <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
@@ -448,7 +451,7 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                number
+                numericality({ message: formatMessage(messages.numberRequired) })
               ]}
             />
             <div className="col-1" />
@@ -533,7 +536,13 @@ class Transfer extends Component {
           <div className="form-group">
             <span />
             <div className="field left floated">
-              <Button type="submit" loading={transfer.loading} content={formatMessage(messages.TRANSFER)} className="button--green-bg" />
+              <Button
+                type="submit"
+                loading={transfer.loading}
+                content={formatMessage(messages.TRANSFER)}
+                className="button--green-bg"
+                disabled={this.props.invalid}
+              />
             </div>
             <div className="col-1" />
           </div>
