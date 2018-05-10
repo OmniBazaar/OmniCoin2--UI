@@ -199,6 +199,7 @@
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "object-hash": "^1.2.0",
+    "omnibazaar-dht": "git+https://scopic.git.beanstalkapp.com/omnibazaar-dht.git",
     "omnibazaarjs": "^1.0.3",
     "omnibazaarjs-ws": "^1.0.1",
     "react": "^16.2.0",
