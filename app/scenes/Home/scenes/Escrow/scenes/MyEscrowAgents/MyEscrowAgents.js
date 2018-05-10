@@ -113,17 +113,17 @@ class MyEscrowAgents extends Component {
     return this.props.escrow.agents
       .filter(agent => agent.name !== currentUser.username)
       .map((agent) => {
-      const isSelected = !!this.props.escrow.myAgents.find(item => item.id === agent.id);
-      return (
-        <li key={agent.name}>
-          <AgentItem
-            isSelected={isSelected}
-            toggleSelect={() => this.toggleSelectAgent(agent)}
-            name={agent.name}
-          />
-        </li>
-      );
-    });
+        const isSelected = !!this.props.escrow.myAgents.find(item => item.id === agent.id);
+        return (
+          <li key={agent.name}>
+            <AgentItem
+              isSelected={isSelected}
+              toggleSelect={() => this.toggleSelectAgent(agent)}
+              name={agent.name}
+            />
+          </li>
+        );
+      });
   }
 
   search(value) {

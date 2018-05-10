@@ -184,15 +184,14 @@ class Transfer extends Component {
     }
 
     return options;
-  };
+  }
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
-        key: escrow.id,
-        value: escrow.id,
-        text: escrow.name
-      })
-    )
+      key: escrow.id,
+      value: escrow.id,
+      text: escrow.name
+    }));
   }
 
   static expirationTimeOptions(formatMessage) {
@@ -227,7 +226,7 @@ class Transfer extends Component {
         value: 60 * 60 * 24 * 90,
         text: formatMessage(messages.threeMonths)
       }
-    ]
+    ];
   }
 
   constructor(props) {
@@ -393,24 +392,22 @@ class Transfer extends Component {
     }
   }
 
-  renderCheckboxField = ({ input, label, onCheck }) => {
-    return (
-      <div className="transfer-input" style={{display: 'flex'}}>
-        <Checkbox
-          value={input.value}
-          onChecked={(value) => {
+  renderCheckboxField = ({ input, label, onCheck }) => (
+    <div className="transfer-input" style={{ display: 'flex' }}>
+      <Checkbox
+        value={input.value}
+        onChecked={(value) => {
             input.onChange(value);
             if (onCheck) {
               onCheck(value);
             }
           }}
-        />
-        <span className="label">
-          {label}
-        </span>
-      </div>
-    );
-  };
+      />
+      <span className="label">
+        {label}
+      </span>
+    </div>
+  );
 
   transferForm() {
     const { formatMessage } = this.props.intl;
@@ -490,22 +487,22 @@ class Transfer extends Component {
           </div>
           {gettingCommonEscrows &&
             <div className="form-group">
-              <Loader active inline="centered"/>
+              <Loader active inline="centered" />
             </div>
           }
           {commonEscrows.length !== 0 && this.props.transferForm.useEscrow && (
               [
                 <div className="form-group">
-                <span>{formatMessage(messages.selectEscrow)}</span>
-                <div className="transfer-input">
-                  <Field
-                    type="text"
-                    name="escrow"
-                    options={Transfer.escrowOptions(commonEscrows)}
-                    component={this.renderSelectField}
-                  />
-                </div>
-                <div className="col-1" />
+                  <span>{formatMessage(messages.selectEscrow)}</span>
+                  <div className="transfer-input">
+                    <Field
+                      type="text"
+                      name="escrow"
+                      options={Transfer.escrowOptions(commonEscrows)}
+                      component={this.renderSelectField}
+                    />
+                  </div>
+                  <div className="col-1" />
                 </div>,
                 <div className="form-group">
                   <span>{formatMessage(messages.expirationTime)}</span>
@@ -578,7 +575,9 @@ class Transfer extends Component {
 
 Transfer.propTypes = {
   transferActions: PropTypes.shape({
-    submitTransfer: PropTypes.func
+    submitTransfer: PropTypes.func,
+    getCommonEscrows: PropTypes.func,
+    createEscrowTransaction: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -587,7 +586,20 @@ Transfer.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   transfer: PropTypes.shape({
     loading: PropTypes.bool,
-    error: PropTypes.string
+    gettingCommonEscrows: PropTypes.bool,
+    error: PropTypes.string,
+    commonEscrows: PropTypes.shape([])
+  }),
+  transferForm: PropTypes.shape({
+    toName: PropTypes.string,
+    useEscrow: PropTypes.bool
+  }),
+  changeFieldValue: PropTypes.func,
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    })
   })
 };
 
@@ -596,6 +608,9 @@ Transfer.defaultProps = {
   intl: {},
   initialize: {},
   transfer: {},
+  transferForm: {},
+  changeFieldValue: () => {},
+  auth: {}
 };
 
 const selector = formValueSelector('transferForm');
@@ -617,7 +632,7 @@ export default compose(
       }, dispatch),
       initialize,
       changeFieldValue: (field, value) => {
-        dispatch(change('transferForm', field, value))
+        dispatch(change('transferForm', field, value));
       }
     })
   ),

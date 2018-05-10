@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {defineMessages, injectIntl} from 'react-intl';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -12,7 +12,7 @@ import {
   TableHeader,
   Loader
 } from 'semantic-ui-react';
-import {toastr} from 'react-redux-toastr';
+import { toastr } from 'react-redux-toastr';
 
 import {
   releaseEscrowTransaction,
@@ -102,23 +102,14 @@ class MyEscrowTransactions extends Component {
     this.handleReturn = this.handleReturn.bind(this);
   }
 
-
-  closeModal = () => {
-    this.setState({
-      confirmationModal: {
-        isOpen: false,
-        question: '',
-        onApprove: null,
-      }
-    });
-  };
-
   componentWillReceiveProps(nextProps) {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const headerName = this.state.lastHeaderClicked;
     const asc = this.state.sortAsc[headerName];
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
+      transactions: nextProps.escrow.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, asc)
+      ),
       lastHeaderClicked: headerName
     });
 
@@ -152,6 +143,16 @@ class MyEscrowTransactions extends Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({
+      confirmationModal: {
+        isOpen: false,
+        question: '',
+        onApprove: null,
+      }
+    });
+  };
+
   sortColumn(headerName, asc) {
     this.setState({
       ...this.state,
@@ -159,7 +160,9 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
+      transactions: this.state.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, asc)
+      ),
       lastHeaderClicked: headerName
     });
   }
@@ -172,28 +175,32 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)),
+      transactions: this.state.transactions.slice().sort(
+        (transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)
+      ),
       lastHeaderClicked: headerName
     });
   }
 
   handleRelease(escrowObject) {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     this.setState({
       confirmationModal: {
         isOpen: true,
-        question: formatMessage(messages.askRelease, {username: escrowObject.seller.name}),
+        question: formatMessage(messages.askRelease, {
+          username: escrowObject.seller.name
+        }),
         onApprove: () => this.props.escrowActions.releaseEscrowTransaction(escrowObject),
       }
     });
   }
 
   handleReturn(escrowObject) {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     this.setState({
       confirmationModal: {
         isOpen: true,
-        question: formatMessage(messages.askReturn, {username: escrowObject.buyer.name}),
+        question: formatMessage(messages.askReturn, { username: escrowObject.buyer.name }),
         onApprove: () => this.props.escrowActions.returnEscrowTransaction(escrowObject),
       }
     });
@@ -202,14 +209,14 @@ class MyEscrowTransactions extends Component {
   renderNoTransactions() {
     const { formatMessage } = this.props.intl;
     return (
-      <span style={{display: 'flex', justifyContent: 'center'}}>
+      <span style={{ display: 'flex', justifyContent: 'center' }}>
         {formatMessage(messages.noTransactions)}
       </span>
     );
   }
 
   renderRows() {
-    const {username} = this.props.auth.currentUser;
+    const { username } = this.props.auth.currentUser;
     return this.state.transactions.map((escrowObject) => (
       <TableRow key={escrowObject.transactionID}>
         <TableCell>{escrowObject.transactionID}</TableCell>
@@ -249,7 +256,7 @@ class MyEscrowTransactions extends Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const {
       loading,
       finalizing
@@ -257,7 +264,7 @@ class MyEscrowTransactions extends Component {
     return (
       <div className="data-table">
         <div className="table-container" style={{ marginTop: '-15px' }}>
-          {loading ? <Loader active inline="centered"/>
+          {loading ? <Loader active inline="centered" />
             : this.state.transactions.length === 0
               ? this.renderNoTransactions()
               : <Table
@@ -316,17 +323,37 @@ class MyEscrowTransactions extends Component {
   }
 }
 
+MyEscrowTransactions.defaultProps = {
+  escrow: {},
+  intl: {},
+  escrowActions: {},
+  auth: {}
+};
+
 MyEscrowTransactions.propTypes = {
   escrow: PropTypes.shape({
-    transactions: PropTypes.array
-  }).isRequired,
+    transactions: PropTypes.array,
+    finalizing: PropTypes.bool,
+    loading: PropTypes.bool,
+    error: PropTypes.string,
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
-  }).isRequired
+  }),
+  escrowActions: PropTypes.shape({
+    releaseEscrowTransaction: PropTypes.func,
+    returnEscrowTransaction: PropTypes.func
+  }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+      password: PropTypes.string
+    })
+  })
 };
 
 export default connect(
-  state => ({...state.default}),
+  state => ({ ...state.default }),
   dispatch => ({
     escrowActions: bindActionCreators({
       returnEscrowTransaction,

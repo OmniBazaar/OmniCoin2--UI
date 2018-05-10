@@ -63,23 +63,19 @@ const reducer = handleActions({
       gettingCommonEscrows: true,
       error: null,
       commonEscrows: []
-    }
+    };
   },
-  GET_COMMON_ESCROWS_SUCCEEDED: (state, { commonEscrows }) => {
-    return {
-      ...state,
-      gettingCommonEscrows: false,
-      error: null,
-      commonEscrows
-    }
-  },
-  GET_COMMON_ESCROWS_FAILED: (state, { error }) => {
-    return {
-      ...state,
-      gettingCommonEscrows: false,
-      error
-    }
-  }
+  GET_COMMON_ESCROWS_SUCCEEDED: (state, { commonEscrows }) => ({
+    ...state,
+    gettingCommonEscrows: false,
+    error: null,
+    commonEscrows
+  }),
+  GET_COMMON_ESCROWS_FAILED: (state, { error }) => ({
+    ...state,
+    gettingCommonEscrows: false,
+    error
+  })
 }, defaultState);
 
 export default reducer;

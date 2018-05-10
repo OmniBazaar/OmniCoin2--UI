@@ -90,7 +90,7 @@ function* loadMyEscrowAgents({ payload: { username } }) {
 
 function* setMyEscrowAgents({ payload: { agents } }) {
   try {
-    const result = yield updateAccount({
+    yield updateAccount({
       escrows: agents.map(agent => agent.id)
     });
     yield put({
@@ -125,7 +125,7 @@ function* getEscrowAgentsCount() {
 function* releaseEscrowTransaction({ payload: { escrowObject } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const [payingAcc, buyerAcc, escrowAcc]  = yield Promise.all([
+    const [payingAcc, buyerAcc, escrowAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
       FetchChain('getAccount', escrowObject.buyer),
       FetchChain('getAccount', escrowObject.escrow)

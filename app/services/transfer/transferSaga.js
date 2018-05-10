@@ -9,8 +9,7 @@ import {
   takeLatest,
   takeEvery,
   select,
-  all,
-  call
+  all
 } from 'redux-saga/effects';
 import _ from 'lodash';
 
@@ -89,8 +88,8 @@ export function* createEscrowTransaction({
       FetchChain('getAccount', seller),
       FetchChain('getAccount', escrow)
     ]);
-    let tr = new TransactionBuilder();
-    tr.add_type_operation("escrow_create_operation", {
+    const tr = new TransactionBuilder();
+    tr.add_type_operation('escrow_create_operation', {
       expiration_time: sec + expirationTime,
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
@@ -101,7 +100,7 @@ export function* createEscrowTransaction({
       },
       transfer_to_escrow: transferToEscrow
     });
-    let key = generateKeyFromPassword(currentUser.username, "active", currentUser.password);
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
@@ -115,21 +114,17 @@ export function* createEscrowTransaction({
 export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
   try {
     if (!fromAccount || !toAccount) {
-      return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: []});
+      return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: [] });
     }
     let [fromEscrows, toEscrows] = yield Promise.all([
       fetchAccount(fromAccount),
       fetchAccount(toAccount)
     ]).then(res => res.map(el => el.escrows));
-    fromEscrows = yield Promise.all(
-      fromEscrows.map(el => FetchChain('getAccount', el))
-    ).then(res => res.map(el => el.toJS()));
-    toEscrows = yield Promise.all(
-      toEscrows.map(el => FetchChain('getAccount', el))
-    ).then(res => res.map(el => el.toJS()));
-    yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id')})
+    fromEscrows = yield Promise.all(fromEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
+    toEscrows = yield Promise.all(toEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
+    yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id') });
   } catch (error) {
     console.log('ERROR ', error);
-    yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message })
+    yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message });
   }
 }
