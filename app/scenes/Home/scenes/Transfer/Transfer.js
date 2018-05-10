@@ -141,7 +141,7 @@ const messages = defineMessages({
   },
   escrowsNotFound: {
     id: 'Transfer.escrowNotFound',
-    defaultMessage: 'Unfortunately you don\'t any have common escrows with the specified account',
+    defaultMessage: 'Unfortunately you don\'t any have any common escrows with the specified account',
   }
 });
 
@@ -223,7 +223,7 @@ class Transfer extends Component {
       },
       {
         key: 5,
-        value: 60 * 60 * 24 * 90,
+        value: 60 * 60 * 24 * 90 - 1,
         text: formatMessage(messages.threeMonths)
       }
     ];
