@@ -109,7 +109,10 @@ class MyEscrowAgents extends Component {
   }
 
   renderAgents() {
-    return this.props.escrow.agents.map((agent) => {
+    const { currentUser } = this.props.auth;
+    return this.props.escrow.agents
+      .filter(agent => agent.name !== currentUser.username)
+      .map((agent) => {
       const isSelected = !!this.props.escrow.myAgents.find(item => item.id === agent.id);
       return (
         <li key={agent.name}>
