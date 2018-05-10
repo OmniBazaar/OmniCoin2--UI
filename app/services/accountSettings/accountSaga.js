@@ -101,20 +101,22 @@ export function* getRecentTransactions() {
           FetchChain('getAccount', el.op[1].from),
           FetchChain('getAccount', el.op[1].to)
         ]);
-        historyStorage.addOperation({
-          id: el.id,
-          blockNum: el.block_num,
-          opInTrx: el.op_in_trx,
-          trxInBlock: el.trx_in_block,
-          date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
-          fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
-          from: from.get('name'),
-          to: to.get('name'),
-          memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
-          amount: el.op[1].amount.amount / 100000,
-          fee: el.op[1].fee.amount / 100000,
-          type: from.get('name') === currentUser.username ? HistoryStorage.OperationTypes.withdraw : HistoryStorage.OperationTypes.deposit
-        });
+        if (!!from && !!to) {
+          historyStorage.addOperation({
+            id: el.id,
+            blockNum: el.block_num,
+            opInTrx: el.op_in_trx,
+            trxInBlock: el.trx_in_block,
+            date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
+            fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
+            from: from.get('name'),
+            to: to.get('name'),
+            memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
+            amount: el.op[1].amount.amount / 100000,
+            fee: el.op[1].fee.amount / 100000,
+            type: from.get('name') === currentUser.username ? HistoryStorage.OperationTypes.withdraw : HistoryStorage.OperationTypes.deposit
+          });
+        }
       }
     }
     historyStorage.save();
