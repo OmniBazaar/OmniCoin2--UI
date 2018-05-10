@@ -10,6 +10,7 @@ import {
   takeEvery,
   select,
   all,
+  call
 } from 'redux-saga/effects';
 import _ from 'lodash';
 
@@ -65,10 +66,9 @@ export function* submitTransfer(data) {
       },
     });
 
-    tr.set_required_fees().then(() => {
-      tr.add_signer(key.privKey, key.privKey.toPublicKey().toPublicKeyString('BTS'));
-      tr.broadcast();
-    });
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
@@ -84,7 +84,7 @@ export function* createEscrowTransaction({
   try {
     const { currentUser } = (yield select()).default.auth;
     const [sec, buyerAcc, sellerAcc, escrowAcc] = yield Promise.all([
-      TransactionBuilder.base_expiration_sec(),
+      TransactionBuilder.fetch_base_expiration_sec(),
       FetchChain('getAccount', buyer),
       FetchChain('getAccount', seller),
       FetchChain('getAccount', escrow)
@@ -102,13 +102,13 @@ export function* createEscrowTransaction({
       transfer_to_escrow: transferToEscrow
     });
     let key = generateKeyFromPassword(currentUser.username, "active", currentUser.password);
-    tr.set_required_fees().then(() => {
-      tr.add_signer(key.privKey, key.pubKey);
-      tr.broadcast();
-    });
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
-    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error });
+    console.log('ERROR', error);
+    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: error.message });
   }
 }
 
@@ -129,6 +129,7 @@ export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
     ).then(res => res.map(el => el.toJS()));
     yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id')})
   } catch (error) {
-    yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error })
+    console.log('ERROR ', error);
+    yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message })
   }
 }

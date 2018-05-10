@@ -73,12 +73,10 @@ export function* updateAccount(payload) {
       ...payload
     }
   );
-  const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-  tr.add_signer(activeKey.privKey, activeKey.pubKey);
-  yield Promise.all([
-    tr.set_required_fees(),
-    tr.update_head_block()
-  ]).then(() => tr.broadcast());
+  const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+  yield tr.set_required_fees();
+  yield tr.add_signer(key.privKey, key.pubKey);
+  yield tr.broadcast();
 }
 
 export function* getRecentTransactions() {

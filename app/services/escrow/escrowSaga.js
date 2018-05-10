@@ -138,10 +138,9 @@ function* releaseEscrowTransaction({ payload: { escrowObject } }) {
       escrow_account: escrowAcc.get('id')
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-    tr.set_required_fees().then(() => {
-      tr.add_signer(key.privKey, key.pubKey);
-      tr.broadcast();
-    });
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
     yield put({ type: 'RELEASE_ESCROW_TRANSACTION_SUCCEEDED', releasedTransaction: escrowObject });
   } catch (error) {
     console.log('ERROR ', error);
@@ -165,10 +164,9 @@ function* returnEscrowTransaction({ payload: { escrowObject } }) {
       escrow_account: escrowAcc.get('id')
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-    tr.set_required_fees().then(() => {
-      tr.add_signer(key.privKey, key.pubKey);
-      tr.broadcast();
-    });
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
     yield put({ type: 'RETURN_ESCROW_TRANSACTION_SUCCEEDED', returnedTransaction: escrowObject });
   } catch (error) {
     console.log('ERROR RETURN', error);
