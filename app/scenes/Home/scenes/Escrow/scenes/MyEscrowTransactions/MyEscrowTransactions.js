@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {defineMessages, injectIntl} from 'react-intl';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -12,7 +12,7 @@ import {
   TableHeader,
   Loader
 } from 'semantic-ui-react';
-import { toastr } from 'react-redux-toastr';
+import {toastr} from 'react-redux-toastr';
 
 import {
   releaseEscrowTransaction,
@@ -67,6 +67,10 @@ const messages = defineMessages({
   successReturn: {
     id: 'MyEscrowTransactions.successReturn',
     defaultMessage: '{amount} XOM were successfully returned to {username}!'
+  },
+  noTransactions: {
+    id: 'MyEscrowTransactions.noTransactions',
+    defaultMessage: 'You don\'t have any pending escrow transactions.'
   }
 });
 
@@ -110,7 +114,7 @@ class MyEscrowTransactions extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const { formatMessage } = this.props.intl;
+    const {formatMessage} = this.props.intl;
     const headerName = this.state.lastHeaderClicked;
     const asc = this.state.sortAsc[headerName];
     this.setState({
@@ -174,29 +178,38 @@ class MyEscrowTransactions extends Component {
   }
 
   handleRelease(escrowObject) {
-    const { formatMessage } = this.props.intl;
+    const {formatMessage} = this.props.intl;
     this.setState({
       confirmationModal: {
         isOpen: true,
-        question: formatMessage(messages.askRelease, { username: escrowObject.seller.name }),
+        question: formatMessage(messages.askRelease, {username: escrowObject.seller.name}),
         onApprove: () => this.props.escrowActions.releaseEscrowTransaction(escrowObject),
       }
     });
   }
 
   handleReturn(escrowObject) {
-    const { formatMessage } = this.props.intl;
+    const {formatMessage} = this.props.intl;
     this.setState({
       confirmationModal: {
         isOpen: true,
-        question: formatMessage(messages.askReturn, { username: escrowObject.buyer.name }),
+        question: formatMessage(messages.askReturn, {username: escrowObject.buyer.name}),
         onApprove: () => this.props.escrowActions.returnEscrowTransaction(escrowObject),
       }
     });
   }
 
+  renderNoTransactions() {
+    const { formatMessage } = this.props.intl;
+    return (
+      <span style={{display: 'flex', justifyContent: 'center'}}>
+        {formatMessage(messages.noTransactions)}
+      </span>
+    );
+  }
+
   renderRows() {
-    const { username } = this.props.auth.currentUser;
+    const {username} = this.props.auth.currentUser;
     return this.state.transactions.map((escrowObject) => (
       <TableRow key={escrowObject.transactionID}>
         <TableCell>{escrowObject.transactionID}</TableCell>
@@ -236,7 +249,7 @@ class MyEscrowTransactions extends Component {
   }
 
   render() {
-    const { formatMessage } = this.props.intl;
+    const {formatMessage} = this.props.intl;
     const {
       loading,
       finalizing
@@ -244,49 +257,51 @@ class MyEscrowTransactions extends Component {
     return (
       <div className="data-table">
         <div className="table-container" style={{ marginTop: '-15px' }}>
-          {loading ? <Loader active inline="centered" /> :
-          <Table
-            sortable="true"
-            compact="true"
-            basic="very"
-            striped="true"
-            size="small"
-          >
-            <TableHeader>
-              <TableRow>
-                <TableHeaderCell
-                  sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
-                  onClick={this.handleHeaderClick.bind(this, 'transactionID')}
-                >
-                  {formatMessage(messages.transactionID)}
-                </TableHeaderCell>
-                <TableHeaderCell
-                  sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
-                  onClick={this.handleHeaderClick.bind(this, 'amount')}
-                >
-                  {formatMessage(messages.amount)}
-                </TableHeaderCell>
-                <TableHeaderCell
-                  sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
-                  onClick={this.handleHeaderClick.bind(this, 'parties')}
-                >
-                  {formatMessage(messages.parties)}
-                </TableHeaderCell>
-                <TableHeaderCell
-                  sorted={this.state.sortAsc.expirationTime ? 'ascending' : 'descending'}
-                  onClick={this.handleHeaderClick.bind(this, 'expirationTime')}
-                >
-                  {formatMessage(messages.expirationTime)}
-                </TableHeaderCell>
-                <TableHeaderCell className="sorted">
-                  {formatMessage(messages.finalize)}
-                </TableHeaderCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {this.renderRows()}
-            </TableBody>
-          </Table>
+          {loading ? <Loader active inline="centered"/>
+            : this.state.transactions.length === 0
+              ? this.renderNoTransactions()
+              : <Table
+                sortable="true"
+                compact="true"
+                basic="very"
+                striped="true"
+                size="small"
+              >
+                <TableHeader>
+                  <TableRow>
+                    <TableHeaderCell
+                      sorted={this.state.sortAsc.transactionID ? 'ascending' : 'descending'}
+                      onClick={this.handleHeaderClick.bind(this, 'transactionID')}
+                    >
+                      {formatMessage(messages.transactionID)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      sorted={this.state.sortAsc.amount ? 'ascending' : 'descending'}
+                      onClick={this.handleHeaderClick.bind(this, 'amount')}
+                    >
+                      {formatMessage(messages.amount)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      sorted={this.state.sortAsc.parties ? 'ascending' : 'descending'}
+                      onClick={this.handleHeaderClick.bind(this, 'parties')}
+                    >
+                      {formatMessage(messages.parties)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      sorted={this.state.sortAsc.expirationTime ? 'ascending' : 'descending'}
+                      onClick={this.handleHeaderClick.bind(this, 'expirationTime')}
+                    >
+                      {formatMessage(messages.expirationTime)}
+                    </TableHeaderCell>
+                    <TableHeaderCell className="sorted">
+                      {formatMessage(messages.finalize)}
+                    </TableHeaderCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {this.renderRows()}
+                </TableBody>
+              </Table>
           }
         </div>
         <ConfirmationModal
@@ -311,7 +326,7 @@ MyEscrowTransactions.propTypes = {
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({...state.default}),
   dispatch => ({
     escrowActions: bindActionCreators({
       returnEscrowTransaction,
