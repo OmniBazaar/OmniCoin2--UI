@@ -12,12 +12,15 @@ import {
   loadMyEscrowAgents,
   getEscrowAgentsCount,
   releaseEscrowTransaction,
-  returnEscrowTransaction
+  returnEscrowTransaction,
+  setActivePageMyEscrow,
+  setPaginationMyEscrow
 } from './escrowActions';
 import EscrowStorage from './escrowStorage';
 
 const defaultState = {
   transactions: [],
+  transactionsFiltered: [],
   agents: [],
   agentsCount: 0,
   myAgents: [],
@@ -27,8 +30,19 @@ const defaultState = {
   error: null,
   loading: false,
   updating: false,
-  finalizing: false
+  finalizing: false,
+  activePageMyEscrow: 1,
+  rowsPerPageMyEscrow: 10,
+  totalPagesMyEscrow: 1,
 };
+
+const sliceData = (data, activePage, rowsPerPage) => (
+  data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+);
+
+const getTotalPages = (data, rowsPerPage) => (
+  Math.ceil(data.length / rowsPerPage)
+);
 
 const reducer = handleActions(
   {
@@ -141,6 +155,7 @@ const reducer = handleActions(
     LOAD_ESCROW_TRANSACTIONS_DONE: (state, action) => ({
       ...state,
       transactions: action.transactions,
+      transactionsFiltered: action.transactions,
       loading: false
     }),
     LOAD_ESCROW_TRANSACTIONS_FAILED: (state, action) => ({
@@ -161,6 +176,7 @@ const reducer = handleActions(
       ...state,
       releasedTransaction,
       transactions: state.transactions.filter(el => el.transactionID !== releasedTransaction.transactionID),
+      transactionsFiltered: state.transactions.filter(el => el.transactionID !== releasedTransaction.transactionID),
       finalizing: false
     }),
     RELEASE_ESCROW_TRANSACTION_FAILED: (state, { error }) => ({
@@ -181,6 +197,7 @@ const reducer = handleActions(
       ...state,
       returnedTransaction,
       transactions: state.transactions.filter(el => el.transactionID !== returnedTransaction.transactionID),
+      transactionsFiltered: state.transactions.filter(el => el.transactionID !== returnedTransaction.transactionID),
       finalizing: false
     }),
     RETURN_ESCROW_TRANSACTION_FAILED: (state, { error }) => ({
@@ -188,6 +205,36 @@ const reducer = handleActions(
       finalizing: false,
       error
     }),
+    [setPaginationMyEscrow](state, { payload: { rowsPerPageMyEscrow } }) {
+      const data = state.transactions;
+      const { activePageMyEscrow } = state;
+      const totalPagesMyEscrow = getTotalPages(data, rowsPerPageMyEscrow);
+      const currentData = sliceData(data, activePageMyEscrow, rowsPerPageMyEscrow);
+
+      return {
+        ...state,
+        totalPagesMyEscrow,
+        rowsPerPageMyEscrow,
+        transactionsFiltered: currentData,
+      };
+    },
+    [setActivePageMyEscrow](state, { payload: { activePageMyEscrow } }) {
+      const data = state.transactions;
+      if (activePageMyEscrow !== state.activePageStandBy) {
+        const { rowsPerPageMyEscrow } = state;
+        const currentData = sliceData(data, activePageMyEscrow, rowsPerPageMyEscrow);
+
+        return {
+          ...state,
+          activePageMyEscrow,
+          transactionsFiltered: currentData,
+        };
+      }
+
+      return {
+        ...state,
+      };
+    },
   }
   , defaultState
 );

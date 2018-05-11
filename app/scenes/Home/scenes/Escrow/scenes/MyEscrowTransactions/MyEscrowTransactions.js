@@ -16,12 +16,13 @@ import { toastr } from 'react-redux-toastr';
 
 import {
   releaseEscrowTransaction,
-  returnEscrowTransaction
+  returnEscrowTransaction,
+  setActivePageMyEscrow
 } from '../../../../../../services/escrow/escrowActions';
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import './my-escrow-transactions.scss';
-
 
 const messages = defineMessages({
   transactionID: {
@@ -85,7 +86,7 @@ class MyEscrowTransactions extends Component {
     super(props);
 
     this.state = {
-      transactions: props.escrow.transactions,
+      transactions: props.escrow.transactionsFiltered,
       sortAsc: {
         transactionID: false,
         amount: false,
@@ -107,7 +108,7 @@ class MyEscrowTransactions extends Component {
     const headerName = this.state.lastHeaderClicked;
     const asc = this.state.sortAsc[headerName];
     this.setState({
-      transactions: nextProps.escrow.transactions.slice().sort(
+      transactions: nextProps.escrow.transactionsFiltered.slice().sort(
         (transA, transB) => comparator(transA, transB, headerName, asc)
       ),
       lastHeaderClicked: headerName
@@ -151,6 +152,10 @@ class MyEscrowTransactions extends Component {
         onApprove: null,
       }
     });
+  };
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.props.escrowActions.setActivePageMyEscrow(activePage);
   };
 
   sortColumn(headerName, asc) {
@@ -259,11 +264,20 @@ class MyEscrowTransactions extends Component {
     const { formatMessage } = this.props.intl;
     const {
       loading,
-      finalizing
+      finalizing,
+      activePageMyEscrow,
+      totalPagesMyEscrow
     } = this.props.escrow;
     return (
       <div className="data-table">
-        <div className="table-container" style={{ marginTop: '-15px' }}>
+        <div className="top-detail">
+          <Pagination
+            activePage={activePageMyEscrow}
+            onPageChange={this.handlePaginationChange}
+            totalPages={totalPagesMyEscrow}
+          />
+        </div>
+        <div className="table-container">
           {loading ? <Loader active inline="centered" />
             : this.state.transactions.length === 0
               ? this.renderNoTransactions()
@@ -333,16 +347,20 @@ MyEscrowTransactions.defaultProps = {
 MyEscrowTransactions.propTypes = {
   escrow: PropTypes.shape({
     transactions: PropTypes.array,
+    transactionsFiltered: PropTypes.array,
     finalizing: PropTypes.bool,
     loading: PropTypes.bool,
     error: PropTypes.string,
+    activePageMyEscrow: PropTypes.number,
+    totalPagesMyEscrow: PropTypes.number
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }),
   escrowActions: PropTypes.shape({
     releaseEscrowTransaction: PropTypes.func,
-    returnEscrowTransaction: PropTypes.func
+    returnEscrowTransaction: PropTypes.func,
+    setActivePageMyEscrow: PropTypes.func
   }),
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
@@ -357,7 +375,8 @@ export default connect(
   dispatch => ({
     escrowActions: bindActionCreators({
       returnEscrowTransaction,
-      releaseEscrowTransaction
+      releaseEscrowTransaction,
+      setActivePageMyEscrow
     }, dispatch),
   })
 )(injectIntl(MyEscrowTransactions));
