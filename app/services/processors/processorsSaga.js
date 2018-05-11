@@ -118,10 +118,9 @@ async function commitProcessors(processors, toggledProcessors, account, password
     }
   });
   const key = generateKeyFromPassword(account.name, 'active', password);
-  return tr.set_required_fees().then(() => {
-    tr.add_signer(key.privKey, key.pubKey);
-    tr.broadcast();
-  });
+  await tr.set_required_fees();
+  await tr.add_signer(key.privKey, key.pubKey);
+  await tr.broadcast();
 }
 
 async function processProcessors(processors) {

@@ -1,8 +1,18 @@
-import { put, takeEvery, call, all, takeLatest } from 'redux-saga/effects';
+import {
+  put,
+  takeEvery,
+  call,
+  all,
+  takeLatest,
+  select
+} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
+import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
+
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
 import { fetchAccount } from '../blockchain/utils/miscellaneous';
+import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 
 export function* escrowSubscriber() {
   yield all([
@@ -10,7 +20,9 @@ export function* escrowSubscriber() {
     takeLatest('LOAD_ESCROW_AGENTS', loadEscrowAgents),
     takeEvery('LOAD_MY_ESCROW_AGENTS', loadMyEscrowAgents),
     takeEvery('SET_MY_ESCROW_AGENTS', setMyEscrowAgents),
-    takeEvery('GET_ESCROW_AGENTS_COUNT', getEscrowAgentsCount)
+    takeEvery('GET_ESCROW_AGENTS_COUNT', getEscrowAgentsCount),
+    takeEvery('RELEASE_ESCROW_TRANSACTION', releaseEscrowTransaction),
+    takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction)
   ]);
 }
 
@@ -78,10 +90,9 @@ function* loadMyEscrowAgents({ payload: { username } }) {
 
 function* setMyEscrowAgents({ payload: { agents } }) {
   try {
-    const result = yield updateAccount({
+    yield updateAccount({
       escrows: agents.map(agent => agent.id)
     });
-    console.log('RESULT OF UPDATE ', result);
     yield put({
       type: 'SET_MY_ESCROW_AGENTS_SUCCEEDED'
     });
@@ -107,6 +118,59 @@ function* getEscrowAgentsCount() {
       type: 'GET_ESCROW_AGENTS_COUNT_FAILED',
       error: e
     });
+  }
+}
+
+
+function* releaseEscrowTransaction({ payload: { escrowObject } }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const [payingAcc, buyerAcc, escrowAcc] = yield Promise.all([
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', escrowObject.buyer),
+      FetchChain('getAccount', escrowObject.escrow)
+    ]);
+    const tr = new TransactionBuilder();
+    tr.add_type_operation('escrow_release_operation', {
+      fee_paying_account: payingAcc.get('id'),
+      escrow: escrowObject.transactionID,
+      buyer_account: buyerAcc.get('id'),
+      escrow_account: escrowAcc.get('id')
+    });
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
+    yield put({ type: 'RELEASE_ESCROW_TRANSACTION_SUCCEEDED', releasedTransaction: escrowObject });
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put({ type: 'RELEASE_ESCROW_TRANSACTION_FAILED', error });
+  }
+}
+
+function* returnEscrowTransaction({ payload: { escrowObject } }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const [payingAcc, sellerAcc, escrowAcc] = yield Promise.all([
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', escrowObject.seller),
+      FetchChain('getAccount', escrowObject.escrow)
+    ]);
+    const tr = new TransactionBuilder();
+    tr.add_type_operation('escrow_return_operation', {
+      fee_paying_account: payingAcc.get('id'),
+      escrow: escrowObject.transactionID,
+      seller_account: sellerAcc.get('id'),
+      escrow_account: escrowAcc.get('id')
+    });
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
+    yield put({ type: 'RETURN_ESCROW_TRANSACTION_SUCCEEDED', returnedTransaction: escrowObject });
+  } catch (error) {
+    console.log('ERROR RETURN', error);
+    yield put({ type: 'RETURN_ESCROW_TRANSACTION_FAILED', error });
   }
 }
 

@@ -10,7 +10,9 @@ const {
   updateEscrowSettings,
   clearEscrowAgents,
   loadMyEscrowAgents,
-  getEscrowAgentsCount
+  getEscrowAgentsCount,
+  releaseEscrowTransaction,
+  returnEscrowTransaction
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
@@ -24,7 +26,9 @@ createActions({
   UPDATE_ESCROW_SETTINGS: (settings) => ({ settings }),
   CLEAR_ESCROW_AGENTS: () => ({}),
   LOAD_MY_ESCROW_AGENTS: (username) => ({ username }),
-  GET_ESCROW_AGENTS_COUNT: () => ({})
+  GET_ESCROW_AGENTS_COUNT: () => ({}),
+  RELEASE_ESCROW_TRANSACTION: (escrowObject) => ({ escrowObject }),
+  RETURN_ESCROW_TRANSACTION: (escrowObject) => ({ escrowObject })
 });
 
 export {
@@ -37,5 +41,7 @@ export {
   updateEscrowSettings,
   clearEscrowAgents,
   loadMyEscrowAgents,
-  getEscrowAgentsCount
+  getEscrowAgentsCount,
+  releaseEscrowTransaction,
+  returnEscrowTransaction
 };

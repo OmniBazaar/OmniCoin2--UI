@@ -1,3 +1,7 @@
 {
-
+  "MyEscrowTransactions.transactionID": "Transaction ID",
+  "MyEscrowTransactions.amount": "Amount",
+  "MyEscrowTransactions.parties": "Parties",
+  "MyEscrowTransactions.expirationTime": "Expiration time",
+  "MyEscrowTransactions.finalize": "Finalize"
 }

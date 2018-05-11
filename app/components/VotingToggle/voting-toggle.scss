@@ -1,0 +1,19 @@
+.voting-toggle {
+  display: flex;
+  cursor: pointer;
+
+  &.voted {
+    opacity: 0.5;
+  }
+  :hover:not(.voted) {
+    opacity: 0.7;
+  }
+
+  span {
+    margin-right: 22px;
+  }
+
+  img {
+    margin-right: 10px;
+  }
+}
