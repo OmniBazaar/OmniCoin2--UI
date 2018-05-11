@@ -1,8 +1,12 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { init } from '../../../utils/dht-connector';
+import dhtConnector from '../../../utils/dht-connector';
+
+const { init, findPeersFor } = dhtConnector;
 
 export function* dhtSubscriber() {
   yield takeEvery('DHT_CONNECT', connect);
+  yield takeEvery('DHT_GET_PEERS_FOR', getPeersFor);
+  yield takeEvery('DHT_FETCH_PEERS_DATA', fetchPeersData);
 }
 
 export function* connect() {
@@ -12,5 +16,26 @@ export function* connect() {
     yield put({ type: 'DHT_CONNECT_SUCCEEDED', connector });
   } catch (e) {
     yield put({ type: 'DHT_CONNECT_FAILED', error: e.message });
+  }
+}
+
+export function* getPeersFor({ payload }) {
+  try {
+    const { peers, noPeers } = yield call(findPeersFor.bind(dhtConnector), payload);
+    const finalPeers = noPeers ? [] : peers;
+
+    yield put({ type: 'DHT_FETCH_PEERS_DATA', peers: finalPeers, keyword: payload });
+  } catch (e) {
+    yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
+  }
+}
+
+export function* fetchPeersData(peers, keyword) {
+  console.log('fetching peers data');
+  try {
+    // TODO fetch all peers data here
+    yield put({ type: 'DHT_SEARCH_SUCCEEDED', searchResult: { keyword, data: [] } });
+  } catch (e) {
+    yield put({ type: 'DHT_SEARCH_FAILED', error: e.message });
   }
 }

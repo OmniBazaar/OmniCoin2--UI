@@ -2,13 +2,16 @@ import { createActions } from 'redux-actions';
 
 const {
   dhtConnect,
-  getPeers,
+  dhtGetPeersFor,
+  dhtFetchPeersData,
 } = createActions({
   DHT_CONNECT: () => ({}),
-  GET_PEERS: () => ({}),
+  DHT_GET_PEERS_FOR: text => text,
+  DHT_FETCH_PEERS_DATA: peers => peers,
 });
 
 export {
   dhtConnect,
-  getPeers,
+  dhtGetPeersFor,
+  dhtFetchPeersData,
 };
