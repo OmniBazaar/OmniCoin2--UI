@@ -69,8 +69,9 @@ export function* sendMail(action) {
       storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);
       mailSentCallback();
     }));
-  } catch (err) {
-    console.log('sendMail error:', err);
+    yield put({ type: 'EMAIL_SENT_SUCCEEDED' });
+  } catch (error) {
+    yield put({ type: 'EMAIL_SENT_FAILED', error });
   }
 }
 

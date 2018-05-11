@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { toastr } from 'react-redux-toastr';
 import { bindActionCreators, compose } from 'redux';
 
 import classNames from 'classnames';
@@ -62,6 +63,22 @@ const mailMessages = defineMessages({
     id: 'Mail.addressBook',
     defaultMessage: 'ADDRESS BOOK'
   },
+  success: {
+    id: 'Mail.success',
+    defaultMessage: 'Success'
+  },
+  mailSent: {
+    id: 'Mail.mailSent',
+    defaultMessage: 'Mail sent successfully'
+  },
+  error: {
+    id: 'Mail.error',
+    defaultMessage: 'Error'
+  },
+  mailNotSent: {
+    id: 'Mail.mailNotSent',
+    defaultMessage: 'There was an error while trying to send your mail'
+  },
 });
 
 class Compose extends Component {
@@ -78,6 +95,25 @@ class Compose extends Component {
         recipient: message.sender,
         subject: `RE: ${message.subject}`,
       });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { mailSent, error } = this.props.mail;
+    const { formatMessage } = this.props.intl;
+
+    if (mailSent !== nextProps.mail.mailSent) {
+      if (nextProps.mail.mailSent) {
+        this.closeCompose();
+        toastr.success(formatMessage(mailMessages.success), formatMessage(mailMessages.mailSent));
+      }
+    }
+
+    if (error !== nextProps.mail.error) {
+      if (nextProps.mail.error) {
+        this.closeCompose();
+        toastr.error(formatMessage(mailMessages.error), formatMessage(mailMessages.mailNotSent));
+      }
     }
   }
 
@@ -192,7 +228,9 @@ Compose.propTypes = {
     messages: PropTypes.object,
     activeFolder: PropTypes.string,
     activeMessage: PropTypes.string,
-    reply: PropTypes.bool
+    reply: PropTypes.bool,
+    mailSent: PropTypes.bool,
+    error: PropTypes.string
   }),
   initialize: PropTypes.func,
   onClose: PropTypes.func,
