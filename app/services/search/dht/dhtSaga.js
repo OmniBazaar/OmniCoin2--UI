@@ -24,14 +24,14 @@ export function* getPeersFor({ payload }) {
     const { peers, noPeers } = yield call(findPeersFor.bind(dhtConnector), payload);
     const finalPeers = noPeers ? [] : peers;
 
-    yield put({ type: 'DHT_FETCH_PEERS_DATA', peers: finalPeers, keyword: payload });
+    yield put({ type: 'DHT_FETCH_PEERS_DATA', fetchResult: { peers: finalPeers, keyword: payload } });
   } catch (e) {
     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
   }
 }
 
-export function* fetchPeersData(peers, keyword) {
-  console.log('fetching peers data');
+export function* fetchPeersData({ fetchResult: { peers, keyword } }) {
+  console.log('fetching peers data', peers);
   try {
     // TODO fetch all peers data here
     yield put({ type: 'DHT_SEARCH_SUCCEEDED', searchResult: { keyword, data: [] } });
