@@ -29,6 +29,7 @@ import {
   processorsSubscriber,
   bitcoinSubscriber,
   transferSubscriber,
+  wsMarketplaceSaga
 } from './services/saga';
 
 ChainConfig.address_prefix = 'BTS';
@@ -76,6 +77,7 @@ sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);
+sagaMiddleware.run(wsMarketplaceSaga);
 
 ReactDOM.render(
   (
