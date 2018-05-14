@@ -260,7 +260,9 @@ class Transfer extends Component {
     ) {
       this.hideEscrow();
       toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
-    } else if (!nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow) {
+    } else if (this.props.transfer.gettingCommonEscrows
+                && !nextProps.transfer.gettingCommonEscrows
+                && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
   }
