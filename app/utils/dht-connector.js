@@ -17,10 +17,12 @@ const dhtConnector = {
     host,
     publishers = [],
     keywords = [],
+    canPublish = true,
   } = {}) {
     connector = omnibazaarDHT({ host, bootstrap: publishers });
 
-    await connector.connect({ keywords }).catch(console.log);
+    await connector.connect({ keywords, asPublisher: canPublish })
+      .catch(console.log);
 
     return connector;
   },
@@ -46,10 +48,15 @@ const dhtConnector = {
     host,
     publishers = [],
     keywords = [],
+    asPublisher = true,
   } = {}) {
     if (!connector) {
-      console.log('Restarting dht...');
-      return this.init({ host, publishers, keywords });
+      return this.init({
+        host,
+        publishers,
+        keywords,
+        asPublisher,
+      });
     }
 
     return Promise.resolve(connector);
