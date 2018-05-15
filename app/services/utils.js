@@ -9,4 +9,22 @@ function wrapRequest(func) {
   };
 }
 
-export { wrapRequest };
+function reputationOptions(from = 0, to = 10) {
+  const options = [];
+
+  for (let index = from; index < to + 1; index++) {
+    const option = {
+      key: index,
+      value: index,
+      text: index - 5
+    };
+    options.push(option);
+  }
+
+  return options;
+}
+
+export {
+  wrapRequest,
+  reputationOptions
+};
