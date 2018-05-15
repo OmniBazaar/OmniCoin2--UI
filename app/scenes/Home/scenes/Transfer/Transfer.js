@@ -351,6 +351,7 @@ class Transfer extends Component {
       <div className="transfer-input">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
+          className="textfield"
           defaultValue={options[0].value}
           options={options}
           onChange={(param, data) => input.onChange(data.value)}
