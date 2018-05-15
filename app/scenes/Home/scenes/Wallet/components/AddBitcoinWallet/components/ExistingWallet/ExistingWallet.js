@@ -8,6 +8,7 @@ import { required } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 
 import FormField from '../../../FormField/FormField';
+import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
 import { toggleModal, getWallets } from '../../../../../../../../services/blockchain/bitcoin/bitcoinActions';
 import './existing-wallet.scss';
 
@@ -91,21 +92,13 @@ class ExistingWallet extends Component {
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />
-        <div className="footer">
-          <Button
-            className="button--transparent"
-            content={formatMessage(messages.cancel)}
-            loading={loading}
-            onClick={this.handleCancel}
-          />
-          <Button
-            className="button--primary"
-            disabled={!valid}
-            loading={loading}
-            content={formatMessage(messages.connect)}
-            type="submit"
-          />
-        </div>
+        <ModalFooter
+          successContent={formatMessage(messages.connect)}
+          cancelContent={formatMessage(messages.cancel)}
+          handleCancel={this.handleCancel}
+          loading={loading}
+          disabled={!valid}
+        />
       </Form>
     );
   }
