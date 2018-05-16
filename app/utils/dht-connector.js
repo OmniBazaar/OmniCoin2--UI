@@ -72,19 +72,7 @@ const dhtConnector = {
   async findPeersFor(text) {
     await this.reconnectIfNeeded();
 
-    const lookupPromise = new Promise((resolve) => {
-      connector.listenPeerLookup((response) => {
-        resolve(response);
-      });
-    });
-
-    const { nodeWithPeers } = await connector.findPeersFor(text);
-
-    if (!nodeWithPeers) {
-      return Promise.resolve({ noPeers: true });
-    }
-
-    return lookupPromise;
+    return connector.findPeersFor(text);
   },
 };
 
