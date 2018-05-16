@@ -1,20 +1,35 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Select } from 'semantic-ui-react';
 
+import { reputationOptions } from '../../../../../../../../services/utils';
 import './form-field.scss';
 
+export const options = reputationOptions();
+export const defaultOption = 5;
+
 const FormField = ({
-  input, placeholder, type, message, meta: { touched, error }, intl
+  input,
+  message,
+  intl,
+  meta: {
+    touched,
+    error
+  },
 }) => {
   const errorMessage = error && error.id ? intl.formatMessage(error) : error;
   return (
-    <div className="form-field">
+    <div className="rate-modal-form-field">
       <div className="message">
         <span>{message}</span>
         {touched && ((error && <span className="error">{errorMessage}</span>))}
       </div>
-      <input {...input} placeholder={placeholder} type={type} />
+      <Select
+        defaultValue={defaultOption}
+        options={options}
+        onChange={(param, data) => input.onChange(data.value)}
+      />
     </div>
   );
 };

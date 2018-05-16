@@ -1,0 +1,11 @@
+.rate-modal-form-field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px 32px;
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

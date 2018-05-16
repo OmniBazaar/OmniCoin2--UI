@@ -29,6 +29,7 @@ import {
   getCommonEscrows,
   createEscrowTransaction
 } from '../../../../services/transfer/transferActions';
+import { reputationOptions } from '../../../../services/utils';
 
 
 const messages = defineMessages({
@@ -176,20 +177,6 @@ class Transfer extends Component {
     }
   };
 
-  static reputationOptions() {
-    const options = [];
-
-    for (let index = 0; index < 11; index++) {
-      const option = {
-        key: index,
-        value: index,
-        text: index - 5
-      };
-      options.push(option);
-    }
-
-    return options;
-  }
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -364,7 +351,6 @@ class Transfer extends Component {
       <div className="transfer-input">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
-          type="text"
           className="textfield"
           defaultValue={options[0].value}
           options={options}
@@ -463,7 +449,7 @@ class Transfer extends Component {
             <Field
               type="text"
               name="reputation"
-              options={Transfer.reputationOptions()}
+              options={reputationOptions()}
               component={this.renderSelectField}
             />
             <div className="col-1" />

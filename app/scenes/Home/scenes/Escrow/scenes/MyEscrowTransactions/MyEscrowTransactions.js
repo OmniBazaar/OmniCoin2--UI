@@ -19,7 +19,7 @@ import {
   returnEscrowTransaction,
   setActivePageMyEscrow
 } from '../../../../../../services/escrow/escrowActions';
-import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
+import RateModal from './components/RateModal/RateModal';
 import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import './my-escrow-transactions.scss';
@@ -72,6 +72,22 @@ const messages = defineMessages({
   noTransactions: {
     id: 'MyEscrowTransactions.noTransactions',
     defaultMessage: 'You don\'t have any pending escrow transactions.'
+  },
+  rateSomeone: {
+    id: 'MyEscrowTransaction.rateSomeone',
+    defaultMessage: 'Rate {username} ({type})'
+  },
+  escrow: {
+    id: 'MyEscrowTransactions.escrow',
+    defaultMessage: 'escrow',
+  },
+  buyer: {
+    id: 'MyEscrowTransactions.buyer',
+    defaultMessage: 'buyer',
+  },
+  seller: {
+    id: 'MyEscrowTransactions.seller',
+    defaultMessage: 'seller',
   }
 });
 
@@ -93,14 +109,16 @@ class MyEscrowTransactions extends Component {
         parties: false
       },
       lastHeaderClicked: 'transactionID',
-      confirmationModal: {
+      rateModal: {
         isOpen: false,
-        question: '',
-        onApprove: null,
+        name1: null,
+        label1: null,
+        name2: null,
+        label2: null,
+        onSubmit: () => {},
       }
     };
-    this.handleRelease = this.handleRelease.bind(this);
-    this.handleReturn = this.handleReturn.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -108,9 +126,7 @@ class MyEscrowTransactions extends Component {
     const headerName = this.state.lastHeaderClicked;
     const asc = this.state.sortAsc[headerName];
     this.setState({
-      transactions: nextProps.escrow.transactionsFiltered.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, asc)
-      ),
+      transactions: nextProps.escrow.transactionsFiltered.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
       lastHeaderClicked: headerName
     });
 
@@ -146,10 +162,13 @@ class MyEscrowTransactions extends Component {
 
   closeModal = () => {
     this.setState({
-      confirmationModal: {
+      rateModal: {
         isOpen: false,
-        question: '',
-        onApprove: null,
+        name1: null,
+        label1: null,
+        name2: null,
+        label2: null,
+        onSubmit: () => {},
       }
     });
   };
@@ -165,9 +184,7 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: asc
       },
-      transactions: this.state.transactions.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, asc)
-      ),
+      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, asc)),
       lastHeaderClicked: headerName
     });
   }
@@ -180,36 +197,60 @@ class MyEscrowTransactions extends Component {
         ...this.state.sortAsc,
         [headerName]: newHeaderSortAsc
       },
-      transactions: this.state.transactions.slice().sort(
-        (transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)
-      ),
+      transactions: this.state.transactions.slice().sort((transA, transB) => comparator(transA, transB, headerName, newHeaderSortAsc)),
       lastHeaderClicked: headerName
     });
   }
 
-  handleRelease(escrowObject) {
+  getParties(escrowObject) {
+    const type = this.getCurrentUserType(escrowObject);
+    return ['seller', 'buyer', 'escrow'].filter(el => el != type);
+  }
+
+  getCurrentUserType(escrowObject) {
+    const { currentUser } = this.props.auth;
+    if (escrowObject.seller.name === currentUser.username) {
+      return 'seller';
+    }
+    if (escrowObject.buyer.name === currentUser.username) {
+      return 'buyer';
+    }
+    if (escrowObject.escrow.name === currentUser.username) {
+      return 'escrow';
+    }
+  }
+
+  handleSubmit(type, escrowObject) {
     const { formatMessage } = this.props.intl;
+    const parties = this.getParties(escrowObject);
+    const currUserType = this.getCurrentUserType(escrowObject);
     this.setState({
-      confirmationModal: {
+      rateModal: {
         isOpen: true,
-        question: formatMessage(messages.askRelease, {
-          username: escrowObject.seller.name
+        name1: parties[0],
+        label1: formatMessage(messages.rateSomeone, {
+          username: escrowObject[parties[0]].name,
+          type: formatMessage(messages[parties[0]])
         }),
-        onApprove: () => this.props.escrowActions.releaseEscrowTransaction(escrowObject),
+        name2: parties[1],
+        label2: formatMessage(messages.rateSomeone, {
+          username: escrowObject[parties[1]].name,
+          type: formatMessage(messages[parties[1]])
+        }),
+        onSubmit: (votes) =>
+          (type === 'release'
+            ? this.props.escrowActions.releaseEscrowTransaction(escrowObject, {
+              ...votes,
+              [currUserType]: 5
+            })
+            : this.props.escrowActions.returnEscrowTransaction(escrowObject, {
+              ...votes,
+              [currUserType]: 5
+            })),
       }
     });
   }
 
-  handleReturn(escrowObject) {
-    const { formatMessage } = this.props.intl;
-    this.setState({
-      confirmationModal: {
-        isOpen: true,
-        question: formatMessage(messages.askReturn, { username: escrowObject.buyer.name }),
-        onApprove: () => this.props.escrowActions.returnEscrowTransaction(escrowObject),
-      }
-    });
-  }
 
   renderNoTransactions() {
     const { formatMessage } = this.props.intl;
@@ -233,11 +274,11 @@ class MyEscrowTransactions extends Component {
             <div className="finalize">
               <VotingToggle
                 type="up"
-                onToggle={() => this.handleRelease(escrowObject)}
+                onToggle={() => this.handleSubmit('release', escrowObject)}
               />
               <VotingToggle
                 type="down"
-                onToggle={() => this.handleReturn(escrowObject)}
+                onToggle={() => this.handleSubmit('return', escrowObject)}
               />
             </div>
             :
@@ -245,12 +286,12 @@ class MyEscrowTransactions extends Component {
               {escrowObject.seller.name === username ?
                 <VotingToggle
                   type="down"
-                  onToggle={() => this.handleReturn(escrowObject)}
+                  onToggle={() => this.handleSubmit('return', escrowObject)}
                 />
                 :
                 <VotingToggle
                   type="up"
-                  onToggle={() => this.handleRelease(escrowObject)}
+                  onToggle={() => this.handleSubmit('release', escrowObject)}
                 />
               }
             </div>
@@ -325,10 +366,8 @@ class MyEscrowTransactions extends Component {
               </Table>
           }
         </div>
-        <ConfirmationModal
-          isOpen={this.state.confirmationModal.isOpen}
-          question={this.state.confirmationModal.question}
-          onApprove={this.state.confirmationModal.onApprove}
+        <RateModal
+          {...this.state.rateModal}
           onCancel={this.closeModal}
           loading={finalizing}
         />
