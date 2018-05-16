@@ -64,8 +64,7 @@ const dhtConnector = {
 
   /**
    *
-   * @param {Object} data
-   * @param {string} data.payload
+   * @param {string} text
    *
    * @returns {Promise}
    */
