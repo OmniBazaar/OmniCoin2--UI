@@ -1,4 +1,5 @@
 import { orderBy } from 'lodash';
+import { ChainTypes } from 'omnibazaarjs/es';
 
 const key = 'historyStorage';
 
@@ -47,12 +48,46 @@ class HistoryStorage {
   }
 
   addOperation(op) {
+    if (op.operationType === ChainTypes.operations.escrow_release_operation
+        || op.operationType === ChainTypes.operations.escrow_return_operation) {
+      const escrowTr = this.findEscrowTransactionByResult(op);
+      if (escrowTr) {
+        op.amount = escrowTr.amount;
+      }
+    }
     this.cache[op.id] = op;
+  }
+
+  findEscrowTransactionByResult(op) {
+    const filtered = Object.keys(this.cache).filter(i =>
+      this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation
+    );
+    return this.cache[filtered[0]];
+  }
+
+  findEscrowTransactionResult(op) {
+    const filtered = Object.keys(this.cache).filter(i =>
+      (this.cache[i].escrow === op.escrow &&
+      (this.cache[i].operationType === ChainTypes.operations.escrow_release_operation ||
+      this.cache[i].operationType === ChainTypes.operations.escrow_return_operation))
+    );
+    return this.cache[filtered[0]];
+  }
+
+  includeOperation(op) {
+    if (op.operationType === ChainTypes.operations.escrow_create_operation) {
+      const result = this.findEscrowTransactionResult(op);
+      return !result;
+    }
+    return true;
   }
 
   getHistory() {
     const transactions = {};
     Object.keys(this.cache).forEach(i => {
+      if (!this.includeOperation(this.cache[i])) {
+        return;
+      }
       const op = this.cache[i];
       const trxKey = `${op.blockNum}${op.trxInBlock}`;
       if (!transactions[trxKey]) {
@@ -61,6 +96,7 @@ class HistoryStorage {
           fee: 0,
           balance: 0,
           operations: [],
+          type: op.operationType
         };
       }
       if (op.opInTrx === 0) {
@@ -86,6 +122,11 @@ class HistoryStorage {
 
   save() {
     localStorage.setItem(key + this.accountName, JSON.stringify(this.cache));
+  }
+
+  clear() {
+    this.cache = [];
+    localStorage.setItem(key + this.accountName, null);
   }
 }
 

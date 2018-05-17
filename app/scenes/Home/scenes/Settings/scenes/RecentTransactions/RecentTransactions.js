@@ -18,7 +18,7 @@ import {
   Loader
 } from 'semantic-ui-react';
 import { debounce } from 'lodash';
-
+import { ChainTypes } from 'omnibazaarjs/es';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 
 import {
@@ -64,6 +64,26 @@ const messages = defineMessages({
   details: {
     id: 'Settings.details',
     defaultMessage: 'DETAILS'
+  },
+  type: {
+    id: 'Settings.type',
+    defaultMessage: 'Type'
+  },
+  [ChainTypes.operations.transfer]: {
+    id: 'Settings.transfer',
+    defaultMessage: 'Transfer'
+  },
+  [ChainTypes.operations.escrow_create_operation]: {
+    id: 'Settings.pending',
+    defaultMessage: 'Pending'
+  },
+  [ChainTypes.operations.escrow_return_operation]: {
+    id: 'Settings.return',
+    defaultMessage: 'Returned'
+  },
+  [ChainTypes.operations.escrow_release_operation]: {
+    id: 'Settings.release',
+    defaultMessage: 'Released'
   },
 });
 
@@ -181,6 +201,13 @@ class RecentTransactions extends Component {
                     {formatMessage(messages.fee)}
                   </TableHeaderCell>
                   <TableHeaderCell
+                    key="fee"
+                    sorted={sortColumn === 'type' ? sortDirection : null}
+                    onClick={this.sortData('type')}
+                  >
+                    {formatMessage(messages.type)}
+                  </TableHeaderCell>
+                  <TableHeaderCell
                     key="balance"
                     sorted={sortColumn === 'balance' ? sortDirection : null}
                     onClick={this.sortData('balance')}
@@ -209,6 +236,7 @@ class RecentTransactions extends Component {
                           <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
+                          <TableCell>{formatMessage(messages[row.type])}</TableCell>
                           <TableCell className="balance">
                             {row.balance}
                           </TableCell>
