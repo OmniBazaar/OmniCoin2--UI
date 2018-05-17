@@ -14,7 +14,7 @@ import {
 import _ from 'lodash';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
-import { fetchAccount } from '../blockchain/utils/miscellaneous';
+import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 
 export function* transferSubscriber() {
   yield all([
@@ -40,25 +40,11 @@ export function* submitTransfer(data) {
 
     const key = generateKeyFromPassword(senderName.get('name'), 'active', currentUser.password);
     const tr = new TransactionBuilder();
-    const memoFromKey = senderName.getIn(['options', 'memo_key']);
-    const memoToKey = toName.getIn(['options', 'memo_key']);
-    const nonce = TransactionHelper.unique_nonce_uint64();
-    const memoObject = {
-      from: memoFromKey,
-      to: memoToKey,
-      nonce,
-      message: Aes.encrypt_with_checksum(
-        key.privKey,
-        memoToKey,
-        nonce,
-        memo
-      )
-    };
     tr.add_type_operation('transfer', {
       from: senderName.get('id'),
       to: toName.get('id'),
       reputation_vote: parseInt(reputation),
-      memo: memoObject,
+      memo: memoObject(memo, senderName, toName, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
@@ -77,7 +63,7 @@ export function* submitTransfer(data) {
 export function* createEscrowTransaction({
   payload:
   {
-    expirationTime, buyer, seller, escrow, amount, transferToEscrow
+    expirationTime, buyer, seller, escrow, amount, transferToEscrow, memo
   }
 }) {
   try {
@@ -88,19 +74,20 @@ export function* createEscrowTransaction({
       FetchChain('getAccount', seller),
       FetchChain('getAccount', escrow)
     ]);
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const tr = new TransactionBuilder();
     tr.add_type_operation('escrow_create_operation', {
       expiration_time: sec + expirationTime,
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
       escrow: escrowAcc.get('id'),
+      memo: memoObject(memo, buyerAcc, sellerAcc, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
       transfer_to_escrow: transferToEscrow
     });
-    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();

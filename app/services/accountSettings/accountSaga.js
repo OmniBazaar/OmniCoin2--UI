@@ -80,7 +80,7 @@ export function* updateAccount(payload) {
 }
 
 async function getParties(op) {
-  switch(op[0]) {
+  switch (op[0]) {
     case ChainTypes.operations.transfer:
       return await Promise.all([
         FetchChain('getAccount', op[1].from),
@@ -117,12 +117,11 @@ export function* getRecentTransactions() {
     const seenOps = new Set();
     history = history.concat(h.toJS().filter(op => !seenOps.has(op.id) && seenOps.add(op.id)));
     history = history.filter(el => [
-        ChainTypes.operations.transfer,
-        ChainTypes.operations.escrow_create_operation,
-        ChainTypes.operations.escrow_release_operation,
-        ChainTypes.operations.escrow_return_operation
-      ].includes(el.op[0])
-    );
+      ChainTypes.operations.transfer,
+      ChainTypes.operations.escrow_create_operation,
+      ChainTypes.operations.escrow_release_operation,
+      ChainTypes.operations.escrow_return_operation
+    ].includes(el.op[0]));
     const historyStorage = new HistoryStorage(currentUser.username);
     historyStorage.clear();
     for (let i = 0; i < history.length; ++i) {

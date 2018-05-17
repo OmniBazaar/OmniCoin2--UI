@@ -60,8 +60,7 @@ class HistoryStorage {
 
   findEscrowTransactionByResult(op) {
     const filtered = Object.keys(this.cache).filter(i =>
-      this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation
-    );
+      this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation);
     return this.cache[filtered[0]];
   }
 
@@ -69,8 +68,7 @@ class HistoryStorage {
     const filtered = Object.keys(this.cache).filter(i =>
       (this.cache[i].escrow === op.escrow &&
       (this.cache[i].operationType === ChainTypes.operations.escrow_release_operation ||
-      this.cache[i].operationType === ChainTypes.operations.escrow_return_operation))
-    );
+      this.cache[i].operationType === ChainTypes.operations.escrow_return_operation)));
     return this.cache[filtered[0]];
   }
 

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {injectIntl, defineMessages} from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import cn from 'classnames';
 
 import './deal-rating.scss';
@@ -22,13 +22,12 @@ const messages = defineMessages({
 
 
 class DealRating extends Component {
-
   state = {
     selectedValue: this.props.selectedValue
   };
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.selectedValue !== this.state.selectedValue) {
+    if (nextProps.selectedValue !== this.state.selectedValue) {
       this.setState({
         selectedValue: nextProps.selectedValue
       });
@@ -41,14 +40,14 @@ class DealRating extends Component {
       [color]: true,
       selected: isSelected
     });
-    return <div
-                className={className}
-                key={option.key}
-                onClick={() => {
+    return (<div
+      className={className}
+      key={option.key}
+      onClick={() => {
                   onClick(option);
-                  this.setState({selectedValue: option});
+                  this.setState({ selectedValue: option });
                 }}
-    />
+    />);
   }
 
   render() {
@@ -58,7 +57,7 @@ class DealRating extends Component {
     } = this.props;
     const { formatMessage } = this.props.intl;
     const doths = [];
-    for(let i = 0; i < options.length; ++i) {
+    for (let i = 0; i < options.length; ++i) {
       let color = 'red';
       if (options[i].text === 0) {
         color = 'gray';
@@ -88,7 +87,6 @@ class DealRating extends Component {
       </div>
     );
   }
-
 }
 
 DealRating.defaultProps = {

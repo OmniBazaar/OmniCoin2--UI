@@ -529,8 +529,8 @@ class Transfer extends Component {
               ]
             )
           }
-          <div className="form-group" style={{marginTop: '10px'}}>
-            <span style={{marginBottom: '25px'}}>
+          <div className="form-group" style={{ marginTop: '10px' }}>
+            <span style={{ marginBottom: '25px' }}>
               {formatMessage(messages.reputation)}
             </span>
             <Field
@@ -572,7 +572,8 @@ class Transfer extends Component {
         values.toName,
         values.escrow,
         values.amount,
-        values.transferToEscrow
+        values.transferToEscrow,
+        values.memo
       );
     } else {
       this.props.transferActions.submitTransfer(values);
