@@ -22,6 +22,7 @@ import { toastr } from 'react-redux-toastr';
 import { FetchChain } from 'omnibazaarjs/es';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import './transfer.scss';
 import {
@@ -360,6 +361,23 @@ class Transfer extends Component {
     );
   };
 
+  renderDealRatingField = ({
+    input, options, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <DealRating
+          selectedValue={options[input.value] || options[5]}
+          options={options}
+          onChange={(data) => input.onChange(data.value)}
+        />
+      </div>
+    );
+  };
+
   renderMemoField = ({
     input, placeholder, meta: { touched, error }
   }) => {
@@ -445,16 +463,6 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>{formatMessage(messages.reputation)}</span>
-            <Field
-              type="text"
-              name="reputation"
-              options={reputationOptions()}
-              component={this.renderSelectField}
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
             <span>{formatMessage(messages.memo)}</span>
             <Field
               type="text"
@@ -521,6 +529,18 @@ class Transfer extends Component {
               ]
             )
           }
+          <div className="form-group" style={{marginTop: '10px'}}>
+            <span style={{marginBottom: '25px'}}>
+              {formatMessage(messages.reputation)}
+            </span>
+            <Field
+              type="text"
+              name="reputation"
+              options={reputationOptions()}
+              component={this.renderDealRatingField}
+            />
+            <div className="col-1" />
+          </div>
           <div className="form-group">
             <span />
             <div className="field left floated">
