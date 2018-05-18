@@ -72,7 +72,7 @@ const messages = defineMessages({
   },
   reputation: {
     id: 'Transfer.reputation',
-    defaultMessage: 'Reputation'
+    defaultMessage: 'Rate your deal'
   },
   memo: {
     id: 'Transfer.memo',
@@ -529,18 +529,20 @@ class Transfer extends Component {
               ]
             )
           }
-          <div className="form-group" style={{ marginTop: '10px' }}>
-            <span style={{ marginBottom: '25px' }}>
-              {formatMessage(messages.reputation)}
-            </span>
-            <Field
-              type="text"
-              name="reputation"
-              options={reputationOptions()}
-              component={this.renderDealRatingField}
-            />
-            <div className="col-1" />
-          </div>
+          {!this.props.transferForm.useEscrow &&
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <span style={{ marginBottom: '25px' }}>
+                {formatMessage(messages.reputation)}
+              </span>
+              <Field
+                type="text"
+                name="reputation"
+                options={reputationOptions()}
+                component={this.renderDealRatingField}
+              />
+              <div className="col-1" />
+            </div>
+          }
           <div className="form-group">
             <span />
             <div className="field left floated">

@@ -131,7 +131,7 @@ class RecentTransactions extends Component {
   }
 
   getBadgeClass(type) {
-    switch(type) {
+    switch (type) {
       case ChainTypes.operations.escrow_create_operation:
         return 'pending';
       case ChainTypes.operations.transfer:
@@ -139,7 +139,7 @@ class RecentTransactions extends Component {
       case ChainTypes.operations.escrow_release_operation:
         return 'released';
       case ChainTypes.operations.escrow_return_operation:
-        return 'returned'
+        return 'returned';
     }
   }
 
@@ -217,18 +217,18 @@ class RecentTransactions extends Component {
                   </TableHeaderCell>
                   <TableHeaderCell
                     key="fee"
-                    sorted={sortColumn === 'status' ? sortDirection : null}
-                    onClick={this.sortData('status')}
+                    sorted={sortColumn === 'type' ? sortDirection : null}
+                    onClick={this.sortData('type')}
                   >
                     {formatMessage(messages.status)}
                   </TableHeaderCell>
-                  <TableHeaderCell
-                    key="balance"
-                    sorted={sortColumn === 'balance' ? sortDirection : null}
-                    onClick={this.sortData('balance')}
-                  >
-                    {formatMessage(messages.balance)}
-                  </TableHeaderCell>
+                  {/* <TableHeaderCell */}
+                  {/* key="balance" */}
+                  {/* sorted={sortColumn === 'balance' ? sortDirection : null} */}
+                  {/* onClick={this.sortData('balance')} */}
+                  {/* > */}
+                  {/* {formatMessage(messages.balance)} */}
+                  {/* </TableHeaderCell> */}
                   <TableHeaderCell />
                 </TableRow>
               </TableHeader>
@@ -252,13 +252,13 @@ class RecentTransactions extends Component {
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
                           <TableCell>
-                            <div className={cn("badge-tag", this.getBadgeClass(row.type))}>
+                            <div className={cn('badge-tag', this.getBadgeClass(row.type))}>
                               {formatMessage(messages[row.type])}
                             </div>
-                            </TableCell>
-                          <TableCell className="balance">
-                            {row.balance}
                           </TableCell>
+                          {/* <TableCell className="balance"> */}
+                          {/* {row.balance} */}
+                          {/* </TableCell> */}
                           <TableCell>
                             <span
                               className="link"
