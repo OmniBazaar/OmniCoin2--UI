@@ -8,12 +8,16 @@ function generateKeyFromPassword(accountName, role, password) {
 }
 
 function decodeMemo(memo, key) {
-  return Aes.decrypt_with_checksum(
-    key.privKey,
-    key.pubKey !== memo.from ? memo.from : memo.to,
-    memo.nonce,
-    memo.message
-  ).toString('utf-8');
+  try {
+    return Aes.decrypt_with_checksum(
+      key.privKey,
+      key.pubKey !== memo.from ? memo.from : memo.to,
+      memo.nonce,
+      memo.message
+    ).toString('utf-8');
+  } catch (e) {
+    return '###';
+  }
 }
 
 export {

@@ -2,7 +2,7 @@ import {
   Apis,
   Manager
 } from 'omnibazaarjs-ws';
-import { FetchChain } from 'omnibazaarjs/es';
+import { FetchChain, TransactionHelper, Aes } from 'omnibazaarjs/es';
 
 import { nodesAddresses as nodes } from '../settings';
 
@@ -48,10 +48,29 @@ function calcBlockTime(blockNumber, globalObject, dynGlobalObject) {
   return new Date(headBlockTime - secondsBelow * 1000);
 }
 
+function memoObject(memo, fromAccount, toAccount, pKey) {
+  const memoFromKey = fromAccount.getIn(['options', 'memo_key']);
+  const memoToKey = toAccount.getIn(['options', 'memo_key']);
+  const nonce = TransactionHelper.unique_nonce_uint64();
+
+  return {
+    from: memoFromKey,
+    to: memoToKey,
+    nonce,
+    message: Aes.encrypt_with_checksum(
+      pKey,
+      memoToKey,
+      nonce,
+      memo
+    )
+  };
+}
+
 export {
   getDynGlobalObject,
   getGlobalObject,
   createConnection,
   calcBlockTime,
-  fetchAccount
+  fetchAccount,
+  memoObject
 };

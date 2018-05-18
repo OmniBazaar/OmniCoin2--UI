@@ -1,9 +1,34 @@
+@import '../../../../../../styles/index';
+
 .recent-transactions {
   .top-detail {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 8px;
+  }
+  .badge-tag {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    border-radius: 5px;
+    font-size: 9px;
+    &.pending {
+      border: 1px solid $primary-gray;
+      color: $primary-gray;
+    }
+    &.released {
+      border: 1px solid $green;
+      color: $green;
+    }
+    &.returned {
+      border: 1px solid $red;
+      color: $red;
+    }
+    &.transfer {
+      border: 1px solid $primary-blue;
+      color: $primary-blue;
+    }
   }
 }
 
