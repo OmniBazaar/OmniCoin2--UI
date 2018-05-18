@@ -1,12 +1,14 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 import DHTConnector from '../../../utils/dht-connector';
 
 const dhtConnector = new DHTConnector();
 
 export function* dhtSubscriber() {
-  yield takeEvery('DHT_CONNECT', connect);
-  yield takeEvery('DHT_GET_PEERS_FOR', getPeersFor);
-  yield takeEvery('DHT_FETCH_PEERS_DATA', fetchPeersData);
+  yield all([
+    takeEvery('DHT_CONNECT', connect),
+    takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
+    takeEvery('DHT_FETCH_PEERS_DATA', fetchPeersData),
+  ]);
 }
 
 export function* connect() {
