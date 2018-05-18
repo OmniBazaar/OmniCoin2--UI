@@ -11,6 +11,7 @@ import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 
 import FormField from '../FormField/FormField';
+import ModalFooter from '../../../../../../components/ModalFooter/ModalFooter';
 import { toggleAddAddressModal, addAddress } from '../../../../../../services/blockchain/bitcoin/bitcoinActions';
 import './add-bitcoin-address.scss';
 
@@ -80,20 +81,12 @@ class AddBitcoinAddress extends Component {
               message={formatMessage(messages.label)}
               component={FormField}
             />
-            <div className="footer">
-              <Button
-                className="button--transparent"
-                loading={loading}
-                content={formatMessage(messages.cancel)}
-                onClick={this.handleCancel}
-              />
-              <Button
-                className="button--primary"
-                loading={loading}
-                content={formatMessage(messages.add)}
-                type="submit"
-              />
-            </div>
+            <ModalFooter
+              cancelContent={formatMessage(messages.cancel)}
+              handleCancel={this.handleCancel}
+              successContent={formatMessage(messages.add)}
+              loading={loading}
+            />
           </Form>
         </Modal.Content>
       </Modal>

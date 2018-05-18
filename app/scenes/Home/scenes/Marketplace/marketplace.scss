@@ -103,9 +103,12 @@
         align-items: center;
         align-content: center;
         flex-basis: 180px;
+        margin-right: 20px;
+        border-radius: 4px;
 
         img.ui {
           margin-right: 20px;
+          display: initial !important;
         }
 
         &.blue {

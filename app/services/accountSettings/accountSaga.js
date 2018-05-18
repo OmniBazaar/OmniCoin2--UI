@@ -73,12 +73,10 @@ export function* updateAccount(payload) {
       ...payload
     }
   );
-  const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-  tr.add_signer(activeKey.privKey, activeKey.pubKey);
-  yield Promise.all([
-    tr.set_required_fees(),
-    tr.update_head_block()
-  ]).then(() => tr.broadcast());
+  const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+  yield tr.set_required_fees();
+  yield tr.add_signer(key.privKey, key.pubKey);
+  yield tr.broadcast();
 }
 
 export function* getRecentTransactions() {
@@ -100,8 +98,8 @@ export function* getRecentTransactions() {
       const el = history[i];
       if (!historyStorage.exists(el.id)) {
         const [from, to] = yield Promise.all([
-          FetchChain('getAccount', el.op[1].from),
-          FetchChain('getAccount', el.op[1].to)
+          FetchChain('getAccount', el.op[1].from ? el.op[1].from : el.op[1].buyer),
+          FetchChain('getAccount', el.op[1].to ? el.op[1].to : el.op[1].seller)
         ]);
         historyStorage.addOperation({
           id: el.id,

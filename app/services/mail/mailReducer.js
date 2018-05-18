@@ -21,6 +21,7 @@ const defaultState = {
   to: '',
   subject: '',
   body: '',
+  error: null,
   activeFolder: MailTypes.INBOX,
   activeMessage: 0,
   showCompose: false,
@@ -33,6 +34,8 @@ const reducer = handleActions({
     return {
       ...state,
       reply: false,
+      mailSent: false,
+      error: null,
       showCompose: !state.showCompose
     };
   },
@@ -66,7 +69,17 @@ const reducer = handleActions({
       ...state.messages,
       [action.messageFolder]: action.messages,
     }
-  })
+  }),
+  EMAIL_SENT_SUCCEEDED: (state, {}) => ({
+    ...state,
+    mailSent: true,
+    error: null,
+  }),
+  EMAIL_SENT_FAILED: (state, { error }) => ({
+    ...state,
+    mailSent: false,
+    error
+  }),
 }, defaultState);
 
 export default reducer;

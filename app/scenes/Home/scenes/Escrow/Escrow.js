@@ -5,7 +5,6 @@ import { Tab } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-
 import MyEscrowAgents from './scenes/MyEscrowAgents/MyEscrowAgents';
 import MyEscrowSettings from './scenes/MyEscrowSettings/MyEscrowSettings';
 import MyEscrowTransactions from './scenes/MyEscrowTransactions/MyEscrowTransactions';
@@ -15,7 +14,8 @@ import {
   loadEscrowTransactions,
   loadEscrowAgents,
   loadMyEscrowAgents,
-  getEscrowSettings
+  getEscrowSettings,
+  setPaginationMyEscrow
 } from '../../../../services/escrow/escrowActions';
 import './escrow.scss';
 
@@ -38,12 +38,21 @@ const messages = defineMessages({
   }
 });
 
+const rowsPerPage = 10;
+
 class Escrow extends Component {
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
     this.props.escrowActions.loadEscrowTransactions(username);
     this.props.escrowActions.loadMyEscrowAgents(username);
     this.props.escrowActions.getEscrowSettings();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.escrow.transactionsFiltered.length
+      && !this.props.escrow.transactionsFiltered.length) {
+      this.props.escrowActions.setPaginationMyEscrow(rowsPerPage);
+    }
   }
 
   render() {
@@ -92,7 +101,8 @@ Escrow.propTypes = {
   escrowActions: PropTypes.shape({
     loadEscrowTransactions: PropTypes.func,
     loadMyEscrowAgents: PropTypes.func,
-    getEscrowSettings: PropTypes.func
+    getEscrowSettings: PropTypes.func,
+    setPaginationMyEscrow: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -102,12 +112,16 @@ Escrow.propTypes = {
       username: PropTypes.string
     })
   }),
+  escrow: PropTypes.shape({
+    transactionsFiltered: PropTypes.array
+  }),
 };
 
 Escrow.defaultProps = {
   escrowActions: {},
   intl: {},
-  auth: {}
+  auth: {},
+  escrow: {}
 };
 
 export default connect(
@@ -117,7 +131,8 @@ export default connect(
       loadEscrowTransactions,
       loadMyEscrowAgents,
       getEscrowSettings,
-      loadEscrowAgents
+      loadEscrowAgents,
+      setPaginationMyEscrow
     }, dispatch),
   }),
 )(injectIntl(Escrow));
