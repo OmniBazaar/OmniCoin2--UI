@@ -19,6 +19,8 @@ import {
 } from 'semantic-ui-react';
 import { debounce } from 'lodash';
 import { ChainTypes } from 'omnibazaarjs/es';
+import cn from 'classnames';
+
 import Pagination from '../../../../../../components/Pagination/Pagination';
 
 import {
@@ -65,25 +67,25 @@ const messages = defineMessages({
     id: 'Settings.details',
     defaultMessage: 'DETAILS'
   },
-  type: {
+  status: {
     id: 'Settings.type',
-    defaultMessage: 'Type'
+    defaultMessage: 'Status'
   },
   [ChainTypes.operations.transfer]: {
     id: 'Settings.transfer',
-    defaultMessage: 'Transfer'
+    defaultMessage: 'TRANSFER'
   },
   [ChainTypes.operations.escrow_create_operation]: {
     id: 'Settings.pending',
-    defaultMessage: 'Pending'
+    defaultMessage: 'PENDING'
   },
   [ChainTypes.operations.escrow_return_operation]: {
     id: 'Settings.return',
-    defaultMessage: 'Returned'
+    defaultMessage: 'RETURNED'
   },
   [ChainTypes.operations.escrow_release_operation]: {
     id: 'Settings.release',
-    defaultMessage: 'Released'
+    defaultMessage: 'RELEASED'
   },
 });
 
@@ -126,6 +128,19 @@ class RecentTransactions extends Component {
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
+  }
+
+  getBadgeClass(type) {
+    switch(type) {
+      case ChainTypes.operations.escrow_create_operation:
+        return 'pending';
+      case ChainTypes.operations.transfer:
+        return 'transfer';
+      case ChainTypes.operations.escrow_release_operation:
+        return 'released';
+      case ChainTypes.operations.escrow_return_operation:
+        return 'returned'
+    }
   }
 
   render() {
@@ -202,10 +217,10 @@ class RecentTransactions extends Component {
                   </TableHeaderCell>
                   <TableHeaderCell
                     key="fee"
-                    sorted={sortColumn === 'type' ? sortDirection : null}
-                    onClick={this.sortData('type')}
+                    sorted={sortColumn === 'status' ? sortDirection : null}
+                    onClick={this.sortData('status')}
                   >
-                    {formatMessage(messages.type)}
+                    {formatMessage(messages.status)}
                   </TableHeaderCell>
                   <TableHeaderCell
                     key="balance"
@@ -236,7 +251,11 @@ class RecentTransactions extends Component {
                           <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
-                          <TableCell>{formatMessage(messages[row.type])}</TableCell>
+                          <TableCell>
+                            <div className={cn("badge-tag", this.getBadgeClass(row.type))}>
+                              {formatMessage(messages[row.type])}
+                            </div>
+                            </TableCell>
                           <TableCell className="balance">
                             {row.balance}
                           </TableCell>

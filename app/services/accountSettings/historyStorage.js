@@ -47,20 +47,27 @@ class HistoryStorage {
     return !!this.cache[id];
   }
 
-  addOperation(op) {
+  operationAmount(op) {
+    if (op.amount) {
+      return op.amount;
+    }
     if (op.operationType === ChainTypes.operations.escrow_release_operation
-        || op.operationType === ChainTypes.operations.escrow_return_operation) {
+      || op.operationType === ChainTypes.operations.escrow_return_operation) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       if (escrowTr) {
-        op.amount = escrowTr.amount;
+        return escrowTr.amount;
       }
     }
+  }
+
+  addOperation(op) {
     this.cache[op.id] = op;
   }
 
   findEscrowTransactionByResult(op) {
-    const filtered = Object.keys(this.cache).filter(i =>
-      this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation);
+    const filtered = Object.keys(this.cache).filter(i => {
+      return this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation
+    });
     return this.cache[filtered[0]];
   }
 
@@ -82,6 +89,7 @@ class HistoryStorage {
 
   getHistory() {
     const transactions = {};
+    console.log('CACHE ', this.cache);
     Object.keys(this.cache).forEach(i => {
       if (!this.includeOperation(this.cache[i])) {
         return;
@@ -104,9 +112,9 @@ class HistoryStorage {
         };
       }
       if (op.type === HistoryStorage.OperationTypes.deposit) {
-        transactions[trxKey].amount += op.amount;
+        transactions[trxKey].amount += this.operationAmount(op);
       } else {
-        transactions[trxKey].amount -= op.amount;
+        transactions[trxKey].amount -= this.operationAmount(op);
       }
       if (op.type === HistoryStorage.OperationTypes.withdraw) {
         transactions[trxKey].fee += op.fee;
@@ -123,8 +131,8 @@ class HistoryStorage {
   }
 
   clear() {
-    this.cache = [];
-    localStorage.setItem(key + this.accountName, null);
+    this.cache = {};
+    localStorage.setItem(key + this.accountName, JSON.stringify({}));
   }
 }
 
