@@ -9,6 +9,10 @@ const {
   setContinuous,
   addImage,
   removeImage,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites
 } = createActions({
   GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
@@ -18,6 +22,10 @@ const {
   SET_CONTINUOUS: () => ({}),
   ADD_IMAGE: (image) => ({ image }),
   REMOVE_IMAGE: (imageIndex) => ({ imageIndex }),
+  IS_FAVORITE: (listingDetailId) => ({ listingDetailId }),
+  ADD_TO_FAVORITES: (listingDetail) => ({ listingDetail }),
+  REMOVE_FROM_FAVORITES: (listingDetailId) => ({ listingDetailId }),
+  GET_FAVORITES: () => ({}),
 });
 
 export {
@@ -29,4 +37,8 @@ export {
   setContinuous,
   addImage,
   removeImage,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites
 };

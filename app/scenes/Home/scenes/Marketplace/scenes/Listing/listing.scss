@@ -130,11 +130,16 @@
         display: flex;
         justify-content: space-between;
 
+        button {
+          text-transform: uppercase;
+        }
+
         .buy-wrapper {
           display: flex;
 
           button {
             margin-right: 15px;
+            text-transform: uppercase;
           }
 
           span.react-numeric-input {

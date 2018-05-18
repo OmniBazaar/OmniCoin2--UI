@@ -9,6 +9,10 @@ import {
   setOmnicoinPrice,
   addImage,
   removeImage,
+  addToFavorites,
+  removeFromFavorites,
+  isFavorite,
+  getFavorites
 } from './listingActions';
 
 const CoinTypes = Object.freeze({
@@ -23,10 +27,50 @@ const defaultState = {
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
-  addedImages: []
+  isFavorite: false,
+  addedImages: [],
+  favoriteListings: []
 };
 
 const reducer = handleActions({
+  [getFavorites](state) {
+    // localStorage.removeItem('favoritesListings');
+    const favorites = localStorage.getItem('favoritesListings');
+    const favoriteListings = favorites ? JSON.parse(favorites) : [];
+    return {
+      ...state,
+      favoriteListings
+    };
+  },
+  [isFavorite](state, { payload: { listingDetailId } }) {
+    const index = state.favoriteListings.length > 0 ?
+      state.favoriteListings.findIndex(x => x.id === listingDetailId) : -1;
+    return {
+      ...state,
+      isFavorite: index !== -1
+    };
+  },
+  [addToFavorites](state, { payload: { listingDetail } }) {
+    const favoriteListings = [...state.favoriteListings, listingDetail];
+    localStorage.setItem('favoritesListings', JSON.stringify(favoriteListings));
+    return {
+      ...state,
+      favoriteListings
+    };
+  },
+  [removeFromFavorites](state, { payload: { listingDetailId } }) {
+    const index = state.favoriteListings.length > 0 ?
+      state.favoriteListings.findIndex(x => x.id === listingDetailId) : -1;
+    const favoriteListings = [
+      ...state.favoriteListings.slice(0, index),
+      ...state.favoriteListings.slice(index + 1)
+    ];
+    localStorage.setItem('favoritesListings', favoriteListings);
+    return {
+      ...state,
+      favoriteListings
+    };
+  },
   [getListingDetail](state, { payload: { listingDetail } }) {
     return {
       ...state,
