@@ -123,7 +123,6 @@ export function* getRecentTransactions() {
       ChainTypes.operations.escrow_return_operation
     ].includes(el.op[0]));
     const historyStorage = new HistoryStorage(currentUser.username);
-    historyStorage.clear();
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
       if (!historyStorage.exists(el.id)) {

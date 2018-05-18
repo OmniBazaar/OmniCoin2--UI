@@ -51,7 +51,8 @@ class HistoryStorage {
     if (op.amount) {
       return op.amount;
     }
-    if (op.operationType === ChainTypes.operations.escrow_release_operation) {
+    if (op.operationType === ChainTypes.operations.escrow_release_operation
+        || op.operationType === ChainTypes.operations.escrow_return_operation) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       return escrowTr.amount;
     }
