@@ -2,7 +2,7 @@ import omnibazaarDHT from 'omnibazaar-dht';
 
 let connector;
 
-const dhtConnector = {
+export default class DHTConnector {
   /**
    * Creates a new instance of the connector
    *
@@ -13,26 +13,19 @@ const dhtConnector = {
    *
    * @returns {Promise}
    */
-  async init({
+  init = async ({
     host,
     publishers = [],
     keywords = [],
     canPublish = true,
-  } = {}) {
+  } = {}) => {
     connector = omnibazaarDHT({ host, bootstrap: publishers });
 
     await connector.connect({ keywords, asPublisher: canPublish })
       .catch(console.log);
 
     return connector;
-  },
-
-  /**
-   * @returns {boolean}
-   */
-  alreadyConnected() {
-    return !!connector;
-  },
+  }
 
   /**
    * Will try to reconnect to the DHT if no connected already
@@ -44,7 +37,7 @@ const dhtConnector = {
    *
    * @returns {Promise}
    */
-  reconnectIfNeeded({
+  async reconnectIfNeeded({
     host,
     publishers = [],
     keywords = [],
@@ -59,8 +52,8 @@ const dhtConnector = {
       });
     }
 
-    return Promise.resolve(connector);
-  },
+    return connector;
+  }
 
   /**
    *
@@ -72,7 +65,5 @@ const dhtConnector = {
     await this.reconnectIfNeeded();
 
     return connector.findPeersFor(text);
-  },
-};
-
-export default dhtConnector;
+  }
+}

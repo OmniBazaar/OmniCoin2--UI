@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import dhtConnector from '../../../utils/dht-connector';
+import DHTConnector from '../../../utils/dht-connector';
 
-const { init, findPeersFor } = dhtConnector;
+const dhtConnector = new DHTConnector();
 
 export function* dhtSubscriber() {
   yield takeEvery('DHT_CONNECT', connect);
@@ -11,7 +11,7 @@ export function* dhtSubscriber() {
 
 export function* connect() {
   try {
-    const connector = yield call(init, {});
+    const connector = yield call(dhtConnector.init, {});
 
     yield put({ type: 'DHT_CONNECT_SUCCEEDED', connector });
   } catch (e) {
@@ -21,7 +21,7 @@ export function* connect() {
 
 export function* getPeersFor({ payload }) {
   try {
-    const { peers, noPeers } = yield call(findPeersFor.bind(dhtConnector), payload);
+    const { peers, noPeers } = yield call(dhtConnector.findPeersFor.bind(dhtConnector), payload);
     const finalPeers = noPeers ? [] : peers;
 
     yield put({ type: 'DHT_FETCH_PEERS_DATA', fetchResult: { peers: finalPeers, keyword: payload } });
