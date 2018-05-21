@@ -21,6 +21,8 @@ import CurrencyDropdown from './components/CurrencyDropdown';
 import ConditionDropdown from './components/ConditionDropdown';
 import UnitDropdown from './components/UnitDropdown';
 import ContactDropdown from './components/ContactDropdown';
+import CountryDropdown from './components/CountryDropdown';
+import StateDropdown from './components/StateDropdown';
 
 import {
   setBitcoinPrice,
@@ -326,10 +328,7 @@ class AddListing extends Component {
   addListingForm() {
     const { formatMessage } = this.props.intl;
 
-    let category = null;
-    if (this.props.formValues) {
-      category = this.props.formValues.category;
-    }
+    const { category, country } = this.props.formValues ? this.props.formValues : {};
 
     return (
       <Form className="add-listing-form">
@@ -351,7 +350,7 @@ class AddListing extends Component {
             <Grid.Column width={12}>
               <Field
                 type="text"
-                name="listingTitle"
+                name="listing_title"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
@@ -398,7 +397,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="pricePerItem"
+                name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.renderLabeledField}
                 className="textfield"
@@ -453,7 +452,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="numberAvailable"
+                name="quantity"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
@@ -476,7 +475,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="fromDate"
+                name="start_date"
                 placeholder={formatMessage(messages.from)}
                 component={this.renderCalendarField}
                 className="textfield"
@@ -485,7 +484,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="toDate"
+                name="end_date"
                 placeholder={formatMessage(messages.to)}
                 component={this.renderCalendarField}
                 className="textfield"
@@ -584,7 +583,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="ownerName"
+                name="name"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
@@ -616,11 +615,12 @@ class AddListing extends Component {
               <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.country)}
-                options={placingTypeOptions}
+              <Field
+                name='country'
+                component={CountryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.country)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -646,17 +646,19 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.state)}
-                options={placingTypeOptions}
+              <Field
+                name='state'
+                component={StateDropdown}
+                props={{
+                  placeholder: formatMessage(messages.state),
+                  country
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="postalCode"
+                name="post_code"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
