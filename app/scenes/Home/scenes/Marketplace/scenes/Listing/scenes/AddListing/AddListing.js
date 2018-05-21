@@ -17,6 +17,7 @@ import AddIcon from '../../../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
 import CategoryDropdown from './components/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown';
+import CurrencyDropdown from './components/CurrencyDropdown';
 
 import {
   setBitcoinPrice,
@@ -351,7 +352,7 @@ class AddListing extends Component {
             </Grid.Column>
             <Grid.Column width={6}>
               <Field
-                name='subCategory'
+                name='subcategory'
                 component={SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
@@ -365,11 +366,12 @@ class AddListing extends Component {
               <span>{formatMessage(messages.pricing)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.currency)}
-                options={placingTypeOptions}
+              <Field
+                name='currency'
+                component={CurrencyDropdown}
+                props={{
+                  placeholder: formatMessage(messages.currency)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
