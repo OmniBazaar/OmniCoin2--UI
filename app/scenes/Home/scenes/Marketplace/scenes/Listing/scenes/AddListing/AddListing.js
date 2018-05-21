@@ -4,7 +4,7 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import DatePicker from 'react-datepicker';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
@@ -15,6 +15,8 @@ import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CalendarIcon from '../../../../../../images/icn-calendar.svg';
 import AddIcon from '../../../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
+import CategoryDropdown from './components/CategoryDropdown';
+import SubCategoryDropdown from './components/SubCategoryDropdown';
 
 import {
   setBitcoinPrice,
@@ -302,6 +304,11 @@ class AddListing extends Component {
   addListingForm() {
     const { formatMessage } = this.props.intl;
 
+    let category = null;
+    if (this.props.formValues) {
+      category = this.props.formValues.category;
+    }
+
     return (
       <Form className="add-listing-form">
         <Grid>
@@ -333,28 +340,23 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.placing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.type)}
-                options={placingTypeOptions}
+            <Grid.Column width={6}>
+              <Field
+                name='category'
+                component={CategoryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.category)
+                }}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.category)}
-                options={placingTypeOptions}
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.subCategory)}
-                options={placingTypeOptions}
+            <Grid.Column width={6}>
+              <Field
+                name='subCategory'
+                component={SubCategoryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.subCategory),
+                  parentCategory: category
+                }}
               />
             </Grid.Column>
           </Grid.Row>
@@ -725,8 +727,15 @@ AddListing.defaultProps = {
 };
 
 export default compose(
+  reduxForm({
+    form: 'addListingForm',
+    destroyOnUnmount: true,
+  }),
   connect(
-    state => ({ ...state.default }),
+    state => ({
+      ...state.default,
+      formValues: getFormValues('addListingForm')(state)
+    }),
     (dispatch) => ({
       listingActions: bindActionCreators({
         setBitcoinPrice,
@@ -735,10 +744,9 @@ export default compose(
         addImage,
         removeImage
       }, dispatch),
+      formActions: bindActionCreators({
+        change: (field, value) => change('addListingForm', field, value)
+      }, dispatch)
     }),
   ),
-  reduxForm({
-    form: 'addListingForm',
-    destroyOnUnmount: true,
-  }),
 )(injectIntl(AddListing));
