@@ -60,11 +60,16 @@ class StateDropdown extends Component {
 
 StateDropdown.propTypes = {
 	placeholder: PropTypes.string.isRequired,
-	country: PropTypes.string.isRequired,
+	country: PropTypes.string,
   input: PropTypes.shape({
   	onChange: PropTypes.func,
   	value: PropTypes.string
   })
 };
+
+StateDropdown.defaultProps = {
+	country: '',
+	input: {}
+}
 
 export default StateDropdown;

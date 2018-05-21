@@ -5,14 +5,11 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
-import DatePicker from 'react-datepicker';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
 
-import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
 import { getFileExtension } from '../../../../../../../../utils/file';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import CalendarIcon from '../../../../../../images/icn-calendar.svg';
 import AddIcon from '../../../../../../images/btn-add-image.svg';
 import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
 import CategoryDropdown from './components/CategoryDropdown';
@@ -23,6 +20,8 @@ import UnitDropdown from './components/UnitDropdown';
 import ContactDropdown from './components/ContactDropdown';
 import CountryDropdown from './components/CountryDropdown';
 import StateDropdown from './components/StateDropdown';
+import Checkbox from './components/Checkbox';
+import Calendar from './components/Calendar';
 
 import {
   setBitcoinPrice,
@@ -34,12 +33,8 @@ import {
 
 import './add-listing.scss';
 
-require('react-datepicker/dist/react-datepicker-cssmodules.css');
-
 const iconSize = 42;
 const iconSizeLarge = 23;
-const iconSizeMedium = 20;
-const iconSizeSmall = 15;
 
 const messages = defineMessages({
   myListings: {
@@ -100,11 +95,11 @@ const messages = defineMessages({
   },
   bitcoinPrice: {
     id: 'AddListing.bitcoinPrice',
-    defaultMessage: 'Add Bitcoin Price'
+    defaultMessage: 'Show Bitcoin Price'
   },
   omnicoinPrice: {
     id: 'AddListing.omnicoinPrice',
-    defaultMessage: 'Add Omnicoin Price'
+    defaultMessage: 'Show Omnicoin Price'
   },
   additionalInfo: {
     id: 'AddListing.additionalInfo',
@@ -112,7 +107,7 @@ const messages = defineMessages({
   },
   condition: {
     id: 'AddListing.condition',
-    defaultMessage: 'Condition'
+    defaultMessage: 'Enter condition'
   },
   numberAvailable: {
     id: 'AddListing.numberAvailable',
@@ -224,14 +219,6 @@ const messages = defineMessages({
   },
 });
 
-const placingTypeOptions = [
-  {
-    key: 'all',
-    value: 'all',
-    text: 'All'
-  },
-];
-
 const contactOmniMessage = 'OmniMessage';
 
 class AddListing extends Component {
@@ -241,10 +228,6 @@ class AddListing extends Component {
       open: false
     };
   }
-
-  toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPrice();
-  toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPrice();
-  toggleContinuous = () => this.props.listingActions.setContinuous();
 
   renderLabeledField = ({
     input, placeholder, buttonText
@@ -258,20 +241,6 @@ class AddListing extends Component {
       />
       <Button className="copy-btn button--gray-text">
         {buttonText}
-      </Button>
-    </div>
-  );
-
-  renderCalendarField = ({
-    placeholder
-  }) => (
-    <div className="hybrid-input">
-      <DatePicker
-        placeholderText={placeholder}
-        onChange={this.handleChange}
-      />
-      <Button className="copy-btn button--gray-text">
-        <Image src={CalendarIcon} width={iconSizeSmall} height={iconSizeSmall} />
       </Button>
     </div>
   );
@@ -408,32 +377,22 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleBitcoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.bitcoinPrice)}
-                  </div>
-                </div>
-              </div>
+              <Field
+                name='price_using_btc'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.bitcoinPrice)
+                }}
+              />
             </Grid.Column>
             <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleOmnicoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.omnicoinPrice)}
-                  </div>
-                </div>
-              </div>
+              <Field
+                name='price_using_omnicoin'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.omnicoinPrice)
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -476,33 +435,32 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="start_date"
-                placeholder={formatMessage(messages.from)}
-                component={this.renderCalendarField}
+                component={Calendar}
                 className="textfield"
+                props={{
+                  placeholder: formatMessage(messages.from)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
                 type="text"
                 name="end_date"
-                placeholder={formatMessage(messages.to)}
-                component={this.renderCalendarField}
+                component={Calendar}
                 className="textfield"
+                props={{
+                  placeholder: formatMessage(messages.to)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleContinuous}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.continuous)}
-                  </div>
-                </div>
-              </div>
+              <Field
+                name='continuous'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.continuous)
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 
