@@ -51,6 +51,7 @@ class SubCategoryDropdown extends Component {
 	}
 
 	render() {
+		const { value } = this.props.input;
 		return (
 			<Dropdown
         compact
@@ -58,6 +59,7 @@ class SubCategoryDropdown extends Component {
         placeholder={this.props.placeholder}
         options={this.getCategories()}
         onChange={this.onChange.bind(this)}
+        value={value}
       />
 		);
 	}
@@ -65,11 +67,15 @@ class SubCategoryDropdown extends Component {
 
 SubCategoryDropdown.propTypes = {
 	placeholder: PropTypes.string.isRequired,
-	parentCategory: PropTypes.string.isRequired,
+	parentCategory: PropTypes.string,
 	intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   input: PropTypes.object.isRequired
+};
+
+SubCategoryDropdown.defaultProps = {
+	parentCategory: null
 };
 
 export default injectIntl(SubCategoryDropdown)

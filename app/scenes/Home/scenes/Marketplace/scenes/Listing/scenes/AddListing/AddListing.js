@@ -18,6 +18,9 @@ import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg
 import CategoryDropdown from './components/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown';
 import CurrencyDropdown from './components/CurrencyDropdown';
+import ConditionDropdown from './components/ConditionDropdown';
+import UnitDropdown from './components/UnitDropdown';
+import ContactDropdown from './components/ContactDropdown';
 
 import {
   setBitcoinPrice,
@@ -227,6 +230,8 @@ const placingTypeOptions = [
   },
 ];
 
+const contactOmniMessage = 'OmniMessage';
+
 class AddListing extends Component {
   constructor(props) {
     super(props);
@@ -269,6 +274,13 @@ class AddListing extends Component {
     </div>
   );
 
+  componentWillMount() {
+    this.props.initialize({
+      contact_type: contactOmniMessage,
+      contact_info: this.props.auth.currentUser.username
+    });
+  }
+
   onImageChange(event) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
@@ -281,6 +293,15 @@ class AddListing extends Component {
         reader.readAsDataURL(event.target.files[0]);
       }
     }
+  }
+
+  onContactTypeChange(e, newValue) {
+    let contactInfo = '';
+    if (newValue === contactOmniMessage) {
+      contactInfo = this.props.auth.currentUser.username;
+    }
+
+    this.props.formActions.change('contact_info', contactInfo);
   }
 
   onClickAddImage = () => {
@@ -421,11 +442,12 @@ class AddListing extends Component {
               <span>{formatMessage(messages.additionalInfo)}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.condition)}
-                options={placingTypeOptions}
+              <Field
+                name='condition'
+                component={ConditionDropdown}
+                props={{
+                  placeholder: formatMessage(messages.condition)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -438,11 +460,12 @@ class AddListing extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.unitsOfMeasure)}
-                options={placingTypeOptions}
+              <Field
+                name='units'
+                component={UnitDropdown}
+                props={{
+                  placeholder: formatMessage(messages.unitsOfMeasure)
+                }}
               />
             </Grid.Column>
           </Grid.Row>
@@ -568,17 +591,19 @@ class AddListing extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.preferredContact)}
-                options={placingTypeOptions}
+              <Field
+                name='contact_type'
+                component={ContactDropdown}
+                onChange={this.onContactTypeChange.bind(this)}
+                props={{
+                  placeholder: formatMessage(messages.preferredContact)
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
                 type="text"
-                name="preferredContactDetail"
+                name="contact_info"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
@@ -720,12 +745,18 @@ AddListing.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  })
 };
 
 AddListing.defaultProps = {
   listingActions: {},
   listing: {},
   intl: {},
+  auth: {}
 };
 
 export default compose(

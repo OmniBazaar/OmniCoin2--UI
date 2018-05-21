@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import currencies from '../../../../../../commons/currencies';
+import units from '../../../../../../commons/units';
 
-class CurrencyDropdown extends Component {
+class UnitDropdown extends Component {
 	componentWillMount() {
 		const { formatMessage } = this.props.intl;
-		this.options = Object.keys(currencies).map(id => {
+		this.options = Object.keys(units).map(id => {
 			return {
 				value: id,
-				text: formatMessage(currencies[id])
+				text: formatMessage(units[id])
 			}
 		});
 	}
@@ -23,7 +23,7 @@ class CurrencyDropdown extends Component {
 	}
 
 	render() {
-		const { value } = this.props.input;
+    const { value } = this.props.input;
 		return (
 			<Dropdown
         compact
@@ -37,7 +37,7 @@ class CurrencyDropdown extends Component {
 	}
 };
 
-CurrencyDropdown.propTypes = {
+UnitDropdown.propTypes = {
 	placeholder: PropTypes.string.isRequired,
 	intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -45,4 +45,4 @@ CurrencyDropdown.propTypes = {
   input: PropTypes.object.isRequired
 };
 
-export default injectIntl(CurrencyDropdown)
+export default injectIntl(UnitDropdown)

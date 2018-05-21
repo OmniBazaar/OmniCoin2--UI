@@ -28,6 +28,7 @@ class CategoryDropdown extends Component {
 	}
 
 	render() {
+		const { value } = this.props.input;
 		return (
 			<Dropdown
         compact
@@ -35,6 +36,7 @@ class CategoryDropdown extends Component {
         placeholder={this.props.placeholder}
         options={this.options}
         onChange={this.onChange.bind(this)}
+        value={value}
       />
 		);
 	}
