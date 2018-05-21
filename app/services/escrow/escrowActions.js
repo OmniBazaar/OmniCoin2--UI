@@ -12,7 +12,9 @@ const {
   loadMyEscrowAgents,
   getEscrowAgentsCount,
   releaseEscrowTransaction,
-  returnEscrowTransaction
+  returnEscrowTransaction,
+  setActivePageMyEscrow,
+  setPaginationMyEscrow
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
@@ -27,8 +29,10 @@ createActions({
   CLEAR_ESCROW_AGENTS: () => ({}),
   LOAD_MY_ESCROW_AGENTS: (username) => ({ username }),
   GET_ESCROW_AGENTS_COUNT: () => ({}),
-  RELEASE_ESCROW_TRANSACTION: (escrowObject) => ({ escrowObject }),
-  RETURN_ESCROW_TRANSACTION: (escrowObject) => ({ escrowObject })
+  RELEASE_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),
+  RETURN_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),
+  SET_PAGINATION_MY_ESCROW: (rowsPerPageMyEscrow) => ({ rowsPerPageMyEscrow }),
+  SET_ACTIVE_PAGE_MY_ESCROW: (activePageMyEscrow) => ({ activePageMyEscrow })
 });
 
 export {
@@ -43,5 +47,7 @@ export {
   loadMyEscrowAgents,
   getEscrowAgentsCount,
   releaseEscrowTransaction,
-  returnEscrowTransaction
+  returnEscrowTransaction,
+  setActivePageMyEscrow,
+  setPaginationMyEscrow
 };

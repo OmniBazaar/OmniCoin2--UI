@@ -9,6 +9,7 @@ import { required } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 
 import FormField from '../../../FormField/FormField';
+import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
 import {
   toggleModal,
   createWallet,
@@ -151,21 +152,13 @@ class NewWallet extends Component {
           <div />
           <span className="email-tooltip">{formatMessage(messages.message)}</span>
         </div>
-        <div className="footer">
-          <Button
-            className="button--transparent"
-            content={formatMessage(messages.cancel)}
-            loading={loading}
-            onClick={this.handleCancel}
-          />
-          <Button
-            className="button--primary"
-            disabled={!valid}
-            loading={loading}
-            content={formatMessage(messages.createWallet)}
-            type="submit"
-          />
-        </div>
+        <ModalFooter
+          successContent={formatMessage(messages.createWallet)}
+          cancelContent={formatMessage(messages.cancel)}
+          handleCancel={this.handleCancel}
+          loading={loading}
+          disabled={!valid}
+        />
       </Form>
     );
   }

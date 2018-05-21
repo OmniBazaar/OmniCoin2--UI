@@ -11,10 +11,8 @@ import TabsData from '../../../../components/TabsData/TabsData';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
-import {
-  getSearchResults,
-  filterSearchResults
-} from '../../../../../../../../services/search/searchActions';
+import { getSearchResults } from '../../../../../../../../services/search/searchActions';
+import { dhtGetPeersFor } from '../../../../../../../../services/search/dht/dhtActions';
 
 import './search-results.scss';
 
@@ -411,7 +409,7 @@ class SearchResults extends Component {
   // setSearchText = () => this.props.searchActions.setSearchText();
 
   onSearch = () => {
-    this.props.searchActions.filterSearchResults(this.searchInput.value);
+    this.props.searchActions.dhtGetPeersFor(this.searchInput.value);
   };
 
   renderButtonField = ({
@@ -538,7 +536,7 @@ SearchResults.propTypes = {
   }),
   searchActions: PropTypes.shape({
     getSearchResults: PropTypes.func,
-    filterSearchResults: PropTypes.func,
+    dhtGetPeersFor: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -557,12 +555,12 @@ export default compose(
     (dispatch) => ({
       searchActions: bindActionCreators({
         getSearchResults,
-        filterSearchResults
+        dhtGetPeersFor,
       }, dispatch),
-    }),
+    })
   ),
   reduxForm({
     form: 'searchForm',
     destroyOnUnmount: true,
-  }),
+  })
 )(injectIntl(SearchResults));

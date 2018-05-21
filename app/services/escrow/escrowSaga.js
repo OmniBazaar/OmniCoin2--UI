@@ -122,20 +122,26 @@ function* getEscrowAgentsCount() {
 }
 
 
-function* releaseEscrowTransaction({ payload: { escrowObject } }) {
+function* releaseEscrowTransaction({ payload: { escrowObject, votes } }) {
   try {
+    const keys = Object.keys(votes);
     const { currentUser } = (yield select()).default.auth;
-    const [payingAcc, buyerAcc, escrowAcc] = yield Promise.all([
+    const [payingAcc, buyerAcc, escrowAcc, sellerAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
       FetchChain('getAccount', escrowObject.buyer),
-      FetchChain('getAccount', escrowObject.escrow)
+      FetchChain('getAccount', escrowObject.escrow),
+      FetchChain('getAccount', escrowObject.seller)
     ]);
     const tr = new TransactionBuilder();
     tr.add_type_operation('escrow_release_operation', {
       fee_paying_account: payingAcc.get('id'),
       escrow: escrowObject.transactionID,
       buyer_account: buyerAcc.get('id'),
-      escrow_account: escrowAcc.get('id')
+      escrow_account: escrowAcc.get('id'),
+      seller_account: sellerAcc.get('id'),
+      [`reputation_vote_for_${keys[0]}`]: votes[keys[0]],
+      [`reputation_vote_for_${keys[1]}`]: votes[keys[1]],
+      [`reputation_vote_for_${keys[2]}`]: votes[keys[2]],
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();
@@ -148,20 +154,26 @@ function* releaseEscrowTransaction({ payload: { escrowObject } }) {
   }
 }
 
-function* returnEscrowTransaction({ payload: { escrowObject } }) {
+function* returnEscrowTransaction({ payload: { escrowObject, votes } }) {
   try {
+    const keys = Object.keys(votes);
     const { currentUser } = (yield select()).default.auth;
-    const [payingAcc, sellerAcc, escrowAcc] = yield Promise.all([
+    const [payingAcc, sellerAcc, escrowAcc, buyerAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
       FetchChain('getAccount', escrowObject.seller),
-      FetchChain('getAccount', escrowObject.escrow)
+      FetchChain('getAccount', escrowObject.escrow),
+      FetchChain('getAccount', escrowObject.buyer)
     ]);
     const tr = new TransactionBuilder();
     tr.add_type_operation('escrow_return_operation', {
       fee_paying_account: payingAcc.get('id'),
       escrow: escrowObject.transactionID,
       seller_account: sellerAcc.get('id'),
-      escrow_account: escrowAcc.get('id')
+      escrow_account: escrowAcc.get('id'),
+      buyer_account: buyerAcc.get('id'),
+      [`reputation_vote_for_${keys[0]}`]: votes[keys[0]],
+      [`reputation_vote_for_${keys[1]}`]: votes[keys[1]],
+      [`reputation_vote_for_${keys[2]}`]: votes[keys[2]]
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();

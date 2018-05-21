@@ -22,6 +22,7 @@ import { toastr } from 'react-redux-toastr';
 import { FetchChain } from 'omnibazaarjs/es';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import './transfer.scss';
 import {
@@ -29,6 +30,7 @@ import {
   getCommonEscrows,
   createEscrowTransaction
 } from '../../../../services/transfer/transferActions';
+import { reputationOptions } from '../../../../services/utils';
 
 
 const messages = defineMessages({
@@ -70,7 +72,7 @@ const messages = defineMessages({
   },
   reputation: {
     id: 'Transfer.reputation',
-    defaultMessage: 'Reputation'
+    defaultMessage: 'Rate your deal'
   },
   memo: {
     id: 'Transfer.memo',
@@ -176,20 +178,6 @@ class Transfer extends Component {
     }
   };
 
-  static reputationOptions() {
-    const options = [];
-
-    for (let index = 0; index < 11; index++) {
-      const option = {
-        key: index,
-        value: index,
-        text: index - 5
-      };
-      options.push(option);
-    }
-
-    return options;
-  }
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -260,7 +248,9 @@ class Transfer extends Component {
     ) {
       this.hideEscrow();
       toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
-    } else if (!nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow) {
+    } else if (this.props.transfer.gettingCommonEscrows
+                && !nextProps.transfer.gettingCommonEscrows
+                && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
   }
@@ -362,11 +352,27 @@ class Transfer extends Component {
       <div className="transfer-input">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
-          type="text"
           className="textfield"
           defaultValue={options[0].value}
           options={options}
           onChange={(param, data) => input.onChange(data.value)}
+        />
+      </div>
+    );
+  };
+
+  renderDealRatingField = ({
+    input, options, meta: { touched, error }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+      <div className="transfer-input">
+        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        <DealRating
+          selectedValue={options[input.value] || options[5]}
+          options={options}
+          onChange={(data) => input.onChange(data.value)}
         />
       </div>
     );
@@ -457,16 +463,6 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>{formatMessage(messages.reputation)}</span>
-            <Field
-              type="text"
-              name="reputation"
-              options={Transfer.reputationOptions()}
-              component={this.renderSelectField}
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
             <span>{formatMessage(messages.memo)}</span>
             <Field
               type="text"
@@ -533,6 +529,20 @@ class Transfer extends Component {
               ]
             )
           }
+          {!this.props.transferForm.useEscrow &&
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <span style={{ marginBottom: '25px' }}>
+                {formatMessage(messages.reputation)}
+              </span>
+              <Field
+                type="text"
+                name="reputation"
+                options={reputationOptions()}
+                component={this.renderDealRatingField}
+              />
+              <div className="col-1" />
+            </div>
+          }
           <div className="form-group">
             <span />
             <div className="field left floated">
@@ -564,7 +574,8 @@ class Transfer extends Component {
         values.toName,
         values.escrow,
         values.amount,
-        values.transferToEscrow
+        values.transferToEscrow,
+        values.memo
       );
     } else {
       this.props.transferActions.submitTransfer(values);

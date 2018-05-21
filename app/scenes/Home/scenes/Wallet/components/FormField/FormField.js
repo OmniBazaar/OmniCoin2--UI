@@ -1,7 +1,8 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import './form-field.scss';
 import PropTypes from 'prop-types';
+
+import './form-field.scss';
 
 const FormField = ({
   input, placeholder, type, message, meta: { touched, error }, intl
