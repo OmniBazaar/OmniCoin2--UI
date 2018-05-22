@@ -23,22 +23,22 @@ import CountryDropdown from './components/CountryDropdown';
 import StateDropdown from './components/StateDropdown';
 import Checkbox from './components/Checkbox';
 import Calendar from './components/Calendar';
+import Images from './components/images';
 import messages from './messages';
 import ValidatableField,
   { makeValidatableField } from '../../../../../../../../components/ValidatableField';
 
 import {
-  setBitcoinPrice,
-  setOmnicoinPrice,
-  setContinuous,
   addImage,
-  removeImage
+  removeImage,
+  setImages
 } from '../../../../../../../../services/listing/listingActions';
 
 import './add-listing.scss';
 
 const iconSize = 42;
 const iconSizeLarge = 23;
+const maxFileLimit = 10;
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -50,7 +50,8 @@ class AddListing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      images: []
     };
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -87,6 +88,7 @@ class AddListing extends Component {
       contact_type: contactOmniMessage,
       contact_info: this.props.auth.currentUser.username
     });
+    this.props.listingActions.setImages([]);
   }
 
   onImageChange(event) {
@@ -327,19 +329,7 @@ class AddListing extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <input
-                ref={(ref) => { this.inputElement = ref; }}
-                type="file"
-                onChange={this.onImageChange.bind(this)}
-                className="filetype"
-                accept="image/*"
-              />
-              <div className="images-wrapper">
-                {this.addedImages()}
-                <Button className="add-img-button" onClick={() => this.onClickAddImage()}>
-                  <Image src={AddIcon} width={iconSize} height={iconSize} />
-                </Button>
-              </div>
+              <Images />
             </Grid.Column>
           </Grid.Row>
 
@@ -549,11 +539,9 @@ class AddListing extends Component {
 
 AddListing.propTypes = {
   listingActions: PropTypes.shape({
-    setBitcoinPrice: PropTypes.func,
-    setOmnicoinPrice: PropTypes.func,
-    setContinuous: PropTypes.func,
     addImage: PropTypes.func,
     removeImage: PropTypes.func,
+    setImages: PropTypes.func
   }),
   listing: PropTypes.shape({
     bitcoinPrice: PropTypes.bool,
@@ -590,11 +578,9 @@ export default compose(
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
-        setBitcoinPrice,
-        setOmnicoinPrice,
-        setContinuous,
         addImage,
-        removeImage
+        removeImage,
+        setImages
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('addListingForm', field, value)

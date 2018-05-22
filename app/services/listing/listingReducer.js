@@ -9,6 +9,7 @@ import {
   setOmnicoinPrice,
   addImage,
   removeImage,
+  setImages
 } from './listingActions';
 
 const CoinTypes = Object.freeze({
@@ -23,7 +24,7 @@ const defaultState = {
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
-  addedImages: []
+  listingImages: []
 };
 
 const reducer = handleActions({
@@ -65,21 +66,32 @@ const reducer = handleActions({
       isContinuous: !state.isContinuous
     };
   },
-  [addImage](state, { payload: { image } }) {
+  [addImage](state, { payload: { file } }) {
     return {
       ...state,
-      addedImages: [...state.addedImages, image]
+      listingImages: [
+        ...state.listingImages,
+        {
+          file,
+          uploading: true
+        }
+      ]
     };
   },
   [removeImage](state, { payload: { imageIndex } }) {
     return {
       ...state,
-      addedImages: [
-        ...state.addedImages.slice(0, imageIndex),
-        ...state.addedImages.slice(imageIndex + 1)
-      ],
+      listingImages: state.listingImages.filter((img, index)=>{
+        return index !== imageIndex;
+      })
     };
   },
+  [setImages](state, { payload: { images } }) {
+    return {
+      ...state,
+      listingImages: images ? images : []
+    }
+  }
 }, defaultState);
 
 export default reducer;

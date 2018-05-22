@@ -9,6 +9,7 @@ const {
   setContinuous,
   addImage,
   removeImage,
+  setImages
 } = createActions({
   GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
@@ -16,8 +17,9 @@ const {
   SET_BITCOIN_PRICE: () => ({}),
   SET_OMNICOIN_PRICE: () => ({}),
   SET_CONTINUOUS: () => ({}),
-  ADD_IMAGE: (image) => ({ image }),
+  ADD_IMAGE: (file) => ({ file }),
   REMOVE_IMAGE: (imageIndex) => ({ imageIndex }),
+  SET_IMAGES: (images) => ({ images })
 });
 
 export {
@@ -29,4 +31,5 @@ export {
   setContinuous,
   addImage,
   removeImage,
+  setImages
 };
