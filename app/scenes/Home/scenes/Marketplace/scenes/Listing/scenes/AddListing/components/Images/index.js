@@ -3,16 +3,20 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Image, Button } from 'semantic-ui-react';
+import shortid from 'shortid';
 import AddIcon from '../../../../../../../../images/btn-add-image.svg';
 import { getFileExtension } from '../../../../../../../../../../utils/file';
 import {
-  addImage,
-  removeImage
+  uploadListingImage
 } from '../../../../../../../../../../services/listing/listingActions';
 import ImageItem from './image';
 
 const imageLimit = 10;
 const iconSize = 42;
+
+const getImageId = () => {
+	return shortid.generate();
+}
 
 class Images extends Component {
 	onClickAddImage() {
@@ -23,18 +27,21 @@ class Images extends Component {
 		let files =this.inputElement.files;
 		if (files && files.length) {
 			const file = files[0];
-      const { addImage } = this.props.listingActions;
+      const { uploadListingImage } = this.props.listingActions;
 
       if (file.type.match('image.*')) {
-      	addImage(file);
+      	const imageId = getImageId();
+      	uploadListingImage(file, imageId);
       }
     }
 	}
 
 	renderImages() {
-		return this.props.listingImages.map((image, index) => {
+		return Object.keys(this.props.listingImages).map((imageId) => {
 			return (
-				<ImageItem key={index} image={image} index={index} />
+				<ImageItem key={imageId}
+					imageId={imageId}
+					image={this.props.listingImages[imageId]} />
 			);
 		});
 	}
@@ -62,10 +69,9 @@ class Images extends Component {
 
 Images.propTypes = {
 	listingActions: PropTypes.shape({
-		addImage: PropTypes.func,
-		removeImage: PropTypes.func
+		uploadListingImage: PropTypes.func
 	}).isRequired,
-	listingImages: PropTypes.array.isRequired
+	listingImages: PropTypes.object.isRequired
 };
 
 const mapState = state => {
@@ -77,8 +83,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
 	return {
 		listingActions: bindActionCreators({
-      addImage,
-      removeImage
+      uploadListingImage
     }, dispatch)
 	}
 };

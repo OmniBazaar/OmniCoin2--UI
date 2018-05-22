@@ -88,7 +88,7 @@ class AddListing extends Component {
       contact_type: contactOmniMessage,
       contact_info: this.props.auth.currentUser.username
     });
-    this.props.listingActions.setImages([]);
+    this.props.listingActions.setImages(null);
   }
 
   onImageChange(event) {

@@ -7,9 +7,11 @@ import {
   setBitcoinPrice,
   setContinuous,
   setOmnicoinPrice,
-  addImage,
-  removeImage,
-  setImages
+  addListingImage,
+  removeListingImage,
+  setListingImages,
+  uploadListingImageSuccess,
+  uploadListingImageError
 } from './listingActions';
 
 const CoinTypes = Object.freeze({
@@ -24,7 +26,7 @@ const defaultState = {
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
-  listingImages: []
+  listingImages: {}
 };
 
 const reducer = handleActions({
@@ -66,31 +68,83 @@ const reducer = handleActions({
       isContinuous: !state.isContinuous
     };
   },
-  [addImage](state, { payload: { file } }) {
+  [addListingImage](state, { payload: { file, imageId } }) {
     return {
       ...state,
-      listingImages: [
+      listingImages: {
         ...state.listingImages,
-        {
+        [imageId] : {
           file,
-          uploading: true
+          uploading: true,
+          id: imageId
         }
-      ]
+      }
     };
   },
-  [removeImage](state, { payload: { imageIndex } }) {
+  [removeListingImage](state, { payload: { imageId } }) {
+    let listingImages = {
+      ...state.listingImages
+    };
+    delete listingImages[imageId];
     return {
       ...state,
-      listingImages: state.listingImages.filter((img, index)=>{
-        return index !== imageIndex;
-      })
+      listingImages: listingImages
     };
   },
-  [setImages](state, { payload: { images } }) {
+  [setListingImages](state, { payload: { images } }) {
     return {
       ...state,
-      listingImages: images ? images : []
+      listingImages: images ? images : {}
     }
+  },
+  [uploadListingImageSuccess](state, {
+    payload: {
+      imageId,
+      image,
+      thumb,
+      fileName
+    }
+  }) {
+    if (state.listingImages[imageId]) {
+      let imageItem = {
+        ...state.listingImages[imageId],
+        uploading: false,
+        image,
+        thumb,
+        fileName,
+        file: null
+      };
+
+      return {
+        ...state,
+        listingImages: {
+          ...state.listingImages,
+          [imageId]: imageItem
+        }
+      };
+    }
+
+    return state;
+  },
+  [uploadListingImageError](state, { payload: { imageId, error } }) {
+    if (state.listingImages[imageId]) {
+      let imageItem = {
+        ...state.listingImages[imageId],
+        uploading: false,
+        error,
+        file: null
+      };
+
+      return {
+        ...state,
+        listingImages: {
+          ...state.listingImages,
+          [imageId]: imageItem
+        }
+      };
+    }
+
+    return state;
   }
 }, defaultState);
 

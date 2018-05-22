@@ -74,7 +74,7 @@ ImageItem.propTypes = {
 		file: PropTypes.object,
 		uploading: PropTypes.bool
 	}).isRequired,
-	index: PropTypes.number.isRequired
+	imageId: PropTypes.string.isRequired
 };
 
 export default ImageItem;
