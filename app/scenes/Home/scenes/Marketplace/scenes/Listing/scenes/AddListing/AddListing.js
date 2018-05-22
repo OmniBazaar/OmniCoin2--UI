@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
+import { required } from 'redux-form-validators';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
 
@@ -22,6 +23,9 @@ import CountryDropdown from './components/CountryDropdown';
 import StateDropdown from './components/StateDropdown';
 import Checkbox from './components/Checkbox';
 import Calendar from './components/Calendar';
+import messages from './messages';
+import ValidatableField,
+  { makeValidatableField } from '../../../../../../../../components/ValidatableField';
 
 import {
   setBitcoinPrice,
@@ -36,190 +40,11 @@ import './add-listing.scss';
 const iconSize = 42;
 const iconSizeLarge = 23;
 
-const messages = defineMessages({
-  myListings: {
-    id: 'AddListing.myListings',
-    defaultMessage: 'My Listings'
-  },
-  createListing: {
-    id: 'AddListing.createListing',
-    defaultMessage: 'Create Listing'
-  },
-  primaryInfo: {
-    id: 'AddListing.primaryInfo',
-    defaultMessage: 'Primary Info'
-  },
-  importListings: {
-    id: 'AddListing.importListings',
-    defaultMessage: 'IMPORT LISTINGS'
-  },
-  listingTitle: {
-    id: 'AddListing.listingTitle',
-    defaultMessage: 'Listing Title'
-  },
-  pleaseEnter: {
-    id: 'AddListing.pleaseEnter',
-    defaultMessage: 'Please enter'
-  },
-  placing: {
-    id: 'AddListing.placing',
-    defaultMessage: 'Placing'
-  },
-  type: {
-    id: 'AddListing.type',
-    defaultMessage: 'Type'
-  },
-  category: {
-    id: 'AddListing.category',
-    defaultMessage: 'Category'
-  },
-  subCategory: {
-    id: 'AddListing.subCategory',
-    defaultMessage: 'Sub-category'
-  },
-  pricing: {
-    id: 'AddListing.pricing',
-    defaultMessage: 'Pricing'
-  },
-  currency: {
-    id: 'AddListing.currency',
-    defaultMessage: 'Currency'
-  },
-  pricePerItem: {
-    id: 'AddListing.pricePerItem',
-    defaultMessage: 'Price per item'
-  },
-  na: {
-    id: 'AddListing.na',
-    defaultMessage: 'N/A'
-  },
-  bitcoinPrice: {
-    id: 'AddListing.bitcoinPrice',
-    defaultMessage: 'Show Bitcoin Price'
-  },
-  omnicoinPrice: {
-    id: 'AddListing.omnicoinPrice',
-    defaultMessage: 'Show Omnicoin Price'
-  },
-  additionalInfo: {
-    id: 'AddListing.additionalInfo',
-    defaultMessage: 'Additional Info'
-  },
-  condition: {
-    id: 'AddListing.condition',
-    defaultMessage: 'Enter condition'
-  },
-  numberAvailable: {
-    id: 'AddListing.numberAvailable',
-    defaultMessage: 'Number Available'
-  },
-  unitsOfMeasure: {
-    id: 'AddListing.unitsOfMeasure',
-    defaultMessage: 'Units of Measure'
-  },
-  listingDates: {
-    id: 'AddListing.listingDates',
-    defaultMessage: 'Listing Dates'
-  },
-  optional: {
-    id: 'AddListing.optional',
-    defaultMessage: '(Optional)'
-  },
-  from: {
-    id: 'AddListing.from',
-    defaultMessage: 'From'
-  },
-  to: {
-    id: 'AddListing.to',
-    defaultMessage: 'To'
-  },
-  continuous: {
-    id: 'AddListing.continuous',
-    defaultMessage: 'continuous'
-  },
-  images: {
-    id: 'AddListing.images',
-    defaultMessage: 'Images'
-  },
-  listingImages: {
-    id: 'AddListing.listingImages',
-    defaultMessage: 'Listing Images'
-  },
-  description: {
-    id: 'AddListing.description',
-    defaultMessage: 'Description'
-  },
-  keywordsSearch: {
-    id: 'AddListing.keywordsSearch',
-    defaultMessage: 'Keywords for search engine'
-  },
-  keywordCommas: {
-    id: 'AddListing.keywordCommas',
-    defaultMessage: 'Keywords separated by commas'
-  },
-  owner: {
-    id: 'AddListing.owner',
-    defaultMessage: 'Owner'
-  },
-  ownerDetails: {
-    id: 'AddListing.ownerDetails',
-    defaultMessage: 'Owner Details'
-  },
-  ownerName: {
-    id: 'AddListing.ownerName',
-    defaultMessage: 'Owner Name'
-  },
-  preferredContact: {
-    id: 'AddListing.preferredContact',
-    defaultMessage: 'Preferred contact'
-  },
-  enterPreferredContact: {
-    id: 'AddListing.enterPreferredContact',
-    defaultMessage: 'Enter preferred contact'
-  },
-  location: {
-    id: 'AddListing.location',
-    defaultMessage: 'Location'
-  },
-  country: {
-    id: 'AddListing.country',
-    defaultMessage: 'Country'
-  },
-  address: {
-    id: 'AddListing.address',
-    defaultMessage: 'Address'
-  },
-  city: {
-    id: 'AddListing.city',
-    defaultMessage: 'City'
-  },
-  state: {
-    id: 'AddListing.state',
-    defaultMessage: 'State'
-  },
-  postalCode: {
-    id: 'AddListing.postalCode',
-    defaultMessage: 'Postal Code'
-  },
-  createListingCaps: {
-    id: 'AddListing.createListingCaps',
-    defaultMessage: 'CREATE LISTING'
-  },
-  warning: {
-    id: 'AddListing.warning',
-    defaultMessage: 'Warning'
-  },
-  ok: {
-    id: 'AddListing.ok',
-    defaultMessage: 'Ok'
-  },
-  onlyImagesMsg: {
-    id: 'AddListing.onlyImagesMsg',
-    defaultMessage: 'Only jpg/jpeg and png files are allowed.'
-  },
-});
-
 const contactOmniMessage = 'OmniMessage';
+
+const requiredFieldValidator = [
+  required({ message: messages.fieldRequired })
+];
 
 class AddListing extends Component {
   constructor(props) {
@@ -227,6 +52,18 @@ class AddListing extends Component {
     this.state = {
       open: false
     };
+
+    this.CategoryDropdown = makeValidatableField(CategoryDropdown);
+    this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.ConditionDropdown = makeValidatableField(ConditionDropdown);
+    this.UnitDropdown = makeValidatableField(UnitDropdown);
+    this.ContactDropdown = makeValidatableField(ContactDropdown);
+    this.CountryDropdown = makeValidatableField(CountryDropdown);
+    this.StateDropdown = makeValidatableField(StateDropdown);
+    this.Calendar = makeValidatableField(Calendar);
+    this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
+    this.PriceInput = makeValidatableField(this.renderLabeledField);
   }
 
   renderLabeledField = ({
@@ -294,13 +131,17 @@ class AddListing extends Component {
     ));
   }
 
+  submit(values) {
+    console.log(values)
+  }
+
   addListingForm() {
     const { formatMessage } = this.props.intl;
-
     const { category, country } = this.props.formValues ? this.props.formValues : {};
+    const { handleSubmit } = this.props;
 
     return (
-      <Form className="add-listing-form">
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
@@ -320,9 +161,10 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="listing_title"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -330,23 +172,25 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.placing)}</span>
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={6} className='align-top'>
               <Field
                 name='category'
-                component={CategoryDropdown}
+                component={this.CategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.category)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={6} className='align-top'>
               <Field
                 name='subcategory'
-                component={SubCategoryDropdown}
+                component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
                   parentCategory: category
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -354,23 +198,25 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.pricing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='currency'
-                component={CurrencyDropdown}
+                component={this.CurrencyDropdown}
                 props={{
                   placeholder: formatMessage(messages.currency)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
-                component={this.renderLabeledField}
+                component={this.PriceInput}
                 className="textfield"
                 buttonText={formatMessage(messages.na)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -399,31 +245,33 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.additionalInfo)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='condition'
-                component={ConditionDropdown}
+                component={this.ConditionDropdown}
                 props={{
                   placeholder: formatMessage(messages.condition)
                 }}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="quantity"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='units'
-                component={UnitDropdown}
+                component={this.UnitDropdown}
                 props={{
                   placeholder: formatMessage(messages.unitsOfMeasure)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -431,26 +279,28 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.listingDates)} {formatMessage(messages.optional)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="start_date"
-                component={Calendar}
+                component={this.Calendar}
                 className="textfield"
                 props={{
                   placeholder: formatMessage(messages.from)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="end_date"
-                component={Calendar}
+                component={this.Calendar}
                 className="textfield"
                 props={{
                   placeholder: formatMessage(messages.to)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -507,9 +357,10 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="keywords"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -521,9 +372,10 @@ class AddListing extends Component {
               <Field
                 type="textarea"
                 name="description"
-                component="textarea"
+                component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -538,32 +390,35 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.ownerDetails)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="name"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='contact_type'
-                component={ContactDropdown}
+                component={this.ContactDropdown}
                 onChange={this.onContactTypeChange.bind(this)}
                 props={{
                   placeholder: formatMessage(messages.preferredContact)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="contact_info"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -572,48 +427,52 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='country'
-                component={CountryDropdown}
+                component={this.CountryDropdown}
                 props={{
                   placeholder: formatMessage(messages.country)
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="address"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="city"
-                component="input"
+                component={ValidatableField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 name='state'
-                component={StateDropdown}
+                component={this.StateDropdown}
                 props={{
                   placeholder: formatMessage(messages.state),
                   country
                 }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="post_code"
@@ -626,7 +485,7 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button content={formatMessage(messages.createListingCaps)} className="button--green-bg" />
+              <Button type='submit' content={formatMessage(messages.createListingCaps)} className="button--green-bg" />
             </Grid.Column>
           </Grid.Row>
         </Grid>

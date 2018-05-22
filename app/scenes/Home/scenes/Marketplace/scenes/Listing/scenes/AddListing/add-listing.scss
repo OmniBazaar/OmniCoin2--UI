@@ -39,6 +39,10 @@
               margin-top: 8px;
             }
 
+            &.align-top {
+              align-items: flex-start;
+            }
+
             .ui.compact.dropdown {
               min-width: 100%;
               background-color: $lighter-blue;
