@@ -10,14 +10,24 @@ import {
 	uploadListingImageError,
 	startDeleteListingImage,
 	deleteListingImageSuccess,
-	deleteListingImageError
+	deleteListingImageError,
+	saveListingSuccess,
+	saveListingError,
+	deleteListingSuccess,
+	deleteListingError
 } from './listingActions';
-import { saveImage, deleteImage } from './apis';
+import {
+	saveImage,
+	deleteImage,
+	saveListing,
+	deleteListing
+} from './apis';
 
 export function* listingSubscriber() {
   yield all([
     takeEvery('UPLOAD_LISTING_IMAGE', uploadImage),
-    takeEvery('DELETE_LISTING_IMAGE', removeImage)
+    takeEvery('DELETE_LISTING_IMAGE', removeImage),
+    takeEvery('SAVE_LISTING', saveListingHandler)
   ]);
 }
 
@@ -50,4 +60,8 @@ function* removeImage({ payload: { image } }) {
 		console.log(err);
 		yield put(deleteListingImageError(id, err));
 	}
+}
+
+function* saveListingHandler({ payload: { listing, listingId } }) {
+	console.log('FROM SAGA');
 }

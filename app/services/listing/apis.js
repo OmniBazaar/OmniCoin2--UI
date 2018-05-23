@@ -37,7 +37,7 @@ export const saveImage = async file => {
 		}
 	};
 
-	let body = await request(options);
+	const body = await request(options);
 	return JSON.parse(body);
 }
 
@@ -51,7 +51,55 @@ export const deleteImage = async (fileName) => {
 		json: true
 	};
 
-	let body = await request(options);
+	const body = await request(options);
 	
+	return body;
+}
+
+export const saveListing = async (listing) => {
+	const publiser = await getPubliser();
+
+	let options = {
+		method: 'POST',
+		uri: `${publiser}/listings`,
+		headers: getAuthHeaders(),
+		json: true,
+		body: {
+			...listings
+		}
+	};
+
+	const body = await request(options);
+	return body;
+}
+
+export const editListing = async (listingId, listing) => {
+	const publiser = await getPubliser();
+
+	let options = {
+		method: 'PUT',
+		uri: `${publiser}/listings/${listingId}`,
+		headers: getAuthHeaders(),
+		json: true,
+		body: {
+			...listings
+		}
+	};
+
+	const body = await request(options);
+	return body;
+}
+
+export const deleteListing = async (listingId) => {
+	const publiser = await getPubliser();
+
+	let options = {
+		method: 'DELETE',
+		uri: `${publiser}/listings/${listingId}`,
+		headers: getAuthHeaders(),
+		json: true
+	};
+
+	const body = await request(options);
 	return body;
 }

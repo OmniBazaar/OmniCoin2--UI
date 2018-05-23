@@ -15,6 +15,14 @@ import {
   uploadListingImageSuccess,
   uploadListingImageError,
   clearListingImageError,
+  resetSaveListing,
+  saveListing,
+  saveListingSuccess,
+  saveListingError,
+  resetDeleteListing,
+  deleteListing,
+  deleteListingSuccess,
+  deleteListingError,
   addToFavorites,
   removeFromFavorites,
   isFavorite,
@@ -35,7 +43,18 @@ const defaultState = {
   isContinuous: false,
   isFavorite: false,
   favoriteListings: [],
-  listingImages: {}
+  listingImages: {},
+  saveListing: {
+    saving: false,
+    error: null,
+    listing: null,
+    listingId: null
+  },
+  deleteListing: {
+    deleting: false,
+    error: null,
+    listingId: null
+  }
 };
 
 const reducer = handleActions({
@@ -248,6 +267,62 @@ const reducer = handleActions({
     }
 
     return state;
+  },
+  [resetSaveListing](state) {
+    return {
+      ...state,
+      saveListing: {
+        saving: false,
+        error: null,
+        listing: null,
+        listingId: null
+      }
+    };
+  },
+  [saveListing](state, { payload: { listing, listingId } }) {
+    return {
+      ...state,
+      saveListing: {
+        ...state.saveListing,
+        saving: true,
+        error: null,
+        listing,
+        listingId
+      }
+    };
+  },
+  [saveListingSuccess](state, { payload: { listingId, listing } }) {
+    return {
+      ...state,
+      saveListing: {
+        ...state.saveListing,
+        saving: false,
+        error: null,
+        listing,
+        listingId
+      }
+    };
+  },
+  [saveListingError](state, { payload: { listingId, error } }) {
+    return {
+      ...state,
+      saveListing: {
+        ...state.saveListing,
+        saving: false,
+        error,
+        listingId
+      }
+    }
+  },
+  [resetDeleteListing](state) {
+    return {
+      ...state,
+      deleteListing: {
+        deleting: false,
+        error: null,
+        listingId: null
+      }
+    };
   }
 }, defaultState);
 

@@ -26,7 +26,8 @@ import ValidatableField,
   { makeValidatableField } from '../../../../../../../../components/ValidatableField';
 
 import {
-  setListingImages
+  setListingImages,
+  saveListing
 } from '../../../../../../../../services/listing/listingActions';
 
 import './add-listing.scss';
@@ -95,6 +96,9 @@ class AddListing extends Component {
 
   submit(values) {
     console.log(values)
+    const { saveListing } = this.props.listingActions;
+
+    saveListing(values);
   }
 
   addListingForm() {
@@ -529,7 +533,8 @@ export default compose(
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
-        setListingImages
+        setListingImages,
+        saveListing
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('addListingForm', field, value)
