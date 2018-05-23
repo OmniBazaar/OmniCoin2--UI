@@ -29,6 +29,7 @@ import {
   processorsSubscriber,
   bitcoinSubscriber,
   transferSubscriber,
+  wsMarketplaceSaga,
   dhtSubscriber,
   listingSubscriber
 } from './services/saga';
@@ -78,6 +79,7 @@ sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);
+sagaMiddleware.run(wsMarketplaceSaga);
 sagaMiddleware.run(dhtSubscriber);
 sagaMiddleware.run(listingSubscriber);
 
@@ -111,4 +113,3 @@ if (module.hot) {
     );
   });
 }
-

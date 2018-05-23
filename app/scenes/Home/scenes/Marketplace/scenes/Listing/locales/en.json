@@ -32,5 +32,6 @@
   "Listing.byDate": "By Date",
   "Listing.lowestPrice": "Lowest Price",
   "Listing.highestPrice": "Highest Price",
-  "Listing.marketplace": "Marketplace"
+  "Listing.marketplace": "Marketplace",
+  "Listing.removeFromFavorites": "Remove From Favorites"
 }

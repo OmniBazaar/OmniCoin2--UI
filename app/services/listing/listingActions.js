@@ -12,7 +12,11 @@ const {
   setImages,
   uploadListingImage,
   uploadListingImageSuccess,
-  uploadListingImageError
+  uploadListingImageError,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites
 } = createActions({
   GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
@@ -30,7 +34,11 @@ const {
     thumb,
     fileName
   }),
-  UPLOAD_LISTING_IMAGE_ERROR: (imageId, error) => ({ imageId, error })
+  UPLOAD_LISTING_IMAGE_ERROR: (imageId, error) => ({ imageId, error }),
+  IS_FAVORITE: (listingDetailId) => ({ listingDetailId }),
+  ADD_TO_FAVORITES: (listingDetail) => ({ listingDetail }),
+  REMOVE_FROM_FAVORITES: (listingDetailId) => ({ listingDetailId }),
+  GET_FAVORITES: () => ({}),
 });
 
 export {
@@ -45,5 +53,9 @@ export {
   setImages,
   uploadListingImage,
   uploadListingImageSuccess,
-  uploadListingImageError
+  uploadListingImageError,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites
 };

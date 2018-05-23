@@ -23,6 +23,7 @@ import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
 import Listing from './scenes/Marketplace/scenes/Listing/Listing';
 import MyListings from './scenes/Marketplace/scenes/Listing/scenes/MyListings/MyListings';
+import FavoriteListings from './scenes/Marketplace/scenes/Listing/scenes/FavoriteListings/FavoriteListings';
 import AddListing from './scenes/Marketplace/scenes/Listing/scenes/AddListing/AddListing';
 import MyListingsDefaults from './scenes/Marketplace/scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
 import ImportListings from './scenes/Marketplace/scenes/Listing/scenes/ImportListings/ImportListings';
@@ -206,8 +207,9 @@ class Home extends Component {
             <Route path="/support" render={(props) => <Support {...props} />} />
             <Route path="/transfer" render={(props) => <Transfer {...props} />} />
             <Route path="/wallet" render={(props) => <Wallet {...props} />} />
-            <Route path="/listing/:id/:name" render={(props) => <Listing {...props} />} />
+            <Route path="/listing/:id" render={(props) => <Listing {...props} />} />
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
+            <Route path="/favorite-listings" render={(props) => <FavoriteListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
             <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
             <Route path="/import-listings" render={(props) => <ImportListings {...props} />} />

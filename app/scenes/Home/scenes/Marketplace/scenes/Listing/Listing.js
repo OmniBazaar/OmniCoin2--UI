@@ -20,10 +20,15 @@ import UserIcon from './images/icn-users-review.svg';
 
 import './listing.scss';
 
-import { getListingDetail } from '../../../../../../services/listing/listingActions';
+import {
+  getListingDetail,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites
+} from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
-
 const isUserOwner = false;
 
 const listing = {
@@ -32,6 +37,8 @@ const listing = {
   name: 'Farco Jewelry',
   description: 'If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched',
   date: '2018-04-03',
+  category: 'For sale',
+  subCategory: 'Design',
   seller: {
     username: 'eugen1879',
     phone: '+1 50112223',
@@ -139,17 +146,28 @@ const messages = defineMessages({
     id: 'Listing.addToFavorites',
     defaultMessage: 'ADD TO FAVORITES'
   },
+  removeFromFavorites: {
+    id: 'Listing.removeFromFavorites',
+    defaultMessage: 'REMOVE FROM FAVORITES'
+  },
 });
 
 class Listing extends Component {
   componentDidMount() {
     window.addEventListener('resize', this.setGallerySize.bind(this));
     this.setGallerySize();
-    this.fetchFeatureList();
+    this.props.listingActions.getListingDetail(listing);
+    this.props.listingActions.getFavorites();
   }
 
-  fetchFeatureList() {
-    this.props.listingActions.getListingDetail(listing);
+  componentWillReceiveProps(nextProps) {
+    const { props } = this;
+    const { listingDetail, favoriteListings } = props.listing;
+
+    if (listingDetail.id !== nextProps.listing.listingDetail.id ||
+      favoriteListings.length !== nextProps.listing.favoriteListings.length) {
+      props.listingActions.isFavorite(nextProps.listing.listingDetail.id);
+    }
   }
 
   setGallerySize() {
@@ -231,6 +249,15 @@ class Listing extends Component {
   };
 
   addToFavorites = () => {
+    const { props } = this;
+    const { listingDetail } = props.listing;
+    props.listingActions.addToFavorites(listingDetail);
+  };
+
+  removeFromFavorites = () => {
+    const { props } = this;
+    const { listingDetail } = props.listing;
+    props.listingActions.removeFromFavorites(listingDetail.id);
   };
 
   reportListing = () => {
@@ -259,11 +286,19 @@ class Listing extends Component {
             onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
           />
         </div>
-        <Button
-          onClick={() => this.addToFavorites()}
-          content={formatMessage(messages.addToFavorites)}
-          className="button--transparent"
-        />
+        {this.props.listing.isFavorite ?
+          <Button
+            onClick={() => this.removeFromFavorites()}
+            content={formatMessage(messages.removeFromFavorites)}
+            className="button--transparent"
+          />
+          :
+          <Button
+            onClick={() => this.addToFavorites()}
+            content={formatMessage(messages.addToFavorites)}
+            className="button--transparent"
+          />
+        }
         <Button
           onClick={() => this.reportListing()}
           content={formatMessage(messages.report)}
@@ -398,9 +433,15 @@ class Listing extends Component {
 Listing.propTypes = {
   listingActions: PropTypes.shape({
     getListingDetail: PropTypes.func,
+    isFavorite: PropTypes.func,
+    addToFavorites: PropTypes.func,
+    removeFromFavorites: PropTypes.func,
+    getFavorites: PropTypes.func,
   }),
   listing: PropTypes.shape({
     listingDetail: PropTypes.object,
+    favoriteListings: PropTypes.array,
+    isFavorite: PropTypes.bool,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -417,7 +458,11 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      getListingDetail
+      isFavorite,
+      getListingDetail,
+      addToFavorites,
+      removeFromFavorites,
+      getFavorites
     }, dispatch),
   }),
 )(injectIntl(Listing));
