@@ -8,7 +8,8 @@ import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
-import { wsMarketplaceSaga } from './marketplace/wsSaga';
+import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
+import { searchSubscriber } from './search/searchSaga';
 
 export {
   connectionSubscriber,
@@ -21,5 +22,6 @@ export {
   bitcoinSubscriber,
   transferSubscriber,
   dhtSubscriber,
-  wsMarketplaceSaga
+  wsMarketplaceSubscriber,
+  searchSubscriber
 };

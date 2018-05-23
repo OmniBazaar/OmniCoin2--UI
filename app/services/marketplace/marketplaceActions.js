@@ -10,7 +10,6 @@ const {
   getCryptoBazaarList,
   setActiveCategory,
   getRecentSearches,
-
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,

@@ -79,6 +79,7 @@ const reducer = handleActions({
       savedSearches: sortedData
     };
   },
+
 }, defaultState);
 
 export default reducer;

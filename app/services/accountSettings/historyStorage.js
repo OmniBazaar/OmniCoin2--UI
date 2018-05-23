@@ -1,10 +1,12 @@
 import { orderBy } from 'lodash';
 
+import BaseStorage from '../../utils/baseStorage';
+
 const key = 'historyStorage';
 
-class HistoryStorage {
+class HistoryStorage extends BaseStorage{
   constructor(accountName) {
-    this.accountName = accountName;
+    super(key, accountName);
     this.cache = this.getData();
     if (!this.cache) {
       this.init();
@@ -17,13 +19,6 @@ class HistoryStorage {
     deposit: 'deposit'
   });
 
-  init() {
-    localStorage.setItem(key + this.accountName, JSON.stringify({}));
-  }
-
-  getData() {
-    return JSON.parse(localStorage.getItem(key + this.accountName));
-  }
 
   static updateBalances(transactions) {
     if (transactions.length) {
@@ -85,7 +80,7 @@ class HistoryStorage {
   }
 
   save() {
-    localStorage.setItem(key + this.accountName, JSON.stringify(this.cache));
+    super.save(this.cache);
   }
 }
 

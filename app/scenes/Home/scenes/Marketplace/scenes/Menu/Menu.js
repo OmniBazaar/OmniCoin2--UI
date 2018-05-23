@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
-import { Button, Image, Popup, Form, Dropdown, Icon, Grid } from 'semantic-ui-react';
+import { Button, Image, Popup, Form, Dropdown, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
-import { Field, reduxForm } from 'redux-form';
-import hash from 'object-hash';
 
-import Checkbox from '../../../../../../components/Checkbox/Checkbox';
+import SearchMenu from './components/SearchMenu/SearchMenu';
 
 import AddIcon from '../../images/btn-add-listing.svg';
-import SearchIcon from '../../images/btn-search-norm.svg';
 import UserIcon from '../../images/btn-user-menu-norm.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
 
-import {
-  setActiveCategory,
-  getRecentSearches
-} from '../../../../../../services/marketplace/marketplaceActions';
 
 import {
   saleCategories,
@@ -40,32 +33,6 @@ const iconSizeMedium = 15;
 const iconSizeSmall = 12;
 const maxSearches = 5;
 
-const recentSearchesList = [
-  {
-    id: 1,
-    date: '2018-04-19',
-    search: 'car',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 2,
-    date: '2018-04-19',
-    search: 'motorcycles',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 3,
-    date: '2018-04-20',
-    search: 'cars',
-    filters: ['USA', 'Lowest price'],
-  },
-  {
-    id: 4,
-    date: '2018-04-20',
-    search: 'jewelry',
-    filters: [],
-  },
-];
 
 const messages = defineMessages({
   addListing: {
@@ -103,27 +70,8 @@ const messages = defineMessages({
   recent: {
     id: 'Menu.recent',
     defaultMessage: 'Recent'
-  },
-  extendedSearch: {
-    id: 'Menu.extendedSearch',
-    defaultMessage: 'Extended Search'
-  },
-  viewAll: {
-    id: 'Menu.viewAll',
-    defaultMessage: 'VIEW ALL'
-  },
-  default: {
-    id: 'Menu.default',
-    defaultMessage: 'Default'
-  },
+  }
 });
-
-const options = [
-  { key: 1, text: 'All Categories', value: 'all' },
-  { key: 2, text: 'Category 1', value: 'category1' },
-  { key: 3, text: 'Category 2', value: 'category2' },
-  { key: 4, text: 'Category 3', value: 'category3' },
-];
 
 class Menu extends Component {
   static getValue(category) {
@@ -136,9 +84,7 @@ class Menu extends Component {
     return categoryName;
   }
 
-  componentDidMount() {
-    this.props.marketplaceActions.getRecentSearches(recentSearchesList);
-  }
+
 
   menuTitle(category) {
     const { props } = this;
@@ -209,7 +155,6 @@ class Menu extends Component {
   renderForSaleSubMenu() {
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(mainCategories.forSale);
-
     return (
       <Popup
         trigger={this.menuTitle(mainCategories.forSale)}
@@ -224,31 +169,9 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {this.renderOption(saleCategories.antiques, mainCategories.forSale)}
-            {this.renderOption(saleCategories.appliances, mainCategories.forSale)}
-            {this.renderOption(saleCategories.artsCrafts, mainCategories.forSale)}
-            {this.renderOption(saleCategories.babyChild, mainCategories.forSale)}
-            {this.renderOption(saleCategories.barter, mainCategories.forSale)}
-            {this.renderOption(saleCategories.beautyHealth, mainCategories.forSale)}
-            {this.renderOption(saleCategories.bikes, mainCategories.forSale)}
-            {this.renderOption(saleCategories.boats, mainCategories.forSale)}
-            {this.renderOption(saleCategories.books, mainCategories.forSale)}
-            {this.renderOption(saleCategories.business, mainCategories.forSale)}
-            {this.renderOption(saleCategories.carsTrucks, mainCategories.forSale)}
-            {this.renderOption(saleCategories.cdDvd, mainCategories.forSale)}
-            {this.renderOption(saleCategories.farmGarden, mainCategories.forSale)}
-            {this.renderOption(saleCategories.free, mainCategories.forSale)}
-            {this.renderOption(saleCategories.furniture, mainCategories.forSale)}
-            {this.renderOption(saleCategories.garageSale, mainCategories.forSale)}
-            {this.renderOption(saleCategories.general, mainCategories.forSale)}
-            {this.renderOption(saleCategories.heavyEquip, mainCategories.forSale)}
-            {this.renderOption(saleCategories.household, mainCategories.forSale)}
-            {this.renderOption(saleCategories.jewelry, mainCategories.forSale)}
-            {this.renderOption(saleCategories.materials, mainCategories.forSale)}
-            {this.renderOption(saleCategories.motorcycles, mainCategories.forSale)}
-            {this.renderOption(saleCategories.musicalInstruments, mainCategories.forSale)}
-            {this.renderOption(saleCategories.photoVideo, mainCategories.forSale)}
-            {this.renderOption(saleCategories.rvCampers, mainCategories.forSale)}
+            {Object.keys(saleCategories).map(
+              key => this.renderOption(saleCategories[key], mainCategories.forSale)
+            )}
           </div>
         </div>
       </Popup>
@@ -273,25 +196,9 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {this.renderOption(servicesCategories.automotive, mainCategories.services)}
-            {this.renderOption(servicesCategories.beautyPersonal, mainCategories.services)}
-            {this.renderOption(servicesCategories.computerIT, mainCategories.services)}
-            {this.renderOption(servicesCategories.creative, mainCategories.services)}
-            {this.renderOption(servicesCategories.dental, mainCategories.services)}
-            {this.renderOption(servicesCategories.eventMgmt, mainCategories.services)}
-            {this.renderOption(servicesCategories.farmGarden, mainCategories.services)}
-            {this.renderOption(servicesCategories.financial, mainCategories.services)}
-            {this.renderOption(servicesCategories.healthCare, mainCategories.services)}
-            {this.renderOption(servicesCategories.laborConstruction, mainCategories.services)}
-            {this.renderOption(servicesCategories.legal, mainCategories.services)}
-            {this.renderOption(servicesCategories.lessonsCoaching, mainCategories.services)}
-            {this.renderOption(servicesCategories.marine, mainCategories.services)}
-            {this.renderOption(servicesCategories.realState, mainCategories.services)}
-            {this.renderOption(servicesCategories.skilledTrades, mainCategories.services)}
-            {this.renderOption(servicesCategories.smallBusiness, mainCategories.services)}
-            {this.renderOption(servicesCategories.therapeutic, mainCategories.services)}
-            {this.renderOption(servicesCategories.travelVacation, mainCategories.services)}
-            {this.renderOption(servicesCategories.writingEditing, mainCategories.services)}
+            {Object.keys(servicesCategories).map(
+              key => this.renderOption(servicesCategories[key], mainCategories.services)
+            )}
           </div>
         </div>
       </Popup>
@@ -316,22 +223,9 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {this.renderOption(jobsCategories.accounting, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.adminOffice, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.architect, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.artMediaDesign, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.aerospace, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.businessManagement, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.customerService, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.education, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.foodBev, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.generalLabor, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.government, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.humanResources, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.itSoftware, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.legalParalegal, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.manufacturing, mainCategories.jobs)}
-            {this.renderOption(jobsCategories.salesMarketing, mainCategories.jobs)}
+            {Object.keys(jobsCategories).map(
+              key => this.renderOption(jobsCategories[key], mainCategories.jobs)
+            )}
           </div>
         </div>
       </Popup>
@@ -356,13 +250,9 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {this.renderOption(cryptoCategories.localOmniCoin, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.localBitCoin, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.localEutherium, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.localMonero, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.localOther, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.omniCoinBitCoin, mainCategories.cryptoBazaar)}
-            {this.renderOption(cryptoCategories.omniCoinOther, mainCategories.cryptoBazaar)}
+            {Object.keys(cryptoCategories).map(
+              key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar)
+            )}
           </div>
         </div>
       </Popup>
@@ -526,125 +416,6 @@ class Menu extends Component {
     );
   }
 
-  renderSelectField = ({
-    input, placeholder, dropdownPlaceholder
-  }) => (
-    <div className="hybrid-input">
-      <input
-        {...input}
-        type="text"
-        className="textfield"
-        placeholder={placeholder}
-      />
-      <div className="search-actions">
-        <Dropdown
-          labeled
-          defaultValue="all"
-          options={options}
-          placeholder={dropdownPlaceholder}
-          selection
-          className="icon button--gray-text select-btn"
-        />
-        <NavLink to="/search-results">
-          <Button
-            content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-            className="button--primary search-btn"
-          />
-        </NavLink>
-      </div>
-    </div>
-  );
-
-  renderFilters(filters) {
-    const { formatMessage } = this.props.intl;
-
-    if (filters.length === 0) {
-      return (
-        <span>{formatMessage(messages.default)}</span>
-      );
-    }
-
-    return (
-      filters.map((filter, index) => {
-        const comma = filters.length - 1 !== index ? ', ' : '';
-        return (
-          <span key={hash(filter)}>{`${filter}${comma}`}</span>
-        );
-      })
-    );
-  }
-
-  recentSearches() {
-    const { recentSearches } = this.props.marketplace;
-    return (
-      recentSearches.slice(0, maxSearches).map((search) => (
-        <Grid.Row key={hash(search)}>
-          <Grid.Column width={8}>
-            <span className="blue-text">{search.search}</span>
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <span className="gray-text">{this.renderFilters(search.filters)}</span>
-          </Grid.Column>
-        </Grid.Row>
-      ))
-    );
-  }
-
-  renderSearchMenu() {
-    const { formatMessage } = this.props.intl;
-
-    return (
-      <Popup
-        trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
-        hoverable
-        basic
-        on="hover"
-        position="bottom center"
-        wide="very"
-        hideOnScroll
-        className="search-menu"
-      >
-        <Form className="search-form">
-          <Field
-            type="text"
-            name="search"
-            placeholder="Search"
-            dropdownPlaceholder="Categories"
-            component={this.renderSelectField}
-            className="textfield"
-          />
-        </Form>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <span className="gray-text">{formatMessage(messages.recent)}</span>
-            </Grid.Column>
-            <Grid.Column width={8}>
-              <div className="check-wrapper">
-                <Checkbox
-                  width={iconSizeMedium}
-                  height={iconSizeMedium}
-                />
-                <div className="description-text">
-                  {formatMessage(messages.extendedSearch)}
-                </div>
-              </div>
-            </Grid.Column>
-          </Grid.Row>
-          {this.recentSearches()}
-          <Grid.Row>
-            <Grid.Column width={12} />
-            <Grid.Column width={4} className="right">
-              <NavLink to="/saved-searches">
-                <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
-              </NavLink>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Popup>
-    );
-  }
-
   render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
@@ -681,7 +452,7 @@ class Menu extends Component {
               {formatMessage(messages.addListing)}
             </Button>
           </NavLink>
-          {this.renderSearchMenu()}
+          <SearchMenu />
           {this.renderUserMenu()}
         </div>
       </div>
@@ -692,10 +463,6 @@ class Menu extends Component {
 Menu.propTypes = {
   marketplace: PropTypes.shape({
     recentSearches: PropTypes.array
-  }),
-  marketplaceActions: PropTypes.shape({
-    setActiveCategory: PropTypes.func,
-    getRecentSearches: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -710,16 +477,7 @@ Menu.defaultProps = {
 
 export default compose(
   connect(
-    state => ({ ...state.default }),
-    (dispatch) => ({
-      marketplaceActions: bindActionCreators({
-        setActiveCategory,
-        getRecentSearches
-      }, dispatch),
-    }),
+    state => ({ ...state.default })
   ),
-  reduxForm({
-    form: 'searchForm',
-    destroyOnUnmount: true,
-  }),
+
 )(injectIntl(Menu));

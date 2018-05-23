@@ -1,5 +1,12 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  put,
+  takeEvery,
+  select
+} from 'redux-saga/effects';
 import DHTConnector from '../../../utils/dht-connector';
+import SearchHistory from '../searchHistory';
 
 const dhtConnector = new DHTConnector();
 
@@ -7,37 +14,31 @@ export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
     takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
-    takeEvery('DHT_FETCH_PEERS_DATA', fetchPeersData),
   ]);
 }
 
 export function* connect() {
   try {
-    const connector = yield call(dhtConnector.init, {});
+    const connector = yield call(dhtConnector.init, { host: '127.0.0.1', publishers: ['127.0.0.1:5000'] });
 
     yield put({ type: 'DHT_CONNECT_SUCCEEDED', connector });
   } catch (e) {
+    console.log('ERROR ', e);
     yield put({ type: 'DHT_CONNECT_FAILED', error: e.message });
   }
 }
 
-export function* getPeersFor({ payload }) {
+export function* getPeersFor({ payload: { searchTerm, category } }) {
+  const keywords = [...(searchTerm.split(' ')), category];
   try {
-    const { peers, noPeers } = yield call(dhtConnector.findPeersFor.bind(dhtConnector), payload);
-    const finalPeers = noPeers ? [] : peers;
-
-    yield put({ type: 'DHT_FETCH_PEERS_DATA', fetchResult: { peers: finalPeers, keyword: payload } });
+    const responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor(keyword)));
+    const peers = responses.reduce(
+      (prev, curr) => [...prev, ...(curr.peers ? curr.peers : [])],
+      []
+    );
+    yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peers });
   } catch (e) {
+    console.log('ERROR ', e);
     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
-  }
-}
-
-export function* fetchPeersData({ fetchResult: { peers, keyword } }) {
-  console.log('fetching peers data', peers);
-  try {
-    // TODO fetch all peers data here
-    yield put({ type: 'DHT_SEARCH_SUCCEEDED', searchResult: { keyword, data: [] } });
-  } catch (e) {
-    yield put({ type: 'DHT_SEARCH_FAILED', error: e.message });
   }
 }
