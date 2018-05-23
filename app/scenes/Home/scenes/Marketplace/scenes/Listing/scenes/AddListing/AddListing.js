@@ -9,10 +9,7 @@ import { required } from 'redux-form-validators';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
 
-import { getFileExtension } from '../../../../../../../../utils/file';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import AddIcon from '../../../../../../images/btn-add-image.svg';
-import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
 import CategoryDropdown from './components/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown';
 import CurrencyDropdown from './components/CurrencyDropdown';
@@ -29,16 +26,12 @@ import ValidatableField,
   { makeValidatableField } from '../../../../../../../../components/ValidatableField';
 
 import {
-  addImage,
-  removeImage,
-  setImages
+  setListingImages
 } from '../../../../../../../../services/listing/listingActions';
 
 import './add-listing.scss';
 
 const iconSize = 42;
-const iconSizeLarge = 23;
-const maxFileLimit = 10;
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -50,8 +43,7 @@ class AddListing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      images: []
+      open: false
     };
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -88,21 +80,7 @@ class AddListing extends Component {
       contact_type: contactOmniMessage,
       contact_info: this.props.auth.currentUser.username
     });
-    this.props.listingActions.setImages(null);
-  }
-
-  onImageChange(event) {
-    if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      const extFile = getFileExtension(event);
-
-      if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
-        reader.onload = (e) => {
-          this.props.listingActions.addImage(e.target.result);
-        };
-        reader.readAsDataURL(event.target.files[0]);
-      }
-    }
+    this.props.listingActions.setListingImages(null);
   }
 
   onContactTypeChange(e, newValue) {
@@ -114,24 +92,6 @@ class AddListing extends Component {
     this.props.formActions.change('contact_info', contactInfo);
   }
 
-  onClickAddImage = () => {
-    this.inputElement.click();
-  };
-
-  removeImage = (index) => {
-    this.props.listingActions.removeImage(index);
-  };
-
-  addedImages() {
-    const { addedImages } = this.props.listing;
-
-    return addedImages.map((image, index) => (
-      <div key={hash(image)} className="img-container">
-        <Image src={RemoveIcon} width={iconSizeLarge} height={iconSizeLarge} className="remove-icon" onClick={() => this.removeImage(index)} />
-        <img alt="" src={image} width={132} height={100} className="added-img" />
-      </div>
-    ));
-  }
 
   submit(values) {
     console.log(values)
@@ -539,15 +499,7 @@ class AddListing extends Component {
 
 AddListing.propTypes = {
   listingActions: PropTypes.shape({
-    addImage: PropTypes.func,
-    removeImage: PropTypes.func,
-    setImages: PropTypes.func
-  }),
-  listing: PropTypes.shape({
-    bitcoinPrice: PropTypes.bool,
-    omnicoinPrice: PropTypes.bool,
-    isContinuous: PropTypes.bool,
-    addedImages: PropTypes.arrayOf(PropTypes.string),
+    setListingImages: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -561,7 +513,6 @@ AddListing.propTypes = {
 
 AddListing.defaultProps = {
   listingActions: {},
-  listing: {},
   intl: {},
   auth: {}
 };
@@ -578,9 +529,7 @@ export default compose(
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
-        addImage,
-        removeImage,
-        setImages
+        setListingImages
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('addListingForm', field, value)

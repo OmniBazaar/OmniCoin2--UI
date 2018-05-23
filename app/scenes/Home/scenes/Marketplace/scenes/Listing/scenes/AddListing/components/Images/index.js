@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Image, Button } from 'semantic-ui-react';
+import { injectIntl } from 'react-intl';
 import shortid from 'shortid';
 import AddIcon from '../../../../../../../../images/btn-add-image.svg';
 import { getFileExtension } from '../../../../../../../../../../utils/file';
@@ -10,6 +11,7 @@ import {
   uploadListingImage
 } from '../../../../../../../../../../services/listing/listingActions';
 import ImageItem from './image';
+import messages from '../../messages';
 
 const imageLimit = 10;
 const iconSize = 42;
@@ -34,6 +36,8 @@ class Images extends Component {
       	uploadListingImage(file, imageId);
       }
     }
+
+    this.inputElement.value = '';
 	}
 
 	renderImages() {
@@ -47,8 +51,9 @@ class Images extends Component {
 	}
 
 	render() {
+		const { listingImages } = this.props;
 		return (
-			<div>
+			<div className='listing-image-container'>
 				<input
 	        ref={(ref) => this.inputElement = ref}
 	        type="file"
@@ -58,9 +63,12 @@ class Images extends Component {
 	      />
 	      <div className="images-wrapper">
 	        {this.renderImages()}
-	        <Button className="add-img-button" onClick={this.onClickAddImage.bind(this)}>
-	          <Image src={AddIcon} width={iconSize} height={iconSize} />
-	        </Button>
+	        {
+	        	(Object.keys(listingImages).length < imageLimit) &&
+	        	<Button className="add-img-button" onClick={this.onClickAddImage.bind(this)}>
+		          <Image src={AddIcon} width={iconSize} height={iconSize} />
+		        </Button>
+	        }
 	      </div>
       </div>
 		);
@@ -71,7 +79,10 @@ Images.propTypes = {
 	listingActions: PropTypes.shape({
 		uploadListingImage: PropTypes.func
 	}).isRequired,
-	listingImages: PropTypes.object.isRequired
+	listingImages: PropTypes.object.isRequired,
+	intl: PropTypes.shape({
+		formatMessage: PropTypes.func
+	}).isRequired,
 };
 
 const mapState = state => {
@@ -88,4 +99,4 @@ const mapDispatch = dispatch => {
 	}
 };
 
-export default connect(mapState, mapDispatch)(Images);
+export default connect(mapState, mapDispatch)(injectIntl(Images));

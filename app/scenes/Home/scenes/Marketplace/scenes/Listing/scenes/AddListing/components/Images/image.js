@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Image, Button } from 'semantic-ui-react';
+import { injectIntl } from 'react-intl';
 import RemoveIcon from '../../../../../../../../images/btn-remove-image-norm+press.svg';
 import LoadingIcon from '../../../../../../../../images/loading.gif';
+import {
+  deleteListingImage,
+  clearListingImageError
+} from '../../../../../../../../../../services/listing/listingActions';
+import messages from '../../messages';
 
 const imageSize = 42;
 const iconSize = 23;
@@ -35,11 +43,43 @@ class ImageItem extends Component {
 	}
 
 	remove() {
+		const { image } = this.props;
+		this.props.listingActions.deleteListingImage(image);
+	}
 
+	clearError() {
+		const { id } = this.props.image;
+		this.props.listingActions.clearListingImageError(id);
+	}
+
+	renderError() {
+		const { uploadError, deleteError } = this.props.image;
+
+		if (!uploadError && !deleteError) {
+			return null;
+		}
+
+		const { formatMessage } = this.props.intl;
+		const msg = (
+			uploadError ? 
+			formatMessage(messages.uploadImageError) :
+			formatMessage(messages.deleteImageError)
+		);
+
+		return (
+			<div className='loading-overlay'>
+				<div className='content'>
+					<span className='error'>{msg}</span>
+					<Button type='submit' content={formatMessage(messages.close)}
+						className="button--green-bg btn-close"
+						onClick={this.clearError.bind(this)} />
+				</div>
+			</div>
+		);
 	}
 
 	render() {
-		const { uploading } = this.props.image;
+		const { uploading, deleting } = this.props.image;
 
 		return (
 			<div className="img-container">
@@ -56,7 +96,7 @@ class ImageItem extends Component {
         	<img alt="" src={this.state.url} width={132} height={100} className="added-img" />
         }
         {
-        	uploading &&
+        	(uploading || deleting) &&
         	<div className='loading-overlay'>
         		<Image src={LoadingIcon} 
 		        	width={loadingIconSize} 
@@ -64,6 +104,7 @@ class ImageItem extends Component {
 		        	className="loading-icon" />
         	</div>
         }
+        { this.renderError() }
       </div>
 		);
 	}
@@ -72,9 +113,25 @@ class ImageItem extends Component {
 ImageItem.propTypes = {
 	image: PropTypes.shape({
 		file: PropTypes.object,
-		uploading: PropTypes.bool
+		uploading: PropTypes.bool,
+		deleting: PropTypes.bool
 	}).isRequired,
-	imageId: PropTypes.string.isRequired
+	imageId: PropTypes.string.isRequired,
+	listingActions: PropTypes.shape({
+		deleteListingImage: PropTypes.func
+	}).isRequired,
+	intl: PropTypes.shape({
+		formatMessage: PropTypes.func
+	}).isRequired
 };
 
-export default ImageItem;
+const mapDispatch = dispatch => {
+	return {
+		listingActions: bindActionCreators({
+      deleteListingImage,
+      clearListingImageError
+    }, dispatch)
+	}
+}
+
+export default connect(null, mapDispatch)(injectIntl(ImageItem));

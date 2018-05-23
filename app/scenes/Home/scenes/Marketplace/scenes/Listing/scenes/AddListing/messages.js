@@ -184,7 +184,23 @@ const messages = defineMessages({
   fieldRequired: {
     id: 'AddListing.fieldRequired',
     defaultMessage: 'This field is required'
-  }
+  },
+  numberImageLimit: {
+  	id: 'AddListing.numberImageLimit',
+  	defaultMessage: 'Only {max} images is allowed'
+  },
+  uploadImageError: {
+  	id: 'AddListing.uploadImageError',
+  	defaultMessage: 'Upload error'
+  },
+  deleteImageError: {
+  	id: 'AddListing.deleteImageError',
+  	defaultMessage: 'Delete error'
+  },
+  close: {
+  	id: 'AddListing.close',
+  	defaultMessage: 'Close'
+  },
 });
 
 export default messages;

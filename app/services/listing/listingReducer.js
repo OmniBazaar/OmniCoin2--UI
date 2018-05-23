@@ -8,10 +8,13 @@ import {
   setContinuous,
   setOmnicoinPrice,
   addListingImage,
-  removeListingImage,
+  startDeleteListingImage,
+  deleteListingImageSuccess,
+  deleteListingImageError,
   setListingImages,
   uploadListingImageSuccess,
   uploadListingImageError,
+  clearListingImageError,
   addToFavorites,
   removeFromFavorites,
   isFavorite,
@@ -125,16 +128,6 @@ const reducer = handleActions({
       }
     };
   },
-  [removeListingImage](state, { payload: { imageId } }) {
-    let listingImages = {
-      ...state.listingImages
-    };
-    delete listingImages[imageId];
-    return {
-      ...state,
-      listingImages: listingImages
-    };
-  },
   [setListingImages](state, { payload: { images } }) {
     return {
       ...state,
@@ -175,7 +168,7 @@ const reducer = handleActions({
       let imageItem = {
         ...state.listingImages[imageId],
         uploading: false,
-        error,
+        uploadError: error,
         file: null
       };
 
@@ -185,6 +178,72 @@ const reducer = handleActions({
           ...state.listingImages,
           [imageId]: imageItem
         }
+      };
+    }
+
+    return state;
+  },
+  [startDeleteListingImage](state, { payload: { imageId } }) {
+    if (state.listingImages[imageId]) {
+      return {
+        ...state,
+        listingImages: {
+          ...state.listingImages,
+          [imageId]: {
+            ...state.listingImages[imageId],
+            deleting: true,
+            deleteError: null
+          }
+        }
+      };
+    }
+
+    return state;
+  },
+  [deleteListingImageSuccess](state, { payload: { imageId } }) {
+    let listingImages = {
+      ...state.listingImages
+    };
+    delete listingImages[imageId];
+    return {
+      ...state,
+      listingImages: listingImages
+    };
+  },
+  [deleteListingImageError](state, { payload: { imageId, error } }) {
+    if (state.listingImages[imageId]) {
+      return {
+        ...state,
+        listingImages: {
+          ...state.listingImages,
+          [imageId]: {
+            ...state.listingImages[imageId],
+            deleting: false,
+            deleteError: error
+          }
+        }
+      };
+    }
+
+    return state;
+  },
+  [clearListingImageError](state, { payload: { imageId } }) {
+    if (state.listingImages[imageId]) {
+      let images = {
+        ...state.listingImages
+      };
+      if (images[imageId].uploadError) {
+        delete images[imageId];
+      } else {
+        images[imageId] = {
+          ...images[imageId],
+          deleteError: null
+        };
+      }
+
+      return {
+        ...state,
+        listingImages: images
       };
     }
 

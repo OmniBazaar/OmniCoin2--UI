@@ -40,3 +40,18 @@ export const saveImage = async file => {
 	let body = await request(options);
 	return JSON.parse(body);
 }
+
+export const deleteImage = async (fileName) => {
+	const publiser = await getPubliser();
+
+	let options = {
+		method: 'DELETE',
+		uri: `${publiser}/images/${fileName}`,
+		headers: getAuthHeaders(),
+		json: true
+	};
+
+	let body = await request(options);
+	
+	return body;
+}
