@@ -1,4 +1,5 @@
 {
   "GridTable.edit": "EDIT",
-  "GridTable.delete": "DELETE"
+  "GridTable.delete": "DELETE",
+  "GridTable.noData": "No data found."
 }

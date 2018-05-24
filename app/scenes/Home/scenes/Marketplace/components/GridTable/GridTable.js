@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import {
   Table,
@@ -13,6 +14,7 @@ import {
   Button
 } from 'semantic-ui-react';
 import hash from 'object-hash';
+import './grid-table.scss';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 
@@ -34,6 +36,10 @@ const messages = defineMessages({
   delete: {
     id: 'GridTable.delete',
     defaultMessage: 'DELETE'
+  },
+  noData: {
+    id: 'GridTable.noData',
+    defaultMessage: 'No data found.'
   },
 });
 
@@ -61,12 +67,21 @@ class GridTable extends Component {
     }
   }
 
-  onClickItem = () => {
-  };
-
   handlePaginationChange = (e, { activePage }) => {
     this.props.gridTableActions.setActivePageGridTable(activePage);
   };
+
+  renderEmptyRow() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <TableRow className="items empty">
+        <TableCell className="item">
+          {formatMessage(messages.noData)}
+        </TableCell>
+      </TableRow>
+    );
+  }
 
   render() {
     const {
@@ -82,32 +97,24 @@ class GridTable extends Component {
         <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableBody>
-              {rows.map(row =>
+              {rows.length > 0 ? rows.map(row =>
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const style = { backgroundImage: `url(${item.image})` };
+                      const image = item.image || item.images[0].original;
+                      const style = { backgroundImage: `url(${image})` };
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
                       return (
                         <TableCell className="item" key={hash(item)}>
-                          <div
-                            className="img-wrapper"
-                            style={style}
-                            onClick={() => this.onClickItem(item)}
-                            onKeyDown={this.onClickItem}
-                            tabIndex={0}
-                            role="link"
-                          />
-                          <span
-                            className="title"
-                            onClick={() => this.onClickItem(item)}
-                            role="link"
-                            onKeyDown={() => this.onClickItem(item)}
-                            tabIndex={0}
-                          >
-                            {item.title}
-                          </span>
+                          <Link to={`listing/${item.id}`}>
+                            <div className="img-wrapper" style={style} />
+                          </Link>
+
+                          <Link to={`listing/${item.id}`}>
+                            <span className="title">{item.title}</span>
+                          </Link>
+
                           <span className="subtitle">
                             {item.category}
                             <span>
@@ -128,7 +135,9 @@ class GridTable extends Component {
                       );
                     })}
                   </TableRow>
-                ))}
+                ))
+                : this.renderEmptyRow()
+              }
             </TableBody>
           </Table>
         </div>

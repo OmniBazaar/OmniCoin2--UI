@@ -1,0 +1,56 @@
+@import '../../styles/index';
+
+.deal-rating {
+  .doths {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .doth {
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      &.green {
+        &.selected {
+          background-color: $green;
+          border: 2px solid $green;
+        }
+        &:not(.selected) {
+          border: 2px solid lighten($green, 20%);
+        }
+      }
+      &.red {
+        &.selected {
+          background-color: $red;
+          border: 2px solid $red;
+        }
+        &:not(.selected) {
+          border: 2px solid lighten($red, 20%);
+        }
+      }
+      &.gray {
+        &.selected {
+          background-color: $primary-gray;
+          border: 2px solid $primary-gray;
+        }
+        &:not(.selected) {
+          border: 2px solid lighten($primary-gray, 20%);
+        }
+      }
+    }
+  }
+  .footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    div {
+      color: $primary-gray;
+      font-size: x-small;
+      font-weight: bold;
+      font: $montserrat;
+    }
+  }
+}

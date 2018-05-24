@@ -8,7 +8,7 @@
   "Transfer.accountNameOrPublicKey": "Account Name or Public Key",
   "Transfer.pleaseEnter": "Please enter",
   "Transfer.amount": "Amount",
-  "Transfer.reputation": "Reputation",
+  "Transfer.reputation": "Rate your deal",
   "Transfer.memo": "Memo",
   "Transfer.transferSecurity":"Transfer Security",
   "Transfer.useEscrowService":"Use SecureSend (Escrow Service)",
