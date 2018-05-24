@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Image, Button } from 'semantic-ui-react';
+import { Image, Button, Loader, Dimmer } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
 import RemoveIcon from '../../../../../../../../images/btn-remove-image-norm+press.svg';
 import LoadingIcon from '../../../../../../../../images/loading.gif';
@@ -98,10 +98,9 @@ class ImageItem extends Component {
         {
         	(uploading || deleting) &&
         	<div className='loading-overlay'>
-        		<Image src={LoadingIcon} 
-		        	width={loadingIconSize} 
-		        	height={loadingIconSize} 
-		        	className="loading-icon" />
+        		<Dimmer active inverted>
+      				<Loader size='small' />
+    				</Dimmer>
         	</div>
         }
         { this.renderError() }

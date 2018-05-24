@@ -106,6 +106,10 @@
                     flex-direction: column;
                   }
 
+                  .ui.inverted.dimmer {
+                    background-color: rgba(255, 255, 255, 0);
+                  }
+
                   .content .error {
                     color: #BF0712 !important;
                   }
