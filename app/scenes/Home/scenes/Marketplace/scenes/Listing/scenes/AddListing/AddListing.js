@@ -8,6 +8,7 @@ import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required } from 'redux-form-validators';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
+import {toastr} from 'react-redux-toastr'
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CategoryDropdown from './components/CategoryDropdown';
@@ -27,7 +28,8 @@ import ValidatableField,
 
 import {
   setListingImages,
-  saveListing
+  saveListing,
+  resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
 
 import './add-listing.scss';
@@ -79,9 +81,31 @@ class AddListing extends Component {
   componentWillMount() {
     this.props.initialize({
       contact_type: contactOmniMessage,
-      contact_info: this.props.auth.currentUser.username
+      contact_info: this.props.auth.currentUser.username,
+      price_using_btc: false,
+      price_using_omnicoin: false,
+      continuous: false
     });
     this.props.listingActions.setListingImages(null);
+    this.props.listingActions.resetSaveListing();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { error, saving } = nextProps.listing.saveListing;
+    if (this.props.listing.saveListing.saving && !saving) {
+      const { formatMessage } = this.props.intl;
+      if (error) {
+        this.showErrorToast(
+          formatMessage(messages.error),
+          formatMessage(messages.saveListingErrorMessage)
+        );
+      } else {
+        this.showSuccessToast(
+          formatMessage(messages.success),
+          formatMessage(messages.saveListingSuccessMessage)
+        );
+      }
+    }
   }
 
   onContactTypeChange(e, newValue) {
@@ -93,20 +117,52 @@ class AddListing extends Component {
     this.props.formActions.change('contact_info', contactInfo);
   }
 
+  getImagesData() {
+    const { listingImages } = this.props.listing;
+
+    let data = [];
+    for (const imageId in listingImages) {
+      const imageItem = listingImages[imageId];
+      const { uploadError, image, thumb, fileName } = imageItem;
+      if (uploadError || !image) {
+        continue;
+      }
+
+      data.push({
+        path: image,
+        thumb,
+        image_name: fileName
+      });
+    }
+
+    return data;
+  }
+
+  showSuccessToast(title, message) {
+    toastr.success(title, message);
+  }
+
+  showErrorToast(title, message) {
+    toastr.error(title, message);
+  }
 
   submit(values) {
-    console.log(values)
     const { saveListing } = this.props.listingActions;
-
-    saveListing(values);
+    
+    saveListing({
+      ...values,
+      images: this.getImagesData()
+    });
   }
 
   addListingForm() {
     const { formatMessage } = this.props.intl;
     const { category, country } = this.props.formValues ? this.props.formValues : {};
     const { handleSubmit } = this.props;
+    const { error, saving } = this.props.listing.saveListing;
 
     return (
+      
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -439,7 +495,11 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button type='submit' content={formatMessage(messages.createListingCaps)} className="button--green-bg" />
+              <Button type='submit'
+                content={formatMessage(messages.createListingCaps)}
+                className="button--green-bg"
+                loading={saving}
+                disabled={saving} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -475,7 +535,7 @@ class AddListing extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <div className="marketplace-container category-listing add-listing">
+      <div className="marketplace-container category-listing add-listing" style={{position: 'relative'}}>
         <div className="header">
           <Menu />
         </div>
@@ -503,7 +563,9 @@ class AddListing extends Component {
 
 AddListing.propTypes = {
   listingActions: PropTypes.shape({
-    setListingImages: PropTypes.func
+    setListingImages: PropTypes.func,
+    resetSaveListing: PropTypes.func,
+    saveListing: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -512,7 +574,14 @@ AddListing.propTypes = {
     currentUser: PropTypes.shape({
       username: PropTypes.string
     })
-  })
+  }),
+  listing: PropTypes.shape({
+    saveListing: PropTypes.shape({
+      error: PropTypes.object,
+      saving: PropTypes.bool
+    }),
+    listingImages: PropTypes.object
+  }).isRequired,
 };
 
 AddListing.defaultProps = {
@@ -528,13 +597,15 @@ export default compose(
   }),
   connect(
     state => ({
-      ...state.default,
+      auth: state.default.auth,
+      listing: state.default.listing,
       formValues: getFormValues('addListingForm')(state)
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
         setListingImages,
-        saveListing
+        saveListing,
+        resetSaveListing
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('addListingForm', field, value)

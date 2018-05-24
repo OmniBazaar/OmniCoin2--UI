@@ -19,7 +19,8 @@ import {
 import {
 	saveImage,
 	deleteImage,
-	saveListing,
+	createListing,
+	editListing,
 	deleteListing
 } from './apis';
 
@@ -63,5 +64,21 @@ function* removeImage({ payload: { image } }) {
 }
 
 function* saveListingHandler({ payload: { listing, listingId } }) {
-	console.log('FROM SAGA');
+	console.log(listing);
+	let result;
+	try {
+		if (listingId) {
+			result = yield call(editListing, listingId, listing);
+		} else {
+			result = yield call(createListing, listing);
+		}
+
+		if (!listingId) {
+			listingId = result.listing_id;
+		}
+	 	yield put(saveListingSuccess(result, listingId));
+	} catch (err) {
+		console.log(err);
+		yield put(saveListingError(listingId, err));
+	}
 }

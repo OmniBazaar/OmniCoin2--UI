@@ -201,6 +201,22 @@ const messages = defineMessages({
   	id: 'AddListing.close',
   	defaultMessage: 'Close'
   },
+  saveListingErrorMessage: {
+  	id: 'AddListing.saveListingErrorMessage',
+  	defaultMessage: 'Have error when saving listing'
+  },
+  saveListingSuccessMessage: {
+  	id: 'AddListing.saveListingSuccessMessage',
+  	defaultMessage: 'Listing is saved successful'
+  },
+  error: {
+  	id: 'AddListing.error',
+  	defaultMessage: 'Error'
+  },
+  success: {
+  	id: 'AddListing.success',
+  	defaultMessage: 'Success'
+  }
 });
 
 export default messages;

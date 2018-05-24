@@ -48,5 +48,9 @@
   "AddListing.numberImageLimit": "Only {max} images is allowed",
   "AddListing.uploadImageError": "Upload error",
   "AddListing.deleteImageError": "Delete error",
-  "AddListing.close": "Close"
+  "AddListing.close": "Close",
+  "AddListing.saveListingErrorMessage": "Have error when saving listing",
+  "AddListing.saveListingSuccessMessage": "Listing is saved successful",
+  "AddListing.error": "Error",
+  "AddListing.success": "Success"
 }

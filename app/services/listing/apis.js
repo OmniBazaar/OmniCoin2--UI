@@ -56,7 +56,7 @@ export const deleteImage = async (fileName) => {
 	return body;
 }
 
-export const saveListing = async (listing) => {
+export const createListing = async (listing) => {
 	const publiser = await getPubliser();
 
 	let options = {
@@ -65,7 +65,9 @@ export const saveListing = async (listing) => {
 		headers: getAuthHeaders(),
 		json: true,
 		body: {
-			...listings
+			...listing,
+			listing_type: 'Listing',
+			listing_uuid: 'testuuid'
 		}
 	};
 
