@@ -1,11 +1,13 @@
 .rate-modal-form-field {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 5px 32px;
+  padding: 10px 32px;
   .message {
-    display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
+  }
+  .deal-rating {
+    flex: 3;
   }
 }

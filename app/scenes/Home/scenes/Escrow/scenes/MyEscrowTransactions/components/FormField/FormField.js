@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Select } from 'semantic-ui-react';
 
+import DealRating from '../../../../../../../../components/DealRating/DealRating';
 import { reputationOptions } from '../../../../../../../../services/utils';
 import './form-field.scss';
 
@@ -25,10 +26,10 @@ const FormField = ({
         <span>{message}</span>
         {touched && ((error && <span className="error">{errorMessage}</span>))}
       </div>
-      <Select
-        defaultValue={defaultOption}
+      <DealRating
         options={options}
-        onChange={(param, data) => input.onChange(data.value)}
+        selectedValue={options[input.value] || options[defaultOption]}
+        onChange={(option) => input.onChange(option.value)}
       />
     </div>
   );

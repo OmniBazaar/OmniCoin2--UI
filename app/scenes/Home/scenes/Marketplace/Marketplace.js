@@ -1707,10 +1707,10 @@ class Marketplace extends Component {
 
         return (
           <div key={`fl-item-${item.id}`} className="item">
-            <Link to={`listing/${item.id}/test`}>
+            <Link to={`listing/${item.id}`}>
               <div className="img-wrapper" style={style} />
             </Link>
-            <Link to={`listing/${item.id}/test`}>
+            <Link to={`listing/${item.id}`}>
               <span className="title" >
                 {item.title}
               </span>
