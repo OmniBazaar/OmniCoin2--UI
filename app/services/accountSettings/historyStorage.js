@@ -5,7 +5,7 @@ import BaseStorage from '../../utils/baseStorage';
 
 const key = 'historyStorage';
 
-class HistoryStorage extends BaseStorage{
+class HistoryStorage extends BaseStorage {
   constructor(accountName) {
     super(key, accountName);
     this.cache = this.getData();

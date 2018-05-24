@@ -2,6 +2,8 @@ import { handleActions } from 'redux-actions';
 import { defineMessages } from 'react-intl';
 import _ from 'lodash';
 
+import SearchStorage from '../search/searchHistory';
+
 import {
   getFeatureList,
   getForSaleList,
@@ -11,7 +13,6 @@ import {
   getCryptoBazaarList,
   getCategories,
   setActiveCategory,
-  getRecentSearches,
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
@@ -124,13 +125,6 @@ const reducer = handleActions({
     return {
       ...state,
       categories: messages
-    };
-  },
-  [getRecentSearches](state, { payload: { recentSearches } }) {
-    const sortedData = _.sortBy(recentSearches, ['date']).reverse();
-    return {
-      ...state,
-      recentSearches: sortedData
     };
   },
 

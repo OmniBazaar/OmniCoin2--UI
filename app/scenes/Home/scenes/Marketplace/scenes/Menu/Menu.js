@@ -85,7 +85,6 @@ class Menu extends Component {
   }
 
 
-
   menuTitle(category) {
     const { props } = this;
     const { formatMessage } = this.props.intl;
@@ -169,9 +168,7 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(saleCategories).map(
-              key => this.renderOption(saleCategories[key], mainCategories.forSale)
-            )}
+            {Object.keys(saleCategories).map(key => this.renderOption(saleCategories[key], mainCategories.forSale))}
           </div>
         </div>
       </Popup>
@@ -196,9 +193,7 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(servicesCategories).map(
-              key => this.renderOption(servicesCategories[key], mainCategories.services)
-            )}
+            {Object.keys(servicesCategories).map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
           </div>
         </div>
       </Popup>
@@ -223,9 +218,7 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(jobsCategories).map(
-              key => this.renderOption(jobsCategories[key], mainCategories.jobs)
-            )}
+            {Object.keys(jobsCategories).map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
           </div>
         </div>
       </Popup>
@@ -250,9 +243,7 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(cryptoCategories).map(
-              key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar)
-            )}
+            {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
           </div>
         </div>
       </Popup>
@@ -477,9 +468,4 @@ Menu.defaultProps = {
   marketplaceActions: {},
 };
 
-export default compose(
-  connect(
-    state => ({ ...state.default })
-  ),
-
-)(injectIntl(Menu));
+export default compose(connect(state => ({ ...state.default })), )(injectIntl(Menu));

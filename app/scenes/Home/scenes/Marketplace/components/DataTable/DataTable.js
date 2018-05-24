@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
 import {
@@ -12,9 +10,9 @@ import {
   TableHeader,
   Button
 } from 'semantic-ui-react';
+import { toastr } from 'react-redux-toastr';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { sortDataTableBy } from '../../../../../../services/marketplace/marketplaceActions';
 
 const messages = defineMessages({
   default: {
@@ -30,8 +28,8 @@ const messages = defineMessages({
     defaultMessage: 'Search'
   },
   parameters: {
-    id: 'DataTable.parameters',
-    defaultMessage: 'Parameters'
+    id: 'DataTable.category',
+    defaultMessage: 'Category'
   },
   save: {
     id: 'DataTable.save',
@@ -45,43 +43,80 @@ const messages = defineMessages({
     id: 'DataTable.view',
     defaultMessage: 'VIEW'
   },
+  error: {
+    id: 'DataTable.error',
+    defaultMessage: 'Error'
+  },
+  success: {
+    id: 'DataTable.success',
+    defaultMessage: 'Success'
+  },
+  successSave: {
+    id: 'DataTable.successSave',
+    defaultMessage: 'Successfully saved'
+  },
+  successDelete: {
+    id: 'DataTable.successDelete',
+    defaultMessage: 'Successfully deleted'
+  }
 });
 
 class DataTable extends Component {
+  state = {
+    deletingSearch: null,
+    savingSearch: null
+  };
+
   componentDidMount() {
-    this.props.dataTableActions.sortDataTableBy(this.props.data, this.props.sortBy);
+    this.sortData(this.props.sortBy);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.data !== nextProps.data ||
-      this.props.sortBy !== nextProps.sortBy ||
-      this.props.sortDirection !== nextProps.sortDirection) {
-      this.props.dataTableActions.sortDataTableBy(nextProps.data, nextProps.sortBy);
+    const { formatMessage } = this.props.intl;
+    if (!nextProps.saving && this.props.saving) {
+      if (this.props.error) {
+        toastr.error(formatMessage(messages.error), this.props.error);
+      } else {
+        toastr.success(formatMessage(messages.success), formatMessage(messages.successSave));
+      }
+      this.setState({
+        savingSearch: null
+      });
+    }
+    if (!nextProps.deleting && this.props.deleting) {
+      if (this.props.error) {
+        toastr.error(formatMessage(messages.error), this.props.error);
+      } else {
+        toastr.success(formatMessage(messages.success), formatMessage(messages.successDelete));
+      }
+      this.setState({
+        deletingSearch: null
+      });
     }
   }
 
   sortData = (clickedColumn) => () => {
-    this.props.dataTableActions.sortDataTableBy(this.props.data, clickedColumn);
+    const { sortDirection } = this.props;
+    let direction = 'descending';
+    if (sortDirection === 'descending') {
+      direction = 'ascending';
+    }
+    this.props.sort(direction, clickedColumn);
   };
 
-  renderFilters(filters) {
-    const { formatMessage } = this.props.intl;
+  handleSave = (row) => {
+    this.props.onSave(row);
+    this.setState({
+      savingSearch: row
+    });
+  };
 
-    if (filters.length === 0) {
-      return (
-        <span>{formatMessage(messages.default)}</span>
-      );
-    }
-
-    return (
-      filters.map((filter, index) => {
-        const comma = filters.length - 1 !== index ? ', ' : '';
-        return (
-          <span key={hash(filter)}>{`${filter}${comma}`}</span>
-        );
-      })
-    );
-  }
+  handleDelete = (row) => {
+    this.props.onDelete(row);
+    this.setState({
+      deletingSearch: row
+    });
+  };
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -90,11 +125,13 @@ class DataTable extends Component {
       showDeleteButton,
       showViewButton
     } = this.props;
+
     const {
-      sortTableBy,
-      sortTableDirection,
-      dataTableData
-    } = this.props.marketplace;
+      sortBy,
+      sortDirection,
+      data,
+      onView,
+    } = this.props;
 
     return (
       <div className="data-table">
@@ -102,40 +139,60 @@ class DataTable extends Component {
           <Table {...this.props.tableProps}>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell key="date" sorted={sortTableBy === 'date' ? sortTableDirection : null} onClick={this.sortData('date')}>
+                <TableHeaderCell key="date" sorted={sortBy === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
                   {formatMessage(messages.date)}
                 </TableHeaderCell>
-                <TableHeaderCell key="search" sorted={sortTableBy === 'search' ? sortTableDirection : null} onClick={this.sortData('search')}>
+                <TableHeaderCell key="search" sorted={sortBy === 'searchTerm' ? sortDirection : null} onClick={this.sortData('search')}>
                   {formatMessage(messages.search)}
                 </TableHeaderCell>
-                <TableHeaderCell key="filters" sorted={sortTableBy === 'filters' ? sortTableDirection : null} onClick={this.sortData('filters')}>
+                <TableHeaderCell key="filters" sorted={sortBy === 'category' ? sortDirection : null} onClick={this.sortData('filters')}>
                   {formatMessage(messages.parameters)}
                 </TableHeaderCell>
-                <TableHeaderCell key="actions" sorted={sortTableBy === 'actions' ? sortTableDirection : null} onClick={this.sortData('actions')} />
+                <TableHeaderCell key="actions" onClick={this.sortData('actions')} />
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dataTableData.map(row =>
+              {data.map(row =>
                 (
                   <TableRow key={hash(row)}>
                     <TableCell>{row.date}</TableCell>
-                    <TableCell><a>{row.search}</a></TableCell>
-                    <TableCell>{this.renderFilters(row.filters)}</TableCell>
+                    <TableCell>
+                      <a onClick={() => onView({ searchTerm: row.searchTerm })}>
+                        {row.searchTerm}
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      <a onClick={() => onView({ category: row.category })}>
+                        {row.category}
+                      </a>
+                    </TableCell>
                     <TableCell className="actions">
                       {
-                        showSaveButton ?
-                          <Button content={formatMessage(messages.save)} className="button--blue-text save-btn" />
-                        : null
+                        showSaveButton &&
+                          <Button
+                            content={formatMessage(messages.save)}
+                            className="button--blue-text save-btn"
+                            onClick={() => this.handleSave(row)}
+                            loading={this.state.deletingSearch && this.state.deletingSearch.id === row.id}
+                            disabled={row.saved}
+                          />
                       }
                       {
-                        showDeleteButton ?
-                          <Button content={formatMessage(messages.delete)} className="button--blue-text save-btn" />
-                        : null
+                        showDeleteButton &&
+                          <Button
+                            content={formatMessage(messages.delete)}
+                            className="button--blue-text save-btn"
+                            onClick={() => this.handleDelete(row)}
+                            loading={this.state.savingSearch && this.state.savingSearch.id === row.id}
+                          />
                       }
                       {
-                        showViewButton ?
-                          <Button content={formatMessage(messages.view)} className="button--blue-text view-btn" />
-                        : null
+                        showViewButton &&
+                          <Button
+                            content={formatMessage(messages.view)}
+                            className="button--blue-text view-btn"
+                            onClick={() => onView(row)}
+                          />
                       }
                     </TableCell>
                   </TableRow>
@@ -151,14 +208,7 @@ class DataTable extends Component {
 DataTable.propTypes = {
   sortBy: PropTypes.string,
   sortDirection: PropTypes.string,
-  dataTableActions: PropTypes.shape({
-    sortDataTableBy: PropTypes.func,
-  }),
-  marketplace: PropTypes.shape({
-    sortTableBy: PropTypes.string,
-    sortTableDirection: PropTypes.string,
-    dataTableData: PropTypes.array,
-  }),
+  sort: PropTypes.func,
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
     compact: PropTypes.bool,
@@ -171,27 +221,36 @@ DataTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),
   showSaveButton: PropTypes.bool,
   showDeleteButton: PropTypes.bool,
-  showViewButton: PropTypes.bool
+  showViewButton: PropTypes.bool,
+  onSave: PropTypes.func,
+  onDelete: PropTypes.func,
+  onView: PropTypes.func,
+  search: PropTypes.func,
+  saving: PropTypes.bool,
+  deleting: PropTypes.bool,
 };
 
 DataTable.defaultProps = {
-  dataTableActions: {},
-  marketplace: {},
-  tableProps: {},
+  tableProps: {
+    sortable: true,
+    compact: true,
+    basic: 'very',
+    striped: true,
+    size: 'small'
+  },
   intl: {},
   data: [],
   sortBy: '',
   sortDirection: '',
   showSaveButton: false,
   showDeleteButton: false,
-  showViewButton: false
+  showViewButton: false,
+  saving: false,
+  deleting: false,
+  onSave: () => {},
+  onView: () => {},
+  onDelete: () => {},
+  search: () => {}
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    dataTableActions: bindActionCreators({
-      sortDataTableBy
-    }, dispatch)
-  })
-)(injectIntl(DataTable));
+export default injectIntl(DataTable);

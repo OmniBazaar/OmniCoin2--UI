@@ -44,7 +44,7 @@ const reducer = handleActions({
       ...state,
       isLoading: false,
       peers
-    }
+    };
   },
 
   DHT_FETCH_PEERS_FAILED: (state, { error }) => ({

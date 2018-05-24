@@ -9,7 +9,6 @@ const {
   getRentalsList,
   getCryptoBazaarList,
   setActiveCategory,
-  getRecentSearches,
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
@@ -24,7 +23,6 @@ const {
   GET_RENTALS_LIST: (rentalsList) => ({ rentalsList }),
   GET_CRYPTO_BAZAAR_LIST: (cryptoBazaarList) => ({ cryptoBazaarList }),
   SET_ACTIVE_CATEGORY: (activeCategory, parentCategory) => ({ activeCategory, parentCategory }),
-  GET_RECENT_SEARCHES: (recentSearches) => ({ recentSearches }),
   SET_PAGINATION_GRID_TABLE: (rowsPerPageGridTable) => ({ rowsPerPageGridTable }),
   SORT_GRID_TABLE_BY: (gridTableData, sortGridBy, sortGridDirection) =>
     ({ gridTableData, sortGridBy, sortGridDirection }),
@@ -41,7 +39,6 @@ export {
   getRentalsList,
   getCryptoBazaarList,
   setActiveCategory,
-  getRecentSearches,
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,

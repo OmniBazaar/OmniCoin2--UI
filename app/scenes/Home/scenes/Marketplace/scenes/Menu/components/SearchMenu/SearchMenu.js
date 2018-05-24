@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { NavLink } from 'react-router-dom';
 import { injectIntl, defineMessages } from 'react-intl';
+import { withRouter } from 'react-router';
 import {
   Popup,
   Dropdown,
@@ -19,44 +20,11 @@ import hash from 'object-hash';
 
 import './search-menu.scss';
 
-import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
 import SearchIcon from '../../../../images/btn-search-norm.svg';
-import {
-  getRecentSearches,
-  setActiveCategory,
-} from "../../../../../../../../services/marketplace/marketplaceActions";
+import { getSavedSearches } from '../../../../../../../../services/search/searchActions';
 
-import {
-  searchListings
-} from "../../../../../../../../services/search/searchActions";
+import { searchListings } from '../../../../../../../../services/search/searchActions';
 
-
-const recentSearchesList = [
-  {
-    id: 1,
-    date: '2018-04-19',
-    search: 'car',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 2,
-    date: '2018-04-19',
-    search: 'motorcycles',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 3,
-    date: '2018-04-20',
-    search: 'cars',
-    filters: ['USA', 'Lowest price'],
-  },
-  {
-    id: 4,
-    date: '2018-04-20',
-    search: 'jewelry',
-    filters: [],
-  },
-];
 
 const messages = defineMessages({
   default: {
@@ -67,9 +35,9 @@ const messages = defineMessages({
     id: 'SearchMenu.connectingToDht',
     defaultMessage: 'Connecting to dht'
   },
-  recent: {
-    id: 'SearchMenu.recent',
-    defaultMessage: 'Recent'
+  saved: {
+    id: 'SearchMenu.saved',
+    defaultMessage: 'Saved searches'
   },
   extendedSearch: {
     id: 'SearchMenu.extendedSearch',
@@ -86,6 +54,10 @@ const messages = defineMessages({
   loadingListings: {
     id: 'SearchMenu.loadingListings',
     defaultMessage: 'Loading listings'
+  },
+  noSavedSearches: {
+    id: 'SearchMenu.noSavedSearches',
+    defaultMessage: 'You haven\'t saved any searches yet'
   }
 });
 
@@ -102,24 +74,20 @@ const options = [
 ];
 
 class SearchMenu extends Component {
-
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.dht.isLoading && !nextProps.dht.isLoading) {
-      console.log('Peers map', nextProps.dht.peers);
-    }
-  }
+
 
   componentDidMount() {
-    this.props.marketplaceActions.getRecentSearches(recentSearchesList);
+    const { currentUser } = this.props.auth;
+    this.props.searchActions.getSavedSearches(currentUser.username);
   }
 
-  renderSelectField = ({
-                         input, placeholder, dropdownPlaceholder
-                       }) => (
+  renderSearchField = ({
+    input, placeholder, dropdownPlaceholder
+  }) => (
     <div className="hybrid-input">
       <input
         value={input.value.searchTerm}
@@ -153,67 +121,57 @@ class SearchMenu extends Component {
     </div>
   );
 
-  renderFilters(filters) {
-    const { formatMessage } = this.props.intl;
-
-    if (filters.length === 0) {
-      return (
-        <span>{formatMessage(messages.default)}</span>
-      );
-    }
-
-    return (
-      filters.map((filter, index) => {
-        const comma = filters.length - 1 !== index ? ', ' : '';
-        return (
-          <span key={hash(filter)}>{`${filter}${comma}`}</span>
-        );
-      })
-    );
-  }
 
   recentSearches() {
-    const { recentSearches } = this.props.marketplace;
+    const { savedSearches } = this.props.search;
     const { formatMessage } = this.props.intl;
-    if (this.props.dht.isLoading || this.props.marketplace.loading) {
+    if (this.props.dht.isLoading || this.props.search.loading) {
       return (
         <Grid.Row>
-          <Grid.Column width={16} style={{display: 'flex', justifyContent: 'center'}}>
+          <Grid.Column width={16} style={{ display: 'flex', justifyContent: 'center' }}>
             <Loader
-                    content={
+              content={
                       this.props.dht.isLoading
                         ? formatMessage(messages.searchingForPeers)
                         : formatMessage(messages.loadingListings)
                     }
-                    inline
-                    active
+              inline
+              active
             />
           </Grid.Column>
         </Grid.Row>
       );
     }
     return (
-      recentSearches.slice(0, maxSearches).map((search) => (
-        <Grid.Row key={hash(search)}>
-          <Grid.Column width={8}>
-            <span className="blue-text">{search.search}</span>
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <span className="gray-text">{this.renderFilters(search.filters)}</span>
-          </Grid.Column>
-        </Grid.Row>
-      ))
+      savedSearches.length === 0
+        ?
+          <Grid.Row>
+            <Grid.Column width={16}>{formatMessage(messages.noSavedSearches)}</Grid.Column>
+          </Grid.Row>
+        :
+        savedSearches.slice(0, maxSearches).map((search) => (
+          <Grid.Row key={hash(search)}>
+            <Grid.Column width={8}>
+              <span className="blue-text">{search.searchTerm}</span>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <span className="gray-text">{search.date}</span>
+            </Grid.Column>
+          </Grid.Row>
+        ))
     );
   }
 
   handleSubmit(values) {
     const { searchTerm, category } = values.search;
-    this.props.searchActions.searchListings(searchTerm, category ? category: 'All');
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(searchTerm, category || 'All');
   }
 
   render() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
+    const { savedSearches } = this.props.search;
     const isLoading = this.props.dht.isLoading || this.props.marketplace.loading;
     return (
       <Popup
@@ -226,7 +184,7 @@ class SearchMenu extends Component {
         hideOnScroll
         className="search-menu"
       >
-        <Dimmer.Dimmable  as="div" dimmed={this.props.dht.isConnecting}>
+        <Dimmer.Dimmable as="div" dimmed={this.props.dht.isConnecting}>
           <Dimmer active={this.props.dht.isConnecting}>
             <Loader>{formatMessage(messages.connectingToDht)}</Loader>
           </Dimmer>
@@ -236,7 +194,7 @@ class SearchMenu extends Component {
               name="search"
               placeholder="Search"
               dropdownPlaceholder="Categories"
-              component={this.renderSelectField}
+              component={this.renderSearchField}
               className="textfield"
             />
           </Form>
@@ -244,28 +202,17 @@ class SearchMenu extends Component {
             {!isLoading &&
               <Grid.Row>
                 <Grid.Column width={8}>
-                  <span className="gray-text">{formatMessage(messages.recent)}</span>
-                </Grid.Column>
-                <Grid.Column width={8}>
-                  <div className="check-wrapper">
-                    <Checkbox
-                      width={iconSizeMedium}
-                      height={iconSizeMedium}
-                    />
-                    <div className="description-text">
-                      {formatMessage(messages.extendedSearch)}
-                    </div>
-                  </div>
+                  <span className="gray-text">{formatMessage(messages.saved)}</span>
                 </Grid.Column>
               </Grid.Row>
             }
             {this.recentSearches()}
-            {!isLoading &&
+            {!isLoading && savedSearches.length > maxSearches &&
               <Grid.Row>
-                <Grid.Column width={12}/>
+                <Grid.Column width={12} />
                 <Grid.Column width={4} className="right">
                   <NavLink to="/saved-searches">
-                    <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all"/>
+                    <Button content={formatMessage(messages.viewAll)} className="button--blue-text view-all" />
                   </NavLink>
                 </Grid.Column>
               </Grid.Row>
@@ -277,16 +224,15 @@ class SearchMenu extends Component {
   }
 }
 
+SearchMenu = withRouter(SearchMenu);
 
 export default compose(
   connect(
     state => ({ ...state.default }),
     (dispatch) => ({
-      marketplaceActions: bindActionCreators({
-        getRecentSearches
-      }, dispatch),
       searchActions: bindActionCreators({
-        searchListings
+        searchListings,
+        getSavedSearches
       }, dispatch)
     }),
   ),
