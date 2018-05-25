@@ -18,119 +18,122 @@ const loadingIconSize = 24;
 
 class ImageItem extends Component {
 	state = {
-		ready: false,
-		url: null
+	  ready: false,
+	  url: null
 	}
 
 	componentWillMount() {
-		const { file, thumb } = this.props.image;
-		if (file) {
-			const reader = new FileReader();
+	  const { file, thumb } = this.props.image;
+	  if (file) {
+	    const reader = new FileReader();
 
-      reader.onload = (e) => {
-        this.setState({
+	    reader.onload = (e) => {
+	      this.setState({
         	ready: true,
         	url: e.target.result
-        });
-      };
-      reader.readAsDataURL(file);
-		} else {
-			this.setState({
-				ready: true,
-				url: thumb
-			});
-		}
+	      });
+	    };
+	    reader.readAsDataURL(file);
+	  } else {
+	    this.setState({
+	      ready: true,
+	      url: thumb
+	    });
+	  }
 	}
 
 	remove() {
-		const { image } = this.props;
-		this.props.listingActions.deleteListingImage(image);
+	  const { image } = this.props;
+	  this.props.listingActions.deleteListingImage(image);
 	}
 
 	clearError() {
-		const { id } = this.props.image;
-		this.props.listingActions.clearListingImageError(id);
+	  const { id } = this.props.image;
+	  this.props.listingActions.clearListingImageError(id);
 	}
 
 	renderError() {
-		const { uploadError, deleteError } = this.props.image;
+	  const { uploadError, deleteError } = this.props.image;
 
-		if (!uploadError && !deleteError) {
-			return null;
-		}
+	  if (!uploadError && !deleteError) {
+	    return null;
+	  }
 
-		const { formatMessage } = this.props.intl;
-		const msg = (
-			uploadError ? 
-			formatMessage(messages.uploadImageError) :
-			formatMessage(messages.deleteImageError)
-		);
+	  const { formatMessage } = this.props.intl;
+	  const msg = (
+	    uploadError ?
+	      formatMessage(messages.uploadImageError) :
+	      formatMessage(messages.deleteImageError)
+	  );
 
-		return (
-			<div className='loading-overlay'>
-				<div className='content'>
-					<span className='error'>{msg}</span>
-					<Button type='submit' content={formatMessage(messages.close)}
-						className="button--green-bg btn-close"
-						onClick={this.clearError.bind(this)} />
-				</div>
-			</div>
-		);
+	  return (
+  <div className="loading-overlay">
+    <div className="content">
+      <span className="error">{msg}</span>
+      <Button
+        type="submit"
+        content={formatMessage(messages.close)}
+        className="button--green-bg btn-close"
+        onClick={this.clearError.bind(this)}
+      />
+    </div>
+  </div>
+	  );
 	}
 
 	render() {
-		const { uploading, deleting } = this.props.image;
+	  const { uploading, deleting } = this.props.image;
 
-		return (
-			<div className="img-container">
-        {
+	  return (
+  <div className="img-container">
+    {
         	this.state.url && !uploading &&
-        	<Image src={RemoveIcon} 
-	        	width={iconSize} 
-	        	height={iconSize} 
-	        	className="remove-icon" 
-	        	onClick={this.remove.bind(this)} />
+        	<Image
+          src={RemoveIcon}
+          width={iconSize}
+          height={iconSize}
+          className="remove-icon"
+          onClick={this.remove.bind(this)}
+        	/>
       	}
-        {
+    {
         	this.state.url &&
         	<img alt="" src={this.state.url} width={132} height={100} className="added-img" />
         }
-        {
+    {
         	(uploading || deleting) &&
-        	<div className='loading-overlay'>
-        		<Dimmer active inverted>
-      				<Loader size='small' />
-    				</Dimmer>
+        	<div className="loading-overlay">
+          <Dimmer active inverted>
+            <Loader size="small" />
+          </Dimmer>
         	</div>
         }
-        { this.renderError() }
-      </div>
-		);
-	}
-};
-
-ImageItem.propTypes = {
-	image: PropTypes.shape({
-		file: PropTypes.object,
-		uploading: PropTypes.bool,
-		deleting: PropTypes.bool
-	}).isRequired,
-	imageId: PropTypes.string.isRequired,
-	listingActions: PropTypes.shape({
-		deleteListingImage: PropTypes.func
-	}).isRequired,
-	intl: PropTypes.shape({
-		formatMessage: PropTypes.func
-	}).isRequired
-};
-
-const mapDispatch = dispatch => {
-	return {
-		listingActions: bindActionCreators({
-      deleteListingImage,
-      clearListingImageError
-    }, dispatch)
+    { this.renderError() }
+  </div>
+	  );
 	}
 }
+
+ImageItem.propTypes = {
+  image: PropTypes.shape({
+    file: PropTypes.object,
+    uploading: PropTypes.bool,
+    deleting: PropTypes.bool
+  }).isRequired,
+  imageId: PropTypes.string.isRequired,
+  listingActions: PropTypes.shape({
+    deleteListingImage: PropTypes.func
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func
+  }).isRequired
+};
+
+const mapDispatch = dispatch => ({
+  listingActions: bindActionCreators({
+    deleteListingImage,
+    clearListingImageError
+  }, dispatch)
+});
 
 export default connect(null, mapDispatch)(injectIntl(ImageItem));

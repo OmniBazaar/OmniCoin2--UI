@@ -8,7 +8,7 @@ import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required } from 'redux-form-validators';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
-import {toastr} from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
@@ -122,10 +122,12 @@ class AddListing extends Component {
   getImagesData() {
     const { listingImages } = this.props.listing;
 
-    let data = [];
+    const data = [];
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
-      const { uploadError, image, thumb, fileName } = imageItem;
+      const {
+        uploadError, image, thumb, fileName
+      } = imageItem;
       if (uploadError || !image) {
         continue;
       }
@@ -197,9 +199,9 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.placing)}</span>
             </Grid.Column>
-            <Grid.Column width={6} className='align-top'>
+            <Grid.Column width={6} className="align-top">
               <Field
-                name='category'
+                name="category"
                 component={this.CategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.category)
@@ -207,9 +209,9 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={6} className='align-top'>
+            <Grid.Column width={6} className="align-top">
               <Field
-                name='subcategory'
+                name="subcategory"
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
@@ -223,9 +225,9 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.pricing)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='currency'
+                name="currency"
                 component={this.CurrencyDropdown}
                 props={{
                   placeholder: formatMessage(messages.currency)
@@ -233,7 +235,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="price"
@@ -249,7 +251,7 @@ class AddListing extends Component {
             <Grid.Column width={4} />
             <Grid.Column width={4}>
               <Field
-                name='price_using_btc'
+                name="price_using_btc"
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.bitcoinPrice)
@@ -258,7 +260,7 @@ class AddListing extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
-                name='price_using_omnicoin'
+                name="price_using_omnicoin"
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.omnicoinPrice)
@@ -270,16 +272,16 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.additionalInfo)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='condition'
+                name="condition"
                 component={this.ConditionDropdown}
                 props={{
                   placeholder: formatMessage(messages.condition)
                 }}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="quantity"
@@ -289,9 +291,9 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='units'
+                name="units"
                 component={this.UnitDropdown}
                 props={{
                   placeholder: formatMessage(messages.unitsOfMeasure)
@@ -304,7 +306,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.listingDates)} {formatMessage(messages.optional)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="start_date"
@@ -316,7 +318,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="end_date"
@@ -330,7 +332,7 @@ class AddListing extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
-                name='continuous'
+                name="continuous"
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.continuous)
@@ -403,7 +405,7 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.ownerDetails)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="name"
@@ -413,9 +415,9 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='contact_type'
+                name="contact_type"
                 component={this.ContactDropdown}
                 onChange={this.onContactTypeChange.bind(this)}
                 props={{
@@ -424,7 +426,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="contact_info"
@@ -440,9 +442,9 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='country'
+                name="country"
                 component={this.CountryDropdown}
                 props={{
                   placeholder: formatMessage(messages.country)
@@ -450,7 +452,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="address"
@@ -460,7 +462,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="city"
@@ -474,9 +476,9 @@ class AddListing extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
-                name='state'
+                name="state"
                 component={this.StateDropdown}
                 props={{
                   placeholder: formatMessage(messages.state),
@@ -485,7 +487,7 @@ class AddListing extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className='align-top'>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="post_code"
@@ -498,11 +500,13 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button type='submit'
+              <Button
+                type="submit"
                 content={formatMessage(messages.createListingCaps)}
                 className="button--green-bg"
                 loading={saving}
-                disabled={saving} />
+                disabled={saving}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -538,7 +542,7 @@ class AddListing extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <div className="marketplace-container category-listing add-listing" style={{position: 'relative'}}>
+      <div className="marketplace-container category-listing add-listing" style={{ position: 'relative' }}>
         <div className="header">
           <Menu />
         </div>

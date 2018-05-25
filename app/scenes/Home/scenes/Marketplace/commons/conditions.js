@@ -1,29 +1,29 @@
 const conditions = {
-	'': {
+  '': {
     id: 'Marketplace.condition',
     defaultMessage: 'Condition'
   },
-	Service: {
+  Service: {
     id: 'Marketplace.service',
     defaultMessage: 'Service'
   },
-	New: {
+  New: {
     id: 'Marketplace.new',
     defaultMessage: 'New'
   },
-	'Like-new': {
+  'Like-new': {
     id: 'Marketplace.likeNew',
     defaultMessage: 'Like-new'
   },
-	Good: {
+  Good: {
     id: 'Marketplace.good',
     defaultMessage: 'Good'
   },
-	Fair: {
+  Fair: {
     id: 'Marketplace.fair',
     defaultMessage: 'Fair'
   },
-	Used: {
+  Used: {
     id: 'Marketplace.used',
     defaultMessage: 'Used'
   }

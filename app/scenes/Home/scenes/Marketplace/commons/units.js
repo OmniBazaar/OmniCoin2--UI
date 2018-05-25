@@ -1,29 +1,29 @@
 const units = {
-	'': {
+  '': {
     id: 'Marketplace.unitOfMeasure',
     defaultMessage: 'Units of Measure'
   },
-	Each: {
+  Each: {
     id: 'Marketplace.each',
     defaultMessage: 'Each'
   },
-	Set: {
+  Set: {
     id: 'Marketplace.set',
     defaultMessage: 'Set'
   },
-	Package: {
+  Package: {
     id: 'Marketplace.package',
     defaultMessage: 'Package'
   },
-	Dozen: {
+  Dozen: {
     id: 'Marketplace.dozen',
     defaultMessage: 'Dozen'
   },
-	Box: {
+  Box: {
     id: 'Marketplace.box',
     defaultMessage: 'Box'
   },
-	Bottle: {
+  Bottle: {
     id: 'Marketplace.bottle',
     defaultMessage: 'Bottle'
   },

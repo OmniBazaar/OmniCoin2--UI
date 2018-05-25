@@ -139,7 +139,7 @@ const reducer = handleActions({
       ...state,
       listingImages: {
         ...state.listingImages,
-        [imageId] : {
+        [imageId]: {
           file,
           uploading: true,
           id: imageId
@@ -150,8 +150,8 @@ const reducer = handleActions({
   [setListingImages](state, { payload: { images } }) {
     return {
       ...state,
-      listingImages: images ? images : {}
-    }
+      listingImages: images || {}
+    };
   },
   [uploadListingImageSuccess](state, {
     payload: {
@@ -162,7 +162,7 @@ const reducer = handleActions({
     }
   }) {
     if (state.listingImages[imageId]) {
-      let imageItem = {
+      const imageItem = {
         ...state.listingImages[imageId],
         uploading: false,
         image,
@@ -184,7 +184,7 @@ const reducer = handleActions({
   },
   [uploadListingImageError](state, { payload: { imageId, error } }) {
     if (state.listingImages[imageId]) {
-      let imageItem = {
+      const imageItem = {
         ...state.listingImages[imageId],
         uploading: false,
         uploadError: error,
@@ -220,13 +220,13 @@ const reducer = handleActions({
     return state;
   },
   [deleteListingImageSuccess](state, { payload: { imageId } }) {
-    let listingImages = {
+    const listingImages = {
       ...state.listingImages
     };
     delete listingImages[imageId];
     return {
       ...state,
-      listingImages: listingImages
+      listingImages
     };
   },
   [deleteListingImageError](state, { payload: { imageId, error } }) {
@@ -248,7 +248,7 @@ const reducer = handleActions({
   },
   [clearListingImageError](state, { payload: { imageId } }) {
     if (state.listingImages[imageId]) {
-      let images = {
+      const images = {
         ...state.listingImages
       };
       if (images[imageId].uploadError) {
@@ -312,7 +312,7 @@ const reducer = handleActions({
         error,
         listingId
       }
-    }
+    };
   },
   [resetDeleteListing](state) {
     return {

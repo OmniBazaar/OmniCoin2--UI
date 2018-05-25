@@ -1,29 +1,29 @@
 const currencies = {
-	USD: {
+  USD: {
     id: 'Marketplace.currencyUsd',
     defaultMessage: 'US Dollar'
   },
-	EUR: {
+  EUR: {
     id: 'Marketplace.currencyEur',
     defaultMessage: 'Euro'
   },
-	GBP: {
+  GBP: {
     id: 'Marketplace.currencyGbp',
     defaultMessage: 'Sterling'
   },
-	CAD: {
+  CAD: {
     id: 'Marketplace.currencyCad',
     defaultMessage: 'Canadian Dollar'
   },
-	SEK: {
+  SEK: {
     id: 'Marketplace.currencySek',
     defaultMessage: 'Swedish Crown'
   },
-	AUD: {
+  AUD: {
     id: 'Marketplace.currencyAud',
     defaultMessage: 'Aussie'
   },
-	JPY: {
+  JPY: {
     id: 'Marketplace.currencyJpy',
     defaultMessage: 'Yen'
   },

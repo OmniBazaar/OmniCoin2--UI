@@ -5,27 +5,25 @@ import { defineMessages, injectIntl } from 'react-intl';
 import conditions from '../../../../../../commons/conditions';
 
 class ConditionDropdown extends Component {
-	componentWillMount() {
-		const { formatMessage } = this.props.intl;
-		this.options = Object.keys(conditions).map(id => {
-			return {
-				value: id,
-				text: formatMessage(conditions[id])
-			}
-		});
-	}
+  componentWillMount() {
+    const { formatMessage } = this.props.intl;
+    this.options = Object.keys(conditions).map(id => ({
+      value: id,
+      text: formatMessage(conditions[id])
+    }));
+  }
 
-	onChange(e, data) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(data.value);
-		}
-	}
+  onChange(e, data) {
+    const { onChange } = this.props.input;
+    if (onChange) {
+      onChange(data.value);
+    }
+  }
 
-	render() {
+  render() {
     const { value } = this.props.input;
-		return (
-			<Dropdown
+    return (
+      <Dropdown
         compact
         selection
         placeholder={this.props.placeholder}
@@ -33,16 +31,16 @@ class ConditionDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
       />
-		);
-	}
-};
+    );
+  }
+}
 
 ConditionDropdown.propTypes = {
-	placeholder: PropTypes.string.isRequired,
-	intl: PropTypes.shape({
+  placeholder: PropTypes.string.isRequired,
+  intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   input: PropTypes.object.isRequired
 };
 
-export default injectIntl(ConditionDropdown)
+export default injectIntl(ConditionDropdown);

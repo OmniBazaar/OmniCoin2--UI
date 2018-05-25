@@ -5,27 +5,25 @@ import { defineMessages, injectIntl } from 'react-intl';
 import contacts from '../../../../../../commons/contacts';
 
 class ContactDropdown extends Component {
-	componentWillMount() {
-		const { formatMessage } = this.props.intl;
-		this.options = Object.keys(contacts).map(id => {
-			return {
-				value: id,
-				text: formatMessage(contacts[id])
-			}
-		});
-	}
+  componentWillMount() {
+    const { formatMessage } = this.props.intl;
+    this.options = Object.keys(contacts).map(id => ({
+      value: id,
+      text: formatMessage(contacts[id])
+    }));
+  }
 
-	onChange(e, data) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(data.value);
-		}
-	}
+  onChange(e, data) {
+    const { onChange } = this.props.input;
+    if (onChange) {
+      onChange(data.value);
+    }
+  }
 
-	render() {
-		const { value } = this.props.input;
-		return (
-			<Dropdown
+  render() {
+    const { value } = this.props.input;
+    return (
+      <Dropdown
         compact
         selection
         placeholder={this.props.placeholder}
@@ -33,16 +31,16 @@ class ContactDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
       />
-		);
-	}
-};
+    );
+  }
+}
 
 ContactDropdown.propTypes = {
-	placeholder: PropTypes.string.isRequired,
-	intl: PropTypes.shape({
+  placeholder: PropTypes.string.isRequired,
+  intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   input: PropTypes.object.isRequired
 };
 
-export default injectIntl(ContactDropdown)
+export default injectIntl(ContactDropdown);

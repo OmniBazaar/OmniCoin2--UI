@@ -5,32 +5,30 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { mainCategories } from '../../../../../../categories';
 
 const categoryIds = [
-	'forSale', 'services', 'jobs', 'cryptoBazaar',
-	'community', 'housing', 'gigs'
+  'forSale', 'services', 'jobs', 'cryptoBazaar',
+  'community', 'housing', 'gigs'
 ];
 
 class CategoryDropdown extends Component {
-	componentWillMount() {
-		const { formatMessage } = this.props.intl;
-		this.options = categoryIds.map(id => {
-			return {
-				value: id,
-				text: formatMessage(mainCategories[id])
-			}
-		});
-	}
+  componentWillMount() {
+    const { formatMessage } = this.props.intl;
+    this.options = categoryIds.map(id => ({
+      value: id,
+      text: formatMessage(mainCategories[id])
+    }));
+  }
 
-	onChange(e, data) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(data.value);
-		}
-	}
+  onChange(e, data) {
+    const { onChange } = this.props.input;
+    if (onChange) {
+      onChange(data.value);
+    }
+  }
 
-	render() {
-		const { value } = this.props.input;
-		return (
-			<Dropdown
+  render() {
+    const { value } = this.props.input;
+    return (
+      <Dropdown
         compact
         selection
         placeholder={this.props.placeholder}
@@ -38,16 +36,16 @@ class CategoryDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
       />
-		);
-	}
-};
+    );
+  }
+}
 
 CategoryDropdown.propTypes = {
-	placeholder: PropTypes.string.isRequired,
-	intl: PropTypes.shape({
+  placeholder: PropTypes.string.isRequired,
+  intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   input: PropTypes.object.isRequired
 };
 
-export default injectIntl(CategoryDropdown)
+export default injectIntl(CategoryDropdown);

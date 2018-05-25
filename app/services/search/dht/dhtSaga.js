@@ -19,7 +19,13 @@ export function* dhtSubscriber() {
 
 export function* connect() {
   try {
-    const connector = yield call(dhtConnector.init, { host: '127.0.0.1', publishers: ['127.0.0.1:5000'] });
+    const connector = yield call(dhtConnector.init, {
+      publishers: [
+        '35.171.116.3:8500',
+        '127.0.0.1:8500',
+        '127.0.0.1:5000'
+      ]
+    });
 
     yield put({ type: 'DHT_CONNECT_SUCCEEDED', connector });
   } catch (e) {

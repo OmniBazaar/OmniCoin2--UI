@@ -5,27 +5,25 @@ import { defineMessages, injectIntl } from 'react-intl';
 import currencies from '../../../../../../commons/currencies';
 
 class CurrencyDropdown extends Component {
-	componentWillMount() {
-		const { formatMessage } = this.props.intl;
-		this.options = Object.keys(currencies).map(id => {
-			return {
-				value: id,
-				text: formatMessage(currencies[id])
-			}
-		});
-	}
+  componentWillMount() {
+    const { formatMessage } = this.props.intl;
+    this.options = Object.keys(currencies).map(id => ({
+      value: id,
+      text: formatMessage(currencies[id])
+    }));
+  }
 
-	onChange(e, data) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(data.value);
-		}
-	}
+  onChange(e, data) {
+    const { onChange } = this.props.input;
+    if (onChange) {
+      onChange(data.value);
+    }
+  }
 
-	render() {
-		const { value } = this.props.input;
-		return (
-			<Dropdown
+  render() {
+    const { value } = this.props.input;
+    return (
+      <Dropdown
         compact
         selection
         placeholder={this.props.placeholder}
@@ -33,16 +31,16 @@ class CurrencyDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
       />
-		);
-	}
-};
+    );
+  }
+}
 
 CurrencyDropdown.propTypes = {
-	placeholder: PropTypes.string.isRequired,
-	intl: PropTypes.shape({
+  placeholder: PropTypes.string.isRequired,
+  intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   input: PropTypes.object.isRequired
 };
 
-export default injectIntl(CurrencyDropdown)
+export default injectIntl(CurrencyDropdown);

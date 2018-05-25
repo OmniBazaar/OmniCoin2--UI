@@ -5,18 +5,17 @@ import CheckboxComponent from '../../../../../../../../../../components/Checkbox
 const size = 20;
 
 class Checkbox extends Component {
+  onChecked(isChecked) {
+    const { onChange } = this.props.input;
+    if (onChange) {
+      onChange(isChecked);
+    }
+  }
 
-	onChecked(isChecked) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(isChecked);
-		}
-	}
-
-	render() {
-		const { value } = this.props.input;
-		return (
-			<div className="check-form field">
+  render() {
+    const { value } = this.props.input;
+    return (
+      <div className="check-form field">
         <div className="description">
           <CheckboxComponent
             width={size}
@@ -28,12 +27,12 @@ class Checkbox extends Component {
           </div>
         </div>
       </div>
-		);
-	}
-};
+    );
+  }
+}
 
 Checkbox.propTypes = {
-	label: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   input: PropTypes.object.isRequired
 };
 

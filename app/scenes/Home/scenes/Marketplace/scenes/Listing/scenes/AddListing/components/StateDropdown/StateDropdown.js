@@ -5,62 +5,62 @@ import PropTypes from 'prop-types';
 
 class StateDropdown extends Component {
 	state = {
-		options: []
+	  options: []
 	}
 
 	componentWillMount() {
-		this.getStateOptions(this.props.country);
+	  this.getStateOptions(this.props.country);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.country !== this.props.country) {
-			this.getStateOptions(nextProps.country);
-		}
+	  if (nextProps.country !== this.props.country) {
+	    this.getStateOptions(nextProps.country);
+	  }
 	}
 
 	getStateOptions(country) {
-		for (let i in countryRegionData) {
-			if (countryRegionData[i].countryName === country) {
-				const options = countryRegionData[i].regions.map(item => {
-					const { name } = item;
-					return {
-						value: name,
-						text: name
-					};
-				});
+	  for (const i in countryRegionData) {
+	    if (countryRegionData[i].countryName === country) {
+	      const options = countryRegionData[i].regions.map(item => {
+	        const { name } = item;
+	        return {
+	          value: name,
+	          text: name
+	        };
+	      });
 
-				this.setState({ options });
-				break;
-			}
-		}
+	      this.setState({ options });
+	      break;
+	    }
+	  }
 	}
 
 	onChange(e, data) {
-		const { onChange } = this.props.input;
-		if (onChange) {
-			onChange(data.value);
-		}
+	  const { onChange } = this.props.input;
+	  if (onChange) {
+	    onChange(data.value);
+	  }
 	}
 
 	render() {
-		const { value } = this.props.input;
-		return (
-			<Dropdown
-				search={true}
-        compact
-        selection
-        placeholder={this.props.placeholder}
-        options={this.state.options}
-        onChange={this.onChange.bind(this)}
-        value={value}
-      />
-		);
+	  const { value } = this.props.input;
+	  return (
+  <Dropdown
+    search
+    compact
+    selection
+    placeholder={this.props.placeholder}
+    options={this.state.options}
+    onChange={this.onChange.bind(this)}
+    value={value}
+  />
+	  );
 	}
-};
+}
 
 StateDropdown.propTypes = {
-	placeholder: PropTypes.string.isRequired,
-	country: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
+  country: PropTypes.string,
   input: PropTypes.shape({
   	onChange: PropTypes.func,
   	value: PropTypes.string
@@ -68,8 +68,8 @@ StateDropdown.propTypes = {
 };
 
 StateDropdown.defaultProps = {
-	country: '',
-	input: {}
-}
+  country: '',
+  input: {}
+};
 
 export default StateDropdown;
