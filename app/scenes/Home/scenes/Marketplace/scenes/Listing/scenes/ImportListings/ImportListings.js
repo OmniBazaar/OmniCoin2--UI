@@ -15,6 +15,7 @@ import {
 } from '../../../../../../../../services/listing/importActions';
 
 import { getFileExtension } from '../../../../../../../../utils/file';
+import { mapListingsFromFile } from '../../../../../../../../utils/listings';
 
 import './import-listings.scss';
 
@@ -115,27 +116,22 @@ class ImportListings extends Component {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
       const extFile = getFileExtension(event);
-      if (extFile === 'txt') {
-        reader.onload = () => {
-          // e.target.result
-          const filename = this.inputElement.files[0].name;
-          const file = {
-            title: filename,
-            content: 'The content for this txt file.',
-            type: 'Amazon',
-            category: 'Category',
-            subCategory: 'Sub-category',
-            contactType: 'Contact Type',
-            contactInfo: 'Contact Info',
-            price: 15,
-            currency: 'USD',
-          };
-          this.props.listingActions.importFile(file);
-        };
-        reader.readAsDataURL(event.target.files[0]);
-      } else {
-        this.setState({ open: true });
+
+      if (extFile !== 'txt') {
+        return this.setState({ open: true });
       }
+
+      reader.onload = () => {
+        const items = mapListingsFromFile(reader.result);
+        const filename = this.inputElement.files[0].name;
+
+        this.props.listingActions.importFile({
+          title: filename,
+          items,
+        });
+      };
+
+      reader.readAsText(event.target.files[0]);
     }
   }
 
@@ -302,5 +298,5 @@ export default connect(
       removeFile,
       removeAllFiles
     }, dispatch),
-  }),
+  })
 )(injectIntl(ImportListings));
