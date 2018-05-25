@@ -98,19 +98,20 @@ class ImportedFilesTable extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {importedFiles.map(row =>
-                (
-                  <TableRow key={hash(row)}>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{row.subCategory}</TableCell>
-                    <TableCell>{row.contactType}</TableCell>
-                    <TableCell>{row.contactInfo}</TableCell>
+              {
+                importedFiles.map(row => row.items.map(item => (
+                  <TableRow key={hash(item)}>
+                    <TableCell>{item.type}</TableCell>
+                    <TableCell>{item.category}</TableCell>
+                    <TableCell>{item.subCategory}</TableCell>
+                    <TableCell>{item.contactType}</TableCell>
+                    <TableCell>{item.contactInfo}</TableCell>
                     <TableCell>{row.title}</TableCell>
-                    <TableCell>{numberWithCommas(row.price)}</TableCell>
-                    <TableCell>{row.currency}</TableCell>
+                    <TableCell>{numberWithCommas(item.price)}</TableCell>
+                    <TableCell>{item.currency}</TableCell>
                   </TableRow>
-                ))}
+                )))
+              }
             </TableBody>
           </Table>
         </div>
@@ -154,5 +155,5 @@ export default connect(
     listingActions: bindActionCreators({
       sortImportData
     }, dispatch),
-  }),
+  })
 )(injectIntl(ImportedFilesTable));
