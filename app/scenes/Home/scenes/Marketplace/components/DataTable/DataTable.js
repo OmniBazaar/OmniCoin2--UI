@@ -101,7 +101,7 @@ class DataTable extends Component {
     if (sortDirection === 'descending') {
       direction = 'ascending';
     }
-    this.props.sort(direction, clickedColumn);
+    this.props.sort(clickedColumn, direction);
   };
 
   handleSave = (row) => {
@@ -134,6 +134,7 @@ class DataTable extends Component {
       onSearch
     } = this.props;
 
+
     return (
       <div className="data-table">
         <div className="table-container">
@@ -143,10 +144,10 @@ class DataTable extends Component {
                 <TableHeaderCell key="date" sorted={sortBy === 'date' ? sortDirection : null} onClick={this.sortData('date')}>
                   {formatMessage(messages.date)}
                 </TableHeaderCell>
-                <TableHeaderCell key="search" sorted={sortBy === 'searchTerm' ? sortDirection : null} onClick={this.sortData('search')}>
+                <TableHeaderCell key="search" sorted={sortBy === 'searchTerm' ? sortDirection : null} onClick={this.sortData('searchTerm')}>
                   {formatMessage(messages.search)}
                 </TableHeaderCell>
-                <TableHeaderCell key="filters" sorted={sortBy === 'category' ? sortDirection : null} onClick={this.sortData('filters')}>
+                <TableHeaderCell key="filters" sorted={sortBy === 'category' ? sortDirection : null} onClick={this.sortData('category')}>
                   {formatMessage(messages.parameters)}
                 </TableHeaderCell>
                 <TableHeaderCell key="actions" onClick={this.sortData('actions')} />
@@ -232,6 +233,9 @@ DataTable.propTypes = {
 };
 
 DataTable.defaultProps = {
+  sortBy: '',
+  sortDirection: '',
+  sort: () => {},
   tableProps: {
     sortable: true,
     compact: true,
@@ -241,8 +245,6 @@ DataTable.defaultProps = {
   },
   intl: {},
   data: [],
-  sortBy: '',
-  sortDirection: '',
   showSaveButton: false,
   showDeleteButton: false,
   showViewButton: false,

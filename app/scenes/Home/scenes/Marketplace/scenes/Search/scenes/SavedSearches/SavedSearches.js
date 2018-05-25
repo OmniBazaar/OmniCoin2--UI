@@ -73,6 +73,7 @@ class SavedSearches extends Component {
               data={savedSearches}
               sortBy={savedSortOptions.by}
               sortDirection={savedSortOptions.direction}
+              sort={this.props.searchActions.sortSavedSearches}
               showDeleteButton
               showViewButton
               onView={this.handleView}

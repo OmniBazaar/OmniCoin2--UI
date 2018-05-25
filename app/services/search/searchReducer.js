@@ -26,12 +26,12 @@ const defaultState = {
   recentSearches: [],
   recentSortOptions: {
     by: 'date',
-    direction: 'desc',
+    direction: 'descending',
   },
   savedSearches: [],
   savedSortOptions: {
     by: 'date',
-    direction: 'desc'
+    direction: 'descending'
   },
   searchResults: [],
   searchResultsFiltered: [],
