@@ -150,10 +150,11 @@ class AddListing extends Component {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
-    
+
     saveListing({
       ...values,
-      images: this.getImagesData()
+      images: this.getImagesData(),
+      keywords: values.keywords.split(',').map(el => el.trim())
     });
   }
 
@@ -164,7 +165,7 @@ class AddListing extends Component {
     const { error, saving } = this.props.listing.saveListing;
 
     return (
-      
+
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
