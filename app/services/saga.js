@@ -10,6 +10,7 @@ import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
 import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
 import { searchSubscriber } from './search/searchSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
+import { listingSubscriber } from './listing/listingSaga';
 
 export {
   connectionSubscriber,
@@ -23,5 +24,6 @@ export {
   transferSubscriber,
   dhtSubscriber,
   wsMarketplaceSubscriber,
-  searchSubscriber
+  searchSubscriber,
+  listingSubscriber
 };
