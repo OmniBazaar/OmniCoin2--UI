@@ -11,20 +11,22 @@ import { NavLink } from 'react-router-dom';
 import {toastr} from 'react-redux-toastr'
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import CategoryDropdown from './components/CategoryDropdown';
-import SubCategoryDropdown from './components/SubCategoryDropdown';
-import CurrencyDropdown from './components/CurrencyDropdown';
-import ConditionDropdown from './components/ConditionDropdown';
-import UnitDropdown from './components/UnitDropdown';
-import ContactDropdown from './components/ContactDropdown';
-import CountryDropdown from './components/CountryDropdown';
-import StateDropdown from './components/StateDropdown';
-import Checkbox from './components/Checkbox';
-import Calendar from './components/Calendar';
-import Images from './components/images';
+import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
+import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
+import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
+import UnitDropdown from './components/UnitDropdown/UnitDropdown';
+import ContactDropdown from './components/ContactDropdown/ContactDropdown';
+import CountryDropdown from './components/CountryDropdown/CountryDropdown';
+import StateDropdown from './components/StateDropdown/StateDropdown';
+import Checkbox from './components/Checkbox/Checkbox';
+import Calendar from './components/Calendar/Calendar';
+import Images from './components/Images/Images';
 import messages from './messages';
-import ValidatableField,
-  { makeValidatableField } from '../../../../../../../../components/ValidatableField';
+import {
+  InputField,
+  makeValidatableField
+} from '../../../../../../../../components/ValidatableField/ValidatableField';
 
 import {
   setListingImages,
@@ -183,7 +185,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="listing_title"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
                 validate={requiredFieldValidator}
@@ -280,7 +282,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="quantity"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
                 validate={requiredFieldValidator}
@@ -367,7 +369,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="keywords"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
                 validate={requiredFieldValidator}
@@ -404,7 +406,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="name"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
                 validate={requiredFieldValidator}
@@ -425,7 +427,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="contact_info"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
                 validate={requiredFieldValidator}
@@ -451,7 +453,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="address"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
                 validate={requiredFieldValidator}
@@ -461,7 +463,7 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="city"
-                component={ValidatableField}
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
                 validate={requiredFieldValidator}

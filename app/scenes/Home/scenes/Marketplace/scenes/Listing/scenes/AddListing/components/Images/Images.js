@@ -10,7 +10,7 @@ import { getFileExtension } from '../../../../../../../../../../utils/file';
 import {
   uploadListingImage
 } from '../../../../../../../../../../services/listing/listingActions';
-import ImageItem from './image';
+import ImageItem from './ImageItem';
 import messages from '../../messages';
 
 const imageLimit = 10;
