@@ -190,6 +190,7 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
+    "country-region-data": "^1.4.2",
     "dateformat": "^3.0.3",
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
@@ -225,8 +226,11 @@
     "redux-form-validators": "^2.4.1",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
     "semantic-ui-css": "^2.3.0",
     "semantic-ui-react": "^0.78.3",
+    "shortid": "^2.2.8",
     "source-map-support": "^0.5.3"
   },
   "devEngines": {

@@ -4,224 +4,44 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
-import { Field, reduxForm } from 'redux-form';
-import DatePicker from 'react-datepicker';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
+import { required } from 'redux-form-validators';
 import hash from 'object-hash';
 import { NavLink } from 'react-router-dom';
+import {toastr} from 'react-redux-toastr'
 
-import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
-import { getFileExtension } from '../../../../../../../../utils/file';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import CalendarIcon from '../../../../../../images/icn-calendar.svg';
-import AddIcon from '../../../../../../images/btn-add-image.svg';
-import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
+import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
+import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
+import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
+import UnitDropdown from './components/UnitDropdown/UnitDropdown';
+import ContactDropdown from './components/ContactDropdown/ContactDropdown';
+import CountryDropdown from './components/CountryDropdown/CountryDropdown';
+import StateDropdown from './components/StateDropdown/StateDropdown';
+import Checkbox from './components/Checkbox/Checkbox';
+import Calendar from './components/Calendar/Calendar';
+import Images from './components/Images/Images';
+import messages from './messages';
+import {
+  InputField,
+  makeValidatableField
+} from '../../../../../../../../components/ValidatableField/ValidatableField';
 
 import {
-  setBitcoinPrice,
-  setOmnicoinPrice,
-  setContinuous,
-  addImage,
-  removeImage
+  setListingImages,
+  saveListing,
+  resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
 
 import './add-listing.scss';
 
-require('react-datepicker/dist/react-datepicker-cssmodules.css');
-
 const iconSize = 42;
-const iconSizeLarge = 23;
-const iconSizeMedium = 20;
-const iconSizeSmall = 15;
 
-const messages = defineMessages({
-  myListings: {
-    id: 'AddListing.myListings',
-    defaultMessage: 'My Listings'
-  },
-  createListing: {
-    id: 'AddListing.createListing',
-    defaultMessage: 'Create Listing'
-  },
-  primaryInfo: {
-    id: 'AddListing.primaryInfo',
-    defaultMessage: 'Primary Info'
-  },
-  importListings: {
-    id: 'AddListing.importListings',
-    defaultMessage: 'IMPORT LISTINGS'
-  },
-  listingTitle: {
-    id: 'AddListing.listingTitle',
-    defaultMessage: 'Listing Title'
-  },
-  pleaseEnter: {
-    id: 'AddListing.pleaseEnter',
-    defaultMessage: 'Please enter'
-  },
-  placing: {
-    id: 'AddListing.placing',
-    defaultMessage: 'Placing'
-  },
-  type: {
-    id: 'AddListing.type',
-    defaultMessage: 'Type'
-  },
-  category: {
-    id: 'AddListing.category',
-    defaultMessage: 'Category'
-  },
-  subCategory: {
-    id: 'AddListing.subCategory',
-    defaultMessage: 'Sub-category'
-  },
-  pricing: {
-    id: 'AddListing.pricing',
-    defaultMessage: 'Pricing'
-  },
-  currency: {
-    id: 'AddListing.currency',
-    defaultMessage: 'Currency'
-  },
-  pricePerItem: {
-    id: 'AddListing.pricePerItem',
-    defaultMessage: 'Price per item'
-  },
-  na: {
-    id: 'AddListing.na',
-    defaultMessage: 'N/A'
-  },
-  bitcoinPrice: {
-    id: 'AddListing.bitcoinPrice',
-    defaultMessage: 'Add Bitcoin Price'
-  },
-  omnicoinPrice: {
-    id: 'AddListing.omnicoinPrice',
-    defaultMessage: 'Add Omnicoin Price'
-  },
-  additionalInfo: {
-    id: 'AddListing.additionalInfo',
-    defaultMessage: 'Additional Info'
-  },
-  condition: {
-    id: 'AddListing.condition',
-    defaultMessage: 'Condition'
-  },
-  numberAvailable: {
-    id: 'AddListing.numberAvailable',
-    defaultMessage: 'Number Available'
-  },
-  unitsOfMeasure: {
-    id: 'AddListing.unitsOfMeasure',
-    defaultMessage: 'Units of Measure'
-  },
-  listingDates: {
-    id: 'AddListing.listingDates',
-    defaultMessage: 'Listing Dates'
-  },
-  optional: {
-    id: 'AddListing.optional',
-    defaultMessage: '(Optional)'
-  },
-  from: {
-    id: 'AddListing.from',
-    defaultMessage: 'From'
-  },
-  to: {
-    id: 'AddListing.to',
-    defaultMessage: 'To'
-  },
-  continuous: {
-    id: 'AddListing.continuous',
-    defaultMessage: 'continuous'
-  },
-  images: {
-    id: 'AddListing.images',
-    defaultMessage: 'Images'
-  },
-  listingImages: {
-    id: 'AddListing.listingImages',
-    defaultMessage: 'Listing Images'
-  },
-  description: {
-    id: 'AddListing.description',
-    defaultMessage: 'Description'
-  },
-  keywordsSearch: {
-    id: 'AddListing.keywordsSearch',
-    defaultMessage: 'Keywords for search engine'
-  },
-  keywordCommas: {
-    id: 'AddListing.keywordCommas',
-    defaultMessage: 'Keywords separated by commas'
-  },
-  owner: {
-    id: 'AddListing.owner',
-    defaultMessage: 'Owner'
-  },
-  ownerDetails: {
-    id: 'AddListing.ownerDetails',
-    defaultMessage: 'Owner Details'
-  },
-  ownerName: {
-    id: 'AddListing.ownerName',
-    defaultMessage: 'Owner Name'
-  },
-  preferredContact: {
-    id: 'AddListing.preferredContact',
-    defaultMessage: 'Preferred contact'
-  },
-  enterPreferredContact: {
-    id: 'AddListing.enterPreferredContact',
-    defaultMessage: 'Enter preferred contact'
-  },
-  location: {
-    id: 'AddListing.location',
-    defaultMessage: 'Location'
-  },
-  country: {
-    id: 'AddListing.country',
-    defaultMessage: 'Country'
-  },
-  address: {
-    id: 'AddListing.address',
-    defaultMessage: 'Address'
-  },
-  city: {
-    id: 'AddListing.city',
-    defaultMessage: 'City'
-  },
-  state: {
-    id: 'AddListing.state',
-    defaultMessage: 'State'
-  },
-  postalCode: {
-    id: 'AddListing.postalCode',
-    defaultMessage: 'Postal Code'
-  },
-  createListingCaps: {
-    id: 'AddListing.createListingCaps',
-    defaultMessage: 'CREATE LISTING'
-  },
-  warning: {
-    id: 'AddListing.warning',
-    defaultMessage: 'Warning'
-  },
-  ok: {
-    id: 'AddListing.ok',
-    defaultMessage: 'Ok'
-  },
-  onlyImagesMsg: {
-    id: 'AddListing.onlyImagesMsg',
-    defaultMessage: 'Only jpg/jpeg and png files are allowed.'
-  },
-});
+const contactOmniMessage = 'OmniMessage';
 
-const placingTypeOptions = [
-  {
-    key: 'all',
-    value: 'all',
-    text: 'All'
-  },
+const requiredFieldValidator = [
+  required({ message: messages.fieldRequired })
 ];
 
 class AddListing extends Component {
@@ -230,11 +50,19 @@ class AddListing extends Component {
     this.state = {
       open: false
     };
-  }
 
-  toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPrice();
-  toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPrice();
-  toggleContinuous = () => this.props.listingActions.setContinuous();
+    this.CategoryDropdown = makeValidatableField(CategoryDropdown);
+    this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.ConditionDropdown = makeValidatableField(ConditionDropdown);
+    this.UnitDropdown = makeValidatableField(UnitDropdown);
+    this.ContactDropdown = makeValidatableField(ContactDropdown);
+    this.CountryDropdown = makeValidatableField(CountryDropdown);
+    this.StateDropdown = makeValidatableField(StateDropdown);
+    this.Calendar = makeValidatableField(Calendar);
+    this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
+    this.PriceInput = makeValidatableField(this.renderLabeledField);
+  }
 
   renderLabeledField = ({
     input, placeholder, buttonText
@@ -252,58 +80,92 @@ class AddListing extends Component {
     </div>
   );
 
-  renderCalendarField = ({
-    placeholder
-  }) => (
-    <div className="hybrid-input">
-      <DatePicker
-        placeholderText={placeholder}
-        onChange={this.handleChange}
-      />
-      <Button className="copy-btn button--gray-text">
-        <Image src={CalendarIcon} width={iconSizeSmall} height={iconSizeSmall} />
-      </Button>
-    </div>
-  );
+  componentWillMount() {
+    this.props.initialize({
+      contact_type: contactOmniMessage,
+      contact_info: this.props.auth.currentUser.username,
+      price_using_btc: false,
+      price_using_omnicoin: false,
+      continuous: false
+    });
+    this.props.listingActions.setListingImages(null);
+    this.props.listingActions.resetSaveListing();
+  }
 
-  onImageChange(event) {
-    if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      const extFile = getFileExtension(event);
-
-      if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
-        reader.onload = (e) => {
-          this.props.listingActions.addImage(e.target.result);
-        };
-        reader.readAsDataURL(event.target.files[0]);
+  componentWillReceiveProps(nextProps) {
+    const { error, saving } = nextProps.listing.saveListing;
+    if (this.props.listing.saveListing.saving && !saving) {
+      const { formatMessage } = this.props.intl;
+      if (error) {
+        this.showErrorToast(
+          formatMessage(messages.error),
+          formatMessage(messages.saveListingErrorMessage)
+        );
+      } else {
+        this.showSuccessToast(
+          formatMessage(messages.success),
+          formatMessage(messages.saveListingSuccessMessage)
+        );
       }
     }
   }
 
-  onClickAddImage = () => {
-    this.inputElement.click();
-  };
+  onContactTypeChange(e, newValue) {
+    let contactInfo = '';
+    if (newValue === contactOmniMessage) {
+      contactInfo = this.props.auth.currentUser.username;
+    }
 
-  removeImage = (index) => {
-    this.props.listingActions.removeImage(index);
-  };
+    this.props.formActions.change('contact_info', contactInfo);
+  }
 
-  addedImages() {
-    const { addedImages } = this.props.listing;
+  getImagesData() {
+    const { listingImages } = this.props.listing;
 
-    return addedImages.map((image, index) => (
-      <div key={hash(image)} className="img-container">
-        <Image src={RemoveIcon} width={iconSizeLarge} height={iconSizeLarge} className="remove-icon" onClick={() => this.removeImage(index)} />
-        <img alt="" src={image} width={132} height={100} className="added-img" />
-      </div>
-    ));
+    let data = [];
+    for (const imageId in listingImages) {
+      const imageItem = listingImages[imageId];
+      const { uploadError, image, thumb, fileName } = imageItem;
+      if (uploadError || !image) {
+        continue;
+      }
+
+      data.push({
+        path: image,
+        thumb,
+        image_name: fileName
+      });
+    }
+
+    return data;
+  }
+
+  showSuccessToast(title, message) {
+    toastr.success(title, message);
+  }
+
+  showErrorToast(title, message) {
+    toastr.error(title, message);
+  }
+
+  submit(values) {
+    const { saveListing } = this.props.listingActions;
+    
+    saveListing({
+      ...values,
+      images: this.getImagesData()
+    });
   }
 
   addListingForm() {
     const { formatMessage } = this.props.intl;
+    const { category, country } = this.props.formValues ? this.props.formValues : {};
+    const { handleSubmit } = this.props;
+    const { error, saving } = this.props.listing.saveListing;
 
     return (
-      <Form className="add-listing-form">
+      
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
@@ -322,10 +184,11 @@ class AddListing extends Component {
             <Grid.Column width={12}>
               <Field
                 type="text"
-                name="listingTitle"
-                component="input"
+                name="listing_title"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -333,28 +196,25 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.placing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.type)}
-                options={placingTypeOptions}
+            <Grid.Column width={6} className='align-top'>
+              <Field
+                name='category'
+                component={this.CategoryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.category)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.category)}
-                options={placingTypeOptions}
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.subCategory)}
-                options={placingTypeOptions}
+            <Grid.Column width={6} className='align-top'>
+              <Field
+                name='subcategory'
+                component={this.SubCategoryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.subCategory),
+                  parentCategory: category
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -362,83 +222,80 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.pricing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.currency)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='currency'
+                component={this.CurrencyDropdown}
+                props={{
+                  placeholder: formatMessage(messages.currency)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="pricePerItem"
+                name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
-                component={this.renderLabeledField}
+                component={this.PriceInput}
                 className="textfield"
                 buttonText={formatMessage(messages.na)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleBitcoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.bitcoinPrice)}
-                  </div>
-                </div>
-              </div>
+              <Field
+                name='price_using_btc'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.bitcoinPrice)
+                }}
+              />
             </Grid.Column>
             <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleOmnicoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.omnicoinPrice)}
-                  </div>
-                </div>
-              </div>
+              <Field
+                name='price_using_omnicoin'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.omnicoinPrice)
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
               <span>{formatMessage(messages.additionalInfo)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.condition)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='condition'
+                component={this.ConditionDropdown}
+                props={{
+                  placeholder: formatMessage(messages.condition)
+                }}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="numberAvailable"
-                component="input"
+                name="quantity"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.unitsOfMeasure)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='units'
+                component={this.UnitDropdown}
+                props={{
+                  placeholder: formatMessage(messages.unitsOfMeasure)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -446,37 +303,38 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.listingDates)} {formatMessage(messages.optional)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="fromDate"
-                placeholder={formatMessage(messages.from)}
-                component={this.renderCalendarField}
+                name="start_date"
+                component={this.Calendar}
                 className="textfield"
+                props={{
+                  placeholder: formatMessage(messages.from)
+                }}
+                validate={requiredFieldValidator}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                type="text"
+                name="end_date"
+                component={this.Calendar}
+                className="textfield"
+                props={{
+                  placeholder: formatMessage(messages.to)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
-                type="text"
-                name="toDate"
-                placeholder={formatMessage(messages.to)}
-                component={this.renderCalendarField}
-                className="textfield"
+                name='continuous'
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.continuous)
+                }}
               />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleContinuous}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.continuous)}
-                  </div>
-                </div>
-              </div>
             </Grid.Column>
           </Grid.Row>
 
@@ -493,19 +351,7 @@ class AddListing extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <input
-                ref={(ref) => { this.inputElement = ref; }}
-                type="file"
-                onChange={this.onImageChange.bind(this)}
-                className="filetype"
-                accept="image/*"
-              />
-              <div className="images-wrapper">
-                {this.addedImages()}
-                <Button className="add-img-button" onClick={() => this.onClickAddImage()}>
-                  <Image src={AddIcon} width={iconSize} height={iconSize} />
-                </Button>
-              </div>
+              <Images />
             </Grid.Column>
           </Grid.Row>
 
@@ -523,9 +369,10 @@ class AddListing extends Component {
               <Field
                 type="text"
                 name="keywords"
-                component="input"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -537,9 +384,10 @@ class AddListing extends Component {
               <Field
                 type="textarea"
                 name="description"
-                component="textarea"
+                component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -554,30 +402,35 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.ownerDetails)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="ownerName"
-                component="input"
+                name="name"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.preferredContact)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='contact_type'
+                component={this.ContactDropdown}
+                onChange={this.onContactTypeChange.bind(this)}
+                props={{
+                  placeholder: formatMessage(messages.preferredContact)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="preferredContactDetail"
-                component="input"
+                name="contact_info"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
@@ -586,48 +439,55 @@ class AddListing extends Component {
             <Grid.Column width={4}>
               <span>{formatMessage(messages.location)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.country)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='country'
+                component={this.CountryDropdown}
+                props={{
+                  placeholder: formatMessage(messages.country)
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="address"
-                component="input"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
                 name="city"
-                component="input"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.state)}
-                options={placingTypeOptions}
+            <Grid.Column width={4} className='align-top'>
+              <Field
+                name='state'
+                component={this.StateDropdown}
+                props={{
+                  placeholder: formatMessage(messages.state),
+                  country
+                }}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className='align-top'>
               <Field
                 type="text"
-                name="postalCode"
+                name="post_code"
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
@@ -637,7 +497,11 @@ class AddListing extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>
-              <Button content={formatMessage(messages.createListingCaps)} className="button--green-bg" />
+              <Button type='submit'
+                content={formatMessage(messages.createListingCaps)}
+                className="button--green-bg"
+                loading={saving}
+                disabled={saving} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -673,7 +537,7 @@ class AddListing extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <div className="marketplace-container category-listing add-listing">
+      <div className="marketplace-container category-listing add-listing" style={{position: 'relative'}}>
         <div className="header">
           <Menu />
         </div>
@@ -701,44 +565,53 @@ class AddListing extends Component {
 
 AddListing.propTypes = {
   listingActions: PropTypes.shape({
-    setBitcoinPrice: PropTypes.func,
-    setOmnicoinPrice: PropTypes.func,
-    setContinuous: PropTypes.func,
-    addImage: PropTypes.func,
-    removeImage: PropTypes.func,
-  }),
-  listing: PropTypes.shape({
-    bitcoinPrice: PropTypes.bool,
-    omnicoinPrice: PropTypes.bool,
-    isContinuous: PropTypes.bool,
-    addedImages: PropTypes.arrayOf(PropTypes.string),
+    setListingImages: PropTypes.func,
+    resetSaveListing: PropTypes.func,
+    saveListing: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape({
+      username: PropTypes.string
+    })
+  }),
+  listing: PropTypes.shape({
+    saveListing: PropTypes.shape({
+      error: PropTypes.object,
+      saving: PropTypes.bool
+    }),
+    listingImages: PropTypes.object
+  }).isRequired,
 };
 
 AddListing.defaultProps = {
   listingActions: {},
-  listing: {},
   intl: {},
+  auth: {}
 };
 
 export default compose(
-  connect(
-    state => ({ ...state.default }),
-    (dispatch) => ({
-      listingActions: bindActionCreators({
-        setBitcoinPrice,
-        setOmnicoinPrice,
-        setContinuous,
-        addImage,
-        removeImage
-      }, dispatch),
-    }),
-  ),
   reduxForm({
     form: 'addListingForm',
     destroyOnUnmount: true,
   }),
+  connect(
+    state => ({
+      auth: state.default.auth,
+      listing: state.default.listing,
+      formValues: getFormValues('addListingForm')(state)
+    }),
+    (dispatch) => ({
+      listingActions: bindActionCreators({
+        setListingImages,
+        saveListing,
+        resetSaveListing
+      }, dispatch),
+      formActions: bindActionCreators({
+        change: (field, value) => change('addListingForm', field, value)
+      }, dispatch)
+    }),
+  ),
 )(injectIntl(AddListing));
