@@ -47,14 +47,6 @@ const messages = defineMessages({
     id: 'SearchMenu.viewAll',
     defaultMessage: 'VIEW ALL'
   },
-  searchingForPeers: {
-    id: 'SearchMenu.searchingForPeers',
-    defaultMessage: 'Searching for publishers'
-  },
-  loadingListings: {
-    id: 'SearchMenu.loadingListings',
-    defaultMessage: 'Loading listings'
-  },
   noSavedSearches: {
     id: 'SearchMenu.noSavedSearches',
     defaultMessage: 'You haven\'t saved any searches yet'
