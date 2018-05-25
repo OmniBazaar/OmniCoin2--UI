@@ -29,6 +29,7 @@ class SavedSearches extends Component {
     this.props.searchActions.getSavedSearches(currentUser.username);
     this.handleView = this.handleView.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   handleView(search) {
@@ -38,6 +39,11 @@ class SavedSearches extends Component {
 
   handleDelete(search) {
     this.props.searchActions.deleteSearch(search);
+  }
+
+  handleSearch(searchTerm, category) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(searchTerm, category, false);
   }
 
   render() {
@@ -71,6 +77,7 @@ class SavedSearches extends Component {
               showViewButton
               onView={this.handleView}
               onDelete={this.handleDelete}
+              onSearch={this.handleSearch}
               deleting={deleting}
               error={error}
             />

@@ -32,6 +32,7 @@ class RecentSearches extends Component {
     super(props);
     this.handleView = this.handleView.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +49,10 @@ class RecentSearches extends Component {
     this.props.searchActions.saveSearch(search);
   }
 
+  handleSearch(searchTerm, category) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(searchTerm, category, false);
+  }
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -86,6 +91,7 @@ class RecentSearches extends Component {
                   showViewButton
                   onSave={this.handleSave}
                   onView={this.handleView}
+                  onSearch={this.handleSearch}
                   saving={saving}
                 />
             }

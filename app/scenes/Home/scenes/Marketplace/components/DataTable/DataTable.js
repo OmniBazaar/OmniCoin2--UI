@@ -131,6 +131,7 @@ class DataTable extends Component {
       sortDirection,
       data,
       onView,
+      onSearch
     } = this.props;
 
     return (
@@ -157,12 +158,12 @@ class DataTable extends Component {
                   <TableRow key={hash(row)}>
                     <TableCell>{row.date}</TableCell>
                     <TableCell>
-                      <a onClick={() => onView({ searchTerm: row.searchTerm })}>
+                      <a onClick={() => onSearch(row.searchTerm, '')}>
                         {row.searchTerm}
                       </a>
                     </TableCell>
                     <TableCell>
-                      <a onClick={() => onView({ category: row.category })}>
+                      <a onClick={() => onSearch('', row.category)}>
                         {row.category}
                       </a>
                     </TableCell>
@@ -225,7 +226,7 @@ DataTable.propTypes = {
   onSave: PropTypes.func,
   onDelete: PropTypes.func,
   onView: PropTypes.func,
-  search: PropTypes.func,
+  onSearch: PropTypes.func,
   saving: PropTypes.bool,
   deleting: PropTypes.bool,
 };
@@ -250,7 +251,7 @@ DataTable.defaultProps = {
   onSave: () => {},
   onView: () => {},
   onDelete: () => {},
-  search: () => {}
+  onSearch: () => {}
 };
 
 export default injectIntl(DataTable);

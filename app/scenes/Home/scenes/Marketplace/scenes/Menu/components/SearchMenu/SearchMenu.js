@@ -125,23 +125,6 @@ class SearchMenu extends Component {
   recentSearches() {
     const { savedSearches } = this.props.search;
     const { formatMessage } = this.props.intl;
-    if (this.props.dht.isLoading || this.props.search.loading) {
-      return (
-        <Grid.Row>
-          <Grid.Column width={16} style={{ display: 'flex', justifyContent: 'center' }}>
-            <Loader
-              content={
-                      this.props.dht.isLoading
-                        ? formatMessage(messages.searchingForPeers)
-                        : formatMessage(messages.loadingListings)
-                    }
-              inline
-              active
-            />
-          </Grid.Column>
-        </Grid.Row>
-      );
-    }
     return (
       savedSearches.length === 0
         ?
@@ -152,7 +135,9 @@ class SearchMenu extends Component {
         savedSearches.slice(0, maxSearches).map((search) => (
           <Grid.Row key={hash(search)}>
             <Grid.Column width={8}>
-              <span className="blue-text">{search.searchTerm}</span>
+              <a onClick={() => this.handleSubmit({search})}>
+                {search.searchTerm}
+              </a>
             </Grid.Column>
             <Grid.Column width={8}>
               <span className="gray-text">{search.date}</span>
@@ -172,7 +157,6 @@ class SearchMenu extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { savedSearches } = this.props.search;
-    const isLoading = this.props.dht.isLoading || this.props.marketplace.loading;
     return (
       <Popup
         trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
@@ -199,15 +183,13 @@ class SearchMenu extends Component {
             />
           </Form>
           <Grid>
-            {!isLoading &&
-              <Grid.Row>
-                <Grid.Column width={8}>
-                  <span className="gray-text">{formatMessage(messages.saved)}</span>
-                </Grid.Column>
-              </Grid.Row>
-            }
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <span className="gray-text">{formatMessage(messages.saved)}</span>
+              </Grid.Column>
+            </Grid.Row>
             {this.recentSearches()}
-            {!isLoading && savedSearches.length > maxSearches &&
+            {savedSearches.length > maxSearches &&
               <Grid.Row>
                 <Grid.Column width={12} />
                 <Grid.Column width={4} className="right">
