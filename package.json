@@ -119,7 +119,7 @@
     ]
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.1",
     "babel-jest": "^22.1.0",
     "babel-loader": "^7.1.2",
@@ -200,8 +200,8 @@
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "object-hash": "^1.2.0",
-    "omnibazaar-dht": "git+https://github.com/OmniBazaar/DHT2.git",
     "omnibazaarjs": "^1.3.0",
+    "omnibazaar-dht": "git+ssh://github.com/OmniBazaar/DHT2.git",
     "omnibazaarjs-ws": "^1.0.1",
     "react": "^16.2.0",
     "react-copy-to-clipboard": "^5.0.1",
