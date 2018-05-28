@@ -15,7 +15,6 @@ import {
 } from '../../../../../../../../services/listing/importActions';
 
 import { getFileExtension } from '../../../../../../../../utils/file';
-import { mapListingsFromFile } from '../../../../../../../../utils/listings';
 
 import './import-listings.scss';
 
@@ -114,24 +113,18 @@ class ImportListings extends Component {
 
   importFile(event) {
     if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
       const extFile = getFileExtension(event);
 
       if (extFile !== 'txt') {
         return this.setState({ open: true });
       }
 
-      reader.onload = () => {
-        const items = mapListingsFromFile(reader.result);
-        const filename = this.inputElement.files[0].name;
+      const file = this.inputElement.files[0];
 
-        this.props.listingActions.importFile({
-          title: filename,
-          items,
-        });
-      };
-
-      reader.readAsText(event.target.files[0]);
+      this.props.listingActions.importFile({
+        content: file,
+        name: file.name,
+      });
     }
   }
 
@@ -275,7 +268,7 @@ ImportListings.propTypes = {
     formatMessage: PropTypes.func,
   }),
   listingImport: PropTypes.shape({
-    importedFiles: PropTypes.arrayOf(PropTypes.obj),
+    importedFiles: PropTypes.arrayOf(PropTypes.object),
   }),
   listingActions: PropTypes.shape({
     importFile: PropTypes.func,

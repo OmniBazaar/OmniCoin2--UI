@@ -13,6 +13,7 @@ import { dhtSubscriber } from './search/dht/dhtSaga';
 import { listingSubscriber } from './listing/listingSaga';
 import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 import { preferencesSubscriber } from './preferences/preferencesSaga';
+import { importSubscriber } from './listing/importSaga';
 
 export {
   connectionSubscriber,
@@ -29,5 +30,6 @@ export {
   searchSubscriber,
   listingSubscriber,
   listingDefaultsSubscriber,
-  preferencesSubscriber
+  preferencesSubscriber,
+  importSubscriber,
 };

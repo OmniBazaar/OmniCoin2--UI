@@ -11,13 +11,16 @@ const defaultState = {
   importedFiles: [],
   sortDirection: 'descending',
   sortColumn: 'type',
+  importingFile: false,
+  error: null,
 };
 
 const reducer = handleActions({
-  [importFile](state, { payload: { file } }) {
+  [importFile](state) {
     return {
       ...state,
-      importedFiles: [...state.importedFiles, file]
+      importigFile: true,
+      error: null,
     };
   },
   [removeFile](state, { payload: { fileIndex } }) {
@@ -54,6 +57,19 @@ const reducer = handleActions({
       sortColumn,
     };
   },
+
+  IMPORT_FILE_SUCCEEDED: (state, { file }) => ({
+    ...state,
+    importedFiles: [...state.importedFiles, file],
+    importingFile: false,
+    error: null,
+  }),
+
+  IMPORT_FILE_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    importingFile: false,
+  }),
 }, defaultState);
 
 export default reducer;
