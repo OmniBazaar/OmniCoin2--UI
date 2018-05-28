@@ -7,7 +7,12 @@ import { defineMessages, injectIntl } from 'react-intl';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import DataTable from '../../../../components/DataTable/DataTable';
 
-import { getSavedSearches } from '../../../../../../../../services/search/searchActions';
+import {
+  getSavedSearches,
+  sortSavedSearches,
+  searchListings,
+  deleteSearch
+} from '../../../../../../../../services/search/searchActions';
 
 import './saved-searches.scss';
 
@@ -18,41 +23,37 @@ const messages = defineMessages({
   },
 });
 
-const savedSearchesList = [
-  {
-    id: 1,
-    date: '2018-04-19',
-    search: 'car',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 2,
-    date: '2018-04-19',
-    search: 'motorcycles',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 3,
-    date: '2018-04-20',
-    search: 'truck',
-    filters: ['USA', 'Lowest price'],
-  },
-  {
-    id: 4,
-    date: '2018-04-20',
-    search: 'jewelry',
-    filters: [],
-  },
-];
-
 class SavedSearches extends Component {
   componentDidMount() {
-    this.props.searchActions.getSavedSearches(savedSearchesList);
+    const { currentUser } = this.props.auth;
+    this.props.searchActions.getSavedSearches(currentUser.username);
+    this.handleView = this.handleView.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+
+  handleView(search) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(search.searchTerm, search.category);
+  }
+
+  handleDelete(search) {
+    this.props.searchActions.deleteSearch(search);
+  }
+
+  handleSearch(searchTerm, category) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(searchTerm, category, false);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { savedSearches } = this.props.search;
+    const {
+      savedSearches,
+      savedSortOptions,
+      deleting,
+      error
+    } = this.props.search;
 
     return (
       <div className="marketplace-container category-listing recent-searches">
@@ -70,17 +71,16 @@ class SavedSearches extends Component {
           <div className="list-container">
             <DataTable
               data={savedSearches}
-              sortBy="date"
-              sortDirection="descending"
-              tableProps={{
-                sortable: true,
-                compact: true,
-                basic: 'very',
-                striped: true,
-                size: 'small'
-              }}
+              sortBy={savedSortOptions.by}
+              sortDirection={savedSortOptions.direction}
+              sort={this.props.searchActions.sortSavedSearches}
               showDeleteButton
               showViewButton
+              onView={this.handleView}
+              onDelete={this.handleDelete}
+              onSearch={this.handleSearch}
+              deleting={deleting}
+              error={error}
             />
           </div>
         </div>
@@ -111,7 +111,10 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     searchActions: bindActionCreators({
-      getSavedSearches
+      getSavedSearches,
+      sortSavedSearches,
+      deleteSearch,
+      searchListings
     }, dispatch)
   })
 )(injectIntl(SavedSearches));

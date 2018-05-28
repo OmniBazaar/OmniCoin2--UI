@@ -3,11 +3,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import { withRouter } from 'react-router';
+import { Loader } from 'semantic-ui-react';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import DataTable from '../../../../components/DataTable/DataTable';
 
-import { getRecentSearches } from '../../../../../../../../services/search/searchActions';
+import {
+  getRecentSearches,
+  sortRecentSearches,
+  saveSearch,
+  searchListings
+} from '../../../../../../../../services/search/searchActions';
+
 
 import './recent-searches.scss';
 
@@ -18,42 +26,42 @@ const messages = defineMessages({
   },
 });
 
-const recentSearchesList = [
-  {
-    id: 1,
-    date: '2018-04-19',
-    search: 'car',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 2,
-    date: '2018-04-19',
-    search: 'motorcycles',
-    filters: ['USA', 'Lowest price', 'Newest'],
-  },
-  {
-    id: 3,
-    date: '2018-04-20',
-    search: 'cars',
-    filters: ['USA', 'Lowest price'],
-  },
-  {
-    id: 4,
-    date: '2018-04-20',
-    search: 'jewelry',
-    filters: [],
-  },
-];
 
 class RecentSearches extends Component {
+  constructor(props) {
+    super(props);
+    this.handleView = this.handleView.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+
   componentDidMount() {
-    this.props.searchActions.getRecentSearches(recentSearchesList);
+    const { currentUser } = this.props.auth;
+    this.props.searchActions.getRecentSearches(currentUser.username);
+  }
+
+  handleView(search) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(search.searchTerm, search.category);
+  }
+
+  handleSave(search) {
+    this.props.searchActions.saveSearch(search);
+  }
+
+  handleSearch(searchTerm, category) {
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(searchTerm, category, false);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { recentSearches } = this.props.search;
-
+    const {
+      recentSearches,
+      recentSortOptions,
+      loading,
+      saving
+    } = this.props.search;
     return (
       <div className="marketplace-container category-listing recent-searches">
         <div className="header">
@@ -68,20 +76,25 @@ class RecentSearches extends Component {
             </div>
           </div>
           <div className="list-container">
-            <DataTable
-              data={recentSearches}
-              sortBy="date"
-              sortDirection="descending"
-              tableProps={{
-                sortable: true,
-                compact: true,
-                basic: 'very',
-                striped: true,
-                size: 'small'
-              }}
-              showSaveButton
-              showViewButton
-            />
+            {loading
+              ?
+                <div style={{ flex: 'display', justifyContent: 'center' }}>
+                  <Loader active />
+                </div>
+              :
+                <DataTable
+                  data={recentSearches}
+                  sortBy={recentSortOptions.by}
+                  sortDirection={recentSortOptions.direction}
+                  sort={this.props.searchActions.sortRecentSearches}
+                  showSaveButton
+                  showViewButton
+                  onSave={this.handleSave}
+                  onView={this.handleView}
+                  onSearch={this.handleSearch}
+                  saving={saving}
+                />
+            }
           </div>
         </div>
       </div>
@@ -107,11 +120,16 @@ RecentSearches.defaultProps = {
   intl: {},
 };
 
+RecentSearches = withRouter(RecentSearches);
+
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     searchActions: bindActionCreators({
-      getRecentSearches
+      getRecentSearches,
+      sortRecentSearches,
+      saveSearch,
+      searchListings
     }, dispatch)
   })
 )(injectIntl(RecentSearches));

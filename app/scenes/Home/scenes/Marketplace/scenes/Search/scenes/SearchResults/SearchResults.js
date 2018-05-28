@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Button, Form, Dropdown } from 'semantic-ui-react';
+import {
+  Icon,
+  Button,
+  Form,
+  Dropdown,
+  Loader
+} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
@@ -65,6 +71,14 @@ const messages = defineMessages({
   searchResults: {
     id: 'SearchResults.searchResults',
     defaultMessage: 'Search results'
+  },
+  searchingForPublishers: {
+    id: 'SearchResults.searchingForPublishers',
+    defaultMessage: 'Searching for publishers'
+  },
+  loadingListings: {
+    id: 'SearchMenu.loadingListings',
+    defaultMessage: 'Loading listings'
   },
 });
 
@@ -522,7 +536,21 @@ class SearchResults extends Component {
               </div>
             </div>
           </div>
-          {this.renderSearchResults()}
+          {(this.props.dht.isLoading || this.props.search.loading)
+            ?
+              <Loader
+                content={
+                  this.props.dht.isLoading
+                    ? formatMessage(messages.searchingForPublishers)
+                    : formatMessage(messages.loadingListings)
+                }
+                inline
+                active
+              />
+            :
+            this.renderSearchResults()
+          }
+
         </div>
       </div>
     );

@@ -11,6 +11,7 @@ function wrapRequest(func) {
   };
 }
 
+
 function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
@@ -36,6 +37,7 @@ function wsWatcher(socket, messageTypes) {
     };
   });
 }
+
 
 function reputationOptions(from = 0, to = 10) {
   const options = [];

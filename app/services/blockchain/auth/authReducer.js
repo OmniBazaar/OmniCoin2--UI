@@ -12,6 +12,12 @@ import {
   getLastLoginUserName
 } from './authActions';
 
+import {
+  getStoredCurrentUser,
+  storeCurrentUser,
+  removeStoredCurrentUser
+} from './services';
+
 const defaultState = {
   currentUser: null,
   account: null,
@@ -25,7 +31,7 @@ const reducer = handleActions({
   [getCurrentUser](state) {
     return {
       ...state,
-      currentUser: JSON.parse(localStorage.getItem('currentUser'))
+      currentUser: getStoredCurrentUser()
     };
   },
   [login](state, { payload: { username, password } }) {
@@ -36,7 +42,7 @@ const reducer = handleActions({
     };
   },
   [logout](state) {
-    localStorage.removeItem('currentUser');
+    removeStoredCurrentUser();
     return {
       ...state,
       currentUser: null
@@ -67,7 +73,7 @@ const reducer = handleActions({
     ipcRenderer.send('get-pc-ids', null);
   },
   [getLastLoginUserName]: (state) => {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const user = getStoredCurrentUser();
     return {
       ...state,
       lastLoginUserName: user ? user.username : null
@@ -80,7 +86,7 @@ const reducer = handleActions({
     loading: false
   }),
   LOGIN_SUCCEEDED: (state, action) => {
-    localStorage.setItem('currentUser', JSON.stringify(action.user));
+    storeCurrentUser(action.user);
     return {
       ...state,
       currentUser: action.user,
@@ -89,7 +95,7 @@ const reducer = handleActions({
     };
   },
   SIGNUP_SUCCEEDED: (state, action) => {
-    localStorage.setItem('currentUser', JSON.stringify(action.user));
+    storeCurrentUser(action.user);
     return {
       ...state,
       currentUser: action.user,

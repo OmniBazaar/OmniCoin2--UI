@@ -35,7 +35,7 @@ const messageTypes = [
   }
 ];
 
-export function* wsMarketplaceSaga() {
+export function* wsMarketplaceSubscriber() {
   const channel = yield call(wsWatcher, ws, messageTypes);
   while (true) {
     const action = yield take(channel);

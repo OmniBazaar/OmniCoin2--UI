@@ -7,8 +7,10 @@ import { transferSubscriber } from './transfer/transferSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
-import { wsMarketplaceSaga } from './marketplace/wsSaga';
+import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
+import { searchSubscriber } from './search/searchSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
+import { listingSubscriber } from './listing/listingSaga';
 import { importSubscriber } from './listing/importSaga';
 
 export {
@@ -21,7 +23,9 @@ export {
   processorsSubscriber,
   bitcoinSubscriber,
   transferSubscriber,
-  wsMarketplaceSaga,
   dhtSubscriber,
+  wsMarketplaceSubscriber,
+  searchSubscriber,
+  listingSubscriber,
   importSubscriber,
 };

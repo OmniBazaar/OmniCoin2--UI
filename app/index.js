@@ -29,8 +29,10 @@ import {
   processorsSubscriber,
   bitcoinSubscriber,
   transferSubscriber,
-  wsMarketplaceSaga,
   dhtSubscriber,
+  searchSubscriber,
+  wsMarketplaceSubscriber,
+  listingSubscriber,
   importSubscriber,
 } from './services/saga';
 
@@ -79,8 +81,10 @@ sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);
-sagaMiddleware.run(wsMarketplaceSaga);
+sagaMiddleware.run(searchSubscriber);
+sagaMiddleware.run(wsMarketplaceSubscriber);
 sagaMiddleware.run(dhtSubscriber);
+sagaMiddleware.run(listingSubscriber);
 sagaMiddleware.run(importSubscriber);
 
 ReactDOM.render(
