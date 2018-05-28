@@ -32,7 +32,8 @@ import {
   dhtSubscriber,
   searchSubscriber,
   wsMarketplaceSubscriber,
-  listingSubscriber
+  listingSubscriber,
+  importSubscriber,
 } from './services/saga';
 
 ChainConfig.address_prefix = 'BTS';
@@ -84,6 +85,7 @@ sagaMiddleware.run(searchSubscriber);
 sagaMiddleware.run(wsMarketplaceSubscriber);
 sagaMiddleware.run(dhtSubscriber);
 sagaMiddleware.run(listingSubscriber);
+sagaMiddleware.run(importSubscriber);
 
 ReactDOM.render(
   (

@@ -99,8 +99,8 @@ class ImportedFilesTable extends Component {
             </TableHeader>
             <TableBody>
               {
-                importedFiles.map(row => row.items.map(item => (
-                  <TableRow key={hash(item)}>
+                importedFiles.map(row => row.items && row.items.map((item, index) => (
+                  <TableRow key={hash(row) + hash(item) + hash(index)}>
                     <TableCell>{item.type}</TableCell>
                     <TableCell>{item.category}</TableCell>
                     <TableCell>{item.subCategory}</TableCell>
