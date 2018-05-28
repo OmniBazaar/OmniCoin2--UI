@@ -14,7 +14,7 @@ import messages from '../../messages';
 const imageLimit = 10;
 const iconSize = 42;
 
-const getImageId = () => shortid.generate();
+export const getImageId = () => shortid.generate();
 
 class Images extends Component {
   onClickAddImage() {

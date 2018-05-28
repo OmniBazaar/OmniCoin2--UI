@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import {
   Table,
@@ -83,6 +83,11 @@ class GridTable extends Component {
     );
   }
 
+  onEditClick(item) {
+    const { history } = this.props;
+    history.push(`/edit-listing/${item.id}`);
+  }
+
   render() {
     const {
       activePageGridTable,
@@ -126,7 +131,10 @@ class GridTable extends Component {
                           <span className="price">$ {numberWithCommas(item.price)}</span>
                           {this.props.showActions ?
                             <div className="actions">
-                              <Button content={formatMessage(messages.edit)} className="button--blue" />
+                              <Button
+                                content={formatMessage(messages.edit)}
+                                className="button--blue"
+                                onClick={this.onEditClick.bind(this, item)} />
                               <Button content={formatMessage(messages.delete)} className="button--gray-text" />
                             </div>
                             : null
@@ -160,7 +168,7 @@ GridTable.propTypes = {
   sortDirection: PropTypes.string,
   rowsPerPage: PropTypes.number,
   showActions: PropTypes.bool,
-  data: PropTypes.arrayOf(PropTypes.object),
+  data: PropTypes.object,
   tableProps: PropTypes.shape({
     sortable: PropTypes.bool,
     compact: PropTypes.bool,
@@ -186,7 +194,7 @@ GridTable.defaultProps = {
   intl: {},
   marketplace: {},
   tableProps: {},
-  data: [],
+  data: {},
   rowsPerPage: 3 * 6,
   showActions: false,
   sortBy: '',
@@ -203,4 +211,4 @@ export default connect(
       sortGridTableBy
     }, dispatch),
   }),
-)(injectIntl(GridTable));
+)(injectIntl(withRouter(GridTable)));

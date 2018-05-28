@@ -3,7 +3,9 @@ import _ from 'lodash';
 import {
   getListingDetail,
   setActiveCurrency,
-  getMyListings,
+  requestMyListings,
+  requestMyListingsSuccess,
+  requestMyListingsError,
   setBitcoinPrice,
   setContinuous,
   setOmnicoinPrice,
@@ -34,8 +36,12 @@ const CoinTypes = Object.freeze({
 });
 
 const defaultState = {
-  myListings: [],
-  myListingsFiltered: [],
+  myListings: {},
+  requestMyListing: {
+    isRequest: false,
+    error: null
+  },
+  myListingsFiltered: {},
   listingDetail: {},
   activeCurrency: CoinTypes.OMNI_COIN,
   bitcoinPrice: false,
@@ -108,13 +114,36 @@ const reducer = handleActions({
       activeCurrency
     };
   },
-  [getMyListings](state, { payload: { myListings } }) {
-    const sortedData = _.sortBy(myListings, ['date']).reverse();
+  [requestMyListings](state) {
     return {
       ...state,
-      myListings: sortedData,
-      myListingsFiltered: sortedData
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: true,
+        error: null
+      }
     };
+  },
+  [requestMyListingsSuccess](state, { payload: { myListings } }) {
+    return {
+      ...state,
+      myListings,
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: false,
+        error: null
+      }
+    }
+  },
+  [requestMyListingsError](state, { payload: { error } }) {
+    return {
+      ...state,
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: false,
+        error
+      }
+    }
   },
   [setBitcoinPrice](state) {
     return {

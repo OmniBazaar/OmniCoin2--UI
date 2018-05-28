@@ -52,5 +52,8 @@
   "AddListing.saveListingErrorMessage": "Have error when saving listing",
   "AddListing.saveListingSuccessMessage": "Listing is saved successful",
   "AddListing.error": "Error",
-  "AddListing.success": "Success"
+  "AddListing.success": "Success",
+  "AddListing.editListing": "Edit Listing",
+  "AddListing.listingNotFound": "Listing not found",
+  "AddListing.saveListing": "Save Listing"
 }

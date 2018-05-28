@@ -3,6 +3,7 @@ import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { myListings } from './sample';
 
 let authHeaders = null;
 
@@ -25,8 +26,8 @@ const getAuthHeaders = () => new Promise((resolve, reject) => {
 });
 
 const getPubliser = async () =>
-  // return 'http://127.0.0.1:8181';
-	 'http://35.171.116.3/pub-api';
+  'http://127.0.0.1:8181';
+	 // 'http://35.171.116.3/pub-api';
 
 
 const makeRequest = async (url, options) => {
@@ -110,3 +111,12 @@ export const deleteListing = async (listingId) => {
   const body = await makeRequest(`listings/${listingId}`, options);
   return body;
 };
+
+export const getMyListings = async () => {
+	const listings = {};
+	myListings.forEach(item => {
+		listings[item.id] = item;
+	});
+
+	return listings;
+}

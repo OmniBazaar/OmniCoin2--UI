@@ -3,7 +3,9 @@ import { createActions } from 'redux-actions';
 const {
   getListingDetail,
   setActiveCurrency,
-  getMyListings,
+  requestMyListings,
+  requestMyListingsSuccess,
+  requestMyListingsError,
   setBitcoinPrice,
   setOmnicoinPrice,
   setContinuous,
@@ -32,7 +34,9 @@ const {
 } = createActions({
   GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
-  GET_MY_LISTINGS: (myListings) => ({ myListings }),
+  REQUEST_MY_LISTINGS: () => ({}),
+  REQUEST_MY_LISTINGS_SUCCESS: (myListings) => ({ myListings }),
+  REQUEST_MY_LISTINGS_ERROR: (error) => ({ error }),
   SET_BITCOIN_PRICE: () => ({}),
   SET_OMNICOIN_PRICE: () => ({}),
   SET_CONTINUOUS: () => ({}),
@@ -68,7 +72,9 @@ const {
 export {
   getListingDetail,
   setActiveCurrency,
-  getMyListings,
+  requestMyListings,
+  requestMyListingsSuccess,
+  requestMyListingsError,
   setBitcoinPrice,
   setOmnicoinPrice,
   setContinuous,

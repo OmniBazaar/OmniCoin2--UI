@@ -14,21 +14,25 @@ import {
   saveListingSuccess,
   saveListingError,
   deleteListingSuccess,
-  deleteListingError
+  deleteListingError,
+  requestMyListingsSuccess,
+  requestMyListingsError
 } from './listingActions';
 import {
   saveImage,
   deleteImage,
   createListing,
   editListing,
-  deleteListing
+  deleteListing,
+  getMyListings
 } from './apis';
 
 export function* listingSubscriber() {
   yield all([
     takeEvery('UPLOAD_LISTING_IMAGE', uploadImage),
     takeEvery('DELETE_LISTING_IMAGE', removeImage),
-    takeEvery('SAVE_LISTING', saveListingHandler)
+    takeEvery('SAVE_LISTING', saveListingHandler),
+    takeEvery('REQUEST_MY_LISTINGS', requestMyListings)
   ]);
 }
 
@@ -64,7 +68,6 @@ function* removeImage({ payload: { image } }) {
 }
 
 function* saveListingHandler({ payload: { listing, listingId } }) {
-  console.log(listing);
   let result;
   try {
     if (listingId) {
@@ -81,4 +84,13 @@ function* saveListingHandler({ payload: { listing, listingId } }) {
     console.log(err);
     yield put(saveListingError(listingId, err));
   }
+}
+
+function* requestMyListings() {
+	try {
+		const myListings = yield call(getMyListings);
+		yield put(requestMyListingsSuccess(myListings));
+	} catch (err) {
+		yield put(requestMyListingsError(err));
+	}
 }
