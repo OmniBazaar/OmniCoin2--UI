@@ -9,6 +9,7 @@ import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
 import { wsMarketplaceSaga } from './marketplace/wsSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
+import { importSubscriber } from './listing/importSaga';
 
 export {
   connectionSubscriber,
@@ -22,4 +23,5 @@ export {
   transferSubscriber,
   wsMarketplaceSaga,
   dhtSubscriber,
+  importSubscriber,
 };
