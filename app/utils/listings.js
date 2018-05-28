@@ -6,7 +6,6 @@ export default {
 
     const onLoadPromise = new Promise((resolve) => {
       reader.onload = () => {
-        console.log(reader.result);
         resolve(this.mapListingsFromFile(reader.result));
       };
     });
