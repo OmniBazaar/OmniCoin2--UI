@@ -78,6 +78,7 @@ export function* submitBitcoinTransfer(data) {
     yield put({ type: 'MAKE_PAYMENT_SUCCEEDED', res });
   } catch (error) {
     yield put({ type: 'MAKE_PAYMENT_FAILED', error });
+    console.log('ERROR', error);
   }
 }
 
@@ -92,7 +93,7 @@ export function* submitTransfer(data) {
       yield submitBitcoinTransfer(data);
       break;
     default:
-      yield submitOmniCoinTransfer(data);
+      yield submitBitcoinTransfer(data);
   }
 }
 

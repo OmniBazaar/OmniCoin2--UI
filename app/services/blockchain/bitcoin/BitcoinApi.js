@@ -18,7 +18,7 @@ const createWallet = wrapRequest(async (password, label, email) => {
 
 const getWallets = wrapRequest(async (password, guid) => fetch(`${address}/merchant/${guid}/accounts?password=${password}`));
 
-const makePayment = wrapRequest(async (guid, password, to, amount, from, fee) => fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}`, {
+const makePayment = wrapRequest(async (guid, password, to, amount, from, fee) => fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}&from=${from}`, {
   method: 'post',
   mode: 'cors',
   headers: {
