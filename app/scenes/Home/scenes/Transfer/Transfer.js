@@ -6,8 +6,7 @@ import {
   Form,
   Select,
   TextArea,
-  Loader,
-  Dropdown
+  Loader
 } from 'semantic-ui-react';
 import { required, numericality } from 'redux-form-validators';
 import {
@@ -289,10 +288,12 @@ class Transfer extends Component {
     }
 
     if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
+      this.props.change('password', this.props.bitcoin.password);
+      this.props.change('guid', this.props.bitcoin.guid);
       const wallets = [];
       nextProps.bitcoin.wallets.forEach((wallet) => {
         wallets[wallet.index] = {
-          value: wallet.label,
+          value: wallet.receiveAddress,
           text: wallet.label,
           description: `${wallet.balance} BTC`
         };
@@ -371,22 +372,15 @@ class Transfer extends Component {
     );
   };
 
-  renderAccountWalletField = ({
-    input, placeholder, meta: { touched, error }, options
+  renderHiddenField = ({
+    input
   }) => {
-    const { formatMessage } = this.props.intl;
-    const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
-      <div className="transfer-input">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
-        <Dropdown
-          {...input}
-          value={input.value}
-          selection
-          placeholder={placeholder}
-          options={options}
-        />
-      </div>
+      <input
+        {...input}
+        type="hidden"
+        className="textfield"
+      />
     );
   };
 
@@ -411,7 +405,6 @@ class Transfer extends Component {
     );
   };
 
-
   renderSelectField = ({
     input, options, meta: { touched, error }
   }) => {
@@ -422,11 +415,27 @@ class Transfer extends Component {
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
           className="textfield"
-          defaultValue={options[0].value}
+          defaultValue={options[0] ? options[0].value : ''}
           options={options}
           onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
+    );
+  };
+
+  renderCurrencyField = ({
+    input, options
+  }) => {
+    return (
+      <Select
+        className="textfield"
+        defaultValue={options[0] ? options[0].value : ''}
+        options={options}
+        onChange={(param, data) => {
+          input.onChange(data.value);
+          this.onChangeCurrency(data);
+        }}
+      />
     );
   };
 
@@ -644,12 +653,14 @@ class Transfer extends Component {
           <p className="title">{formatMessage(messages.from)}</p>
           <div className="form-group">
             <span>{formatMessage(messages.selectWallet)}</span>
-            <Dropdown
-              selection
-              name="fromName"
-              placeholder="FROM"
-              options={wallets}
-            />
+            <div className="transfer-input">
+              <Field
+                type="text"
+                name="fromName"
+                options={wallets}
+                component={this.renderSelectField}
+              />
+            </div>
             <div className="col-1" />
           </div>
         </div>
@@ -659,7 +670,7 @@ class Transfer extends Component {
             <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
             <Field
               type="text"
-              name="toName"
+              name="toBCName"
               placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderAccountNameField}
               className="textfield1"
@@ -697,6 +708,8 @@ class Transfer extends Component {
               component={this.renderAccountNameField}
               className="textfield1"
             />
+            <Field type="text" name="guid" fieldValue={this.props.bitcoin.guid} component={this.renderHiddenField} />
+            <Field type="text" name="password" fieldValue={this.props.bitcoin.password} component={this.renderHiddenField} />
             <div className="col-1" />
           </div>
         </div>
@@ -730,7 +743,7 @@ class Transfer extends Component {
     }
   }
 
-  onChangeCurrency = (e, data) => {
+  onChangeCurrency = (data) => {
     this.props.transferActions.setCurrency(data.value);
   };
 
@@ -743,12 +756,11 @@ class Transfer extends Component {
         <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
           <div className="form-group">
             <span>{formatMessage(messages.currency)}</span>
-            <Dropdown
-              selection
-              placeholder="Select"
+            <Field
+              type="text"
+              name="currencySelected"
               options={currencyOptions}
-              defaultValue="bitcoin"
-              onChange={this.onChangeCurrency}
+              component={this.renderCurrencyField}
             />
             <div className="col-1" />
           </div>
@@ -810,6 +822,7 @@ Transfer.propTypes = {
     commonEscrows: PropTypes.shape([])
   }),
   transferForm: PropTypes.shape({
+    currencySelected: PropTypes.string,
     fromName: PropTypes.string,
     toName: PropTypes.string,
     useEscrow: PropTypes.bool

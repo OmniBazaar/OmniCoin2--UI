@@ -9,12 +9,15 @@ import {
   takeLatest,
   takeEvery,
   select,
-  all
+  all,
+  call
 } from 'redux-saga/effects';
 import _ from 'lodash';
+import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
+import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 
 export function* transferSubscriber() {
   yield all([
@@ -24,7 +27,7 @@ export function* transferSubscriber() {
   ]);
 }
 
-export function* submitTransfer(data) {
+export function* submitOmniCoinTransfer(data) {
   const { currentUser } = (yield select()).default.auth;
   const senderNameStr = currentUser.username;
   const toNameStr = data.payload.data.toName;
@@ -57,6 +60,39 @@ export function* submitTransfer(data) {
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+  }
+}
+
+export function* submitBitcoinTransfer(data) {
+  const {
+    guid,
+    password,
+    toBCName,
+    amount,
+    fromName
+  } = data.payload.data;
+  const fee = 0;
+
+  try {
+    const res = yield call(BitcoinApi.makePayment, guid, password, toBCName, amount, fromName, fee);
+    yield put({ type: 'MAKE_PAYMENT_SUCCEEDED', res });
+  } catch (error) {
+    yield put({ type: 'MAKE_PAYMENT_FAILED', error });
+  }
+}
+
+export function* submitTransfer(data) {
+  const currencySelectedStr = data.payload.data.currencySelected;
+
+  switch (currencySelectedStr) {
+    case 'omnicoin':
+      yield submitOmniCoinTransfer(data);
+      break;
+    case 'bitcoin':
+      yield submitBitcoinTransfer(data);
+      break;
+    default:
+      yield submitOmniCoinTransfer(data);
   }
 }
 
