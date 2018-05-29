@@ -10,6 +10,10 @@ import {
   deleteListingImage,
   clearListingImageError
 } from '../../../../../../../../../../services/listing/listingActions';
+import {
+  deleteListingDefaultImage,
+  clearListingDefaultImageError
+} from '../../../../../../../../../../services/listing/listingDefaultsActions';
 import messages from '../../messages';
 
 const imageSize = 42;
@@ -43,13 +47,22 @@ class ImageItem extends Component {
 	}
 
 	remove() {
-	  const { image } = this.props;
-	  this.props.listingActions.deleteListingImage(image);
+	  const { image, isListingDefaults } = this.props;
+	  if (isListingDefaults) {
+	  	this.props.listingDefaultsActions.deleteListingDefaultImage(image);
+	  } else {
+	  	this.props.listingActions.deleteListingImage(image);
+	  }
 	}
 
 	clearError() {
 	  const { id } = this.props.image;
-	  this.props.listingActions.clearListingImageError(id);
+	  const { isListingDefaults } = this.props;
+	  if (isListingDefaults) {
+	  	this.props.listingDefaultsActions.clearListingDefaultImageError(id);
+	  } else {
+	  	this.props.listingActions.clearListingImageError(id);
+	  }
 	}
 
 	renderError() {
@@ -67,17 +80,17 @@ class ImageItem extends Component {
 	  );
 
 	  return (
-  <div className="loading-overlay">
-    <div className="content">
-      <span className="error">{msg}</span>
-      <Button
-        type="submit"
-        content={formatMessage(messages.close)}
-        className="button--green-bg btn-close"
-        onClick={this.clearError.bind(this)}
-      />
-    </div>
-  </div>
+		  <div className="loading-overlay">
+		    <div className="content">
+		      <span className="error">{msg}</span>
+		      <Button
+		        type="submit"
+		        content={formatMessage(messages.close)}
+		        className="button--green-bg btn-close"
+		        onClick={this.clearError.bind(this)}
+		      />
+		    </div>
+		  </div>
 	  );
 	}
 
@@ -85,8 +98,8 @@ class ImageItem extends Component {
 	  const { uploading, deleting } = this.props.image;
 
 	  return (
-  <div className="img-container">
-    {
+		  <div className="img-container">
+		    {
         	this.state.url && !uploading &&
         	<Image
           src={RemoveIcon}
@@ -96,20 +109,20 @@ class ImageItem extends Component {
           onClick={this.remove.bind(this)}
         	/>
       	}
-    {
+		    {
         	this.state.url &&
         	<img alt="" src={this.state.url} width={132} height={100} className="added-img" />
         }
-    {
-        	(uploading || deleting) &&
-        	<div className="loading-overlay">
-          <Dimmer active inverted>
-            <Loader size="small" />
-          </Dimmer>
-        	</div>
+		    {
+	      	(uploading || deleting) &&
+	      	<div className="loading-overlay">
+		        <Dimmer active inverted>
+		          <Loader size="small" />
+		        </Dimmer>
+	      	</div>
         }
-    { this.renderError() }
-  </div>
+		    { this.renderError() }
+		  </div>
 	  );
 	}
 }
@@ -122,17 +135,31 @@ ImageItem.propTypes = {
   }).isRequired,
   imageId: PropTypes.string.isRequired,
   listingActions: PropTypes.shape({
-    deleteListingImage: PropTypes.func
+    deleteListingImage: PropTypes.func,
+    clearListingImageError: PropTypes.func
+  }).isRequired,
+  listingDefaultsActions: PropTypes.shape({
+    deleteListingDefaultImage: PropTypes.func,
+    clearListingDefaultImageError: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  isListingDefaults: PropTypes.bool
+};
+
+ImageItem.defaultProps = {
+	isListingDefaults: false
 };
 
 const mapDispatch = dispatch => ({
   listingActions: bindActionCreators({
     deleteListingImage,
     clearListingImageError
+  }, dispatch),
+  listingDefaultsActions: bindActionCreators({
+  	deleteListingDefaultImage,
+  	clearListingDefaultImageError
   }, dispatch)
 });
 

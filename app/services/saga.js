@@ -11,6 +11,7 @@ import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
 import { searchSubscriber } from './search/searchSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
 import { listingSubscriber } from './listing/listingSaga';
+import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 
 export {
   connectionSubscriber,
@@ -25,5 +26,6 @@ export {
   dhtSubscriber,
   wsMarketplaceSubscriber,
   searchSubscriber,
-  listingSubscriber
+  listingSubscriber,
+  listingDefaultsSubscriber
 };

@@ -1,15 +1,23 @@
 import request from 'request-promise-native';
 import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
+import {
+  FetchChain,
+  TransactionHelper,
+  Aes,
+  TransactionBuilder
+} from 'omnibazaarjs/es';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { myListings } from './sample';
 
+let authUser = null;
 let authHeaders = null;
 
 const getAuthHeaders = () => new Promise((resolve, reject) => {
-  if (!authHeaders) {
-    const user = getStoredCurrentUser();
+	const user = getStoredCurrentUser();
+  if (!authHeaders || !authUser || (authUser.username !== user.username)) {
+    authUser = user;
     const key = generateKeyFromPassword(user.username, 'active', user.password);
     setTimeout(() => {
       // heavy operation
@@ -73,6 +81,24 @@ export const deleteImage = async (fileName) => {
 
   return body;
 };
+
+const createListingOnBlockchain = async (listing) => {
+	const user = getStoredCurrentUser();
+	const seller = await FetchChain('getAccount', user.username);
+  const key = generateKeyFromPassword(user.username, 'active', user.password);
+  const tr = new TransactionBuilder();
+  tr.add_type_operation('listing_create_operation', {
+    seller: seller.get('id'),
+    price: {
+      asset_id: '1.3.0',
+      amount: listing.price
+    },
+    quantity: listing.quantity
+  });
+  await tr.set_required_fees();
+  await tr.add_signer(key.privKey, key.pubKey);
+  await tr.broadcast();
+}
 
 export const createListing = async (listing) => {
   const options = {
