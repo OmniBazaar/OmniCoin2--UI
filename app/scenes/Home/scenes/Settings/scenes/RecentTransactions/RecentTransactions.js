@@ -248,7 +248,7 @@ class RecentTransactions extends Component {
                               <span> {row.fromTo} </span>
                             </div>
                           </TableCell>
-                          <TableCell>{row.memo.length > 0 ? `${row.memo.substring(100, 0)} ...` : row.memo}</TableCell>
+                          <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
                           <TableCell>

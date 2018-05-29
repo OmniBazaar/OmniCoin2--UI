@@ -8,7 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, numericality } from 'redux-form-validators';
+import { required, numericality, length } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
@@ -149,6 +149,10 @@ const messages = defineMessages({
   numberRequired: {
     id: 'Transfer.numberRequired',
     defaultMessage: 'Number required'
+  },
+  maxLength: {
+    id: 'Transfer.maxLength',
+    defaultMessage: 'Memo must be less than 150 characters'
   }
 });
 
@@ -342,7 +346,6 @@ class Transfer extends Component {
     );
   };
 
-
   renderSelectField = ({
     input, options, meta: { touched, error }
   }) => {
@@ -469,6 +472,9 @@ class Transfer extends Component {
               name="memo"
               placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderMemoField}
+              validate={[
+                length({ max: 150, message: formatMessage(messages.maxLength) })
+              ]}
             />
             <div className="col-1" />
           </div>
