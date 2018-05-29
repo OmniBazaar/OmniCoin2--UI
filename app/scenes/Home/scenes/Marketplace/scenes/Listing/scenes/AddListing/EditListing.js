@@ -18,18 +18,23 @@ class EditListing extends Component {
     const { formatMessage } = this.props.intl;
     const { id } = this.props.match.params;
     const { myListings } = this.props;
-    // const listing = myListings[id];
+    // const listing = myListings[id];http://127.0.0.1:8181/images/
     const listing = {
       "images": [
         {
-          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/a06b1136-6090-4bbc-9581-1f0d0cb61cee.jpg",
-          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/a06b1136-6090-4bbc-9581-1f0d0cb61cee.jpg",
-          "image_name": "a06b1136-6090-4bbc-9581-1f0d0cb61cee.jpg"
+          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg",
+          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg",
+          "image_name": "d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg"
         },
         {
-          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/04c98ac5-acd1-4f2a-b6cc-bd81f62f32f0.jpeg",
-          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/04c98ac5-acd1-4f2a-b6cc-bd81f62f32f0.jpeg",
-          "image_name": "04c98ac5-acd1-4f2a-b6cc-bd81f62f32f0.jpeg"
+          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg",
+          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg",
+          "image_name": "dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg"
+        },
+        {
+          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg",
+          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg",
+          "image_name": "5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg"
         }
       ],
       "_id": "2525b0e8-410d-48ca-8d48-19917cda77a9",
@@ -42,15 +47,16 @@ class EditListing extends Component {
       "category": "services",
       "subcategory": "beautyPersonal",
       "currency": "USD",
-      "price": "100",
+      "price": "200",
       "condition": "Service",
-      "quantity": "10",
+      "quantity": "12",
       "units": "Each",
       "start_date": "2018-05-24",
       "end_date": "2018-06-01",
       "keywords": [
         "abc",
-        "xxx"
+        "xxx",
+        "yyy"
       ],
       "description": "This is test 1\nThis is test 2",
       "name": "Tu Tran",

@@ -84,7 +84,8 @@ class ListingForm extends Component {
     let data;
     if (editingListing) {
       data = {
-        ...editingListing
+        ...editingListing,
+        keywords: editingListing.keywords ? editingListing.keywords.join(', ') : ''
       };
       delete data.images;
     } else {
@@ -105,10 +106,12 @@ class ListingForm extends Component {
     let images = {};
     if (editingListing && editingListing.images) {
       editingListing.images.forEach(item => {
-        images[getImageId()] = {
+        const id = getImageId();
+        images[id] = {
           image: item.path,
           thumb: item.thumb,
-          fileName: item.image_name
+          fileName: item.image_name,
+          id
         };
       });
     }
@@ -157,13 +160,35 @@ class ListingForm extends Component {
       }
 
       data.push({
-        path: image,
-        thumb,
+        path: this.fixImagePath(image),
+        thumb: this.fixThumbPath(thumb),
         image_name: fileName
       });
     }
 
     return data;
+  }
+
+  fixImagePath(path) {
+    const segs = path.split('/');
+    if (segs.length > 2) {
+      return segs[segs.length - 2] + '/' + segs[segs.length - 1];
+    }
+
+    return path;
+  }
+
+  fixThumbPath(path) {
+    const segs = path.split('/');
+    if (segs.length > 3) {
+      return (
+        segs[segs.length - 3]
+        + '/' + segs[segs.length - 2]
+        + '/' + segs[segs.length - 1]
+      );
+    }
+
+    return path;
   }
 
   showSuccessToast(title, message) {
@@ -176,12 +201,13 @@ class ListingForm extends Component {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
+    const { listing_id, ...data } = values;
 
     saveListing({
-      ...values,
+      ...data,
       images: this.getImagesData(),
-      keywords: values.keywords.split(',').map(el => el.trim())
-    });
+      keywords: data.keywords.split(',').map(el => el.trim())
+    }, listing_id);
   }
 
   render() {

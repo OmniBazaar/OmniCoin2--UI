@@ -61,8 +61,10 @@ class Images extends Component {
           {this.renderImages()}
           {
 	        	(Object.keys(listingImages).length < imageLimit) &&
-	        	<Button className="add-img-button" onClick={this.onClickAddImage.bind(this)}>
-  <Image src={AddIcon} width={iconSize} height={iconSize} />
+	        	<Button className="add-img-button"
+	        		onClick={this.onClickAddImage.bind(this)}
+	        		type='button'>
+  						<Image src={AddIcon} width={iconSize} height={iconSize} />
 		        </Button>
 	        }
         </div>

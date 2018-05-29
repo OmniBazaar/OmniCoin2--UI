@@ -94,7 +94,7 @@ export const editListing = async (listingId, listing) => {
     method: 'PUT',
     json: true,
     body: {
-      ...listings
+      ...listing
     }
   };
 
