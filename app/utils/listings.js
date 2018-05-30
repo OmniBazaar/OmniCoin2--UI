@@ -24,6 +24,9 @@ const keysMap = {
 const valuesMapper = {
   price: Number.parseFloat,
   quantity: Number.parseFloat,
+  keywords: keywords => keywords
+    .split(keywords, ',')
+    .map(keyword => keyword.trim())
 };
 
 export function mapListingsFromFile(fileContent = '') {
