@@ -357,7 +357,7 @@ class MyListingsDefaults extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()}>
+      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()} closeIcon>
         <Modal.Header>
           {formatMessage(messages.warning)}
         </Modal.Header>

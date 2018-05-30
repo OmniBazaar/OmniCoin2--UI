@@ -307,7 +307,7 @@ class Preferences extends Component {
     const { formatMessage } = this.props.intl;
     const { props } = this;
     return (
-      <Modal size="normal" open={props.menu.showPreferences} onClose={this.close}>
+      <Modal size="normal" open={props.menu.showPreferences} onClose={this.close} closeIcon>
         <Modal.Content>
           <div className="modal-container settings-container">
             <div className="modal-content">
