@@ -10,10 +10,7 @@ export async function* importLisingsFromFile({ payload: { file } }) {
   try {
     const { content, name } = file;
     const listings = yield call(getListings, content);
-
-    const items = listings.map(async (item) => {
-      await createListing(item);
-    });
+    const items = await Promise.all(listings.map(item => createListing(item)));
 
     yield put({
       type: 'IMPORT_FILE_SUCCEEDED',
