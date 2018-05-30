@@ -33,7 +33,8 @@ export function* listingSubscriber() {
     takeEvery('UPLOAD_LISTING_IMAGE', uploadImage),
     takeEvery('DELETE_LISTING_IMAGE', removeImage),
     takeEvery('SAVE_LISTING', saveListingHandler),
-    takeEvery('REQUEST_MY_LISTINGS', requestMyListings)
+    takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
+    takeEvery('DELETE_LISTING', deleteMyListing)
   ]);
 }
 
@@ -107,7 +108,6 @@ function* saveListingHandler({ payload: { listing, listingId } }) {
       result = yield call(editListing, listingId, listing);
     } else {
     	yield checkAndUploadImages(listing);
-    	console.log(listing);
       result = yield call(createListing, listing);
     }
 
@@ -126,6 +126,17 @@ function* requestMyListings() {
 		const myListings = yield call(getMyListings);
 		yield put(requestMyListingsSuccess(myListings));
 	} catch (err) {
+    console.log(err);
 		yield put(requestMyListingsError(err));
 	}
+}
+
+function* deleteMyListing({ payload: { listing } }) {
+  try {
+    const result = yield call(deleteListing, listing);
+    yield put(deleteListingSuccess(listing.id));
+  } catch (err) {
+    console.log(err);
+    yield put(deleteListingError(listing.id, err));
+  }
 }

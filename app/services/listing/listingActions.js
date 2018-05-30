@@ -60,7 +60,7 @@ const {
   SAVE_LISTING_SUCCESS: (listing, listingId) => ({ listing, listingId }),
   SAVE_LISTING_ERROR: (listingId, error) => ({ listingId, error }),
   RESET_DELETE_LISTING: () => ({}),
-  DELETE_LISTING: (listingId) => ({ listingId }),
+  DELETE_LISTING: (listing) => ({ listing }),
   DELETE_LISTING_SUCCESS: (listingId) => ({ listingId }),
   DELETE_LISTING_ERROR: (listingId, error) => ({ listingId, error }),
   IS_FAVORITE: (listingDetailId) => ({ listingDetailId }),

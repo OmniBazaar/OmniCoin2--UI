@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Dropdown, Icon } from 'semantic-ui-react';
+import { Dropdown, Icon, Dimmer, Loader } from 'semantic-ui-react';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
-import { requestMyListings } from '../../../../../../../../services/listing/listingActions';
+import {
+  requestMyListings,
+  resetDeleteListing
+} from '../../../../../../../../services/listing/listingActions';
 
 import './my-listings.scss';
 import '../../../../../Marketplace/marketplace.scss';
@@ -51,6 +54,7 @@ const options = [
 
 class MyListings extends Component {
   componentDidMount() {
+    this.props.listingActions.resetDeleteListing();
     this.props.listingActions.requestMyListings();
   }
 
@@ -127,6 +131,7 @@ class MyListings extends Component {
 MyListings.propTypes = {
   listingActions: PropTypes.shape({
     requestMyListings: PropTypes.func,
+    resetDeleteListing: PropTypes.func
   }),
   listing: PropTypes.shape({
     myListings: PropTypes.object,
@@ -146,7 +151,8 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      requestMyListings
+      requestMyListings,
+      resetDeleteListing
     }, dispatch),
   }),
 )(injectIntl(MyListings));

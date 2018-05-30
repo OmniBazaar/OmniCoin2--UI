@@ -5,13 +5,17 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
+import { toastr } from 'react-redux-toastr';
 import {
   Table,
   TableBody,
   TableCell,
   TableRow,
   Icon,
-  Button
+  Button,
+  Modal,
+  Dimmer,
+  Loader
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 import './grid-table.scss';
@@ -23,28 +27,20 @@ import {
   setActivePageGridTable,
   sortGridTableBy
 } from '../../../../../../services/marketplace/marketplaceActions';
+import {
+  deleteListing
+} from '../../../../../../services/listing/listingActions';
 
 import { numberWithCommas } from '../../../../../../utils/numeric';
+import messages from './messages';
 
 const iconSizeSmall = 12;
 
-const messages = defineMessages({
-  edit: {
-    id: 'GridTable.edit',
-    defaultMessage: 'EDIT'
-  },
-  delete: {
-    id: 'GridTable.delete',
-    defaultMessage: 'DELETE'
-  },
-  noData: {
-    id: 'GridTable.noData',
-    defaultMessage: 'No data found.'
-  },
-});
-
-
 class GridTable extends Component {
+  state = {
+    confirmDeleteOpen: false
+  }
+
   componentDidMount() {
     this.props.gridTableActions.sortGridTableBy(
       this.props.data,
@@ -64,6 +60,25 @@ class GridTable extends Component {
         nextProps.sortDirection
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+    }
+
+    if (
+      this.props.listing.deleteListing.deleting && 
+      !nextProps.listing.deleteListing.deleting &&
+      nextProps.listing.deleteListing.listingId
+    ) {
+      const { formatMessage } = this.props.intl;
+      if (nextProps.listing.deleteListing.error) {
+        this.showErrorToast(
+          formatMessage(messages.error),
+          formatMessage(messages.deleteListingError)
+        );
+      } else {
+        this.showSuccessToast(
+          formatMessage(messages.success),
+          formatMessage(messages.deleteListingSuccess)
+        );
+      }
     }
   }
 
@@ -86,6 +101,70 @@ class GridTable extends Component {
   onEditClick(item) {
     const { history } = this.props;
     history.push(`/edit-listing/${item.id}`);
+  }
+
+  onDeleteClick(item) {
+    this.setState({
+      confirmDeleteOpen: true
+    });
+    this.item = item;
+  }
+
+  onOkDelete() {
+    this.closeConfirm();
+    if (this.item) {
+      this.props.listingActions.deleteListing(this.item);
+    }
+  }
+
+  closeConfirm() {
+    this.setState({
+      confirmDeleteOpen: false
+    });
+  }
+
+  showSuccessToast(title, message) {
+    toastr.success(title, message);
+  }
+
+  showErrorToast(title, message) {
+    toastr.error(title, message);
+  }
+
+  renderLoading() {
+    const { deleting } = this.props.listing.deleteListing;
+    return (
+      <Dimmer active={deleting} inverted>
+        <Loader size='medium'></Loader>
+      </Dimmer>
+    );
+  }
+
+  renderConfirmDialog() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <Modal size="mini"
+        open={this.state.confirmDeleteOpen}
+        onClose={this.closeConfirm.bind(this)}>
+        <Modal.Header>
+          {formatMessage(messages.confirmDeleteTitle)}
+        </Modal.Header>
+        <Modal.Content>
+          <p className="modal-content">
+            {formatMessage(messages.confirmDeleteMessage)}
+          </p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color='grey' onClick={this.closeConfirm.bind(this)}>
+            {formatMessage(messages.cancel)}
+          </Button>
+          <Button color='red' onClick={this.onOkDelete.bind(this)}>
+            {formatMessage(messages.ok)}
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
   }
 
   render() {
@@ -135,7 +214,10 @@ class GridTable extends Component {
                                 content={formatMessage(messages.edit)}
                                 className="button--blue"
                                 onClick={this.onEditClick.bind(this, item)} />
-                              <Button content={formatMessage(messages.delete)} className="button--gray-text" />
+                              <Button
+                                content={formatMessage(messages.delete)}
+                                className="button--gray-text"
+                                onClick={this.onDeleteClick.bind(this, item)} />
                             </div>
                             : null
                           }
@@ -158,6 +240,9 @@ class GridTable extends Component {
             />
           </div>
         </div>
+
+        {this.renderConfirmDialog()}
+        {this.renderLoading()}
       </div>
     );
   }
@@ -185,6 +270,9 @@ GridTable.propTypes = {
     setActivePageGridTable: PropTypes.func,
     sortGridTableBy: PropTypes.func,
   }),
+  listingActions: PropTypes.shape({
+    deleteListing: PropTypes.func
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -210,5 +298,8 @@ export default connect(
       setActivePageGridTable,
       sortGridTableBy
     }, dispatch),
+    listingActions: bindActionCreators({
+      deleteListing
+    }, dispatch)
   }),
 )(injectIntl(withRouter(GridTable)));

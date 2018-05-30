@@ -128,13 +128,23 @@ export const editListing = async (listingId, listing) => {
   return body;
 };
 
-export const deleteListing = async (listingId) => {
+export const deleteListing = async (listing) => {
   const options = {
     method: 'DELETE',
     json: true
   };
 
-  const body = await makeRequest(`listings/${listingId}`, options);
+  const { id, images } = listing;
+  const body = await makeRequest(`listings/${id}`, options);
+  if (body.success) {
+    for (let i=0; i<images.length; i++) {
+      const imageItem = images[i];
+      if (imageItem.image_name) {
+        await deleteImage(imageItem.image_name);
+      }
+    }
+  }
+
   return body;
 };
 

@@ -352,6 +352,50 @@ const reducer = handleActions({
         listingId: null
       }
     };
+  },
+  [deleteListing](state, { payload: { listing } }) {
+    return {
+      ...state,
+      deleteListing: {
+        ...state.deleteListing,
+        deleting: true,
+        listingId: listing.id,
+        error: null
+      }
+    };
+  },
+  [deleteListingSuccess](state, { payload: { listingId } }) {
+    if (state.deleteListing.listingId === listingId) {
+      const myListings = {
+        ...state.myListings
+      };
+      delete myListings[listingId];
+
+      return {
+        ...state,
+        deleteListing: {
+          ...state.deleteListing,
+          deleting: false
+        },
+        myListings
+      };
+    }
+
+    return state;
+  },
+  [deleteListingError](state, { payload: { listingId, error } }) {
+    if (state.deleteListing.listingId === listingId) {
+      return {
+        ...state,
+        deleteListing: {
+          ...state.deleteListing,
+          deleting: false,
+          error
+        }
+      };
+    }
+
+    return state;
   }
 }, defaultState);
 
