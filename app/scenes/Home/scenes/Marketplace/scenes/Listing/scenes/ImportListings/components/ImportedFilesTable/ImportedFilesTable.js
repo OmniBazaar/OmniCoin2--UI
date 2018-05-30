@@ -106,7 +106,7 @@ class ImportedFilesTable extends Component {
                     <TableCell>{item.subCategory}</TableCell>
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
-                    <TableCell>{row.title}</TableCell>
+                    <TableCell>{item.listing_title}</TableCell>
                     <TableCell>{numberWithCommas(item.price)}</TableCell>
                     <TableCell>{item.currency}</TableCell>
                   </TableRow>
