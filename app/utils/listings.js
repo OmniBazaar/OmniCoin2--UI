@@ -18,6 +18,7 @@ const keysMap = {
   'open-date': 'start-date',
   'seller-sku': 'keywords',
   'item-condition': 'codition',
+  'image-url': 'imageURL',
 };
 
 const valuesMapper = {
