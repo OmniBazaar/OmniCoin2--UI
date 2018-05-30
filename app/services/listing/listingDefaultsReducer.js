@@ -14,6 +14,7 @@ import {
   getStoredListingDefautls,
   storeListingDefaults
 } from './listingDefaultsService';
+import { getImageFilePath } from './listingDefaultsService';
 
 const defaultState = {
   category: '',
@@ -28,13 +29,24 @@ const defaultState = {
   post_code: ''
 };
 
+const fixImagesData = (data) => {
+  for (const imageId in data.images) {
+    const imageItem = data.images[imageId];
+    imageItem.localFilePath = getImageFilePath(imageItem.path);
+    imageItem.id = imageId;
+  }
+
+  return data;
+}
+
 const reducer = handleActions({
   [getListingDefault](state) {
     const data = getStoredListingDefautls();
+
     if (data) {
       return {
         ...state,
-        ...data
+        ...fixImagesData(data)
       };
     }
 
@@ -46,7 +58,7 @@ const reducer = handleActions({
       ...listingDefault
     };
     storeListingDefaults(data);
-    return data;
+    return fixImagesData(data);
   },
   [uploadListingDefaultImage](state, { payload: { file, imageId } }) {
     return {

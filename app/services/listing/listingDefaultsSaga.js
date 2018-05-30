@@ -33,9 +33,9 @@ function* uploadImage({ payload: { file, imageId } }) {
 }
 
 function* removeImage({ payload: { image } }) {
-  const { fileName, id } = image;
+  const { path, id } = image;
   try {
-    yield call(deleteImage, fileName);
+    yield call(deleteImage, path);
     yield put(deleteListingDefaultImageSuccess(id));
   } catch (err) {
     console.log(err);

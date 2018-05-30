@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import electron from 'electron';
 import fs from 'fs';
 import uuid from 'uuid/v4';
 import path from 'path';
@@ -24,7 +24,12 @@ const checkDir = (dir) => {
 };
 
 const getImageFolder = () => {
-  return path.resolve(app.getAppPath(), '/listingDefaults');
+  const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+  return path.resolve(userDataPath, 'listingDefaults');
+}
+
+export const getImageFilePath = (fileName) => {
+  return path.resolve(getImageFolder(), fileName);
 }
 
 const copyFile = (source, target) => {
@@ -76,6 +81,8 @@ export const deleteImage = (fileName) => {
           resolve();
         }
       });
+    } else {
+      resolve();
     }
   });
 }
@@ -90,7 +97,7 @@ export const getStoredListingDefautls = () => {
     return JSON.parse(data);
   }
 
-  return null;
+  return {};
 }
 
 export const storeListingDefaults = (listingDefaults) => {

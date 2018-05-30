@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Image, Button, Loader, Dimmer } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
+import fileUrl from 'file-url';
 import RemoveIcon from '../../../../../../../../images/btn-remove-image-norm+press.svg';
 import LoadingIcon from '../../../../../../../../images/loading.gif';
 import {
@@ -27,8 +28,13 @@ class ImageItem extends Component {
 	}
 
 	componentWillMount() {
-	  const { file, thumb } = this.props.image;
-	  if (file) {
+	  const { localFilePath, file, thumb } = this.props.image;
+	  if (localFilePath) {
+	  	this.setState({
+	  		ready: true,
+	  		url: fileUrl(localFilePath)
+	  	});
+	  } else if (file) {
 	    const reader = new FileReader();
 
 	    reader.onload = (e) => {

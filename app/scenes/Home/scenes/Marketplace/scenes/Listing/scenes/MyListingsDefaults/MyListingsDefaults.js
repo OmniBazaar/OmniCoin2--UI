@@ -90,6 +90,13 @@ class MyListingsDefaults extends Component {
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
+            <Grid.Column width={16}>
+              <span className="title">
+                {formatMessage(listingDefaultMessages.defaultsNote)}
+              </span>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
             <Grid.Column width={4}>
               <span>{formatMessage(addListingMessages.placing)}</span>
             </Grid.Column>
@@ -170,7 +177,7 @@ class MyListingsDefaults extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Images />
+              <Images isListingDefaults={true} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -202,6 +209,16 @@ class MyListingsDefaults extends Component {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.postalCode)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4} />
+            <Grid.Column width={6}>
+              <Button
+                type="submit"
+                content={ formatMessage(listingDefaultMessages.saveDefaults) }
+                className="button--green-bg uppercase"
               />
             </Grid.Column>
           </Grid.Row>
