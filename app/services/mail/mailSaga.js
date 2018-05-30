@@ -1,5 +1,6 @@
 import { put, takeEvery, all } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
+import _ from 'lodash';
 import {
   storeMessage,
   getMessagesFromFolder,
@@ -123,10 +124,11 @@ export function* loadFolder(action) {
   const { user, messageFolder } = action.payload;
 
   const emails = getMessagesFromFolder(user, messageFolder);
+  const sortedEmails = _.sortBy(emails, ['creation_time']).reverse();
 
   yield put({
     type: 'LOAD_FOLDER_UPDATE',
-    messages: emails,
+    messages: sortedEmails,
     messageFolder: action.payload.messageFolder
   });
 }
