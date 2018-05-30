@@ -67,7 +67,7 @@ class ListingForm extends Component {
         className="textfield"
         placeholder={placeholder}
       />
-      <Button className="copy-btn button--gray-text">
+      <Button type='button' className="copy-btn button--gray-text">
         {buttonText}
       </Button>
     </div>
