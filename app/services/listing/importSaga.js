@@ -17,7 +17,20 @@ export function* importLisingsFromFile({ payload: { file } }) {
       file: { items: listings, title: name }
     });
 
-    const items = yield* listings.map(item => createListing(item));
+    const items = yield* listings.map(item => {
+      let { imageURL } = item;
+
+      if (imageURL) {
+        const doc = (new DOMParser()).parseFromString(item);
+
+        imageURL = doc.querySelector('LargeImage URL').nodeValue;
+      }
+
+      return createListing({
+        ...item,
+        imageURL,
+      });
+    });
 
     yield put({
       type: 'IMPORT_FILE_SUCCEEDED',
