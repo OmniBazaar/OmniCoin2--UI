@@ -89,12 +89,14 @@ class ListingForm extends Component {
       };
       delete data.images;
     } else {
+      const { images, ...defaultData } = this.props.listingDefaults;
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
         price_using_omnicoin: false,
-        continuous: false
+        continuous: false,
+        ...defaultData
       };
     }
 
@@ -114,6 +116,8 @@ class ListingForm extends Component {
           id
         };
       });
+    } else if (!editingListing) {
+      images = this.props.listingDefaults.images;
     }
 
     this.props.listingActions.setListingImages(images);
@@ -153,17 +157,25 @@ class ListingForm extends Component {
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
       const {
-        uploadError, image, thumb, fileName
+        uploadError, image, thumb, fileName, localFilePath, path
       } = imageItem;
-      if (uploadError || !image) {
+      if (uploadError || (!image && !localFilePath)) {
         continue;
       }
 
-      data.push({
-        path: this.fixImagePath(image),
-        thumb: this.fixThumbPath(thumb),
-        image_name: fileName
-      });
+      if (localFilePath) {
+        data.push({
+          localFilePath,
+          path,
+          id: imageId
+        });
+      } else {
+        data.push({
+          path: this.fixImagePath(image),
+          thumb: this.fixThumbPath(thumb),
+          image_name: fileName
+        });
+      }
     }
 
     return data;
@@ -595,6 +607,9 @@ ListingForm.propTypes = {
     }),
     listingImages: PropTypes.object
   }).isRequired,
+  listingDefaults: PropTypes.shape({
+    images: PropTypes.object
+  }).isRequired
 };
 
 export default compose(
@@ -606,7 +621,8 @@ export default compose(
     state => ({
       auth: state.default.auth,
       listing: state.default.listing,
-      formValues: getFormValues('listingForm')(state)
+      formValues: getFormValues('listingForm')(state),
+      listingDefaults: state.default.listingDefaults
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({

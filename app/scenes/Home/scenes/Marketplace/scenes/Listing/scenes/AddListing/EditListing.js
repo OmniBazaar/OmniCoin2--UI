@@ -20,55 +20,53 @@ class EditListing extends Component {
     const { myListings } = this.props;
     // const listing = myListings[id];http://127.0.0.1:8181/images/
     const listing = {
-      "images": [
-        {
-          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg",
-          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg",
-          "image_name": "d1c624e0-ebfd-4aed-bacf-f497722605c9.jpg"
-        },
-        {
-          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg",
-          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg",
-          "image_name": "dc8b48d6-e941-47ae-8bc9-c9376fc27654.jpeg"
-        },
-        {
-          "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg",
-          "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg",
-          "image_name": "5492e892-9cf1-4617-9c94-37c29ba14cfd.jpeg"
-        }
-      ],
-      "_id": "2525b0e8-410d-48ca-8d48-19917cda77a9",
-      "contact_type": "OmniMessage",
-      "contact_info": "tutran19",
-      "price_using_btc": false,
-      "price_using_omnicoin": false,
-      "continuous": false,
-      "listing_title": "Test",
-      "category": "services",
-      "subcategory": "beautyPersonal",
-      "currency": "USD",
-      "price": "200",
-      "condition": "Service",
-      "quantity": "12",
-      "units": "Each",
-      "start_date": "2018-05-24",
-      "end_date": "2018-06-01",
-      "keywords": [
-        "abc",
-        "xxx",
-        "yyy"
-      ],
-      "description": "This is test 1\nThis is test 2",
-      "name": "Tu Tran",
-      "country": "Åland Islands",
-      "address": "123 abc",
-      "city": "AAAA",
-      "state": "Finström",
-      "post_code": "12345",
-      "listing_type": "Listing",
-      "listing_uuid": "testuuid",
-      "owner": "tutran19",
-      "listing_id": "Listing|2525b0e8-410d-48ca-8d48-19917cda77a9"
+        "images": [
+          {
+            "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/76ff6818-5471-4d36-be0f-60651a9a86e0.png",
+            "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/76ff6818-5471-4d36-be0f-60651a9a86e0.png",
+            "image_name": "76ff6818-5471-4d36-be0f-60651a9a86e0.png"
+          },
+          {
+            "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/6afa054b-0d5d-48ea-9b7b-12269c02b750.jpg",
+            "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/6afa054b-0d5d-48ea-9b7b-12269c02b750.jpg",
+            "image_name": "6afa054b-0d5d-48ea-9b7b-12269c02b750.jpg"
+          },
+          {
+            "path": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/68155f99-f896-46e4-abbc-f19aecdac87b.jpeg",
+            "thumb": "http://127.0.0.1:8181/images/b33e281d5e7a356198d89e3e3767d702fbda1878/thumbs/68155f99-f896-46e4-abbc-f19aecdac87b.jpeg",
+            "image_name": "68155f99-f896-46e4-abbc-f19aecdac87b.jpeg"
+          }
+        ],
+        "keywords": [
+          "listing default"
+        ],
+        "_id": "9b21826f-9b0a-4d0d-826e-2a96f3152516",
+        "contact_type": "OmniMessage",
+        "contact_info": "tutran19",
+        "price_using_btc": true,
+        "price_using_omnicoin": true,
+        "continuous": false,
+        "category": "services",
+        "subcategory": "beautyPersonal",
+        "currency": "JPY",
+        "description": "This is default description",
+        "address": "123 ABC",
+        "city": "DN",
+        "post_code": "111111",
+        "listing_title": "Listing Default",
+        "price": "200",
+        "condition": "Like-new",
+        "quantity": "100",
+        "units": "Each",
+        "start_date": "2018-05-30",
+        "end_date": "2018-06-09",
+        "name": "Tu Tran",
+        "country": "Anguilla",
+        "state": "Anguillita Island",
+        "listing_type": "Listing",
+        "listing_uuid": "testuuid",
+        "owner": "tutran19",
+        "listing_id": "Listing|9b21826f-9b0a-4d0d-826e-2a96f3152516"
     };
 
     return (

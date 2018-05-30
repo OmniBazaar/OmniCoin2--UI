@@ -4,6 +4,7 @@ import {
   all,
   call
 } from 'redux-saga/effects';
+import mime from 'mime-types';
 import {
   addListingImage,
   uploadListingImageSuccess,
@@ -52,9 +53,14 @@ function* uploadImage({ payload: { file, imageId } }) {
 }
 
 function* removeImage({ payload: { image } }) {
-  const { id, fileName } = image;
+  const { id, fileName, localFilePath } = image;
   try {
     yield put(startDeleteListingImage(id));
+    if (localFilePath && !fileName) {
+    	yield put(deleteListingImageSuccess(id));
+    	return;
+    }
+
     const result = yield call(deleteImage, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
@@ -67,12 +73,41 @@ function* removeImage({ payload: { image } }) {
   }
 }
 
+function* checkAndUploadImages(listing) {
+	for (let i=0; i<listing.images.length; i++) {
+		const imageItem = listing.images[i];
+		const { localFilePath, path, id } = imageItem;
+		if (localFilePath) {
+			const type = mime.lookup(path);
+			const file = {
+				path: localFilePath,
+				name: path,
+				type
+			};
+			const result = yield call(saveImage, file);
+			yield put(uploadListingImageSuccess(
+	      id,
+	      result.image,
+	      result.thumb,
+	      result.fileName
+	    ));
+	    listing.images[i] = {
+	    	path: result.image,
+	    	thumb: result.thumb,
+	    	image_name: result.fileName
+	    };
+		}
+	};
+}
+
 function* saveListingHandler({ payload: { listing, listingId } }) {
   let result;
   try {
     if (listingId) {
       result = yield call(editListing, listingId, listing);
     } else {
+    	yield checkAndUploadImages(listing);
+    	console.log(listing);
       result = yield call(createListing, listing);
     }
 

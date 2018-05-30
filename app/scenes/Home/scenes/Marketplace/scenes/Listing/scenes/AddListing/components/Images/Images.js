@@ -30,7 +30,6 @@ class Images extends Component {
     const files = this.inputElement.files;
     if (files && files.length) {
       const file = files[0];
-      console.log(file);
 
       if (file.type.match('image.*')) {
       	this.uploadImage(file);
