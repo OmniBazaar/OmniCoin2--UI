@@ -2,6 +2,8 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
   getListingDetail,
+  getListingDetailSucceeded,
+  getListingDetailFailed,
   setActiveCurrency,
   getMyListings,
   setBitcoinPrice,
@@ -36,7 +38,7 @@ const CoinTypes = Object.freeze({
 const defaultState = {
   myListings: [],
   myListingsFiltered: [],
-  listingDetail: {},
+  listingDetail: null,
   activeCurrency: CoinTypes.OMNI_COIN,
   bitcoinPrice: false,
   omnicoinPrice: false,
@@ -54,7 +56,7 @@ const defaultState = {
     deleting: false,
     error: null,
     listingId: null
-  }
+  },
 };
 
 const reducer = handleActions({
@@ -85,7 +87,7 @@ const reducer = handleActions({
   },
   [removeFromFavorites](state, { payload: { listingDetailId } }) {
     const index = state.favoriteListings.length > 0 ?
-      state.favoriteListings.findIndex(x => x.id === listingDetailId) : -1;
+      state.favoriteListings.findIndex(x => x['listing_id'] === listingDetailId) : -1;
     const favoriteListings = [
       ...state.favoriteListings.slice(0, index),
       ...state.favoriteListings.slice(index + 1)
@@ -96,11 +98,23 @@ const reducer = handleActions({
       favoriteListings
     };
   },
-  [getListingDetail](state, { payload: { listingDetail } }) {
+  [getListingDetail](state) {
     return {
       ...state,
-      listingDetail
-    };
+      listingDetail: null
+    }
+  },
+  [getListingDetailSucceeded](state, { payload: { listingDetail }}) {
+    return {
+      ...state,
+      listingDetail,
+    }
+  },
+  [getListingDetailFailed](state, { payload: { error }}) {
+    return {
+      ...state,
+      error,
+    }
   },
   [setActiveCurrency](state, { payload: { activeCurrency } }) {
     return {

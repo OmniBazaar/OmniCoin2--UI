@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import { dhtConnect, dhtGetPeersFor, dhtFetchPeersData } from './dhtActions';
 
 const defaultState = {
-  peers: [],
+  peersMap: [],
   isConnecting: false,
   connector: null,
   isLoading: false,
@@ -38,12 +38,11 @@ const reducer = handleActions({
     };
   },
 
-  DHT_FETCH_PEERS_SUCCEEDED: (state, { peers }) => {
-    console.log('PEERS SUCCEEDED ', peers);
+  DHT_FETCH_PEERS_SUCCEEDED: (state, { peersMap }) => {
     return {
       ...state,
       isLoading: false,
-      peers
+      peersMap
     };
   },
 

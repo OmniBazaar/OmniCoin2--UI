@@ -26,8 +26,8 @@ function wsWatcher(socket, messageTypes) {
         if (msg) {
           console.log('MSG ', msg);
         }
-        const messageType = messageTypes.find(el => el.type === msg.type);
-        return emitter({ type: messageType.action, data: msg });
+        const messageType = Object.keys(messageTypes).find(key => messageTypes[key] === msg.type);
+        return emitter({ type: messageType, data: msg });
       } catch (e) {
         console.error(`Error parsing : ${e.data}`);
       }

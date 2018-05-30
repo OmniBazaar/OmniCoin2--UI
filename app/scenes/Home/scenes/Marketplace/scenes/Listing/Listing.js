@@ -5,7 +5,12 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import ReactStars from 'react-stars';
-import { Image, Button, Popup } from 'semantic-ui-react';
+import {
+  Image,
+  Button,
+  Popup,
+  Loader
+} from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
 
 import ImageGallery from 'react-image-gallery';
@@ -153,20 +158,25 @@ const messages = defineMessages({
 });
 
 class Listing extends Component {
+
+  componentWillMount() {
+    this.props.listingActions.getListingDetail(this.props.match.params.id);
+  }
+
   componentDidMount() {
     window.addEventListener('resize', this.setGallerySize.bind(this));
     this.setGallerySize();
-    this.props.listingActions.getListingDetail(listing);
     this.props.listingActions.getFavorites();
   }
 
   componentWillReceiveProps(nextProps) {
     const { props } = this;
     const { listingDetail, favoriteListings } = props.listing;
-
-    if (listingDetail.id !== nextProps.listing.listingDetail.id ||
-      favoriteListings.length !== nextProps.listing.favoriteListings.length) {
-      props.listingActions.isFavorite(nextProps.listing.listingDetail.id);
+    if (listingDetail && nextProps.listing.listingDetail) {
+      if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
+        favoriteListings.length !== nextProps.listing.favoriteListings.length) {
+        props.listingActions.isFavorite(nextProps.listing.listingDetail['listing_id']);
+      }
     }
   }
 
@@ -257,7 +267,7 @@ class Listing extends Component {
   removeFromFavorites = () => {
     const { props } = this;
     const { listingDetail } = props.listing;
-    props.listingActions.removeFromFavorites(listingDetail.id);
+    props.listingActions.removeFromFavorites(listingDetail['listing_id']);
   };
 
   reportListing = () => {
@@ -312,7 +322,11 @@ class Listing extends Component {
     return (
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery
-          items={listingDetail.images}
+          items={listingDetail.images.map(image => ({
+            original: `http://${listingDetail.address}/publisher-images/${image.path}`,
+            thumbnail: `http://${listingDetail.address}/publisher-images/${image.thumb}`
+            })
+          )}
           showPlayButton={false}
           showFullscreenButton={false}
         />
@@ -330,30 +344,27 @@ class Listing extends Component {
 
     return (
       <div className="item-description">
-        <div>
-          <span className={statusClass}>{listingDetail.status}</span>
-        </div>
-        <span className="title">{listingDetail.name}</span>
+        <span className="title">{listingDetail.title}</span>
         <div className="seller-wrapper">
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
             {this.renderUser(listingDetail)}
-            <span className="rating">
-              {listingDetail.seller ?
-                <ReactStars
-                  count={5}
-                  size={16}
-                  value={listingDetail.seller.rating}
-                  color1="#f9d596"
-                  color2="#fbae3c"
-                  edit={false}
-                />
-                : null}
-            </span>
-            <div className="votes">
-              <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
-              <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
-            </div>
+            {/*<span className="rating">*/}
+              {/*{listingDetail.seller ?*/}
+                {/*<ReactStars*/}
+                  {/*count={5}*/}
+                  {/*size={16}*/}
+                  {/*value={listingDetail.seller.rating}*/}
+                  {/*color1="#f9d596"*/}
+                  {/*color2="#fbae3c"*/}
+                  {/*edit={false}*/}
+                {/*/>*/}
+                {/*: null}*/}
+            {/*</span>*/}
+            {/*<div className="votes">*/}
+              {/*<Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />*/}
+              {/*<span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>*/}
+            {/*</div>*/}
           </div>
         </div>
         <div className="details-wrapper">
@@ -396,15 +407,10 @@ class Listing extends Component {
   }
 
   render() {
-    const { props } = this;
-    const { listingDetail } = props.listing;
+    const { listingDetail } = this.props.listing;
     const { formatMessage } = this.props.intl;
 
-    /*
-    const listingId = props.match.params.id;
-    const name = props.match.params.name;
-    const activeCategory = props.marketplace.activeCategory;
-    */
+
     return (
       <div className="marketplace-container category-listing listing">
         <div className="header">
@@ -416,14 +422,19 @@ class Listing extends Component {
               <CategoryHeader />
             </div>
           </div>
-          <div className="listing-body">
-            {this.renderGallery(listingDetail)}
-            {this.renderItemDetails(listingDetail)}
-          </div>
-          <div className="listing-description">
-            <span className="title">{formatMessage(messages.itemDescription)}</span>
-            <p className="description">{listingDetail.description}</p>
-          </div>
+          {!listingDetail
+            ?
+            <Loader active inline/>
+            :
+            <div className="listing-body">
+              {this.renderGallery(listingDetail)}
+              {this.renderItemDetails(listingDetail)}
+            </div>
+          }
+          {/*<div className="listing-description">*/}
+            {/*<span className="title">{formatMessage(messages.itemDescription)}</span>*/}
+            {/*<p className="description">{listingDetail.description}</p>*/}
+          {/*</div>*/}
         </div>
       </div>
     );

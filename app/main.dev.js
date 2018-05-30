@@ -65,7 +65,8 @@ app.on('ready', async () => {
 
   bitcoincli.start({
     port: 3000,
-    bind: 'localhost'
+    bind: 'localhost',
+    logLevel: 'info'
   });
 
   getmac.getMac((err, macAddress) => {
