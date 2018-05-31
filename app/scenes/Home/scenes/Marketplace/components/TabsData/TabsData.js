@@ -49,13 +49,13 @@ class TabsData extends Component {
 }
 
 TabsData.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
+  data: PropTypes.object,
   tabs: PropTypes.arrayOf(PropTypes.object),
   showActions: PropTypes.bool
 };
 
 TabsData.defaultProps = {
-  data: [],
+  data: {},
   tabs: [],
   showActions: false,
 };

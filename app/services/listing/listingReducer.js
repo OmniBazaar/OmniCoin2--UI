@@ -5,7 +5,9 @@ import {
   getListingDetailSucceeded,
   getListingDetailFailed,
   setActiveCurrency,
-  getMyListings,
+  requestMyListings,
+  requestMyListingsSuccess,
+  requestMyListingsError,
   setBitcoinPrice,
   setContinuous,
   setOmnicoinPrice,
@@ -36,9 +38,13 @@ const CoinTypes = Object.freeze({
 });
 
 const defaultState = {
-  myListings: [],
-  myListingsFiltered: [],
   listingDetail: null,
+  myListings: {},
+  requestMyListing: {
+    isRequest: false,
+    error: null
+  },
+  myListingsFiltered: {},
   activeCurrency: CoinTypes.OMNI_COIN,
   bitcoinPrice: false,
   omnicoinPrice: false,
@@ -122,13 +128,36 @@ const reducer = handleActions({
       activeCurrency
     };
   },
-  [getMyListings](state, { payload: { myListings } }) {
-    const sortedData = _.sortBy(myListings, ['date']).reverse();
+  [requestMyListings](state) {
     return {
       ...state,
-      myListings: sortedData,
-      myListingsFiltered: sortedData
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: true,
+        error: null
+      }
     };
+  },
+  [requestMyListingsSuccess](state, { payload: { myListings } }) {
+    return {
+      ...state,
+      myListings,
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: false,
+        error: null
+      }
+    }
+  },
+  [requestMyListingsError](state, { payload: { error } }) {
+    return {
+      ...state,
+      requestMyListing: {
+        ...state.requestMyListing,
+        isRequest: false,
+        error
+      }
+    }
   },
   [setBitcoinPrice](state) {
     return {
@@ -337,6 +366,50 @@ const reducer = handleActions({
         listingId: null
       }
     };
+  },
+  [deleteListing](state, { payload: { listing } }) {
+    return {
+      ...state,
+      deleteListing: {
+        ...state.deleteListing,
+        deleting: true,
+        listingId: listing.id,
+        error: null
+      }
+    };
+  },
+  [deleteListingSuccess](state, { payload: { listingId } }) {
+    if (state.deleteListing.listingId === listingId) {
+      const myListings = {
+        ...state.myListings
+      };
+      delete myListings[listingId];
+
+      return {
+        ...state,
+        deleteListing: {
+          ...state.deleteListing,
+          deleting: false
+        },
+        myListings
+      };
+    }
+
+    return state;
+  },
+  [deleteListingError](state, { payload: { listingId, error } }) {
+    if (state.deleteListing.listingId === listingId) {
+      return {
+        ...state,
+        deleteListing: {
+          ...state.deleteListing,
+          deleting: false,
+          error
+        }
+      };
+    }
+
+    return state;
   }
 }, defaultState);
 

@@ -161,6 +161,14 @@
         flex: 3;
       }
     }
+
+    .not-found {
+      font-size: 20px;
+      color: grey;
+    }
+    .uppercase {
+      text-transform: uppercase;
+    }
   }
 }
 

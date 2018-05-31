@@ -27,7 +27,7 @@ class Calendar extends Component {
           placeholderText={this.props.placeholder}
           onChange={this.onChange.bind(this)}
         />
-        <Button className="copy-btn button--gray-text">
+        <Button className="copy-btn button--gray-text" type='button'>
           <Image src={CalendarIcon} width={size} height={size} />
         </Button>
       </div>

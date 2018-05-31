@@ -1,20 +1,35 @@
 import { createActions } from 'redux-actions';
 
 const {
-  setBitcoinPriceDefaults,
-  setOmnicoinPriceDefaults,
-  addImageDefaults,
-  removeImageDefaults
+  getListingDefault,
+  saveListingDefault,
+  uploadListingDefaultImage,
+  uploadListingDefaultImageSuccess,
+  uploadListingDefaultImageError,
+  deleteListingDefaultImage,
+  deleteListingDefaultImageSuccess,
+  deleteListingDefaultImageError,
+  clearListingDefaultImageError
 } = createActions({
-  SET_BITCOIN_PRICE_DEFAULTS: () => ({}),
-  SET_OMNICOIN_PRICE_DEFAULTS: () => ({}),
-  ADD_IMAGE_DEFAULTS: (image) => ({ image }),
-  REMOVE_IMAGE_DEFAULTS: (imageIndex) => ({ imageIndex }),
+  GET_LISTING_DEFAULT: () => ({}),
+  SAVE_LISTING_DEFAULT: (listingDefault) => ({ listingDefault }),
+  UPLOAD_LISTING_DEFAULT_IMAGE: (file, imageId) => ({ file, imageId }),
+  UPLOAD_LISTING_DEFAULT_IMAGE_SUCCESS: (imageId, path) => ({ imageId, path }),
+  UPLOAD_LISTING_DEFAULT_IMAGE_ERROR: (imageId, error) => ({ imageId, error }),
+  DELETE_LISTING_DEFAULT_IMAGE: (image) => ({ image }),
+  DELETE_LISTING_DEFAULT_IMAGE_SUCCESS: (imageId) => ({ imageId }),
+  DELETE_LISTING_DEFAULT_IMAGE_ERROR: (imageId, error) => ({ imageId, error }),
+  CLEAR_LISTING_DEFAUT_IMAGE_ERROR: (imageId) => ({ imageId })
 });
 
 export {
-  setBitcoinPriceDefaults,
-  setOmnicoinPriceDefaults,
-  addImageDefaults,
-  removeImageDefaults
+  getListingDefault,
+  saveListingDefault,
+  uploadListingDefaultImage,
+  uploadListingDefaultImageSuccess,
+  uploadListingDefaultImageError,
+  deleteListingDefaultImage,
+  deleteListingDefaultImageSuccess,
+  deleteListingDefaultImageError,
+  clearListingDefaultImageError
 };
