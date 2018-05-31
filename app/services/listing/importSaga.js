@@ -15,12 +15,6 @@ export function* importLisingsFromFile({ payload: { file } }) {
     const { content, name } = file;
     const listings = yield call(getListings, content);
 
-    // Remember to remove
-    yield put({
-      type: 'IMPORT_FILE_SUCCEEDED',
-      file: { items: listings, title: name }
-    });
-
     const items = yield* listings.map(async item => {
       let image;
 
@@ -38,19 +32,23 @@ export function* importLisingsFromFile({ payload: { file } }) {
         const reader = new FileReader();
 
         reader.onloadend = async () => {
-          fs.writeFileSync(image.path, reader.result, { flag: 'w' });
+          const imgContent = reader.result.replace(/^data:image\/\w+;base64,/, '');
+
+          fs.writeFileSync(image.path, Buffer.from(imgContent, 'base64'), { flag: 'w' });
+
+          const newImage = await saveImage(image);
+
+          fs.unlink(image.path, console.log);
 
           const listing = await createListing({
             ...item,
-            images: [await saveImage(image)],
+            images: [newImage],
           });
-
-          fs.unlink(image.path, console.log);
 
           resolve(listing);
         };
 
-        reader.readAsText(image);
+        reader.readAsDataURL(image);
       });
     });
 

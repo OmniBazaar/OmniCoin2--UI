@@ -15,7 +15,7 @@ const keysMap = {
   'item-name': 'listing_title',
   'item-description': 'description',
   'listing-id': 'listing_uuid',
-  'open-date': 'start-date',
+  'open-date': 'start_date',
   'seller-sku': 'keywords',
   'item-condition': 'codition',
   'image-url': 'imageURL',
