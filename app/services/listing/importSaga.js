@@ -27,9 +27,9 @@ export function* importLisingsFromFile({ payload: { file } }) {
 
         console.log(doc);
 
-        imageURL = doc.querySelector('LargeImage URL').nodeValue;
+        imageURL = doc.querySelector('LargeImage URL').innerHTML;
 
-        console.log(new File(imageURL, 'test'));
+        console.log(new File([imageURL], 'test'));
       }
 
       return createListing({

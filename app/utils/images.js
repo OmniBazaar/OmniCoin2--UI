@@ -14,12 +14,8 @@ export default {
     };
 
     const url = getSignedUrl(params);
-    console.log(url);
-
     const response = await fetch(new Request(url));
 
-    console.log(response);
-
-    return response;
+    return response.text();
   },
 };
