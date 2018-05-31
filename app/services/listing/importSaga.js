@@ -10,7 +10,7 @@ export function* importSubscriber() {
   yield takeEvery('IMPORT_FILE', importLisingsFromFile);
 }
 
-export function* importLisingsFromFile({ payload: { file } }) {
+export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
   try {
     const { content, name } = file;
     const listings = yield call(getListings, content);
@@ -41,6 +41,7 @@ export function* importLisingsFromFile({ payload: { file } }) {
           fs.unlink(image.path, console.log);
 
           const listing = await createListing({
+            ...defaultValues,
             ...item,
             images: [newImage],
           });

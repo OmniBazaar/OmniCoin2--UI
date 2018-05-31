@@ -124,7 +124,7 @@ class ImportListings extends Component {
       this.props.listingActions.importFile({
         content: file,
         name: file.name,
-      });
+      }, this.props.listingDefaults);
     }
   }
 
@@ -275,11 +275,24 @@ ImportListings.propTypes = {
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
   }),
+  listingDefaults: PropTypes.shape({
+    category: PropTypes.string,
+    subcategory: PropTypes.string,
+    currency: PropTypes.string,
+    price_using_btc: PropTypes.bool,
+    price_using_omnicoin: PropTypes.bool,
+    description: PropTypes.string,
+    images: PropTypes.object,
+    address: PropTypes.string,
+    city: PropTypes.string,
+    post_code: PropTypes.string,
+  }),
 };
 
 ImportListings.defaultProps = {
   listingImport: {},
   listingActions: {},
+  listingDefaults: {},
   intl: {},
 };
 
