@@ -4,372 +4,226 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
-import { Field, reduxForm } from 'redux-form';
-import hash from 'object-hash';
+import { Field, reduxForm, getFormValues } from 'redux-form';
+import { toastr } from 'react-redux-toastr';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import AddIcon from '../../../../../../images/btn-add-image.svg';
-import RemoveIcon from '../../../../../../images/btn-remove-image-norm+press.svg';
-import Checkbox from '../../../../../../../../components/Checkbox/Checkbox';
-
-import { getFileExtension } from '../../../../../../../../utils/file';
+import CategoryDropdown from '../AddListing/components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from '../AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
+import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
+import Checkbox from '../AddListing/components/Checkbox/Checkbox';
+import Images, { getImageId } from '../AddListing/components/Images/Images';
+import addListingMessages from '../AddListing/messages';
+import listingDefaultMessages from './messages';
 
 import {
-  setBitcoinPriceDefaults,
-  setOmnicoinPriceDefaults,
-  addImageDefaults,
-  removeImageDefaults
+  InputField,
+  makeValidatableField
+} from '../../../../../../../../components/ValidatableField/ValidatableField';
+
+import {
+  saveListingDefault
 } from '../../../../../../../../services/listing/listingDefaultsActions';
 
 import '../AddListing/add-listing.scss';
 
-require('react-datepicker/dist/react-datepicker-cssmodules.css');
-
 const iconSize = 42;
-const iconSizeLarge = 23;
-const iconSizeMedium = 20;
-
-const messages = defineMessages({
-  myListings: {
-    id: 'ListingsDefaults.myListings',
-    defaultMessage: 'My Listings'
-  },
-  listingDefaults: {
-    id: 'ListingsDefaults.listingDefaults',
-    defaultMessage: 'Listing Defaults'
-  },
-  defaultsNote: {
-    id: 'ListingsDefaults.defaultsNote',
-    defaultMessage: 'Pre-defined information for all new listings you are creating.'
-  },
-  type: {
-    id: 'ListingsDefaults.type',
-    defaultMessage: 'Type'
-  },
-  category: {
-    id: 'ListingsDefaults.category',
-    defaultMessage: 'Category'
-  },
-  subCategory: {
-    id: 'ListingsDefaults.subCategory',
-    defaultMessage: 'Sub-category'
-  },
-  localCurrency: {
-    id: 'ListingsDefaults.localCurrency',
-    defaultMessage: 'Local Currency'
-  },
-  selectCoin: {
-    id: 'ListingsDefaults.selectCoin',
-    defaultMessage: 'Select Coin'
-  },
-  addBitcoinPrice: {
-    id: 'ListingsDefaults.addBitcoinPrice',
-    defaultMessage: 'Add Bitcoin Price'
-  },
-  addOmnicoinPrice: {
-    id: 'ListingsDefaults.addOmnicoinPrice',
-    defaultMessage: 'Add Omnicoin Price'
-  },
-  description: {
-    id: 'ListingsDefaults.description',
-    defaultMessage: 'Description'
-  },
-  pleaseEnter: {
-    id: 'ListingsDefaults.pleaseEnter',
-    defaultMessage: 'Please enter'
-  },
-  listingImages: {
-    id: 'ListingsDefaults.listingImages',
-    defaultMessage: 'Listing Images'
-  },
-  optional: {
-    id: 'ListingsDefaults.optional',
-    defaultMessage: '(Optional)'
-  },
-  location: {
-    id: 'ListingsDefaults.location',
-    defaultMessage: 'Location'
-  },
-  address: {
-    id: 'ListingsDefaults.address',
-    defaultMessage: 'Address'
-  },
-  city: {
-    id: 'ListingsDefaults.city',
-    defaultMessage: 'City'
-  },
-  postalCode: {
-    id: 'ListingsDefaults.postalCode',
-    defaultMessage: 'Postal Code'
-  },
-  saveDefaults: {
-    id: 'ListingsDefaults.saveDefaults',
-    defaultMessage: 'SAVE DEFAULTS'
-  },
-  warning: {
-    id: 'ListingsDefaults.warning',
-    defaultMessage: 'Warning'
-  },
-  ok: {
-    id: 'ListingsDefaults.ok',
-    defaultMessage: 'Ok'
-  },
-  onlyImagesMsg: {
-    id: 'ListingsDefaults.onlyImagesMsg',
-    defaultMessage: 'Only jpg/jpeg and png files are allowed.'
-  },
-});
-
-const placingTypeOptions = [
-  {
-    key: 'all',
-    value: 'all',
-    text: 'All'
-  },
-];
 
 class MyListingsDefaults extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: false
-    };
+    this.CategoryDropdown = makeValidatableField(CategoryDropdown);
+    this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
   }
 
-  toggleBitcoinPrice = () => this.props.listingActions.setBitcoinPriceDefaults();
-  toggleOmnicoinPrice = () => this.props.listingActions.setOmnicoinPriceDefaults();
+  componentWillMount() {
+    const { listingDefaults } = this.props;
+    this.props.initialize(listingDefaults);
+  }
 
-  onImageChange(event) {
-    if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      const extFile = getFileExtension(event);
+  submit(values) {
+    const { saveListingDefault } = this.props.listingDefaultsActions;
+    const { formatMessage } = this.props.intl;
 
-      if (extFile === 'jpg' || extFile === 'jpeg' || extFile === 'png') {
-        reader.onload = (e) => {
-          this.props.listingActions.addImageDefaults(e.target.result);
-        };
-        reader.readAsDataURL(event.target.files[0]);
-      } else {
-        this.setState({ open: true });
+    saveListingDefault({
+      ...values,
+      images: this.getImagesData()
+    });
+
+    this.showSuccessToast(
+      formatMessage(listingDefaultMessages.success), 
+      formatMessage(listingDefaultMessages.saveListingSuccessMessage)
+    );
+  }
+
+  getImagesData() {
+    const { images } = this.props.listingDefaults;
+
+    const data = {};
+    for (const imageId in images) {
+      const imageItem = images[imageId];
+      const {
+        uploadError, path
+      } = imageItem;
+      if (uploadError || !path) {
+        continue;
       }
+
+      data[imageId] = { path };
     }
+
+    return data;
   }
 
-  onClickAddImage = () => {
-    this.inputElement.click();
-  };
-
-  removeImage = (index) => {
-    this.props.listingActions.removeImageDefaults(index);
-  };
-
-  addedImages() {
-    const { addedImagesDefaults } = this.props.listingDefaults;
-
-    return addedImagesDefaults.map((image, index) => (
-      <div key={hash(image)} className="img-container">
-        <Image src={RemoveIcon} width={iconSizeLarge} height={iconSizeLarge} className="remove-icon" onClick={() => this.removeImage(index)} />
-        <img alt="" id="target" src={image} width={132} height={100} className="added-img" />
-      </div>
-    ));
+  showSuccessToast(title, message) {
+    toastr.success(title, message);
   }
 
   defaultsForm() {
     const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
+    const { category } = this.props.formValues ? this.props.formValues : {};
 
     return (
-      <Form className="add-listing-form">
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={16}>
-              <span className="title">{formatMessage(messages.defaultsNote)}</span>
+              <span className="title">
+                {formatMessage(listingDefaultMessages.defaultsNote)}
+              </span>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Placing</span>
+              <span>{formatMessage(addListingMessages.placing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.type)}
-                options={placingTypeOptions}
+            <Grid.Column width={6} className="align-top">
+              <Field
+                name="category"
+                component={this.CategoryDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.category)
+                }}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.category)}
-                options={placingTypeOptions}
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.subCategory)}
-                options={placingTypeOptions}
+            <Grid.Column width={6} className="align-top">
+              <Field
+                name="subcategory"
+                component={this.SubCategoryDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.subCategory),
+                  parentCategory: category
+                }}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>Pricing</span>
+              <span>{formatMessage(addListingMessages.pricing)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.localCurrency)}
-                options={placingTypeOptions}
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Dropdown
-                compact
-                selection
-                placeholder={formatMessage(messages.selectCoin)}
-                options={placingTypeOptions}
+            <Grid.Column width={6} className="align-top">
+              <Field
+                name="currency"
+                component={this.CurrencyDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.currency)
+                }}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleBitcoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.addBitcoinPrice)}
-                  </div>
-                </div>
-              </div>
+            <Grid.Column width={6}>
+              <Field
+                name="price_using_btc"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(addListingMessages.bitcoinPrice)
+                }}
+              />
             </Grid.Column>
-            <Grid.Column width={4}>
-              <div className="check-form field">
-                <div className="description">
-                  <Checkbox
-                    width={iconSizeMedium}
-                    height={iconSizeMedium}
-                    onChecked={this.toggleOmnicoinPrice}
-                  />
-                  <div className="description-text">
-                    {formatMessage(messages.addOmnicoinPrice)}
-                  </div>
-                </div>
-              </div>
+            <Grid.Column width={6}>
+              <Field
+                name="price_using_omnicoin"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(addListingMessages.omnicoinPrice)
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>{formatMessage(messages.description)}</span>
+              <span>{formatMessage(addListingMessages.description)}</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
                 type="textarea"
-                name="listingTitle"
-                component="textarea"
+                name="description"
+                component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnter)}
+                placeholder={formatMessage(addListingMessages.pleaseEnter)}
               />
             </Grid.Column>
           </Grid.Row>
-
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
               <span>
-                {formatMessage(messages.listingImages)} {formatMessage(messages.optional)}
+                {formatMessage(addListingMessages.listingImages)} {formatMessage(addListingMessages.optional)}
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <input
-                ref={(ref) => { this.inputElement = ref; }}
-                type="file"
-                onChange={this.onImageChange.bind(this)}
-                className="filetype"
-                accept="image/*"
-              />
-              <div className="images-wrapper">
-                {this.addedImages()}
-                <Button className="add-img-button" onClick={() => this.onClickAddImage()}>
-                  <Image src={AddIcon} width={iconSize} height={iconSize} />
-                </Button>
-              </div>
+              <Images isListingDefaults={true} />
             </Grid.Column>
           </Grid.Row>
-
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.location)}</span>
+              <span>{formatMessage(addListingMessages.location)}</span>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="address"
-                component="input"
+                component={InputField}
                 className="textfield"
-                placeholder={formatMessage(messages.address)}
+                placeholder={formatMessage(addListingMessages.address)}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="city"
-                component="input"
+                component={InputField}
                 className="textfield"
-                placeholder={formatMessage(messages.city)}
+                placeholder={formatMessage(addListingMessages.city)}
               />
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
-                name="postalCode"
+                name="post_code"
                 component="input"
                 className="textfield"
-                placeholder={formatMessage(messages.postalCode)}
+                placeholder={formatMessage(addListingMessages.postalCode)}
               />
             </Grid.Column>
           </Grid.Row>
-
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
-              <Button content={formatMessage(messages.saveDefaults)} className="button--green-bg" />
+            <Grid.Column width={6}>
+              <Button
+                type="submit"
+                content={ formatMessage(listingDefaultMessages.saveDefaults) }
+                className="button--green-bg uppercase"
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Form>
-    );
-  }
-
-  closeWarning() {
-    this.setState({ open: false });
-  }
-
-  showWarningMessage() {
-    const { formatMessage } = this.props.intl;
-
-    return (
-      <Modal size="mini" open={this.state.open} onClose={() => this.closeWarning()} closeIcon>
-        <Modal.Header>
-          {formatMessage(messages.warning)}
-        </Modal.Header>
-        <Modal.Content>
-          <p className="modal-content">{formatMessage(messages.onlyImagesMsg)}</p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button positive onClick={() => this.closeWarning()}>
-            {formatMessage(messages.ok)}
-          </Button>
-        </Modal.Actions>
-      </Modal>
     );
   }
 
@@ -386,10 +240,10 @@ class MyListingsDefaults extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.myListings)}</span>
+                  <span>{formatMessage(listingDefaultMessages.myListings)}</span>
                   <Icon name="long arrow right" width={iconSize} height={iconSize} />
                 </div>
-                <span className="child">{formatMessage(messages.listingDefaults)}</span>
+                <span className="child">{formatMessage(listingDefaultMessages.listingDefaults)}</span>
               </div>
             </div>
           </div>
@@ -397,49 +251,44 @@ class MyListingsDefaults extends Component {
             {this.defaultsForm()}
           </div>
         </div>
-        {this.showWarningMessage()}
       </div>
     );
   }
 }
 
 MyListingsDefaults.propTypes = {
-  listingActions: PropTypes.shape({
-    setBitcoinPriceDefaults: PropTypes.func,
-    setOmnicoinPriceDefaults: PropTypes.func,
-    addImageDefaults: PropTypes.func,
-    removeImageDefaults: PropTypes.func,
-  }),
   listingDefaults: PropTypes.shape({
-    bitcoinPriceDefaults: PropTypes.bool,
-    omnicoinPriceDefaults: PropTypes.bool,
-    addedImagesDefaults: PropTypes.arrayOf(PropTypes.string),
-  }),
+    images: PropTypes.object
+  }).isRequired,
+  listingDefaultsActions: PropTypes.shape({
+    saveListingDefault: PropTypes.func
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  }),
+  }).isRequired,
+  formValues: PropTypes.shape({
+    category: PropTypes.string
+  })
 };
 
 MyListingsDefaults.defaultProps = {
-  listingActions: {},
-  listingDefaults: {},
-  intl: {},
+  formValues: {}
 };
 
 export default compose(
   connect(
-    state => ({ ...state.default }),
+    state => ({
+      listingDefaults: state.default.listingDefaults,
+      formValues: getFormValues('listingDefaultsForm')(state)
+    }),
     (dispatch) => ({
-      listingActions: bindActionCreators({
-        setBitcoinPriceDefaults,
-        setOmnicoinPriceDefaults,
-        addImageDefaults,
-        removeImageDefaults
+      listingDefaultsActions: bindActionCreators({
+        saveListingDefault
       }, dispatch),
     }),
   ),
   reduxForm({
-    form: 'addListingForm',
+    form: 'listingDefaultsForm',
     destroyOnUnmount: true,
   }),
 )(injectIntl(MyListingsDefaults));

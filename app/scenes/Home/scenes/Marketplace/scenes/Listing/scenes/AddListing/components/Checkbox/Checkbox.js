@@ -21,6 +21,7 @@ class Checkbox extends Component {
             width={size}
             height={size}
             onChecked={this.onChecked.bind(this)}
+            value={value}
           />
           <div className="description-text">
             {this.props.label}
