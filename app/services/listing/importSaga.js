@@ -1,6 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { generate } from 'shortid';
+import fs from 'fs';
+
 import { getListings } from './../../utils/listings';
-import { createListing } from './apis';
+import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
 
 export function* importSubscriber() {
@@ -19,22 +22,35 @@ export function* importLisingsFromFile({ payload: { file } }) {
     });
 
     const items = yield* listings.map(async item => {
-      let { imageURL } = item;
+      let image;
 
-      if (!imageURL) {
-        const imageXML = await getImageFromAmazon(item['product-id']);
-        const doc = (new DOMParser()).parseFromString(imageXML, 'application/xml');
-
-        console.log(doc);
-
-        imageURL = doc.querySelector('LargeImage URL').innerHTML;
-
-        console.log(new File([imageURL], 'test'));
+      if (!item.imageURL) {
+        image = await getImageFromAmazon(item['product-id']);
+      } else {
+        image = (await fetch(item.imageURL)).blob();
       }
 
-      return createListing({
-        ...item,
-        imageURL,
+      image.name = `${generate()}-${item['product-id']}.${image.type.split('/')[1]}`;
+      image.path = `tmp/${image.name}`;
+      image.lastModifiedDate = new Date();
+
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+
+        reader.onloadend = async () => {
+          fs.writeFileSync(image.path, reader.result, { flag: 'w' });
+
+          const listing = await createListing({
+            ...item,
+            images: [await saveImage(image)],
+          });
+
+          fs.unlink(image.path, console.log);
+
+          resolve(listing);
+        };
+
+        reader.readAsText(image);
       });
     });
 

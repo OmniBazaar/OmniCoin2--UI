@@ -46,7 +46,6 @@ export const getSignedUrl = (params) => {
     .replace('+', '%20')
     .replace('*', '%2A')
     .replace('%7E', '~');
-  console.log(canonicalQS);
 
   const toSign = `${REQUEST_METHOD}\n${ENDPOINT}\n${REQUEST_URI}\n${canonicalQS}`;
   const hmac = toSha256(toSign, AWS_SECRET_KEY);
