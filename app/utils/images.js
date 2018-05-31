@@ -2,6 +2,11 @@ import { getSignedUrl } from './signed-requester';
 import { AWS_ACCESS_KEY, AWS_ASSOC_TAG } from './constants';
 
 export default {
+  /**
+   * @param {string} productId
+   *
+   * @returns {Promise<Blob>}
+   */
   async getImageFromAmazon(productId) {
     const params = {
       Service: 'AWSECommerceService',
@@ -14,8 +19,10 @@ export default {
     };
 
     const url = getSignedUrl(params);
-    const response = await fetch(new Request(url));
+    const amazonResponse = await fetch(url);
+    const doc = (new DOMParser()).parseFromString(await amazonResponse.text(), 'application/xml');
+    const imageURL = doc.querySelector('LargeImage URL').innerHTML;
 
-    return response.text();
+    return (await fetch(imageURL)).blob();
   },
 };
