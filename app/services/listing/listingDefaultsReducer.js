@@ -1,45 +1,185 @@
 import { handleActions } from 'redux-actions';
 import {
-  setBitcoinPriceDefaults,
-  setOmnicoinPriceDefaults,
-  addImageDefaults,
-  removeImageDefaults
+  getListingDefault,
+  saveListingDefault,
+  uploadListingDefaultImage,
+  uploadListingDefaultImageSuccess,
+  uploadListingDefaultImageError,
+  deleteListingDefaultImage,
+  deleteListingDefaultImageSuccess,
+  deleteListingDefaultImageError,
+  clearListingDefaultImageError
 } from './listingDefaultsActions';
+import {
+  getStoredListingDefautls,
+  storeListingDefaults
+} from './listingDefaultsService';
+import { getImageFilePath } from './listingDefaultsService';
 
 const defaultState = {
-  bitcoinPriceDefaults: false,
-  omnicoinPriceDefaults: false,
-  addedImagesDefaults: []
+  category: '',
+  subcategory: '',
+  currency: '',
+  price_using_btc: false,
+  price_using_omnicoin: false,
+  description: '',
+  images: {},
+  address: '',
+  city: '',
+  post_code: ''
 };
 
+const fixImagesData = (data) => {
+  for (const imageId in data.images) {
+    const imageItem = data.images[imageId];
+    imageItem.localFilePath = getImageFilePath(imageItem.path);
+    imageItem.id = imageId;
+  }
+
+  return data;
+}
+
 const reducer = handleActions({
-  [setBitcoinPriceDefaults](state) {
+  [getListingDefault](state) {
+    const data = getStoredListingDefautls();
+
+    if (data) {
+      return {
+        ...state,
+        ...fixImagesData(data)
+      };
+    }
+
+    return state;
+  },
+  [saveListingDefault](state, { payload: { listingDefault } }) {
+    const data = {
+      ...state,
+      ...listingDefault
+    };
+    storeListingDefaults(data);
+    return fixImagesData(data);
+  },
+  [uploadListingDefaultImage](state, { payload: { file, imageId } }) {
     return {
       ...state,
-      bitcoinPriceDefaults: !state.bitcoinPriceDefaults
+      images: {
+        ...state.images,
+        [imageId]: {
+          file,
+          uploading: true,
+          id: imageId
+        }
+      }
     };
   },
-  [setOmnicoinPriceDefaults](state) {
-    return {
-      ...state,
-      omnicoinPriceDefaults: !state.omnicoinPriceDefaults
-    };
+  [uploadListingDefaultImageSuccess](state, { payload: { imageId, path } }) {
+    const imageItem = state.images[imageId];
+    if (imageItem) {
+      return {
+        ...state,
+        images: {
+          ...state.images,
+          [imageId]: {
+            ...imageItem,
+            uploading: false,
+            file: null,
+            path
+          }
+        }
+      };
+    }
+    return state;
   },
-  [addImageDefaults](state, { payload: { image } }) {
-    return {
-      ...state,
-      addedImagesDefaults: [...state.addedImagesDefaults, image]
-    };
+  [uploadListingDefaultImageError](state, { payload: { imageId, error } }) {
+    const imageItem = state.images[imageId];
+    if (imageItem) {
+      return {
+        ...state,
+        images: {
+          ...state.images,
+          [imageId]: {
+            ...imageItem,
+            uploading: false,
+            file: null,
+            uploadError: error
+          }
+        }
+      };
+    }
+    return state;
   },
-  [removeImageDefaults](state, { payload: { imageIndex } }) {
-    return {
-      ...state,
-      addedImagesDefaults: [
-        ...state.addedImagesDefaults.slice(0, imageIndex),
-        ...state.addedImagesDefaults.slice(imageIndex + 1)
-      ],
-    };
+  [deleteListingDefaultImage](state, { payload: { image } }) {
+    const { id } = image;
+    const imageItem = state.images[id];
+    if (imageItem) {
+      return {
+        ...state,
+        images: {
+          ...state.images,
+          [id]: {
+            ...imageItem,
+            deleting: true,
+            deleteError: null
+          }
+        }
+      };
+    }
+    return state;
   },
+  [deleteListingDefaultImageSuccess](state, { payload: { imageId } }) {
+    if (state.images[imageId]) {
+      const images = {
+        ...state.images
+      };
+      delete images[imageId];
+      return {
+        ...state,
+        images
+      };
+    }
+    
+    return state;
+  },
+  [deleteListingDefaultImageError](state, { payload: { imageId, error } }) {
+    const imageItem = state.images[imageId];
+    if (imageItem) {
+      return {
+        ...state,
+        images: {
+          ...state.images,
+          [imageId]: {
+            ...imageItem,
+            deleting: false,
+            deleteError: error
+          }
+        }
+      };
+    }
+    return state;
+  },
+  [clearListingDefaultImageError](state, { payload: { imageId } }) {
+    if (state.images[imageId]) {
+      const images = {
+        ...state.images
+      };
+      if (images[imageId].uploadError) {
+        delete images[imageId];
+      } else {
+        images[imageId] = {
+          ...images[imageId],
+          deleteError: null
+        };
+      }
+
+      return {
+        ...state,
+        images
+      };
+    }
+
+    return state;
+  }
 }, defaultState);
 
 export default reducer;

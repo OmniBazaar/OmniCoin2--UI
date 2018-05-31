@@ -11,12 +11,14 @@ import Home from './scenes/Home/Home';
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/blockchain/auth/authActions';
 import { dhtConnect } from './services/search/dht/dhtActions';
+import { getListingDefault } from './services/listing/listingDefaultsActions';
 
 class Root extends Component {
   componentWillMount() {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
     this.props.authActions.getLastLoginUserName();
+    this.props.listingDefaultsActions.getListingDefault();
     this.props.dhtActions.dhtConnect();
     // this.props.authActions.getCurrentUser();
   }
@@ -57,7 +59,10 @@ Root.propTypes = {
   }),
   settings: PropTypes.shape({
     activeNode: PropTypes.object
-  })
+  }),
+  listingDefaultsActions: PropTypes.shape({
+    getListingDefault: PropTypes.func
+  }).isRequired
 };
 
 Root.defaultProps = {
@@ -78,6 +83,9 @@ export default connect(
     }, dispatch),
     dhtActions: bindActionCreators({
       dhtConnect,
+    }, dispatch),
+    listingDefaultsActions: bindActionCreators({
+      getListingDefault
     }, dispatch),
   })
 )(Root);
