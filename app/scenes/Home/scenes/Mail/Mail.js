@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import hash from 'object-hash';
 
 import { Button, Image } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -178,8 +179,7 @@ class Mail extends Component {
     const emailData = props.mail.messages[props.mail.activeFolder];
 
     if (emailData.length > 0) {
-      const sortedData = _.sortBy(emailData, ['creation_time']).reverse();
-      return sortedData.map((message, index) => {
+      return emailData.map((message, index) => {
         const containerClass = classNames({
           'mail-summary': true,
           active: props.mail.activeMessage === index,
@@ -190,9 +190,12 @@ class Mail extends Component {
 
         return (
           <div
-            key={`item-${index}`}
+            key={hash(message)}
             className={containerClass}
             onClick={() => self.clickedEmail(message, index)}
+            onKeyDown={() => self.clickedEmail(message, index)}
+            tabIndex={0}
+            role="link"
           >
             <div className="top-detail">
               <div className="from">{message.user}</div>
@@ -209,9 +212,10 @@ class Mail extends Component {
 
   getMessage() {
     const { props } = this;
+    const emailData = props.mail.messages[props.mail.activeFolder];
 
-    if (props.mail.messages[props.mail.activeFolder].length > 0) {
-      return props.mail.messages[props.mail.activeFolder][props.mail.activeMessage];
+    if (emailData.length > 0) {
+      return emailData[props.mail.activeMessage];
     }
   }
 
