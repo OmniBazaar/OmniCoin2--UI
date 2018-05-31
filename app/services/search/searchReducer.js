@@ -204,7 +204,7 @@ const reducer = handleActions({
   [marketplaceReturnListings](state, { data }) {
     const listings = JSON.parse(data.command.listings).listings.map(listing => ({
       ...listing,
-      address: data.command.address
+      ip: data.command.address
     }));
     if (parseInt(data.id) === state.searchId) {
       return {

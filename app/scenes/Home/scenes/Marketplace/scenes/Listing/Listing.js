@@ -197,7 +197,7 @@ class Listing extends Component {
 
     return (
       <Popup
-        trigger={<span className="username">{listingDetail.seller ? listingDetail.seller.username : null}</span>}
+        trigger={<span className="username">{listingDetail.owner}</span>}
         hoverable
         basic
         on="hover"
@@ -209,26 +209,26 @@ class Listing extends Component {
         <div className="contact-popup">
           <div className="info">
             <span>{formatMessage(messages.preferredContact)}</span>
-            <span className="value">Phone: {listingDetail.seller ? listingDetail.seller.phone : null}</span>
+            <span className="value">{listingDetail['contact_type']}</span>
           </div>
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.name)}</span>
-              <span className="value">{listingDetail.seller ? listingDetail.seller.name : null}</span>
+              <span className="value">{listingDetail.name}</span>
             </div>
             <div className="info">
               <span>{formatMessage(messages.city)}</span>
-              <span className="value">{listingDetail.seller ? listingDetail.seller.city : null}</span>
+              <span className="value">{listingDetail.city}</span>
             </div>
           </div>
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.postalCode)}</span>
-              <span className="value">{listingDetail.seller ? listingDetail.seller.postalCode : null}</span>
+              <span className="value">{listingDetail['post_code']}</span>
             </div>
             <div className="info">
               <span>{formatMessage(messages.address)}</span>
-              <span className="value">{listingDetail.seller ? listingDetail.seller.address : null}</span>
+              <span className="value">{listingDetail.address}</span>
             </div>
           </div>
         </div>
@@ -323,8 +323,8 @@ class Listing extends Component {
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery
           items={listingDetail.images.map(image => ({
-            original: `http://${listingDetail.address}/publisher-images/${image.path}`,
-            thumbnail: `http://${listingDetail.address}/publisher-images/${image.thumb}`
+            original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
+            thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
             })
           )}
           showPlayButton={false}
@@ -349,36 +349,34 @@ class Listing extends Component {
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
             {this.renderUser(listingDetail)}
-            {/*<span className="rating">*/}
-              {/*{listingDetail.seller ?*/}
-                {/*<ReactStars*/}
-                  {/*count={5}*/}
-                  {/*size={16}*/}
-                  {/*value={listingDetail.seller.rating}*/}
-                  {/*color1="#f9d596"*/}
-                  {/*color2="#fbae3c"*/}
-                  {/*edit={false}*/}
-                {/*/>*/}
-                {/*: null}*/}
-            {/*</span>*/}
-            {/*<div className="votes">*/}
-              {/*<Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />*/}
-              {/*<span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>*/}
-            {/*</div>*/}
+            <span className="rating">
+                <ReactStars
+                  count={5}
+                  size={16}
+                  value={4}
+                  color1="#f9d596"
+                  color2="#fbae3c"
+                  edit={false}
+                />
+            </span>
+            <div className="votes">
+              <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
+              <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
+            </div>
           </div>
         </div>
         <div className="details-wrapper">
           <div className="info">
             <span>{formatMessage(messages.listingDate)}</span>
-            <span className="value">{listingDetail.date}</span>
+            <span className="value">{listingDetail['end_date']}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.condition)}</span>
-            <span className="value">{listingDetail.condition}</span>
+            <span className="value">{listingDetail['condition']}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.cityLocation)}</span>
-            <span className="value">{listingDetail.location}</span>
+            <span className="value">{listingDetail['city']}</span>
           </div>
         </div>
         <div className="price-wrapper">
