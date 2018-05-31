@@ -54,8 +54,28 @@ function reputationOptions(from = 0, to = 10) {
   return options;
 }
 
+function currencyConverter(amount, from, to) {
+  const usdRates = {
+     EUR: 0.86,
+     GBP: 0.75,
+     CAD: 0.76,
+     SEK: 8.89,
+     AUD: 0.75,
+     JPY: 108.5
+   };
+  const omcUSD = 0.00333;
+  const btcUSD = 7500;
+  if (to === 'OMC') {
+    return amount  / (omcUSD * (usdRates[from] || 1));
+  }
+  if (to === 'BTC') {
+    return amount  / (btcUSD * (usdRates[from] || 1));
+  }
+}
+
 export {
   wrapRequest,
   wsWatcher,
-  reputationOptions
+  reputationOptions,
+  currencyConverter
 };

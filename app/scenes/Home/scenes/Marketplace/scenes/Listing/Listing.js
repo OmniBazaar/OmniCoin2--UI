@@ -22,6 +22,7 @@ import PriceItem from './components/PriceItem';
 import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
+import { currencyConverter } from "../../../../../../services/utils";
 
 import './listing.scss';
 
@@ -142,10 +143,6 @@ const messages = defineMessages({
   buyNow: {
     id: 'Listing.buyNow',
     defaultMessage: 'BUY NOW'
-  },
-  report: {
-    id: 'Listing.report',
-    defaultMessage: 'REPORT'
   },
   addToFavorites: {
     id: 'Listing.addToFavorites',
@@ -270,9 +267,6 @@ class Listing extends Component {
     props.listingActions.removeFromFavorites(listingDetail['listing_id']);
   };
 
-  reportListing = () => {
-  };
-
   setItemsAmount = (valueAsNumber) => {
   };
 
@@ -309,11 +303,7 @@ class Listing extends Component {
             className="button--transparent"
           />
         }
-        <Button
-          onClick={() => this.reportListing()}
-          content={formatMessage(messages.report)}
-          className="button--gray-text"
-        />
+
       </div>
     );
   }
@@ -387,9 +377,24 @@ class Listing extends Component {
               formatMessage(messages.selectCurrency)
             }
           </span>
-          <PriceItem amount="154.50" coinLabel={CoinTypes.OMNI_COIN} currency={CoinTypes.OMNI_CURRENCY} isUserOwner={isUserOwner} />
-          <PriceItem amount="0.000000000485" coinLabel={CoinTypes.BIT_COIN} currency={CoinTypes.BIT_CURRENCY} isUserOwner={isUserOwner} />
-          <PriceItem amount="4.50" coinLabel={CoinTypes.LOCAL} currency={CoinTypes.LOCAL_CURRENCY} isUserOwner={isUserOwner} />
+          {listingDetail['price_using_omnicoin'] &&
+              <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC')}
+                         coinLabel={CoinTypes.OMNI_COIN}
+                         currency={CoinTypes.OMNI_CURRENCY}
+                         isUserOwner={isUserOwner}/>
+          }
+          {listingDetail['price_using_btc'] &&
+            <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC')}
+                       coinLabel={CoinTypes.BIT_COIN}
+                       currency={CoinTypes.BIT_CURRENCY}
+                       isUserOwner={isUserOwner}/>
+          }
+          <PriceItem
+            amount={listingDetail.price}
+            coinLabel={CoinTypes.LOCAL}
+            currency={listingDetail['currency']}
+            isUserOwner={isUserOwner}
+          />
         </div>
         {isUserOwner ?
           this.renderOwnerButtons()
@@ -424,15 +429,18 @@ class Listing extends Component {
             ?
             <Loader active inline/>
             :
-            <div className="listing-body">
-              {this.renderGallery(listingDetail)}
-              {this.renderItemDetails(listingDetail)}
-            </div>
+            [
+              <div className="listing-body">
+                {this.renderGallery(listingDetail)}
+                {this.renderItemDetails(listingDetail)}
+              </div>,
+              <div className="listing-description">
+                <span className="title">{formatMessage(messages.itemDescription)}</span>
+                <p className="description">{listingDetail.description}</p>
+              </div>
+            ]
           }
-          {/*<div className="listing-description">*/}
-            {/*<span className="title">{formatMessage(messages.itemDescription)}</span>*/}
-            {/*<p className="description">{listingDetail.description}</p>*/}
-          {/*</div>*/}
+
         </div>
       </div>
     );
