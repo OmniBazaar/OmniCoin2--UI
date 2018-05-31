@@ -9,6 +9,10 @@ const messages = defineMessages({
     id: 'AddListing.createListing',
     defaultMessage: 'Create Listing'
   },
+  editListing: {
+  	id: 'AddListing.editListing',
+  	defaultMessage: 'Edit Listing'
+  },
   primaryInfo: {
     id: 'AddListing.primaryInfo',
     defaultMessage: 'Primary Info'
@@ -216,6 +220,14 @@ const messages = defineMessages({
   success: {
   	id: 'AddListing.success',
   	defaultMessage: 'Success'
+  },
+  listingNotFound: {
+  	id: 'AddListing.listingNotFound',
+  	defaultMessage: 'Listing not found'
+  },
+  saveListing: {
+  	id: 'AddListing.saveListing',
+  	defaultMessage: 'Save Listing'
   }
 });
 

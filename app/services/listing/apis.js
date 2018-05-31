@@ -1,14 +1,23 @@
 import request from 'request-promise-native';
 import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
+import {
+  FetchChain,
+  TransactionHelper,
+  Aes,
+  TransactionBuilder
+} from 'omnibazaarjs/es';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { myListings } from './sample';
 
+let authUser = null;
 let authHeaders = null;
 
 const getAuthHeaders = () => new Promise((resolve, reject) => {
-  if (!authHeaders) {
-    const user = getStoredCurrentUser();
+	const user = getStoredCurrentUser();
+  if (!authHeaders || !authUser || (authUser.username !== user.username)) {
+    authUser = user;
     const key = generateKeyFromPassword(user.username, 'active', user.password);
     setTimeout(() => {
       // heavy operation
@@ -25,7 +34,7 @@ const getAuthHeaders = () => new Promise((resolve, reject) => {
 });
 
 const getPubliser = async () =>
-  // return 'http://127.0.0.1:8181';
+  // 'http://127.0.0.1:8181';
 	 'http://35.171.116.3/pub-api';
 
 
@@ -73,6 +82,24 @@ export const deleteImage = async (fileName) => {
   return body;
 };
 
+const createListingOnBlockchain = async (listing) => {
+	const user = getStoredCurrentUser();
+	const seller = await FetchChain('getAccount', user.username);
+  const key = generateKeyFromPassword(user.username, 'active', user.password);
+  const tr = new TransactionBuilder();
+  tr.add_type_operation('listing_create_operation', {
+    seller: seller.get('id'),
+    price: {
+      asset_id: '1.3.0',
+      amount: listing.price
+    },
+    quantity: listing.quantity
+  });
+  await tr.set_required_fees();
+  await tr.add_signer(key.privKey, key.pubKey);
+  await tr.broadcast();
+}
+
 export const createListing = async (listing) => {
   const options = {
     method: 'POST',
@@ -93,7 +120,7 @@ export const editListing = async (listingId, listing) => {
     method: 'PUT',
     json: true,
     body: {
-      ...listings
+      ...listing
     }
   };
 
@@ -101,12 +128,31 @@ export const editListing = async (listingId, listing) => {
   return body;
 };
 
-export const deleteListing = async (listingId) => {
+export const deleteListing = async (listing) => {
   const options = {
     method: 'DELETE',
     json: true
   };
 
-  const body = await makeRequest(`listings/${listingId}`, options);
+  const { id, images } = listing;
+  const body = await makeRequest(`listings/${id}`, options);
+  if (body.success) {
+    for (let i=0; i<images.length; i++) {
+      const imageItem = images[i];
+      if (imageItem.image_name) {
+        await deleteImage(imageItem.image_name);
+      }
+    }
+  }
+
   return body;
 };
+
+export const getMyListings = async () => {
+	const listings = {};
+	myListings.forEach(item => {
+		listings[item.id] = item;
+	});
+
+	return listings;
+}

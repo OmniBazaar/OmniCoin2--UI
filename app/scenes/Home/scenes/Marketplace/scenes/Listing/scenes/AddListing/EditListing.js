@@ -13,9 +13,12 @@ import './add-listing.scss';
 
 const iconSize = 42;
 
-class AddListing extends Component {
+class EditListing extends Component {
   render() {
     const { formatMessage } = this.props.intl;
+    const { id } = this.props.match.params;
+    const { myListings } = this.props;
+    const listing = myListings[id];
 
     return (
       <div className="marketplace-container category-listing add-listing" style={{ position: 'relative' }}>
@@ -30,12 +33,17 @@ class AddListing extends Component {
                   <span>{formatMessage(messages.myListings)}</span>
                   <Icon name="long arrow right" width={iconSize} height={iconSize} />
                 </div>
-                <span className="child">{formatMessage(messages.createListing)}</span>
+                <span className="child">{formatMessage(messages.editListing)}</span>
               </div>
             </div>
           </div>
           <div className="listing-body">
-            <ListingForm />
+            { listing && <ListingForm editingListing={listing} /> }
+            { !listing &&
+              <div className='not-found'>
+                {formatMessage(messages.listingNotFound)}
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -43,10 +51,17 @@ class AddListing extends Component {
   }
 }
 
-AddListing.propTypes = {
+EditListing.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  }).isRequired
+  }).isRequired,
+  myListings: PropTypes.object.isRequired
 };
 
-export default injectIntl(AddListing);
+const mapState = state => {
+  return {
+    myListings: state.default.listing.myListings
+  };  
+}
+
+export default connect(mapState)(injectIntl(EditListing));
