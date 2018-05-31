@@ -31,11 +31,12 @@ export const getSignedUrl = (params) => {
     Timestamp: `${moment.utc().format(TIMESTAMP_FORMAT)}Z`,
   };
   const canonicalQS = canonicalize(urlParams);
+  console.log(canonicalQS);
   const toSign = `${REQUEST_METHOD}\n${ENDPOINT}\n${REQUEST_URI}\n${canonicalQS}`;
   const hmac = createHmac(HMAC_ALGORITHM, Buffer.from(AWS_SECRET_KEY))
     .update(toSign)
-    .digest('base64');
+    .digest('hex');
   const sign = encodeURIComponent(hmac);
 
-  return `http://${ENDPOINT}${REQUEST_URI}?${canonicalQS}&Signature=${sign}`;
+  return `https://${ENDPOINT}${REQUEST_URI}?${canonicalQS}&Signature=${sign}`;
 };
