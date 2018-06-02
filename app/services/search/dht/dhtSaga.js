@@ -32,7 +32,6 @@ export function* connect() {
     const ips = (yield Promise.all(
         publishers.map(publisherName => FetchChain('getAccount', publisherName))
     )).map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
-    console.log(ips);
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });

@@ -1,12 +1,12 @@
 import request from 'request-promise-native';
 import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
+import { hash } from 'omnibazaarjs/es';
 import {
   FetchChain,
-  TransactionHelper,
-  Aes,
   TransactionBuilder
 } from 'omnibazaarjs/es';
+
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { myListings } from './sample';
@@ -33,28 +33,29 @@ const getAuthHeaders = () => new Promise((resolve, reject) => {
   }
 });
 
-const getPubliser = async () =>
-  // 'http://127.0.0.1:8181';
-	 'http://35.171.116.3/pub-api';
 
+const getListingHash = (listing) => {
+  const forHash = {...listing};
+  delete forHash.price;
+  delete forHash.quantity;
+  delete forHash.publisher;
+  return hash.sha256(JSON.stringify(forHash));
+};
 
-const makeRequest = async (url, options) => {
-  const publiser = await getPubliser();
+const makeRequest = async (publisher, url, options) => {
   const authHeaders = await getAuthHeaders();
-
   const opts = {
-    uri: `${publiser}/${url}`,
+    uri: `http://${publisher['publisher_ip']}/pub-api/${url}`,
     ...options,
     headers: {
       ...options.headers,
       ...authHeaders
     }
   };
-
   return await request(opts);
 };
 
-export const saveImage = async file => {
+export const saveImage = async (publisher, file) => {
   const options = {
     method: 'POST',
     formData: {
@@ -67,55 +68,59 @@ export const saveImage = async file => {
       }
     }
   };
-  const body = await makeRequest('images', options);
+  const body = await makeRequest(publisher, 'images', options);
+  console.log('RESPONSE ', JSON.parse(body));
   return JSON.parse(body);
 };
 
-export const deleteImage = async (fileName) => {
+export const deleteImage = async (publisher, fileName) => {
   const options = {
     method: 'DELETE',
     json: true
   };
 
-  const body = await makeRequest(`images/${fileName}`, options);
+  const body = await makeRequest(publisher, `images/${fileName}`, options);
 
   return body;
 };
 
-const createListingOnBlockchain = async (listing) => {
+const createListingOnBlockchain = async (publisher, listing) => {
 	const user = getStoredCurrentUser();
 	const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
+  console.log('LISTING ', listing);
   const tr = new TransactionBuilder();
   tr.add_type_operation('listing_create_operation', {
     seller: seller.get('id'),
     price: {
       asset_id: '1.3.0',
-      amount: listing.price
+      amount: parseFloat(listing.price) * 100000
     },
-    quantity: listing.quantity
+    quantity: parseInt(listing.quantity),
+    listing_hash: getListingHash(listing),
+    publisher: publisher.id
   });
   await tr.set_required_fees();
   await tr.add_signer(key.privKey, key.pubKey);
-  await tr.broadcast();
-}
+  const result = await tr.broadcast();
+  return result[0].trx.operation_results[0][1]; // listing id
+};
 
-export const createListing = async (listing) => {
+export const createListing = async (publisher, listing) => {
+  const listingId = await createListingOnBlockchain(publisher, listing);
   const options = {
     method: 'POST',
     json: true,
     body: {
       ...listing,
       listing_type: 'Listing',
-      listing_uuid: 'testuuid'
+      listing_id: listingId
     }
   };
-
-  const body = await makeRequest('listings', options);
-  return body;
+  return await makeRequest(publisher, 'listings', options);
 };
 
-export const editListing = async (listingId, listing) => {
+export const editListing = async (publisher, listingId, listing) => {
   const options = {
     method: 'PUT',
     json: true,
@@ -123,24 +128,22 @@ export const editListing = async (listingId, listing) => {
       ...listing
     }
   };
-
-  const body = await makeRequest(`listings/${listingId}`, options);
-  return body;
+  return await makeRequest(publisher, `listings/${listingId}`, options);
 };
 
-export const deleteListing = async (listing) => {
+export const deleteListing = async (publisher, listing) => {
   const options = {
     method: 'DELETE',
     json: true
   };
 
   const { id, images } = listing;
-  const body = await makeRequest(`listings/${id}`, options);
+  const body = await makeRequest(publisher, `listings/${id}`, options);
   if (body.success) {
     for (let i=0; i<images.length; i++) {
       const imageItem = images[i];
       if (imageItem.image_name) {
-        await deleteImage(imageItem.image_name);
+        await deleteImage(publisher, imageItem.image_name);
       }
     }
   }

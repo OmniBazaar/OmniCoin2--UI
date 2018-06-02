@@ -42,10 +42,10 @@ export function* listingSubscriber() {
   ]);
 }
 
-function* uploadImage({ payload: { file, imageId } }) {
+function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
-    yield put(addListingImage(file, imageId));
-    const resultImage = yield call(saveImage, file);
+    yield put(addListingImage(publisher, file, imageId));
+    const resultImage = yield call(saveImage, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
       resultImage.image,
@@ -57,7 +57,7 @@ function* uploadImage({ payload: { file, imageId } }) {
   }
 }
 
-function* removeImage({ payload: { image } }) {
+function* removeImage({ payload: { publisher, image } }) {
   const { id, fileName, localFilePath } = image;
   try {
     yield put(startDeleteListingImage(id));
@@ -66,7 +66,7 @@ function* removeImage({ payload: { image } }) {
     	return;
     }
 
-    const result = yield call(deleteImage, fileName);
+    const result = yield call(deleteImage, publisher, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
     } else {
@@ -78,7 +78,7 @@ function* removeImage({ payload: { image } }) {
   }
 }
 
-function* checkAndUploadImages(listing) {
+function* checkAndUploadImages(publisher, listing) {
 	for (let i=0; i<listing.images.length; i++) {
 		const imageItem = listing.images[i];
 		const { localFilePath, path, id } = imageItem;
@@ -89,7 +89,7 @@ function* checkAndUploadImages(listing) {
 				name: path,
 				type
 			};
-			const result = yield call(saveImage, file);
+			const result = yield call(saveImage, publisher, file);
 			yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
@@ -105,14 +105,14 @@ function* checkAndUploadImages(listing) {
 	};
 }
 
-function* saveListingHandler({ payload: { listing, listingId } }) {
+function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
     if (listingId) {
-      result = yield call(editListing, listingId, listing);
+      result = yield call(editListing, publisher, listingId, listing);
     } else {
-    	yield checkAndUploadImages(listing);
-      result = yield call(createListing, listing);
+    	yield checkAndUploadImages(publisher, listing);
+      result = yield call(createListing, publisher, listing);
     }
 
     if (!listingId) {
@@ -146,9 +146,9 @@ function* requestMyListings() {
 	}
 }
 
-function* deleteMyListing({ payload: { listing } }) {
+function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    const result = yield call(deleteListing, listing);
+    const result = yield call(deleteListing, publisher, listing);
     yield put(deleteListingSuccess(listing.id));
   } catch (err) {
     console.log(err);
