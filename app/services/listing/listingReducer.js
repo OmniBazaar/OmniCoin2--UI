@@ -4,6 +4,9 @@ import {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  isListingFine,
+  isListingFineSucceeded,
+  isListingFineFailed,
   setActiveCurrency,
   requestMyListings,
   requestMyListingsSuccess,
@@ -63,6 +66,12 @@ const defaultState = {
     error: null,
     listingId: null
   },
+  checkingListing: {
+    listing: null,
+    blockchainListing: null,
+    loading: false,
+    error: null
+  }
 };
 
 const reducer = handleActions({
@@ -120,6 +129,37 @@ const reducer = handleActions({
     return {
       ...state,
       error,
+    }
+  },
+  [isListingFine](state, { payload: { listing } }) {
+    return {
+      ...state,
+      checkingListing: {
+        listing,
+        blockchainListing: null,
+        loading: true,
+        error: null
+      }
+    }
+  },
+  [isListingFineSucceeded](state, { payload: { blockchainListing } }) {
+    return {
+      ...state,
+      checkingListing: {
+        ...state.checkingListing,
+        blockchainListing,
+        loading: false,
+      }
+    }
+  },
+  [isListingFineFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      checkingListing: {
+        ...state.checkingListing,
+        error,
+        loading: false
+      }
     }
   },
   [setActiveCurrency](state, { payload: { activeCurrency } }) {

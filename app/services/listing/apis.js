@@ -10,6 +10,7 @@ import {
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { myListings } from './sample';
+import { getListingHash } from "./utils";
 
 let authUser = null;
 let authHeaders = null;
@@ -34,13 +35,6 @@ const getAuthHeaders = () => new Promise((resolve, reject) => {
 });
 
 
-const getListingHash = (listing) => {
-  const forHash = {...listing};
-  delete forHash.price;
-  delete forHash.quantity;
-  delete forHash.publisher;
-  return hash.sha256(JSON.stringify(forHash));
-};
 
 const makeRequest = async (publisher, url, options) => {
   const authHeaders = await getAuthHeaders();
@@ -97,7 +91,10 @@ const createListingOnBlockchain = async (publisher, listing) => {
       amount: parseFloat(listing.price) * 100000
     },
     quantity: parseInt(listing.quantity),
-    listing_hash: getListingHash(listing),
+    listing_hash: getListingHash({
+      ...listing,
+      owner: user.username
+    }),
     publisher: publisher.id
   });
   await tr.set_required_fees();

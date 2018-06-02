@@ -12,6 +12,7 @@ import {
   Loader
 } from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
+import { toastr } from 'react-redux-toastr';
 
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
@@ -31,53 +32,12 @@ import {
   isFavorite,
   addToFavorites,
   removeFromFavorites,
-  getFavorites
+  getFavorites,
+  isListingFine
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
 const isUserOwner = false;
-
-const listing = {
-  id: 1,
-  status: 'active',
-  name: 'Farco Jewelry',
-  description: 'If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched',
-  date: '2018-04-03',
-  category: 'For sale',
-  subCategory: 'Design',
-  seller: {
-    username: 'eugen1879',
-    phone: '+1 50112223',
-    name: 'Eugen Davis',
-    city: 'Clearwater',
-    postalCode: '23587',
-    address: '153 South Street, PO box 15648',
-    rating: 4.5,
-    totalVotes: 1244
-  },
-  condition: 'Good',
-  location: 'Dover, DE, USA',
-  price: 500,
-  amountAvailable: 150,
-  images: [
-    {
-      original: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/19/11/00/heart-2867205_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/19/11/00/heart-2867205_1280.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/29/20/27/necklace-with-winged-heart-2900736_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/29/20/27/necklace-with-winged-heart-2900736_1280.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/19/10/58/heart-2867197_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/19/10/58/heart-2867197_1280.jpg',
-    },
-  ]
-};
 
 const messages = defineMessages({
   seller: {
@@ -152,6 +112,18 @@ const messages = defineMessages({
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
   },
+  hashIsInvalid: {
+    id: 'Listing.hashIsInvalid',
+    defaultMessage: 'Listing is corrupted'
+  },
+  error: {
+    id: 'Listing.error',
+    defaultMessage: 'Error'
+  },
+  success: {
+    id: 'Listing.success',
+    defaultMessage: 'Success'
+  }
 });
 
 class Listing extends Component {
@@ -168,13 +140,39 @@ class Listing extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { props } = this;
-    const { listingDetail, favoriteListings } = props.listing;
+    const {
+      listingDetail,
+      favoriteListings,
+    } = props.listing;
     if (listingDetail && nextProps.listing.listingDetail) {
       if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
         favoriteListings.length !== nextProps.listing.favoriteListings.length) {
         props.listingActions.isFavorite(nextProps.listing.listingDetail['listing_id']);
       }
     }
+    if (listingDetail !== nextProps.listing.listingDetail) {
+      this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
+    }
+    if (this.props.listing.checkingListing.loading && !nextProps.listing.checkingListing.loading) {
+      const { error } = nextProps.listing.checkingListing;
+      if (error) {
+        if (error === 'hash') {
+           this.errorToast(messages.hashIsInvalid);
+        } else {
+           this.errorToast(messages.error);
+        }
+      }
+    }
+  }
+
+  errorToast(message) {
+    const { formatMessage } = this.props.intl;
+    toastr.error(formatMessage(messages.error), formatMessage(message));
+  }
+
+  successToast(message) {
+    const { formatMessage } = this.props.intl;
+    toastr.success(formatMessage(messages.success), formatMessage(message));
   }
 
   setGallerySize() {
@@ -272,7 +270,8 @@ class Listing extends Component {
 
   renderUserButtons(amountAvailable) {
     const { formatMessage } = this.props.intl;
-
+    const { checkingListing } = this.props.listing;
+    console.log('CHECKING LISTING ', checkingListing);
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -280,6 +279,8 @@ class Listing extends Component {
             onClick={() => this.buyItem()}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
+            loading={checkingListing.loading}
+            disabled={!!checkingListing.error}
           />
           <NumericInput
             mobile
@@ -479,7 +480,8 @@ export default connect(
       getListingDetail,
       addToFavorites,
       removeFromFavorites,
-      getFavorites
+      getFavorites,
+      isListingFine
     }, dispatch),
   }),
 )(injectIntl(Listing));
