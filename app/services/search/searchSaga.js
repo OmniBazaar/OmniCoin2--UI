@@ -28,7 +28,7 @@ export function* searchSubscriber() {
   ]);
 }
 
-function* searchListings({ payload: { searchTerm, category, historify } }) {
+function* searchListings({ payload: { searchTerm, category, country, city, historify } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     if (historify) {
@@ -36,7 +36,7 @@ function* searchListings({ payload: { searchTerm, category, historify } }) {
       searchHistory.add({ searchTerm, category });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
-    yield put({ type: 'DHT_GET_PEERS_FOR', payload: { searchTerm, category, searchListings: true } });
+    yield put({ type: 'DHT_GET_PEERS_FOR', payload: { searchTerm, category, country, city, searchListings: true } });
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
