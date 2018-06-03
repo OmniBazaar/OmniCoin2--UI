@@ -12,6 +12,7 @@ import {
   all
 } from 'redux-saga/effects';
 import _ from 'lodash';
+import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
@@ -20,11 +21,12 @@ export function* transferSubscriber() {
   yield all([
     takeLatest('SUBMIT_TRANSFER', submitTransfer),
     takeLatest('CREATE_ESCROW_TRANSACTION', createEscrowTransaction),
-    takeEvery('GET_COMMON_ESCROWS', getCommonEscrows)
+    takeEvery('GET_COMMON_ESCROWS', getCommonEscrows),
+    takeEvery('SALE_BONUS', saleBonus)
   ]);
 }
 
-export function* submitTransfer(data) {
+function* submitTransfer(data) {
   const { currentUser } = (yield select()).default.auth;
   const senderNameStr = currentUser.username;
   const toNameStr = data.payload.data.toName;
@@ -60,7 +62,7 @@ export function* submitTransfer(data) {
   }
 }
 
-export function* createEscrowTransaction({
+function* createEscrowTransaction({
   payload:
   {
     expirationTime, buyer, seller, escrow, amount, transferToEscrow, memo
@@ -98,7 +100,7 @@ export function* createEscrowTransaction({
   }
 }
 
-export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
+function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
   try {
     if (!fromAccount || !toAccount) {
       return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: [] });
@@ -113,5 +115,33 @@ export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message });
+  }
+}
+
+function* saleBonus({ payload: { seller, buyer }}) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const [currUserAcc, sellerAcc, buyerAcc] = yield Promise.all([
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', seller),
+      FetchChain('getAccount', buyer)
+    ]);
+    const isAvailable = yield Apis.instance().db_api().exec('is_sale_bonus_available',
+      [sellerAcc.get('id'), buyerAcc.get('id')]
+    );
+    if (isAvailable) {
+      const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+      const tr = new TransactionBuilder();
+      tr.add_type_operation('sale_bonus_operation', {
+        payer: currUserAcc.get('id'),
+        seller: sellerAcc.get('id'),
+        buyer: buyerAcc.get('id'),
+      });
+      yield tr.set_required_fees();
+      yield tr.add_signer(key.privKey, key.pubKey);
+      yield tr.broadcast();
+    }
+  } catch (error) {
+    console.log('ERROR ', error);
   }
 }

@@ -48,7 +48,6 @@ const defaultState = {
     error: null
   },
   myListingsFiltered: {},
-  activeCurrency: CoinTypes.OMNI_COIN,
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
@@ -66,9 +65,11 @@ const defaultState = {
     error: null,
     listingId: null
   },
-  checkingListing: {
+  buyListing: {
     listing: null,
     blockchainListing: null,
+    activeCurrency: CoinTypes.OMNI_COIN,
+    numberToBuy: 1,
     loading: false,
     error: null
   }
@@ -134,7 +135,8 @@ const reducer = handleActions({
   [isListingFine](state, { payload: { listing } }) {
     return {
       ...state,
-      checkingListing: {
+      buyListing: {
+        ...state.buyListing,
         listing,
         blockchainListing: null,
         loading: true,
@@ -145,8 +147,8 @@ const reducer = handleActions({
   [isListingFineSucceeded](state, { payload: { blockchainListing } }) {
     return {
       ...state,
-      checkingListing: {
-        ...state.checkingListing,
+      buyListing: {
+        ...state.buyListing,
         blockchainListing,
         loading: false,
       }
@@ -155,8 +157,8 @@ const reducer = handleActions({
   [isListingFineFailed](state, { payload: { error } }) {
     return {
       ...state,
-      checkingListing: {
-        ...state.checkingListing,
+      buyListing: {
+        ...state.buyListing,
         error,
         loading: false
       }
@@ -165,7 +167,10 @@ const reducer = handleActions({
   [setActiveCurrency](state, { payload: { activeCurrency } }) {
     return {
       ...state,
-      activeCurrency
+      buyListing: {
+        ...state.buyListing,
+        activeCurrency
+      }
     };
   },
   [requestMyListings](state) {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -33,7 +34,9 @@ import {
   addToFavorites,
   removeFromFavorites,
   getFavorites,
-  isListingFine
+  isListingFine,
+  setNumberToBuy,
+  setActiveCurrency
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
@@ -130,6 +133,7 @@ class Listing extends Component {
 
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
+    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL_CURRENCY);
   }
 
   componentDidMount() {
@@ -153,8 +157,8 @@ class Listing extends Component {
     if (listingDetail !== nextProps.listing.listingDetail) {
       this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
     }
-    if (this.props.listing.checkingListing.loading && !nextProps.listing.checkingListing.loading) {
-      const { error } = nextProps.listing.checkingListing;
+    if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
+      const { error } = nextProps.listing.buyListing;
       if (error) {
         if (error === 'hash') {
            this.errorToast(messages.hashIsInvalid);
@@ -251,6 +255,23 @@ class Listing extends Component {
   }
 
   buyItem = () => {
+    const { listingDetail } = this.props.listing;
+    if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
+      const type = CoinTypes.OMNI_COIN;
+      const listingId = this.props.listing.buyListing.blockchainListing.id;
+      const price = this.props.listing.buyListing.numberToBuy *
+        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const to = listingDetail.owner;
+      this.props.history.push(`/transfer/?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+    }
+    if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
+      const type = CoinTypes.BIT_COIN;
+      const listingId = this.props.listing.buyListing.blockchainListing.id;
+      const price = this.props.listing.buyListing.numberToBuy *
+        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
+      const to = listingDetail.bitcoinAddress;
+      this.props.history.push(`/transfer/${type}?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+    }
   };
 
   addToFavorites = () => {
@@ -266,12 +287,13 @@ class Listing extends Component {
   };
 
   setItemsAmount = (valueAsNumber) => {
+    this.props.listingActions.setNumberToBuy(valueAsNumber);
   };
 
   renderUserButtons(amountAvailable) {
     const { formatMessage } = this.props.intl;
-    const { checkingListing } = this.props.listing;
-    console.log('CHECKING LISTING ', checkingListing);
+    const { buyListing } = this.props.listing;
+    const { quantity } = this.props.listing.buyListing;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -279,15 +301,15 @@ class Listing extends Component {
             onClick={() => this.buyItem()}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
-            loading={checkingListing.loading}
-            disabled={!!checkingListing.error}
+            loading={buyListing.loading}
+            disabled={!!buyListing.error}
           />
           <NumericInput
             mobile
             className="form-control"
             min={0}
-            value={0}
-            max={amountAvailable}
+            value={1}
+            max={quantity}
             onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
           />
         </div>
@@ -472,6 +494,8 @@ Listing.defaultProps = {
   intl: {},
 };
 
+Listing = withRouter(Listing);
+
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
@@ -481,7 +505,9 @@ export default connect(
       addToFavorites,
       removeFromFavorites,
       getFavorites,
-      isListingFine
+      isListingFine,
+      setNumberToBuy,
+      setActiveCurrency
     }, dispatch),
   }),
 )(injectIntl(Listing));

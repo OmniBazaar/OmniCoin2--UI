@@ -167,7 +167,7 @@ function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
     if (blockchainListing.listing_hash === getListingHash(listing)) {
-      yield put(isListingFineSucceeded(blockchainListing.quantity));
+      yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));
     }
