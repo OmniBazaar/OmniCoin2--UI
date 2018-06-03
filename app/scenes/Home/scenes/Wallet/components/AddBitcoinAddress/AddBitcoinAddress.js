@@ -72,7 +72,7 @@ class AddBitcoinAddress extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     return (
-      <Modal size="tiny" open={isOpen} onClose={this.toggleModal}>
+      <Modal size="tiny" open={isOpen} onClose={this.toggleModal} closeIcon>
         <Modal.Content>
           <Form className="add-bitcoin-address" onSubmit={handleSubmit(this.handleSubmit)}>
             <Field
