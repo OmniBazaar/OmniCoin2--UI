@@ -101,7 +101,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  await runOb2();
+//  await runOb2();
 
   bitcoincli.start({
     port: 3000,
