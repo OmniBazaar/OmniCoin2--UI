@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Form, Button } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
-import { required } from 'redux-form-validators';
+import { required, length } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 
 import FormField from '../../../FormField/FormField';
@@ -70,6 +70,10 @@ const messages = defineMessages({
   rememberGuid: {
     id: 'NewWallet.rememberGuid',
     defaultMessage: 'Please do not forget to write down or remember your guid'
+  },
+  minLength: {
+    id: 'NewWallet.minLength',
+    defaultMessage: 'This field must be at least 10 characters in length'
   }
 });
 
@@ -124,7 +128,10 @@ class NewWallet extends Component {
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
           message={formatMessage(messages.createPassword)}
-          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+          validate={[
+            required({ message: formatMessage(messages.fieldRequired) }),
+            length({ min: 10, message: formatMessage(messages.minLength) })
+          ]}
           component={FormField}
         />
         <Field
