@@ -53,6 +53,8 @@ import WalletIcon from './images/sdb-wallet.svg';
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
+import { getListingDefault } from '../../services/listing/listingDefaultsActions';
+
 
 const iconSize = 20;
 
@@ -63,6 +65,9 @@ class Home extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
+    }
+    if (nextProps.auth.currentUser && !this.props.auth.currentUser) {
+      this.props.listingActions.getListingDefault();
     }
   }
 
@@ -235,7 +240,8 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount }, dispatch)
+    authActions: bindActionCreators({ getAccount }, dispatch),
+    listingActions: bindActionCreators({ getListingDefault }, dispatch)
   })
 )(Home);
 

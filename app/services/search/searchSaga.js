@@ -36,7 +36,7 @@ function* searchListings({ payload: { searchTerm, category, historify } }) {
       searchHistory.add({ searchTerm, category });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
-    yield put({ type: 'DHT_GET_PEERS_FOR', payload: { searchTerm, category } });
+    yield put({ type: 'DHT_GET_PEERS_FOR', payload: { searchTerm, category, searchListings: true } });
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });

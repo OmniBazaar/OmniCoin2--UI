@@ -63,7 +63,7 @@ class GridTable extends Component {
     }
 
     if (
-      this.props.listing.deleteListing.deleting && 
+      this.props.listing.deleteListing.deleting &&
       !nextProps.listing.deleteListing.deleting &&
       nextProps.listing.deleteListing.listingId
     ) {
@@ -185,18 +185,18 @@ class GridTable extends Component {
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = item.image || item.images[0].original;
+                      const image = `http://${item.ip}/publisher-images/${item.images[0].thumb}`; //todo
                       const style = { backgroundImage: `url(${image})` };
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
                       return (
                         <TableCell className="item" key={hash(item)}>
-                          <Link to={`listing/${item.id}`}>
+                          <Link to={`listing/${item['listing_id']}`}>
                             <div className="img-wrapper" style={style} />
                           </Link>
 
-                          <Link to={`listing/${item.id}`}>
-                            <span className="title">{item.title}</span>
+                          <Link to={`listing/${item['listing_id']}`}>
+                            <span className="title">{item['listing_title']}</span>
                           </Link>
 
                           <span className="subtitle">
@@ -207,7 +207,7 @@ class GridTable extends Component {
                             {item.subCategory}
                           </span>
                           <span className="description">{description}</span>
-                          <span className="price">$ {numberWithCommas(item.price)}</span>
+                          <span className="price">$ {numberWithCommas(parseFloat(item.price))}</span>
                           {this.props.showActions ?
                             <div className="actions">
                               <Button

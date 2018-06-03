@@ -3,7 +3,6 @@ import _ from 'lodash';
 import SearchHistory from './searchHistory';
 
 import {
-  getSearchResults,
   filterSearchResults,
   getRecentSearches,
   getRecentSearchesSucceeded,
@@ -18,9 +17,12 @@ import {
   saveSearchFailed,
   deleteSearch,
   deleteSearchSucceeded,
-  deleteSearchFailed
+  deleteSearchFailed,
+  searching,
+  marketplaceReturnListings,
+  marketplaceReturnBool,
+  searchListings
 } from './searchActions';
-import SavedSearches from '../../scenes/Home/scenes/Marketplace/scenes/Search/scenes/SavedSearches/SavedSearches';
 
 const defaultState = {
   recentSearches: [],
@@ -34,13 +36,17 @@ const defaultState = {
     direction: 'descending'
   },
   searchResults: [],
-  searchResultsFiltered: [],
+  searchResultsFiltered: null,
+  searchId: null,
   searchText: '',
   loading: false,
   saving: false,
   deleting: false,
+  searching: false,
   error: null
 };
+
+const rowsPerPageSearchResults = 20;
 
 const sliceData = (data, activePage, rowsPerPage) => (
   data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
@@ -49,31 +55,18 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
 const reducer = handleActions({
-  [getSearchResults](state, { payload: { searchResults } }) {
-    return {
-      ...state,
-      searchResults,
-      searchResultsFiltered: searchResults
-    };
-  },
   [filterSearchResults](state, { payload: { searchText } }) {
     const data = state.searchResults;
     const activePageSearchResults = 1;
-    let { totalPagesSearchResults } = state;
-    const { rowsPerPageSearchResults } = state;
+    let totalPagesSearchResults;
     let currentData = [];
 
     if (searchText !== '') {
-      let filteredData = _.map(data, (o) => {
-        const values = Object.values(o);
-        const result = _.map(values, (val) => {
-          if (val) {
-            if (val.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1) return o;
-          }
-        });
-        return _.without(result, undefined)[0];
+      let filteredData = data.filter(listing => {
+        return Object.values(listing).filter(
+           value => {  return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1 }
+         ).length !== 0;
       });
-
       filteredData = _.without(filteredData, undefined);
       totalPagesSearchResults = getTotalPages(filteredData, rowsPerPageSearchResults);
       currentData = sliceData(filteredData, activePageSearchResults, rowsPerPageSearchResults);
@@ -82,7 +75,6 @@ const reducer = handleActions({
       totalPagesSearchResults = getTotalPages(currentData, rowsPerPageSearchResults);
       currentData = sliceData(currentData, activePageSearchResults, rowsPerPageSearchResults);
     }
-
     return {
       ...state,
       searchText,
@@ -192,6 +184,40 @@ const reducer = handleActions({
       error,
       deleting: false
     };
+  },
+  [searchListings](state) {
+    return {
+      ...state,
+      searchId: null,
+      searchResults: [],
+      searchResultsFiltered: null
+    }
+  },
+  [searching](state, { payload: { searchId }}) {
+    return {
+      ...state,
+      searchId,
+      searchResults: [],
+      searching: true,
+    }
+  },
+  [marketplaceReturnListings](state, { data }) {
+    const listings = JSON.parse(data.command.listings).listings.map(listing => ({
+      ...listing,
+      ip: data.command.address
+    }));
+    if (parseInt(data.id) === state.searchId) {
+      return {
+        ...state,
+        searchResults: [...state.searchResults, ...listings],
+        searching: false,
+      }
+    } else {
+      return {
+        ...state,
+        searching: false
+      }
+    }
   }
 }, defaultState);
 

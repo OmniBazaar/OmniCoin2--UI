@@ -2,7 +2,8 @@ import {
   takeEvery,
   put,
   all,
-  call
+  call,
+  select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
 import {
@@ -16,6 +17,8 @@ import {
   saveListingError,
   deleteListingSuccess,
   deleteListingError,
+  getListingDetailSucceeded,
+  getListingDetailFailed,
   requestMyListingsSuccess,
   requestMyListingsError
 } from './listingActions';
@@ -33,6 +36,7 @@ export function* listingSubscriber() {
     takeEvery('UPLOAD_LISTING_IMAGE', uploadImage),
     takeEvery('DELETE_LISTING_IMAGE', removeImage),
     takeEvery('SAVE_LISTING', saveListingHandler),
+    takeEvery('GET_LISTING_DETAIL', getListingDetail),
     takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
     takeEvery('DELETE_LISTING', deleteMyListing)
   ]);
@@ -118,6 +122,17 @@ function* saveListingHandler({ payload: { listing, listingId } }) {
   } catch (err) {
     console.log(err);
     yield put(saveListingError(listingId, err));
+  }
+}
+
+function* getListingDetail({ payload: { listingId }}) {
+  try {
+    const listings = (yield select()).default.search.searchResults;
+    const listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    yield put(getListingDetailSucceeded(listingDetail));
+  } catch (error) {
+    console.log('Error ', error);
+    yield put(getListingDetailFailed(error));
   }
 }
 

@@ -2,7 +2,6 @@ import { createActions } from 'redux-actions';
 
 const {
   searchListings,
-  getSearchResults,
   filterSearchResults,
   getRecentSearches,
   getRecentSearchesSucceeded,
@@ -17,10 +16,12 @@ const {
   saveSearchFailed,
   deleteSearch,
   deleteSearchSucceeded,
-  deleteSearchFailed
+  deleteSearchFailed,
+  marketplaceReturnListings,
+  marketplaceReturnBool,
+  searching
 } = createActions({
   SEARCH_LISTINGS: (searchTerm, category, historify = true) => ({ searchTerm, category, historify }),
-  GET_SEARCH_RESULTS: (searchResults) => ({ searchResults }),
   FILTER_SEARCH_RESULTS: (searchText) => ({ searchText }),
   GET_RECENT_SEARCHES: () => ({ }),
   GET_RECENT_SEARCHES_SUCCEEDED: (recentSearches) => ({ recentSearches }),
@@ -35,12 +36,14 @@ const {
   SAVE_SEARCH_FAILED: (error) => ({ error }),
   DELETE_SEARCH: (search) => ({ search }),
   DELETE_SEARCH_SUCCEEDED: (savedSearches) => ({ savedSearches }),
-  DELETE_SEARCH_FAILED: (error) => ({ error })
+  DELETE_SEARCH_FAILED: (error) => ({ error }),
+  MARKETPLACE_RETURN_LISTINGS: (data) => ({ data }),
+  MARKETPLACE_RETURN_BOOL: (data) => ({ data }),
+  SEARCHING: (searchId) => ({ searchId })
 });
 
 export {
   searchListings,
-  getSearchResults,
   filterSearchResults,
   getRecentSearches,
   getRecentSearchesSucceeded,
@@ -55,5 +58,8 @@ export {
   saveSearchFailed,
   deleteSearch,
   deleteSearchSucceeded,
-  deleteSearchFailed
+  deleteSearchFailed,
+  marketplaceReturnBool,
+  marketplaceReturnListings,
+  searching
 };

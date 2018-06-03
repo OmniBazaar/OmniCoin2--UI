@@ -2,6 +2,8 @@ import { createActions } from 'redux-actions';
 
 const {
   getListingDetail,
+  getListingDetailSucceeded,
+  getListingDetailFailed,
   setActiveCurrency,
   requestMyListings,
   requestMyListingsSuccess,
@@ -32,7 +34,9 @@ const {
   removeFromFavorites,
   getFavorites
 } = createActions({
-  GET_LISTING_DETAIL: (listingDetail) => ({ listingDetail }),
+  GET_LISTING_DETAIL: (listingId) => ({ listingId }),
+  GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
+  GET_LISTING_DETAIL_FAILED: (error) => ({ error }),
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
   REQUEST_MY_LISTINGS: () => ({}),
   REQUEST_MY_LISTINGS_SUCCESS: (myListings) => ({ myListings }),
@@ -71,6 +75,8 @@ const {
 
 export {
   getListingDetail,
+  getListingDetailSucceeded,
+  getListingDetailFailed,
   setActiveCurrency,
   requestMyListings,
   requestMyListingsSuccess,
