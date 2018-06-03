@@ -103,7 +103,7 @@ const messages = defineMessages({
   },
   city: {
     id: 'SignupForm.city',
-    defaultMessage: 'Your City'
+    defaultMessage: 'Your State/City'
   },
   keywords: {
     id: 'SignupForm.keywords',
