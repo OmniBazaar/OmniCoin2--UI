@@ -26,12 +26,16 @@ import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import './transfer.scss';
 import {
+  setCurrency,
   submitTransfer,
   getCommonEscrows,
   createEscrowTransaction,
   saleBonus
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
+import {
+  makePayment
+} from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 
 
@@ -152,6 +156,18 @@ const messages = defineMessages({
     id: 'Transfer.numberRequired',
     defaultMessage: 'Number required'
   },
+  currency: {
+    id: 'Transfer.currency',
+    defaultMessage: 'Select Currency'
+  },
+  selectWallet: {
+    id: 'Transfer.selectWallet',
+    defaultMessage: 'Select Wallet'
+  },
+  transactionID: {
+    id: 'Transfer.transactionID',
+    defaultMessage: 'Transaction ID'
+  },
   maxLength: {
     id: 'Transfer.maxLength',
     defaultMessage: 'Memo must be less than 150 characters'
@@ -173,6 +189,20 @@ const walletOptions = [
   }
 ];
 
+const currencyOptions = [
+  {
+    key: 'bitcoin',
+    value: 'bitcoin',
+    text: 'BitCoin',
+    description: 'BitCoin Currency'
+  },
+  {
+    key: 'omnicoin',
+    value: 'omnicoin',
+    text: 'OmniCoin',
+    description: 'OmniCoin Currency'
+  }
+];
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
@@ -183,7 +213,6 @@ class Transfer extends Component {
       throw { toName: messages.accountDoNotExist };
     }
   };
-
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -233,11 +262,17 @@ class Transfer extends Component {
     this.submitTransfer = this.submitTransfer.bind(this);
     this.handleEscrowTransactionChecked = this.handleEscrowTransactionChecked.bind(this);
     this.hideEscrow = this.hideEscrow.bind(this);
+
+    this.state = {
+      bitcoinWallets: [],
+      wallets: []
+    };
   }
 
   state = {
     type: CoinTypes.OMNI_COIN,
     listingId: null,
+    number: 0,
   };
 
   componentDidMount() {
@@ -245,9 +280,15 @@ class Transfer extends Component {
     const type = params.get('type');
     const listingId = params.get('listing_id');
     const price = params.get('price');
-    this.setState({ listingId, price });
     const to = params.get('to');
-    this.handleInitialize(price, to);
+    const number = params.get('number');
+    this.setState({ listingId, price, number });
+    this.handleInitialize(price * number, to);
+    if (type === CoinTypes.OMNI_COIN) {
+      this.props.transferActions.setCurrency('omnicoin');
+    } else if (type === CoinTypes.BIT_COIN) {
+      this.props.transferActions.setCurrency('bitcoin');
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -269,6 +310,24 @@ class Transfer extends Component {
                 && !nextProps.transfer.gettingCommonEscrows
                 && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
+    }
+
+    if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
+      this.props.change('password', this.props.bitcoin.password);
+      this.props.change('guid', this.props.bitcoin.guid);
+      const wallets = [];
+      nextProps.bitcoin.wallets.forEach((wallet) => {
+        wallets[wallet.index] = {
+          value: wallet.receiveAddress,
+          text: wallet.label,
+          description: `${wallet.balance} BTC`
+        };
+      });
+
+      this.setState({
+        bitcoinWallets: nextProps.bitcoin.wallets,
+        wallets
+      });
     }
   }
 
@@ -340,6 +399,18 @@ class Transfer extends Component {
     );
   };
 
+  renderHiddenField = ({
+    input
+  }) => {
+    return (
+      <input
+        {...input}
+        type="hidden"
+        className="textfield"
+      />
+    );
+  };
+
   renderUnitsField = ({
     input, placeholder, buttonText, buttonClass, meta: { touched, error }
   }) => {
@@ -371,11 +442,27 @@ class Transfer extends Component {
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <Select
           className="textfield"
-          defaultValue={options[0].value}
+          defaultValue={options[0] ? options[0].value : ''}
           options={options}
           onChange={(param, data) => input.onChange(data.value)}
         />
       </div>
+    );
+  };
+
+  renderCurrencyField = ({
+    input, options
+  }) => {
+    return (
+      <Select
+        className="textfield"
+        value={this.props.transfer.transferCurrency}
+        options={options}
+        onChange={(param, data) => {
+          input.onChange(data.value);
+          this.onChangeCurrency(data);
+        }}
+      />
     );
   };
 
@@ -438,16 +525,17 @@ class Transfer extends Component {
     </div>
   );
 
-  transferForm() {
+  renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit, transfer } = this.props;
+    const { transfer } = this.props;
     const {
       gettingCommonEscrows,
       commonEscrows
     } = this.props.transfer;
+
     return (
-      <div className="transfer-form">
-        <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
+      <div>
+        <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
             <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
@@ -463,6 +551,8 @@ class Transfer extends Component {
             />
             <div className="col-1" />
           </div>
+        </div>
+        <div className="section">
           <p className="title">{formatMessage(messages.transfer)}</p>
           <div className="form-group">
             <span>{formatMessage(messages.amount)}</span>
@@ -506,77 +596,197 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           {gettingCommonEscrows &&
-            <div className="form-group">
-              <Loader active inline="centered" />
-            </div>
+          <div className="form-group">
+            <Loader active inline="centered" />
+          </div>
           }
           {commonEscrows.length !== 0 && this.props.transferForm.useEscrow && (
-              [
-                <div className="form-group">
-                  <span>{formatMessage(messages.selectEscrow)}</span>
-                  <div className="transfer-input">
-                    <Field
-                      type="text"
-                      name="escrow"
-                      options={Transfer.escrowOptions(commonEscrows)}
-                      component={this.renderSelectField}
-                    />
-                  </div>
-                  <div className="col-1" />
-                </div>,
-                <div className="form-group">
-                  <span>{formatMessage(messages.expirationTime)}</span>
-                  <div className="transfer-input">
-                    <Field
-                      type="text"
-                      name="expirationTime"
-                      options={Transfer.expirationTimeOptions(formatMessage)}
-                      component={this.renderSelectField}
-                    />
-                  </div>
-                  <div className="col-1" />
-                </div>,
-                <div className="form-group">
-                  <span>{formatMessage(messages.transferToEscrow)}</span>
-                  <div className="transfer-input">
-                    <Field
-                      name="transferToEscrow"
-                      component={this.renderCheckboxField}
-                      label={formatMessage(messages.transferToEscrowLabel)}
-                    />
-                  </div>
-                  <div className="col-1" />
+            [
+              <div className="form-group">
+                <span>{formatMessage(messages.selectEscrow)}</span>
+                <div className="transfer-input">
+                  <Field
+                    type="text"
+                    name="escrow"
+                    options={Transfer.escrowOptions(commonEscrows)}
+                    component={this.renderSelectField}
+                  />
                 </div>
-              ]
-            )
+                <div className="col-1" />
+              </div>,
+              <div className="form-group">
+                <span>{formatMessage(messages.expirationTime)}</span>
+                <div className="transfer-input">
+                  <Field
+                    type="text"
+                    name="expirationTime"
+                    options={Transfer.expirationTimeOptions(formatMessage)}
+                    component={this.renderSelectField}
+                  />
+                </div>
+                <div className="col-1" />
+              </div>,
+              <div className="form-group">
+                <span>{formatMessage(messages.transferToEscrow)}</span>
+                <div className="transfer-input">
+                  <Field
+                    name="transferToEscrow"
+                    component={this.renderCheckboxField}
+                    label={formatMessage(messages.transferToEscrowLabel)}
+                  />
+                </div>
+                <div className="col-1" />
+              </div>
+            ]
+          )
           }
           {!this.props.transferForm.useEscrow &&
-            <div className="form-group" style={{ marginTop: '10px' }}>
-              <span style={{ marginBottom: '25px' }}>
-                {formatMessage(messages.reputation)}
-              </span>
+          <div className="form-group" style={{ marginTop: '10px' }}>
+            <span style={{ marginBottom: '25px' }}>
+              {formatMessage(messages.reputation)}
+            </span>
+            <Field
+              type="text"
+              name="reputation"
+              options={reputationOptions()}
+              component={this.renderDealRatingField}
+            />
+            <div className="col-1" />
+          </div>
+          }
+        </div>
+        <div className="form-group">
+          <span />
+          <div className="field left floated">
+            <Button
+              type="submit"
+              loading={transfer.loading}
+              content={formatMessage(messages.TRANSFER)}
+              className="button--green-bg"
+              disabled={this.props.invalid}
+            />
+          </div>
+          <div className="col-1" />
+        </div>
+      </div>
+    );
+  }
+
+  renderBitCoinForm() {
+    const { formatMessage } = this.props.intl;
+    const { transfer } = this.props;
+    const { wallets } = this.state;
+
+    return (
+      <div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.from)}</p>
+          <div className="form-group">
+            <span>{formatMessage(messages.selectWallet)}</span>
+            <div className="transfer-input">
               <Field
                 type="text"
-                name="reputation"
-                options={reputationOptions()}
-                component={this.renderDealRatingField}
-              />
-              <div className="col-1" />
-            </div>
-          }
-          <div className="form-group">
-            <span />
-            <div className="field left floated">
-              <Button
-                type="submit"
-                loading={transfer.loading}
-                content={formatMessage(messages.TRANSFER)}
-                className="button--green-bg"
-                disabled={this.props.invalid}
+                name="fromName"
+                options={wallets}
+                component={this.renderSelectField}
               />
             </div>
             <div className="col-1" />
           </div>
+        </div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.to)}</p>
+          <div className="form-group">
+            <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
+            <Field
+              type="text"
+              name="toName"
+              placeholder={formatMessage(messages.pleaseEnter)}
+              component="input"
+              className="textfield"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) })
+              ]}
+            />
+            <div className="col-1" />
+          </div>
+        </div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.transfer)}</p>
+          <div className="form-group">
+            <span>{formatMessage(messages.amount)}</span>
+            <Field
+              type="text"
+              name="amount"
+              placeholder="0.0"
+              component={this.renderUnitsField}
+              className="textfield1"
+              buttonText="BTC"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) }),
+                numericality({ message: formatMessage(messages.numberRequired) })
+              ]}
+            />
+            <div className="col-1" />
+          </div>
+          <div className="form-group">
+            <Field type="text" name="guid" fieldValue={this.props.bitcoin.guid} component={this.renderHiddenField} />
+            <Field type="text" name="password" fieldValue={this.props.bitcoin.password} component={this.renderHiddenField} />
+            <div className="col-1" />
+          </div>
+        </div>
+        <div className="form-group">
+          <span />
+          <div className="field left floated">
+            <Button
+              type="submit"
+              loading={transfer.loading}
+              content={formatMessage(messages.TRANSFER)}
+              className="button--green-bg"
+              disabled={this.props.invalid}
+            />
+          </div>
+          <div className="col-1" />
+        </div>
+      </div>
+    );
+  }
+
+  renderForm() {
+    const { transferCurrency } = this.props.transfer;
+
+    switch (transferCurrency) {
+      case 'omnicoin':
+        return this.renderOmniCoinForm();
+      case 'bitcoin':
+        return this.renderBitCoinForm();
+      default:
+        return this.renderBitCoinForm();
+    }
+  }
+
+  onChangeCurrency = (data) => {
+    this.props.transferActions.setCurrency(data.value);
+  };
+
+  transferForm() {
+    const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
+
+    return (
+      <div className="transfer-form">
+        <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
+          <div className="form-group">
+            <span>{formatMessage(messages.currency)}</span>
+            <Field
+              type="text"
+              name="currencySelected"
+              options={currencyOptions}
+              component={this.renderCurrencyField}
+            />
+            <div className="col-1" />
+          </div>
+          {this.renderForm()}
         </Form>
       </div>
     );
@@ -589,17 +799,12 @@ class Transfer extends Component {
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {
       this.props.transferActions.saleBonus(values.toName, currentUser.username);
+      values.listingCount = this.state.number;
+      values.listingId = this.state.listingId;
     }
     if (values.useEscrow) {
-      this.props.transferActions.createEscrowTransaction(
-        values.expirationTime,
-        currentUser.username,
-        values.toName,
-        values.escrow,
-        values.amount,
-        values.transferToEscrow,
-        values.memo
-      );
+      values.buyer = currentUser.username;
+      this.props.transferActions.createEscrowTransaction(values);
     } else {
       this.props.transferActions.submitTransfer(values);
     }
@@ -620,7 +825,8 @@ Transfer.propTypes = {
   transferActions: PropTypes.shape({
     submitTransfer: PropTypes.func,
     getCommonEscrows: PropTypes.func,
-    createEscrowTransaction: PropTypes.func
+    createEscrowTransaction: PropTypes.func,
+    setCurrency: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -630,10 +836,13 @@ Transfer.propTypes = {
   transfer: PropTypes.shape({
     loading: PropTypes.bool,
     gettingCommonEscrows: PropTypes.bool,
+    transferCurrency: PropTypes.string,
     error: PropTypes.string,
     commonEscrows: PropTypes.shape([])
   }),
   transferForm: PropTypes.shape({
+    currencySelected: PropTypes.string,
+    fromName: PropTypes.string,
     toName: PropTypes.string,
     useEscrow: PropTypes.bool
   }),
@@ -664,11 +873,14 @@ export default compose(
       ...state.default,
       transferForm: {
         toName: selector(state, 'toName'),
+        fromName: selector(state, 'fromName'),
         useEscrow: selector(state, 'useEscrow')
       }
     }),
     (dispatch) => ({
       transferActions: bindActionCreators({
+        makePayment,
+        setCurrency,
         submitTransfer,
         getCommonEscrows,
         createEscrowTransaction,
@@ -684,8 +896,7 @@ export default compose(
     form: 'transferForm',
     keepDirtyOnReinitialize: true,
     enableReinitialize: true,
-    fields: ['toName', 'useEscrow'],
-    asyncValidate: Transfer.asyncValidate,
+    fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
   })

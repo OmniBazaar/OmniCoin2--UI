@@ -3,11 +3,13 @@ import { handleActions } from 'redux-actions';
 import {
   submitTransfer,
   createEscrowTransaction,
-  getCommonEscrows
+  getCommonEscrows,
+  setCurrency
 } from './transferActions';
 
 const defaultState = {
   from_name: '',
+  fromName: '',
   toName: '',
   amount: '',
   memo: '',
@@ -19,7 +21,8 @@ const defaultState = {
   reputation: 5,
   loading: false,
   gettingCommonEscrows: false,
-  commonEscrows: []
+  commonEscrows: [],
+  transferCurrency: 'bitcoin'
 };
 
 const reducer = handleActions({
@@ -29,6 +32,12 @@ const reducer = handleActions({
       ...data,
       loading: true,
       error: null
+    };
+  },
+  [setCurrency](state, { payload: { transferCurrency } }) {
+    return {
+      ...state,
+      transferCurrency
     };
   },
   SUBMIT_TRANSFER_SUCCEEDED: (state) => ({
