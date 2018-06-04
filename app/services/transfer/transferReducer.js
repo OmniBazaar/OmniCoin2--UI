@@ -84,7 +84,7 @@ const reducer = handleActions({
     ...state,
     gettingCommonEscrows: false,
     error
-  })
+  }),
 }, defaultState);
 
 export default reducer;

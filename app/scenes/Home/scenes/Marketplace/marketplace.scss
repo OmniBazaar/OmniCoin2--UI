@@ -427,6 +427,138 @@
   }
 }
 
+.badges-popup {
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 5px !important;
+
+  .items {
+    display: flex;
+
+    .left-items,
+    .right-items {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  .menu-wrapper {
+    color: $white;
+    padding: 10px;
+    font-size: 15px;
+
+    .title {
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-decoration: underline;
+    }
+  }
+
+  .versatility {
+    background-color: $primary-green;
+    .items {
+      flex-direction: column;
+    }
+    .item {
+      margin-bottom: 8px;
+    }
+  }
+
+  .rewards {
+    background-color: $primary-orange;
+
+    .items {
+      .left-items {
+        border-right: 2px solid $white;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .separator {
+        margin: 10px auto;
+        width: 50px;
+        height: 2px;
+        background-color: $white;
+      }
+    }
+  }
+
+  .fees {
+    background-color: $red;
+
+    .title {
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    .items {
+      .left-items {
+        border-right: 2px solid $white;
+      }
+
+      .row {
+        display: flex;
+        flex: 1;
+        margin-top: 10px;
+
+        .item {
+          flex: 0.5;
+          margin-bottom: 15px;
+
+          .amount {
+            font-size: 30px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+          }
+
+          .note {
+            font-size: 12px;
+          }
+        }
+      }
+
+      .small {
+        margin-top: 10px;
+        font-size: 11px;
+        line-height: 13px;
+      }
+    }
+  }
+
+  .benefits {
+    background-color: $yellow;
+  }
+
+  .overview {
+    color: $dark-gray;
+
+    .net-img {
+      margin-bottom: 15px;
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .title {
+      margin-bottom: 15px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+
+    .items {
+      .left-items {
+        margin-right: 15px;
+      }
+    }
+  }
+}
+
 .menu-popup {
   border-radius: 0 !important;
   max-width: none !important;

@@ -28,8 +28,7 @@ $compose-width: 38%;
     height: 100%;
 
     .second-split-pane .Pane1 {
-      width: auto !important;
-      min-width: 260px;
+      min-width: fit-content;
     }
 
     .Pane.vertical.Pane1 {
@@ -82,6 +81,10 @@ $compose-width: 38%;
           background-color: $primary-white;
         }
 
+        &:focus {
+          outline: none;
+        }
+
         .title {
           font-size: 13px;
         }
@@ -120,6 +123,8 @@ $compose-width: 38%;
           .date {
             color: $primary-gray;
             font-size: 0.8em;
+            min-width: fit-content;
+            margin-left: 8px;
           }
         }
 

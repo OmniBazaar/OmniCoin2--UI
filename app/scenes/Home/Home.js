@@ -25,6 +25,7 @@ import Listing from './scenes/Marketplace/scenes/Listing/Listing';
 import MyListings from './scenes/Marketplace/scenes/Listing/scenes/MyListings/MyListings';
 import FavoriteListings from './scenes/Marketplace/scenes/Listing/scenes/FavoriteListings/FavoriteListings';
 import AddListing from './scenes/Marketplace/scenes/Listing/scenes/AddListing/AddListing';
+import EditListing from './scenes/Marketplace/scenes/Listing/scenes/AddListing/EditListing';
 import MyListingsDefaults from './scenes/Marketplace/scenes/Listing/scenes/MyListingsDefaults/MyListingsDefaults';
 import ImportListings from './scenes/Marketplace/scenes/Listing/scenes/ImportListings/ImportListings';
 import SearchResults from './scenes/Marketplace/scenes/Search/scenes/SearchResults/SearchResults';
@@ -52,6 +53,8 @@ import WalletIcon from './images/sdb-wallet.svg';
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
+import { getListingDefault } from '../../services/listing/listingDefaultsActions';
+
 
 const iconSize = 20;
 
@@ -62,6 +65,9 @@ class Home extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
+    }
+    if (nextProps.auth.currentUser && !this.props.auth.currentUser) {
+      this.props.listingActions.getListingDefault();
     }
   }
 
@@ -211,6 +217,7 @@ class Home extends Component {
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
             <Route path="/favorite-listings" render={(props) => <FavoriteListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
+            <Route path="/edit-listing/:id" render={(props) => <EditListing {...props} />} />
             <Route path="/listings-defaults" render={(props) => <MyListingsDefaults {...props} />} />
             <Route path="/import-listings" render={(props) => <ImportListings {...props} />} />
             <Route path="/search-results" render={(props) => <SearchResults {...props} />} />
@@ -233,7 +240,8 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount }, dispatch)
+    authActions: bindActionCreators({ getAccount }, dispatch),
+    listingActions: bindActionCreators({ getListingDefault }, dispatch)
   })
 )(Home);
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Image, Icon } from 'semantic-ui-react';
+import { Button, Image, Icon, Popup } from 'semantic-ui-react';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import classNames from 'classnames';
 
 import OverviewIcon from './images/tile-overview.svg';
 import VersatilityIcon from './images/tile-versatility.svg';
@@ -15,6 +16,9 @@ import ForSaleIcon from './images/bg-forsale.jpg';
 import ServicesIcon from './images/bg-services.jpg';
 import JobsIcon from './images/bg-jobs.jpg';
 import CryptoIcon from './images/bg-crypto.jpg';
+import Logo from '../../../../assets/images/logo.png';
+import EbayNet from '../../../../assets/images/ebay-net.png';
+import ObNet from '../../../../assets/images/ob-net.png';
 
 import { CategoriesTypes } from './constants';
 import Menu from './scenes/Menu/Menu';
@@ -1677,6 +1681,222 @@ const messages = defineMessages({
   exchangeTwo: {
     id: 'Marketplace.exchangeTwo',
     defaultMessage: 'EXCHANGE TWO'
+  },
+  whatYouCanSell: {
+    id: 'Marketplace.whatYouCanSell',
+    defaultMessage: 'What You Can Buy/Sell on OmniBazaar'
+  },
+  productsServices: {
+    id: 'Marketplace.productsServices',
+    defaultMessage: 'Products and Services'
+  },
+  personalItems: {
+    id: 'Marketplace.personalItems',
+    defaultMessage: 'Personal Items'
+  },
+  professionalServices: {
+    id: 'Marketplace.professionalServices',
+    defaultMessage: 'Professional Services'
+  },
+  gigsServices: {
+    id: 'Marketplace.gigsServices',
+    defaultMessage: 'Gigs and Contract Services'
+  },
+  localCrypto: {
+    id: 'Marketplace.localCrypto',
+    defaultMessage: 'Local Crypocurrencies'
+  },
+  overstockUnused: {
+    id: 'Marketplace.overstockUnused',
+    defaultMessage: 'Over-stock or Unused Inventory'
+  },
+  likeAmazon: {
+    id: 'Marketplace.likeAmazon',
+    defaultMessage: '(like Amazon or Alibaba)'
+  },
+  likeEbay: {
+    id: 'Marketplace.likeEbay',
+    defaultMessage: '(like eBay, Etsy or CraigsList)'
+  },
+  likeUpwork: {
+    id: 'Marketplace.likeUpwork',
+    defaultMessage: '(like UpWork, Freelancer or Guru)'
+  },
+  likeFiverr: {
+    id: 'Marketplace.likeFiverr',
+    defaultMessage: '(like Fiverr, GigBucks or Zeerk)'
+  },
+  likeLocalBitcoins: {
+    id: 'Marketplace.likeLocalBitcoins',
+    defaultMessage: '(like LocalBitcoins or Wall of Coins)'
+  },
+  likeBarter: {
+    id: 'Marketplace.likeBarter',
+    defaultMessage: '(like barter networks)'
+  },
+  incentivesBonuses: {
+    id: 'Marketplace.incentivesBonuses',
+    defaultMessage: 'OmniCoin (XOM) Incentives and Bonuses'
+  },
+  earlyAdopters: {
+    id: 'Marketplace.earlyAdopters',
+    defaultMessage: 'Early Adopters'
+  },
+  registrationAir: {
+    id: 'Marketplace.registrationAir',
+    defaultMessage: 'Registration ("Air-drop")'
+  },
+  upTo: {
+    id: 'Marketplace.upTo',
+    defaultMessage: 'Up to'
+  },
+  referralsNewUser: {
+    id: 'Marketplace.referralsNewUser',
+    defaultMessage: 'Referrals (Each new user)'
+  },
+  firstSale: {
+    id: 'Marketplace.firstSale',
+    defaultMessage: 'First Sale (Each new buyer)'
+  },
+  continuing: {
+    id: 'Marketplace.continuing',
+    defaultMessage: 'Continuing'
+  },
+  transactionProcessing: {
+    id: 'Marketplace.transactionProcessing',
+    defaultMessage: 'Transaction Processing ("Mining")'
+  },
+  perBlock: {
+    id: 'Marketplace.perBlock',
+    defaultMessage: 'per block'
+  },
+  referralsEachTransaction: {
+    id: 'Marketplace.referralsEachTransaction',
+    defaultMessage: 'Referrals (Each transaction)'
+  },
+  perSale: {
+    id: 'Marketplace.perSale',
+    defaultMessage: 'per sale'
+  },
+  proxyListing: {
+    id: 'Marketplace.proxyListing',
+    defaultMessage: 'Proxy Listing Publisher'
+  },
+  perListing: {
+    id: 'Marketplace.perListing',
+    defaultMessage: 'per listing'
+  },
+  mandatoryFees: {
+    id: 'Marketplace.mandatoryFees',
+    defaultMessage: 'Mandatory Fees:'
+  },
+  monthlyFees: {
+    id: 'Marketplace.monthlyFees',
+    defaultMessage: 'Monthly Fees:'
+  },
+  listingFees: {
+    id: 'Marketplace.listingFees',
+    defaultMessage: 'Listing Fees:'
+  },
+  transactionFees: {
+    id: 'Marketplace.transactionFees',
+    defaultMessage: 'Transaction Fees:'
+  },
+  softwareCost: {
+    id: 'Marketplace.softwareCost',
+    defaultMessage: 'Software Cost:'
+  },
+  feesNote1: {
+    id: 'Marketplace.feesNote1',
+    defaultMessage: 'When we say FREE, we meant it. OmniBazaar can be 100% free if you don\'t use any of the optional services.'
+  },
+  optionalServices: {
+    id: 'Marketplace.optionalServices',
+    defaultMessage: 'Optional Services:'
+  },
+  affiliateProgram: {
+    id: 'Marketplace.affiliateProgram',
+    defaultMessage: 'Affiliate Program:'
+  },
+  priorityListing: {
+    id: 'Marketplace.priorityListing',
+    defaultMessage: 'Priority Listing Placement:'
+  },
+  userSelectable: {
+    id: 'Marketplace.userSelectable',
+    defaultMessage: '(User Selectable)'
+  },
+  escrowAgents: {
+    id: 'Marketplace.escrowAgents',
+    defaultMessage: 'Escrow Agents:'
+  },
+  marketDrivenPrice: {
+    id: 'Marketplace.marketDrivenPrice',
+    defaultMessage: '(Market-Driven Price)'
+  },
+  feesNote2: {
+    id: 'Marketplace.feesNote2',
+    defaultMessage: 'You pay these fees only if you use the services. If you provide these services, you earn 100% of the fees.'
+  },
+  marketsLabel: {
+    id: 'Marketplace.marketsLabel',
+    defaultMessage: 'Amazon, eBay, Alibaba, Rakutan, Etsy, etc.'
+  },
+  highSellerFees: {
+    id: 'Marketplace.highSellerFees',
+    defaultMessage: 'High Seller Fees'
+  },
+  includingPayment1: {
+    id: 'Marketplace.includingPayment1',
+    defaultMessage: '(10-20% including payment processing)'
+  },
+  authorizationControl: {
+    id: 'Marketplace.authorizationControl',
+    defaultMessage: 'Authorization control'
+  },
+  tracksEvery: {
+    id: 'Marketplace.tracksEvery',
+    defaultMessage: 'Tracks every click ("big data")'
+  },
+  pushesContent: {
+    id: 'Marketplace.pushesContent',
+    defaultMessage: 'Pushes content/advertising'
+  },
+  requiresBank: {
+    id: 'Marketplace.requiresBank',
+    defaultMessage: 'Requires a bank account'
+  },
+  contentCensorship: {
+    id: 'Marketplace.contentCensorship',
+    defaultMessage: 'Content censorship'
+  },
+  lowerFees: {
+    id: 'Marketplace.lowerFees',
+    defaultMessage: '90-100% Lower Fees'
+  },
+  includingPayment2: {
+    id: 'Marketplace.includingPayment2',
+    defaultMessage: '(0-1.5% including payment processing)'
+  },
+  communityOwned: {
+    id: 'Marketplace.communityOwned',
+    defaultMessage: 'Community owned and operated'
+  },
+  noTrackingUser: {
+    id: 'Marketplace.noTrackingUser',
+    defaultMessage: 'No tracking of user information'
+  },
+  listingsYouChoose: {
+    id: 'Marketplace.listingsYouChoose',
+    defaultMessage: 'See only the listings you choose'
+  },
+  useBitcoin: {
+    id: 'Marketplace.useBitcoin',
+    defaultMessage: 'Use Bitcoin and Omnicoin'
+  },
+  communityPolicing: {
+    id: 'Marketplace.communityPolicing',
+    defaultMessage: 'Community policing'
   }
 });
 
@@ -1893,6 +2113,233 @@ class Marketplace extends Component {
     );
   }
 
+  badgeMenu(icon, title) {
+    const { formatMessage } = this.props.intl;
+    const badgeClass = classNames({
+      badge: true,
+      blue: title === 'overview',
+      green: title === 'versatility',
+      yellow: title === 'benefits',
+      orange: title === 'rewards',
+      red: title === 'fees'
+    });
+
+    return (
+      <div className={badgeClass}>
+        <Image src={icon} width={iconSize} height={iconSize} />
+        <span>{formatMessage(messages[title])}</span>
+      </div>
+    );
+  }
+
+  overviewPopup() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="menu-wrapper overview">
+        <div className="items">
+          <div className="left-items">
+            <div className="title">{formatMessage(messages.marketsLabel)}</div>
+            <Image src={EbayNet} width={300} className="net-img" />
+            <div className="title">{formatMessage(messages.highSellerFees)}</div>
+            <div className="small">{formatMessage(messages.includingPayment1)}</div>
+            <div>{formatMessage(messages.authorizationControl)}</div>
+            <div>{formatMessage(messages.tracksEvery)}</div>
+            <div>{formatMessage(messages.pushesContent)}</div>
+            <div>{formatMessage(messages.requiresBank)}</div>
+            <div>{formatMessage(messages.contentCensorship)}</div>
+          </div>
+          <div className="right-items">
+            <Image src={Logo} width={300} />
+            <Image src={ObNet} width={300} className="net-img" />
+            <div className="title">{formatMessage(messages.lowerFees)}</div>
+            <div className="small">{formatMessage(messages.includingPayment2)}</div>
+            <div>{formatMessage(messages.communityOwned)}</div>
+            <div>{formatMessage(messages.noTrackingUser)}</div>
+            <div>{formatMessage(messages.listingsYouChoose)}</div>
+            <div>{formatMessage(messages.useBitcoin)}</div>
+            <div>{formatMessage(messages.communityPolicing)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  versatilityPopup() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="menu-wrapper versatility">
+        <p className="title">{formatMessage(messages.whatYouCanSell)}</p>
+        <div className="items">
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.productsServices)}</span> {formatMessage(messages.likeAmazon)}
+          </div>
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.personalItems)}</span> {formatMessage(messages.likeEbay)}
+          </div>
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.professionalServices)}</span> {formatMessage(messages.likeUpwork)}
+          </div>
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.gigsServices)}</span> {formatMessage(messages.likeFiverr)}
+          </div>
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.localCrypto)}</span> {formatMessage(messages.likeLocalBitcoins)}
+          </div>
+          <div className="item">
+            <Icon name="check" /><span className="subtitle">{formatMessage(messages.overstockUnused)}</span> {formatMessage(messages.likeBarter)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  rewardsPopup() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="menu-wrapper rewards">
+        <p className="title">{formatMessage(messages.incentivesBonuses)}</p>
+        <div className="items">
+          <div className="left-items">
+            <div className="subtitle">{formatMessage(messages.earlyAdopters)}</div>
+            <div className="item">
+              <div>{formatMessage(messages.registrationAir)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>10,000 XOM</div>
+            </div>
+            <div className="separator" />
+            <div className="item">
+              <div>{formatMessage(messages.referralsNewUser)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>10,000 XOM</div>
+            </div>
+            <div className="separator" />
+            <div className="item">
+              <div>{formatMessage(messages.firstSale)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>10,000 XOM</div>
+            </div>
+          </div>
+          <div className="right-items">
+            <div className="subtitle">{formatMessage(messages.continuing)}</div>
+            <div className="item">
+              <div>{formatMessage(messages.transactionProcessing)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>50 XOM {formatMessage(messages.perBlock)}</div>
+            </div>
+            <div className="separator" />
+            <div className="item">
+              <div>{formatMessage(messages.referralsEachTransaction)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>0.25% {formatMessage(messages.perSale)}</div>
+            </div>
+            <div className="separator" />
+            <div className="item">
+              <div>{formatMessage(messages.proxyListing)}</div>
+              <div>{formatMessage(messages.upTo)}</div>
+              <div>0.50% {formatMessage(messages.perListing)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  benefitsPopup() {
+    return (
+      <div className="menu-wrapper benefits">
+        <p className="title">Benefits</p>
+        <div className="items" />
+      </div>
+    );
+  }
+
+  feesPopup() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="menu-wrapper fees">
+        <div className="items">
+          <div className="left-items">
+            <div className="title">{formatMessage(messages.mandatoryFees)}</div>
+            <div className="row">
+              <div className="item">
+                <div>{formatMessage(messages.monthlyFees)}</div>
+                <div className="amount">$0</div>
+              </div>
+              <div className="item">
+                <div>{formatMessage(messages.listingFees)}</div>
+                <div className="amount">$0</div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="item">
+                <div>{formatMessage(messages.transactionFees)}</div>
+                <div className="amount">$0</div>
+              </div>
+              <div className="item">
+                <div>{formatMessage(messages.softwareCost)}</div>
+                <div className="amount">$0</div>
+              </div>
+            </div>
+            <div className="small">{formatMessage(messages.feesNote1)}</div>
+          </div>
+          <div className="right-items">
+            <div className="title">{formatMessage(messages.optionalServices)}</div>
+            <div className="row">
+              <div className="item">
+                <div>{formatMessage(messages.affiliateProgram)}</div>
+                <div className="amount">0 - .5%</div>
+                <div className="note">{formatMessage(messages.userSelectable)}</div>
+              </div>
+              <div className="item">
+                <div>{formatMessage(messages.escrowAgents)}</div>
+                <div className="amount">0 - .5%</div>
+                <div className="note">{formatMessage(messages.marketDrivenPrice)}</div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="item">
+                <div>{formatMessage(messages.proxyListing)}:</div>
+                <div className="amount">0 - .5%</div>
+                <div className="note">{formatMessage(messages.marketDrivenPrice)}</div>
+              </div>
+              <div className="item">
+                <div>{formatMessage(messages.priorityListing)}</div>
+                <div className="amount">0 - 2%</div>
+                <div className="note">{formatMessage(messages.userSelectable)}</div>
+              </div>
+            </div>
+            <div className="small">{formatMessage(messages.feesNote2)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderBadge(icon, title) {
+    return (
+      <Popup
+        trigger={this.badgeMenu(icon, title)}
+        hoverable
+        basic
+        on="hover"
+        position="bottom center"
+        wide="very"
+        hideOnScroll
+        className="badges-popup"
+      >
+        {title === 'overview' ? this.overviewPopup() : null}
+        {title === 'versatility' ? this.versatilityPopup() : null}
+        {title === 'rewards' ? this.rewardsPopup() : null}
+        {title === 'fees' ? this.feesPopup() : null}
+        {title === 'benefits' ? this.benefitsPopup() : null}
+      </Popup>
+    );
+  }
+
   header() {
     const { formatMessage } = this.props.intl;
 
@@ -1901,26 +2348,11 @@ class Marketplace extends Component {
         <Menu />
         <span className="title">{formatMessage(messages.welcome)}</span>
         <div className="badges">
-          <div className="badge blue">
-            <Image src={OverviewIcon} width={iconSize} height={iconSize} />
-            <span>{formatMessage(messages.overview)}</span>
-          </div>
-          <div className="badge green">
-            <Image src={VersatilityIcon} width={iconSize} height={iconSize} />
-            <span>{formatMessage(messages.versatility)}</span>
-          </div>
-          <div className="badge yellow">
-            <Image src={BenefitIcon} width={iconSize} height={iconSize} />
-            <span>{formatMessage(messages.benefits)}</span>
-          </div>
-          <div className="badge orange">
-            <Image src={RewardsIcon} width={iconSize} height={iconSize} />
-            <span>{formatMessage(messages.rewards)}</span>
-          </div>
-          <div className="badge red">
-            <Image src={FeesIcon} width={iconSize} height={iconSize} />
-            <span>{formatMessage(messages.fees)}</span>
-          </div>
+          {this.renderBadge(OverviewIcon, 'overview')}
+          {this.renderBadge(VersatilityIcon, 'versatility')}
+          {this.renderBadge(BenefitIcon, 'benefits')}
+          {this.renderBadge(RewardsIcon, 'rewards')}
+          {this.renderBadge(FeesIcon, 'fees')}
         </div>
       </div>
     );

@@ -37,6 +37,18 @@ const mainCategories = defineMessages({
     id: 'Marketplace.rentals',
     defaultMessage: 'Rentals'
   },
+  community: {
+    id: 'Marketplace.community',
+    defaultMessage: 'Community'
+  },
+  housing: {
+    id: 'Marketplace.housing',
+    defaultMessage: 'Housing'
+  },
+  gigs: {
+    id: 'Marketplace.gigs',
+    defaultMessage: 'Gigs'
+  }
 });
 
 const saleCategories = defineMessages({
@@ -340,6 +352,10 @@ const moreCategories = defineMessages({
     id: 'Marketplace.events',
     defaultMessage: 'Events'
   },
+  general: {
+    id: 'Marketplace.general',
+    defaultMessage: 'General'
+  },
   groups: {
     id: 'Marketplace.groups',
     defaultMessage: 'Groups'
@@ -371,10 +387,6 @@ const moreCategories = defineMessages({
   volunteers: {
     id: 'Marketplace.volunteers',
     defaultMessage: 'Volunteers'
-  },
-  general: {
-    id: 'Marketplace.general',
-    defaultMessage: 'General'
   },
   aptsHousing: {
     id: 'Marketplace.aptsHousing',
@@ -456,6 +468,151 @@ const moreCategories = defineMessages({
     id: 'Marketplace.techSupport',
     defaultMessage: 'Tech Support'
   },
+});
+
+const communityCategories = defineMessages({
+  activities: {
+    id: 'Marketplace.activities',
+    defaultMessage: 'Activities'
+  },
+  arts: {
+    id: 'Marketplace.arts',
+    defaultMessage: 'Arts'
+  },
+  childCare: {
+    id: 'Marketplace.childCare',
+    defaultMessage: 'Childcare'
+  },
+  classes: {
+    id: 'Marketplace.classes',
+    defaultMessage: 'Classes'
+  },
+  events: {
+    id: 'Marketplace.events',
+    defaultMessage: 'Events'
+  },
+  general: {
+    id: 'Marketplace.general',
+    defaultMessage: 'General'
+  },
+  groups: {
+    id: 'Marketplace.groups',
+    defaultMessage: 'Groups'
+  },
+  localNews: {
+    id: 'Marketplace.localNews',
+    defaultMessage: 'Local News'
+  },
+  lostFound: {
+    id: 'Marketplace.lostFound',
+    defaultMessage: 'Lost / Found'
+  },
+  music: {
+    id: 'Marketplace.music',
+    defaultMessage: 'Music'
+  },
+  pets: {
+    id: 'Marketplace.pets',
+    defaultMessage: 'Pets'
+  },
+  politics: {
+    id: 'Marketplace.politics',
+    defaultMessage: 'Politics'
+  },
+  ridesharing: {
+    id: 'Marketplace.ridesharing',
+    defaultMessage: 'Ridesharing'
+  },
+  volunteers: {
+    id: 'Marketplace.volunteers',
+    defaultMessage: 'Volunteers'
+  }
+});
+
+const housingCategories = defineMessages({
+  aptsHousing: {
+    id: 'Marketplace.aptsHousing',
+    defaultMessage: 'Apts / Housing'
+  },
+  housingSwap: {
+    id: 'Marketplace.housingSwap',
+    defaultMessage: 'Housing Swap'
+  },
+  housingWanted: {
+    id: 'Marketplace.housingWanted',
+    defaultMessage: 'Housing Wanted'
+  },
+  officeCommercial: {
+    id: 'Marketplace.officeCommercial',
+    defaultMessage: 'Office Commercial'
+  },
+  realEstateSale: {
+    id: 'Marketplace.realEstateSale',
+    defaultMessage: 'Real Estate for Sale'
+  },
+  roomsToShare: {
+    id: 'Marketplace.roomsToShare',
+    defaultMessage: 'Rooms to Share'
+  },
+  roomWanted: {
+    id: 'Marketplace.roomWanted',
+    defaultMessage: 'Room Wanted'
+  },
+  subletsTemporary: {
+    id: 'Marketplace.subletsTemporary',
+    defaultMessage: 'Sublets / Temporary'
+  },
+  vacation: {
+    id: 'Marketplace.vacation',
+    defaultMessage: 'Vacation'
+  }
+});
+
+const gigsCategories = defineMessages({
+  babySitting: {
+    id: 'Marketplace.babySitting',
+    defaultMessage: 'Baby Sitting'
+  },
+  cleaning: {
+    id: 'Marketplace.cleaning',
+    defaultMessage: 'Cleaning'
+  },
+  crew: {
+    id: 'Marketplace.crew',
+    defaultMessage: 'Crew'
+  },
+  delivery: {
+    id: 'Marketplace.delivery',
+    defaultMessage: 'Delivery'
+  },
+  escort: {
+    id: 'Marketplace.escort',
+    defaultMessage: 'Escort'
+  },
+  houseSitting: {
+    id: 'Marketplace.houseSitting',
+    defaultMessage: 'House Siting'
+  },
+  handyman: {
+    id: 'Marketplace.handyman',
+    defaultMessage: 'Handyman'
+  },
+  massage: {
+    id: 'Marketplace.massage',
+    defaultMessage: 'Massage'
+  },
+  movingHauling: {
+    id: 'Marketplace.movingHauling',
+    defaultMessage: 'Moving / Hauling'
+  },
+  petCare: {
+    id: 'Marketplace.petCare',
+    defaultMessage: 'Pet Care'
+  },
+  techSupport: {
+    id: 'Marketplace.techSupport',
+    defaultMessage: 'Tech Support'
+  }
 });
 
 const aboutCategories = defineMessages({
@@ -636,5 +793,8 @@ export {
   cryptoCategories,
   moreCategories,
   aboutCategories,
-  userMenu
+  userMenu,
+  communityCategories,
+  housingCategories,
+  gigsCategories
 };

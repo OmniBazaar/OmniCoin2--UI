@@ -11,6 +11,7 @@ function wrapRequest(func) {
   };
 }
 
+
 function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
@@ -25,8 +26,8 @@ function wsWatcher(socket, messageTypes) {
         if (msg) {
           console.log('MSG ', msg);
         }
-        const messageType = messageTypes.find(el => el.type === msg.type);
-        return emitter({ type: messageType.action, data: msg });
+        const messageType = Object.keys(messageTypes).find(key => messageTypes[key] === msg.type);
+        return emitter({ type: messageType, data: msg });
       } catch (e) {
         console.error(`Error parsing : ${e.data}`);
       }
@@ -36,6 +37,7 @@ function wsWatcher(socket, messageTypes) {
     };
   });
 }
+
 
 function reputationOptions(from = 0, to = 10) {
   const options = [];
@@ -52,8 +54,28 @@ function reputationOptions(from = 0, to = 10) {
   return options;
 }
 
+function currencyConverter(amount, from, to) {
+  const usdRates = {
+     EUR: 0.86,
+     GBP: 0.75,
+     CAD: 0.76,
+     SEK: 8.89,
+     AUD: 0.75,
+     JPY: 108.5
+   };
+  const omcUSD = 0.00333;
+  const btcUSD = 7500;
+  if (to === 'OMC') {
+    return amount  / (omcUSD * (usdRates[from] || 1));
+  }
+  if (to === 'BTC') {
+    return amount  / (btcUSD * (usdRates[from] || 1));
+  }
+}
+
 export {
   wrapRequest,
   wsWatcher,
-  reputationOptions
+  reputationOptions,
+  currencyConverter
 };

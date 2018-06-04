@@ -8,7 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, numericality } from 'redux-form-validators';
+import { required, numericality, length } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
@@ -29,12 +29,15 @@ import {
   setCurrency,
   submitTransfer,
   getCommonEscrows,
-  createEscrowTransaction
+  createEscrowTransaction,
+  saleBonus
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import {
   makePayment
 } from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import CoinTypes from '../Marketplace/scenes/Listing/constants';
+
 
 const messages = defineMessages({
   accountDoNotExist: {
@@ -164,6 +167,10 @@ const messages = defineMessages({
   transactionID: {
     id: 'Transfer.transactionID',
     defaultMessage: 'Transaction ID'
+  },
+  maxLength: {
+    id: 'Transfer.maxLength',
+    defaultMessage: 'Memo must be less than 150 characters'
   }
 });
 
@@ -262,8 +269,19 @@ class Transfer extends Component {
     };
   }
 
+  state = {
+    type: CoinTypes.OMNI_COIN,
+    listingId: null,
+  };
+
   componentDidMount() {
-    this.handleInitialize();
+    const params = new URLSearchParams(this.props.location.search);
+    const type = params.get('type');
+    const listingId = params.get('listing_id');
+    const price = params.get('price');
+    this.setState({ listingId, price });
+    const to = params.get('to');
+    this.handleInitialize(price, to);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -306,9 +324,11 @@ class Transfer extends Component {
     }
   }
 
-  handleInitialize() {
+  handleInitialize(price, to) {
     this.props.initialize({
       reputation: 5,
+      toName: to,
+      amount: price
     });
   }
 
@@ -550,6 +570,9 @@ class Transfer extends Component {
               name="memo"
               placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderMemoField}
+              validate={[
+                length({ max: 150, message: formatMessage(messages.maxLength) })
+              ]}
             />
             <div className="col-1" />
           </div>
@@ -774,9 +797,11 @@ class Transfer extends Component {
       ...paramValues,
       memo: paramValues.memo ? paramValues.memo : ''
     };
-
+    const { currentUser } = this.props.auth;
+    if (this.state.listingId) {
+      this.props.transferActions.saleBonus(values.toName, currentUser.username);
+    }
     if (values.useEscrow) {
-      const { currentUser } = this.props.auth;
       this.props.transferActions.createEscrowTransaction(
         values.expirationTime,
         currentUser.username,
@@ -864,7 +889,8 @@ export default compose(
         setCurrency,
         submitTransfer,
         getCommonEscrows,
-        createEscrowTransaction
+        createEscrowTransaction,
+        saleBonus
       }, dispatch),
       initialize,
       changeFieldValue: (field, value) => {

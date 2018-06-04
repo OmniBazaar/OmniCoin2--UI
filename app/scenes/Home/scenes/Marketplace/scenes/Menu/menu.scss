@@ -19,6 +19,13 @@
       min-width: 380px;
     }
 
+    .dropdown {
+      margin-right: 30px;
+      min-height: 0;
+      background-color: transparent !important;
+      border: 0;
+    }
+
     .search-actions {
       position: absolute !important;
       top: 0;

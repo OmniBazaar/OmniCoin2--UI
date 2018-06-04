@@ -3,15 +3,14 @@ import { createActions } from 'redux-actions';
 const {
   dhtConnect,
   dhtGetPeersFor,
-  dhtFetchPeersData,
 } = createActions({
   DHT_CONNECT: () => ({}),
-  DHT_GET_PEERS_FOR: text => text,
-  DHT_FETCH_PEERS_DATA: peers => peers,
+  DHT_GET_PEERS_FOR: (searchTerm, category, country, city, searchListings = true) => ({
+    searchTerm, category, country, city, searchListings
+  }),
 });
 
 export {
   dhtConnect,
   dhtGetPeersFor,
-  dhtFetchPeersData,
 };

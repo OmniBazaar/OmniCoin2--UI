@@ -6,36 +6,18 @@ import {
 
 import { wsWatcher } from '../utils';
 
-const ws = new WebSocket('ws://127.0.0.1:8099');
+export const ws = new WebSocket('ws://127.0.0.1:8099');
 
-const messageTypes = [
-  {
-    type: '0',
-    action: 'MARKETPLACE_NULL'
-  },
-  {
-    type: '1',
-    action: 'MARKETPLACE_TAG_FAVORITE'
-  },
-  {
-    type: '2',
-    action: 'MARKETPLACE_UNTAG_FAVORITE'
-  },
-  {
-    type: '3',
-    action: 'MARKETPLACE_GET_FAVORITES'
-  },
-  {
-    type: '4',
-    action: 'MARKETPLACE_SEARCH_BY_ALL_KEYWORDS'
-  },
-  {
-    type: '5',
-    action: 'MARKETPLACE_SEARCH_BY_ANY_KEYWORD'
-  }
-];
+export const messageTypes = {
+  MARKETPLACE_NULL_DATA_RECEIVED: '0',
+  MARKETPLACE_SEARCH_BY_ALL_KEYWORDS_DATA_RECEIVED: '1',
+  MARKETPLACE_SEARCH_BY_ANY_KEYWORD_DATA_RECEIVED: '2',
+  MARKETPLACE_RETURN_BOOL: '3',
+  MARKETPLACE_RETURN_LISTINGS: '4',
+  MARKETPLACE_GET_LISTING: '5',
+};
 
-export function* wsMarketplaceSaga() {
+  export function* wsMarketplaceSubscriber() {
   const channel = yield call(wsWatcher, ws, messageTypes);
   while (true) {
     const action = yield take(channel);

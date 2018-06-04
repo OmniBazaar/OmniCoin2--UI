@@ -78,6 +78,6 @@ export default connect(
     }, dispatch),
     dhtActions: bindActionCreators({
       dhtConnect,
-    }, dispatch),
+    }, dispatch)
   })
 )(Root);
