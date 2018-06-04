@@ -259,18 +259,18 @@ class Listing extends Component {
     if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = this.props.listing.buyListing.numberToBuy *
-        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const number =  this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
-      this.props.history.push(`/transfer/?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
     if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = this.props.listing.buyListing.numberToBuy *
-        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
-      const to = listingDetail.bitcoinAddress;
-      this.props.history.push(`/transfer/${type}?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
+      const number = this.props.listing.buyListing.numberToBuy;
+      const to = listingDetail['bitcoin_address'];
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
   };
 
@@ -366,15 +366,15 @@ class Listing extends Component {
                 <ReactStars
                   count={5}
                   size={16}
-                  value={4}
+                  value={listingDetail.reputationScore * 100 / 5}
                   color1="#f9d596"
                   color2="#fbae3c"
                   edit={false}
                 />
             </span>
             <div className="votes">
+              <span className="total-votes">{integerWithCommas(listingDetail.reputationVotesCount)}</span>
               <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
-              <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
             </div>
           </div>
         </div>

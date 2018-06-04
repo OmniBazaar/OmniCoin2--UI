@@ -240,6 +240,10 @@ const messages = defineMessages({
   fieldNumeric: {
     id: 'AddListing.fieldNumeric',
     defaultMessage: 'Should be a number'
+  },
+  bitcoinAddress: {
+    id: 'AddListing.bitcoinAddress',
+    defaultMessage: 'Bitcoin address'
   }
 });
 

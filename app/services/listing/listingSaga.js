@@ -6,6 +6,7 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
+import { FetchChain, hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 
 import {
@@ -35,7 +36,6 @@ import {
   deleteListing,
   getMyListings
 } from './apis';
-import {getListingHash} from "./utils";
 
 export function* listingSubscriber() {
   yield all([
@@ -136,6 +136,9 @@ function* getListingDetail({ payload: { listingId }}) {
   try {
     const listings = (yield select()).default.search.searchResults;
     const listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
+    listingDetail.reputationScore = ownerAcc['reputation_score'];
+    listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
     console.log('Error ', error);
@@ -166,7 +169,7 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
 function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
-    if (blockchainListing.listing_hash === getListingHash(listing)) {
+    if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));

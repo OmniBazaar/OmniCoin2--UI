@@ -103,6 +103,9 @@
           .votes {
             display: flex;
             align-items: center;
+            .total-votes {
+              margin-right: 2px;
+            }
           }
         }
       }

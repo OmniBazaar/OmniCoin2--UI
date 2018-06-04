@@ -1,7 +1,5 @@
 import {
   FetchChain,
-  TransactionHelper,
-  Aes,
   TransactionBuilder
 } from 'omnibazaarjs/es';
 import {
@@ -46,7 +44,7 @@ function* submitOmniCoinTransfer(data) {
 
     const key = generateKeyFromPassword(senderName.get('name'), 'active', currentUser.password);
     const tr = new TransactionBuilder();
-    tr.add_type_operation('transfer', {
+    const operationObj = {
       from: senderName.get('id'),
       to: toName.get('id'),
       reputation_vote: parseInt(reputation),
@@ -55,8 +53,12 @@ function* submitOmniCoinTransfer(data) {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
-    });
-
+    };
+    if (data.listingId) {
+      operationObj.listing = data.listingId;
+      operationObj.listing_count = data.listingCount;
+    }
+    tr.add_type_operation('transfer', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
@@ -90,19 +92,27 @@ export function* submitTransfer(data) {
 
   switch (currencySelectedStr) {
     case 'omnicoin':
-      yield fork(submitOmniCoinTransfer(data));
+      yield fork(submitOmniCoinTransfer, data);
       break;
     case 'bitcoin':
-      yield fork(submitBitcoinTransfer(data));
+      yield fork(submitBitcoinTransfer, data);
       break;
     default:
-      yield fork(submitBitcoinTransfer(data));
+      yield fork(submitBitcoinTransfer, data);
   }
 }
 
 
 function* createEscrowTransaction({ payload: {
-    expirationTime, buyer, seller, escrow, amount, transferToEscrow, memo
+    expirationTime,
+    buyer,
+    toName: seller,
+    escrow,
+    amount,
+    transferToEscrow,
+    memo,
+    listingId,
+    listingCount
   }
 }) {
   try {
@@ -115,7 +125,7 @@ function* createEscrowTransaction({ payload: {
     ]);
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const tr = new TransactionBuilder();
-    tr.add_type_operation('escrow_create_operation', {
+    const operationObj = {
       expiration_time: sec + expirationTime,
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
@@ -126,7 +136,12 @@ function* createEscrowTransaction({ payload: {
         amount: amount * 100000
       },
       transfer_to_escrow: transferToEscrow
-    });
+    };
+    if (listingId) {
+      operationObj.listing = listingId;
+      operationObj.listing_count = listingCount;
+    }
+    tr.add_type_operation('escrow_create_operation', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();

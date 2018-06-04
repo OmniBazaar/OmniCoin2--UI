@@ -10,7 +10,6 @@ import {
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { myListings } from './sample';
-import { getListingHash } from "./utils";
 
 let authUser = null;
 let authHeaders = null;
@@ -91,7 +90,7 @@ const createListingOnBlockchain = async (publisher, listing) => {
       amount: parseFloat(listing.price) * 100000
     },
     quantity: parseInt(listing.quantity),
-    listing_hash: getListingHash({
+    listing_hash: hash.listingSHA256({
       ...listing,
       owner: user.username
     }),

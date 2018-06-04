@@ -272,6 +272,7 @@ class Transfer extends Component {
   state = {
     type: CoinTypes.OMNI_COIN,
     listingId: null,
+    number: 0,
   };
 
   componentDidMount() {
@@ -279,9 +280,15 @@ class Transfer extends Component {
     const type = params.get('type');
     const listingId = params.get('listing_id');
     const price = params.get('price');
-    this.setState({ listingId, price });
     const to = params.get('to');
-    this.handleInitialize(price, to);
+    const number = params.get('number');
+    this.setState({ listingId, price, number });
+    this.handleInitialize(price * number, to);
+    if (type === CoinTypes.OMNI_COIN) {
+      this.props.transferActions.setCurrency('omnicoin');
+    } else if (type === CoinTypes.BIT_COIN) {
+      this.props.transferActions.setCurrency('bitcoin');
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -446,10 +453,11 @@ class Transfer extends Component {
   renderCurrencyField = ({
     input, options
   }) => {
+    console.log('TRANSFER CURRENCY ', this.props.transfer.transferCurrency);
     return (
       <Select
         className="textfield"
-        defaultValue={options[0] ? options[0].value : ''}
+        value={this.props.transfer.transferCurrency}
         options={options}
         onChange={(param, data) => {
           input.onChange(data.value);
@@ -693,7 +701,7 @@ class Transfer extends Component {
             <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
             <Field
               type="text"
-              name="toBCName"
+              name="toName"
               placeholder={formatMessage(messages.pleaseEnter)}
               component={this.renderAccountNameField}
               className="textfield1"
@@ -800,17 +808,12 @@ class Transfer extends Component {
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {
       this.props.transferActions.saleBonus(values.toName, currentUser.username);
+      values.listingCount = this.state.number;
+      values.listingId = this.state.listingId;
     }
     if (values.useEscrow) {
-      this.props.transferActions.createEscrowTransaction(
-        values.expirationTime,
-        currentUser.username,
-        values.toName,
-        values.escrow,
-        values.amount,
-        values.transferToEscrow,
-        values.memo
-      );
+      values.buyer = currentUser.username;
+      this.props.transferActions.createEscrowTransaction(values);
     } else {
       this.props.transferActions.submitTransfer(values);
     }

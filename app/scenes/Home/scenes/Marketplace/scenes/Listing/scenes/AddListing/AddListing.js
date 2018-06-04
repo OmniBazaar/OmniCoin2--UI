@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import {  injectIntl } from 'react-intl';
 import { Icon } from 'semantic-ui-react';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
