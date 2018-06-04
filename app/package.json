@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "blockchain-wallet-service": "^0.26.0",
+    "blockchain-wallet-service": "^0.26.1",
     "getmac": "^1.4.0",
     "node-machine-id": "^1.1.10"
   }

@@ -453,7 +453,6 @@ class Transfer extends Component {
   renderCurrencyField = ({
     input, options
   }) => {
-    console.log('TRANSFER CURRENCY ', this.props.transfer.transferCurrency);
     return (
       <Select
         className="textfield"
@@ -703,8 +702,8 @@ class Transfer extends Component {
               type="text"
               name="toName"
               placeholder={formatMessage(messages.pleaseEnter)}
-              component={this.renderAccountNameField}
-              className="textfield1"
+              component="input"
+              className="textfield"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -731,14 +730,6 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>{formatMessage(messages.transactionID)}</span>
-            <Field
-              type="text"
-              name="transactionID"
-              placeholder={formatMessage(messages.pleaseEnter)}
-              component={this.renderAccountNameField}
-              className="textfield1"
-            />
             <Field type="text" name="guid" fieldValue={this.props.bitcoin.guid} component={this.renderHiddenField} />
             <Field type="text" name="password" fieldValue={this.props.bitcoin.password} component={this.renderHiddenField} />
             <div className="col-1" />
@@ -906,7 +897,6 @@ export default compose(
     keepDirtyOnReinitialize: true,
     enableReinitialize: true,
     fields: ['toName', 'fromName', 'useEscrow'],
-    asyncValidate: Transfer.asyncValidate,
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
   })
