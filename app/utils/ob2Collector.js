@@ -7,7 +7,7 @@ const copy = path => fs.createReadStream(path).pipe(fs.createWriteStream(outputP
 
 switch (process.platform) {
   case 'win32':
-    copy(basePath + '/windows/ob2');
+    copy(basePath + '/windows/ob2.exe');
     break;
   case 'linux':
     copy(basePath + '/linux/ob2');
