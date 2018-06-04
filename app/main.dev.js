@@ -61,25 +61,23 @@ const runOb2 = async () => {
   };
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     const path = getOb2DevPath();
-    const child = spawn(path);
-    child.stdout.on('data', (data) => {
-      console.log('DATA ', data);
-    });
-  } else {
-    const path = getOb2ProdPath();
-    var fs = require('fs');
-    fs.writeFile("/Users/denissamohvalov/Documents/development/omnibazaar-ui/app/test.txt", path, function(err) {
-      if(err) {
-        return console.log(err);
-      }
-
-      console.log("The file was saved!");
-    });
-    // const child = spawn(path);
-    // child.stdout.on('data', (data) => {
-    //   console.log('DATA ', data);
-    // });
-  }
+    spawn(path);
+   }
+   // else {
+  //   const path = getOb2ProdPath();
+  //   var fs = require('fs');
+  //   fs.writeFile("/Users/denissamohvalov/Documents/development/omnibazaar-ui/app/test.txt", path, function(err) {
+  //     if(err) {
+  //       return console.log(err);
+  //     }
+  //
+  //     console.log("The file was saved!");
+  //   });
+  //   // const child = spawn(path);
+  //   // child.stdout.on('data', (data) => {
+  //   //   console.log('DATA ', data);
+  //   // });
+  // }
 };
 
 /**
@@ -101,7 +99,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-//  await runOb2();
+  await runOb2();
 
   bitcoincli.start({
     port: 3000,
