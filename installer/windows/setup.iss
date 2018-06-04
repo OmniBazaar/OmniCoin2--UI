@@ -29,7 +29,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion recursesubdirs
-Source: "..\..\app\ob2\windows\ob2"; DestDir: {userappdata}\{#APPDATA_DIR}; Flags: ignoreversion
+Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {userappdata}\{#APPDATA_DIR}; Flags: ignoreversion
 
 [Icons]
 Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
