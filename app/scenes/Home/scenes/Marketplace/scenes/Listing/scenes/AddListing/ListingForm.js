@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
-import { required } from 'redux-form-validators';
+import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import { NavLink } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ import CountryDropdown from './components/CountryDropdown/CountryDropdown';
 import StateDropdown from './components/StateDropdown/StateDropdown';
 import Checkbox from './components/Checkbox/Checkbox';
 import Calendar from './components/Calendar/Calendar';
+import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
 import {
@@ -40,6 +41,10 @@ const requiredFieldValidator = [
   required({ message: messages.fieldRequired })
 ];
 
+const numericFieldValidator = [
+  numericality({ message: messages.fieldNumeric })
+];
+
 class ListingForm extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +58,7 @@ class ListingForm extends Component {
     this.CountryDropdown = makeValidatableField(CountryDropdown);
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.Calendar = makeValidatableField(Calendar);
+    this.PublishersDropdown = makeValidatableField(PublishersDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
   }
@@ -75,7 +81,7 @@ class ListingForm extends Component {
 
   componentWillMount() {
     this.initFormData();
-    this.initImages();    
+    this.initImages();
     this.props.listingActions.resetSaveListing();
   }
 
@@ -213,19 +219,22 @@ class ListingForm extends Component {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
-    const { listing_id, ...data } = values;
+    const { listing_id, publisher, keywords, ...data } = values;
 
-    saveListing({
+    saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
-      keywords: data.keywords.split(',').map(el => el.trim())
+      keywords: keywords.split(',').map(el => el.trim())
     }, listing_id);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { category, country } = this.props.formValues ? this.props.formValues : {};
-    const { handleSubmit, editingListing } = this.props;
+    const { category, country, publisher } = this.props.formValues ? this.props.formValues : {};
+    const {
+      handleSubmit,
+      editingListing,
+    } = this.props;
     const { error, saving } = this.props.listing.saveListing;
 
     return (
@@ -236,7 +245,7 @@ class ListingForm extends Component {
             <Grid.Column width={12}>
               <span className="title">{formatMessage(messages.primaryInfo)}</span>
             </Grid.Column>
-            { 
+            {
               !editingListing &&
               <Grid.Column width={4} floated="right">
                 <NavLink to="/import-listings">
@@ -308,7 +317,7 @@ class ListingForm extends Component {
                 component={this.PriceInput}
                 className="textfield"
                 buttonText={formatMessage(messages.na)}
-                validate={requiredFieldValidator}
+                validate={[...requiredFieldValidator, ...numericFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -353,7 +362,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
-                validate={requiredFieldValidator}
+                validate={[...requiredFieldValidator, ...numericFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -405,6 +414,21 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.publisher)}</span>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="publisher"
+                component={this.PublishersDropdown}
+                props={{
+                  placeholder: formatMessage(messages.selectPublisher)
+                }}
+                validate={requiredFieldValidator}
+              />
+            </Grid.Column>
+          </Grid.Row>
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
@@ -419,7 +443,10 @@ class ListingForm extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Images />
+              <Images
+                publisher={publisher}
+                disabled={!publisher}
+              />
             </Grid.Column>
           </Grid.Row>
 

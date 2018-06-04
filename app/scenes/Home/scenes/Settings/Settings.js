@@ -136,7 +136,7 @@ class Settings extends Component {
     });
 
     return (
-      <Modal size="fullscreen" open={props.menu.showSettings} onClose={this.close}>
+      <Modal size="fullscreen" open={props.menu.showSettings} onClose={this.close} closeIcon>
         <Modal.Content>
           <div className="modal-container settings-container">
             <div className="sidebar settings visible">{this.sideMenu()}</div>

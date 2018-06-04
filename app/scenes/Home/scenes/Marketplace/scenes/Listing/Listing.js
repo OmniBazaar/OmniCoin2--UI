@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -12,6 +13,7 @@ import {
   Loader
 } from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
+import { toastr } from 'react-redux-toastr';
 
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
@@ -31,53 +33,14 @@ import {
   isFavorite,
   addToFavorites,
   removeFromFavorites,
-  getFavorites
+  getFavorites,
+  isListingFine,
+  setNumberToBuy,
+  setActiveCurrency
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
 const isUserOwner = false;
-
-const listing = {
-  id: 1,
-  status: 'active',
-  name: 'Farco Jewelry',
-  description: 'If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched',
-  date: '2018-04-03',
-  category: 'For sale',
-  subCategory: 'Design',
-  seller: {
-    username: 'eugen1879',
-    phone: '+1 50112223',
-    name: 'Eugen Davis',
-    city: 'Clearwater',
-    postalCode: '23587',
-    address: '153 South Street, PO box 15648',
-    rating: 4.5,
-    totalVotes: 1244
-  },
-  condition: 'Good',
-  location: 'Dover, DE, USA',
-  price: 500,
-  amountAvailable: 150,
-  images: [
-    {
-      original: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/19/11/00/heart-2867205_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/19/11/00/heart-2867205_1280.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/29/20/27/necklace-with-winged-heart-2900736_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/29/20/27/necklace-with-winged-heart-2900736_1280.jpg',
-    },
-    {
-      original: 'https://cdn.pixabay.com/photo/2017/10/19/10/58/heart-2867197_1280.jpg',
-      thumbnail: 'https://cdn.pixabay.com/photo/2017/10/19/10/58/heart-2867197_1280.jpg',
-    },
-  ]
-};
 
 const messages = defineMessages({
   seller: {
@@ -152,12 +115,25 @@ const messages = defineMessages({
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
   },
+  hashIsInvalid: {
+    id: 'Listing.hashIsInvalid',
+    defaultMessage: 'Listing is corrupted'
+  },
+  error: {
+    id: 'Listing.error',
+    defaultMessage: 'Error'
+  },
+  success: {
+    id: 'Listing.success',
+    defaultMessage: 'Success'
+  }
 });
 
 class Listing extends Component {
 
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
+    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL_CURRENCY);
   }
 
   componentDidMount() {
@@ -168,13 +144,39 @@ class Listing extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { props } = this;
-    const { listingDetail, favoriteListings } = props.listing;
+    const {
+      listingDetail,
+      favoriteListings,
+    } = props.listing;
     if (listingDetail && nextProps.listing.listingDetail) {
       if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
         favoriteListings.length !== nextProps.listing.favoriteListings.length) {
         props.listingActions.isFavorite(nextProps.listing.listingDetail['listing_id']);
       }
     }
+    if (listingDetail !== nextProps.listing.listingDetail) {
+      this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
+    }
+    if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
+      const { error } = nextProps.listing.buyListing;
+      if (error) {
+        if (error === 'hash') {
+           this.errorToast(messages.hashIsInvalid);
+        } else {
+           this.errorToast(messages.error);
+        }
+      }
+    }
+  }
+
+  errorToast(message) {
+    const { formatMessage } = this.props.intl;
+    toastr.error(formatMessage(messages.error), formatMessage(message));
+  }
+
+  successToast(message) {
+    const { formatMessage } = this.props.intl;
+    toastr.success(formatMessage(messages.success), formatMessage(message));
   }
 
   setGallerySize() {
@@ -253,6 +255,23 @@ class Listing extends Component {
   }
 
   buyItem = () => {
+    const { listingDetail } = this.props.listing;
+    if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
+      const type = CoinTypes.OMNI_COIN;
+      const listingId = this.props.listing.buyListing.blockchainListing.id;
+      const price = this.props.listing.buyListing.numberToBuy *
+        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const to = listingDetail.owner;
+      this.props.history.push(`/transfer/?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+    }
+    if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
+      const type = CoinTypes.BIT_COIN;
+      const listingId = this.props.listing.buyListing.blockchainListing.id;
+      const price = this.props.listing.buyListing.numberToBuy *
+        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
+      const to = listingDetail.bitcoinAddress;
+      this.props.history.push(`/transfer/${type}?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+    }
   };
 
   addToFavorites = () => {
@@ -268,11 +287,13 @@ class Listing extends Component {
   };
 
   setItemsAmount = (valueAsNumber) => {
+    this.props.listingActions.setNumberToBuy(valueAsNumber);
   };
 
   renderUserButtons(amountAvailable) {
     const { formatMessage } = this.props.intl;
-
+    const { buyListing } = this.props.listing;
+    const { quantity } = this.props.listing.buyListing;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -280,13 +301,15 @@ class Listing extends Component {
             onClick={() => this.buyItem()}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
+            loading={buyListing.loading}
+            disabled={!!buyListing.error}
           />
           <NumericInput
             mobile
             className="form-control"
             min={0}
-            value={0}
-            max={amountAvailable}
+            value={1}
+            max={quantity}
             onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
           />
         </div>
@@ -471,6 +494,8 @@ Listing.defaultProps = {
   intl: {},
 };
 
+Listing = withRouter(Listing);
+
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
@@ -479,7 +504,10 @@ export default connect(
       getListingDetail,
       addToFavorites,
       removeFromFavorites,
-      getFavorites
+      getFavorites,
+      isListingFine,
+      setNumberToBuy,
+      setActiveCurrency
     }, dispatch),
   }),
 )(injectIntl(Listing));

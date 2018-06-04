@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { dhtConnect, dhtGetPeersFor, dhtFetchPeersData } from './dhtActions';
+import { dhtConnect, dhtGetPeersFor } from './dhtActions';
 
 const defaultState = {
   peersMap: [],

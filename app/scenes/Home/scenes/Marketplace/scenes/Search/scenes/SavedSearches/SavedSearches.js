@@ -14,6 +14,10 @@ import {
   deleteSearch
 } from '../../../../../../../../services/search/searchActions';
 
+import {
+  getPublisherData
+} from "../../../../../../../../services/accountSettings/accountActions";
+
 import './saved-searches.scss';
 
 const messages = defineMessages({
@@ -27,6 +31,7 @@ class SavedSearches extends Component {
   componentDidMount() {
     const { currentUser } = this.props.auth;
     this.props.searchActions.getSavedSearches(currentUser.username);
+    this.props.publisherActions.getPublisherData();
     this.handleView = this.handleView.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -34,7 +39,8 @@ class SavedSearches extends Component {
 
   handleView(search) {
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(search.searchTerm, search.category);
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(search.searchTerm, search.category, country, city);
   }
 
   handleDelete(search) {
@@ -43,7 +49,8 @@ class SavedSearches extends Component {
 
   handleSearch(searchTerm, category) {
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(searchTerm, category, false);
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(searchTerm, category, country, city, false);
   }
 
   render() {
@@ -115,6 +122,9 @@ export default connect(
       sortSavedSearches,
       deleteSearch,
       searchListings
+    }, dispatch),
+    publisherActions: bindActionCreators({
+      getPublisherData
     }, dispatch)
   })
 )(injectIntl(SavedSearches));

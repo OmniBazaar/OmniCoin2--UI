@@ -6,6 +6,8 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
+import { Apis } from 'omnibazaarjs-ws';
+
 import {
   addListingImage,
   uploadListingImageSuccess,
@@ -20,7 +22,10 @@ import {
   getListingDetailSucceeded,
   getListingDetailFailed,
   requestMyListingsSuccess,
-  requestMyListingsError
+  requestMyListingsError,
+  isListingFine,
+  isListingFineSucceeded,
+  isListingFineFailed
 } from './listingActions';
 import {
   saveImage,
@@ -30,6 +35,7 @@ import {
   deleteListing,
   getMyListings
 } from './apis';
+import {getListingHash} from "./utils";
 
 export function* listingSubscriber() {
   yield all([
@@ -38,14 +44,15 @@ export function* listingSubscriber() {
     takeEvery('SAVE_LISTING', saveListingHandler),
     takeEvery('GET_LISTING_DETAIL', getListingDetail),
     takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
-    takeEvery('DELETE_LISTING', deleteMyListing)
+    takeEvery('DELETE_LISTING', deleteMyListing),
+    takeEvery('IS_LISTING_FINE', checkListingHash)
   ]);
 }
 
-function* uploadImage({ payload: { file, imageId } }) {
+function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
-    yield put(addListingImage(file, imageId));
-    const resultImage = yield call(saveImage, file);
+    yield put(addListingImage(publisher, file, imageId));
+    const resultImage = yield call(saveImage, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
       resultImage.image,
@@ -57,7 +64,7 @@ function* uploadImage({ payload: { file, imageId } }) {
   }
 }
 
-function* removeImage({ payload: { image } }) {
+function* removeImage({ payload: { publisher, image } }) {
   const { id, fileName, localFilePath } = image;
   try {
     yield put(startDeleteListingImage(id));
@@ -66,7 +73,7 @@ function* removeImage({ payload: { image } }) {
     	return;
     }
 
-    const result = yield call(deleteImage, fileName);
+    const result = yield call(deleteImage, publisher, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
     } else {
@@ -78,7 +85,7 @@ function* removeImage({ payload: { image } }) {
   }
 }
 
-function* checkAndUploadImages(listing) {
+function* checkAndUploadImages(publisher, listing) {
 	for (let i=0; i<listing.images.length; i++) {
 		const imageItem = listing.images[i];
 		const { localFilePath, path, id } = imageItem;
@@ -89,7 +96,7 @@ function* checkAndUploadImages(listing) {
 				name: path,
 				type
 			};
-			const result = yield call(saveImage, file);
+			const result = yield call(saveImage, publisher, file);
 			yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
@@ -105,14 +112,14 @@ function* checkAndUploadImages(listing) {
 	};
 }
 
-function* saveListingHandler({ payload: { listing, listingId } }) {
+function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
     if (listingId) {
-      result = yield call(editListing, listingId, listing);
+      result = yield call(editListing, publisher, listingId, listing);
     } else {
-    	yield checkAndUploadImages(listing);
-      result = yield call(createListing, listing);
+    	yield checkAndUploadImages(publisher, listing);
+      result = yield call(createListing, publisher, listing);
     }
 
     if (!listingId) {
@@ -146,12 +153,25 @@ function* requestMyListings() {
 	}
 }
 
-function* deleteMyListing({ payload: { listing } }) {
+function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    const result = yield call(deleteListing, listing);
+    const result = yield call(deleteListing, publisher, listing);
     yield put(deleteListingSuccess(listing.id));
   } catch (err) {
     console.log(err);
     yield put(deleteListingError(listing.id, err));
+  }
+}
+
+function* checkListingHash({ payload: { listing } }) {
+  try {
+    const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
+    if (blockchainListing.listing_hash === getListingHash(listing)) {
+      yield put(isListingFineSucceeded(blockchainListing));
+    } else {
+      yield put(isListingFineFailed('hash'));
+    }
+  } catch (error) {
+    yield put(isListingFineFailed(error));
   }
 }

@@ -72,7 +72,7 @@ const defaultState = {
     keywords: []
   },
   publishers: {
-    names: [],
+    publishers: [],
     loading: false,
     error: null
   },
@@ -277,7 +277,7 @@ const reducer = handleActions({
   GET_PUBLISHERS_SUCCEEDED: (state, { publishers }) => ({
     ...state,
     publishers: {
-      names: publishers,
+      publishers,
       loading: false,
       error: null
     }
@@ -285,7 +285,7 @@ const reducer = handleActions({
   GET_PUBLISHERS_FAILED: (state, { error }) => ({
     ...state,
     publishers: {
-      names: [],
+      publishers: [],
       loading: false,
       error
     }
