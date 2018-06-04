@@ -49,7 +49,7 @@ const runOb2 = async () => {
   const getOb2DevPath = () => {
     switch (process.platform) {
       case 'win32':
-        return './app/ob2/mac/ob2';
+        return './app/ob2/mac/ob2.exe';
       case 'linux':
         return './app/ob2/linux/ob2';
       case 'darwin':
