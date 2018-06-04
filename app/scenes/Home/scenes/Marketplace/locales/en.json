@@ -246,5 +246,22 @@
   "Marketplace.noTrackingUser": "No tracking of user information",
   "Marketplace.listingsYouChoose": "See only the listings you choose",
   "Marketplace.useBitcoin": "Use Bitcoin and Omnicoin",
-  "Marketplace.communityPolicing": "Community policing"
+  "Marketplace.communityPolicing": "Community policing",
+  "Marketplace.omniBazaarFeatures": "OmniBazaar Features and Benefits",
+  "Marketplace.omniBazaarFeature": "OmniBazaar Feature",
+  "Marketplace.yourBenefit": "Your Benefit",
+  "Marketplace.lowerPlatformFees": "90% lower platform fees",
+  "Marketplace.moreProfit": "More profit for sellers",
+  "Marketplace.lowerPricesBuyers": "Lower prices for buyers",
+  "Marketplace.userOwned": "User owned and operated",
+  "Marketplace.shopWithoutMiddlemen": "Shop without middlemen",
+  "Marketplace.payWithoutBank": "Pay without bankers",
+  "Marketplace.noTrackUserInfo": "No tracking of user information",
+  "Marketplace.noPushMarketing": "No \"push\" marketing",
+  "Marketplace.morePrivacy": "More privacy",
+  "Marketplace.paymentsAreSecure": "Payments are secure",
+  "Marketplace.noChargeBacks": "No charge-backs",
+  "Marketplace.usersProtectFromIllegal": "Users protect the marketplace from illegal listings.",
+  "Marketplace.priorityListingsAvailable": "Priority listings available",
+  "Marketplace.makeImportantListings": "You can make important listings stand out."
 }
