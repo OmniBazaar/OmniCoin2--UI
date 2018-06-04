@@ -4,6 +4,11 @@
   "version": "1.0.5361",
   "description": "Comunity-owned peer-to-peer marketplace",
   "main": "./main.prod.js",
+  "author": {
+    "name": "Omnibazaar",
+    "email": "Info@OmniBazaar.com",
+    "url": "https://github.com/OmniBazaar"
+  },
   "scripts": {
     "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
     "postinstall": "npm run electron-rebuild"

@@ -78,6 +78,15 @@
       "./app/dist/ob2"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmniBazaar/OmniCoin2--UI.git"
+  },
+  "author": {
+    "name": "Omnibazaar",
+    "email": "Info@OmniBazaar.com",
+    "url": "https://github.com/OmniBazaar"
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
