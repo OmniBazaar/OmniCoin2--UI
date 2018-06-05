@@ -21,10 +21,32 @@ import votes from './votes';
 import listingPriorities from './priorities';
 import './preferences.scss';
 
+//need this variable to check saving success when language is changed,
+//in that case we force all components to be recreated.
+let lastLanguage = null;
+
 class PreferencesTab extends Component {
+  constructor(props) {
+    super(props);
+    if (!lastLanguage) {
+      lastLanguage = props.preferences.preferences.language;
+    }
+  }
+
   componentWillMount() {
     const { preferences } = this.props.preferences;
     this.props.initialize(preferences);
+  }
+
+  componentDidMount() {
+    const { language } = this.props.preferences.preferences;
+    const { formatMessage } = this.props.intl;
+    if (lastLanguage !== language) {
+      this.showSuccessToast(
+        formatMessage(messages.successTitle),
+        formatMessage(messages.saveSuccessMessage)
+      );
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,6 +64,10 @@ class PreferencesTab extends Component {
         );
       }
     }
+  }
+
+  componentWillUnmount() {
+    lastLanguage = this.props.preferences.preferences.language;
   }
 
   showErrorToast(title, message) {

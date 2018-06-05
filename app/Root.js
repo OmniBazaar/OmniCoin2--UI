@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { IntlProvider } from 'react-intl';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
@@ -13,6 +14,7 @@ import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/b
 import { dhtConnect } from './services/search/dht/dhtActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
+import localeData from './../app/dist/i18n/data.json';
 
 class Root extends Component {
   componentWillMount() {
@@ -22,7 +24,7 @@ class Root extends Component {
     this.props.dhtActions.dhtConnect();
     this.props.listingDefaultsActions.loadListingDefault();
     this.props.preferencesActions.loadPreferences();
-    // this.props.authActions.getCurrentUser();
+    //this.props.authActions.getCurrentUser();
   }
 
   componentDidMount() {
@@ -33,15 +35,24 @@ class Root extends Component {
     clearInterval(this.syncInterval);
   }
 
+  getLocaleMessages(language) {
+    const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+    return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+  }
+
   render() {
+    const { language } = this.props.preferences.preferences;
+    const messages = this.getLocaleMessages(language);
     return (
-      <Router>
-        <Switch>
-          <Route path="/signup" render={(props) => <Signup {...props} />} />
-          <Route path="/login" render={(props) => <Login {...props} />} />
-          <Route path="/" render={(props) => <Home {...props} />} />
-        </Switch>
-      </Router>
+      <IntlProvider locale={language} messages={messages} key={language}>
+        <Router>
+          <Switch>
+            <Route path="/signup" render={(props) => <Signup {...props} />} />
+            <Route path="/login" render={(props) => <Login {...props} />} />
+            <Route path="/" render={(props) => <Home {...props} />} />
+          </Switch>
+        </Router>
+      </IntlProvider>
     );
   }
 }
@@ -67,11 +78,19 @@ Root.propTypes = {
   }).isRequired,
   preferencesActions: PropTypes.shape({
     loadPreferences: PropTypes.func
+  }).isRequired,
+  preferences: PropTypes.shape({
+    preferences: PropTypes.shape({
+      language: PropTypes.string
+    })
   }).isRequired
 };
 
 export default connect(
-  (state) => ({ ...state.default }),
+  (state) => ({
+    settings: state.default.settings,
+    preferences: state.default.preferences
+  }),
   (dispatch) => ({
     connectionActions: bindActionCreators({
       connectToNode, getDynGlobalObject
