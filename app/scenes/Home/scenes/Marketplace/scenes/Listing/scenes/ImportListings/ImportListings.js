@@ -122,6 +122,7 @@ class ImportListings extends Component {
       const file = this.inputElement.files[0];
 
       this.props.listingActions.importFile({
+        publisher: this.props.publisher,
         content: file,
         name: file.name,
       }, this.props.listingDefaults);
@@ -287,6 +288,7 @@ ImportListings.propTypes = {
     city: PropTypes.string,
     post_code: PropTypes.string,
   }),
+  publisher: PropTypes.shape({}),
 };
 
 ImportListings.defaultProps = {
@@ -294,6 +296,7 @@ ImportListings.defaultProps = {
   listingActions: {},
   listingDefaults: {},
   intl: {},
+  publisher: null,
 };
 
 export default connect(
