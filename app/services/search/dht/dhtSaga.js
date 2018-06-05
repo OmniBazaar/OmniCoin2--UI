@@ -3,19 +3,15 @@ import {
   call,
   put,
   takeEvery,
-  select
+  fork
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
-import uuid from 'uuid/v4';
-
 import DHTConnector from '../../../utils/dht-connector';
-import { searching } from '../../search/searchActions';
-import { ws, messageTypes } from '../../marketplace/wsSaga';
+import {searchListingsByPeersMap} from "../searchSaga";
 
-const searchByAllKeywords = false; //todo
+
 const dhtPort = '8500';
-let id = 0;
 
 const dhtConnector = new DHTConnector();
 
@@ -58,44 +54,8 @@ export function* getPeersFor({ payload: { searchTerm, category, country, city, s
     })).filter(el => el.publishers.length !== 0);
     peersMap = adjustPeersMap(peersMap);
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
-    if (peersMap.length === 0) return;
-    if (searchListings) {
-      let message;
-      if (searchByAllKeywords) {
-        message = {
-          id: id++,
-          type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS_DATA_RECEIVED,
-          command: {
-            keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
-            publishers: peersMap.reduce((publishers, curr) => [...publishsers, curr.publishers], []),
-            currency: "BTC",
-            range: "20",
-          },
-        };
-        console.log(JSON.stringify(message, null, 2));
-      } else {
-        message = {
-          id: id++,
-          type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD_DATA_RECEIVED,
-          command: {
-            keywords: peersMap,
-            currency: "BTC",
-            range: "20",
-          },
-        };
-        console.log(JSON.stringify(message, null, 2));
-      }
-      if (category) {
-        message.category = category;
-      }
-      if (city) {
-        message.city = city;
-      }
-      if (country) {
-        message.country = country;
-      }
-      ws.send(JSON.stringify(message));
-      yield put(searching(id - 1));
+    if (peersMap.length !== 0 && searchListings) {
+      yield fork(searchListingsByPeersMap, {payload: { peersMap, category, country, city }});
     }
   } catch (e) {
     console.log('ERROR ', e);

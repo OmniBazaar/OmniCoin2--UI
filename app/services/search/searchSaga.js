@@ -14,9 +14,14 @@ import {
   deleteSearchSucceeded,
   deleteSearchFailed,
   saveSearchSucceeded,
-  saveSearchFailed
+  saveSearchFailed,
+  searching
 } from './searchActions';
 import SearchHistory from './searchHistory';
+import {getNewId, messageTypes, ws} from "../marketplace/wsSaga";
+
+const searchByAllKeywords = false; //todo
+
 
 export function* searchSubscriber() {
   yield all([
@@ -41,6 +46,44 @@ function* searchListings({ payload: { searchTerm, category, country, city, histo
     console.log('ERROR ', e);
     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
   }
+}
+
+export function* searchListingsByPeersMap({ payload: { peersMap, category, country, city }}) {
+    let message;
+    const id = getNewId();
+    if (searchByAllKeywords) {
+      message = {
+        id,
+        type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS_DATA_RECEIVED,
+        command: {
+          keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
+          publishers: peersMap.reduce((publishers, curr) => [...publishsers, curr.publishers], []),
+          currency: "BTC",
+          range: "20",
+        },
+      };
+    } else {
+      message = {
+        id,
+        type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD_DATA_RECEIVED,
+        command: {
+          keywords: peersMap,
+          currency: "BTC",
+          range: "20",
+        },
+      };
+    }
+    if (category) {
+      message.category = category;
+    }
+    if (city) {
+      message.city = city;
+    }
+    if (country) {
+      message.country = country;
+    }
+    ws.send(JSON.stringify(message));
+    yield put(searching(id));
 }
 
 function* getRecentSearches() {
