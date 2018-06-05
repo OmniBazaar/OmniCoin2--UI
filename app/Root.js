@@ -11,6 +11,8 @@ import Home from './scenes/Home/Home';
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/blockchain/auth/authActions';
 import { dhtConnect } from './services/search/dht/dhtActions';
+import { loadListingDefault } from './services/listing/listingDefaultsActions';
+import { loadPreferences } from './services/preferences/preferencesActions';
 
 class Root extends Component {
   componentWillMount() {
@@ -18,6 +20,8 @@ class Root extends Component {
     this.props.authActions.requestPcIds();
     this.props.authActions.getLastLoginUserName();
     this.props.dhtActions.dhtConnect();
+    this.props.listingDefaultsActions.loadListingDefault();
+    this.props.preferencesActions.loadPreferences();
     // this.props.authActions.getCurrentUser();
   }
 
@@ -46,25 +50,24 @@ Root.propTypes = {
   connectionActions: PropTypes.shape({
     connectToNode: PropTypes.func,
     getDynGlobalObject: PropTypes.func
-  }),
+  }).isRequired,
   authActions: PropTypes.shape({
     requestPcIds: PropTypes.func,
     getLastLoginUserName: PropTypes.func,
     getCurrentUser: PropTypes.func
-  }),
+  }).isRequired,
   dhtActions: PropTypes.shape({
     dhtConnect: PropTypes.func
-  }),
+  }).isRequired,
   settings: PropTypes.shape({
     activeNode: PropTypes.object
-  })
-};
-
-Root.defaultProps = {
-  connectionActions: {},
-  authActions: {},
-  dhtActions: {},
-  settings: {}
+  }).isRequired,
+  listingDefaultsActions: PropTypes.shape({
+    loadListingDefault: PropTypes.func
+  }).isRequired,
+  preferencesActions: PropTypes.shape({
+    loadPreferences: PropTypes.func
+  }).isRequired
 };
 
 export default connect(
@@ -78,6 +81,12 @@ export default connect(
     }, dispatch),
     dhtActions: bindActionCreators({
       dhtConnect,
+    }, dispatch),
+    listingDefaultsActions: bindActionCreators({
+      loadListingDefault
+    }, dispatch),
+    preferencesActions: bindActionCreators({
+      loadPreferences
     }, dispatch)
   })
 )(Root);

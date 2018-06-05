@@ -1,7 +1,7 @@
 import { createActions } from 'redux-actions';
 
 const {
-  getListingDefault,
+  loadListingDefault,
   saveListingDefault,
   uploadListingDefaultImage,
   uploadListingDefaultImageSuccess,
@@ -11,7 +11,7 @@ const {
   deleteListingDefaultImageError,
   clearListingDefaultImageError
 } = createActions({
-  GET_LISTING_DEFAULT: () => ({}),
+  LOAD_LISTING_DEFAULT: () => ({}),
   SAVE_LISTING_DEFAULT: (listingDefault) => ({ listingDefault }),
   UPLOAD_LISTING_DEFAULT_IMAGE: (file, imageId) => ({ file, imageId }),
   UPLOAD_LISTING_DEFAULT_IMAGE_SUCCESS: (imageId, path) => ({ imageId, path }),
@@ -23,7 +23,7 @@ const {
 });
 
 export {
-  getListingDefault,
+  loadListingDefault,
   saveListingDefault,
   uploadListingDefaultImage,
   uploadListingDefaultImageSuccess,

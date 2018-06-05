@@ -1,7 +1,9 @@
 import messages from './messages';
 
 export default {
-  eng: messages.english,
-  spa: messages.spanish,
-  rus: messages.russian
+  en: messages.english,
+  es: messages.spanish,
+  fr: messages.french,
+  it: messages.italian,
+  ru: messages.russian
 };

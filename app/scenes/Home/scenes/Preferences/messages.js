@@ -73,6 +73,14 @@ export default defineMessages({
     id: 'Preferences.spanish',
     defaultMessage: 'Spanish'
   },
+  french: {
+    id: 'Preferences.french',
+    defaultMessage: 'French'
+  },
+  italian: {
+    id: 'Preferences.italian',
+    defaultMessage: 'Italian'
+  },
   russian: {
     id: 'Preferences.russian',
     defaultMessage: 'Russian'
@@ -116,5 +124,33 @@ export default defineMessages({
   voteAsRecommended: {
     id: 'Preferences.voteAsRecommended',
     defaultMessage: 'As My Processors Recommended'
+  },
+  searchListingOptions: {
+    id: 'Preferences.searchListingOptions',
+    defaultMessage: 'Search Listing Options'
+  },
+  byAnyKeyword: {
+    id: 'Preferences.byAnyKeyword',
+    defaultMessage: 'By any keyword'
+  },
+  byAllKeywords: {
+    id: 'Preferences.byAllKeywords',
+    defaultMessage: 'By all keywords'
+  },
+  errorTitle: {
+    id: 'Preferences.errorTitle',
+    defaultMessage: 'Error'
+  },
+  successTitle: {
+    id: 'Preferences.successTitle',
+    defaultMessage: 'Success'
+  },
+  saveErrorMessage: {
+    id: 'Preferences.saveErrorMessage',
+    defaultMessage: 'Having error when saving Preferences data'
+  },
+  saveSuccessMessage: {
+    id: 'Preferences.saveSuccessMessage',
+    defaultMessage: 'Preferences data is saved successful'
   }
 });

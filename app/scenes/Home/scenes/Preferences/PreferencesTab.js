@@ -5,11 +5,16 @@ import { Modal, Tab, Form, Button, Select, Image, Icon } from 'semantic-ui-react
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
+import { toastr } from 'react-redux-toastr';
 
+import {
+  savePreferences
+} from '../../../../services/preferences/preferencesActions';
 import FormInputWithIconOnRight 
 from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
 import Dropdown from './components/Dropdown';
 import Checkbox from '../Marketplace/scenes/Listing/scenes/AddListing/components/Checkbox/Checkbox';
+import FormRadido from '../../../../components/Radio/FormRadio';
 import messages from './messages';
 import languages from './languages';
 import votes from './votes';
@@ -18,16 +23,47 @@ import './preferences.scss';
 
 class PreferencesTab extends Component {
   componentWillMount() {
-    this.props.initialize({
-      listingPriority: 'normal'
-    });
+    const { preferences } = this.props.preferences;
+    this.props.initialize(preferences);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.preferences.saving && this.props.preferences.saving) {
+      const { formatMessage } = this.props.intl;
+      if (nextProps.preferences.error) {
+        this.showErrorToast(
+          formatMessage(messages.errorTitle),
+          formatMessage(messages.saveErrorMessage)
+        );
+      } else {
+        this.showSuccessToast(
+          formatMessage(messages.successTitle),
+          formatMessage(messages.saveSuccessMessage)
+        );
+      }
+    }
+  }
+
+  showErrorToast(title, message) {
+    toastr.error(title, message);
+  }
+
+  showSuccessToast(title, message) {
+    toastr.success(title, message);
+  }
+
+  onSubmit(values) {
+    this.props.preferencesActions.savePreferences(values);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
+    const { saving } = this.props.preferences;
+
     return (
       <div className="preferences-form-container">
-        <Form onSubmit={this.onSubmit} className="preferences-form">
+        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="preferences-form">
           <div className="form-group">
             <span>{formatMessage(messages.logoutTimeout)}</span>
             <Field
@@ -76,7 +112,7 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group top">
+          <div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
               <div className="description">
@@ -134,10 +170,41 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
+          <div className='form-group'>
+            <span>{formatMessage(messages.searchListingOptions)}</span>
+            <div className='radios field'>
+              <div className='radio-group'>
+                <Field
+                  name='searchListingOption'
+                  component={FormRadido}
+                  props={{
+                    value: 'anyKeyword'
+                  }}
+                />
+                <span>{formatMessage(messages.byAnyKeyword)}</span>
+              </div>
+              <div className='radio-group'>
+                <Field
+                  name='searchListingOption'
+                  component={FormRadido}
+                  props={{
+                    value: 'allKeywords'
+                  }}
+                />
+                <span>{formatMessage(messages.byAllKeywords)}</span>
+              </div>
+            </div>
+            <div className="col-1" />
+          </div>
           <div className="form-group submit-group">
             <span />
             <div className="field">
-              <Button type="submit" content={formatMessage(messages.update)} className="button--green-bg" />
+              <Button
+                type="submit"
+                content={formatMessage(messages.update)}
+                className="button--green-bg"
+                loading={saving}
+                disabled={saving} />
             </div>
             <div className="col-1" />
           </div>
@@ -148,6 +215,14 @@ class PreferencesTab extends Component {
 }
 
 PreferencesTab.propTypes = {
+  preferences: PropTypes.shape({
+    preferences: PropTypes.object,
+    saving: PropTypes.bool,
+    error: PropTypes.object
+  }).isRequired,
+  preferencesActions: PropTypes.shape({
+    savePreferences: PropTypes.func
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired
@@ -155,7 +230,14 @@ PreferencesTab.propTypes = {
 
 export default compose(
   connect(
-    state => ({ ...state.default })
+    state => ({
+      preferences: state.default.preferences
+    }),
+    dispatch => ({
+      preferencesActions: bindActionCreators({
+        savePreferences
+      }, dispatch)
+    })
   ),
   reduxForm({
     form: 'preferencesForm',

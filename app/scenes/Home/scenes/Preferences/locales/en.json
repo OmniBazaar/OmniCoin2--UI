@@ -17,6 +17,8 @@
   "Preferences.commandHint": "Type command and hit enter",
   "Preferences.english": "English",
   "Preferences.spanish": "Spanish",
+  "Preferences.french": "French",
+  "Preferences.italian": "Italian",
   "Preferences.russian": "Russian",
   "Preferences.priorityHighest": "Highest (2.00% Fee)",
   "Preferences.priorityHigher": "Higher (1.50% Fee)",
@@ -27,5 +29,9 @@
   "Preferences.voteNone": "None",
   "Preferences.voteEachTransaction": "Specify for Each Transaction",
   "Preferences.voteRandomSubset": "Random Subset",
-  "Preferences.voteAsRecommended": "As My Processors Recommended"
+  "Preferences.voteAsRecommended": "As My Processors Recommended",
+  "Preferences.errorTitle": "Error",
+  "Preferences.successTitle": "Success",
+  "Preferences.saveErrorMessage": "Having error when saving Preferences data",
+  "Preferences.saveSuccessMessage": "Preferences data is saved successful"
 }
