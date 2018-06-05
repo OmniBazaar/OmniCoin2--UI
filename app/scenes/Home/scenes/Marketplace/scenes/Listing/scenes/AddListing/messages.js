@@ -228,6 +228,22 @@ const messages = defineMessages({
   saveListing: {
   	id: 'AddListing.saveListing',
   	defaultMessage: 'Save Listing'
+  },
+  publisher: {
+    id: 'AddListing.publisher',
+    defaultMessage: 'Publisher'
+  },
+  selectPublisher: {
+    id: 'AddListing.selectPublisher',
+    defaultMessage: 'Select publisher'
+  },
+  fieldNumeric: {
+    id: 'AddListing.fieldNumeric',
+    defaultMessage: 'Should be a number'
+  },
+  bitcoinAddress: {
+    id: 'AddListing.bitcoinAddress',
+    defaultMessage: 'Bitcoin address'
   }
 });
 

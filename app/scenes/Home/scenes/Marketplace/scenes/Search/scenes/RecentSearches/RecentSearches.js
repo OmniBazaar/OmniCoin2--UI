@@ -16,6 +16,10 @@ import {
   searchListings
 } from '../../../../../../../../services/search/searchActions';
 
+import {
+  getPublisherData
+} from "../../../../../../../../services/accountSettings/accountActions";
+
 
 import './recent-searches.scss';
 
@@ -37,12 +41,14 @@ class RecentSearches extends Component {
 
   componentDidMount() {
     const { currentUser } = this.props.auth;
+    this.props.publisherActions.getPublisherData();
     this.props.searchActions.getRecentSearches(currentUser.username);
   }
 
   handleView(search) {
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(search.searchTerm, search.category);
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(search.searchTerm, search.category, country, city);
   }
 
   handleSave(search) {
@@ -51,7 +57,8 @@ class RecentSearches extends Component {
 
   handleSearch(searchTerm, category) {
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(searchTerm, category, false);
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(searchTerm, category, country, city, false);
   }
 
   render() {
@@ -130,6 +137,9 @@ export default connect(
       sortRecentSearches,
       saveSearch,
       searchListings
+    }, dispatch),
+    publisherActions: bindActionCreators({
+      getPublisherData
     }, dispatch)
   })
 )(injectIntl(RecentSearches));

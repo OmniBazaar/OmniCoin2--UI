@@ -51,7 +51,7 @@ class RateModal extends Component {
     const { handleSubmit } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <Modal size="tiny" open={isOpen}>
+      <Modal size="tiny" open={isOpen} closeIcon>
         <Modal.Content>
           <Form onSubmit={handleSubmit(this.handleSubmit)}>
             <Field

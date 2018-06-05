@@ -56,7 +56,7 @@ const BitcoinWalletDetail = (props) => {
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">{props.balance || 0} BTC</span>
+          <span className="balance">{(props.balance / 100000000) || 0} BTC</span>
         </div>
       </div>
     </div>

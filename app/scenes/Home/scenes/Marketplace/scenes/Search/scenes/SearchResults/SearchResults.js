@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
+import CategoryDropdown from '../../../../../Marketplace/scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
@@ -112,14 +113,6 @@ class SearchResults extends Component {
     return (
       <div className="list-container search-filters">
         <div className="filters">
-          <Dropdown
-            button
-            className="categories icon"
-            floating
-            options={options}
-            defaultValue="all"
-            placeholder={formatMessage(messages.allCategories)}
-          />
           <CurrencyDropdown />
         </div>
         <TabsData

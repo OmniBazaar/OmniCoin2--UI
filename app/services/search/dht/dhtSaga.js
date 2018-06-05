@@ -32,7 +32,6 @@ export function* connect() {
     const ips = (yield Promise.all(
         publishers.map(publisherName => FetchChain('getAccount', publisherName))
     )).map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
-    console.log(ips);
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -44,17 +43,22 @@ export function* connect() {
   }
 }
 
-export function* getPeersFor({ payload: { searchTerm, category, searchListings } }) {
-  console.log('SEARCH LISTINGS ', searchListings);
-  const keywords = [...(searchTerm.split(' ')), category];
+export function* getPeersFor({ payload: { searchTerm, category, country, city, searchListings } }) {
+  const keywords = [...(searchTerm.split(' '))];
   try {
-    const responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor(keyword)));
+    let responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor("keyword:" + keyword)));
+    let cccResponses = (yield Promise.all([
+      category !== 'All' ? dhtConnector.findPeersFor("category:" + category) : null,
+      country ? dhtConnector.findPeersFor("country:" + country) : null,
+      city? dhtConnector.findPeersFor("city:" + city) : null
+    ]));
     let peersMap = responses.map((response, index) => ({
         keyword: keywords[index],
         publishers: response.peers ? response.peers : []
-    }));
+    })).filter(el => el.publishers.length !== 0);
     peersMap = adjustPeersMap(peersMap);
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
+    if (peersMap.length === 0) return;
     if (searchListings) {
       let message;
       if (searchByAllKeywords) {
@@ -65,7 +69,7 @@ export function* getPeersFor({ payload: { searchTerm, category, searchListings }
             keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
             publishers: peersMap.reduce((publishers, curr) => [...publishsers, curr.publishers], []),
             currency: "BTC",
-            range: "20"
+            range: "20",
           },
         };
         console.log(JSON.stringify(message, null, 2));
@@ -76,10 +80,19 @@ export function* getPeersFor({ payload: { searchTerm, category, searchListings }
           command: {
             keywords: peersMap,
             currency: "BTC",
-            range: "20"
+            range: "20",
           },
         };
         console.log(JSON.stringify(message, null, 2));
+      }
+      if (category) {
+        message.category = category;
+      }
+      if (city) {
+        message.city = city;
+      }
+      if (country) {
+        message.country = country;
       }
       ws.send(JSON.stringify(message));
       yield put(searching(id - 1));
