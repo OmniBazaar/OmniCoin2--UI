@@ -12,7 +12,7 @@ export function* importSubscriber() {
 
 export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
   try {
-    const { content, name } = file;
+    const { content, name, publisher } = file;
     const listings = yield call(getListings, content);
 
     const items = yield* listings.map(async item => {
@@ -36,7 +36,7 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
 
           fs.writeFileSync(image.path, Buffer.from(imgContent, 'base64'), { flag: 'w' });
 
-          const newImage = await saveImage(image);
+          const newImage = await saveImage(publisher, image);
 
           fs.unlink(image.path, console.log);
 
