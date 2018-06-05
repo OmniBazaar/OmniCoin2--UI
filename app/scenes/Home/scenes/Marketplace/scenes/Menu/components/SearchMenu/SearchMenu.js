@@ -155,9 +155,9 @@ class SearchMenu extends Component {
     return (
       <Popup
         trigger={<Image src={SearchIcon} width={iconSizeBig} height={iconSizeBig} />}
-        hoverable
+        hoverable={false}
         basic
-        on="hover"
+        on="click"
         position="bottom center"
         wide="very"
         hideOnScroll

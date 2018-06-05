@@ -21,8 +21,8 @@ const {
   marketplaceReturnBool,
   searching
 } = createActions({
-  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true) => ({
-    searchTerm, category, country, city, historify
+  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory) => ({
+    searchTerm, category, country, city, historify, subCategory
   }),
   FILTER_SEARCH_RESULTS: (searchText) => ({ searchText }),
   GET_RECENT_SEARCHES: () => ({ }),

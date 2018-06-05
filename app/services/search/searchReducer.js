@@ -64,8 +64,8 @@ const reducer = handleActions({
     if (searchText !== '') {
       let filteredData = data.filter(listing => {
         return Object.values(listing).filter(
-           value => {  return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1 }
-         ).length !== 0;
+         value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
+        ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
       totalPagesSearchResults = getTotalPages(filteredData, rowsPerPageSearchResults);
@@ -191,7 +191,7 @@ const reducer = handleActions({
       searchId: null,
       searchResults: [],
       searchResultsFiltered: null
-    }
+    };
   },
   [searching](state, { payload: { searchId }}) {
     return {
@@ -199,25 +199,27 @@ const reducer = handleActions({
       searchId,
       searchResults: [],
       searching: true,
-    }
+    };
   },
   [marketplaceReturnListings](state, { data }) {
-    const listings = JSON.parse(data.command.listings).listings.map(listing => ({
+    const commandListings = JSON.parse(data.command.listings);
+    const listings = commandListings.listings ? commandListings.listings.map(listing => ({
       ...listing,
       ip: data.command.address
-    }));
-    if (parseInt(data.id) === state.searchId) {
+    })) : [];
+
+    if (parseInt(data.id, 10) === state.searchId) {
       return {
         ...state,
         searchResults: [...state.searchResults, ...listings],
         searching: false,
-      }
-    } else {
-      return {
-        ...state,
-        searching: false
-      }
+      };
     }
+
+    return {
+      ...state,
+      searching: false
+    };
   }
 }, defaultState);
 
