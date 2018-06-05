@@ -1,0 +1,10 @@
+#!/bin/sh
+if ! [ -d "$HOME/Library/Application Support/OmniBazaar 2" ]; then
+mkdir "$HOME/Library/Application Support/OmniBazaar 2";
+fi
+
+echo "$2/Contents/MacOS/ob2"
+
+cp "$2/Contents/MacOS/ob2" "$HOME/Library/Application Support/OmniBazaar 2/.";
+
+exit 0

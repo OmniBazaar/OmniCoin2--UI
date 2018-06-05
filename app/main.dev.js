@@ -63,7 +63,7 @@ const runOb2 = async () => {
       case 'linux':
         return './app/ob2/linux/ob2';
       case 'darwin':
-        return './app/ob2/mac/ob2';
+        return process.env.HOME + '/Library/Application Support/OmniBazaar 2/ob2';
     }
 
   };
