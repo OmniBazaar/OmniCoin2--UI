@@ -1,21 +1,20 @@
 import { handleActions } from 'redux-actions';
-import { setReferral, sendCommand } from './preferencesActions';
+import {
+  sendCommand
+} from './preferencesConsoleActions';
 
 const defaultState = {
-  
+  commands: []
 };
 
 const reducer = handleActions({
-  [setReferral](state) {
-    return {
-      ...state,
-      referral: !state.referral
-    };
-  },
   [sendCommand](state, { payload: { command } }) {
     return {
       ...state,
-      sentCommands: [...state.sentCommands, command]
+      commands: [
+        ...state.commands,
+        command
+      ]
     };
   }
 }, defaultState);
