@@ -54,7 +54,7 @@ export function* searchListingsByPeersMap({ payload: { peersMap, category, count
     if (searchByAllKeywords) {
       message = {
         id,
-        type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS_DATA_RECEIVED,
+        type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
         command: {
           keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
           publishers: peersMap.reduce((publishers, curr) => [...publishsers, curr.publishers], []),
@@ -65,7 +65,7 @@ export function* searchListingsByPeersMap({ payload: { peersMap, category, count
     } else {
       message = {
         id,
-        type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD_DATA_RECEIVED,
+        type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD,
         command: {
           keywords: peersMap,
           currency: "BTC",
