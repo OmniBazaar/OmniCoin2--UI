@@ -185,7 +185,7 @@ class GridTable extends Component {
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = `http://${item.ip}/publisher-images/${item.images[0].thumb}`; //todo
+                      const image = `http://${item.ip}/publisher-images/${item.images ? item.images[0].thumb : ''}`; //todo
                       const style = { backgroundImage: `url(${image})` };
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;

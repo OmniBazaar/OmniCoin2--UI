@@ -75,7 +75,7 @@ class MyListings extends Component {
           <CurrencyDropdown />
         </div>
         <TabsData
-          data={ myListings }
+          data={myListings}
           showActions
           tabs={[
             {

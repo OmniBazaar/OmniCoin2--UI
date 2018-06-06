@@ -8,11 +8,9 @@ import {
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
 import DHTConnector from '../../../utils/dht-connector';
-import {searchListingsByPeersMap} from "../searchSaga";
-
+import { searchListingsByPeersMap } from '../searchSaga';
 
 const dhtPort = '8500';
-
 const dhtConnector = new DHTConnector();
 
 export function* dhtSubscriber() {
@@ -25,9 +23,8 @@ export function* dhtSubscriber() {
 export function* connect() {
   try {
     const publishers = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
-    const ips = (yield Promise.all(
-        publishers.map(publisherName => FetchChain('getAccount', publisherName))
-    )).map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
+    const ips = (yield Promise.all(publishers.map(publisherName => FetchChain('getAccount', publisherName))))
+      .map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -39,30 +36,52 @@ export function* connect() {
   }
 }
 
-export function* getPeersFor({ payload: { searchTerm, category, country, city, searchListings } }) {
+export function* getPeersFor({
+  payload: {
+    searchTerm, category, country, city, searchListings, subCategory
+  }
+}) {
   const keywords = [...(searchTerm.split(' '))];
+
   try {
-    let responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor("keyword:" + keyword)));
+    // const responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`)));
+    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+    /*
+    if (country) {
+      responses.push(dhtConnector.findPeersFor(`country:${country}`));
+    }
+    */
+    const responsesNew = (yield Promise.all(responses));
     let cccResponses = (yield Promise.all([
-      category !== 'All' ? dhtConnector.findPeersFor("category:" + category) : null,
-      country ? dhtConnector.findPeersFor("country:" + country) : null,
-      city? dhtConnector.findPeersFor("city:" + city) : null
+      category !== 'All' ? dhtConnector.findPeersFor(`category:${category}`) : null,
+      country ? dhtConnector.findPeersFor(`country:${country}`) : null,
+      city ? dhtConnector.findPeersFor(`city:${city}`) : null
     ]));
-    let peersMap = responses.map((response, index) => ({
-        keyword: keywords[index],
-        publishers: response.peers ? response.peers : []
+
+    let peersMap = responsesNew.map((response, index) => ({
+      keyword: keywords[index],
+      publishers: response.peers ? response.peers : []
     })).filter(el => el.publishers.length !== 0);
+
     peersMap = adjustPeersMap(peersMap);
+
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
     if (peersMap.length !== 0 && searchListings) {
-      yield fork(searchListingsByPeersMap, {payload: { peersMap, category, country, city }});
+      yield fork(searchListingsByPeersMap, {
+        payload: {
+          peersMap,
+          category,
+          country,
+          city,
+          subCategory
+        }
+      });
     }
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
   }
 }
-
 
 function getPublishersWeights(peersMap) {
   const weights = {};
@@ -78,15 +97,13 @@ function getPublishersWeights(peersMap) {
   return weights;
 }
 
-
 function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
     keyword: item.keyword,
     publishers: item.publishers.map(publisher => ({
-        address: publisher.host,
-        weight: publishersWeights[publisher]
-      })
-    )
-  }))
+      address: publisher.host,
+      weight: publishersWeights[publisher]
+    }))
+  }));
 }
