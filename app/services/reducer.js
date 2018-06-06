@@ -9,6 +9,7 @@ import processorsTopReducer from './processors/processorsTopReducer';
 import menuReducer from './menu/menuReducer';
 import accountReducer from './accountSettings/accountReducer';
 import preferencesReducer from './preferences/preferencesReducer';
+import preferencesConsoleReducer from './preferencesConsole/preferencesConsoleReducer';
 import escrowReducer from './escrow/escrowReducer';
 import marketplaceReducer from './marketplace/marketplaceReducer';
 import blockchainWallet from './blockchain/wallet/walletReducer';
@@ -32,6 +33,7 @@ export default combineReducers({
   menu: menuReducer,
   account: accountReducer,
   preferences: preferencesReducer,
+  preferencesConsole: preferencesConsoleReducer,
   escrow: escrowReducer,
   marketplace: marketplaceReducer,
   listing: listingReducer,
