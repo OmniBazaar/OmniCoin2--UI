@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Image, Icon, Popup } from 'semantic-ui-react';
+import { Button, Image, Icon, Popup, Table } from 'semantic-ui-react';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -1897,6 +1897,74 @@ const messages = defineMessages({
   communityPolicing: {
     id: 'Marketplace.communityPolicing',
     defaultMessage: 'Community policing'
+  },
+  omniBazaarFeatures: {
+    id: 'Marketplace.omniBazaarFeatures',
+    defaultMessage: 'OmniBazaar Features and Benefits'
+  },
+  omniBazaarFeature: {
+    id: 'Marketplace.omniBazaarFeature',
+    defaultMessage: 'OmniBazaar Feature'
+  },
+  yourBenefit: {
+    id: 'Marketplace.yourBenefit',
+    defaultMessage: 'Your Benefit'
+  },
+  lowerPlatformFees: {
+    id: 'Marketplace.lowerPlatformFees',
+    defaultMessage: '90% lower platform fees'
+  },
+  moreProfit: {
+    id: 'Marketplace.moreProfit',
+    defaultMessage: 'More profit for sellers'
+  },
+  lowerPricesBuyers: {
+    id: 'Marketplace.lowerPricesBuyers',
+    defaultMessage: 'Lower prices for buyers'
+  },
+  userOwned: {
+    id: 'Marketplace.userOwned',
+    defaultMessage: 'Lower prices for buyers'
+  },
+  shopWithoutMiddlemen: {
+    id: 'Marketplace.shopWithoutMiddlemen',
+    defaultMessage: 'Shop without middlemen'
+  },
+  payWithoutBank: {
+    id: 'Marketplace.payWithoutBank',
+    defaultMessage: 'Pay without bankers'
+  },
+  noTrackUserInfo: {
+    id: 'Marketplace.noTrackUserInfo',
+    defaultMessage: 'No tracking of user information'
+  },
+  noPushMarketing: {
+    id: 'Marketplace.noPushMarketing',
+    defaultMessage: 'No "push" marketing'
+  },
+  morePrivacy: {
+    id: 'Marketplace.morePrivacy',
+    defaultMessage: 'More privacy'
+  },
+  paymentsAreSecure: {
+    id: 'Marketplace.paymentsAreSecure',
+    defaultMessage: 'Payments are secure'
+  },
+  noChargeBacks: {
+    id: 'Marketplace.noChargeBacks',
+    defaultMessage: 'No charge-backs'
+  },
+  usersProtectFromIllegal: {
+    id: 'Marketplace.usersProtectFromIllegal',
+    defaultMessage: 'Users protect the marketplace from illegal listings.'
+  },
+  priorityListingsAvailable: {
+    id: 'Marketplace.priorityListingsAvailable',
+    defaultMessage: 'Priority listings available'
+  },
+  makeImportantListings: {
+    id: 'Marketplace.makeImportantListings',
+    defaultMessage: 'You can make important listings stand out.'
   }
 });
 
@@ -2248,10 +2316,53 @@ class Marketplace extends Component {
   }
 
   benefitsPopup() {
+    const { formatMessage } = this.props.intl;
+
     return (
       <div className="menu-wrapper benefits">
-        <p className="title">Benefits</p>
-        <div className="items" />
+        <p className="title">{formatMessage(messages.omniBazaarFeatures)}</p>
+        <Table className="benefits-table" celled striped fixed singleLine>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell colSpan="1">
+                <Icon name="caret down" size={32} /> {formatMessage(messages.omniBazaarFeature)}
+              </Table.HeaderCell>
+              <Table.HeaderCell colSpan="2">
+                <Icon name="caret down" size={32} /> {formatMessage(messages.yourBenefit)}
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.lowerPlatformFees)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.moreProfit)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.lowerPricesBuyers)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.userOwned)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.shopWithoutMiddlemen)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.payWithoutBank)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.noTrackUserInfo)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.noPushMarketing)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.morePrivacy)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.useBitcoin)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.paymentsAreSecure)}</Table.Cell>
+              <Table.Cell>{formatMessage(messages.noChargeBacks)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.communityPolicing)}</Table.Cell>
+              <Table.Cell colSpan="2">{formatMessage(messages.usersProtectFromIllegal)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>{formatMessage(messages.priorityListingsAvailable)}</Table.Cell>
+              <Table.Cell colSpan="2">{formatMessage(messages.makeImportantListings)}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
       </div>
     );
   }
@@ -2320,6 +2431,11 @@ class Marketplace extends Component {
   }
 
   renderBadge(icon, title) {
+    const popupClass = classNames({
+      'badges-popup': true,
+      benefits: title === 'benefits'
+    });
+
     return (
       <Popup
         trigger={this.badgeMenu(icon, title)}
@@ -2329,7 +2445,7 @@ class Marketplace extends Component {
         position="bottom center"
         wide="very"
         hideOnScroll
-        className="badges-popup"
+        className={popupClass}
       >
         {title === 'overview' ? this.overviewPopup() : null}
         {title === 'versatility' ? this.versatilityPopup() : null}
