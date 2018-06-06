@@ -15,7 +15,7 @@ const iconSizeSmall = 12;
 
 class PriceItem extends Component {
   renderCheckIcon() {
-    if (this.props.listing.activeCurrency === this.props.coinLabel) {
+    if (this.props.listing.buyListing.activeCurrency === this.props.coinLabel) {
       return <Image src={CheckIcon} width={iconSize} height={iconSize} />;
     }
 
@@ -31,7 +31,7 @@ class PriceItem extends Component {
     const priceClass = classNames({
       'price-item': true,
       'owner-view': isUserOwner,
-      active: this.props.listing.activeCurrency === this.props.coinLabel
+      active: this.props.listing.buyListing.activeCurrency === this.props.coinLabel
     });
 
     return (

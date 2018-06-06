@@ -4,6 +4,9 @@ import {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  isListingFine,
+  isListingFineSucceeded,
+  isListingFineFailed,
   setActiveCurrency,
   requestMyListings,
   requestMyListingsSuccess,
@@ -45,7 +48,6 @@ const defaultState = {
     error: null
   },
   myListingsFiltered: {},
-  activeCurrency: CoinTypes.OMNI_COIN,
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
@@ -63,6 +65,14 @@ const defaultState = {
     error: null,
     listingId: null
   },
+  buyListing: {
+    listing: null,
+    blockchainListing: null,
+    activeCurrency: CoinTypes.OMNI_COIN,
+    numberToBuy: 1,
+    loading: false,
+    error: null
+  }
 };
 
 const reducer = handleActions({
@@ -122,10 +132,45 @@ const reducer = handleActions({
       error,
     }
   },
+  [isListingFine](state, { payload: { listing } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        listing,
+        blockchainListing: null,
+        loading: true,
+        error: null
+      }
+    }
+  },
+  [isListingFineSucceeded](state, { payload: { blockchainListing } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        blockchainListing,
+        loading: false,
+      }
+    }
+  },
+  [isListingFineFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        error,
+        loading: false
+      }
+    }
+  },
   [setActiveCurrency](state, { payload: { activeCurrency } }) {
     return {
       ...state,
-      activeCurrency
+      buyListing: {
+        ...state.buyListing,
+        activeCurrency
+      }
     };
   },
   [requestMyListings](state) {

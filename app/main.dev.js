@@ -75,22 +75,6 @@ const runOb2 = async () => {
 	const path = getOb2ProdPath();
 	spawn(path);
    }
-   
-   // else {
-  //   const path = getOb2ProdPath();
-  //   var fs = require('fs');
-  //   fs.writeFile("/Users/denissamohvalov/Documents/development/omnibazaar-ui/app/test.txt", path, function(err) {
-  //     if(err) {
-  //       return console.log(err);
-  //     }
-  //
-  //     console.log("The file was saved!");
-  //   });
-  //   // const child = spawn(path);
-  //   // child.stdout.on('data', (data) => {
-  //   //   console.log('DATA ', data);
-  //   // });
-  // }
 };
 
 /**

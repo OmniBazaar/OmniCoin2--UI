@@ -1,13 +1,13 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "electron-react-boilerplate",
-  "version": "1.0.5340",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "Omninazaar",
+  "productName": "Omnibazaar",
+  "version": "1.0.5361",
+  "description": "Comunity-owned peer-to-peer marketplace",
   "main": "./main.prod.js",
   "author": {
-    "name": "C. T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "Omnibazaar",
+    "email": "Info@OmniBazaar.com",
+    "url": "https://github.com/OmniBazaar"
   },
   "scripts": {
     "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "blockchain-wallet-service": "^0.26.0",
+    "blockchain-wallet-service": "^0.26.1",
     "getmac": "^1.4.0",
     "node-machine-id": "^1.1.10"
   }

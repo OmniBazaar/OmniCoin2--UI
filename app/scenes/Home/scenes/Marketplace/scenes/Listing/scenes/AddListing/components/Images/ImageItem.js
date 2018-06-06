@@ -53,11 +53,11 @@ class ImageItem extends Component {
 	}
 
 	remove() {
-	  const { image, isListingDefaults } = this.props;
+	  const { image, isListingDefaults, publisher } = this.props;
 	  if (isListingDefaults) {
 	  	this.props.listingDefaultsActions.deleteListingDefaultImage(image);
 	  } else {
-	  	this.props.listingActions.deleteListingImage(image);
+	  	this.props.listingActions.deleteListingImage(publisher, image);
 	  }
 	}
 

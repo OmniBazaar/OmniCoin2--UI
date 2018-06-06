@@ -20,11 +20,11 @@ import hash from 'object-hash';
 
 import './search-menu.scss';
 
+import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 import SearchIcon from '../../../../images/btn-search-norm.svg';
 import { getSavedSearches } from '../../../../../../../../services/search/searchActions';
-
 import { searchListings } from '../../../../../../../../services/search/searchActions';
-
+import { getPublisherData } from "../../../../../../../../services/accountSettings/accountActions";
 
 const messages = defineMessages({
   default: {
@@ -74,6 +74,7 @@ class SearchMenu extends Component {
 
   componentDidMount() {
     const { currentUser } = this.props.auth;
+    this.props.publisherActions.getPublisherData();
     this.props.searchActions.getSavedSearches(currentUser.username);
   }
 
@@ -92,17 +93,18 @@ class SearchMenu extends Component {
         })}
       />
       <div className="search-actions">
-        <Dropdown
-          labeled
-          defaultValue="all"
-          options={options}
-          placeholder={dropdownPlaceholder}
-          onChange={(e, data) => input.onChange({
-            ...input.value,
-            category: value
-          })}
-          selection
-          className="icon button--gray-text select-btn"
+        <CategoryDropdown
+           placeholder={dropdownPlaceholder}
+           selection
+           input={{
+             value: input.category,
+             onChange: (value) => {
+               input.onChange({
+                 ...input.value,
+                 category: value
+               })
+             }
+           }}
         />
         <Button
           content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
@@ -142,7 +144,8 @@ class SearchMenu extends Component {
   handleSubmit(values) {
     const { searchTerm, category } = values.search;
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(searchTerm, category || 'All');
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city);
   }
 
   render() {
@@ -207,6 +210,9 @@ export default compose(
       searchActions: bindActionCreators({
         searchListings,
         getSavedSearches
+      }, dispatch),
+      publisherActions: bindActionCreators({
+        getPublisherData
       }, dispatch)
     }),
   ),

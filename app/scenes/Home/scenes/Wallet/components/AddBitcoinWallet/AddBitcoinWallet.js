@@ -32,7 +32,7 @@ class AddBitcoinWallet extends Component {
     const { isOpen } = this.props.bitcoin.modal;
     const { formatMessage } = this.props.intl;
     return (
-      <Modal size="small" open={isOpen} onClose={this.toggleModal}>
+      <Modal size="small" open={isOpen} onClose={this.toggleModal} closeIcon>
         <Modal.Content>
           <Tab
             className="tabs"

@@ -41,13 +41,13 @@ class Images extends Component {
 
   uploadImage(file) {
   	const imageId = getImageId();
-  	const { isListingDefaults } = this.props;
+  	const { isListingDefaults, publisher } = this.props;
   	if (isListingDefaults) {
   		const { uploadListingDefaultImage } = this.props.listingDefaultsActions;
   		uploadListingDefaultImage(file, imageId);
   	} else {
 			const { uploadListingImage } = this.props.listingActions;
-  		uploadListingImage(file, imageId);
+  		uploadListingImage(publisher, file, imageId);
   	}
   }
 
@@ -61,7 +61,10 @@ class Images extends Component {
   }
 
   renderImages() {
-  	const { isListingDefaults } = this.props;
+  	const {
+  	  isListingDefaults,
+      publisher
+  	} = this.props;
   	const images = this.getImages();
     return Object.keys(images).map((imageId) => (
       <ImageItem
@@ -69,11 +72,13 @@ class Images extends Component {
         imageId={imageId}
         image={images[imageId]}
         isListingDefaults={isListingDefaults}
+        publisher={publisher}
       />
     ));
   }
 
   render() {
+    const { disabled } = this.props;
   	const images = this.getImages();
     return (
       <div className="listing-image-container">
@@ -88,8 +93,10 @@ class Images extends Component {
           {this.renderImages()}
           {
 	        	(Object.keys(images).length < imageLimit) &&
-	        	<Button className="add-img-button"
+	        	<Button
+              className="add-img-button"
 	        		onClick={this.onClickAddImage.bind(this)}
+              disabled={disabled}
 	        		type='button'>
   						<Image src={AddIcon} width={iconSize} height={iconSize} />
 		        </Button>
@@ -108,12 +115,16 @@ Images.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }).isRequired,
-  isListingDefaults: PropTypes.bool
+  isListingDefaults: PropTypes.bool,
+  publisher: PropTypes.shape({}),
+  disabled: PropTypes.bool
 };
 
 
 Images.defaultProps = {
-	isListingDefaults: false
+	isListingDefaults: false,
+  publisher: null,
+  disabled: false
 };
 
 const mapState = state => ({

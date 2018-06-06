@@ -1,7 +1,5 @@
 import {
   FetchChain,
-  TransactionHelper,
-  Aes,
   TransactionBuilder
 } from 'omnibazaarjs/es';
 import {
@@ -9,22 +7,28 @@ import {
   takeLatest,
   takeEvery,
   select,
-  all
+  all,
+  fork,
+  call
 } from 'redux-saga/effects';
 import _ from 'lodash';
+import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
+import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 
 export function* transferSubscriber() {
   yield all([
     takeLatest('SUBMIT_TRANSFER', submitTransfer),
     takeLatest('CREATE_ESCROW_TRANSACTION', createEscrowTransaction),
-    takeEvery('GET_COMMON_ESCROWS', getCommonEscrows)
+    takeEvery('GET_COMMON_ESCROWS', getCommonEscrows),
+    takeEvery('SALE_BONUS', saleBonus)
   ]);
 }
 
-export function* submitTransfer(data) {
+function* submitOmniCoinTransfer(data) {
   const { currentUser } = (yield select()).default.auth;
   const senderNameStr = currentUser.username;
   const toNameStr = data.payload.data.toName;
@@ -40,7 +44,7 @@ export function* submitTransfer(data) {
 
     const key = generateKeyFromPassword(senderName.get('name'), 'active', currentUser.password);
     const tr = new TransactionBuilder();
-    tr.add_type_operation('transfer', {
+    const operationObj = {
       from: senderName.get('id'),
       to: toName.get('id'),
       reputation_vote: parseInt(reputation),
@@ -49,8 +53,12 @@ export function* submitTransfer(data) {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
-    });
-
+    };
+    if (data.listingId) {
+      operationObj.listing = data.listingId;
+      operationObj.listing_count = data.listingCount;
+    }
+    tr.add_type_operation('transfer', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
@@ -60,10 +68,53 @@ export function* submitTransfer(data) {
   }
 }
 
-export function* createEscrowTransaction({
-  payload:
-  {
-    expirationTime, buyer, seller, escrow, amount, transferToEscrow, memo
+function* submitBitcoinTransfer(data) {
+  const {
+    guid,
+    password,
+    toBCName,
+    amount,
+    fromName
+  } = data.payload.data;
+  const fee = 0;
+
+  try {
+    const res = yield call(BitcoinApi.makePayment, guid, password, toBCName, amount, fromName, fee);
+    yield put({ type: 'MAKE_PAYMENT_SUCCEEDED', res });
+  } catch (error) {
+    yield put({ type: 'MAKE_PAYMENT_FAILED', error });
+    console.log('ERROR', error);
+  }
+}
+
+export function* submitTransfer(data) {
+  const currencySelectedStr = data.payload.data.currencySelected;
+
+  switch (currencySelectedStr) {
+    case 'omnicoin':
+      yield fork(submitOmniCoinTransfer, data);
+      break;
+    case 'bitcoin':
+      yield fork(submitBitcoinTransfer, data);
+      break;
+    default:
+      yield fork(submitBitcoinTransfer, data);
+  }
+}
+
+
+function* createEscrowTransaction({ payload: {
+    data : {
+      expirationTime,
+      buyer,
+      toName: seller,
+      escrow,
+      amount,
+      transferToEscrow,
+      memo,
+      listingId,
+      listingCount
+    }
   }
 }) {
   try {
@@ -76,7 +127,7 @@ export function* createEscrowTransaction({
     ]);
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const tr = new TransactionBuilder();
-    tr.add_type_operation('escrow_create_operation', {
+    const operationObj = {
       expiration_time: sec + expirationTime,
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
@@ -87,7 +138,12 @@ export function* createEscrowTransaction({
         amount: amount * 100000
       },
       transfer_to_escrow: transferToEscrow
-    });
+    };
+    if (listingId) {
+      operationObj.listing = listingId;
+      operationObj.listing_count = listingCount;
+    }
+    tr.add_type_operation('escrow_create_operation', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
@@ -98,7 +154,7 @@ export function* createEscrowTransaction({
   }
 }
 
-export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
+function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
   try {
     if (!fromAccount || !toAccount) {
       return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: [] });
@@ -113,5 +169,33 @@ export function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message });
+  }
+}
+
+function* saleBonus({ payload: { seller, buyer }}) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const [currUserAcc, sellerAcc, buyerAcc] = yield Promise.all([
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', seller),
+      FetchChain('getAccount', buyer)
+    ]);
+    const isAvailable = yield Apis.instance().db_api().exec('is_sale_bonus_available',
+      [sellerAcc.get('id'), buyerAcc.get('id')]
+    );
+    if (isAvailable) {
+      const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+      const tr = new TransactionBuilder();
+      tr.add_type_operation('sale_bonus_operation', {
+        payer: currUserAcc.get('id'),
+        seller: sellerAcc.get('id'),
+        buyer: buyerAcc.get('id'),
+      });
+      yield tr.set_required_fees();
+      yield tr.add_signer(key.privKey, key.pubKey);
+      yield tr.broadcast();
+    }
+  } catch (error) {
+    console.log('ERROR ', error);
   }
 }
