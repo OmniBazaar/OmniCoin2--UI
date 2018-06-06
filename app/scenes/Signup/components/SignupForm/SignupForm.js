@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Form, Divider, Icon } from 'semantic-ui-react';
+import { Button, Form, Divider, Icon, Popup, Modal } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
@@ -112,10 +112,16 @@ const messages = defineMessages({
   addKeyword: {
     id: 'SignupForm.addKeyword',
     defaultMessage: 'Add keyword'
+  },
+  done: {
+    id: 'SignupForm.done',
+    defaultMessage: 'Done'
   }
 });
 
 class SignupForm extends Component {
+  state = { open: false };
+
   static asyncValidate = async (values, dispatch, props, field) => {
     const previousErrors = props.asyncErrors;
     if (field === 'username') {
@@ -275,6 +281,40 @@ class SignupForm extends Component {
     );
   };
 
+  show = () => this.setState({ open: true });
+  close = () => this.setState({ open: false });
+
+  renderTerms() {
+    const { open } = this.state;
+    const { formatMessage } = this.props.intl;
+    const categoryTitle = formatMessage(messages.termsAndCond);
+
+    return (
+      <Modal
+        size="normal"
+        open={open}
+        closeIcon
+        onClose={this.close}
+      >
+        <Modal.Content>
+          <div className="modal-container terms-container">
+            <p className="title">{categoryTitle}</p>
+            <div className="body">
+              Terms & conditions here.
+            </div>
+          </div>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            className="button--primary"
+            content={formatMessage(messages.done)}
+            onClick={this.close}
+          />
+        </Modal.Actions>
+      </Modal>
+    );
+  }
+
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
     return (
@@ -285,13 +325,12 @@ class SignupForm extends Component {
             height={inputCustomSize}
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
-          <span>{ formatMessage(messages.agree) } </span>
-          <a href="#">{ formatMessage(messages.termsAndCond) }</a>
+          <span>{formatMessage(messages.agree)}</span>
+          <a href="#" onClick={this.show}>{formatMessage(messages.termsAndCond)}</a>
         </div>
       ]
     );
-  }
-
+  };
 
   renderSearchPriority() {
     const { formatMessage } = this.props.intl;
@@ -417,6 +456,7 @@ class SignupForm extends Component {
           name="agreementTerms"
           component={this.renderTermField}
         />
+        {this.renderTerms()}
         <Button
           content={formatMessage(messages.signup)}
           disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating}

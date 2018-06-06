@@ -87,6 +87,19 @@
   }
 }
 
+.terms-container {
+  .title {
+    margin: 0;
+    font-size: 25px;
+    padding: 15px;
+    border-bottom: 1px solid #e8edf0 !important;
+  }
+
+  .body {
+    padding: 15px;
+  }
+}
+
 .hidden {
   display: none !important;
 }
