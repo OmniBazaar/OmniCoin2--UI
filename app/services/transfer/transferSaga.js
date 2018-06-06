@@ -104,15 +104,17 @@ export function* submitTransfer(data) {
 
 
 function* createEscrowTransaction({ payload: {
-    expirationTime,
-    buyer,
-    toName: seller,
-    escrow,
-    amount,
-    transferToEscrow,
-    memo,
-    listingId,
-    listingCount
+    data : {
+      expirationTime,
+      buyer,
+      toName: seller,
+      escrow,
+      amount,
+      transferToEscrow,
+      memo,
+      listingId,
+      listingCount
+    }
   }
 }) {
   try {
