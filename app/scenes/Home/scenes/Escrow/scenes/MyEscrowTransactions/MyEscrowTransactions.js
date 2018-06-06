@@ -17,7 +17,8 @@ import { toastr } from 'react-redux-toastr';
 import {
   releaseEscrowTransaction,
   returnEscrowTransaction,
-  setActivePageMyEscrow
+  setActivePageMyEscrow,
+  setPaginationMyEscrow
 } from '../../../../../../services/escrow/escrowActions';
 import RateModal from './components/RateModal/RateModal';
 import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
@@ -157,6 +158,10 @@ class MyEscrowTransactions extends Component {
           );
         }
       }
+    }
+
+    if (this.props.escrow.loading !== nextProps.escrow.loading) {
+      this.props.escrowActions.setPaginationMyEscrow(this.props.rowsPerPage);
     }
   }
 
@@ -322,13 +327,7 @@ class MyEscrowTransactions extends Component {
           {loading ? <Loader active inline="centered" />
             : this.state.transactions.length === 0
               ? this.renderNoTransactions()
-              : <Table
-                sortable="true"
-                compact="true"
-                basic="very"
-                striped="true"
-                size="small"
-              >
+              : <Table {...this.props.tableProps}>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderCell
@@ -380,7 +379,9 @@ MyEscrowTransactions.defaultProps = {
   escrow: {},
   intl: {},
   escrowActions: {},
-  auth: {}
+  auth: {},
+  rowsPerPage: 10,
+  tableProps: {},
 };
 
 MyEscrowTransactions.propTypes = {
@@ -399,14 +400,23 @@ MyEscrowTransactions.propTypes = {
   escrowActions: PropTypes.shape({
     releaseEscrowTransaction: PropTypes.func,
     returnEscrowTransaction: PropTypes.func,
-    setActivePageMyEscrow: PropTypes.func
+    setActivePageMyEscrow: PropTypes.func,
+    setPaginationMyEscrow: PropTypes.func
   }),
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string
     })
-  })
+  }),
+  tableProps: PropTypes.shape({
+    sortable: PropTypes.bool,
+    compact: PropTypes.bool,
+    basic: PropTypes.string,
+    striped: PropTypes.bool,
+    size: PropTypes.string,
+  }),
+  rowsPerPage: PropTypes.number,
 };
 
 export default connect(
@@ -415,7 +425,8 @@ export default connect(
     escrowActions: bindActionCreators({
       returnEscrowTransaction,
       releaseEscrowTransaction,
-      setActivePageMyEscrow
+      setActivePageMyEscrow,
+      setPaginationMyEscrow
     }, dispatch),
   })
 )(injectIntl(MyEscrowTransactions));
