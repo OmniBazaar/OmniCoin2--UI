@@ -59,7 +59,7 @@ const runOb2 = async () => {
   const getOb2ProdPath = () => {
     switch (process.platform) {
       case 'win32':
-        return process.env.APPDATA + '/OmniBazaar 2/ob2.exe';
+        return process.env.LOCALAPPDATA + '/OmniBazaar 2/ob2.exe';
       case 'linux':
         return './app/ob2/linux/ob2';
       case 'darwin':
