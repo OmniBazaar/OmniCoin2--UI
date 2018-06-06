@@ -34,6 +34,7 @@ Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR};
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 Type: filesandordirs; Name: "{localappdata}\{#APPDATA_DIR}"
+Type: filesandordirs; Name: "{userappdata}\{#APPDATA_DIR}"
 
 [Icons]
 Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
