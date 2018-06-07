@@ -82,7 +82,7 @@ export function* getPeersFor({
           country,
           city,
           subCategory,
-          searchByAllKeywords: !!keywords.length,
+          searchByAllKeywords: !keywords.length,
         }
       });
     }
