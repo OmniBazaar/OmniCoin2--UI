@@ -43,16 +43,13 @@ export function* getPeersFor({
 }) {
   try {
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
-    const responses = keywords.length > 0 ? keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`)) : [];
+    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
     const allResponses = yield Promise.all(responses);
 
     const categoryKey = `category:${category}`;
     const subcategoryKey = `subcategory:${subCategory}`;
     const countryKey = `country:${country}`;
     const cityKey = `city:${city}`;
-
-    keywords.push(categoryKey, subcategoryKey, countryKey, cityKey);
-    console.log('searchTerm', searchTerm, keywords);
 
     const extraKeywordsResponse = yield Promise.all([
       category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
@@ -75,8 +72,6 @@ export function* getPeersFor({
     }
 
     peersMap = adjustPeersMap(peersMap);
-    console.log('peersMap');
-    console.log(peersMap);
 
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
     if (peersMap.length !== 0 && searchListings) {
@@ -87,7 +82,7 @@ export function* getPeersFor({
           country,
           city,
           subCategory,
-          searchByAllKeywords: !!keywords.length,
+          searchByAllKeywords: !keywords.length,
         }
       });
     }

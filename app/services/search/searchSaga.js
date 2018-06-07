@@ -102,6 +102,10 @@ export function* searchListingsByPeersMap({
   }
 
   if (searchByAllKeywords) {
+    peersMap.reduce((publishers, curr) => {
+      console.log(publishers, curr.publishers);
+      return '';
+    });
     message = {
       id,
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
