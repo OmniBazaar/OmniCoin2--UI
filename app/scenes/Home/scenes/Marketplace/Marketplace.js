@@ -401,9 +401,11 @@ const messages = defineMessages({
 class Marketplace extends Component {
   componentWillMount() {
     this.props.accountActions.getPublisherData();
+    this.fetchListings();
+  }
 
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(null, 'All', country, city, true, null);
+  componentDidMount() {
+    // this.fetchListings();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -412,6 +414,12 @@ class Marketplace extends Component {
     if (searchResults !== nextProps.search.searchResults) {
       this.props.searchActions.filterSearchByCategory();
     }
+  }
+
+  fetchListings() {
+    const { country, city } = this.props.account.publisherData;
+    console.log(country, city);
+    this.props.searchActions.searchListings(null, 'All', country, city, true, null);
   }
 
   listItems(items, size) {

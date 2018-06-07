@@ -77,7 +77,6 @@ export function* searchListingsByPeersMap({
     });
   }
 
-  /*
   if (country) {
     filters.push({
       op: '=',
@@ -85,7 +84,14 @@ export function* searchListingsByPeersMap({
       value: country
     });
   }
-  */
+
+  if (city) {
+    filters.push({
+      op: '=',
+      name: 'city',
+      value: city
+    });
+  }
 
   if (searchByAllKeywords) {
     message = {
@@ -117,6 +123,9 @@ export function* searchListingsByPeersMap({
   if (country) {
     message.country = country;
   }
+
+  console.log('message sent:');
+  console.log(JSON.stringify(message));
 
   ws.send(JSON.stringify(message));
   yield put(searching(id));
