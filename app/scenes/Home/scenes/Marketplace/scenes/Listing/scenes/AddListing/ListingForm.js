@@ -91,9 +91,9 @@ class ListingForm extends Component {
     if (editingListing) {
       data = {
         ...editingListing,
-        keywords: editingListing.keywords ? editingListing.keywords.join(', ') : ''
+        keywords: editingListing.keywords ? editingListing.keywords.join(', ') : '',
+        publisher: editingListing.ip
       };
-      delete data.images;
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
       data = {

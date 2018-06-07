@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {  injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -9,16 +9,29 @@ import { getPublishers } from "../../../../../../../../../../services/accountSet
 
 class PublishersDropdown extends Component {
 
+  state = {
+    disabled: false
+  };
+
   componentWillMount() {
     this.props.accountActions.getPublishers();
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      value,
+      onChange
+    } = this.props.input;
     if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
       this.options = nextProps.account.publishers.publishers.map(publisher => ({
         value: publisher,
         text: publisher.name
       }));
+      if (value && typeof value === 'string') {
+        const publisher = this.options.find(el => el.value.publisher_ip === value);
+        this.props.input.onChange(publisher.value);
+        this.setState({disabled: true});
+      }
     }
   }
 
@@ -31,16 +44,18 @@ class PublishersDropdown extends Component {
 
   render() {
     const { value } = this.props.input;
+    const { loading } = this.props.account.publishers;
     return (
       <Dropdown
-        compact
-        selection
-        placeholder={this.props.placeholder}
-        options={this.options}
-        onChange={this.onChange.bind(this)}
-        value={value}
-        loading={this.props.account.publishers.loading}
-      />
+          compact
+          selection
+          placeholder={this.props.placeholder}
+          options={this.options}
+          onChange={this.onChange.bind(this)}
+          value={value}
+          loading={loading}
+          disabled={this.state.disabled}
+          />
     );
   }
 }
