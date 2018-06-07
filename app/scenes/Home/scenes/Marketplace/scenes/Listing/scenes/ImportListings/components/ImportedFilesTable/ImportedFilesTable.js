@@ -65,8 +65,6 @@ class ImportedFilesTable extends Component {
       importedFiles
     } = this.props.listingImport;
 
-    console.log(importedFiles);
-
     return (
       <div className="data-table">
         <div className="table-container">
