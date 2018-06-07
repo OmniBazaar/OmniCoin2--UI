@@ -69,7 +69,7 @@ export function* searchListingsByPeersMap({
   const id = getNewId();
   const filters = [];
 
-  if (category) {
+  if (category && category !== 'All') {
     filters.push({
       op: '=',
       name: 'category',
@@ -106,7 +106,8 @@ export function* searchListingsByPeersMap({
       id,
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
       command: {
-        keywords: peersMap.reduce((keywords, curr) => [...keywords, ...curr.keyword], []),
+        keywords: peersMap.reduce((keywords, curr) =>
+          [...keywords, ...(curr.keywords || [])], []),
         publishers: peersMap.reduce((publishers, curr) =>
           [...publishers, ...(curr.publishers || [])], []),
         currency: 'BTC',
@@ -125,12 +126,6 @@ export function* searchListingsByPeersMap({
         filters
       },
     };
-  }
-  if (city) {
-    message.city = city;
-  }
-  if (country) {
-    message.country = country;
   }
 
   ws.send(JSON.stringify(message));

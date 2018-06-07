@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Image, Icon, Popup, Table } from 'semantic-ui-react';
+import { Button, Image, Icon, Popup, Table, Loader } from 'semantic-ui-react';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -29,7 +29,8 @@ import {
   servicesCategories,
   jobsCategories,
   cryptoCategories,
-  mainCategories
+  mainCategories,
+  categories
 } from './categories';
 
 import {
@@ -43,1591 +44,12 @@ import {
 } from '../../../../services/marketplace/marketplaceActions';
 
 import { getPublisherData } from '../../../../services/accountSettings/accountActions';
+import { searchListings, filterSearchByCategory } from '../../../../services/search/searchActions';
 
 import './marketplace.scss';
 
 const iconSize = 20;
 const iconSizeSmall = 12;
-
-const featureListings = [
-  {
-    id: 1,
-    date: '2018-01-05',
-    price: 6840,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jevellery',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 2,
-    date: '2017-01-05',
-    price: 6840,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 3,
-    date: '2017-11-05',
-    price: 6840,
-    title: 'UX Designer',
-    category: 'Jobs',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 4,
-    date: '2018-03-05',
-    price: 6840,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 5,
-    date: '2018-03-05',
-    price: 36840,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 6,
-    date: '2018-02-05',
-    price: 87240,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 7,
-    date: '2018-01-01',
-    price: 6840,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 8,
-    date: '2018-02-02',
-    price: 6840,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 9,
-    date: '2018-03-15',
-    price: 6840,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 10,
-    date: '2018-02-02',
-    price: 6840,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jevellery',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 11,
-    date: '2018-03-12',
-    price: 6840,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 12,
-    date: '2018-01-22',
-    price: 6840,
-    title: 'UX Designer',
-    category: 'Jobs',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 13,
-    date: '2018-02-16',
-    price: 6840,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 14,
-    date: '2018-02-18',
-    price: 6840,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 15,
-    date: '2018-03-19',
-    price: 6840,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 16,
-    date: '2018-03-20',
-    price: 3550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 17,
-    date: '2018-03-21',
-    price: 1550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 18,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 19,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 20,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 21,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 22,
-    date: '2018-03-21',
-    price: 465550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 23,
-    date: '2018-03-21',
-    price: 5550,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 24,
-    date: '2018-03-08',
-    price: 3550,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 25,
-    date: '2018-03-21',
-    price: 345550,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 26,
-    date: '2018-03-21',
-    price: 4550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 27,
-    date: '2018-03-08',
-    price: 2550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 28,
-    date: '2018-03-08',
-    price: 6840,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 29,
-    date: '2018-03-21',
-    price: 3550,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 30,
-    date: '2018-03-08',
-    price: 12550,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 31,
-    date: '2018-03-21',
-    price: 5550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 32,
-    date: '2018-03-21',
-    price: 5550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 33,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-];
-
-const forSaleListings = [
-  {
-    id: 1,
-    date: '2018-01-05',
-    price: 5550,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jewelry',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 2,
-    date: '2018-03-08',
-    price: 5550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 3,
-    price: 10550,
-    date: '2018-03-08',
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 4,
-    date: '2018-03-08',
-    price: 850,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 5,
-    date: '2018-03-21',
-    price: 9550,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 6,
-    date: '2018-03-21',
-    price: 1550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 7,
-    date: '2018-01-15',
-    price: 2050,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 8,
-    date: '2018-03-21',
-    price: 1550,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 9,
-    date: '2018-03-21',
-    price: 5028,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 10,
-    date: '2018-03-21',
-    price: 6505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 11,
-    date: '2018-03-21',
-    price: 6505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 12,
-    date: '2018-03-21',
-    price: 3550,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 13,
-    date: '2018-02-12',
-    price: 6505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 14,
-    date: '2018-03-21',
-    price: 6505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 15,
-    date: '2018-03-11',
-    price: 6505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 16,
-    date: '2017-01-21',
-    price: 6505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 17,
-    date: '2018-03-21',
-    price: 6505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 18,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 19,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 20,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 21,
-    date: '2018-01-05',
-    price: 3550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 22,
-    date: '2018-01-05',
-    price: 6505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 23,
-    date: '2018-03-21',
-    price: 6505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 24,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 25,
-    date: '2018-01-05',
-    price: 6505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 26,
-    date: '2018-01-05',
-    price: 6505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 27,
-    date: '2018-01-15',
-    price: 16505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 28,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 29,
-    date: '2018-01-15',
-    price: 6905,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 30,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 31,
-    date: '2018-01-15',
-    price: 3550,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 32,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 33,
-    date: '2018-01-15',
-    price: 6505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 34,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 35,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 36,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 37,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 38,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 39,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 40,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 41,
-    date: '2018-01-15',
-    price: 300505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 42,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 43,
-    date: '2018-01-15',
-    price: 20505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 44,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 45,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 46,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 47,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 48,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jewelry',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 49,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 50,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 51,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 52,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 53,
-    date: '2018-01-15',
-    price: 504505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 54,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 55,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 56,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 57,
-    date: '2018-03-14',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 58,
-    date: '2018-02-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 59,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 60,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 61,
-    date: '2017-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 62,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 63,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 64,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 65,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 66,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 67,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 68,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 69,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 70,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 71,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 72,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 73,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 74,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 75,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 76,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 77,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 78,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 79,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 80,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 81,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 82,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 83,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 84,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 85,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 86,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 87,
-    date: '2018-01-14',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 88,
-    date: '2018-01-12',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 89,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 90,
-    date: '2018-01-17',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 91,
-    date: '2018-01-18',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 92,
-    date: '2018-01-20',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 93,
-    date: '2017-12-20',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 94,
-    date: '2017-12-20',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 95,
-    date: '2018-03-08',
-    price: 4505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 96,
-    date: '2017-12-20',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 97,
-    date: '2017-12-20',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 98,
-    date: '2018-03-20',
-    price: 1405,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 99,
-    date: '2017-12-20',
-    price: 1205,
-    title: 'UX Designer',
-    category: 'For sale',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 100,
-    date: '2018-03-20',
-    price: 1300,
-    title: 'Mega Plumber',
-    category: 'For sale',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-];
-
-const jobsListings = [
-  {
-    id: 1,
-    date: '2018-01-15',
-    price: 3505,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 2,
-    date: '2018-01-15',
-    price: 53305,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 3,
-    date: '2018-01-15',
-    price: 20505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 4,
-    date: '2018-01-15',
-    price: 14505,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jevellery',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 5,
-    date: '2018-01-15',
-    price: 94505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 6,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'UX Designer',
-    category: 'Jobs',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-];
-
-const rentalsListings = [
-  {
-    id: 1,
-    date: '2018-01-15',
-    price: 566505,
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-  {
-    id: 2,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'UX Designer',
-    category: 'Jobs',
-    subCategory: 'Design',
-    description: 'We need someone to make a design for an awesome application.',
-    image: 'https://cdn.pixabay.com/photo/2015/05/28/14/38/ux-787980_640.jpg'
-  },
-  {
-    id: 3,
-    date: '2018-01-15',
-    price: 2505,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 4,
-    date: '2018-01-15',
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 5,
-    title: 'Ferrari',
-    price: 804505,
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 6,
-    date: '2018-01-15',
-    price: 1505,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-];
-
-const servicesListings = [
-  {
-    id: 5,
-    date: '2018-01-15',
-    price: 478505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 6,
-    date: '2018-01-15',
-    price: 904505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 7,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 8,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 9,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 10,
-    date: '2018-01-15',
-    price: 4505,
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jevellery',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-];
-
-const cryptoBazaarListings = [
-  {
-    id: 6,
-    date: '2018-01-15',
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 7,
-    date: '2018-01-15',
-    title: 'Mega Plumber',
-    category: 'Services',
-    subCategory: 'Home',
-    description: 'We are looking for a plumber to work at our offices.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/12/11/07/plumber-3219389_640.jpg'
-  },
-  {
-    id: 8,
-    date: '2018-01-15',
-    title: 'Lonely Star',
-    category: 'For sale',
-    subCategory: 'Others',
-    description: 'For sale this beautiful yacht.',
-    image: 'https://cdn.pixabay.com/photo/2017/06/22/16/46/luxury-yacht-2431471_640.jpg'
-  },
-  {
-    id: 9,
-    date: '2018-01-15',
-    title: 'Ferrari',
-    category: 'For sale',
-    subCategory: 'Car',
-    description: 'Beautiful brand new Ferrari car.',
-    image: 'https://cdn.pixabay.com/photo/2018/03/20/21/47/car-3244831_640.jpg'
-  },
-  {
-    id: 10,
-    date: '2018-01-15',
-    title: 'Farco Jevellery',
-    category: 'For sale',
-    subCategory: 'Jevellery',
-    description: 'At Farco Jevellery we are focus on providing services for all different tastes.',
-    image: 'https://cdn.pixabay.com/photo/2014/07/18/00/53/treasure-395994_640.jpg'
-  },
-  {
-    id: 11,
-    date: '2018-01-15',
-    title: 'Suzuki Bandit 2000',
-    category: 'For sale',
-    subCategory: 'Motor Cycle',
-    description: 'Awesome bike.',
-    image: 'https://cdn.pixabay.com/photo/2016/09/27/15/15/motorcycle-1698615_640.jpg'
-  },
-];
 
 const messages = defineMessages({
   welcome: {
@@ -1965,42 +387,72 @@ const messages = defineMessages({
   makeImportantListings: {
     id: 'Marketplace.makeImportantListings',
     defaultMessage: 'You can make important listings stand out.'
-  }
+  },
+  searchingForPublishers: {
+    id: 'SearchResults.searchingForPublishers',
+    defaultMessage: 'Searching for publishers'
+  },
+  loadingListings: {
+    id: 'SearchMenu.loadingListings',
+    defaultMessage: 'Loading listings'
+  },
 });
 
 class Marketplace extends Component {
+  static getValue(category) {
+    const arr = category.split('.');
+    let categoryName = category;
+    if (arr.length > 1) {
+      categoryName = arr[1];
+    }
+
+    return categoryName;
+  }
+
   componentWillMount() {
     this.props.accountActions.getPublisherData();
+    this.fetchListings();
   }
 
   componentDidMount() {
-    this.fetchFeatureList();
+    // this.fetchListings();
   }
 
-  fetchFeatureList() {
-    this.props.marketplaceActions.getFeatureList(featureListings);
-    this.props.marketplaceActions.getForSaleList(forSaleListings);
-    this.props.marketplaceActions.getJobsList(jobsListings);
-    this.props.marketplaceActions.getRentalsList(rentalsListings);
-    this.props.marketplaceActions.getServicesList(servicesListings);
-    this.props.marketplaceActions.getCryptoBazaarList(cryptoBazaarListings);
+  componentWillReceiveProps(nextProps) {
+    const { searchResults } = this.props.search;
+
+    if (searchResults !== nextProps.search.searchResults) {
+      this.props.searchActions.filterSearchByCategory();
+    }
+
+    if (this.props.account.country !== nextProps.account.country ||
+        this.props.account.city !== nextProps.account.city) {
+      this.fetchListings();
+    }
+  }
+
+  fetchListings() {
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(null, 'All', country, city, true, null);
   }
 
   listItems(items, size) {
     return (
       items.slice(0, size).map((item) => {
-        const style = { backgroundImage: `url(${item.image})` };
+        const image = item.images[0];
+        const imageUrl = `http://${item.ip}/publisher-images/${image.thumb}`;
+        const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
 
         return (
-          <div key={`fl-item-${item.id}`} className="item">
-            <Link to={`listing/${item.id}`}>
+          <div key={`fl-item-${item.listing_id}`} className="item">
+            <Link to={`listing/${item.listing_id}`}>
               <div className="img-wrapper" style={style} />
             </Link>
             <Link to={`listing/${item.id}`}>
               <span className="title" >
-                {item.title}
+                {item.listing_title}
               </span>
             </Link>
             <span className="subtitle">
@@ -2008,7 +460,7 @@ class Marketplace extends Component {
               <span>
                 <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
               </span>
-              {item.subCategory}
+              {item.subcategory}
             </span>
             <span className="description">{description}</span>
           </div>
@@ -2021,6 +473,24 @@ class Marketplace extends Component {
     console.log('View all sub categories for: ', category);
   };
 
+  renderOption(category, parentCategory) {
+    const { formatMessage } = this.props.intl;
+    const type = category.id;
+    const parent = parentCategory ? parentCategory.id : null;
+
+    return (
+      <div
+        className="sub-category"
+        onClick={() => this.viewCategory(type, parent)}
+        onKeyDown={() => this.viewCategory(type, parent)}
+        tabIndex={0}
+        role="link"
+      >
+        {formatMessage(category)}
+      </div>
+    );
+  }
+
   renderForSaleCategory() {
     const categoryName = CategoriesTypes.FOR_SALE;
     const { formatMessage } = this.props.intl;
@@ -2028,33 +498,17 @@ class Marketplace extends Component {
 
     return (
       <div className="item" style={style}>
-        <span className="title">{formatMessage(mainCategories.forSale)}</span>
+        <span
+          className="title"
+          onClick={() => this.viewCategory(mainCategories.forSale.id)}
+          onKeyDown={() => this.viewCategory(mainCategories.forSale.id)}
+          tabIndex={0}
+          role="link"
+        >
+          {formatMessage(mainCategories.forSale)}
+        </span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(saleCategories.antiques)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.appliances)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.artsCrafts)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.babyChild)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.barter)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.beautyHealth)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.bikes)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.boats)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.books)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.business)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.carsTrucks)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.cdDvd)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.farmGarden)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.free)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.furniture)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.garageSale)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.general)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.heavyEquip)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.household)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.jewelry)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.materials)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.motorcycles)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.musicalInstruments)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.photoVideo)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.rvCampers)}</div>
+          {Object.keys(saleCategories).map(key => this.renderOption(saleCategories[key], mainCategories.forSale))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -2078,25 +532,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.services)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(servicesCategories.automotive)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.beautyPersonal)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.computerIT)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.creative)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.dental)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.eventMgmt)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.farmGarden)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.financial)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.healthCare)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.laborConstruction)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.legal)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.lessonsCoaching)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.marine)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.realState)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.skilledTrades)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.smallBusiness)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.therapeutic)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.travelVacation)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.writingEditing)}</div>
+          {Object.keys(servicesCategories).map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -2120,22 +556,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.jobs)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(jobsCategories.accounting)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.adminOffice)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.architect)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.artMediaDesign)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.aerospace)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.businessManagement)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.customerService)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.education)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.foodBev)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.generalLabor)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.government)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.humanResources)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.itSoftware)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.legalParalegal)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.manufacturing)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.salesMarketing)}</div>
+          {Object.keys(jobsCategories).map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -2158,13 +579,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.cryptoBazaar)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(cryptoCategories.localOmniCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localBitCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localEutherium)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localMonero)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localOther)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.omniCoinBitCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.omniCoinOther)}</div>
+          {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
         </div>
       </div>
     );
@@ -2474,14 +889,14 @@ class Marketplace extends Component {
     );
   }
 
-  /**
-   * todo:
-   * onClick SEE ALL, open view with all results for that category
-   */
-  viewCategory = (categoryId) => {
-    if (this.props.marketplaceActions.setActiveCategory) {
-      this.props.marketplaceActions.setActiveCategory(categoryId);
-    }
+  viewCategory = (categoryId, parent) => {
+    this.props.history.push('/search-results');
+    const { country, city } = this.props.account.publisherData;
+    const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
+    const subCategory = parent ? Marketplace.getValue(categoryId) : null;
+
+    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderListItems(type, title, itemsList) {
@@ -2541,8 +956,19 @@ class Marketplace extends Component {
     );
   }
 
+  getListingForCategory(category) {
+    const searchResultsByCategory = this.props.search.searchResultsByCategory || [];
+    let result = [];
+    searchResultsByCategory.forEach((listing) => {
+      if (listing.category === category) {
+        result = listing.listings;
+      }
+    });
+
+    return result;
+  }
+
   renderMarketHome() {
-    const { props } = this;
     const { formatMessage } = this.props.intl;
 
     return (
@@ -2552,7 +978,7 @@ class Marketplace extends Component {
           {this.renderListItems(
             CategoriesTypes.FEATURED,
             formatMessage(mainCategories.featuredListings),
-            props.marketplace.featureList
+            []
           )}
           <div className="categories-container">
             <div className="top-detail">
@@ -2560,31 +986,46 @@ class Marketplace extends Component {
             </div>
             {this.categoriesItems()}
           </div>
-          {this.renderListItems(
-            CategoriesTypes.FOR_SALE,
-            formatMessage(mainCategories.forSale),
-            props.marketplace.forSaleList
-          )}
-          {this.renderListItems(
-            CategoriesTypes.SERVICES,
-            formatMessage(mainCategories.services),
-            props.marketplace.servicesList
-          )}
-          {this.renderListItems(
-            CategoriesTypes.JOBS,
-            formatMessage(mainCategories.jobs),
-            props.marketplace.jobsList
-          )}
-          {this.renderListItems(
-            CategoriesTypes.RENTALS,
-            formatMessage(mainCategories.rentals),
-            props.marketplace.rentalsList
-          )}
-          {this.renderListItems(
-            CategoriesTypes.CRYPTO_BAZAAR,
-            formatMessage(mainCategories.cryptoBazaar),
-            props.marketplace.cryptoBazaarList
-          )}
+          {(this.props.dht.isLoading || this.props.search.searching)
+            ?
+              <Loader
+                content={
+                  this.props.dht.isLoading
+                    ? formatMessage(messages.searchingForPublishers)
+                    : formatMessage(messages.loadingListings)
+                }
+                inline
+                active
+              />
+            :
+              <div>
+                {this.renderListItems(
+                  CategoriesTypes.FOR_SALE,
+                  formatMessage(mainCategories.forSale),
+                  this.getListingForCategory(categories.forSale)
+                )}
+                {this.renderListItems(
+                  CategoriesTypes.SERVICES,
+                  formatMessage(mainCategories.services),
+                  this.getListingForCategory(categories.services)
+                )}
+                {this.renderListItems(
+                  CategoriesTypes.JOBS,
+                  formatMessage(mainCategories.jobs),
+                  this.getListingForCategory(categories.jobs)
+                )}
+                {this.renderListItems(
+                  CategoriesTypes.RENTALS,
+                  formatMessage(mainCategories.rentals),
+                  this.getListingForCategory(categories.rentals)
+                )}
+                {this.renderListItems(
+                  CategoriesTypes.CRYPTO_BAZAAR,
+                  formatMessage(mainCategories.cryptoBazaar),
+                  this.getListingForCategory(categories.cryptoBazaar)
+                )}
+              </div>
+          }
           <div>
             {this.renderFooter()}
           </div>
@@ -2617,14 +1058,24 @@ Marketplace.propTypes = {
   accountActions: PropTypes.shape({
     getPublisherData: PropTypes.func
   }),
+  searchActions: PropTypes.shape({
+    searchListings: PropTypes.func,
+    filterSearchByCategory: PropTypes.func
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
+  }),
+  search: PropTypes.shape({
+    recentSearches: PropTypes.array,
+    searchResultsFiltered: PropTypes.array
   }),
 };
 
 Marketplace.defaultProps = {
+  searchActions: {},
   marketplaceActions: {},
   intl: {},
+  search: {},
 };
 
 export default connect(
@@ -2641,6 +1092,10 @@ export default connect(
     }, dispatch),
     accountActions: bindActionCreators({
       getPublisherData
+    }, dispatch),
+    searchActions: bindActionCreators({
+      searchListings,
+      filterSearchByCategory
     }, dispatch)
   }),
 )(injectIntl(Marketplace));

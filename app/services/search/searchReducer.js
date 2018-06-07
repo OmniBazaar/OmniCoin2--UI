@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import SearchHistory from './searchHistory';
+import { categories } from '../../scenes/Home/scenes/Marketplace/categories';
 
 import {
   filterSearchResults,
@@ -21,7 +22,8 @@ import {
   searching,
   marketplaceReturnListings,
   marketplaceReturnBool,
-  searchListings
+  searchListings,
+  filterSearchByCategory
 } from './searchActions';
 
 const defaultState = {
@@ -81,6 +83,61 @@ const reducer = handleActions({
       activePageSearchResults,
       totalPagesSearchResults,
       searchResultsFiltered: currentData,
+    };
+  },
+  [filterSearchByCategory](state) {
+    const data = state.searchResults;
+
+    const forSaleListings = {
+      category: categories.forSale,
+      listings: []
+    };
+
+    const jobsListings = {
+      category: categories.jobs,
+      listings: []
+    };
+
+    const servicesListings = {
+      category: categories.services,
+      listings: []
+    };
+
+    const cryptoBazaarListings = {
+      category: categories.cryptoBazaar,
+      listings: []
+    };
+
+    const rentalsListings = {
+      category: categories.rentals,
+      listings: []
+    };
+
+    data.forEach((listing) => {
+      switch (listing.category) {
+        case categories.forSale:
+          forSaleListings.listings.push(listing);
+          break;
+        case categories.jobs:
+          jobsListings.listings.push(listing);
+          break;
+        case categories.services:
+          servicesListings.listings.push(listing);
+          break;
+        case categories.cryptoBazaar:
+          cryptoBazaarListings.listings.push(listing);
+          break;
+        case categories.rentals:
+          rentalsListings.listings.push(listing);
+          break;
+        default:
+      }
+    });
+
+    return {
+      ...state,
+      searchResultsByCategory: [
+        forSaleListings, jobsListings, servicesListings, cryptoBazaarListings, rentalsListings]
     };
   },
   [getRecentSearches](state) {

@@ -1,5 +1,13 @@
 import { defineMessages } from 'react-intl';
 
+const categories = Object.freeze({
+  forSale: 'forSale',
+  services: 'services',
+  jobs: 'jobs',
+  cryptoBazaar: 'cryptoBazaar',
+  rentals: 'rentals',
+});
+
 const mainCategories = defineMessages({
   featuredListings: {
     id: 'Marketplace.featuredListings',
@@ -796,5 +804,6 @@ export {
   userMenu,
   communityCategories,
   housingCategories,
-  gigsCategories
+  gigsCategories,
+  categories
 };
