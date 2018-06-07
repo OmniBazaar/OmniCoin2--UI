@@ -6,8 +6,13 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
-import { FetchChain, hash } from 'omnibazaarjs/es';
+import { FetchChain, TransactionBuilder, hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import {
+  ws,
+  getNewId,
+  messageTypes
+} from '../marketplace/wsSaga';
 
 import {
   addListingImage,
@@ -34,8 +39,8 @@ import {
   createListing,
   editListing,
   deleteListing,
-  getMyListings
 } from './apis';
+import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 
 export function* listingSubscriber() {
   yield all([
@@ -134,8 +139,12 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
 
 function* getListingDetail({ payload: { listingId }}) {
   try {
-    const listings = (yield select()).default.search.searchResults;
-    const listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    let listings = (yield select()).default.search.searchResults;
+    let listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    if (!listingDetail) {
+      listings = (yield select()).default.listing.myListings;
+      listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    }
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
@@ -148,8 +157,48 @@ function* getListingDetail({ payload: { listingId }}) {
 
 function* requestMyListings() {
 	try {
-		const myListings = yield call(getMyListings);
-		yield put(requestMyListingsSuccess(myListings));
+    const { currentUser } = (yield select()).default.auth;
+		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
+		let getListingCommands = (yield Promise.all(
+		  myListings.map(
+		    listing => FetchChain('getAccount', listing.publisher)
+      )
+    )).map((account, idx) => {
+      return {
+        listing_id: myListings[idx].id,
+        address: account.get('publisher_ip')
+      }
+    }).reduce((arr, curr) => {
+      const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
+      if (!val) {
+        return [
+          ...arr,
+          {
+            address: curr.address,
+            listing_ids: [curr.listing_id]
+          }
+        ]
+      } else {
+        val.listing_ids.push(curr.listing_id);
+        return arr;
+      }
+    }, []);
+		const ids = [];
+
+		getListingCommands.forEach(command => {
+		  const id = getNewId();
+		  ids.push(id);
+		  const message = {
+        id: id.toString(),
+        type: messageTypes.MARKETPLACE_GET_LISTING,
+        command: {
+          publishers: [command]
+        }
+      };
+		  console.log('Message ', JSON.stringify(message, null, 2));
+		  ws.send(JSON.stringify(message));
+    });
+    yield put(requestMyListingsSuccess(ids));
 	} catch (err) {
     console.log(err);
 		yield put(requestMyListingsError(err));
@@ -158,11 +207,11 @@ function* requestMyListings() {
 
 function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    const result = yield call(deleteListing, publisher, listing);
-    yield put(deleteListingSuccess(listing.id));
+    yield call(deleteListing, publisher, listing);
+    yield put(deleteListingSuccess(listing.listing_id));
   } catch (err) {
     console.log(err);
-    yield put(deleteListingError(listing.id, err));
+    yield put(deleteListingError(listing.listing_id, err));
   }
 }
 

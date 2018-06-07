@@ -36,14 +36,17 @@ import {
   getFavorites
 } from './listingActions';
 
+import { marketplaceReturnListings } from "../search/searchActions";
+
 const CoinTypes = Object.freeze({
   OMNI_COIN: 'OmniCoin',
 });
 
 const defaultState = {
   listingDetail: null,
-  myListings: {},
-  requestMyListing: {
+  myListings: [],
+  requestMyListings: {
+    ids: [],
     isRequest: false,
     error: null
   },
@@ -176,20 +179,21 @@ const reducer = handleActions({
   [requestMyListings](state) {
     return {
       ...state,
-      requestMyListing: {
-        ...state.requestMyListing,
+      myListings: [],
+      requestMyListings: {
+        ...state.requestMyListings,
+        ids: [],
         isRequest: true,
         error: null
       }
     };
   },
-  [requestMyListingsSuccess](state, { payload: { myListings } }) {
+  [requestMyListingsSuccess](state, { payload: { ids } }) {
     return {
       ...state,
-      myListings,
-      requestMyListing: {
-        ...state.requestMyListing,
-        isRequest: false,
+      requestMyListings: {
+        ...state.requestMyListings,
+        ids,
         error: null
       }
     }
@@ -197,8 +201,8 @@ const reducer = handleActions({
   [requestMyListingsError](state, { payload: { error } }) {
     return {
       ...state,
-      requestMyListing: {
-        ...state.requestMyListing,
+      requestMyListings: {
+        ...state.requestMyListings,
         isRequest: false,
         error
       }
@@ -418,25 +422,20 @@ const reducer = handleActions({
       deleteListing: {
         ...state.deleteListing,
         deleting: true,
-        listingId: listing.id,
+        listingId: listing.listing_id,
         error: null
       }
     };
   },
   [deleteListingSuccess](state, { payload: { listingId } }) {
     if (state.deleteListing.listingId === listingId) {
-      const myListings = {
-        ...state.myListings
-      };
-      delete myListings[listingId];
-
       return {
         ...state,
         deleteListing: {
           ...state.deleteListing,
           deleting: false
         },
-        myListings
+        myListings: state.myListings.filter(el => el.listing_id !== listingId)
       };
     }
 
@@ -455,6 +454,36 @@ const reducer = handleActions({
     }
 
     return state;
+  },
+  [marketplaceReturnListings](state, { data }) {
+    const listingsObj = JSON.parse(data.command.listings);
+    if (!listingsObj.listings) {
+      return {
+        ...state,
+        requestMyListings: {
+          ...state.requestMyListings,
+          ids: state.requestMyListings.ids.filter(el => el !== parseInt(data.id)),
+          isRequest: state.requestMyListings.ids.length === 1
+        }
+      }
+    }
+    const listings = listingsObj.listings.map(listing => ({
+      ...listing,
+      ip: data.command.address
+    }));
+    if (state.requestMyListings.ids.includes(parseInt(data.id))) {
+      return {
+        ...state,
+        myListings: [...state.myListings, ...listings],
+        requestMyListings: {
+          ...state.requestMyListings,
+          ids: state.requestMyListings.ids.filter(el => el !== parseInt(data.id)),
+          isRequest: state.requestMyListings.ids.length === 1
+        }
+      }
+    } else return  {
+      ...state
+    };
   }
 }, defaultState);
 
