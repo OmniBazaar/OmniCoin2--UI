@@ -109,7 +109,7 @@ function getPublishersWeights(peersMap) {
 function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
-    keyword: item.keyword,
+    keyword: item.keyword || null,
     publishers: item.publishers.map(publisher => ({
       address: publisher.host,
       weight: publishersWeights[publisher]

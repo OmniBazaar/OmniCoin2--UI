@@ -399,6 +399,16 @@ const messages = defineMessages({
 });
 
 class Marketplace extends Component {
+  static getValue(category) {
+    const arr = category.split('.');
+    let categoryName = category;
+    if (arr.length > 1) {
+      categoryName = arr[1];
+    }
+
+    return categoryName;
+  }
+
   componentWillMount() {
     this.props.accountActions.getPublisherData();
     this.fetchListings();
@@ -414,11 +424,15 @@ class Marketplace extends Component {
     if (searchResults !== nextProps.search.searchResults) {
       this.props.searchActions.filterSearchByCategory();
     }
+
+    if (this.props.account.country !== nextProps.account.country ||
+        this.props.account.city !== nextProps.account.city) {
+      this.fetchListings();
+    }
   }
 
   fetchListings() {
     const { country, city } = this.props.account.publisherData;
-    console.log(country, city);
     this.props.searchActions.searchListings(null, 'All', country, city, true, null);
   }
 
@@ -459,6 +473,24 @@ class Marketplace extends Component {
     console.log('View all sub categories for: ', category);
   };
 
+  renderOption(category, parentCategory) {
+    const { formatMessage } = this.props.intl;
+    const type = category.id;
+    const parent = parentCategory ? parentCategory.id : null;
+
+    return (
+      <div
+        className="sub-category"
+        onClick={() => this.viewCategory(type, parent)}
+        onKeyDown={() => this.viewCategory(type, parent)}
+        tabIndex={0}
+        role="link"
+      >
+        {formatMessage(category)}
+      </div>
+    );
+  }
+
   renderForSaleCategory() {
     const categoryName = CategoriesTypes.FOR_SALE;
     const { formatMessage } = this.props.intl;
@@ -466,33 +498,17 @@ class Marketplace extends Component {
 
     return (
       <div className="item" style={style}>
-        <span className="title">{formatMessage(mainCategories.forSale)}</span>
+        <span
+          className="title"
+          onClick={() => this.viewCategory(mainCategories.forSale.id)}
+          onKeyDown={() => this.viewCategory(mainCategories.forSale.id)}
+          tabIndex={0}
+          role="link"
+        >
+          {formatMessage(mainCategories.forSale)}
+        </span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(saleCategories.antiques)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.appliances)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.artsCrafts)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.babyChild)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.barter)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.beautyHealth)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.bikes)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.boats)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.books)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.business)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.carsTrucks)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.cdDvd)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.farmGarden)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.free)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.furniture)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.garageSale)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.general)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.heavyEquip)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.household)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.jewelry)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.materials)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.motorcycles)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.musicalInstruments)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.photoVideo)}</div>
-          <div className="sub-category">{formatMessage(saleCategories.rvCampers)}</div>
+          {Object.keys(saleCategories).map(key => this.renderOption(saleCategories[key], mainCategories.forSale))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -516,25 +532,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.services)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(servicesCategories.automotive)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.beautyPersonal)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.computerIT)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.creative)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.dental)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.eventMgmt)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.farmGarden)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.financial)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.healthCare)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.laborConstruction)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.legal)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.lessonsCoaching)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.marine)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.realState)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.skilledTrades)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.smallBusiness)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.therapeutic)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.travelVacation)}</div>
-          <div className="sub-category">{formatMessage(servicesCategories.writingEditing)}</div>
+          {Object.keys(servicesCategories).map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -558,22 +556,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.jobs)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(jobsCategories.accounting)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.adminOffice)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.architect)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.artMediaDesign)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.aerospace)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.businessManagement)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.customerService)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.education)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.foodBev)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.generalLabor)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.government)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.humanResources)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.itSoftware)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.legalParalegal)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.manufacturing)}</div>
-          <div className="sub-category">{formatMessage(jobsCategories.salesMarketing)}</div>
+          {Object.keys(jobsCategories).map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
           <div
             className="view-all"
             onClick={() => this.viewAllSubCategories(categoryName)}
@@ -596,13 +579,7 @@ class Marketplace extends Component {
       <div className="item" style={style}>
         <span className="title">{formatMessage(mainCategories.cryptoBazaar)}</span>
         <div className="sub-categories">
-          <div className="sub-category">{formatMessage(cryptoCategories.localOmniCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localBitCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localEutherium)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localMonero)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.localOther)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.omniCoinBitCoin)}</div>
-          <div className="sub-category">{formatMessage(cryptoCategories.omniCoinOther)}</div>
+          {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
         </div>
       </div>
     );
@@ -912,14 +889,14 @@ class Marketplace extends Component {
     );
   }
 
-  /**
-   * todo:
-   * onClick SEE ALL, open view with all results for that category
-   */
-  viewCategory = (categoryId) => {
-    if (this.props.marketplaceActions.setActiveCategory) {
-      this.props.marketplaceActions.setActiveCategory(categoryId);
-    }
+  viewCategory = (categoryId, parent) => {
+    this.props.history.push('/search-results');
+    const { country, city } = this.props.account.publisherData;
+    const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
+    const subCategory = parent ? Marketplace.getValue(categoryId) : null;
+
+    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderListItems(type, title, itemsList) {

@@ -148,7 +148,7 @@ class Menu extends Component {
     const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);
     const subCategory = parent ? Menu.getValue(categoryId) : null;
 
-    this.props.searchActions.searchListings('test', category, country, city, true, subCategory);
+    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
     this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
