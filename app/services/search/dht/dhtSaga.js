@@ -48,9 +48,9 @@ export function* getPeersFor({
     const allResponses = yield Promise.all(responses);
 
     const categoryKey = `category:${category}`;
-    const subcategoryKey = `category:${subCategory}`;
-    const countryKey = `category:${country}`;
-    const cityKey = `category:${city}`;
+    const subcategoryKey = `subcategory:${subCategory}`;
+    const countryKey = `country:${country}`;
+    const cityKey = `city:${city}`;
 
     keywords.push(categoryKey, subcategoryKey, countryKey, cityKey);
 
