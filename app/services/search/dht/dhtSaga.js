@@ -24,7 +24,7 @@ export function* connect() {
   try {
     const publishers = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
     const ips = (yield Promise.all(publishers.map(publisherName => FetchChain('getAccount', publisherName))))
-      .map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
+      .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -38,30 +38,38 @@ export function* connect() {
 
 export function* getPeersFor({
   payload: {
-    searchTerm, category, country, city, searchListings, subCategory
+    searchTerm, category, country, city, searchListings, subcategory
   }
 }) {
-  const keywords = [...(searchTerm.split(' '))];
-
   try {
-    // const responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`)));
+    const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
-    /*
-    if (country) {
-      responses.push(dhtConnector.findPeersFor(`country:${country}`));
-    }
-    */
-    const responsesNew = (yield Promise.all(responses));
-    let cccResponses = (yield Promise.all([
-      category !== 'All' ? dhtConnector.findPeersFor(`category:${category}`) : null,
-      country ? dhtConnector.findPeersFor(`country:${country}`) : null,
-      city ? dhtConnector.findPeersFor(`city:${city}`) : null
-    ]));
+    const allResponses = yield Promise.all(responses);
 
-    let peersMap = responsesNew.map((response, index) => ({
+    console.log(subcategory);
+
+    const categoryKey = `category:${category}`;
+    const subcategoryKey = `category:${subcategory}`;
+    const countryKey = `category:${country}`;
+    const cityKey = `category:${city}`;
+
+    keywords.push(categoryKey, subcategoryKey, countryKey, cityKey);
+
+    const extraKeywordsResponse = yield Promise.all([
+      category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      subcategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
+      country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
+      city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
+    ]);
+
+    allResponses.push(...extraKeywordsResponse);
+
+    console.log(extraKeywordsResponse);
+
+    let peersMap = allResponses.map((response, index) => ({
       keyword: keywords[index],
       publishers: response.peers ? response.peers : []
-    })).filter(el => el.publishers.length !== 0);
+    })).filter(el => el.publishers.length);
 
     peersMap = adjustPeersMap(peersMap);
 
@@ -73,7 +81,7 @@ export function* getPeersFor({
           category,
           country,
           city,
-          subCategory
+          subCategory: subcategory,
         }
       });
     }
@@ -106,4 +114,11 @@ function adjustPeersMap(peersMap) {
       weight: publishersWeights[publisher]
     }))
   }));
+}
+
+function noPeersFallback() {
+  return {
+    noPeers: true,
+    timedOut: false,
+  };
 }
