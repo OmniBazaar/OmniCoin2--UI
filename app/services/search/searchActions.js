@@ -3,6 +3,7 @@ import { createActions } from 'redux-actions';
 const {
   searchListings,
   filterSearchResults,
+  filterSearchByCategory,
   getRecentSearches,
   getRecentSearchesSucceeded,
   getRecentSearchesFailed,
@@ -25,6 +26,7 @@ const {
     searchTerm, category, country, city, historify, subCategory
   }),
   FILTER_SEARCH_RESULTS: (searchText) => ({ searchText }),
+  FILTER_SEARCH_BY_CATEGORY: () => ({}),
   GET_RECENT_SEARCHES: () => ({ }),
   GET_RECENT_SEARCHES_SUCCEEDED: (recentSearches) => ({ recentSearches }),
   GET_RECENT_SEARCHES_FAILED: (error) => ({ error }),
@@ -47,6 +49,7 @@ const {
 export {
   searchListings,
   filterSearchResults,
+  filterSearchByCategory,
   getRecentSearches,
   getRecentSearchesSucceeded,
   getRecentSearchesFailed,

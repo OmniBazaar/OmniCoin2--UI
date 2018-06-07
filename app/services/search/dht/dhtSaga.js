@@ -43,7 +43,8 @@ export function* getPeersFor({
 }) {
   try {
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
-    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+    const responses = keywords.length > 0 ? keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`)) : [];
+    console.log('searchTerm', searchTerm, responses);
     const allResponses = yield Promise.all(responses);
 
     const categoryKey = `category:${category}`;

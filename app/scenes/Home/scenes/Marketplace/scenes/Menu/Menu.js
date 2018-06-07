@@ -9,6 +9,9 @@ import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
 import { searchListings } from '../../../../../../services/search/searchActions';
+
+import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
+
 import SearchMenu from './components/SearchMenu/SearchMenu';
 
 import AddIcon from '../../images/btn-add-listing.svg';
@@ -146,6 +149,7 @@ class Menu extends Component {
     const subCategory = parent ? Menu.getValue(categoryId) : null;
 
     this.props.searchActions.searchListings('test', category, country, city, true, subCategory);
+    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderForSaleSubMenu() {
@@ -460,6 +464,9 @@ Menu.propTypes = {
   searchActions: PropTypes.shape({
     searchListings: PropTypes.func,
   }),
+  marketplaceActions: PropTypes.shape({
+    setActiveCategory: PropTypes.func,
+  }),
 };
 
 Menu.defaultProps = {
@@ -474,6 +481,9 @@ Menu = withRouter(Menu);
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
+    marketplaceActions: bindActionCreators({
+      setActiveCategory
+    }, dispatch),
     searchActions: bindActionCreators({
       searchListings
     }, dispatch)

@@ -61,7 +61,7 @@ export function* searchListingsByPeersMap({
   const id = getNewId();
   const filters = [];
 
-  if (category) {
+  if (category && category !== 'All') {
     filters.push({
       op: '=',
       name: 'category',
