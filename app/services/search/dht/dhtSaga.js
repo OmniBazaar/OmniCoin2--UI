@@ -38,18 +38,16 @@ export function* connect() {
 
 export function* getPeersFor({
   payload: {
-    searchTerm, category, country, city, searchListings, subcategory
-  }
+    searchTerm, category, country, city, searchListings, subCategory
+  },
 }) {
   try {
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
     const allResponses = yield Promise.all(responses);
 
-    console.log(subcategory);
-
     const categoryKey = `category:${category}`;
-    const subcategoryKey = `category:${subcategory}`;
+    const subcategoryKey = `category:${subCategory}`;
     const countryKey = `category:${country}`;
     const cityKey = `category:${city}`;
 
@@ -57,14 +55,12 @@ export function* getPeersFor({
 
     const extraKeywordsResponse = yield Promise.all([
       category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
-      subcategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
+      subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
       country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
       city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
     ]);
 
     allResponses.push(...extraKeywordsResponse);
-
-    console.log(extraKeywordsResponse);
 
     let peersMap = allResponses.map((response, index) => ({
       keyword: keywords[index],
@@ -81,7 +77,7 @@ export function* getPeersFor({
           category,
           country,
           city,
-          subCategory: subcategory,
+          subCategory,
         }
       });
     }
