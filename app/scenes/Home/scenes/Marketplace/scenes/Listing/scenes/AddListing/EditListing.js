@@ -14,12 +14,15 @@ import './add-listing.scss';
 const iconSize = 42;
 
 class EditListing extends Component {
-  render() {
-    const { formatMessage } = this.props.intl;
+
+  componentDidMount() {
     const { id } = this.props.match.params;
     const { myListings } = this.props;
-    const listing = myListings[id];
+    this.listing = myListings.find(el => el.listing_id === id);
+  }
 
+  render() {
+    const { formatMessage } = this.props.intl;
     return (
       <div className="marketplace-container category-listing add-listing" style={{ position: 'relative' }}>
         <div className="header">
@@ -38,8 +41,8 @@ class EditListing extends Component {
             </div>
           </div>
           <div className="listing-body">
-            { listing && <ListingForm editingListing={listing} /> }
-            { !listing &&
+            { this.listing && <ListingForm editingListing={this.listing} /> }
+            { !this.listing &&
               <div className='not-found'>
                 {formatMessage(messages.listingNotFound)}
               </div>
@@ -61,7 +64,7 @@ EditListing.propTypes = {
 const mapState = state => {
   return {
     myListings: state.default.listing.myListings
-  };  
+  };
 }
 
 export default connect(mapState)(injectIntl(EditListing));
