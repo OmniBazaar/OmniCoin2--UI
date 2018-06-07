@@ -127,6 +127,10 @@ const messages = defineMessages({
   success: {
     id: 'Listing.success',
     defaultMessage: 'Success'
+  },
+  deleteListingError: {
+    id: "Listing.deleteListingError",
+    defaultMessage: 'Delete listing error'
   }
 });
 
@@ -170,6 +174,13 @@ class Listing extends Component {
         } else {
            this.errorToast(messages.error);
         }
+      }
+    }
+    if (this.props.listing.deleteListing.deleting && !nextProps.listing.deleteListing.deleting) {
+      if (nextProps.listing.deleteListing.error) {
+        this.errorToast(messages.deleteListingError);
+      } else {
+        this.props.history.push('/listings');
       }
     }
   }
@@ -264,18 +275,20 @@ class Listing extends Component {
 
   renderOwnerButtons() {
     const { formatMessage } = this.props.intl;
-
+    const { deleting } = this.props.listing.deleteListing;
     return (
       <div className="buttons-wrapper">
         <Button
           onClick={() => this.editListing()}
           content={formatMessage(messages.editListing)}
           className="button--green-bg"
+          loading={deleting}
         />
         <Button
           onClick={() => this.deleteListing()}
           content={formatMessage(messages.delete)}
           className="button--gray-text"
+          loading={deleting}
         />
       </div>
     );

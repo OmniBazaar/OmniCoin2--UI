@@ -4,3 +4,5 @@
 *.jpeg binary
 *.ico binary
 *.icns binary
+*.exe binary
+app/ob2/mac/ob2 binary
