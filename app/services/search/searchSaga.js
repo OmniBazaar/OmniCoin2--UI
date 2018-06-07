@@ -111,7 +111,8 @@ export function* searchListingsByPeersMap({
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
       command: {
         keywords: peersMap.reduce((keywords, curr) => [...keywords, ...curr.keyword], []),
-        publishers: peersMap.reduce((publishers, curr) => [...publishers, ...curr.publishers], []),
+        publishers: peersMap.reduce((publishers, curr) =>
+          [...publishers, ...(curr.publishers || [])], []),
         currency: 'BTC',
         range: '20',
         filters
