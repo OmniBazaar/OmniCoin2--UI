@@ -15,18 +15,23 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
     const { content, name, publisher } = file;
     const listings = yield call(getListings, content);
 
-    const items = yield* listings.map(async item => {
-      let image;
+    const items = yield listings.map(async item => {
+      let imageToSave;
+      const itemToSave = {
+        ...item,
+        end_date: item.end_date || item.start_date,
+        name: item.name || item.listing_title,
+      };
 
-      if (!item.imageURL) {
-        image = await getImageFromAmazon(item['product-id']);
+      if (!itemToSave.imageURL) {
+        imageToSave = await getImageFromAmazon(itemToSave.productId);
       } else {
-        image = (await fetch(item.imageURL)).blob();
+        imageToSave = (await fetch(itemToSave.imageURL)).blob();
       }
 
-      image.name = `${generate()}-${item['product-id']}.${image.type.split('/')[1]}`;
-      image.path = `tmp/${image.name}`;
-      image.lastModifiedDate = new Date();
+      imageToSave.name = `${generate()}-${itemToSave.productId}.${imageToSave.type.split('/')[1]}`;
+      imageToSave.path = `tmp/${imageToSave.name}`;
+      imageToSave.lastModifiedDate = new Date();
 
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -34,22 +39,29 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
         reader.onloadend = async () => {
           const imgContent = reader.result.replace(/^data:image\/\w+;base64,/, '');
 
-          fs.writeFileSync(image.path, Buffer.from(imgContent, 'base64'), { flag: 'w' });
+          fs.writeFileSync(imageToSave.path, Buffer.from(imgContent, 'base64'), { flag: 'w' });
 
-          const newImage = await saveImage(publisher, image);
+          const { image, fileName, thumb } = await saveImage(publisher, imageToSave);
 
-          fs.unlink(image.path, console.log);
+          fs.unlink(imageToSave.path, console.log);
 
-          const listing = await createListing({
+          delete itemToSave.productId;
+          delete itemToSave.imageURL;
+
+          const listing = await createListing(publisher, {
             ...defaultValues,
-            ...item,
-            images: [newImage],
+            ...itemToSave,
+            images: [{
+              thumb,
+              image_name: fileName,
+              path: image,
+            }],
           });
 
           resolve(listing);
         };
 
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(imageToSave);
       });
     });
 

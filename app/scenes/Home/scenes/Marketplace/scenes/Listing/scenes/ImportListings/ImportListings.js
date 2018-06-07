@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
+import { Icon, Form, Dropdown, Button, Grid, Modal, Input } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
@@ -13,10 +13,9 @@ import {
   removeFile,
   removeAllFiles
 } from '../../../../../../../../services/listing/importActions';
-
 import { getFileExtension } from '../../../../../../../../utils/file';
-
 import './import-listings.scss';
+import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 
 const iconSize = 42;
 
@@ -73,13 +72,19 @@ const messages = defineMessages({
     id: 'ImportListings.onlyTextFileMsg',
     defaultMessage: 'Only txt files are allowed.'
   },
+  selectPublisher: {
+    id: 'AddListing.selectPublisher',
+    defaultMessage: 'Select publisher'
+  },
 });
 
 class ImportListings extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      open: false
+      open: false,
+      selectedPublisher: null
     };
   }
 
@@ -122,7 +127,7 @@ class ImportListings extends Component {
       const file = this.inputElement.files[0];
 
       this.props.listingActions.importFile({
-        publisher: this.props.publisher,
+        publisher: this.state.selectedPublisher,
         content: file,
         name: file.name,
       }, this.props.listingDefaults);
@@ -159,6 +164,18 @@ class ImportListings extends Component {
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
               />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.selectPublisher)}</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Input>
+                <PublishersDropdown
+                  placeholder={formatMessage(messages.selectPublisher)}
+                  value={this.state.selectedPublisher}
+                  onChange={selectedPublisher => this.setState({ selectedPublisher })}
+                />
+              </Input>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -288,7 +305,6 @@ ImportListings.propTypes = {
     city: PropTypes.string,
     post_code: PropTypes.string,
   }),
-  publisher: PropTypes.shape({}),
 };
 
 ImportListings.defaultProps = {
@@ -296,7 +312,6 @@ ImportListings.defaultProps = {
   listingActions: {},
   listingDefaults: {},
   intl: {},
-  publisher: null,
 };
 
 export default connect(

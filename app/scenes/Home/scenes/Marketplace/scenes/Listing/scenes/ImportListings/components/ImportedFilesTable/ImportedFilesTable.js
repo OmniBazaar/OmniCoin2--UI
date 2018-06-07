@@ -65,6 +65,8 @@ class ImportedFilesTable extends Component {
       importedFiles
     } = this.props.listingImport;
 
+    console.log(importedFiles);
+
     return (
       <div className="data-table">
         <div className="table-container">
@@ -77,7 +79,7 @@ class ImportedFilesTable extends Component {
                 <TableHeaderCell key="category" sorted={sortColumn === 'category' ? sortDirection : null} onClick={this.sortData('category')}>
                   {formatMessage(messages.category)}
                 </TableHeaderCell>
-                <TableHeaderCell key="subCategory" sorted={sortColumn === 'subCategory' ? sortDirection : null} onClick={this.sortData('subCategory')}>
+                <TableHeaderCell key="subCategory" sorted={sortColumn === 'subcategory' ? sortDirection : null} onClick={this.sortData('subCategory')}>
                   {formatMessage(messages.subCategory)}
                 </TableHeaderCell>
                 <TableHeaderCell key="contactType" sorted={sortColumn === 'contactType' ? sortDirection : null} onClick={this.sortData('contactType')}>
@@ -103,7 +105,7 @@ class ImportedFilesTable extends Component {
                   <TableRow key={hash(row) + hash(item) + hash(index)}>
                     <TableCell>{item.type}</TableCell>
                     <TableCell>{item.category}</TableCell>
-                    <TableCell>{item.subCategory}</TableCell>
+                    <TableCell>{item.subcategory}</TableCell>
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
                     <TableCell>{item.listing_title}</TableCell>

@@ -23,14 +23,15 @@ class PublishersDropdown extends Component {
   }
 
   onChange(e, data) {
-    const { onChange } = this.props.input;
+    const { onChange } = this.props.input || this.props;
     if (onChange) {
       onChange(data.value);
     }
   }
 
   render() {
-    const { value } = this.props.input;
+    const { value } = this.props.input || this.props;
+
     return (
       <Dropdown
         compact

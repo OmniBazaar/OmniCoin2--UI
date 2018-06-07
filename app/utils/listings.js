@@ -14,11 +14,13 @@ export function getListings(file) {
 const keysMap = {
   'item-name': 'listing_title',
   'item-description': 'description',
-  'listing-id': 'listing_uuid',
   'open-date': 'start_date',
   'seller-sku': 'keywords',
-  'item-condition': 'codition',
+  'item-condition': 'condition',
   'image-url': 'imageURL',
+  'product-id': 'productId',
+  price: 'price',
+  quantity: 'quantity',
 };
 
 const valuesMapper = {
@@ -40,8 +42,12 @@ export function mapListingsFromFile(fileContent = '') {
     const data = line.split(/\t/);
 
     return data.reduce((object, val, index) => {
-      const key = keysMap[header[index]] || header[index];
+      const key = keysMap[header[index]];
       const value = valuesMapper[key] ? valuesMapper[key](val) : val;
+
+      if (!key || !value) {
+        return { ...object };
+      }
 
       return {
         ...object,
