@@ -36,26 +36,27 @@ class PublishersDropdown extends Component {
   }
 
   onChange(e, data) {
-    const { onChange } = this.props.input;
+    const { onChange } = this.props.input || this.props;
     if (onChange) {
       onChange(data.value);
     }
   }
 
   render() {
-    const { value } = this.props.input;
+    const { value } = this.props.input || this.props;
     const { loading } = this.props.account.publishers;
+
     return (
       <Dropdown
-          compact
-          selection
-          placeholder={this.props.placeholder}
-          options={this.options}
-          onChange={this.onChange.bind(this)}
-          value={value}
-          loading={loading}
-          disabled={this.state.disabled}
-          />
+        compact
+        selection
+        placeholder={this.props.placeholder}
+        options={this.options}
+        onChange={this.onChange.bind(this)}
+        value={value}
+        loading={loading}
+        disabled={this.state.disabled}
+      />
     );
   }
 }
