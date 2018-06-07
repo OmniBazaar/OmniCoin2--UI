@@ -32,19 +32,14 @@ export function* accountSubscriber() {
 
 export function* updatePublicData() {
   const { account } = (yield select()).default;
-  let payload = {
-    is_a_publisher: account.publisher,
-    is_an_escrow: account.escrow,
-    referrer: account.referrer,
-  };
-  if (account.publisher) {
-    payload = {
-      ...payload,
-      publisher_ip: account.ipAddress
-    };
-  }
   try {
-    yield updateAccount(payload);
+    yield updateAccount({
+      transactionProcessor: account.transactionProcessor,
+      referrer: account.referrer,
+      is_a_publisher: account.publisher,
+      is_an_escrow: account.escrow,
+      publisher_ip: account.ipAddress,
+    });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
     console.log('ERR', e);
@@ -69,15 +64,28 @@ export function* getPublishers() {
 
 export function* updateAccount(payload) {
   const { currentUser, account } = (yield select()).default.auth;
+  const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   const tr = new TransactionBuilder();
+  let trObj = {...payload};
+  if (!trObj.is_a_publisher) {
+    delete trObj.publisher_ip;
+  }
+  console.log(trObj);
+  if (trObj.transactionProcessor) {
+    tr.add_type_operation('witness_create', {
+      witness_account: account.id,
+      url: '',
+      block_signing_key:  key.privKey.toPublicKey()
+    })
+  }
+  delete trObj.transactionProcessor;
   tr.add_type_operation(
     'account_update',
     {
       account: account.id,
-      ...payload
+      ...trObj
     }
   );
-  const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   yield tr.set_required_fees();
   yield tr.add_signer(key.privKey, key.pubKey);
   yield tr.broadcast();
