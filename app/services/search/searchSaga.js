@@ -125,12 +125,6 @@ export function* searchListingsByPeersMap({
       },
     };
   }
-  if (city) {
-    message.city = city;
-  }
-  if (country) {
-    message.country = country;
-  }
 
   console.log('message sent:');
   console.log(JSON.stringify(message));
