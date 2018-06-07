@@ -47,7 +47,7 @@ const {
   SET_ACTIVE_CURRENCY: (activeCurrency) => ({ activeCurrency }),
   SET_NUMBER_TO_BUY: (number) => ({ number }),
   REQUEST_MY_LISTINGS: () => ({}),
-  REQUEST_MY_LISTINGS_SUCCESS: (myListings) => ({ myListings }),
+  REQUEST_MY_LISTINGS_SUCCESS: (ids) => ({ ids }),
   REQUEST_MY_LISTINGS_ERROR: (error) => ({ error }),
   SET_BITCOIN_PRICE: () => ({}),
   SET_OMNICOIN_PRICE: () => ({}),

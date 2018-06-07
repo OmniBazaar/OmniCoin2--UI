@@ -18,9 +18,7 @@ import {
   searching
 } from './searchActions';
 import SearchHistory from './searchHistory';
-import {getNewId, messageTypes, ws} from "../marketplace/wsSaga";
-
-const searchByAllKeywords = false; //todo
+import { getNewId, messageTypes, ws } from '../marketplace/wsSaga';
 
 
 export function* searchSubscriber() {
@@ -45,7 +43,17 @@ function* searchListings({
       searchHistory.add({ searchTerm, category });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
-    yield put({ type: 'DHT_GET_PEERS_FOR', payload: { searchTerm, category, country, city, searchListings: true, subCategory } });
+    yield put({
+      type: 'DHT_GET_PEERS_FOR',
+      payload: {
+        searchTerm,
+        category,
+        country,
+        city,
+        searchListings: true,
+        subCategory,
+      }
+    });
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
@@ -54,7 +62,7 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory
+    peersMap, category, country, city, subCategory, searchByAllKeywords,
   }
 }) {
   let message;
@@ -65,7 +73,7 @@ export function* searchListingsByPeersMap({
     filters.push({
       op: '=',
       name: 'category',
-      value: category
+      value: category,
     });
   }
 
@@ -73,19 +81,25 @@ export function* searchListingsByPeersMap({
     filters.push({
       op: '=',
       name: 'subcategory',
-      value: subCategory
+      value: subCategory,
     });
   }
 
-  /*
   if (country) {
     filters.push({
       op: '=',
       name: 'country',
-      value: country
+      value: country,
     });
   }
-  */
+
+  if (city) {
+    filters.push({
+      op: '=',
+      name: 'city',
+      value: city,
+    });
+  }
 
   if (searchByAllKeywords) {
     message = {

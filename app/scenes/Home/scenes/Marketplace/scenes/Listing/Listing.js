@@ -18,6 +18,7 @@ import { toastr } from 'react-redux-toastr';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
+import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CategoryHeader from '../../../Marketplace/scenes/CategoryHeader';
 import PriceItem from './components/PriceItem';
@@ -36,11 +37,11 @@ import {
   getFavorites,
   isListingFine,
   setNumberToBuy,
-  setActiveCurrency
+  setActiveCurrency,
+  deleteListing
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
-const isUserOwner = false;
 
 const messages = defineMessages({
   seller: {
@@ -131,6 +132,10 @@ const messages = defineMessages({
 
 class Listing extends Component {
 
+  state = {
+    confirmDeleteOpen: false
+  };
+
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
     this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL_CURRENCY);
@@ -179,17 +184,39 @@ class Listing extends Component {
     toastr.success(formatMessage(messages.success), formatMessage(message));
   }
 
+  isOwner() {
+    return this.props.listing.listingDetail.owner === this.props.auth.currentUser.username;
+  }
+
   setGallerySize() {
     if (this.gallery) {
       this.gallery.children[0].lastChild.firstChild.style.height = `${this.gallery.offsetWidth}px`;
     }
   }
 
+
   editListing = () => {
+    const { history } = this.props;
+    history.push(`/edit-listing/${this.props.listing.listingDetail.listing_id}`);
   };
 
   deleteListing = () => {
+    this.setState({
+      confirmDeleteOpen: true
+    });
   };
+
+  onOkDelete() {
+    this.closeConfirm();
+    const { listingDetail } = this.props.listing;
+    this.props.listingActions.deleteListing({publisher_ip: listingDetail.ip }, listingDetail);
+  }
+
+  closeConfirm() {
+    this.setState({
+      confirmDeleteOpen: false
+    });
+  }
 
   renderUser(listingDetail) {
     const { formatMessage } = this.props.intl;
@@ -394,7 +421,7 @@ class Listing extends Component {
         </div>
         <div className="price-wrapper">
           <span>
-            {isUserOwner ?
+            {this.isOwner() ?
               formatMessage(messages.itemPrice)
               :
               formatMessage(messages.selectCurrency)
@@ -404,29 +431,29 @@ class Listing extends Component {
               <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC')}
                          coinLabel={CoinTypes.OMNI_COIN}
                          currency={CoinTypes.OMNI_CURRENCY}
-                         isUserOwner={isUserOwner}/>
+                         isUserOwner={this.isOwner()}/>
           }
           {listingDetail['price_using_btc'] &&
             <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC')}
                        coinLabel={CoinTypes.BIT_COIN}
                        currency={CoinTypes.BIT_CURRENCY}
-                       isUserOwner={isUserOwner}/>
+                       isUserOwner={this.isOwner()}/>
           }
           <PriceItem
             amount={listingDetail.price}
             coinLabel={CoinTypes.LOCAL}
             currency={listingDetail['currency']}
-            isUserOwner={isUserOwner}
+            isUserOwner={this.isOwner()}
           />
         </div>
-        {isUserOwner ?
+        {this.isOwner() ?
           this.renderOwnerButtons()
           :
-          this.renderUserButtons(listingDetail.amountAvailable)
+          this.renderUserButtons(listingDetail.quantity)
         }
         <div className="availability">
           <span>{formatMessage(messages.available)}</span>
-          <span>{listingDetail.amountAvailable}</span>
+          <span>{listingDetail.quantity}</span>
         </div>
       </div>
     );
@@ -463,7 +490,11 @@ class Listing extends Component {
               </div>
             ]
           }
-
+          <ConfirmationModal
+            onApprove={() => this.onOkDelete()}
+            onCancel={() => this.closeConfirm()}
+            isOpen={this.state.confirmDeleteOpen}
+          />
         </div>
       </div>
     );
@@ -507,7 +538,8 @@ export default connect(
       getFavorites,
       isListingFine,
       setNumberToBuy,
-      setActiveCurrency
+      setActiveCurrency,
+      deleteListing
     }, dispatch),
   }),
 )(injectIntl(Listing));

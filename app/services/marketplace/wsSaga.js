@@ -25,6 +25,7 @@ export const getNewId = () => {
     localStorage.setItem(key, 1);
     return 1;
   }
+  localStorage.setItem(key, parseInt(id) + 1);
   return (parseInt(id) + 1);
 };
 

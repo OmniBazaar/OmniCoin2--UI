@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import {  injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { toastr } from 'react-redux-toastr';
@@ -13,7 +13,6 @@ import {
   TableRow,
   Icon,
   Button,
-  Modal,
   Dimmer,
   Loader
 } from 'semantic-ui-react';
@@ -21,6 +20,7 @@ import hash from 'object-hash';
 import './grid-table.scss';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 
 import {
   setPaginationGridTable,
@@ -100,7 +100,7 @@ class GridTable extends Component {
 
   onEditClick(item) {
     const { history } = this.props;
-    history.push(`/edit-listing/${item.id}`);
+    history.push(`/edit-listing/${item.listing_id}`);
   }
 
   onDeleteClick(item) {
@@ -113,7 +113,7 @@ class GridTable extends Component {
   onOkDelete() {
     this.closeConfirm();
     if (this.item) {
-      this.props.listingActions.deleteListing(this.item);
+      this.props.listingActions.deleteListing({publisher_ip: this.item.ip }, this.item);
     }
   }
 
@@ -140,32 +140,6 @@ class GridTable extends Component {
     );
   }
 
-  renderConfirmDialog() {
-    const { formatMessage } = this.props.intl;
-
-    return (
-      <Modal size="mini"
-        open={this.state.confirmDeleteOpen}
-        onClose={this.closeConfirm.bind(this)}>
-        <Modal.Header>
-          {formatMessage(messages.confirmDeleteTitle)}
-        </Modal.Header>
-        <Modal.Content>
-          <p className="modal-content">
-            {formatMessage(messages.confirmDeleteMessage)}
-          </p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='grey' onClick={this.closeConfirm.bind(this)}>
-            {formatMessage(messages.cancel)}
-          </Button>
-          <Button color='red' onClick={this.onOkDelete.bind(this)}>
-            {formatMessage(messages.ok)}
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    );
-  }
 
   render() {
     const {
@@ -173,19 +147,22 @@ class GridTable extends Component {
       totalPagesGridTable,
       gridTableDataFiltered
     } = this.props.marketplace;
+    const {
+      showTrailingLoader
+    } = this.props;
     const rows = _.chunk(gridTableDataFiltered, 6);
     const { formatMessage } = this.props.intl;
-
+    console.log('ROWS ', rows);
     return (
       <div className="data-table">
         <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableBody>
-              {rows.length > 0 ? rows.map(row =>
+              {rows.length > 0 || showTrailingLoader ? rows.map((row, idx) =>
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = `http://${item.ip}/publisher-images/${item.images ? item.images[0].thumb : ''}`; //todo
+                      const image = `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}`; //todo
                       const style = { backgroundImage: `url(${image})` };
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
@@ -224,11 +201,24 @@ class GridTable extends Component {
                         </TableCell>
                       );
                     })}
+                    {showTrailingLoader && idx === rows.length - 1 &&
+                      <TableCell className="item">
+                        <Loader active />
+                      </TableCell>
+                    }
                   </TableRow>
                 ))
                 : this.renderEmptyRow()
               }
+              {showTrailingLoader && rows.length === 0 &&
+                <TableRow>
+                  <TableCell className="item">
+                    <Loader active/>
+                  </TableCell>
+                </TableRow>
+              }
             </TableBody>
+
           </Table>
         </div>
         <div className="top-detail bottom">
@@ -240,8 +230,11 @@ class GridTable extends Component {
             />
           </div>
         </div>
-
-        {this.renderConfirmDialog()}
+        <ConfirmationModal
+          onApprove={() => this.onOkDelete()}
+          onCancel={() => this.closeConfirm()}
+          isOpen={this.state.confirmDeleteOpen}
+        />
         {this.renderLoading()}
       </div>
     );
@@ -276,6 +269,7 @@ GridTable.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  showTrailingLoader: PropTypes.bool
 };
 
 GridTable.defaultProps = {
@@ -288,6 +282,7 @@ GridTable.defaultProps = {
   sortBy: '',
   sortDirection: '',
   gridTableActions: {},
+  showTrailingLoader: false,
 };
 
 export default connect(

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
+import { Icon, Form, Dropdown, Button, Grid, Modal, Input } from 'semantic-ui-react';
 import hash from 'object-hash';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
@@ -13,10 +13,9 @@ import {
   removeFile,
   removeAllFiles
 } from '../../../../../../../../services/listing/importActions';
-
 import { getFileExtension } from '../../../../../../../../utils/file';
-
 import './import-listings.scss';
+import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 
 const iconSize = 42;
 
@@ -73,13 +72,19 @@ const messages = defineMessages({
     id: 'ImportListings.onlyTextFileMsg',
     defaultMessage: 'Only txt files are allowed.'
   },
+  selectPublisher: {
+    id: 'AddListing.selectPublisher',
+    defaultMessage: 'Select publisher'
+  },
 });
 
 class ImportListings extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      open: false
+      open: false,
+      selectedPublisher: null
     };
   }
 
@@ -113,29 +118,19 @@ class ImportListings extends Component {
 
   importFile(event) {
     if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
       const extFile = getFileExtension(event);
-      if (extFile === 'txt') {
-        reader.onload = () => {
-          // e.target.result
-          const filename = this.inputElement.files[0].name;
-          const file = {
-            title: filename,
-            content: 'The content for this txt file.',
-            type: 'Amazon',
-            category: 'Category',
-            subCategory: 'Sub-category',
-            contactType: 'Contact Type',
-            contactInfo: 'Contact Info',
-            price: 15,
-            currency: 'USD',
-          };
-          this.props.listingActions.importFile(file);
-        };
-        reader.readAsDataURL(event.target.files[0]);
-      } else {
-        this.setState({ open: true });
+
+      if (extFile !== 'txt') {
+        return this.setState({ open: true });
       }
+
+      const file = this.inputElement.files[0];
+
+      this.props.listingActions.importFile({
+        publisher: this.state.selectedPublisher,
+        content: file,
+        name: file.name,
+      }, this.props.listingDefaults);
     }
   }
 
@@ -169,6 +164,18 @@ class ImportListings extends Component {
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
               />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.selectPublisher)}</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Input>
+                <PublishersDropdown
+                  placeholder={formatMessage(messages.selectPublisher)}
+                  value={this.state.selectedPublisher}
+                  onChange={selectedPublisher => this.setState({ selectedPublisher })}
+                />
+              </Input>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -279,18 +286,31 @@ ImportListings.propTypes = {
     formatMessage: PropTypes.func,
   }),
   listingImport: PropTypes.shape({
-    importedFiles: PropTypes.arrayOf(PropTypes.obj),
+    importedFiles: PropTypes.arrayOf(PropTypes.object),
   }),
   listingActions: PropTypes.shape({
     importFile: PropTypes.func,
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
   }),
+  listingDefaults: PropTypes.shape({
+    category: PropTypes.string,
+    subcategory: PropTypes.string,
+    currency: PropTypes.string,
+    price_using_btc: PropTypes.bool,
+    price_using_omnicoin: PropTypes.bool,
+    description: PropTypes.string,
+    images: PropTypes.object,
+    address: PropTypes.string,
+    city: PropTypes.string,
+    post_code: PropTypes.string,
+  }),
 };
 
 ImportListings.defaultProps = {
   listingImport: {},
   listingActions: {},
+  listingDefaults: {},
   intl: {},
 };
 
@@ -302,5 +322,5 @@ export default connect(
       removeFile,
       removeAllFiles
     }, dispatch),
-  }),
+  })
 )(injectIntl(ImportListings));

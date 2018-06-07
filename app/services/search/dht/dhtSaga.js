@@ -47,9 +47,9 @@ export function* getPeersFor({
     const allResponses = yield Promise.all(responses);
 
     const categoryKey = `category:${category}`;
-    const subcategoryKey = `category:${subCategory}`;
-    const countryKey = `category:${country}`;
-    const cityKey = `category:${city}`;
+    const subcategoryKey = `subcategory:${subCategory}`;
+    const countryKey = `country:${country}`;
+    const cityKey = `city:${city}`;
 
     keywords.push(categoryKey, subcategoryKey, countryKey, cityKey);
 
@@ -60,12 +60,18 @@ export function* getPeersFor({
       city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
     ]);
 
-    allResponses.push(...extraKeywordsResponse);
+    let peersMap;
 
-    let peersMap = allResponses.map((response, index) => ({
-      keyword: keywords[index],
-      publishers: response.peers ? response.peers : []
-    })).filter(el => el.publishers.length);
+    if (keywords.length) {
+      peersMap = allResponses.map((response, index) => ({
+        keyword: keywords[index],
+        publishers: response.peers ? response.peers : []
+      })).filter(el => el.publishers.length);
+    } else {
+      peersMap = extraKeywordsResponse.map((response) => ({
+        publishers: response.peers ? response.peers : []
+      })).filter(el => el.publishers.length);
+    }
 
     peersMap = adjustPeersMap(peersMap);
 
@@ -78,6 +84,7 @@ export function* getPeersFor({
           country,
           city,
           subCategory,
+          searchByAllKeywords: !!keywords.length,
         }
       });
     }
