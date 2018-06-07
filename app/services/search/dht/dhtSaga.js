@@ -51,8 +51,6 @@ export function* getPeersFor({
     const countryKey = `country:${country}`;
     const cityKey = `city:${city}`;
 
-    keywords.push(categoryKey, subcategoryKey, countryKey, cityKey);
-
     const extraKeywordsResponse = yield Promise.all([
       category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
@@ -84,7 +82,7 @@ export function* getPeersFor({
           country,
           city,
           subCategory,
-          searchByAllKeywords: !!keywords.length,
+          searchByAllKeywords: !keywords.length,
         }
       });
     }
