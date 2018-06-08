@@ -79,7 +79,7 @@ const runOb2 = async () => {
       case 'win32':
         return process.env.LOCALAPPDATA + '/OmniBazaar 2/ob2.exe';
       case 'linux':
-        return './app/ob2/linux/ob2';
+        return process.env.HOME + '/.OmniBazaar/ob2';
       case 'darwin':
         return process.env.HOME + '/Library/Application Support/OmniBazaar 2/ob2';
     }

@@ -6,3 +6,4 @@
 *.icns binary
 *.exe binary
 app/ob2/mac/ob2 binary
+app/ob2/linux/ob2 binary
