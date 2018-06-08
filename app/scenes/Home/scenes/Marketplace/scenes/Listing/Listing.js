@@ -18,6 +18,7 @@ import { toastr } from 'react-redux-toastr';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
+import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import CategoryHeader from '../../../Marketplace/scenes/CategoryHeader';
 import PriceItem from './components/PriceItem';
@@ -36,11 +37,11 @@ import {
   getFavorites,
   isListingFine,
   setNumberToBuy,
-  setActiveCurrency
+  setActiveCurrency,
+  deleteListing
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
-const isUserOwner = false;
 
 const messages = defineMessages({
   seller: {
@@ -126,10 +127,18 @@ const messages = defineMessages({
   success: {
     id: 'Listing.success',
     defaultMessage: 'Success'
+  },
+  deleteListingError: {
+    id: "Listing.deleteListingError",
+    defaultMessage: 'Delete listing error'
   }
 });
 
 class Listing extends Component {
+
+  state = {
+    confirmDeleteOpen: false
+  };
 
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
@@ -167,6 +176,13 @@ class Listing extends Component {
         }
       }
     }
+    if (this.props.listing.deleteListing.deleting && !nextProps.listing.deleteListing.deleting) {
+      if (nextProps.listing.deleteListing.error) {
+        this.errorToast(messages.deleteListingError);
+      } else {
+        this.props.history.push('/listings');
+      }
+    }
   }
 
   errorToast(message) {
@@ -179,17 +195,39 @@ class Listing extends Component {
     toastr.success(formatMessage(messages.success), formatMessage(message));
   }
 
+  isOwner() {
+    return this.props.listing.listingDetail.owner === this.props.auth.currentUser.username;
+  }
+
   setGallerySize() {
     if (this.gallery) {
       this.gallery.children[0].lastChild.firstChild.style.height = `${this.gallery.offsetWidth}px`;
     }
   }
 
+
   editListing = () => {
+    const { history } = this.props;
+    history.push(`/edit-listing/${this.props.listing.listingDetail.listing_id}`);
   };
 
   deleteListing = () => {
+    this.setState({
+      confirmDeleteOpen: true
+    });
   };
+
+  onOkDelete() {
+    this.closeConfirm();
+    const { listingDetail } = this.props.listing;
+    this.props.listingActions.deleteListing({publisher_ip: listingDetail.ip }, listingDetail);
+  }
+
+  closeConfirm() {
+    this.setState({
+      confirmDeleteOpen: false
+    });
+  }
 
   renderUser(listingDetail) {
     const { formatMessage } = this.props.intl;
@@ -237,18 +275,20 @@ class Listing extends Component {
 
   renderOwnerButtons() {
     const { formatMessage } = this.props.intl;
-
+    const { deleting } = this.props.listing.deleteListing;
     return (
       <div className="buttons-wrapper">
         <Button
           onClick={() => this.editListing()}
           content={formatMessage(messages.editListing)}
           className="button--green-bg"
+          loading={deleting}
         />
         <Button
           onClick={() => this.deleteListing()}
           content={formatMessage(messages.delete)}
           className="button--gray-text"
+          loading={deleting}
         />
       </div>
     );
@@ -259,18 +299,18 @@ class Listing extends Component {
     if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = this.props.listing.buyListing.numberToBuy *
-        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const number =  this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
-      this.props.history.push(`/transfer/?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
     if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = this.props.listing.buyListing.numberToBuy *
-        currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
-      const to = listingDetail.bitcoinAddress;
-      this.props.history.push(`/transfer/${type}?listing_id=${listingId}&price=${price}&to=${to}&type=${type}`)
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
+      const number = this.props.listing.buyListing.numberToBuy;
+      const to = listingDetail['bitcoin_address'];
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
   };
 
@@ -366,15 +406,15 @@ class Listing extends Component {
                 <ReactStars
                   count={5}
                   size={16}
-                  value={4}
+                  value={listingDetail.reputationScore * 100 / 5}
                   color1="#f9d596"
                   color2="#fbae3c"
                   edit={false}
                 />
             </span>
             <div className="votes">
+              <span className="total-votes">{integerWithCommas(listingDetail.reputationVotesCount)}</span>
               <Image src={UserIcon} width={iconSizeSmall} height={iconSizeSmall} />
-              <span className="total-votes">{listingDetail.seller ? integerWithCommas(listingDetail.seller.totalVotes) : null}</span>
             </div>
           </div>
         </div>
@@ -394,7 +434,7 @@ class Listing extends Component {
         </div>
         <div className="price-wrapper">
           <span>
-            {isUserOwner ?
+            {this.isOwner() ?
               formatMessage(messages.itemPrice)
               :
               formatMessage(messages.selectCurrency)
@@ -404,29 +444,29 @@ class Listing extends Component {
               <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC')}
                          coinLabel={CoinTypes.OMNI_COIN}
                          currency={CoinTypes.OMNI_CURRENCY}
-                         isUserOwner={isUserOwner}/>
+                         isUserOwner={this.isOwner()}/>
           }
           {listingDetail['price_using_btc'] &&
             <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC')}
                        coinLabel={CoinTypes.BIT_COIN}
                        currency={CoinTypes.BIT_CURRENCY}
-                       isUserOwner={isUserOwner}/>
+                       isUserOwner={this.isOwner()}/>
           }
           <PriceItem
             amount={listingDetail.price}
             coinLabel={CoinTypes.LOCAL}
             currency={listingDetail['currency']}
-            isUserOwner={isUserOwner}
+            isUserOwner={this.isOwner()}
           />
         </div>
-        {isUserOwner ?
+        {this.isOwner() ?
           this.renderOwnerButtons()
           :
-          this.renderUserButtons(listingDetail.amountAvailable)
+          this.renderUserButtons(listingDetail.quantity)
         }
         <div className="availability">
           <span>{formatMessage(messages.available)}</span>
-          <span>{listingDetail.amountAvailable}</span>
+          <span>{listingDetail.quantity}</span>
         </div>
       </div>
     );
@@ -463,7 +503,11 @@ class Listing extends Component {
               </div>
             ]
           }
-
+          <ConfirmationModal
+            onApprove={() => this.onOkDelete()}
+            onCancel={() => this.closeConfirm()}
+            isOpen={this.state.confirmDeleteOpen}
+          />
         </div>
       </div>
     );
@@ -507,7 +551,8 @@ export default connect(
       getFavorites,
       isListingFine,
       setNumberToBuy,
-      setActiveCurrency
+      setActiveCurrency,
+      deleteListing
     }, dispatch),
   }),
 )(injectIntl(Listing));

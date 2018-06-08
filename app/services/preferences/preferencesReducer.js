@@ -1,22 +1,62 @@
 import { handleActions } from 'redux-actions';
-import { setReferral, sendCommand } from './preferencesActions';
+import { getPreferences as getPreferencesService } from './services';
+import {
+  loadPreferences,
+  savePreferences,
+  savePreferencesSuccess,
+  savePreferencesError
+} from './preferencesActions';
 
 const defaultState = {
-  referral: false,
-  sentCommands: []
+  preferences: {
+    logoutTimeout: 900,
+    transactionFee: 20,
+    vote: 'all',
+    language: 'en',
+    isReferrer: false,
+    listingPriority: 'normal',
+    publisherFee: '',
+    chargeFee: '',
+    searchListingOption: 'anyKeyword'
+  },
+  saving: false,
+  error: null
 };
 
 const reducer = handleActions({
-  [setReferral](state) {
+  [loadPreferences](state) {
+    const data = getPreferencesService();
     return {
       ...state,
-      referral: !state.referral
+      preferences: {
+        ...state.preferences,
+        ...data
+      }
     };
   },
-  [sendCommand](state, { payload: { command } }) {
+  [savePreferences](state) {
     return {
       ...state,
-      sentCommands: [...state.sentCommands, command]
+      saving: true,
+      error: null
+    };
+  },
+  [savePreferencesSuccess](state, { payload: { preferences } }) {
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        ...preferences
+      },
+      saving: false,
+      error: null
+    };
+  },
+  [savePreferencesError](state, { payload: { error } }) {
+    return {
+      ...state,
+      saving: false,
+      error
     };
   }
 }, defaultState);

@@ -5,8 +5,8 @@ const {
   dhtGetPeersFor,
 } = createActions({
   DHT_CONNECT: () => ({}),
-  DHT_GET_PEERS_FOR: (searchTerm, category, country, city, searchListings = true) => ({
-    searchTerm, category, country, city, searchListings
+  DHT_GET_PEERS_FOR: (searchTerm, category, country, city, searchListings = true, subCategory) => ({
+    searchTerm, category, country, city, searchListings, subCategory
   }),
 });
 

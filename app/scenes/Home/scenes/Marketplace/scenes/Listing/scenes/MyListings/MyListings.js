@@ -60,8 +60,7 @@ class MyListings extends Component {
 
   renderMyListings() {
     const { formatMessage } = this.props.intl;
-    const { myListings } = this.props.listing;
-
+    const { myListings, requestMyListings } = this.props.listing;
     return (
       <div className="list-container my-listings">
         <div className="filters">
@@ -75,7 +74,8 @@ class MyListings extends Component {
           <CurrencyDropdown />
         </div>
         <TabsData
-          data={ myListings }
+          data={myListings}
+          showTrailingLoader={requestMyListings.ids.length !== 0}
           showActions
           tabs={[
             {

@@ -49,7 +49,7 @@ const runOb2 = async () => {
   const getOb2DevPath = () => {
     switch (process.platform) {
       case 'win32':
-        return './app/ob2/mac/ob2';
+        return './app/ob2/windows/ob2.exe';
       case 'linux':
         return './app/ob2/linux/ob2';
       case 'darwin':
@@ -57,27 +57,24 @@ const runOb2 = async () => {
     }
   };
   const getOb2ProdPath = () => {
-    return '.' +  __dirname + '/../ob2';
+    switch (process.platform) {
+      case 'win32':
+        return process.env.LOCALAPPDATA + '/OmniBazaar 2/ob2.exe';
+      case 'linux':
+        return process.env.HOME + '/.OmniBazaar/ob2';
+      case 'darwin':
+        return process.env.HOME + '/Library/Application Support/OmniBazaar 2/ob2';
+    }
+
   };
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     const path = getOb2DevPath();
     spawn(path);
    }
-   // else {
-  //   const path = getOb2ProdPath();
-  //   var fs = require('fs');
-  //   fs.writeFile("/Users/denissamohvalov/Documents/development/omnibazaar-ui/app/test.txt", path, function(err) {
-  //     if(err) {
-  //       return console.log(err);
-  //     }
-  //
-  //     console.log("The file was saved!");
-  //   });
-  //   // const child = spawn(path);
-  //   // child.stdout.on('data', (data) => {
-  //   //   console.log('DATA ', data);
-  //   // });
-  // }
+   else {
+	const path = getOb2ProdPath();
+	spawn(path);
+   }
 };
 
 /**

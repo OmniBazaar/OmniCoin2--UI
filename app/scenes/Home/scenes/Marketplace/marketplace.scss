@@ -14,6 +14,10 @@
   flex: 1;
   overflow: auto;
 
+  .ui.active.text.inline.loader {
+    margin-bottom: 40px;
+  }
+
   .header {
     display: flex;
     flex-direction: column;
@@ -346,6 +350,11 @@
             color: $white;
             font-size: 18px;
             margin-bottom: 8px;
+            cursor: pointer;
+
+            &:focus {
+              outline:none;
+            }
           }
 
           .sub-categories {
@@ -358,6 +367,11 @@
             .sub-category {
               color: $third-white;
               font-size: 13px;
+              cursor: pointer;
+
+              &:focus {
+                outline:none;
+              }
             }
           }
 
@@ -431,6 +445,10 @@
   border-radius: 0 !important;
   margin: 0 !important;
   padding: 5px !important;
+
+  &.benefits {
+    max-width: 700px !important;
+  }
 
   .items {
     display: flex;
@@ -531,7 +549,40 @@
   }
 
   .benefits {
-    background-color: $yellow;
+    background-color: $light-yellow;
+    color: $white;
+    border: 1px solid $white;
+
+    th, tr, table, td, thead {
+      border-radius: 0 !important;
+    }
+
+    td, th {
+      border-color: white !important;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .benefits-table {
+      color: $white;
+
+      tr {
+        background-color: $light-yellow;
+      }
+
+      thead {
+        tr th {
+          color: $white;
+          background-color: $darker-yellow;
+        }
+      }
+      tr:nth-child(2n),
+      tbody tr:nth-child(2n) {
+        background-color: $dark-yellow;
+      }
+    }
   }
 
   .overview {

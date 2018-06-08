@@ -3,20 +3,14 @@ import {
   call,
   put,
   takeEvery,
-  select
+  fork
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
-import uuid from 'uuid/v4';
-
 import DHTConnector from '../../../utils/dht-connector';
-import { searching } from '../../search/searchActions';
-import { ws, messageTypes } from '../../marketplace/wsSaga';
+import { searchListingsByPeersMap } from '../searchSaga';
 
-const searchByAllKeywords = false; //todo
 const dhtPort = '8500';
-let id = 0;
-
 const dhtConnector = new DHTConnector();
 
 export function* dhtSubscriber() {
@@ -29,9 +23,8 @@ export function* dhtSubscriber() {
 export function* connect() {
   try {
     const publishers = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
-    const ips = (yield Promise.all(
-        publishers.map(publisherName => FetchChain('getAccount', publisherName))
-    )).map(publisher => publisher.get('publisher_ip') + ':' + dhtPort);
+    const ips = (yield Promise.all(publishers.map(publisherName => FetchChain('getAccount', publisherName))))
+      .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -43,66 +36,61 @@ export function* connect() {
   }
 }
 
-export function* getPeersFor({ payload: { searchTerm, category, country, city, searchListings } }) {
-  const keywords = [...(searchTerm.split(' '))];
+export function* getPeersFor({
+  payload: {
+    searchTerm, category, country, city, searchListings, subCategory
+  },
+}) {
   try {
-    let responses = yield Promise.all(keywords.map(keyword => dhtConnector.findPeersFor("keyword:" + keyword)));
-    let cccResponses = (yield Promise.all([
-      category !== 'All' ? dhtConnector.findPeersFor("category:" + category) : null,
-      country ? dhtConnector.findPeersFor("country:" + country) : null,
-      city? dhtConnector.findPeersFor("city:" + city) : null
-    ]));
-    let peersMap = responses.map((response, index) => ({
+    const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
+    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+    const allResponses = yield Promise.all(responses);
+
+    const categoryKey = `category:${category}`;
+    const subcategoryKey = `subcategory:${subCategory}`;
+    const countryKey = `country:${country}`;
+    const cityKey = `city:${city}`;
+
+    const extraKeywordsResponse = yield Promise.all([
+      category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
+      country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
+      city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
+    ]);
+
+    let peersMap;
+
+    if (keywords.length) {
+      peersMap = allResponses.map((response, index) => ({
         keyword: keywords[index],
         publishers: response.peers ? response.peers : []
-    })).filter(el => el.publishers.length !== 0);
+      })).filter(el => el.publishers.length);
+    } else {
+      peersMap = extraKeywordsResponse.map((response) => ({
+        publishers: response.peers ? response.peers : []
+      })).filter(el => el.publishers.length);
+    }
+
     peersMap = adjustPeersMap(peersMap);
+
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
-    if (peersMap.length === 0) return;
-    if (searchListings) {
-      let message;
-      if (searchByAllKeywords) {
-        message = {
-          id: id++,
-          type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS_DATA_RECEIVED,
-          command: {
-            keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
-            publishers: peersMap.reduce((publishers, curr) => [...publishsers, curr.publishers], []),
-            currency: "BTC",
-            range: "20",
-          },
-        };
-        console.log(JSON.stringify(message, null, 2));
-      } else {
-        message = {
-          id: id++,
-          type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD_DATA_RECEIVED,
-          command: {
-            keywords: peersMap,
-            currency: "BTC",
-            range: "20",
-          },
-        };
-        console.log(JSON.stringify(message, null, 2));
-      }
-      if (category) {
-        message.category = category;
-      }
-      if (city) {
-        message.city = city;
-      }
-      if (country) {
-        message.country = country;
-      }
-      ws.send(JSON.stringify(message));
-      yield put(searching(id - 1));
+    if (peersMap.length !== 0 && searchListings) {
+      yield fork(searchListingsByPeersMap, {
+        payload: {
+          peersMap,
+          category,
+          country,
+          city,
+          subCategory,
+          searchByAllKeywords: !keywords.length,
+        }
+      });
     }
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
   }
 }
-
 
 function getPublishersWeights(peersMap) {
   const weights = {};
@@ -118,15 +106,20 @@ function getPublishersWeights(peersMap) {
   return weights;
 }
 
-
 function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
-    keyword: item.keyword,
+    keyword: item.keyword || null,
     publishers: item.publishers.map(publisher => ({
-        address: publisher.host,
-        weight: publishersWeights[publisher]
-      })
-    )
-  }))
+      address: publisher.host,
+      weight: publishersWeights[publisher]
+    }))
+  }));
+}
+
+function noPeersFallback() {
+  return {
+    noPeers: true,
+    timedOut: false,
+  };
 }

@@ -20,5 +20,6 @@
   "SignupForm.country": "Your Country",
   "SignupForm.city": "Your State/City",
   "SignupForm.keywords": "Keywords for listing your want to see",
-  "SignupForm.addKeyword": "Add keyword"
+  "SignupForm.addKeyword": "Add keyword",
+  "SignupForm.done": "Done"
 }

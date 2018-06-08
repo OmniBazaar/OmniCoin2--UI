@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import SearchHistory from './searchHistory';
+import { categories } from '../../scenes/Home/scenes/Marketplace/categories';
 
 import {
   filterSearchResults,
@@ -21,7 +22,8 @@ import {
   searching,
   marketplaceReturnListings,
   marketplaceReturnBool,
-  searchListings
+  searchListings,
+  filterSearchByCategory
 } from './searchActions';
 
 const defaultState = {
@@ -64,8 +66,8 @@ const reducer = handleActions({
     if (searchText !== '') {
       let filteredData = data.filter(listing => {
         return Object.values(listing).filter(
-           value => {  return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1 }
-         ).length !== 0;
+         value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
+        ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
       totalPagesSearchResults = getTotalPages(filteredData, rowsPerPageSearchResults);
@@ -81,6 +83,61 @@ const reducer = handleActions({
       activePageSearchResults,
       totalPagesSearchResults,
       searchResultsFiltered: currentData,
+    };
+  },
+  [filterSearchByCategory](state) {
+    const data = state.searchResults;
+
+    const forSaleListings = {
+      category: categories.forSale,
+      listings: []
+    };
+
+    const jobsListings = {
+      category: categories.jobs,
+      listings: []
+    };
+
+    const servicesListings = {
+      category: categories.services,
+      listings: []
+    };
+
+    const cryptoBazaarListings = {
+      category: categories.cryptoBazaar,
+      listings: []
+    };
+
+    const rentalsListings = {
+      category: categories.rentals,
+      listings: []
+    };
+
+    data.forEach((listing) => {
+      switch (listing.category) {
+        case categories.forSale:
+          forSaleListings.listings.push(listing);
+          break;
+        case categories.jobs:
+          jobsListings.listings.push(listing);
+          break;
+        case categories.services:
+          servicesListings.listings.push(listing);
+          break;
+        case categories.cryptoBazaar:
+          cryptoBazaarListings.listings.push(listing);
+          break;
+        case categories.rentals:
+          rentalsListings.listings.push(listing);
+          break;
+        default:
+      }
+    });
+
+    return {
+      ...state,
+      searchResultsByCategory: [
+        forSaleListings, jobsListings, servicesListings, cryptoBazaarListings, rentalsListings]
     };
   },
   [getRecentSearches](state) {
@@ -191,7 +248,7 @@ const reducer = handleActions({
       searchId: null,
       searchResults: [],
       searchResultsFiltered: null
-    }
+    };
   },
   [searching](state, { payload: { searchId }}) {
     return {
@@ -199,25 +256,27 @@ const reducer = handleActions({
       searchId,
       searchResults: [],
       searching: true,
-    }
+    };
   },
   [marketplaceReturnListings](state, { data }) {
-    const listings = JSON.parse(data.command.listings).listings.map(listing => ({
+    const commandListings = JSON.parse(data.command.listings);
+    const listings = commandListings.listings ? commandListings.listings.map(listing => ({
       ...listing,
       ip: data.command.address
-    }));
-    if (parseInt(data.id) === state.searchId) {
+    })) : [];
+
+    if (parseInt(data.id, 10) === state.searchId) {
       return {
         ...state,
         searchResults: [...state.searchResults, ...listings],
         searching: false,
-      }
-    } else {
-      return {
-        ...state,
-        searching: false
-      }
+      };
     }
+
+    return {
+      ...state,
+      searching: false
+    };
   }
 }, defaultState);
 

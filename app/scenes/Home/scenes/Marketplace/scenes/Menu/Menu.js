@@ -6,13 +6,17 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router';
+
+import { searchListings } from '../../../../../../services/search/searchActions';
+
+import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
 
 import SearchMenu from './components/SearchMenu/SearchMenu';
 
 import AddIcon from '../../images/btn-add-listing.svg';
 import UserIcon from '../../images/btn-user-menu-norm.svg';
 import OmniLogo from '../../images/omni-logo-about.svg';
-
 
 import {
   saleCategories,
@@ -32,7 +36,6 @@ const iconSizeBig = 25;
 const iconSizeMedium = 15;
 const iconSizeSmall = 12;
 const maxSearches = 5;
-
 
 const messages = defineMessages({
   addListing: {
@@ -128,9 +131,7 @@ class Menu extends Component {
 
     if (!isExternal) {
       return (
-        <NavLink to={path || '/marketplace'}>
-          {menuItem}
-        </NavLink>
+        <div>{menuItem}</div>
       );
     }
 
@@ -142,13 +143,13 @@ class Menu extends Component {
   }
 
   viewCategory = (categoryId, parent) => {
-    if (this.props.marketplaceActions.setActiveCategory) {
-      const category = categoryId !== mainCategories.home.id ?
-        Menu.getValue(categoryId) : categoryId;
-      const parentValue = parent ? Menu.getValue(parent) : null;
+    this.props.history.push('/search-results');
+    const { country, city } = this.props.account.publisherData;
+    const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);
+    const subCategory = parent ? Menu.getValue(categoryId) : null;
 
-      this.props.marketplaceActions.setActiveCategory(category, parentValue);
-    }
+    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderForSaleSubMenu() {
@@ -460,12 +461,31 @@ Menu.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  searchActions: PropTypes.shape({
+    searchListings: PropTypes.func,
+  }),
+  marketplaceActions: PropTypes.shape({
+    setActiveCategory: PropTypes.func,
+  }),
 };
 
 Menu.defaultProps = {
   intl: {},
   marketplace: {},
+  searchActions: {},
   marketplaceActions: {},
 };
 
-export default compose(connect(state => ({ ...state.default })), )(injectIntl(Menu));
+Menu = withRouter(Menu);
+
+export default connect(
+  state => ({ ...state.default }),
+  (dispatch) => ({
+    marketplaceActions: bindActionCreators({
+      setActiveCategory
+    }, dispatch),
+    searchActions: bindActionCreators({
+      searchListings
+    }, dispatch)
+  })
+)(injectIntl(Menu));

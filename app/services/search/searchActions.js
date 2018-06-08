@@ -3,6 +3,7 @@ import { createActions } from 'redux-actions';
 const {
   searchListings,
   filterSearchResults,
+  filterSearchByCategory,
   getRecentSearches,
   getRecentSearchesSucceeded,
   getRecentSearchesFailed,
@@ -21,10 +22,11 @@ const {
   marketplaceReturnBool,
   searching
 } = createActions({
-  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true) => ({
-    searchTerm, category, country, city, historify
+  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory) => ({
+    searchTerm, category, country, city, historify, subCategory
   }),
   FILTER_SEARCH_RESULTS: (searchText) => ({ searchText }),
+  FILTER_SEARCH_BY_CATEGORY: () => ({}),
   GET_RECENT_SEARCHES: () => ({ }),
   GET_RECENT_SEARCHES_SUCCEEDED: (recentSearches) => ({ recentSearches }),
   GET_RECENT_SEARCHES_FAILED: (error) => ({ error }),
@@ -47,6 +49,7 @@ const {
 export {
   searchListings,
   filterSearchResults,
+  filterSearchByCategory,
   getRecentSearches,
   getRecentSearchesSucceeded,
   getRecentSearchesFailed,

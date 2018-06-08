@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import {
-  getListingDefault,
+  loadListingDefault,
   saveListingDefault,
   uploadListingDefaultImage,
   uploadListingDefaultImageSuccess,
@@ -40,7 +40,7 @@ const fixImagesData = (data) => {
 }
 
 const reducer = handleActions({
-  [getListingDefault](state) {
+  [loadListingDefault](state) {
     const data = getStoredListingDefautls();
 
     if (data) {

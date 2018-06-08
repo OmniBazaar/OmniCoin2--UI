@@ -91,9 +91,9 @@ class ListingForm extends Component {
     if (editingListing) {
       data = {
         ...editingListing,
-        keywords: editingListing.keywords ? editingListing.keywords.join(', ') : ''
+        keywords: editingListing.keywords ? editingListing.keywords.join(', ') : '',
+        publisher: editingListing.ip
       };
-      delete data.images;
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
       data = {
@@ -230,10 +230,11 @@ class ListingForm extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { category, country, publisher } = this.props.formValues ? this.props.formValues : {};
+    const { category, country, publisher, price_using_btc } = this.props.formValues ? this.props.formValues : {};
     const {
       handleSubmit,
       editingListing,
+      invalid
     } = this.props;
     const { error, saving } = this.props.listing.saveListing;
 
@@ -342,6 +343,21 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+          {price_using_btc &&
+            <Grid.Row>
+              <Grid.Column width={4}>
+                {formatMessage(messages.bitcoinAddress)}
+              </Grid.Column>
+              <Grid.Column width={8}>
+                <Field
+                  name="bitcoin_address"
+                  component={InputField}
+                  className="textfield"
+                  validate={requiredFieldValidator}
+                />
+              </Grid.Column>
+            </Grid.Row>
+          }
           <Grid.Row>
             <Grid.Column width={4}>
               <span>{formatMessage(messages.additionalInfo)}</span>
@@ -603,7 +619,7 @@ class ListingForm extends Component {
                 }
                 className="button--green-bg uppercase"
                 loading={saving}
-                disabled={saving}
+                disabled={saving || invalid}
               />
             </Grid.Column>
           </Grid.Row>

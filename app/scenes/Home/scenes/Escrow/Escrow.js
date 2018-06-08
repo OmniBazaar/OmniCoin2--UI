@@ -14,8 +14,7 @@ import {
   loadEscrowTransactions,
   loadEscrowAgents,
   loadMyEscrowAgents,
-  getEscrowSettings,
-  setPaginationMyEscrow
+  getEscrowSettings
 } from '../../../../services/escrow/escrowActions';
 import './escrow.scss';
 
@@ -48,13 +47,6 @@ class Escrow extends Component {
     this.props.escrowActions.getEscrowSettings();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.escrow.transactionsFiltered.length
-      && !this.props.escrow.transactionsFiltered.length) {
-      this.props.escrowActions.setPaginationMyEscrow(rowsPerPage);
-    }
-  }
-
   render() {
     const { formatMessage } = this.props.intl;
     return (
@@ -69,7 +61,16 @@ class Escrow extends Component {
                      menuItem: formatMessage(messages.transactions),
                      render: () => (
                        <Tab.Pane>
-                         <MyEscrowTransactions />
+                         <MyEscrowTransactions
+                           rowsPerPage={rowsPerPage}
+                           tableProps={{
+                             sortable: true,
+                             compact: true,
+                             basic: 'very',
+                             striped: true,
+                             size: 'small'
+                           }}
+                         />
                        </Tab.Pane>
                      ),
                    },
@@ -102,7 +103,6 @@ Escrow.propTypes = {
     loadEscrowTransactions: PropTypes.func,
     loadMyEscrowAgents: PropTypes.func,
     getEscrowSettings: PropTypes.func,
-    setPaginationMyEscrow: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -131,8 +131,7 @@ export default connect(
       loadEscrowTransactions,
       loadMyEscrowAgents,
       getEscrowSettings,
-      loadEscrowAgents,
-      setPaginationMyEscrow
+      loadEscrowAgents
     }, dispatch),
   }),
 )(injectIntl(Escrow));

@@ -77,7 +77,7 @@ class ImportedFilesTable extends Component {
                 <TableHeaderCell key="category" sorted={sortColumn === 'category' ? sortDirection : null} onClick={this.sortData('category')}>
                   {formatMessage(messages.category)}
                 </TableHeaderCell>
-                <TableHeaderCell key="subCategory" sorted={sortColumn === 'subCategory' ? sortDirection : null} onClick={this.sortData('subCategory')}>
+                <TableHeaderCell key="subCategory" sorted={sortColumn === 'subcategory' ? sortDirection : null} onClick={this.sortData('subCategory')}>
                   {formatMessage(messages.subCategory)}
                 </TableHeaderCell>
                 <TableHeaderCell key="contactType" sorted={sortColumn === 'contactType' ? sortDirection : null} onClick={this.sortData('contactType')}>
@@ -98,19 +98,20 @@ class ImportedFilesTable extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {importedFiles.map(row =>
-                (
-                  <TableRow key={hash(row)}>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{row.subCategory}</TableCell>
-                    <TableCell>{row.contactType}</TableCell>
-                    <TableCell>{row.contactInfo}</TableCell>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{numberWithCommas(row.price)}</TableCell>
-                    <TableCell>{row.currency}</TableCell>
+              {
+                importedFiles.map(row => row.items && row.items.map((item, index) => (
+                  <TableRow key={hash(row) + hash(item) + hash(index)}>
+                    <TableCell>{item.type}</TableCell>
+                    <TableCell>{item.category}</TableCell>
+                    <TableCell>{item.subcategory}</TableCell>
+                    <TableCell>{item.contactType}</TableCell>
+                    <TableCell>{item.contactInfo}</TableCell>
+                    <TableCell>{item.listing_title}</TableCell>
+                    <TableCell>{numberWithCommas(item.price)}</TableCell>
+                    <TableCell>{item.currency}</TableCell>
                   </TableRow>
-                ))}
+                )))
+              }
             </TableBody>
           </Table>
         </div>
@@ -154,5 +155,5 @@ export default connect(
     listingActions: bindActionCreators({
       sortImportData
     }, dispatch),
-  }),
+  })
 )(injectIntl(ImportedFilesTable));

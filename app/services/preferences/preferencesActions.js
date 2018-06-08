@@ -1,11 +1,20 @@
 import { createActions } from 'redux-actions';
 
 const {
-  setReferral,
-  sendCommand,
+	loadPreferences,
+  savePreferences,
+  savePreferencesSuccess,
+  savePreferencesError
 } = createActions({
-  SET_REFERRAL: () => ({}),
-  SEND_COMMAND: (command) => ({ command }),
+	LOAD_PREFERENCES: () => ({}),
+  SAVE_PREFERENCES: (preferences) => ({ preferences }),
+  SAVE_PREFERENCES_SUCCESS: (preferences) => ({ preferences }),
+  SAVE_PREFERENCES_ERROR: (error) => ({ error })
 });
 
-export { setReferral, sendCommand };
+export {
+	loadPreferences,
+	savePreferences,
+	savePreferencesSuccess,
+	savePreferencesError
+};
