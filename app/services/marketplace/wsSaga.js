@@ -3,12 +3,13 @@ import {
   take,
   put,
 } from 'redux-saga/effects';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 import { wsWatcher } from '../utils';
 
 const key = 'ob2CommandId';
 
-export const ws = new WebSocket('ws://127.0.0.1:8099');
+export const ws = new ReconnectingWebSocket('ws://127.0.0.1:8099');
 
 export const messageTypes = {
   MARKETPLACE_NULL: '0',

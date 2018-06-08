@@ -15,6 +15,8 @@ import { machineId } from 'node-machine-id';
 import getmac from 'getmac';
 import MenuBuilder from './menu';
 import bitcoincli from 'blockchain-wallet-service';
+import { spawn } from 'child_process';
+
 
 let mainWindow = null;
 
@@ -44,8 +46,24 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
+const handleOb2Connection = (path) => {
+  let ls = spawn(path);
+  ls.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  ls.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  ls.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+    ls.kill();
+    handleOb2Connection(path);
+  });
+};
+
 const runOb2 = async () => {
-  const { spawn } = require('child_process');
   const getOb2DevPath = () => {
     switch (process.platform) {
       case 'win32':
@@ -69,11 +87,11 @@ const runOb2 = async () => {
   };
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     const path = getOb2DevPath();
-    spawn(path);
+    handleOb2Connection(path);
    }
    else {
-	const path = getOb2ProdPath();
-	spawn(path);
+    const path = getOb2ProdPath();
+    handleOb2Connection(path);
    }
 };
 

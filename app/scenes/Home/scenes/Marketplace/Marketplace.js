@@ -437,7 +437,7 @@ class Marketplace extends Component {
     return (
       items.slice(0, size).map((item) => {
         const image = item.images[0];
-        const imageUrl = `http://${item.ip}/publisher-images/${image.thumb}`;
+        const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;

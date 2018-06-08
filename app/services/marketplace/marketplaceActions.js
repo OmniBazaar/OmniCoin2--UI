@@ -12,7 +12,9 @@ const {
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
-  sortDataTableBy
+  sortDataTableBy,
+  ob2SocketOpened,
+  ob2SocketClosed
 } = createActions({
   GET_CATEGORIES: () => ({}),
   GET_FEATURE_LIST: (featureList) => ({ featureList }),
@@ -28,6 +30,8 @@ const {
     ({ gridTableData, sortGridBy, sortGridDirection }),
   SET_ACTIVE_PAGE_GRID_TABLE: (activePageGridTable) => ({ activePageGridTable }),
   SORT_DATA_TABLE_BY: (dataTableData, sortTableBy) => ({ dataTableData, sortTableBy }),
+  OB2_SOCKET_OPENED: () => ({}),
+  OB2_SOCKET_CLOSED: () => ({})
 });
 
 export {
@@ -42,5 +46,7 @@ export {
   setPaginationGridTable,
   sortGridTableBy,
   setActivePageGridTable,
-  sortDataTableBy
+  sortDataTableBy,
+  ob2SocketOpened,
+  ob2SocketClosed
 };
