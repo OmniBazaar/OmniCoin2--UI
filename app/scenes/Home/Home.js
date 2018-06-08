@@ -35,6 +35,7 @@ import SearchPriority from './scenes/Marketplace/scenes/Search/scenes/SearchPrio
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
+import StartGuide from './components/StartGuide/StartGuide';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -123,6 +124,13 @@ class Home extends Component {
         }}
       />);
     }
+    if (this.props.location.pathname === '/') {
+      return (<Redirect
+        to={{
+          pathname: '/start-guide',
+        }}
+      />);
+    }
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -205,6 +213,7 @@ class Home extends Component {
         </div>
         <div className={homeContentClass}>
           <div className="route">
+            <Route path="/start-guide" render={(props) => <StartGuide {...props} />} />
             <Route path="/escrow" render={(props) => <Escrow {...props} />} />
             <Route path="/mail" render={(props) => <Mail {...props} />} />
             <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />

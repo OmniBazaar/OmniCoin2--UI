@@ -22,7 +22,7 @@ import {
 import AddIcon from '../../images/btn-add-image.svg';
 
 import './wallet.scss';
-
+import StartGuide from '../../components/StartGuide/StartGuide';
 
 const messages = defineMessages({
   quickStart: {
@@ -70,7 +70,6 @@ const messages = defineMessages({
     defaultMessage: 'Error'
   }
 });
-
 
 class Wallet extends Component {
   constructor(props) {
@@ -143,36 +142,24 @@ class Wallet extends Component {
             className="tabs"
             menu={{ secondary: true, pointing: true }}
             panes={[
-                   {
-                     menuItem: 'BitCoin',
-                     render: () =>
-                       (<Tab.Pane>
-                         {this.props.bitcoin.wallets.length ?
-                           <div className="content">
-                             {this.getBitcoinContent()}
-                           </div>
-                        :
-                           <div className="no-wallet-yet">
-                             <span>{formatMessage(messages.noWalletYet)}</span>
-                           </div>
-                       }
-                        </Tab.Pane>)
-
-                   },
-                 ]}
+               {
+                 menuItem: 'BitCoin',
+                 render: () =>
+                   (<Tab.Pane>
+                     {this.props.bitcoin.wallets.length ?
+                       <div className="content">
+                         {this.getBitcoinContent()}
+                       </div>
+                    :
+                       <div className="no-wallet-yet">
+                         <span>{formatMessage(messages.noWalletYet)}</span>
+                       </div>
+                   }
+                   </Tab.Pane>)
+               },
+             ]}
           />
-          <div className="quick-start">
-            <h1>{formatMessage(messages.quickStart)}</h1>
-            <h3>{formatMessage(messages.welcome)}</h3>
-            <p>{formatMessage(messages.launch)}</p>
-            <h3>{formatMessage(messages.welcomeBonus)}</h3>
-            <p>
-              {formatMessage(messages.welcomeBonusText1)}
-              <span className="red">{formatMessage(messages.welcomeBonusText2)}</span>
-              {formatMessage(messages.welcomeBonusText3)}
-            </p>
-            <p>{formatMessage(messages.note)}</p>
-          </div>
+          <StartGuide />
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />
