@@ -91,10 +91,12 @@ const listingDefautlStorageKey = 'listingDefault';
 
 export const getStoredListingDefautls = () => {
   const user = getStoredCurrentUser();
-  const key = `${listingDefautlStorageKey}_${user.username}`;
-  const data = localStorage.getItem(key);
-  if (data) {
-    return JSON.parse(data);
+  if (user) {
+    const key = `${listingDefautlStorageKey}_${user.username}`;
+    const data = localStorage.getItem(key);
+    if (data) {
+      return JSON.parse(data);
+    }
   }
 
   return {};
@@ -102,6 +104,8 @@ export const getStoredListingDefautls = () => {
 
 export const storeListingDefaults = (listingDefaults) => {
   const user = getStoredCurrentUser();
-  const key = `${listingDefautlStorageKey}_${user.username}`;
-  localStorage.setItem(key, JSON.stringify(listingDefaults));
+  if (user) {
+    const key = `${listingDefautlStorageKey}_${user.username}`;
+    localStorage.setItem(key, JSON.stringify(listingDefaults));
+  }
 }
