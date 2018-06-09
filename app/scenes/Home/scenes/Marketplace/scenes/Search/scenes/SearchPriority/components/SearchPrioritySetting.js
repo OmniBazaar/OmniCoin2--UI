@@ -103,7 +103,6 @@ class SearchPrioritySetting extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.account.publishers, this.props.account.publisher);
     if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
       this.publishers = nextProps.account.publishers.publishers.map(publisher => ({
         value: publisher,
@@ -137,6 +136,7 @@ class SearchPrioritySetting extends Component {
 
   submitPublisherData() {
     const { formatMessage } = this.props.intl;
+
     this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
     toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
   }
