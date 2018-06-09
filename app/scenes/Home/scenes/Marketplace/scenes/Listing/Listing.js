@@ -421,7 +421,7 @@ class Listing extends Component {
         <div className="details-wrapper">
           <div className="info">
             <span>{formatMessage(messages.listingDate)}</span>
-            <span className="value">{listingDetail['end_date']}</span>
+            <span className="value">{listingDetail['start_date']}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.condition)}</span>
