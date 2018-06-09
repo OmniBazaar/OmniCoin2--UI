@@ -24,17 +24,17 @@ import {
 import './search-priority-setting.scss';
 
 const messages = defineMessages({
-  localArea: {
-    id: 'SearchPrioritySetting.localArea',
-    defaultMessage: 'Local area.'
+  specificLocation: {
+    id: 'SearchPrioritySetting.specificLocation',
+    defaultMessage: 'Specific Location'
   },
-  byCategoryType: {
-    id: 'SearchPrioritySetting.byCategoryType',
-    defaultMessage: 'By Category / Type'
+  anywhere: {
+    id: 'SearchPrioritySetting.anywhere',
+    defaultMessage: 'Anywhere'
   },
   publisherName: {
     id: 'SearchPrioritySetting.publisherName',
-    defaultMessage: 'Publisher Name'
+    defaultMessage: 'Specific Publisher'
   },
   country: {
     id: 'SearchPrioritySetting.country',
@@ -218,7 +218,7 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
                   onChecked={this.onChangePriority}
                 />
-                <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+                <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
               </div>
 
               <div className="radio-wrapper">
@@ -229,7 +229,7 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
                   onChecked={this.onChangePriority}
                 />
-                <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+                <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
               </div>
 
               <div className="radio-wrapper">

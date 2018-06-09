@@ -1,6 +1,6 @@
 {
-  "SearchPrioritySetting.localArea": "Local Area",
-  "SearchPrioritySetting.byCategoryType": "By Category / Type",
+  "SearchPrioritySetting.specificLocation": "Specific Location",
+  "SearchPrioritySetting.anywhere": "Anywhere",
   "SearchPrioritySetting.publisherName": "Publisher Name",
   "SearchPrioritySetting.country": "Country",
   "SearchPrioritySetting.startTyping": "Start typing...",

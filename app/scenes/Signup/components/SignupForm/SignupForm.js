@@ -90,13 +90,13 @@ const messages = defineMessages({
     id: 'SignupForm.searchPriority',
     defaultMessage: 'Marketplace Search priority'
   },
-  localArea: {
-    id: 'SignupForm.localArea',
-    defaultMessage: 'Local Area'
+  specificLocation: {
+    id: 'SignupForm.specificLocation',
+    defaultMessage: 'Specific Location'
   },
-  byCategoryType: {
-    id: 'SignupForm.byCategoryType',
-    defaultMessage: 'By Category/Type'
+  anywhere: {
+    id: 'SignupForm.anywhere',
+    defaultMessage: 'Anywhere'
   },
   country: {
     id: 'SignupForm.country',
@@ -350,7 +350,7 @@ class SignupForm extends Component {
                 checked={searchPriority === PriorityTypes.LOCAL_DATA}
                 onChecked={this.onChangeSearchPriority.bind(this)}
               />
-              <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+              <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
             </div>
 
             <div className="radio-wrapper">
@@ -361,7 +361,7 @@ class SignupForm extends Component {
                 checked={searchPriority === PriorityTypes.BY_CATEGORY}
                 onChecked={this.onChangeSearchPriority.bind(this)}
               />
-              <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+              <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
             </div>
           </div>
 
