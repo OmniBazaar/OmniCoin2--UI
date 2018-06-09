@@ -13,20 +13,25 @@ import {
   generateKeyFromPassword,
   decodeMemo,
 } from '../blockchain/utils/wallet';
-
 import HistoryStorage from './historyStorage';
-
 import {
   getGlobalObject,
   getDynGlobalObject,
   calcBlockTime
 } from '../blockchain/utils/miscellaneous';
+import AccountSettingsStorage from './accountStorage';
 
 export function* accountSubscriber() {
   yield all([
     takeLatest('UPDATE_PUBLIC_DATA', updatePublicData),
     takeLatest('GET_PUBLISHERS', getPublishers),
-    takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions)
+    takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions),
+    takeLatest('CHANGE_PRIORITY', changePriority),
+    takeLatest('CHANGE_COUNTRY', changeCountry),
+    takeLatest('CHANGE_CITY', changeCity),
+    takeLatest('CHANGE_CATEGORY', changeCategory),
+    takeLatest('CHANGE_PUBLISHER_NAME', changePublisherName),
+    takeLatest('CHANGE_KEYWORDS', changeKeywords),
   ]);
 }
 
@@ -148,7 +153,9 @@ export function* getRecentTransactions() {
             : HistoryStorage.OperationTypes.deposit,
           operationType: el.op[0],
           // will be undefined if operation type is transfer
-          escrow: el.op[0] === ChainTypes.operations.escrow_create_operation ? el.result[1] : el.op[1].escrow
+          escrow: el.op[0] === ChainTypes.operations.escrow_create_operation
+            ? el.result[1]
+            : el.op[1].escrow,
         });
       }
     }
@@ -158,4 +165,28 @@ export function* getRecentTransactions() {
     console.log('ERROR', e);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });
   }
+}
+
+export function* changePriority({ payload: { priority } }) {
+  yield AccountSettingsStorage.updatePublisherData({ priority });
+}
+
+export function* changeCountry({ payload: { country } }) {
+  yield AccountSettingsStorage.updatePublisherData({ country });
+}
+
+export function* changeCity({ payload: { city } }) {
+  yield AccountSettingsStorage.updatePublisherData({ city });
+}
+
+export function* changeCategory({ payload: { category } }) {
+  yield AccountSettingsStorage.updatePublisherData({ category });
+}
+
+export function* changePublisherName({ payload: { publisher } }) {
+  yield AccountSettingsStorage.updatePublisherData({ publisherName: publisher });
+}
+
+export function* changeKeywords({ payload: { keywords } }) {
+  yield AccountSettingsStorage.updatePublisherData({ keywords: keywords || [] });
 }
