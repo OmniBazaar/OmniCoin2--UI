@@ -41,6 +41,7 @@ const defaultState = {
   searchResultsFiltered: null,
   searchId: null,
   searchText: '',
+  searchTerm: '',
   loading: false,
   saving: false,
   deleting: false,
@@ -250,12 +251,13 @@ const reducer = handleActions({
       searchResultsFiltered: null
     };
   },
-  [searching](state, { payload: { searchId }}) {
+  [searching](state, { payload: { searchId, searchTerm }}) {
     return {
       ...state,
       searchId,
       searchResults: [],
       searching: true,
+      searchTerm
     };
   },
   [marketplaceReturnListings](state, { data }) {

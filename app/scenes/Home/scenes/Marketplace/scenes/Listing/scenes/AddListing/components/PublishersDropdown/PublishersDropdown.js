@@ -21,7 +21,7 @@ class PublishersDropdown extends Component {
     const {
       value,
       onChange
-    } = this.props.input;
+    } = this.props.input || this.props;
     if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
       this.options = nextProps.account.publishers.publishers.map(publisher => ({
         value: publisher,

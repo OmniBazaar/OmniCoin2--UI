@@ -83,6 +83,7 @@ export function* getPeersFor({
           city,
           subCategory,
           searchByAllKeywords: !keywords.length,
+          searchTerm
         }
       });
     }
