@@ -62,7 +62,7 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory, searchByAllKeywords,
+    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm
   }
 }) {
   let message;
@@ -129,7 +129,7 @@ export function* searchListingsByPeersMap({
   }
 
   ws.send(JSON.stringify(message));
-  yield put(searching(id));
+  yield put(searching(id, searchTerm));
 }
 
 function* getRecentSearches() {
