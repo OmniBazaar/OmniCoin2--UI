@@ -7,6 +7,7 @@ import { IntlProvider } from 'react-intl';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
+import StartGuide from './scenes/Home/components/StartGuide/StartGuide';
 import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';

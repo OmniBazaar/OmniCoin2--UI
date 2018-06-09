@@ -22,7 +22,7 @@ import {
 import AddIcon from '../../images/btn-add-image.svg';
 
 import './wallet.scss';
-
+import StartGuide from '../../components/StartGuide/StartGuide';
 
 const messages = defineMessages({
   quickStart: {
@@ -32,6 +32,26 @@ const messages = defineMessages({
   welcome: {
     id: 'Wallet.welcome',
     defaultMessage: 'Welcome to OmniBazaar!'
+  },
+  welcomeBonus: {
+    id: 'Wallet.welcomeBonus',
+    defaultMessage: 'About the "Welcome Bonus"'
+  },
+  welcomeBonusText1: {
+    id: 'Wallet.welcomeBonusText1',
+    defaultMessage: 'The first time you launch OmniBazaar on this device, you will receive a Welcome Bonus. This Welcome Bonus is our way of saying "thank you" for installing and usingOmniBazaar. '
+  },
+  welcomeBonusText2: {
+    id: 'Wallet.welcomeBonusText2',
+    defaultMessage: ' What we ask in return is that you take some time to explore OmniBazaar, that you create at least one listing in the marketplace for some item or service that you are willing to sell or provide, and that you tell at least one other person about OmniBazaar. '
+  },
+  welcomeBonusText3: {
+    id: 'Wallet.welcomeBonusText3',
+    defaultMessage: ' The listing you create could be for promoting your brick-and-mortar business, selling a used bicycle, finding a roommate, or offering some service you provide. We are using the "honor system" and asking for your cooperation. Please do your part to help us get the marketplace started by creating one or more listings.'
+  },
+  note: {
+    id: 'Wallet.note',
+    defaultMessage: 'Note: You will only receive free registration and the Welcome Bonus from OmniBazaar, once on this computer.'
   },
   launch: {
     id: 'Wallet.launch',
@@ -50,7 +70,6 @@ const messages = defineMessages({
     defaultMessage: 'Error'
   }
 });
-
 
 class Wallet extends Component {
   constructor(props) {
@@ -123,29 +142,24 @@ class Wallet extends Component {
             className="tabs"
             menu={{ secondary: true, pointing: true }}
             panes={[
-                   {
-                     menuItem: 'BitCoin',
-                     render: () =>
-                       (<Tab.Pane>
-                         {this.props.bitcoin.wallets.length ?
-                           <div className="content">
-                             {this.getBitcoinContent()}
-                           </div>
-                        :
-                           <div className="no-wallet-yet">
-                             <span>{formatMessage(messages.noWalletYet)}</span>
-                           </div>
-                       }
-                        </Tab.Pane>)
-
-                   },
-                 ]}
+               {
+                 menuItem: 'BitCoin',
+                 render: () =>
+                   (<Tab.Pane>
+                     {this.props.bitcoin.wallets.length ?
+                       <div className="content">
+                         {this.getBitcoinContent()}
+                       </div>
+                    :
+                       <div className="no-wallet-yet">
+                         <span>{formatMessage(messages.noWalletYet)}</span>
+                       </div>
+                   }
+                   </Tab.Pane>)
+               },
+             ]}
           />
-          <div className="quick-start">
-            <h1>{formatMessage(messages.quickStart)}</h1>
-            <h3>{formatMessage(messages.welcome)}</h3>
-            <p>{formatMessage(messages.launch)}</p>
-          </div>
+          <StartGuide />
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />
