@@ -397,7 +397,7 @@ class Listing extends Component {
 
     return (
       <div className="item-description">
-        <span className="title">{listingDetail.title}</span>
+        <span className="title">{listingDetail.listing_title}</span>
         <div className="seller-wrapper">
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
@@ -421,7 +421,7 @@ class Listing extends Component {
         <div className="details-wrapper">
           <div className="info">
             <span>{formatMessage(messages.listingDate)}</span>
-            <span className="value">{listingDetail['end_date']}</span>
+            <span className="value">{listingDetail['start_date']}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.condition)}</span>
