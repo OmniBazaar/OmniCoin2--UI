@@ -16,6 +16,7 @@ import Radio from '../../../../components/Radio/Radio';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import TagsInput from '../../../../components/TagsInput';
 import PriorityTypes from '../../../../common/SearchPriorityType';
+import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 
 import { signup } from '../../../../services/blockchain/auth/authActions';
 
@@ -293,6 +294,7 @@ class SignupForm extends Component {
       <Modal
         size="normal"
         open={open}
+        className="terms-modal"
         closeIcon
         onClose={this.close}
       >
@@ -300,7 +302,7 @@ class SignupForm extends Component {
           <div className="modal-container terms-container">
             <p className="title">{categoryTitle}</p>
             <div className="body">
-              Terms & conditions here.
+              <TermsAndConditions />
             </div>
           </div>
         </Modal.Content>
