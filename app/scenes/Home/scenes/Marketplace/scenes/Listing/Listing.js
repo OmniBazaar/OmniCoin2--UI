@@ -397,7 +397,7 @@ class Listing extends Component {
 
     return (
       <div className="item-description">
-        <span className="title">{listingDetail.title}</span>
+        <span className="title">{listingDetail.listing_title}</span>
         <div className="seller-wrapper">
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
