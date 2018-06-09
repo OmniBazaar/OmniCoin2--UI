@@ -21,7 +21,9 @@ import {
   updatePublisherData,
   getPublishers
 } from '../../../../../../../../../services/accountSettings/accountActions';
+import { dhtConnect } from '../../../../../../../../../services/search/dht/dhtActions';
 import './search-priority-setting.scss';
+import DHTConnector from '../../../../../../../../../utils/dht-connector';
 
 const messages = defineMessages({
   specificLocation: {
@@ -86,6 +88,8 @@ class SearchPrioritySetting extends Component {
   constructor(props) {
     super(props);
 
+    this.publishers = [];
+
     this.onChangePriority = this.onChangePriority.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
@@ -96,6 +100,17 @@ class SearchPrioritySetting extends Component {
 
   componentWillMount() {
     this.props.accountSettingsActions.getPublishers();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.account.publishers, this.props.account.publisher);
+    if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
+      this.publishers = nextProps.account.publishers.publishers.map(publisher => ({
+        value: publisher,
+        text: publisher.name,
+        key: publisher.name,
+      }));
+    }
   }
 
   onChangePriority(priority) {
@@ -116,6 +131,8 @@ class SearchPrioritySetting extends Component {
 
   onChangePublisherName(e, data) {
     this.props.accountSettingsActions.changePublisherName(data.value);
+    DHTConnector.disconnect();
+    this.props.dhtActions.dhtConnect();
   }
 
   submitPublisherData() {
@@ -184,11 +201,7 @@ class SearchPrioritySetting extends Component {
               loading={publishers.loading}
               fluid
               selection
-              options={publishers.names.map(el => ({
-                  key: el,
-                  value: el,
-                  text: el
-                }))}
+              options={this.publishers.length && this.publishers}
               onChange={this.onChangePublisherName}
             />
             <div className="col-1" />
@@ -200,7 +213,7 @@ class SearchPrioritySetting extends Component {
   }
 
   render() {
-  	const { publisherData } = this.props.account;
+    const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
 
@@ -268,6 +281,9 @@ SearchPrioritySetting.propTypes = {
     getPublishers: PropTypes.func,
     updatePublisherData: PropTypes.func
   }).isRequired,
+  dhtActions: PropTypes.shape({
+    dhtConnect: PropTypes.func,
+  }),
   account: PropTypes.shape({
     priority: PropTypes.string,
     publisherData: PropTypes.shape({}),
@@ -280,6 +296,7 @@ SearchPrioritySetting.propTypes = {
 };
 
 SearchPrioritySetting.defaultProps = {
+  dhtActions: {},
   account: {},
   intl: {},
 };
@@ -298,11 +315,14 @@ export default compose(
         changePublisherName,
         getPublishers,
         updatePublisherData
-      }, dispatch)
-    }),
+      }, dispatch),
+      dhtActions: bindActionCreators({
+        dhtConnect,
+      }, dispatch),
+    })
   ),
   reduxForm({
     form: 'searchPriorityForm',
     destroyOnUnmount: true,
-  }),
+  })
 )(injectIntl(SearchPrioritySetting));
