@@ -58,6 +58,9 @@ export function* getPeersFor({
       city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
     ]);
 
+    console.log('Keywords results', allResponses);
+    console.log('Extra keywords results', extraKeywordsResponse);
+
     let peersMap;
 
     if (keywords.length) {
