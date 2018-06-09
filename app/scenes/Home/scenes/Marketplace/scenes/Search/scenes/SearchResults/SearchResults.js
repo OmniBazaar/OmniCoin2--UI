@@ -83,7 +83,7 @@ class SearchResults extends Component {
   };
 
   renderButtonField = ({
-    input, placeholder
+    input, placeholder, defaultValue
   }) => (
     <div className="hybrid-input">
       <input
@@ -92,6 +92,7 @@ class SearchResults extends Component {
         type="text"
         className="textfield"
         placeholder={placeholder}
+        value={defaultValue}
       />
       <div className="search-actions">
         <Button
@@ -146,6 +147,7 @@ class SearchResults extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { searchTerm } = this.props.search;
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -167,6 +169,7 @@ class SearchResults extends Component {
                   <Field
                     type="text"
                     name="search"
+                    defaultValue={searchTerm || ''}
                     placeholder={formatMessage(messages.search)}
                     component={this.renderButtonField}
                     className="textfield"
