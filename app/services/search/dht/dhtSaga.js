@@ -9,6 +9,7 @@ import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
 import DHTConnector from '../../../utils/dht-connector';
 import { searchListingsByPeersMap } from '../searchSaga';
+import AccountSettingsStorage from '../../accountSettings/accountStorage';
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -22,9 +23,19 @@ export function* dhtSubscriber() {
 
 export function* connect() {
   try {
-    const publishers = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
-    const ips = (yield Promise.all(publishers.map(publisherName => FetchChain('getAccount', publisherName))))
-      .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
+    const { priority, publisherName } = AccountSettingsStorage.getPublisherData();
+    let ips = [];
+
+    if (priority === 'publisher') {
+      ips = [`${publisherName.publisher_ip}:${dhtPort}`];
+    } else {
+      const publishers = yield Apis.instance()
+        .db_api()
+        .exec('get_publisher_nodes_names', []);
+      ips = (yield Promise.all(publishers.map(publisher => FetchChain('getAccount', publisher))))
+        .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
+    }
+
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -67,7 +78,7 @@ export function* getPeersFor({
       peersMap = allResponses.map((response, index) => ({
         keyword: keywords[index],
         publishers: response.peers ? response.peers : []
-      })).filter(el => el.publishers.length);
+      })).filter(({ publishers }) => publishers.length);
     } else {
       peersMap = extraKeywordsResponse.map((response) => ({
         publishers: response.peers ? response.peers : []

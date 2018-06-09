@@ -66,4 +66,9 @@ export default class DHTConnector {
 
     return connector.findPeersFor(text);
   }
+
+  static async disconnect() {
+    await connector.destroy();
+    connector = null;
+  }
 }
