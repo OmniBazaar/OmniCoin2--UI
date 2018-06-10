@@ -72,10 +72,10 @@ function currencyConverter(amount, from, to) {
   const omcUSD = 0.00333;
   const btcUSD = 7500;
   if (to === 'OMC') {
-    return amount  / (omcUSD * (usdRates[from] || 1));
+    return (amount  / (omcUSD * (usdRates[from] || 1))).toPrecision(3);
   }
   if (to === 'BTC') {
-    return amount  / (btcUSD * (usdRates[from] || 1));
+    return (amount  / (btcUSD * (usdRates[from] || 1))).toPrecision(3);
   }
 }
 
