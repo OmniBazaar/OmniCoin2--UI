@@ -567,6 +567,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
+              disabled={this.state.listingId}
             />
             <div className="col-1" />
           </div>
@@ -726,6 +727,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
+              disabled={this.state.listingId}
             />
             <div className="col-1" />
           </div>
