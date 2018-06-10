@@ -141,7 +141,7 @@ export function* getRecentTransactions() {
           blockNum: el.block_num,
           opInTrx: el.op_in_trx,
           trxInBlock: el.trx_in_block,
-          date: calcBlockTime(el.block_num, globalObject, dynGlobalObject),
+          date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
           fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
           from: from.get('name'),
           to: to.get('name'),
