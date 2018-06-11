@@ -795,7 +795,7 @@ class Transfer extends Component {
     const values = {
       ...paramValues,
       memo: paramValues.memo ? paramValues.memo : '',
-      amount: paramValues.amount.toPrecision(3)
+      amount: parseInt(paramValues.amount).toPrecision(3)
     };
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {
