@@ -88,7 +88,6 @@ class HistoryStorage extends BaseStorage {
       return !result && (op.from === this.accountName || op.to === this.accountName);
     } else if (op.operationType === ChainTypes.operations.escrow_return_operation ||
                op.operationType === ChainTypes.operations.escrow_release_operation) {
-      console.log(this.accountName, op.from, op.to);
       return op.from === this.accountName || op.to === this.accountName;
     }
     return true;
@@ -119,13 +118,11 @@ class HistoryStorage extends BaseStorage {
       }
       if (op.type === HistoryStorage.OperationTypes.deposit) {
         transactions[trxKey].amount += this.operationAmount(op);
-      } else {
+      } else if (op.type === HistoryStorage.OperationTypes.withdraw) {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
-      if (op.type === HistoryStorage.OperationTypes.withdraw) {
-        transactions[trxKey].fee += op.fee;
-        // transactions[trxKey].balance -= op.fee;
-      }
+      transactions[trxKey].fee += op.fee;
+
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push(op);
     });
