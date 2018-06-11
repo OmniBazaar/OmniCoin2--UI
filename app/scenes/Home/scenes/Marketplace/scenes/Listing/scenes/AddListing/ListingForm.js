@@ -114,10 +114,11 @@ class ListingForm extends Component {
     let images = {};
     if (editingListing && editingListing.images) {
       editingListing.images.forEach(item => {
+        console.log(item)
         const id = getImageId();
         images[id] = {
           image: item.path,
-          thumb: item.thumb,
+          thumb: this.imageUrl(editingListing.ip, item.thumb),
           fileName: item.image_name,
           id
         };
@@ -127,6 +128,10 @@ class ListingForm extends Component {
     }
 
     this.props.listingActions.setListingImages(images);
+  }
+
+  imageUrl(publisherIp, path) {
+    return `http://${publisherIp}/publisher-images/${path}`;
   }
 
   componentWillReceiveProps(nextProps) {

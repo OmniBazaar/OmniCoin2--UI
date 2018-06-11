@@ -25,7 +25,8 @@ class PublishersDropdown extends Component {
     if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
       this.options = nextProps.account.publishers.publishers.map(publisher => ({
         value: publisher,
-        text: publisher.name
+        text: publisher.name,
+        key: publisher.name
       }));
       if (value && typeof value === 'string') {
         const publisher = this.options.find(el => el.value.publisher_ip === value);
