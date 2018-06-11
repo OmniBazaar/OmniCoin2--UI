@@ -296,7 +296,8 @@ class Listing extends Component {
 
   buyItem = () => {
     const { listingDetail } = this.props.listing;
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
+    const { activeCurrency } = this.props.listing.buyListing;
+    if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
@@ -304,7 +305,7 @@ class Listing extends Component {
       const to = listingDetail.owner;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
+    if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
