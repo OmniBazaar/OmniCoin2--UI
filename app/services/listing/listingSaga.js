@@ -31,8 +31,13 @@ import {
   requestMyListingsError,
   isListingFine,
   isListingFineSucceeded,
-  isListingFineFailed
+  isListingFineFailed,
+  searchPublishersFinish
 } from './listingActions';
+import {
+  countPeersForKeywords
+} from '../search/dht/dhtSaga';
+import { getAllPublishers } from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
@@ -50,7 +55,8 @@ export function* listingSubscriber() {
     takeEvery('GET_LISTING_DETAIL', getListingDetail),
     takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
     takeEvery('DELETE_LISTING', deleteMyListing),
-    takeEvery('IS_LISTING_FINE', checkListingHash)
+    takeEvery('IS_LISTING_FINE', checkListingHash),
+    takeEvery('SEARCH_PUBLISHERS', searchPublishers)
   ]);
 }
 
@@ -226,4 +232,32 @@ function* checkListingHash({ payload: { listing } }) {
   } catch (error) {
     yield put(isListingFineFailed(error));
   }
+}
+
+function* searchPublishers({ payload: { keywords } }) {
+  try {
+    const publishers = yield call(getAllPublishers);
+    if (!keywords || !keywords.length) {
+      yield put(searchPublishersFinish(null, publishers));
+      return;
+    }
+
+    const peers = yield call(countPeersForKeywords, keywords);
+
+    const results = [];
+    publishers.forEach(pub => {
+      if (peers[pub.publisher_ip]) {
+        pub.listingCount = peers[pub.publisher_ip];
+        results.push(pub);
+      }
+    });
+
+    if (!results.length) {
+      yield put(searchPublishersFinish(null, publishers));
+    } else {
+      yield put(searchPublishersFinish(null, results));
+    }
+  } catch (err) {
+    yield put(searchPublishersFinish(err));
+  }  
 }
