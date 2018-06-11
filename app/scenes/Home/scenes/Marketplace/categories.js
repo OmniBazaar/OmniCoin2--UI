@@ -793,6 +793,21 @@ const userMenu = defineMessages({
   }
 });
 
+export const getSubCategoryTitle = (category, subCategory) => {
+  switch (category) {
+    case categories.forSale:
+      return subCategory ? saleCategories[subCategory] : '';
+    case categories.services:
+      return subCategory ? servicesCategories[subCategory] : '';
+    case categories.jobs:
+      return subCategory ? jobsCategories[subCategory] : '';
+    case categories.cryptoBazaar:
+      return subCategory ? cryptoCategories[subCategory] : '';
+    default:
+      return '';
+  }
+};
+
 export {
   mainCategories,
   saleCategories,

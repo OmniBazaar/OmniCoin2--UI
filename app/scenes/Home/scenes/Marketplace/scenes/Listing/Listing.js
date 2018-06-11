@@ -296,7 +296,8 @@ class Listing extends Component {
 
   buyItem = () => {
     const { listingDetail } = this.props.listing;
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
+    const { activeCurrency } = this.props.listing.buyListing;
+    if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
@@ -304,7 +305,7 @@ class Listing extends Component {
       const to = listingDetail.owner;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
+    if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
@@ -326,14 +327,20 @@ class Listing extends Component {
     props.listingActions.removeFromFavorites(listingDetail['listing_id']);
   };
 
-  setItemsAmount = (valueAsNumber) => {
-    this.props.listingActions.setNumberToBuy(valueAsNumber);
+  setItemsAmount = (valueAsNumber, max) => {
+    let v = valueAsNumber;
+    if (v > max) {
+      v = max;
+    } else if (v < 1) {
+      v = 1;
+    }
+    
+    this.props.listingActions.setNumberToBuy(v);
   };
 
-  renderUserButtons(amountAvailable) {
+  renderUserButtons(maxQuantity) {
     const { formatMessage } = this.props.intl;
-    const { buyListing } = this.props.listing;
-    const { quantity } = this.props.listing.buyListing;
+    const { loading, error, numberToBuy } = this.props.listing.buyListing;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -341,16 +348,16 @@ class Listing extends Component {
             onClick={() => this.buyItem()}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
-            loading={buyListing.loading}
-            disabled={!!buyListing.error}
+            loading={loading}
+            disabled={!!error}
           />
           <NumericInput
             mobile
             className="form-control"
-            min={0}
-            value={1}
-            max={quantity}
-            onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
+            min={1}
+            value={numberToBuy}
+            max={maxQuantity}
+            onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber, maxQuantity)}
           />
         </div>
         {this.props.listing.isFavorite ?
@@ -532,21 +539,23 @@ Listing.propTypes = {
     addToFavorites: PropTypes.func,
     removeFromFavorites: PropTypes.func,
     getFavorites: PropTypes.func,
-  }),
+  }).isRequired,
   listing: PropTypes.shape({
     listingDetail: PropTypes.object,
     favoriteListings: PropTypes.array,
     isFavorite: PropTypes.bool,
-  }),
+    buyListing: PropTypes.shape({
+      activeCurrency: PropTypes.string,
+      loading: PropTypes.bool,
+      numberToBuy: PropTypes.number,
+      quantity: PropTypes.number,
+      blockchainListing: PropTypes.object,
+      error: PropTypes.object
+    })
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  }),
-};
-
-Listing.defaultProps = {
-  listingActions: {},
-  listing: {},
-  intl: {},
+  }).isRequired,
 };
 
 Listing = withRouter(Listing);

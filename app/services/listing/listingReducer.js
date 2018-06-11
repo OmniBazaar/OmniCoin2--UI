@@ -33,7 +33,10 @@ import {
   addToFavorites,
   removeFromFavorites,
   isFavorite,
-  getFavorites
+  getFavorites,
+  searchPublishers,
+  searchPublishersFinish,
+  setNumberToBuy
 } from './listingActions';
 
 import { marketplaceReturnListings } from "../search/searchActions";
@@ -74,6 +77,11 @@ const defaultState = {
     activeCurrency: CoinTypes.OMNI_COIN,
     numberToBuy: 1,
     loading: false,
+    error: null
+  },
+  publishers: {
+    searching: false,
+    publishers: [],
     error: null
   }
 };
@@ -143,7 +151,8 @@ const reducer = handleActions({
         listing,
         blockchainListing: null,
         loading: true,
-        error: null
+        error: null,
+        numberToBuy: 1
       }
     }
   },
@@ -483,6 +492,43 @@ const reducer = handleActions({
       }
     } else return  {
       ...state
+    };
+  },
+  [searchPublishers](state) {
+    return {
+      ...state,
+      publishers: {
+        ...state.publishers,
+        searching: true,
+        publishers: [],
+        error: null
+      }
+    }
+  },
+  [searchPublishersFinish](state, { payload: { error, publishers }}) {
+    const pubs = {
+      ...state.publishers,
+      searching: false
+    };
+
+    if (error) {
+      pubs.error = error; 
+    } else {
+      pubs.publishers = publishers;
+    }
+
+    return {
+      ...state,
+      publishers: pubs
+    };
+  },
+  [setNumberToBuy](state, { payload: { number } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        numberToBuy: number
+      }
     };
   }
 }, defaultState);

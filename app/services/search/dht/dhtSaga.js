@@ -5,6 +5,7 @@ import {
   takeEvery,
   fork
 } from 'redux-saga/effects';
+import _ from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
 import DHTConnector from '../../../utils/dht-connector';
@@ -17,7 +18,7 @@ const dhtConnector = new DHTConnector();
 export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
-    takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
+    takeEvery('DHT_GET_PEERS_FOR', getPeersFor)
   ]);
 }
 
@@ -128,6 +129,28 @@ export function* getPeersFor({
   }
 }
 
+export const countPeersForKeywords = async (keywords) => {
+  const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+  const allResponses = await Promise.all(responses);
+  const publishers = {};
+
+  allResponses.forEach(item => {
+    if (item.noPeers) {
+      return;
+    }
+
+    item.peers.forEach(peer => {
+      if (!publishers[peer.host]) {
+        publishers[peer.host] = 1;
+      } else {
+        publishers[peer.host]++;
+      }
+    });
+  });
+
+  return publishers;
+}
+
 function getPublishersWeights(peersMap) {
   const weights = {};
   peersMap.forEach(item => {
@@ -146,10 +169,10 @@ function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
     keyword: item.keyword || null,
-    publishers: item.publishers.map(publisher => ({
+    publishers: _.uniqBy(item.publishers.map(publisher => ({
       address: publisher.host,
       weight: publishersWeights[publisher]
-    }))
+    })), 'address')
   }));
 }
 

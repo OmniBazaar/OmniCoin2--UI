@@ -61,6 +61,10 @@ class ListingForm extends Component {
     this.PublishersDropdown = makeValidatableField(PublishersDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
+
+    this.state = {
+      keywords: ''
+    };
   }
 
   renderLabeledField = ({
@@ -135,6 +139,9 @@ class ListingForm extends Component {
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
+    this.setState({
+      keywords: ''
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -167,6 +174,12 @@ class ListingForm extends Component {
     }
 
     this.props.formActions.change('contact_info', contactInfo);
+  }
+
+  onKeywordsBlur(e) {
+    this.setState({
+      keywords: e.target.value
+    });
   }
 
   getImagesData() {
@@ -281,6 +294,23 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.pleaseEnter)}
                 validate={requiredFieldValidator}
               />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4} className="align-top">
+              <span>{formatMessage(messages.keywordsSearch)}</span>
+            </Grid.Column>
+            <Grid.Column width={12} className='keywords'>
+              <Field
+                type="text"
+                name="keywords"
+                component={InputField}
+                onBlur={this.onKeywordsBlur.bind(this)}
+                className="textfield"
+                placeholder={formatMessage(messages.keywordCommas)}
+                validate={requiredFieldValidator}
+              />
+              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -452,7 +482,8 @@ class ListingForm extends Component {
                 name="publisher"
                 component={this.PublishersDropdown}
                 props={{
-                  placeholder: formatMessage(messages.selectPublisher)
+                  placeholder: formatMessage(messages.selectPublisher),
+                  keywords: this.state.keywords
                 }}
                 validate={requiredFieldValidator}
               />
@@ -482,22 +513,6 @@ class ListingForm extends Component {
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.description)}</span>
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column width={4}>
-              <span>{formatMessage(messages.keywordsSearch)}</span>
-            </Grid.Column>
-            <Grid.Column width={12}>
-              <Field
-                type="text"
-                name="keywords"
-                component={InputField}
-                className="textfield"
-                placeholder={formatMessage(messages.keywordCommas)}
-                validate={requiredFieldValidator}
-              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>

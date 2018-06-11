@@ -87,6 +87,22 @@ const messages = defineMessages({
     id: 'Settings.release',
     defaultMessage: 'RELEASED'
   },
+  [ChainTypes.operations.listing_create_operation]: {
+    id: 'Settings.createListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.listing_update_operation]: {
+    id: 'Settings.updateListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.listing_delete_operation]: {
+    id: 'Settings.deleteListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.account_update]: {
+    id: 'Settings.updateAccount',
+    defaultMessage: 'ACCOUNT'
+  }
 });
 
 
@@ -140,6 +156,14 @@ class RecentTransactions extends Component {
         return 'released';
       case ChainTypes.operations.escrow_return_operation:
         return 'returned';
+      case ChainTypes.operations.listing_delete_operation:
+        return 'listing';
+      case ChainTypes.operations.listing_update_operation:
+        return 'listing';
+      case ChainTypes.operations.listing_create_operation:
+        return 'listing';
+      case ChainTypes.operations.account_update:
+        return 'account';
     }
   }
 
@@ -240,7 +264,7 @@ class RecentTransactions extends Component {
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                               <Image
-                                src={row.fromTo === row.from ? IncomingIcon : OutgoingIcon}
+                                src={(row.fromTo !== row.from || !row.fromTo) ? OutgoingIcon : IncomingIcon}
                                 width={iconSize}
                                 height={iconSize}
                                 className="from-icon"

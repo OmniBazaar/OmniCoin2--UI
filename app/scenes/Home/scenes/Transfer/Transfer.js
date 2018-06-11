@@ -567,6 +567,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
+              disabled={!!this.state.listingId}
             />
             <div className="col-1" />
           </div>
@@ -663,7 +664,7 @@ class Transfer extends Component {
               loading={transfer.loading}
               content={formatMessage(messages.TRANSFER)}
               className="button--green-bg"
-              disabled={this.props.invalid}
+              disabled={!!this.props.invalid}
             />
           </div>
           <div className="col-1" />
@@ -726,6 +727,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
+              disabled={this.state.listingId}
             />
             <div className="col-1" />
           </div>
@@ -795,7 +797,7 @@ class Transfer extends Component {
     const values = {
       ...paramValues,
       memo: paramValues.memo ? paramValues.memo : '',
-      amount: paramValues.amount.toPrecision(3)
+      amount: parseInt(paramValues.amount).toFixed(2)
     };
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {

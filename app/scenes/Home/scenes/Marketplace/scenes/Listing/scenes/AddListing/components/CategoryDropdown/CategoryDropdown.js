@@ -29,6 +29,7 @@ class CategoryDropdown extends Component {
     const { value } = this.props.input;
     return (
       <Dropdown
+        className='category-dropdown'
         compact
         selection
         placeholder={this.props.placeholder}

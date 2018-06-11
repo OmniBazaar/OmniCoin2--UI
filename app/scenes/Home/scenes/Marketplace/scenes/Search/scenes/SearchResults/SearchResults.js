@@ -6,31 +6,26 @@ import {
   Icon,
   Button,
   Form,
-  Dropdown,
   Loader
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
+import { NavLink } from 'react-router-dom';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
-import CategoryDropdown from '../../../../../Marketplace/scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
-
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
+import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
+import { setActiveCategory } from '../../../../../../../../services/marketplace/marketplaceActions';
+
 import {
-  filterSearchResults
-} from '../../../../../../../../services/search/searchActions';
+  mainCategories,
+  getSubCategoryTitle
+} from '../../../../categories';
 
 import './search-results.scss';
 
-const iconSizeMedium = 15;
 const iconSizeSmall = 12;
-
-const options = [
-  { key: 1, text: 'All Categories', value: 'all' },
-  { key: 2, text: 'Category 1', value: 'category1' },
-  { key: 3, text: 'Category 2', value: 'category2' },
-];
 
 const messages = defineMessages({
   marketplace: {
@@ -75,15 +70,28 @@ const messages = defineMessages({
   },
 });
 
-
 class SearchResults extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { searchTerm } = this.props.search;
+
+    if (searchTerm !== nextProps.search.searchTerm) {
+      if (nextProps.search.searchTerm) {
+        this.props.change('search', nextProps.search.searchTerm);
+      }
+    }
+  }
 
   onSearch = () => {
     this.props.searchActions.filterSearchResults(this.searchInput.value);
   };
 
   renderButtonField = ({
-    input, placeholder, defaultValue
+    input, placeholder
   }) => (
     <div className="hybrid-input">
       <input
@@ -92,7 +100,6 @@ class SearchResults extends Component {
         type="text"
         className="textfield"
         placeholder={placeholder}
-        value={defaultValue}
       />
       <div className="search-actions">
         <Button
@@ -117,7 +124,7 @@ class SearchResults extends Component {
           <CurrencyDropdown />
         </div>
         <TabsData
-          data={searchResultsFiltered ? searchResultsFiltered : searchResults}
+          data={searchResultsFiltered || searchResults}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -145,9 +152,31 @@ class SearchResults extends Component {
     );
   }
 
+  handleSubmit(values) {
+    const { search } = values;
+    const { category, subCategory } = this.props.search;
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(search, category || 'All', country, city, true, subCategory);
+  }
+
+  viewCategory = (category, subCategory) => {
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
+  };
+
+  setActiveCategory = () => {
+    if (this.props.searchActions.setActiveCategory) {
+      this.props.searchActions.setActiveCategory('Marketplace.home');
+    }
+  };
+
   render() {
     const { formatMessage } = this.props.intl;
-    const { searchTerm } = this.props.search;
+    const { handleSubmit } = this.props;
+    const { searchTerm, category, subCategory } = this.props.search;
+    const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
+    const subcategory = getSubCategoryTitle(category, subCategory);
+    const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -159,23 +188,48 @@ class SearchResults extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.marketplace)}</span>
-                  <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                  <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
+                    <span className="link">
+                      {formatMessage(messages.marketplace)}
+                    </span>
+                  </NavLink>
+                  {category ?
+                    <div>
+                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                      <span
+                        className="link"
+                        onClick={() => this.viewCategory(category, null)}
+                        onKeyDown={() => this.viewCategory(category, null)}
+                        tabIndex={0}
+                        role="link"
+                      >
+                        {categoryTitle || ''}
+                      </span>
+                    </div>
+                  : null}
+                  {subCategory ?
+                    <div>
+                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                      <span className="link child">
+                        {subCategoryTitle || ''}
+                      </span>
+                    </div>
+                  : null}
                 </div>
-                <span className="child">{formatMessage(messages.searchResults)}</span>
               </div>
-              <div className="search-container">
-                <Form className="search-form">
-                  <Field
-                    type="text"
-                    name="search"
-                    defaultValue={searchTerm || ''}
-                    placeholder={formatMessage(messages.search)}
-                    component={this.renderButtonField}
-                    className="textfield"
-                  />
-                </Form>
-              </div>
+              {searchTerm && searchTerm !== '' ?
+                <div className="search-container">
+                  <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+                    <Field
+                      type="text"
+                      name="search"
+                      placeholder={formatMessage(messages.search)}
+                      component={this.renderButtonField}
+                      className="textfield"
+                    />
+                  </Form>
+                </div>
+              : null}
             </div>
           </div>
           {(this.props.dht.isLoading || this.props.search.searching)
@@ -192,7 +246,6 @@ class SearchResults extends Component {
             :
             this.renderSearchResults()
           }
-
         </div>
       </div>
     );
@@ -200,22 +253,36 @@ class SearchResults extends Component {
 }
 
 SearchResults.propTypes = {
+  account: PropTypes.shape({
+    publisherData: PropTypes.object
+  }),
   search: PropTypes.shape({
+    searchResults: PropTypes.array,
     recentSearches: PropTypes.array,
-    searchResultsFiltered: PropTypes.array
+    searchResultsFiltered: PropTypes.array,
+    searchTerm: PropTypes.string,
+    category: PropTypes.string,
+    subCategory: PropTypes.string,
+    searching: PropTypes.bool,
   }),
   searchActions: PropTypes.shape({
     dhtGetPeersFor: PropTypes.func,
+    filterSearchResults: PropTypes.func,
+    searchListings: PropTypes.func,
+    setActiveCategory: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  handleSubmit: PropTypes.func
 };
 
 SearchResults.defaultProps = {
   intl: {},
   search: {},
+  account: {},
   searchActions: {},
+  handleSubmit: () => {},
 };
 
 export default compose(
@@ -223,7 +290,9 @@ export default compose(
     state => ({ ...state.default }),
     (dispatch) => ({
       searchActions: bindActionCreators({
-        filterSearchResults
+        filterSearchResults,
+        searchListings,
+        setActiveCategory
       }, dispatch),
     })
   ),

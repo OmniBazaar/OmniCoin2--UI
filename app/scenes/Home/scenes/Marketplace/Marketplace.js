@@ -693,13 +693,13 @@ class Marketplace extends Component {
             <div className="item">
               <div>{formatMessage(messages.referralsNewUser)}</div>
               <div>{formatMessage(messages.upTo)}</div>
-              <div>10,000 XOM</div>
+              <div>2,500 XOM</div>
             </div>
             <div className="separator" />
             <div className="item">
               <div>{formatMessage(messages.firstSale)}</div>
               <div>{formatMessage(messages.upTo)}</div>
-              <div>10,000 XOM</div>
+              <div>500 XOM</div>
             </div>
           </div>
           <div className="right-items">
@@ -853,7 +853,7 @@ class Marketplace extends Component {
         trigger={this.badgeMenu(icon, title)}
         hoverable
         basic
-        on="hover"
+        on="click"
         position="bottom center"
         wide="very"
         hideOnScroll
