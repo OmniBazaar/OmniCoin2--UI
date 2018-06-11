@@ -387,6 +387,17 @@ class Listing extends Component {
     );
   }
 
+  getLocation(listingDetail) {
+    const locations = [];
+    const keys = ['city', 'state', 'country'];
+    keys.forEach(k => {
+      if (listingDetail[k]) {
+        locations.push(listingDetail[k]);
+      }
+    });
+    return locations.join(', ');
+  }
+
   renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
@@ -429,7 +440,7 @@ class Listing extends Component {
           </div>
           <div className="info">
             <span>{formatMessage(messages.cityLocation)}</span>
-            <span className="value">{listingDetail['city']}</span>
+            <span className="value">{ this.getLocation(listingDetail) }</span>
           </div>
         </div>
         <div className="price-wrapper">
