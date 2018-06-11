@@ -337,8 +337,10 @@ class Menu extends Component {
         <div className="menu-wrapper about">
           <div className="submenu logo">
             <div>
-              <Image src={OmniLogo} width={logoWidth} />
-              <p className="link">{formatMessage(messages.omniLink)}</p>
+              <a href="http://omnibazaar.com/" target="_blank" rel="noopener noreferrer">
+                <Image src={OmniLogo} width={logoWidth} />
+                <p className="link">{formatMessage(messages.omniLink)}</p>
+              </a>
             </div>
           </div>
           <div className="submenu">
