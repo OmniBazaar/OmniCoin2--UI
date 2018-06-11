@@ -6,31 +6,19 @@ import {
   Icon,
   Button,
   Form,
-  Dropdown,
   Loader
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
-import CategoryDropdown from '../../../../../Marketplace/scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
-
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
-import {
-  filterSearchResults
-} from '../../../../../../../../services/search/searchActions';
+import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
 
 import './search-results.scss';
 
-const iconSizeMedium = 15;
 const iconSizeSmall = 12;
-
-const options = [
-  { key: 1, text: 'All Categories', value: 'all' },
-  { key: 2, text: 'Category 1', value: 'category1' },
-  { key: 3, text: 'Category 2', value: 'category2' },
-];
 
 const messages = defineMessages({
   marketplace: {
@@ -77,6 +65,20 @@ const messages = defineMessages({
 
 
 class SearchResults extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { searchTerm } = this.props.search;
+
+    if (searchTerm !== nextProps.search.searchTerm) {
+      if (nextProps.search.searchTerm) {
+        this.props.change('search', nextProps.search.searchTerm);
+      }
+    }
+  }
 
   onSearch = () => {
     this.props.searchActions.filterSearchResults(this.searchInput.value);
@@ -92,7 +94,6 @@ class SearchResults extends Component {
         type="text"
         className="textfield"
         placeholder={placeholder}
-        value={defaultValue}
       />
       <div className="search-actions">
         <Button
@@ -145,9 +146,15 @@ class SearchResults extends Component {
     );
   }
 
+  handleSubmit(values) {
+    const { searchTerm, category } = values.search;
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city);
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
-    const { searchTerm } = this.props.search;
+    const { handleSubmit } = this.props;
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -165,11 +172,10 @@ class SearchResults extends Component {
                 <span className="child">{formatMessage(messages.searchResults)}</span>
               </div>
               <div className="search-container">
-                <Form className="search-form">
+                <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
                   <Field
                     type="text"
                     name="search"
-                    defaultValue={searchTerm || ''}
                     placeholder={formatMessage(messages.search)}
                     component={this.renderButtonField}
                     className="textfield"
@@ -223,7 +229,8 @@ export default compose(
     state => ({ ...state.default }),
     (dispatch) => ({
       searchActions: bindActionCreators({
-        filterSearchResults
+        filterSearchResults,
+        searchListings
       }, dispatch),
     })
   ),
