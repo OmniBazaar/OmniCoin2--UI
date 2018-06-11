@@ -80,9 +80,7 @@ class ListingForm extends Component {
   );
 
   componentWillMount() {
-    this.initFormData();
-    this.initImages();
-    this.props.listingActions.resetSaveListing();
+    this.resetForm();
   }
 
   initFormData() {
@@ -136,6 +134,7 @@ class ListingForm extends Component {
   resetForm() {
     this.initFormData();
     this.initImages();
+    this.props.listingActions.resetSaveListing();
   }
 
   componentWillReceiveProps(nextProps) {
