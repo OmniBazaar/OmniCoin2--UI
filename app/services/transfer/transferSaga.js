@@ -88,8 +88,7 @@ function* submitBitcoinTransfer(data) {
 }
 
 export function* submitTransfer(data) {
-  const currencySelectedStr = data.payload.data.currencySelected;
-
+  const currencySelectedStr = (yield select()).default.transfer.transferCurrency;
   switch (currencySelectedStr) {
     case 'omnicoin':
       yield fork(submitOmniCoinTransfer, data);
