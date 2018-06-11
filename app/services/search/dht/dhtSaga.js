@@ -5,6 +5,7 @@ import {
   takeEvery,
   fork
 } from 'redux-saga/effects';
+import _ from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
 import DHTConnector from '../../../utils/dht-connector';
@@ -136,10 +137,10 @@ function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
     keyword: item.keyword || null,
-    publishers: item.publishers.map(publisher => ({
+    publishers: _.uniqBy(item.publishers.map(publisher => ({
       address: publisher.host,
       weight: publishersWeights[publisher]
-    }))
+    })), 'address')
   }));
 }
 
