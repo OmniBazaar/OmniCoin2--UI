@@ -47,27 +47,48 @@ export function* connect() {
   }
 }
 
+async function doLocalSearch({ country, city }) {
+  const countryKey = `country:${country}`;
+  const cityKey = `city:${city}`;
+
+  const countryRes = await dhtConnector.findPeersFor(countryKey);
+  const cityRes = await dhtConnector.findPeersFor(cityKey);
+
+  return countryRes.peers ? countryRes.peers
+    .filter(({ host }) => cityRes.peers && cityRes.peers
+      .filter((peer) => peer.host === host)) : [];
+}
+
 export function* getPeersFor({
   payload: {
     searchTerm, category, country, city, searchListings, subCategory
   },
 }) {
   try {
-    const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
-    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
-    const allResponses = yield Promise.all(responses);
-
+    const publisherData = AccountSettingsStorage.getPublisherData();
     const categoryKey = `category:${category}`;
     const subcategoryKey = `subcategory:${subCategory}`;
-    const countryKey = `country:${country}`;
-    const cityKey = `city:${city}`;
 
     const extraKeywordsResponse = yield Promise.all([
       category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
-      country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
-      city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
     ]);
+
+    let peers = [];
+
+    switch (publisherData.priority) {
+      case 'category':
+        break;
+      case 'local':
+        peers = yield doLocalSearch(publisherData);
+        break;
+      default:
+        break;
+    }
+
+    const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
+    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+    const allResponses = yield Promise.all(responses);
 
     console.log('Keywords results', allResponses);
     console.log('Extra keywords results', extraKeywordsResponse);
