@@ -43,7 +43,7 @@ const {
   DELETE_SEARCH_FAILED: (error) => ({ error }),
   MARKETPLACE_RETURN_LISTINGS: (data) => ({ data }),
   MARKETPLACE_RETURN_BOOL: (data) => ({ data }),
-  SEARCHING: (searchId, searchTerm) => ({ searchId, searchTerm })
+  SEARCHING: (searchId, searchTerm, category, subCategory) => ({ searchId, searchTerm, category, subCategory })
 });
 
 export {

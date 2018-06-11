@@ -142,6 +142,12 @@ class Menu extends Component {
     );
   }
 
+  setActiveCategory = () => {
+    if (this.props.marketplaceActions.setActiveCategory) {
+      this.props.marketplaceActions.setActiveCategory('Marketplace.home');
+    }
+  };
+
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
     const { country, city } = this.props.account.publisherData;
@@ -423,13 +429,8 @@ class Menu extends Component {
       <div className="menu">
         <ul>
           <li className={optionMenuClass}>
-            <NavLink to="/marketplace">
-              <span
-                onClick={() => this.viewCategory(mainCategories.home.id)}
-                onKeyDown={() => this.viewCategory(mainCategories.home.id)}
-                tabIndex={0}
-                role="link"
-              >
+            <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
+              <span>
                 {formatMessage(mainCategories.home)}
               </span>
             </NavLink>
