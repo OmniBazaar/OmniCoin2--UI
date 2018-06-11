@@ -9,6 +9,12 @@
 
       .category-title {
         margin-bottom: 20px;
+
+        .link {
+          &:hover {
+            cursor: pointer;
+          }
+        }
       }
 
       .search-container {

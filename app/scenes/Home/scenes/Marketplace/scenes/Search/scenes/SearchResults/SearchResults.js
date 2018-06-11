@@ -10,11 +10,18 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
+import { NavLink } from 'react-router-dom';
 import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
 import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
+import { setActiveCategory } from '../../../../../../../../services/marketplace/marketplaceActions';
+
+import {
+  mainCategories,
+  getSubCategoryTitle
+} from '../../../../categories';
 
 import './search-results.scss';
 
@@ -63,7 +70,6 @@ const messages = defineMessages({
   },
 });
 
-
 class SearchResults extends Component {
   constructor(props) {
     super(props);
@@ -85,7 +91,7 @@ class SearchResults extends Component {
   };
 
   renderButtonField = ({
-    input, placeholder, defaultValue
+    input, placeholder
   }) => (
     <div className="hybrid-input">
       <input
@@ -118,7 +124,7 @@ class SearchResults extends Component {
           <CurrencyDropdown />
         </div>
         <TabsData
-          data={searchResultsFiltered ? searchResultsFiltered : searchResults}
+          data={searchResultsFiltered || searchResults}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -147,14 +153,30 @@ class SearchResults extends Component {
   }
 
   handleSubmit(values) {
-    const { searchTerm, category } = values.search;
+    const { search } = values;
+    const { category, subCategory } = this.props.search;
     const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city);
+    this.props.searchActions.searchListings(search, category || 'All', country, city, true, subCategory);
   }
+
+  viewCategory = (category, subCategory) => {
+    const { country, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
+  };
+
+  setActiveCategory = () => {
+    if (this.props.searchActions.setActiveCategory) {
+      this.props.searchActions.setActiveCategory('Marketplace.home');
+    }
+  };
 
   render() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
+    const { searchTerm, category, subCategory } = this.props.search;
+    const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
+    const subcategory = getSubCategoryTitle(category, subCategory);
+    const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -166,22 +188,48 @@ class SearchResults extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.marketplace)}</span>
-                  <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                  <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
+                    <span className="link">
+                      {formatMessage(messages.marketplace)}
+                    </span>
+                  </NavLink>
+                  {category ?
+                    <div>
+                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                      <span
+                        className="link"
+                        onClick={() => this.viewCategory(category, null)}
+                        onKeyDown={() => this.viewCategory(category, null)}
+                        tabIndex={0}
+                        role="link"
+                      >
+                        {categoryTitle || ''}
+                      </span>
+                    </div>
+                  : null}
+                  {subCategory ?
+                    <div>
+                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                      <span className="link child">
+                        {subCategoryTitle || ''}
+                      </span>
+                    </div>
+                  : null}
                 </div>
-                <span className="child">{formatMessage(messages.searchResults)}</span>
               </div>
-              <div className="search-container">
-                <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
-                  <Field
-                    type="text"
-                    name="search"
-                    placeholder={formatMessage(messages.search)}
-                    component={this.renderButtonField}
-                    className="textfield"
-                  />
-                </Form>
-              </div>
+              {searchTerm && searchTerm !== '' ?
+                <div className="search-container">
+                  <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+                    <Field
+                      type="text"
+                      name="search"
+                      placeholder={formatMessage(messages.search)}
+                      component={this.renderButtonField}
+                      className="textfield"
+                    />
+                  </Form>
+                </div>
+              : null}
             </div>
           </div>
           {(this.props.dht.isLoading || this.props.search.searching)
@@ -198,7 +246,6 @@ class SearchResults extends Component {
             :
             this.renderSearchResults()
           }
-
         </div>
       </div>
     );
@@ -206,22 +253,36 @@ class SearchResults extends Component {
 }
 
 SearchResults.propTypes = {
+  account: PropTypes.shape({
+    publisherData: PropTypes.object
+  }),
   search: PropTypes.shape({
+    searchResults: PropTypes.array,
     recentSearches: PropTypes.array,
-    searchResultsFiltered: PropTypes.array
+    searchResultsFiltered: PropTypes.array,
+    searchTerm: PropTypes.string,
+    category: PropTypes.string,
+    subCategory: PropTypes.string,
+    searching: PropTypes.bool,
   }),
   searchActions: PropTypes.shape({
     dhtGetPeersFor: PropTypes.func,
+    filterSearchResults: PropTypes.func,
+    searchListings: PropTypes.func,
+    setActiveCategory: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  handleSubmit: PropTypes.func
 };
 
 SearchResults.defaultProps = {
   intl: {},
   search: {},
+  account: {},
   searchActions: {},
+  handleSubmit: () => {},
 };
 
 export default compose(
@@ -230,7 +291,8 @@ export default compose(
     (dispatch) => ({
       searchActions: bindActionCreators({
         filterSearchResults,
-        searchListings
+        searchListings,
+        setActiveCategory
       }, dispatch),
     })
   ),

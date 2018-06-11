@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { toastr } from 'react-redux-toastr';
@@ -27,9 +27,17 @@ import {
   setActivePageGridTable,
   sortGridTableBy
 } from '../../../../../../services/marketplace/marketplaceActions';
+import { deleteListing } from '../../../../../../services/listing/listingActions';
+
 import {
-  deleteListing
-} from '../../../../../../services/listing/listingActions';
+  categories,
+  saleCategories,
+  servicesCategories,
+  jobsCategories,
+  cryptoCategories,
+  mainCategories,
+  getSubCategoryTitle
+} from '../../categories';
 
 import { numberWithCommas } from '../../../../../../utils/numeric';
 import messages from './messages';
@@ -140,7 +148,6 @@ class GridTable extends Component {
     );
   }
 
-
   render() {
     const {
       activePageGridTable,
@@ -153,6 +160,7 @@ class GridTable extends Component {
     const rows = _.chunk(gridTableDataFiltered, 6);
     const { formatMessage } = this.props.intl;
     console.log('ROWS ', rows);
+
     return (
       <div className="data-table">
         <div className="table-container">
@@ -166,22 +174,27 @@ class GridTable extends Component {
                       const style = { backgroundImage: `url(${image})` };
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
+                      const categoryTitle = item.category && item.category !== 'All' ?
+                                            formatMessage(mainCategories[item.category]) : item.category || '';
+                      const subcategory = getSubCategoryTitle(item.category, item.subcategory);
+                      const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+
                       return (
                         <TableCell className="item" key={hash(item)}>
-                          <Link to={`listing/${item['listing_id']}`}>
+                          <Link to={`listing/${item.listing_id}`}>
                             <div className="img-wrapper" style={style} />
                           </Link>
 
-                          <Link to={`listing/${item['listing_id']}`}>
-                            <span className="title">{item['listing_title']}</span>
+                          <Link to={`listing/${item.listing_id}`}>
+                            <span className="title">{item.listing_title}</span>
                           </Link>
 
                           <span className="subtitle">
-                            {item.category}
+                            {categoryTitle}
                             <span>
                               <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
                             </span>
-                            {item.subCategory}
+                            {subCategoryTitle}
                           </span>
                           <span className="description">{description}</span>
                           <span className="price">$ {numberWithCommas(parseFloat(item.price))}</span>
@@ -190,11 +203,13 @@ class GridTable extends Component {
                               <Button
                                 content={formatMessage(messages.edit)}
                                 className="button--blue"
-                                onClick={this.onEditClick.bind(this, item)} />
+                                onClick={this.onEditClick.bind(this, item)}
+                              />
                               <Button
                                 content={formatMessage(messages.delete)}
                                 className="button--gray-text"
-                                onClick={this.onDeleteClick.bind(this, item)} />
+                                onClick={this.onDeleteClick.bind(this, item)}
+                              />
                             </div>
                             : null
                           }
