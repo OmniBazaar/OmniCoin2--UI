@@ -55,7 +55,7 @@ class PriceItem extends Component {
 }
 
 PriceItem.propTypes = {
-  amount: PropTypes.string,
+  amount: PropTypes.number,
   currency: PropTypes.string,
   coinLabel: PropTypes.string,
   isUserOwner: PropTypes.bool,
@@ -68,7 +68,7 @@ PriceItem.propTypes = {
 };
 
 PriceItem.defaultProps = {
-  amount: '0',
+  amount: 0,
   currency: '',
   coinLabel: '',
   isUserOwner: false,

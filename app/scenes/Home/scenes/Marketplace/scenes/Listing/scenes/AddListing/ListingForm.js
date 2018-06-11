@@ -80,9 +80,7 @@ class ListingForm extends Component {
   );
 
   componentWillMount() {
-    this.initFormData();
-    this.initImages();
-    this.props.listingActions.resetSaveListing();
+    this.resetForm();
   }
 
   initFormData() {
@@ -117,7 +115,7 @@ class ListingForm extends Component {
         const id = getImageId();
         images[id] = {
           image: item.path,
-          thumb: item.thumb,
+          thumb: this.imageUrl(editingListing.ip, item.thumb),
           fileName: item.image_name,
           id
         };
@@ -127,6 +125,16 @@ class ListingForm extends Component {
     }
 
     this.props.listingActions.setListingImages(images);
+  }
+
+  imageUrl(publisherIp, path) {
+    return `http://${publisherIp}/publisher-images/${path}`;
+  }
+
+  resetForm() {
+    this.initFormData();
+    this.initImages();
+    this.props.listingActions.resetSaveListing();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -139,6 +147,11 @@ class ListingForm extends Component {
           formatMessage(messages.saveListingErrorMessage)
         );
       } else {
+        const { editingListing } = this.props;
+        if (!editingListing) {
+          this.resetForm();
+        }
+
         this.showSuccessToast(
           formatMessage(messages.success),
           formatMessage(messages.saveListingSuccessMessage)
@@ -328,7 +341,6 @@ class ListingForm extends Component {
               <Field
                 name="price_using_btc"
                 component={Checkbox}
-                input={{ value: true }}
                 props={{
                   label: formatMessage(messages.bitcoinPrice)
                 }}
@@ -338,7 +350,6 @@ class ListingForm extends Component {
               <Field
                 name="price_using_omnicoin"
                 component={Checkbox}
-                input={{ value: true }}
                 props={{
                   label: formatMessage(messages.omnicoinPrice)
                 }}
