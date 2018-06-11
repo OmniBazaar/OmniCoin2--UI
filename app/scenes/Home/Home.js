@@ -194,7 +194,7 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
-                <NavLink to="/support" activeClassName="active" className="menu-item">
+                <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.support"
