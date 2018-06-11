@@ -35,7 +35,8 @@ import {
   isFavorite,
   getFavorites,
   searchPublishers,
-  searchPublishersFinish
+  searchPublishersFinish,
+  setNumberToBuy
 } from './listingActions';
 
 import { marketplaceReturnListings } from "../search/searchActions";
@@ -150,7 +151,8 @@ const reducer = handleActions({
         listing,
         blockchainListing: null,
         loading: true,
-        error: null
+        error: null,
+        numberToBuy: 1
       }
     }
   },
@@ -518,6 +520,15 @@ const reducer = handleActions({
     return {
       ...state,
       publishers: pubs
+    };
+  },
+  [setNumberToBuy](state, { payload: { number } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        numberToBuy: number
+      }
     };
   }
 }, defaultState);
