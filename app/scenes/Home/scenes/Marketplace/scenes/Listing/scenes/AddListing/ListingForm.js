@@ -114,7 +114,6 @@ class ListingForm extends Component {
     let images = {};
     if (editingListing && editingListing.images) {
       editingListing.images.forEach(item => {
-        console.log(item)
         const id = getImageId();
         images[id] = {
           image: item.path,
@@ -134,6 +133,11 @@ class ListingForm extends Component {
     return `http://${publisherIp}/publisher-images/${path}`;
   }
 
+  resetForm() {
+    this.initFormData();
+    this.initImages();
+  }
+
   componentWillReceiveProps(nextProps) {
     const { error, saving } = nextProps.listing.saveListing;
     if (this.props.listing.saveListing.saving && !saving) {
@@ -144,6 +148,11 @@ class ListingForm extends Component {
           formatMessage(messages.saveListingErrorMessage)
         );
       } else {
+        const { editingListing } = this.props;
+        if (!editingListing) {
+          this.resetForm();
+        }
+
         this.showSuccessToast(
           formatMessage(messages.success),
           formatMessage(messages.saveListingSuccessMessage)
