@@ -66,6 +66,19 @@
               }
             }
 
+            &.keywords {
+              flex-direction: column;
+              align-items: flex-start;
+
+              >div:first-child {
+                align-self: stretch;
+              }
+
+              .note {
+                margin-top: 4px;
+              }
+            }
+
             .listing-image-container {
               flex-direction: column;
             }

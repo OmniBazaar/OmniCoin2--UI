@@ -297,10 +297,10 @@ class ListingForm extends Component {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}</span>
             </Grid.Column>
-            <Grid.Column width={12}>
+            <Grid.Column width={12} className='keywords'>
               <Field
                 type="text"
                 name="keywords"
@@ -310,6 +310,7 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.keywordCommas)}
                 validate={requiredFieldValidator}
               />
+              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
