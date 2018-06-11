@@ -56,5 +56,6 @@
   "AddListing.editListing": "Edit Listing",
   "AddListing.listingNotFound": "Listing not found",
   "AddListing.saveListing": "Save Listing",
-  "AddListing.searchPublishersErrorMessage": "Have error when searching publishers"
+  "AddListing.searchPublishersErrorMessage": "Have error when searching publishers",
+  "AddListing.keywordsNote": "Keywords will be used to find appropriate publishers"
 }

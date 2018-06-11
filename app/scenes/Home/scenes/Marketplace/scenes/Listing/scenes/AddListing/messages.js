@@ -248,6 +248,10 @@ const messages = defineMessages({
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
     defaultMessage: 'Have error when searching publishers'
+  },
+  keywordsNote: {
+    id: 'AddListing.keywordsNote',
+    defaultMessage: 'Keywords will be used to find appropriate publishers'
   }
 });
 
