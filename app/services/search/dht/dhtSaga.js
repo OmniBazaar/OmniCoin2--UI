@@ -16,7 +16,7 @@ const dhtConnector = new DHTConnector();
 export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
-    takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
+    takeEvery('DHT_GET_PEERS_FOR', getPeersFor)
   ]);
 }
 
@@ -94,6 +94,28 @@ export function* getPeersFor({
     console.log('ERROR ', e);
     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
   }
+}
+
+export const countPeersForKeywords = async (keywords) => {
+  const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+  const allResponses = await Promise.all(responses);
+  const publishers = {};
+
+  allResponses.forEach(item => {
+    if (item.noPeers) {
+      return;
+    }
+
+    item.peers.forEach(peer => {
+      if (!publishers[peer.host]) {
+        publishers[peer.host] = 1;
+      } else {
+        publishers[peer.host]++;
+      }
+    });
+  });
+
+  return publishers;
 }
 
 function getPublishersWeights(peersMap) {

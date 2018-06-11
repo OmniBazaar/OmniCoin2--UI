@@ -244,6 +244,10 @@ const messages = defineMessages({
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
+  },
+  searchPublishersErrorMessage: {
+    id: 'AddListing.searchPublishersErrorMessage',
+    defaultMessage: 'Have error when searching publishers'
   }
 });
 

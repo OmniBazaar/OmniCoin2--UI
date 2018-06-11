@@ -7,6 +7,7 @@ import {
 } from 'redux-saga/effects';
 import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import { getAllPublishers } from './services';
 
 
 import {
@@ -59,11 +60,7 @@ export function* updatePublicData() {
 
 export function* getPublishers() {
   try {
-    const publishersNames = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
-    const publishers = (
-      (yield Promise.all(
-        publishersNames.map(publisherName => FetchChain('getAccount', publisherName)))
-      ).map(publisher => publisher.toJS()));
+    const publishers = yield call(getAllPublishers);
     yield put({ type: 'GET_PUBLISHERS_SUCCEEDED', publishers });
   } catch (e) {
     console.log('ERR', e);
