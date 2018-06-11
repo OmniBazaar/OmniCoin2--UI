@@ -129,7 +129,7 @@ export function* searchListingsByPeersMap({
   }
 
   ws.send(JSON.stringify(message));
-  yield put(searching(id, searchTerm));
+  yield put(searching(id, searchTerm, category, subCategory));
 }
 
 function* getRecentSearches() {
