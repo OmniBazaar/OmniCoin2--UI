@@ -34,6 +34,7 @@ import {
   listingDefaultsSubscriber,
   preferencesSubscriber,
   importSubscriber,
+  myPurchasesSubscriber
 } from './services/saga';
 
 ChainConfig.address_prefix = 'BTS';
@@ -83,6 +84,7 @@ sagaMiddleware.run(importSubscriber);
 sagaMiddleware.run(listingDefaultsSubscriber);
 sagaMiddleware.run(preferencesSubscriber);
 sagaMiddleware.run(importSubscriber);
+sagaMiddleware.run(myPurchasesSubscriber);
 
 ReactDOM.render(
   (

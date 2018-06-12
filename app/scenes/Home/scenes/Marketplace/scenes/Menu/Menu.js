@@ -403,7 +403,9 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/listings">{formatMessage(userMenu.myListings)}</NavLink>
         </div>
-        <div className="link-menu">{formatMessage(userMenu.myPurchases)}</div>
+        <div className="link-menu">
+          <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
+        </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>
