@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { mainCategories } from '../../../../../../categories';
 
 const categoryIds = [
-  'forSale', 'services', 'jobs', 'cryptoBazaar',
+  'all', 'forSale', 'services', 'jobs', 'cryptoBazaar',
   'community', 'housing', 'gigs'
 ];
 
@@ -29,7 +29,7 @@ class CategoryDropdown extends Component {
     const { value } = this.props.input;
     return (
       <Dropdown
-        className='category-dropdown'
+        className="category-dropdown"
         compact
         selection
         placeholder={this.props.placeholder}
