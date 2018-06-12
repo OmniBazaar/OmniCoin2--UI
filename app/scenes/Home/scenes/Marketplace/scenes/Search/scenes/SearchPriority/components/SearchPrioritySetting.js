@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -21,9 +21,8 @@ import {
   updatePublisherData,
   getPublishers
 } from '../../../../../../../../../services/accountSettings/accountActions';
-import { dhtConnect } from '../../../../../../../../../services/search/dht/dhtActions';
+import { dhtReconnect } from '../../../../../../../../../services/search/dht/dhtActions';
 import './search-priority-setting.scss';
-import DHTConnector from '../../../../../../../../../utils/dht-connector';
 
 const messages = defineMessages({
   specificLocation: {
@@ -130,8 +129,7 @@ class SearchPrioritySetting extends Component {
 
   onChangePublisherName(e, data) {
     this.props.accountSettingsActions.changePublisherName(data.value);
-    DHTConnector.disconnect();
-    this.props.dhtActions.dhtConnect();
+    this.props.dhtActions.dhtReconnect();
   }
 
   submitPublisherData() {
@@ -282,7 +280,7 @@ SearchPrioritySetting.propTypes = {
     updatePublisherData: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
-    dhtConnect: PropTypes.func,
+    dhtReconnect: PropTypes.func,
   }),
   account: PropTypes.shape({
     priority: PropTypes.string,
@@ -317,7 +315,7 @@ export default compose(
         updatePublisherData
       }, dispatch),
       dhtActions: bindActionCreators({
-        dhtConnect,
+        dhtReconnect,
       }, dispatch),
     })
   ),

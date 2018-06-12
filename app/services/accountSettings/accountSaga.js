@@ -6,7 +6,6 @@ import {
   call
 } from 'redux-saga/effects';
 import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
-import { Apis } from 'omnibazaarjs-ws';
 import { getAllPublishers } from './services';
 
 
@@ -20,19 +19,12 @@ import {
   getDynGlobalObject,
   calcBlockTime
 } from '../blockchain/utils/miscellaneous';
-import AccountSettingsStorage from './accountStorage';
 
 export function* accountSubscriber() {
   yield all([
     takeLatest('UPDATE_PUBLIC_DATA', updatePublicData),
     takeLatest('GET_PUBLISHERS', getPublishers),
     takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions),
-    takeLatest('CHANGE_PRIORITY', changePriority),
-    takeLatest('CHANGE_COUNTRY', changeCountry),
-    takeLatest('CHANGE_CITY', changeCity),
-    takeLatest('CHANGE_CATEGORY', changeCategory),
-    takeLatest('CHANGE_PUBLISHER_NAME', changePublisherName),
-    takeLatest('CHANGE_KEYWORDS', changeKeywords),
   ]);
 }
 
@@ -148,7 +140,7 @@ export function* getRecentTransactions() {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
             fee: el.op[1].fee.amount / 100000,
             operationType: el.op[0]
-          })
+          });
         } else {
           const [from, to] = yield getParties(el.op);
           historyStorage.addOperation({
@@ -182,28 +174,4 @@ export function* getRecentTransactions() {
     console.log('ERROR', e);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });
   }
-}
-
-export function* changePriority({ payload: { priority } }) {
-  yield AccountSettingsStorage.updatePublisherData({ priority });
-}
-
-export function* changeCountry({ payload: { country } }) {
-  yield AccountSettingsStorage.updatePublisherData({ country });
-}
-
-export function* changeCity({ payload: { city } }) {
-  yield AccountSettingsStorage.updatePublisherData({ city });
-}
-
-export function* changeCategory({ payload: { category } }) {
-  yield AccountSettingsStorage.updatePublisherData({ category });
-}
-
-export function* changePublisherName({ payload: { publisher } }) {
-  yield AccountSettingsStorage.updatePublisherData({ publisherName: publisher });
-}
-
-export function* changeKeywords({ payload: { keywords } }) {
-  yield AccountSettingsStorage.updatePublisherData({ keywords: keywords || [] });
 }
