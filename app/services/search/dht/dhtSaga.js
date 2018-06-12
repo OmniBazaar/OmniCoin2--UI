@@ -12,6 +12,7 @@ import { FetchChain } from 'omnibazaarjs';
 import DHTConnector from '../../../utils/dht-connector';
 import { searchListingsByPeersMap } from '../searchSaga';
 import AccountSettingsStorage from '../../accountSettings/accountStorage';
+import { getPreferences } from '../../preferences/services';
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -127,6 +128,9 @@ export function* getPeersFor({
     peersMap = adjustPeersMap(peersMap);
 
     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
+
+    const { searchListingOption } = getPreferences();
+
     if (peersMap.length !== 0 && searchListings) {
       yield fork(searchListingsByPeersMap, {
         payload: {
@@ -136,7 +140,7 @@ export function* getPeersFor({
           searchTerm,
           country: country || publisherData.country,
           city: city || publisherData.city,
-          searchByAllKeywords: !keywords.length,
+          searchByAllKeywords: searchListingOption === 'allKeywords' || !keywords.length,
         }
       });
     }
