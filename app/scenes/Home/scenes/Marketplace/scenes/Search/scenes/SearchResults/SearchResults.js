@@ -11,7 +11,9 @@ import {
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { NavLink } from 'react-router-dom';
-import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
+import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
+import CurrencyDropdown from '../../../Listing/scenes/AddListing/components/CurrencyDropdown/CurrencyDropdown';
+import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 
@@ -68,11 +70,16 @@ const messages = defineMessages({
     id: 'SearchMenu.loadingListings',
     defaultMessage: 'Loading listings'
   },
+  currency: {
+    id: 'SearchMenu.currency',
+    defaultMessage: 'Currency'
+  },
 });
 
 class SearchResults extends Component {
   constructor(props) {
     super(props);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -87,7 +94,9 @@ class SearchResults extends Component {
   }
 
   onSearch = () => {
-    this.props.searchActions.filterSearchResults(this.searchInput.value);
+    //const currency = values.currency;
+    //const category = (values && values.search) ? values.search.category : null;
+    this.props.searchActions.filterSearchResults(this.searchInput.value, 'all', 'all');
   };
 
   renderButtonField = ({
@@ -111,18 +120,80 @@ class SearchResults extends Component {
     </div>
   );
 
+  renderFilters = ({
+    input, dropdownPlaceholder
+  }) => (
+    <div className="search-actions">
+      <CategoryDropdown
+        placeholder={dropdownPlaceholder}
+        selection
+        input={{
+          value: input.category,
+          onChange: (value) => {
+            input.onChange({
+              ...input.value,
+              category: value
+            });
+          }
+        }}
+      />
+    </div>
+  );
+
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
     const {
+      searchTerm,
+      category,
+      subCategory,
       searchResults,
-      searchResultsFiltered
+      searchResultsFiltered,
+      searchCategory,
+      searchCurrency
     } = this.props.search;
 
     return (
       <div className="list-container search-filters">
-        <div className="filters">
-          <CurrencyDropdown />
-        </div>
+        <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+          {searchTerm && searchTerm !== '' ?
+            <div className="search-container">
+              <Field
+                type="text"
+                name="search"
+                placeholder={formatMessage(messages.search)}
+                component={this.renderButtonField}
+                className="textfield"
+              />
+            </div>
+            : null}
+          <div className="filters">
+            <Field
+              type="text"
+              name="search"
+              placeholder="Search"
+              dropdownPlaceholder="Categories"
+              component={this.renderFilters}
+              className="textfield"
+              props={{
+                value: searchCategory
+              }}
+            />
+            <Field
+              name="currency"
+              component={this.CurrencyDropdown}
+              props={{
+                value: searchCurrency,
+                placeholder: formatMessage(messages.currency)
+              }}
+            />
+            <Button
+              content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+              className="button--primary search-btn"
+              type="submit"
+            />
+          </div>
+        </Form>
         <TabsData
           data={searchResultsFiltered || searchResults}
           tabs={[
@@ -173,10 +244,11 @@ class SearchResults extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    const { searchTerm, category, subCategory } = this.props.search;
+    const { search, searchTerm, category, subCategory } = this.props.search;
     const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
     const subcategory = getSubCategoryTitle(category, subCategory);
     const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+    // console.log(search, searchTerm);
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -217,19 +289,6 @@ class SearchResults extends Component {
                   : null}
                 </div>
               </div>
-              {searchTerm && searchTerm !== '' ?
-                <div className="search-container">
-                  <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
-                    <Field
-                      type="text"
-                      name="search"
-                      placeholder={formatMessage(messages.search)}
-                      component={this.renderButtonField}
-                      className="textfield"
-                    />
-                  </Form>
-                </div>
-              : null}
             </div>
           </div>
           {(this.props.dht.isLoading || this.props.search.searching)

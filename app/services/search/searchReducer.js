@@ -38,6 +38,8 @@ const defaultState = {
     direction: 'descending'
   },
   searchResults: [],
+  searchCategory: 'all',
+  searchCurrency: 'all',
   searchResultsFiltered: null,
   searchId: null,
   searchText: '',
@@ -59,7 +61,7 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
 const reducer = handleActions({
-  [filterSearchResults](state, { payload: { searchText } }) {
+  [filterSearchResults](state, { payload: { searchText, currency, category } }) {
     const data = state.searchResults;
     const activePageSearchResults = 1;
     let totalPagesSearchResults;

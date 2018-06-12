@@ -37,7 +37,9 @@ import {
   searchPublishers,
   searchPublishersFinish,
   setNumberToBuy,
-  filterMyListings
+  filterMyListings,
+  filterFavorites,
+  filterSearch
 } from './listingActions';
 
 import { marketplaceReturnListings } from '../search/searchActions';
@@ -62,6 +64,9 @@ const defaultState = {
   isContinuous: false,
   isFavorite: false,
   favoriteListings: [],
+  favoriteFiltered: [],
+  favoriteCurrency: 'all',
+  favoriteCategory: 'all',
   listingImages: {},
   saveListing: {
     saving: false,
@@ -551,6 +556,26 @@ const reducer = handleActions({
       myListingsCurrency: currency,
       myListingsCategory: category,
       myListingsFiltered
+    };
+  },
+  [filterFavorites](state, { payload: { currency, category } }) {
+    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+    const categoryFilter = (category && category.toLowerCase()) || 'all';
+
+    let favoriteFiltered = [];
+    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+      favoriteFiltered = state.favoriteListings
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter);
+    } else {
+      if (currencyFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    }
+    return {
+      ...state,
+      favoriteCurrency: currency,
+      favoriteCategory: category,
+      favoriteFiltered
     };
   }
 }, defaultState);
