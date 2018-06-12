@@ -98,6 +98,15 @@ $sidebar-size: 250px;
         }
       }
 
+      .account-balance {
+        margin: 0;
+        padding: 0;
+
+        .balance-info {
+          margin-left: 10px;
+        }
+      }
+
       .sidebar {
         .info {
           margin-bottom: 35px;

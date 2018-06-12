@@ -36,6 +36,7 @@ import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNe
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
 import StartGuide from './components/StartGuide/StartGuide';
+import AccountBalance from './components/AccountBalance/AccountBalance';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -201,6 +202,7 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
