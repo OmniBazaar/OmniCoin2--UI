@@ -74,14 +74,8 @@ export function* getPeersFor({
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
 
-    switch (publisherData.priority) {
-      case 'category':
-        break;
-      case 'local':
-        extraKeywordsResponse.push(yield doLocalSearch(publisherData));
-        break;
-      default:
-        break;
+    if (publisherData.priority === 'local') {
+      extraKeywordsResponse.push(yield doLocalSearch(publisherData));
     }
 
     extraKeywordsResponse = extraKeywordsResponse.reduce((acc, curr) => [...acc, ...curr], []);
@@ -138,11 +132,11 @@ export function* getPeersFor({
         payload: {
           peersMap,
           category,
-          country,
-          city,
           subCategory,
+          searchTerm,
+          country: country || publisherData.country,
+          city: city || publisherData.city,
           searchByAllKeywords: !keywords.length,
-          searchTerm
         }
       });
     }

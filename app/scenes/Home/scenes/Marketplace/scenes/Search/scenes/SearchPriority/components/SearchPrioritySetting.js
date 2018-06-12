@@ -130,8 +130,9 @@ class SearchPrioritySetting extends Component {
 
   onChangePublisherName(e, data) {
     this.props.accountSettingsActions.changePublisherName(data.value);
-    DHTConnector.disconnect();
-    this.props.dhtActions.dhtConnect();
+    DHTConnector.disconnect()
+      .then(this.props.dhtActions.dhtConnect())
+      .catch(console.log);
   }
 
   submitPublisherData() {

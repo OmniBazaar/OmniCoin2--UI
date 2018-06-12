@@ -68,6 +68,10 @@ export default class DHTConnector {
   }
 
   static async disconnect() {
+    if (!connector) {
+      return;
+    }
+
     await connector.destroy();
     connector = null;
   }
