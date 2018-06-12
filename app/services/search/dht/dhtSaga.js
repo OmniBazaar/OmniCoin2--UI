@@ -93,7 +93,12 @@ export function* getPeersFor({
   },
 }) {
   try {
+    if (!country) {
+      city = '';
+    }
+
     const publisherData = AccountSettingsStorage.getPublisherData();
+
     const categoryKey = `category:${category}`;
     const subcategoryKey = `subcategory:${subCategory}`;
 
@@ -102,7 +107,7 @@ export function* getPeersFor({
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
 
-    if (publisherData.priority === 'local') {
+    if (publisherData.priority === 'local' && country) {
       extraKeywordsResponse.push(yield doLocalSearch(publisherData));
     }
 
@@ -135,7 +140,7 @@ export function* getPeersFor({
     if (typeof keywords === 'string') {
       keywords = searchTerm.split(' ').map(item => item.trim());
     }
-    
+
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
     const allResponses = yield Promise.all(responses)
       .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
@@ -178,7 +183,7 @@ export function* getPeersFor({
           subCategory,
           searchTerm,
           country: country || publisherData.country,
-          city: city || publisherData.city,
+          city: city || (country && publisherData.city) || '',
           searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
         }
       });

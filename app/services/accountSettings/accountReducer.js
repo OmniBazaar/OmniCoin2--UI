@@ -241,6 +241,10 @@ const reducer = handleActions({
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
+    if (!data.country) {
+      data.city = '';
+    }
+    
     const newData = savePublisherData(data);
     return {
       ...state,
