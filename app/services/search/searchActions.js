@@ -23,8 +23,8 @@ const {
   searching,
   filterSearch
 } = createActions({
-  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory) => ({
-    searchTerm, category, country, city, historify, subCategory
+  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory, fromSearchMenu) => ({
+    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
   }),
   FILTER_SEARCH_RESULTS: (searchText, currency, category) => ({ searchText, currency, category }),
   FILTER_SEARCH_BY_CATEGORY: () => ({}),
@@ -44,7 +44,7 @@ const {
   DELETE_SEARCH_FAILED: (error) => ({ error }),
   MARKETPLACE_RETURN_LISTINGS: (data) => ({ data }),
   MARKETPLACE_RETURN_BOOL: (data) => ({ data }),
-  SEARCHING: (searchId, searchTerm, category, subCategory) => ({ searchId, searchTerm, category, subCategory }),
+  SEARCHING: (searchId, searchTerm, category, subCategory, fromSearchMenu) => ({ searchId, searchTerm, category, subCategory, fromSearchMenu }),
   FILTER_SEARCH: (currency, category) => ({ currency, category })
 });
 

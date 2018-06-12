@@ -26,7 +26,7 @@ class CategoryDropdown extends Component {
   }
 
   render() {
-    const { value } = this.props.input;
+    const { value, defaultValue } = this.props.input;
     return (
       <Dropdown
         className="category-dropdown"
@@ -36,6 +36,7 @@ class CategoryDropdown extends Component {
         options={this.options}
         onChange={this.onChange.bind(this)}
         value={value}
+        defaultValue={defaultValue}
       />
     );
   }

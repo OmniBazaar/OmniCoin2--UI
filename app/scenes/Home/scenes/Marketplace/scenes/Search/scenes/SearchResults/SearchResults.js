@@ -83,21 +83,25 @@ class SearchResults extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    this.props.change('search', null);
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { searchTerm } = this.props.search;
+    const { searchTerm, category } = this.props.search;
 
     if (searchTerm !== nextProps.search.searchTerm) {
       if (nextProps.search.searchTerm) {
-        this.props.change('search', nextProps.search.searchTerm);
+        this.props.change('searchTerm', nextProps.search.searchTerm);
       }
     }
-  }
 
-  onSearch = () => {
-    //const currency = values.currency;
-    //const category = (values && values.search) ? values.search.category : null;
-    this.props.searchActions.filterSearchResults(this.searchInput.value, 'all', 'all');
-  };
+    if (category !== nextProps.search.category) {
+      const categoryName = nextProps.search.category;
+      const searchCategory = categoryName && categoryName === 'All' ? categoryName.toLowerCase() : categoryName;
+      this.props.change('search', searchCategory);
+    }
+  }
 
   renderButtonField = ({
     input, placeholder
@@ -110,88 +114,86 @@ class SearchResults extends Component {
         className="textfield"
         placeholder={placeholder}
       />
-      <div className="search-actions">
-        <Button
-          content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-          className="button--primary search-btn"
-          onClick={this.onSearch}
-        />
-      </div>
     </div>
   );
 
   renderFilters = ({
-    input, dropdownPlaceholder
+    input, dropdownPlaceholder, defaultValue
   }) => (
-    <div className="search-actions">
-      <CategoryDropdown
-        placeholder={dropdownPlaceholder}
-        selection
-        input={{
-          value: input.category,
-          onChange: (value) => {
-            input.onChange({
-              ...input.value,
-              category: value
-            });
-          }
-        }}
-      />
-    </div>
+    <CategoryDropdown
+      placeholder={dropdownPlaceholder}
+      selection
+      input={{
+        defaultValue,
+        value: input.category,
+        onChange: (value) => {
+          input.onChange({
+            ...input.value,
+            category: value
+          });
+        }
+      }}
+    />
   );
+
+  handleSubmit(values) {
+    const currency = values.currency;
+    const searchTerm = (this.searchInput && this.searchInput.value) || '';
+    const category = (values && values.search) ? values.search.category : null;
+    this.props.searchActions.filterSearchResults(searchTerm, currency, category);
+  }
 
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    const {
+    let {
       searchTerm,
-      category,
-      subCategory,
       searchResults,
       searchResultsFiltered,
-      searchCategory,
-      searchCurrency
+      category,
+      fromSearchMenu
     } = this.props.search;
+    const searchCategory = category && category === 'All' ? category.toLowerCase() : category;
 
     return (
       <div className="list-container search-filters">
-        <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
-          {searchTerm && searchTerm !== '' ?
+        <Form className="filter search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+          <div className="content">
             <div className="search-container">
-              <Field
-                type="text"
-                name="search"
-                placeholder={formatMessage(messages.search)}
-                component={this.renderButtonField}
-                className="textfield"
-              />
+              {fromSearchMenu || (searchTerm && searchTerm !== '') ?
+                <Field
+                  type="text"
+                  name="searchTerm"
+                  placeholder={formatMessage(messages.search)}
+                  component={this.renderButtonField}
+                  className="textfield"
+                />
+              : null}
+              <div className="search-filters">
+                <Field
+                  type="text"
+                  name="search"
+                  inputName="search"
+                  placeholder="Search"
+                  dropdownPlaceholder="Categories"
+                  component={this.renderFilters}
+                  defaultValue={searchCategory}
+                  className="textfield"
+                />
+                <Field
+                  name="currency"
+                  component={this.CurrencyDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.currency)
+                  }}
+                />
+                <Button
+                  content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+                  className="button--primary search-btn"
+                  type="submit"
+                />
+              </div>
             </div>
-            : null}
-          <div className="filters">
-            <Field
-              type="text"
-              name="search"
-              placeholder="Search"
-              dropdownPlaceholder="Categories"
-              component={this.renderFilters}
-              className="textfield"
-              props={{
-                value: searchCategory
-              }}
-            />
-            <Field
-              name="currency"
-              component={this.CurrencyDropdown}
-              props={{
-                value: searchCurrency,
-                placeholder: formatMessage(messages.currency)
-              }}
-            />
-            <Button
-              content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-              className="button--primary search-btn"
-              type="submit"
-            />
           </div>
         </Form>
         <TabsData
@@ -223,13 +225,6 @@ class SearchResults extends Component {
     );
   }
 
-  handleSubmit(values) {
-    const { search } = values;
-    const { category, subCategory } = this.props.search;
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(search, category || 'All', country, city, true, subCategory);
-  }
-
   viewCategory = (category, subCategory) => {
     const { country, city } = this.props.account.publisherData;
     this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
@@ -243,12 +238,10 @@ class SearchResults extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
-    const { search, searchTerm, category, subCategory } = this.props.search;
+    const { category, subCategory } = this.props.search;
     const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
     const subcategory = getSubCategoryTitle(category, subCategory);
     const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
-    // console.log(search, searchTerm);
 
     return (
       <div className="marketplace-container category-listing search-results">
