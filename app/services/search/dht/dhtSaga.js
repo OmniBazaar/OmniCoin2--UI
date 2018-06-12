@@ -131,7 +131,11 @@ export function* getPeersFor({
         .filter(({ host }) => host === publisherData.publisherName.publisher_ip);
     }
 
-    const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
+    let keywords = searchTerm ? searchTerm : [];
+    if (typeof keywords === 'string') {
+      keywords = searchTerm.split(' ').map(item => item.trim());
+    }
+    
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
     const allResponses = yield Promise.all(responses)
       .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
