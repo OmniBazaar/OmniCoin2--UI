@@ -408,9 +408,6 @@ class Menu extends Component {
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>
         <div className="link-menu">
-          <NavLink to="/listings-defaults">{formatMessage(userMenu.newListingDefaults)}</NavLink>
-        </div>
-        <div className="link-menu">
           <NavLink to="/search-priority">{formatMessage(userMenu.searchPriority)}</NavLink>
         </div>
         <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
