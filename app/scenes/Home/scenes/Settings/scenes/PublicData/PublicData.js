@@ -8,6 +8,7 @@ import { toastr } from 'react-redux-toastr';
 import ip from 'ip';
 import { debounce } from 'lodash';
 
+import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
 
@@ -117,6 +118,10 @@ class PublicData extends Component {
     this.updatePublicData = this.updatePublicData.bind(this);
     this.freezeSettings = this.freezeSettings.bind(this);
     this.onChangeIpAddress = debounce(this.onChangeIpAddress.bind(this), 500);
+
+    this.state = {
+      ip: ''
+    };
   }
 
   componentWillMount() {
@@ -149,6 +154,10 @@ class PublicData extends Component {
 
   componentWillUnmount() {
     this.props.authActions.getAccount(this.props.auth.currentUser.username);
+  }
+
+  getExternalIp() {
+
   }
 
   freezeSettings() {
@@ -206,8 +215,8 @@ class PublicData extends Component {
     return this.props.account.escrow ? CheckPreNom : CheckNormal;
   }
 
-  onChangeIpAddress(event, data) {
-    this.props.accountSettingsActions.changeIpAddress(data.value);
+  onChangeIpAddress(ip) {
+    this.props.accountSettingsActions.changeIpAddress(ip);
   }
 
   render() {
@@ -241,9 +250,9 @@ class PublicData extends Component {
         {account.publisher &&
           <div className="ip">
             <span>IP: </span>
-            <Input
-              defaultValue={this.props.account.ipAddress}
-              onChange={this.onChangeIpAddress}
+            <IpInput
+              value={this.props.account.ipAddress}
+              onChange={this.onChangeIpAddress.bind(this)}
             />
           </div>
         }
