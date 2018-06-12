@@ -45,7 +45,8 @@ export function* getPeersFor({
   try {
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
-    const allResponses = yield Promise.all(responses);
+    const allResponses = yield Promise.all(responses)
+      .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
 
     const categoryKey = `category:${category}`;
     const subcategoryKey = `subcategory:${subCategory}`;
@@ -57,7 +58,8 @@ export function* getPeersFor({
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
       country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
       city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback(),
-    ]);
+    ])
+      .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
 
     console.log('Keywords results', allResponses);
     console.log('Extra keywords results', extraKeywordsResponse);
@@ -111,13 +113,13 @@ export const countPeersForKeywords = async (keywords) => {
       if (!publishers[peer.host]) {
         publishers[peer.host] = 1;
       } else {
-        publishers[peer.host]++;
+        publishers[peer.host] += 1;
       }
     });
   });
 
   return publishers;
-}
+};
 
 function getPublishersWeights(peersMap) {
   const weights = {};
@@ -145,8 +147,8 @@ function adjustPeersMap(peersMap) {
 }
 
 function noPeersFallback() {
-  return {
+  return [{
     noPeers: true,
     timedOut: false,
-  };
+  }];
 }
