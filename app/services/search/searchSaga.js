@@ -5,7 +5,7 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
-import { uniq } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 
 import {
   getSavedSearchesSucceeded,
@@ -110,7 +110,7 @@ export function* searchListingsByPeersMap({
         keywords: peersMap.reduce((keywords, curr) =>
           uniq([...keywords, ...(curr.keywords || [])]), []),
         publishers: peersMap.reduce((publishers, curr) =>
-          uniq([...publishers, ...(curr.publishers || [])]), []),
+          uniqBy([...publishers, ...(curr.publishers || [])], ({ address }) => address), []),
         currency: 'BTC',
         range: '20',
         filters

@@ -5,9 +5,10 @@ import {
   takeEvery,
   fork
 } from 'redux-saga/effects';
-import _ from 'lodash';
+import { includes, uniqBy } from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
+
 import DHTConnector from '../../../utils/dht-connector';
 import { searchListingsByPeersMap } from '../searchSaga';
 import AccountSettingsStorage from '../../accountSettings/accountStorage';
@@ -52,12 +53,10 @@ async function doLocalSearch({ country, city }) {
   const countryKey = `country:${country}`;
   const cityKey = `city:${city}`;
 
-  const countryRes = await dhtConnector.findPeersFor(countryKey);
-  const cityRes = await dhtConnector.findPeersFor(cityKey);
+  const countryRes = country ? await dhtConnector.findPeersFor(countryKey) : noPeersFallback();
+  const cityRes = city ? await dhtConnector.findPeersFor(cityKey) : noPeersFallback();
 
-  return countryRes.peers ? countryRes.peers
-    .filter(({ host }) => cityRes.peers && cityRes.peers
-      .filter((peer) => peer.host === host)) : [];
+  return [countryRes, cityRes];
 }
 
 export function* getPeersFor({
@@ -71,21 +70,38 @@ export function* getPeersFor({
     const subcategoryKey = `subcategory:${subCategory}`;
 
     const extraKeywordsResponse = yield Promise.all([
-      category !== 'All' ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      (category !== 'All' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
-
-    let peers = [];
 
     switch (publisherData.priority) {
       case 'category':
         break;
       case 'local':
-        peers = yield doLocalSearch(publisherData);
+        extraKeywordsResponse.push(yield doLocalSearch(publisherData));
         break;
       default:
         break;
     }
+
+    let extraKeywordsPeers = extraKeywordsResponse
+      .reduce((final, resp) => [...final, ...(resp.peers || [])], []);
+
+    const [categoryResp, subCategoryResp, countryResp, cityResp] = extraKeywordsResponse;
+
+    extraKeywordsPeers = uniqBy(extraKeywordsPeers, ({ host }) => host)
+      .filter(({ host }) => {
+        const isInCategories = categoryResp && categoryResp.peers ? categoryResp.peers
+          .find(({ host: ctgHost }) => ctgHost === host) : !category;
+        const isInSubCategories = subCategoryResp && subCategoryResp.peers ? subCategoryResp.peers
+          .find(({ host: subHost }) => subHost === host) : !subCategory;
+        const isInCountry = countryResp && countryResp.peers ? countryResp.peers
+          .find(({ host: contryHost }) => contryHost === host) : !country;
+        const isInCity = cityResp && cityResp.peers ? cityResp.peers
+          .find(({ host: cityHost }) => cityHost === host) : !city;
+
+        return isInCategories && isInSubCategories && isInCountry && isInCity;
+      });
 
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
@@ -99,11 +115,15 @@ export function* getPeersFor({
     if (keywords.length) {
       peersMap = allResponses.map((response, index) => ({
         keyword: keywords[index],
-        publishers: response.peers ? response.peers : []
+        publishers: (response.peers || [])
+          .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
+            .map(i => i.host), keyPeer.host)),
       })).filter(({ publishers }) => publishers.length);
     } else {
       peersMap = extraKeywordsResponse.map((response) => ({
-        publishers: response.peers ? response.peers : []
+        publishers: (response.peers || [])
+          .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
+            .map(i => i.host), keyPeer.host)),
       })).filter(el => el.publishers.length);
     }
 
@@ -143,13 +163,13 @@ export const countPeersForKeywords = async (keywords) => {
       if (!publishers[peer.host]) {
         publishers[peer.host] = 1;
       } else {
-        publishers[peer.host]++;
+        publishers[peer.host] += 1;
       }
     });
   });
 
   return publishers;
-}
+};
 
 function getPublishersWeights(peersMap) {
   const weights = {};
@@ -169,7 +189,7 @@ function adjustPeersMap(peersMap) {
   const publishersWeights = getPublishersWeights(peersMap);
   return peersMap.map(item => ({
     keyword: item.keyword || null,
-    publishers: _.uniqBy(item.publishers.map(publisher => ({
+    publishers: uniqBy(item.publishers.map(publisher => ({
       address: publisher.host,
       weight: publishersWeights[publisher]
     })), 'address')
