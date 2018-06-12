@@ -37,6 +37,7 @@ import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
 import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
+import AccountBalance from './components/AccountBalance/AccountBalance';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -51,12 +52,12 @@ import ProcessorsIcon from './images/sdb-processors.svg';
 import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
+import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
 import { getListingDefault } from '../../services/listing/listingDefaultsActions';
-
 
 const iconSize = 20;
 
@@ -195,6 +196,13 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
+                <NavLink to="/listings-defaults" activeClassName="active" className="menu-item">
+                  <Image src={UserIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id='Marketplace.newListingDefaults'
+                    defaultMessage='New Listing Defaults'
+                  />
+                </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -202,6 +210,7 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>

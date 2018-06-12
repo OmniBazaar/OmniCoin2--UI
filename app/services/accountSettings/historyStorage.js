@@ -124,7 +124,10 @@ class HistoryStorage extends BaseStorage {
       transactions[trxKey].fee += op.fee;
 
       transactions[trxKey].memo = this.operationMemo(op);
-      transactions[trxKey].operations.push(op);
+      transactions[trxKey].operations.push({
+        ...op,
+        amount: this.operationAmount(op)
+      });
     });
     return orderBy(Object.values(transactions), ['date'], ['desc']);
     // return HistoryStorage.updateBalances(sortedTransactions);

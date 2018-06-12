@@ -1,6 +1,5 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
-import ip from 'ip';
 
 import PriorityTypes from '../../common/SearchPriorityType';
 
@@ -76,7 +75,7 @@ const defaultState = {
     loading: false,
     error: null
   },
-  ipAddress: ip.address()
+  ipAddress: ''
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -242,6 +241,10 @@ const reducer = handleActions({
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
+    if (!data.country) {
+      data.city = '';
+    }
+    
     const newData = savePublisherData(data);
     return {
       ...state,
