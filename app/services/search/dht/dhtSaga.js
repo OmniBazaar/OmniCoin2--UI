@@ -20,6 +20,7 @@ const dhtConnector = new DHTConnector();
 export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
+    takeEvery('DHT_RECONNECT', reconnect),
     takeEvery('DHT_GET_PEERS_FOR', getPeersFor)
   ]);
 }
@@ -50,6 +51,11 @@ export function* connect() {
   }
 }
 
+export function* reconnect() {
+  yield call(dhtConnector.disconnect);
+  yield put({ type: 'DHT_CONNECT' });
+}
+
 async function doLocalSearch({ country, city }) {
   const countryKey = `country:${country}`;
   const cityKey = `city:${city}`;
@@ -58,6 +64,27 @@ async function doLocalSearch({ country, city }) {
   const cityRes = city ? await dhtConnector.findPeersFor(cityKey) : noPeersFallback();
 
   return [countryRes, cityRes];
+}
+
+function isPresentInFilters(
+  host,
+  {
+    categoryResp, subCategoryResp, countryResp, cityResp
+  },
+  {
+    category, subCategory, country, city
+  }
+) {
+  const isInCategories = categoryResp && categoryResp.peers ? categoryResp.peers
+    .find(({ host: ctgHost }) => ctgHost === host) : !category;
+  const isInSubCategories = subCategoryResp && subCategoryResp.peers ? subCategoryResp.peers
+    .find(({ host: subHost }) => subHost === host) : !subCategory;
+  const isInCountry = countryResp && countryResp.peers ? countryResp.peers
+    .find(({ host: contryHost }) => contryHost === host) : !country;
+  const isInCity = cityResp && cityResp.peers ? cityResp.peers
+    .find(({ host: cityHost }) => cityHost === host) : !city;
+
+  return isInCategories && isInSubCategories && isInCountry && isInCity;
 }
 
 export function* getPeersFor({
@@ -87,18 +114,22 @@ export function* getPeersFor({
     const [categoryResp, subCategoryResp, countryResp, cityResp] = extraKeywordsResponse;
 
     extraKeywordsPeers = uniqBy(extraKeywordsPeers, ({ host }) => host)
-      .filter(({ host }) => {
-        const isInCategories = categoryResp && categoryResp.peers ? categoryResp.peers
-          .find(({ host: ctgHost }) => ctgHost === host) : !category;
-        const isInSubCategories = subCategoryResp && subCategoryResp.peers ? subCategoryResp.peers
-          .find(({ host: subHost }) => subHost === host) : !subCategory;
-        const isInCountry = countryResp && countryResp.peers ? countryResp.peers
-          .find(({ host: contryHost }) => contryHost === host) : !country;
-        const isInCity = cityResp && cityResp.peers ? cityResp.peers
-          .find(({ host: cityHost }) => cityHost === host) : !city;
+      .filter(({ host }) => isPresentInFilters(
+        host,
+        {
+          categoryResp, subCategoryResp, countryResp, cityResp
+        },
+        {
+          category, subCategory, country, city
+        }
+      ));
 
-        return isInCategories && isInSubCategories && isInCountry && isInCity;
-      });
+    const isPublisherSelected = publisherData.priority === 'publisher';
+
+    if (isPublisherSelected) {
+      extraKeywordsPeers = extraKeywordsPeers
+        .filter(({ host }) => host === publisherData.publisherName.publisher_ip);
+    }
 
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
@@ -113,15 +144,19 @@ export function* getPeersFor({
     if (keywords.length) {
       peersMap = allResponses.map((response, index) => ({
         keyword: keywords[index],
-        publishers: (response.peers || [])
-          .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
-            .map(i => i.host), keyPeer.host)),
+        publishers: isPublisherSelected ?
+          [{ host: publisherData.publisherName.publisher_ip }] :
+          (response.peers || [])
+            .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
+              .map(i => i.host), keyPeer.host)),
       })).filter(({ publishers }) => publishers.length);
     } else {
       peersMap = extraKeywordsResponse.map((response) => ({
-        publishers: (response.peers || [])
-          .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
-            .map(i => i.host), keyPeer.host)),
+        publishers: isPublisherSelected ?
+          [{ host: publisherData.publisherName.publisher_ip }] :
+          (response.peers || [])
+            .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
+              .map(i => i.host), keyPeer.host)),
       })).filter(el => el.publishers.length);
     }
 

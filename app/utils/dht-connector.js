@@ -67,12 +67,13 @@ export default class DHTConnector {
     return connector.findPeersFor(text);
   }
 
-  static async disconnect() {
+  disconnect = async () => {
     if (!connector) {
       return;
     }
 
     await connector.destroy();
+
     connector = null;
   }
 }
