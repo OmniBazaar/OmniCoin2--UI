@@ -69,7 +69,7 @@ export function* getPeersFor({
     const categoryKey = `category:${category}`;
     const subcategoryKey = `subcategory:${subCategory}`;
 
-    const extraKeywordsResponse = yield Promise.all([
+    let extraKeywordsResponse = yield Promise.all([
       (category !== 'All' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
@@ -83,6 +83,8 @@ export function* getPeersFor({
       default:
         break;
     }
+
+    extraKeywordsResponse = extraKeywordsResponse.reduce((acc, curr) => [...acc, ...curr], []);
 
     let extraKeywordsPeers = extraKeywordsResponse
       .reduce((final, resp) => [...final, ...(resp.peers || [])], []);
@@ -105,7 +107,8 @@ export function* getPeersFor({
 
     const keywords = searchTerm ? [...(searchTerm.split(' '))] : [];
     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
-    const allResponses = yield Promise.all(responses);
+    const allResponses = yield Promise.all(responses)
+      .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
 
     console.log('Keywords results', allResponses);
     console.log('Extra keywords results', extraKeywordsResponse);
@@ -197,8 +200,8 @@ function adjustPeersMap(peersMap) {
 }
 
 function noPeersFallback() {
-  return {
+  return [{
     noPeers: true,
     timedOut: false,
-  };
+  }];
 }
