@@ -412,7 +412,7 @@ class Transfer extends Component {
   };
 
   renderUnitsField = ({
-    input, placeholder, buttonText, buttonClass, meta: { touched, error }
+    input, placeholder, buttonText, disabled, buttonClass, meta: { touched, error }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
@@ -424,6 +424,7 @@ class Transfer extends Component {
           type="text"
           className="textfield"
           placeholder={placeholder}
+          disabled={disabled}
         />
         <Button className={['copy-btn button--gray-text address-button', buttonClass].join(' ')}>
           {buttonText}
