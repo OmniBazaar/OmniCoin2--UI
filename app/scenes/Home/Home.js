@@ -51,12 +51,12 @@ import ProcessorsIcon from './images/sdb-processors.svg';
 import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
+import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
 import { getListingDefault } from '../../services/listing/listingDefaultsActions';
-
 
 const iconSize = 20;
 
@@ -193,6 +193,13 @@ class Home extends Component {
                   <FormattedMessage
                     id="Home.mail"
                     defaultMessage="Mail"
+                  />
+                </NavLink>
+                <NavLink to="/listings-defaults" activeClassName="active" className="menu-item">
+                  <Image src={UserIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id='Marketplace.newListingDefaults'
+                    defaultMessage='New Listing Defaults'
                   />
                 </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
