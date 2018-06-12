@@ -103,12 +103,17 @@ export function* searchListingsByPeersMap({
   }
 
   if (searchByAllKeywords) {
+    const keywords = [];
+    peersMap.forEach(item => {
+      if (item.keyword) {
+        keywords.push(item.keyword);
+      }
+    });
     message = {
       id,
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
       command: {
-        keywords: peersMap.reduce((keywords, curr) =>
-          uniq([...keywords, ...(curr.keywords || [])]), []),
+        keywords,
         publishers: peersMap.reduce((publishers, curr) =>
           uniqBy([...publishers, ...(curr.publishers || [])], ({ address }) => address), []),
         currency: 'BTC',

@@ -411,8 +411,7 @@ class Marketplace extends Component {
 
   componentWillMount() {
     this.props.accountActions.getPublisherData();
-    const { country, city } = this.props.account.publisherData;
-    this.fetchListings(country, city);
+    this.fetchListings(this.props.account.publisherData);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -422,14 +421,13 @@ class Marketplace extends Component {
       this.props.searchActions.filterSearchByCategory();
     }
 
-    const { country, city } = this.props.account.publisherData;
-    if (country !== nextProps.account.publisherData.country ||
-        city !== nextProps.account.publisherData.city) {
+    // const { country, city } = this.props.account.publisherData;
+    if (this.props.account.publisherData !== nextProps.account.publisherData) {
       this.fetchListings(nextProps.account.publisherData);
     }
   }
 
-  fetchListings({ country, city, keywords = null }) {
+  fetchListings({ country, city, keywords }) {
     this.props.searchActions.searchListings(keywords, 'All', country, city, true, null);
   }
 

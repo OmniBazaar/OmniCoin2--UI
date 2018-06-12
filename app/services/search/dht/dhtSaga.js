@@ -175,7 +175,7 @@ export function* getPeersFor({
           searchTerm,
           country: country || publisherData.country,
           city: city || publisherData.city,
-          searchByAllKeywords: !searchListingOption || searchListingOption === 'allKeywords' || !keywords.length,
+          searchByAllKeywords: (searchListingOption && searchListingOption === 'allKeywords'),
         }
       });
     }
