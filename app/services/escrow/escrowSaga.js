@@ -13,6 +13,12 @@ import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
 import { fetchAccount } from '../blockchain/utils/miscellaneous';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
+import {
+  getEscrowSettingsFailed,
+  getEscrowSettingsSucceeded,
+  updateEscrowSettingsFailed,
+  updateEscrowSettingsSucceeded,
+} from "./escrowActions";
 
 export function* escrowSubscriber() {
   yield all([
@@ -22,7 +28,9 @@ export function* escrowSubscriber() {
     takeEvery('SET_MY_ESCROW_AGENTS', setMyEscrowAgents),
     takeEvery('GET_ESCROW_AGENTS_COUNT', getEscrowAgentsCount),
     takeEvery('RELEASE_ESCROW_TRANSACTION', releaseEscrowTransaction),
-    takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction)
+    takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction),
+    takeEvery('UPDATE_ESCROW_SETTINGS', updateEscrowSettings),
+    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings)
   ]);
 }
 
@@ -186,3 +194,42 @@ function* returnEscrowTransaction({ payload: { escrowObject, votes } }) {
   }
 }
 
+function* updateEscrowSettings({ payload: { settings } }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const account = yield call(FetchChain, 'getAccount', currentUser.username);
+    const tr = new TransactionBuilder();
+    tr.add_type_operation('account_update', {
+      account: account.get('id'),
+      implicit_escrow_options: {
+        positive_rating: settings.positiveRating,
+        voted_witness: settings.transactionProcessor,
+        active_witness: settings.activeTransactionProcessor
+      }
+    });
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
+    yield put(updateEscrowSettingsSucceeded(settings))
+  } catch (error) {
+    console.log("ERROR ", error);
+    yield put(updateEscrowSettingsFailed(error))
+  }
+}
+
+function* getEscrowSettings() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const account = yield call(FetchChain, 'getAccount', currentUser.username);
+    const options = account.get('implicit_escrow_options');
+    yield put(getEscrowSettingsSucceeded({
+      positiveRating: options.get('positive_rating'),
+      transactionProcessor: options.get('voted_witness'),
+      activeTransactionProcessor: options.get('active_witness')
+    }))
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(getEscrowSettingsFailed(error));
+  }
+}
