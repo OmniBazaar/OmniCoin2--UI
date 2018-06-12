@@ -188,19 +188,22 @@ export function* getPeersFor({
 export const countPeersForKeywords = async (keywords) => {
   const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
   const allResponses = await Promise.all(responses);
+
   const publishers = {};
 
   allResponses.forEach(item => {
-    if (item.noPeers) {
-      return;
-    }
-
-    item.peers.forEach(peer => {
-      if (!publishers[peer.host]) {
-        publishers[peer.host] = 1;
-      } else {
-        publishers[peer.host] += 1;
+    item.forEach(result => {
+      if (result.noPeers) {
+        return;
       }
+
+      result.peers.forEach(peer => {
+        if (!publishers[peer.host]) {
+          publishers[peer.host] = peer.weight;
+        } else {
+          publishers[peer.host] += peer.weight;
+        }
+      });
     });
   });
 
