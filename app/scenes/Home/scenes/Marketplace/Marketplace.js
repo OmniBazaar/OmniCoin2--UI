@@ -425,12 +425,12 @@ class Marketplace extends Component {
     const { country, city } = this.props.account.publisherData;
     if (country !== nextProps.account.publisherData.country ||
         city !== nextProps.account.publisherData.city) {
-      this.fetchListings(nextProps.account.publisherData.country, nextProps.account.publisherData.city);
+      this.fetchListings(nextProps.account.publisherData);
     }
   }
 
-  fetchListings(country, city) {
-    this.props.searchActions.searchListings(null, 'All', country, city, true, null);
+  fetchListings({ country, city, keywords = null }) {
+    this.props.searchActions.searchListings(keywords, 'All', country, city, true, null);
   }
 
   listItems(items, size) {
