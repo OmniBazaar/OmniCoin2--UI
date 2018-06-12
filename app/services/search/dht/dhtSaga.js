@@ -143,7 +143,7 @@ export function* getPeersFor({
 
     if (keywords.length) {
       peersMap = allResponses.map((response, index) => ({
-        keyword: keywords[index],
+        keyword: response.keyword?response.keyword.substring(8):'',
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
           (response.peers || [])
@@ -175,7 +175,7 @@ export function* getPeersFor({
           searchTerm,
           country: country || publisherData.country,
           city: city || publisherData.city,
-          searchByAllKeywords: (searchListingOption && searchListingOption === 'allKeywords'),
+          searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
         }
       });
     }
