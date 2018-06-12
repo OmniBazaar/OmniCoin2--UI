@@ -63,7 +63,7 @@ async function doLocalSearch({ country, city }) {
   const countryRes = country ? await dhtConnector.findPeersFor(countryKey) : noPeersFallback();
   const cityRes = city ? await dhtConnector.findPeersFor(cityKey) : noPeersFallback();
 
-  return [countryRes, cityRes];
+  return [...countryRes, ...cityRes];
 }
 
 function isPresentInFilters(
@@ -136,7 +136,8 @@ export function* getPeersFor({
         .filter(({ host }) => host === publisherData.publisherName.publisher_ip);
     }
 
-    let keywords = searchTerm ? searchTerm : [];
+    let keywords = searchTerm || [];
+
     if (typeof keywords === 'string') {
       keywords = searchTerm.split(' ').map(item => item.trim());
     }
@@ -151,8 +152,8 @@ export function* getPeersFor({
     let peersMap;
 
     if (keywords.length) {
-      peersMap = allResponses.map((response, index) => ({
-        keyword: response.keyword?response.keyword.substring(8):'',
+      peersMap = allResponses.map((response) => ({
+        keyword: response.keyword ? response.keyword.substring(8) : '',
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
           (response.peers || [])
