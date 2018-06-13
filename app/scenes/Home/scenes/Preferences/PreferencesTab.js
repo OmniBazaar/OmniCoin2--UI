@@ -79,6 +79,10 @@ class PreferencesTab extends Component {
   }
 
   onSubmit(values) {
+    const { publisher } = this.props.account;
+    if (!publisher) {
+      values.chargeFee = '';
+    }
     this.props.preferencesActions.savePreferences(values);
   }
 
@@ -86,6 +90,7 @@ class PreferencesTab extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { saving } = this.props.preferences;
+    const { publisher } = this.props.account;
 
     return (
       <div className="preferences-form-container">
@@ -172,30 +177,20 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.publisherFee)}</span>
-            <Field
-              name="publisherFee"
-              placeholder={formatMessage(messages.publisherFee)}
-              component={FormInputWithIconOnRight}
-              className="textfield"
-              props={{
-                rightButtonText: formatMessage(messages.xomUnit)
-              }}
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.chargeFee)}</span>
-            <Field
-              type="text"
-              name="chargeFee"
-              component="input"
-              className="textfield"
-              placeholder={formatMessage(messages.chargeFee)}
-            />
-            <div className="col-1" />
-          </div>
+          {
+            publisher && 
+            <div className="form-group">
+              <span>{formatMessage(messages.chargeFee)}</span>
+              <Field
+                type="text"
+                name="chargeFee"
+                component="input"
+                className="textfield"
+                placeholder={formatMessage(messages.chargeFee)}
+              />
+              <div className="col-1" />
+            </div>
+          }
           <div className='form-group'>
             <span>{formatMessage(messages.searchListingOptions)}</span>
             <div className='radios field'>
@@ -241,6 +236,9 @@ class PreferencesTab extends Component {
 }
 
 PreferencesTab.propTypes = {
+  account: PropTypes.shape({
+    publisher: PropTypes.bool
+  }).isRequired,
   preferences: PropTypes.shape({
     preferences: PropTypes.object,
     saving: PropTypes.bool,
@@ -257,7 +255,8 @@ PreferencesTab.propTypes = {
 export default compose(
   connect(
     state => ({
-      preferences: state.default.preferences
+      preferences: state.default.preferences,
+      account: state.default.account
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({
