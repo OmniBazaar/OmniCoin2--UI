@@ -1,0 +1,10 @@
+.my-purchases {
+  .top-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  padding: 20px;
+}

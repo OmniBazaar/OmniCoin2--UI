@@ -55,9 +55,9 @@ function* submitOmniCoinTransfer(data) {
         amount: amount * 100000
       },
     };
-    if (data.listingId) {
-      operationObj.listing = data.listingId;
-      operationObj.listing_count = data.listingCount;
+    if (data.payload.data.listingId) {
+      operationObj.listing = data.payload.data.listingId;
+      operationObj.listing_count = parseInt(data.payload.data.listingCount);
     }
     tr.add_type_operation('transfer', operationObj);
     yield tr.set_required_fees();
@@ -66,6 +66,7 @@ function* submitOmniCoinTransfer(data) {
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
   } catch (error) {
+    console.log('ERROR', error);
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
   }
 }

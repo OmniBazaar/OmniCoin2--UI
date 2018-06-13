@@ -36,6 +36,7 @@ import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNe
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
 import StartGuide from './components/StartGuide/StartGuide';
+import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 
 import './home.scss';
@@ -240,6 +241,7 @@ class Home extends Component {
             <Route path="/wallet" render={(props) => <Wallet {...props} />} />
             <Route path="/listing/:id" render={(props) => <Listing {...props} />} />
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
+            <Route path="/my-purchases" render={(props) => <MyPurchases {...props} />} />
             <Route path="/favorite-listings" render={(props) => <FavoriteListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
             <Route path="/edit-listing/:id" render={(props) => <EditListing {...props} />} />
