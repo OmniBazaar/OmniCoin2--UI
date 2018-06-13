@@ -156,15 +156,21 @@ function* createEscrowTransaction({ payload: {
   }
 }
 
-function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
+function* getCommonEscrows({ payload: { from, to } }) {
   try {
-    if (!fromAccount || !toAccount) {
+    if (!from || !to) {
       return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: [] });
     }
-    let [fromEscrows, toEscrows] = yield Promise.all([
-      fetchAccount(fromAccount),
-      fetchAccount(toAccount)
-    ]).then(res => res.map(el => el.escrows));
+    const [fromAcc, toAcc] = yield Promise.all([
+      fetchAccount(from),
+      fetchAccount(to)
+    ]);
+    const [implicitFromEscrows, implicitToEscrows] = yield Promise.all([
+      Apis.instance().db_api().exec('get_implicit_escrows', [fromAcc.id]),
+      Apis.instance().db_api().exec('get_implicit_escrows', [toAcc.id])
+    ]);
+    let fromEscrows = _.union(fromAcc.escrows, implicitFromEscrows);
+    let toEscrows = _.union(toAcc.escrows, implicitToEscrows);
     fromEscrows = yield Promise.all(fromEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     toEscrows = yield Promise.all(toEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id') });
