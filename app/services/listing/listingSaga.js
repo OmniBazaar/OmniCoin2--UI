@@ -129,14 +129,16 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     if (listingId) {
       result = yield call(editListing, publisher, listingId, listing);
     } else {
-    	yield checkAndUploadImages(publisher, listing);
+      yield checkAndUploadImages(publisher, listing);
       result = yield call(createListing, publisher, listing);
     }
 
     if (!listingId) {
       listingId = result.listing_id;
     }
-	 	yield put(saveListingSuccess(result, listingId));
+
+    yield put({ type: 'DHT_RECONNECT' });
+    yield put(saveListingSuccess(result, listingId));
   } catch (err) {
     console.log(err);
     yield put(saveListingError(listingId, err));
@@ -259,5 +261,5 @@ function* searchPublishers({ payload: { keywords } }) {
     }
   } catch (err) {
     yield put(searchPublishersFinish(err));
-  }  
+  }
 }
