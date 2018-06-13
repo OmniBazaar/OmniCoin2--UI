@@ -31,7 +31,7 @@ class AccountBalance extends Component {
     if (balance && balance.balance) {
       return balance.balance / 100000;
     }
-    return 0;
+    return 0.00;
   }
 
 	render() {
