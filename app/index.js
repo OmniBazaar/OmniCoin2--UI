@@ -82,7 +82,6 @@ sagaMiddleware.run(listingSubscriber);
 sagaMiddleware.run(importSubscriber);
 sagaMiddleware.run(listingDefaultsSubscriber);
 sagaMiddleware.run(preferencesSubscriber);
-sagaMiddleware.run(importSubscriber);
 
 ReactDOM.render(
   (

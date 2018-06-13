@@ -10,7 +10,8 @@ import {
   cryptoCategories,
   moreCategories,
   aboutCategories,
-  mainCategories
+  mainCategories,
+  getSubCategoryTitle
 } from '../../categories';
 
 import { CategoriesTypes } from '../../constants';
@@ -19,10 +20,13 @@ const iconSizeSmall = 12;
 
 class CategoryHeader extends Component {
   static getValue(category) {
-    const arr = category.split('.');
-    let categoryName = category;
-    if (arr.length > 1) {
-      categoryName = arr[1];
+    let categoryName = '';
+    if (category) {
+      const arr = category.split('.');
+      categoryName = category;
+      if (arr.length > 1) {
+        categoryName = arr[1];
+      }
     }
 
     return categoryName;
@@ -32,7 +36,7 @@ class CategoryHeader extends Component {
     const { formatMessage } = this.props.intl;
     const categoryName = CategoryHeader.getValue(category);
 
-    if (!parent) {
+    if (!parent && categoryName) {
       return formatMessage(mainCategories[categoryName]);
     }
 
@@ -57,17 +61,24 @@ class CategoryHeader extends Component {
   }
 
   render() {
-    const { parentCategory, activeCategory } = this.props.marketplace;
+    const { formatMessage } = this.props.intl;
+    const { category, subCategory } = this.props.search;
+
+    const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
+    const subcategory = getSubCategoryTitle(category, subCategory);
+    const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
     return (
       <div className="category-title">
-        {parentCategory ?
+        {category ?
           <div className="parent">
-            <span>{this.getCategoryName(parentCategory)}</span>
-            <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+            <span>{categoryTitle}</span>
+            {subCategoryTitle ?
+              <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+            : null}
           </div>
           : null}
-        <span>{this.getCategoryName(activeCategory, parentCategory)}</span>
+        <span>{subCategoryTitle}</span>
       </div>
     );
   }

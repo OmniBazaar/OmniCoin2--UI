@@ -38,7 +38,9 @@ const {
   removeFromFavorites,
   getFavorites,
   searchPublishers,
-  searchPublishersFinish
+  searchPublishersFinish,
+  filterMyListings,
+  filterFavorites
 } = createActions({
   GET_LISTING_DETAIL: (listingId) => ({ listingId }),
   GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
@@ -83,6 +85,8 @@ const {
   GET_FAVORITES: () => ({}),
   SEARCH_PUBLISHERS: (keywords) => ({ keywords }),
   SEARCH_PUBLISHERS_FINISH: (error, publishers) => ({ error, publishers }),
+  FILTER_MY_LISTINGS: (currency, category) => ({ currency, category }),
+  FILTER_FAVORITES: (currency, category) => ({ currency, category }),
 });
 
 export {
@@ -123,5 +127,7 @@ export {
   removeFromFavorites,
   getFavorites,
   searchPublishers,
-  searchPublishersFinish
+  searchPublishersFinish,
+  filterMyListings,
+  filterFavorites
 };

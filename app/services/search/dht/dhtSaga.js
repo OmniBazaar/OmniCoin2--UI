@@ -89,7 +89,7 @@ function isPresentInFilters(
 
 export function* getPeersFor({
   payload: {
-    searchTerm, category, country, city, searchListings, subCategory
+    searchTerm, category, country, city, searchListings, subCategory, fromSearchMenu
   },
 }) {
   try {
@@ -186,6 +186,7 @@ export function* getPeersFor({
           country: country || publisherData.country,
           city: city || (country && publisherData.city) || '',
           searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
+          fromSearchMenu
         }
       });
     }

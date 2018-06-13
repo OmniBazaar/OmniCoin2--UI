@@ -1,4 +1,8 @@
 const currencies = {
+  ALL: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   USD: {
     id: 'Marketplace.currencyUsd',
     defaultMessage: 'US Dollar'
