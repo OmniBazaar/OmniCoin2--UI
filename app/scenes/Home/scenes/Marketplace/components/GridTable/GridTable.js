@@ -30,11 +30,6 @@ import {
 import { deleteListing } from '../../../../../../services/listing/listingActions';
 
 import {
-  categories,
-  saleCategories,
-  servicesCategories,
-  jobsCategories,
-  cryptoCategories,
   mainCategories,
   getSubCategoryTitle
 } from '../../categories';
@@ -47,7 +42,7 @@ const iconSizeSmall = 12;
 class GridTable extends Component {
   state = {
     confirmDeleteOpen: false
-  }
+  };
 
   componentDidMount() {
     this.props.gridTableActions.sortGridTableBy(
@@ -56,6 +51,7 @@ class GridTable extends Component {
       this.props.sortDirection
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+    this.props.gridTableActions.setActivePageGridTable(1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,6 +64,7 @@ class GridTable extends Component {
         nextProps.sortDirection
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+      this.props.gridTableActions.setActivePageGridTable(1);
     }
 
     if (
@@ -234,7 +231,7 @@ class GridTable extends Component {
               {showTrailingLoader && rows.length === 0 &&
                 <TableRow>
                   <TableCell className="item">
-                    <Loader active/>
+                    <Loader active />
                   </TableCell>
                 </TableRow>
               }
