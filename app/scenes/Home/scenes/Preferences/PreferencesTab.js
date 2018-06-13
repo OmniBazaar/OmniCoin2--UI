@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 import {
   savePreferences
 } from '../../../../services/preferences/preferencesActions';
-import FormInputWithIconOnRight 
+import FormInputWithIconOnRight
 from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
 import Dropdown from './components/Dropdown';
 import Checkbox from '../Marketplace/scenes/Listing/scenes/AddListing/components/Checkbox/Checkbox';
@@ -104,7 +104,7 @@ class PreferencesTab extends Component {
               className="textfield"
               props={{
                 rightButtonText: formatMessage(messages.seconds)
-              }}             
+              }}
             />
             <div className="col-1" />
           </div>
@@ -143,7 +143,7 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group top referrer">
+          {/*<div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
               <div className="description">
@@ -165,7 +165,7 @@ class PreferencesTab extends Component {
               </div>
             </div>
             <div className="col-1" />
-          </div>
+          </div>*/}
           <div className="form-group">
             <span>{formatMessage(messages.priorityForListing)}</span>
             <Field
@@ -178,7 +178,7 @@ class PreferencesTab extends Component {
             <div className="col-1" />
           </div>
           {
-            publisher && 
+            publisher &&
             <div className="form-group">
               <span>{formatMessage(messages.chargeFee)}</span>
               <Field
