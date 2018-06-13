@@ -18,6 +18,7 @@ import { Apis } from 'omnibazaarjs-ws';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
+import { getAccountBalance } from '../blockchain/wallet/walletActions';
 
 export function* transferSubscriber() {
   yield all([
@@ -29,7 +30,7 @@ export function* transferSubscriber() {
 }
 
 function* submitOmniCoinTransfer(data) {
-  const { currentUser } = (yield select()).default.auth;
+  const { currentUser, account } = (yield select()).default.auth;
   const senderNameStr = currentUser.username;
   const toNameStr = data.payload.data.toName;
   const {
@@ -63,6 +64,7 @@ function* submitOmniCoinTransfer(data) {
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+    yield put(getAccountBalance(account));
   } catch (error) {
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
   }
