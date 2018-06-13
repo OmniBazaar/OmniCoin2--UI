@@ -7,7 +7,11 @@ import {
   setMyEscrowAgents,
   removeMyEscrowAgents,
   getEscrowSettings,
+  getEscrowSettingsSucceeded,
+  getEscrowSettingsFailed,
   updateEscrowSettings,
+  updateEscrowSettingsSucceeded,
+  updateEscrowSettingsFailed,
   clearEscrowAgents,
   loadMyEscrowAgents,
   getEscrowAgentsCount,
@@ -16,7 +20,6 @@ import {
   setActivePageMyEscrow,
   setPaginationMyEscrow
 } from './escrowActions';
-import EscrowStorage from './escrowStorage';
 
 const defaultState = {
   transactions: [],
@@ -30,6 +33,7 @@ const defaultState = {
   error: null,
   loading: false,
   updating: false,
+  updatingSettings: false,
   finalizing: false,
   activePageMyEscrow: 1,
   rowsPerPageMyEscrow: 10,
@@ -78,15 +82,45 @@ const reducer = handleActions(
     [getEscrowSettings](state) {
       return {
         ...state,
-        settings: EscrowStorage.getEscrowSettings()
+        loading: true,
+        error: null
       };
     },
-    [updateEscrowSettings](state, { payload: { settings } }) {
-      EscrowStorage.updateEscrowSettings(settings);
+    [getEscrowSettingsSucceeded](state, { payload: { settings } }) {
+      console.log('SETTINGS ', settings);
       return {
         ...state,
-        settings: EscrowStorage.getEscrowSettings()
+        settings,
+        loading: false,
+      }
+    },
+    [getEscrowSettingsFailed](state, { payload: { error } }) {
+      return {
+        ...state,
+        loading: false,
+        error
+      }
+    },
+    [updateEscrowSettings](state) {
+      return {
+        ...state,
+        updatingSettings: true,
+        error: null
       };
+    },
+    [updateEscrowSettingsSucceeded](state, { payload: { settings } }) {
+      return {
+        ...state,
+        settings,
+        updatingSettings: false,
+      }
+    },
+    [updateEscrowSettingsFailed](state, { payload: { error } }) {
+      return {
+        ...state,
+        error,
+        updatingSettings: false
+      }
     },
     [clearEscrowAgents](state) {
       return {

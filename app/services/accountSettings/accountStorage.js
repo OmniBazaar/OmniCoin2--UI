@@ -1,40 +1,20 @@
+import { getStoredCurrentUser } from '../blockchain/auth/services';
+
 const privateDataKey = 'privateDataSettings';
 const publisherDataKey = 'publisherKeySettings';
 
 class AccountSettingsStorage {
-  static init(key) {
-    switch (key) {
-      case privateDataKey:
-        localStorage
-          .setItem(privateDataKey, JSON.stringify({
-            email: '',
-            firstname: '',
-            lastname: '',
-            website: ''
-          }));
-        break;
-      case publisherDataKey:
-        localStorage.setItem(publisherDataKey, JSON.stringify({
-          priority: 'local',
-          country: '',
-          city: '',
-          category: '',
-          name: ''
-        }));
-        break;
-      default:
-    }
-  }
 
   static update(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+    const user = getStoredCurrentUser();
+    localStorage.setItem(`${key}_${user.username}`, JSON.stringify(data));
   }
 
   static get(key) {
-    const data = localStorage.getItem(key);
+    const user = getStoredCurrentUser();
+    const data = localStorage.getItem(`${key}_${user.username}`);
     if (!data) {
-      AccountSettingsStorage.init(key);
-      return JSON.parse(localStorage.getItem(key));
+      return {};
     }
     return JSON.parse(data);
   }
@@ -48,11 +28,7 @@ class AccountSettingsStorage {
   }
 
   static updatePublisherData(data) {
-    const oldData = AccountSettingsStorage.get(publisherDataKey, data);
-    AccountSettingsStorage.update(publisherDataKey, {
-      ...oldData,
-      ...data
-    });
+    AccountSettingsStorage.update(publisherDataKey, data);
   }
 
   static getPublisherData() {

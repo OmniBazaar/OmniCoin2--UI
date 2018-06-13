@@ -133,13 +133,18 @@ class SearchMenu extends Component {
   }
 
   handleSubmit(values) {
-    const { searchTerm, category } = values.search;
+    let searchTerm = '';
+    let category = 'all';
+    if (values && values.search) {
+      searchTerm = values.search.searchTerm;
+      category = values.search.category;
+    }
 
     this.props.history.push('/search-results');
 
     const { country, city } = this.props.account.publisherData;
 
-    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city);
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city, true, null, true);
   }
 
   render() {

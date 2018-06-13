@@ -2,6 +2,7 @@ import request from 'request-promise-native';
 import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
 import { hash } from 'omnibazaarjs/es';
+import { Apis } from 'omnibazaarjs-ws';
 import {
   FetchChain,
   TransactionBuilder
@@ -137,6 +138,15 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
   await tr.add_signer(key.privKey, key.pubKey);
   await tr.broadcast();
 };
+
+export const getListingFromBlockchain = async listingId => {
+  const listing = await Apis.instance().db_api().exec('get_objects', [[listingId]]);
+  if (listing) {
+    return listing[0];
+  }
+
+  return null;
+}
 
 export const createListing = async (publisher, listing) => {
   const listingId = await createListingOnBlockchain(publisher, listing);

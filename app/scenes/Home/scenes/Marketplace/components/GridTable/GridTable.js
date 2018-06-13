@@ -30,11 +30,6 @@ import {
 import { deleteListing } from '../../../../../../services/listing/listingActions';
 
 import {
-  categories,
-  saleCategories,
-  servicesCategories,
-  jobsCategories,
-  cryptoCategories,
   mainCategories,
   getSubCategoryTitle
 } from '../../categories';
@@ -47,7 +42,7 @@ const iconSizeSmall = 12;
 class GridTable extends Component {
   state = {
     confirmDeleteOpen: false
-  }
+  };
 
   componentDidMount() {
     this.props.gridTableActions.sortGridTableBy(
@@ -56,6 +51,7 @@ class GridTable extends Component {
       this.props.sortDirection
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+    this.props.gridTableActions.setActivePageGridTable(1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,6 +64,7 @@ class GridTable extends Component {
         nextProps.sortDirection
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+      this.props.gridTableActions.setActivePageGridTable(1);
     }
 
     if (
@@ -157,9 +154,9 @@ class GridTable extends Component {
     const {
       showTrailingLoader
     } = this.props;
-    const rows = _.chunk(gridTableDataFiltered, 6);
+    let data = gridTableDataFiltered.filter(item => item.listing_id);
+    const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
-    console.log('ROWS ', rows);
 
     return (
       <div className="data-table">
@@ -170,12 +167,18 @@ class GridTable extends Component {
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}`; //todo
-                      const style = { backgroundImage: `url(${image})` };
+                      const image = item.ip ?
+                        `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                      const style = image ? { backgroundImage: `url(${image})` } : {};
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-                      const categoryTitle = item.category && item.category !== 'All' ?
-                                            formatMessage(mainCategories[item.category]) : item.category || '';
+
+                      let categoryTitle = '';
+                      if (item.category && item.category.toLowerCase() !== 'all') {
+                        categoryTitle = mainCategories[item.category] ?
+                          formatMessage(mainCategories[item.category]) : item.category;
+                      }
+
                       const subcategory = getSubCategoryTitle(item.category, item.subcategory);
                       const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
@@ -228,7 +231,7 @@ class GridTable extends Component {
               {showTrailingLoader && rows.length === 0 &&
                 <TableRow>
                   <TableCell className="item">
-                    <Loader active/>
+                    <Loader active />
                   </TableCell>
                 </TableRow>
               }

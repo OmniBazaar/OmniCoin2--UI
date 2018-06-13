@@ -27,6 +27,7 @@ import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from "../../../../../../services/utils";
 
+import messages from './messages';
 import './listing.scss';
 
 import {
@@ -43,96 +44,6 @@ import {
 
 const iconSizeSmall = 12;
 
-const messages = defineMessages({
-  seller: {
-    id: 'Listing.seller',
-    defaultMessage: 'Seller'
-  },
-  editListing: {
-    id: 'Listing.editListing',
-    defaultMessage: 'EDIT LISTING'
-  },
-  delete: {
-    id: 'Listing.delete',
-    defaultMessage: 'DELETE'
-  },
-  available: {
-    id: 'Listing.available',
-    defaultMessage: 'Available:'
-  },
-  itemDescription: {
-    id: 'Listing.itemDescription',
-    defaultMessage: 'Item Description'
-  },
-  preferredContact: {
-    id: 'Listing.preferredContact',
-    defaultMessage: 'Preferred Contact'
-  },
-  name: {
-    id: 'Listing.name',
-    defaultMessage: 'Name'
-  },
-  city: {
-    id: 'Listing.city',
-    defaultMessage: 'City'
-  },
-  postalCode: {
-    id: 'Listing.postalCode',
-    defaultMessage: 'Postal Code'
-  },
-  address: {
-    id: 'Listing.address',
-    defaultMessage: 'Address'
-  },
-  listingDate: {
-    id: 'Listing.listingDate',
-    defaultMessage: 'Listing date'
-  },
-  condition: {
-    id: 'Listing.condition',
-    defaultMessage: 'condition'
-  },
-  cityLocation: {
-    id: 'Listing.cityLocation',
-    defaultMessage: 'City of Specific Location'
-  },
-  itemPrice: {
-    id: 'Listing.itemPrice',
-    defaultMessage: 'Item Price'
-  },
-  selectCurrency: {
-    id: 'Listing.selectCurrency',
-    defaultMessage: 'Select Payment Currency'
-  },
-  buyNow: {
-    id: 'Listing.buyNow',
-    defaultMessage: 'BUY NOW'
-  },
-  addToFavorites: {
-    id: 'Listing.addToFavorites',
-    defaultMessage: 'ADD TO FAVORITES'
-  },
-  removeFromFavorites: {
-    id: 'Listing.removeFromFavorites',
-    defaultMessage: 'REMOVE FROM FAVORITES'
-  },
-  hashIsInvalid: {
-    id: 'Listing.hashIsInvalid',
-    defaultMessage: 'Listing is corrupted'
-  },
-  error: {
-    id: 'Listing.error',
-    defaultMessage: 'Error'
-  },
-  success: {
-    id: 'Listing.success',
-    defaultMessage: 'Success'
-  },
-  deleteListingError: {
-    id: "Listing.deleteListingError",
-    defaultMessage: 'Delete listing error'
-  }
-});
 
 class Listing extends Component {
 
@@ -155,8 +66,16 @@ class Listing extends Component {
     const { props } = this;
     const {
       listingDetail,
+      listingDetailRequest,
       favoriteListings,
     } = props.listing;
+
+    if (listingDetailRequest.loading && !nextProps.listing.listingDetailRequest.loading) {
+      if (nextProps.listing.listingDetailRequest.error) {
+        this.errorToast(messages.loadListingError);
+      }
+    }
+
     if (listingDetail && nextProps.listing.listingDetail) {
       if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
         favoriteListings.length !== nextProps.listing.favoriteListings.length) {
@@ -490,10 +409,29 @@ class Listing extends Component {
     );
   }
 
-  render() {
+  renderDetail() {
     const { listingDetail } = this.props.listing;
     const { formatMessage } = this.props.intl;
 
+    if (!listingDetail) {
+      return null;
+    }
+
+    return [
+      <div className="listing-body">
+        {this.renderGallery(listingDetail)}
+        {this.renderItemDetails(listingDetail)}
+      </div>,
+      <div className="listing-description">
+        <span className="title">{formatMessage(messages.itemDescription)}</span>
+        <p className="description">{listingDetail.description}</p>
+      </div>
+    ];
+  }
+
+  render() {
+    const { listingDetailRequest } = this.props.listing;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className="marketplace-container category-listing listing">
@@ -506,20 +444,12 @@ class Listing extends Component {
               <CategoryHeader />
             </div>
           </div>
-          {!listingDetail
-            ?
-            <Loader active inline/>
-            :
-            [
-              <div className="listing-body">
-                {this.renderGallery(listingDetail)}
-                {this.renderItemDetails(listingDetail)}
-              </div>,
-              <div className="listing-description">
-                <span className="title">{formatMessage(messages.itemDescription)}</span>
-                <p className="description">{listingDetail.description}</p>
-              </div>
-            ]
+          {
+            listingDetailRequest.loading ?
+            <div className='loader-container'>
+              <Loader active inline>{formatMessage(messages.loadListing)}</Loader>
+            </div> :
+            this.renderDetail()
           }
           <ConfirmationModal
             onApprove={() => this.onOkDelete()}
@@ -542,6 +472,10 @@ Listing.propTypes = {
   }).isRequired,
   listing: PropTypes.shape({
     listingDetail: PropTypes.object,
+    listingDetailRequest: PropTypes.shape({
+      loading: PropTypes.bool,
+      error: PropTypes.bool
+    }),
     favoriteListings: PropTypes.array,
     isFavorite: PropTypes.bool,
     buyListing: PropTypes.shape({

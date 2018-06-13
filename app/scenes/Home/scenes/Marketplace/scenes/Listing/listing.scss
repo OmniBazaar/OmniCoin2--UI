@@ -9,11 +9,17 @@
       font-weight: bold;
       margin-top: 12px;
     }
+
+    .loader-container {
+      text-align: center;
+    }
   }
 
   .listing-body {
     display: flex;
     padding: 20px;
+    align-self: center;
+    flex: 0 0 auto;
 
     $galleryWidth: 0.45;
     $descriptionWidth: 0.55;
@@ -32,8 +38,7 @@
         img {
           height: 100%;
           width: 100%;
-          object-fit: contain;
-          max-height: 500px;
+          object-fit: cover;
           object-position: center;
         }
       }

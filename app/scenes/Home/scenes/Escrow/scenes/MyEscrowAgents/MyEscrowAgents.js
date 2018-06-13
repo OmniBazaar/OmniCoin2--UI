@@ -78,8 +78,7 @@ class MyEscrowAgents extends Component {
     this.props.escrowActions.loadEscrowAgents(
       0,
       limit,
-      this.state.searchTerm,
-      this.props.escrow.settings
+      this.state.searchTerm
     );
     this.props.escrowActions.loadMyEscrowAgents(this.props.auth.currentUser.username);
     this.props.escrowActions.getEscrowAgentsCount();
@@ -136,7 +135,7 @@ class MyEscrowAgents extends Component {
     this.setState({
       searchTerm: value
     });
-    this.props.escrowActions.loadEscrowAgents(0, limit, value, this.props.escrow.settings);
+    this.props.escrowActions.loadEscrowAgents(0, limit, value);
   }
 
   handleSearchChange(e, data) {
@@ -167,8 +166,7 @@ class MyEscrowAgents extends Component {
       this.props.escrowActions.loadEscrowAgents(
         start,
         limit,
-        this.state.searchTerm,
-        this.props.escrow.settings
+        this.state.searchTerm
       );
       this.setState({
         activePage
