@@ -148,6 +148,7 @@ $compose-width: 38%;
 
       .message-body {
         padding: 15px;
+        white-space: pre-wrap;
       }
 
       .top-detail {
