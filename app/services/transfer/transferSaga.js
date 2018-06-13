@@ -142,7 +142,7 @@ function* createEscrowTransaction({ payload: {
     };
     if (listingId) {
       operationObj.listing = listingId;
-      operationObj.listing_count = listingCount;
+      operationObj.listing_count = Number(listingCount);
     }
     tr.add_type_operation('escrow_create_operation', operationObj);
     yield tr.set_required_fees();
