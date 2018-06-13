@@ -18,7 +18,7 @@ import TagsInput from '../../../../components/TagsInput';
 import PriorityTypes from '../../../../common/SearchPriorityType';
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 
-import { signup } from '../../../../services/blockchain/auth/authActions';
+import { signup, showTermsModal } from '../../../../services/blockchain/auth/authActions';
 
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
@@ -158,7 +158,6 @@ class SignupForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       keywordsTouched: false
     };
 
@@ -343,40 +342,41 @@ class SignupForm extends Component {
     );
   };
 
-  show = () => this.setState({ open: true });
-  close = () => this.setState({ open: false });
-
   renderTerms() {
-    const { open } = this.state;
+    const { props } = this;
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(messages.termsAndCond);
 
-    return (
-      <Modal
-        size="normal"
-        open={open}
-        className="terms-modal"
-        closeIcon
-        onClose={this.close}
-      >
-        <Modal.Content>
-          <div className="modal-container terms-container">
-            <p className="title">{categoryTitle}</p>
-            <div className="body">
-              <TermsAndConditions />
+    if (props.auth.showTermsModal) {
+      return (
+        <Modal
+          size="normal"
+          open={props.auth.showTermsModal}
+          className="terms-modal"
+          closeIcon
+          onClose={this.toggleTermsModal}
+        >
+          <Modal.Content>
+            <div className="modal-container terms-container">
+              <p className="title">{categoryTitle}</p>
+              <div className="body">
+                <TermsAndConditions />
+              </div>
             </div>
-          </div>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            className="button--primary"
-            content={formatMessage(messages.done)}
-            onClick={this.close}
-          />
-        </Modal.Actions>
-      </Modal>
-    );
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              className="button--primary"
+              content={formatMessage(messages.done)}
+              onClick={this.toggleTermsModal}
+            />
+          </Modal.Actions>
+        </Modal>
+      );
+    }
   }
+
+  toggleTermsModal = () => this.props.authActions.showTermsModal();
 
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
@@ -389,7 +389,9 @@ class SignupForm extends Component {
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
-          <a href="#" onClick={this.show}>{formatMessage(messages.termsAndCond)}</a>
+          <span className="link" onClick={this.toggleTermsModal}>
+            {formatMessage(messages.termsAndCond)}
+          </span>
         </div>
       ]
     );
@@ -548,10 +550,12 @@ class SignupForm extends Component {
           component={this.renderReferrerField}
         />
         {this.renderSearchPriority()}
-        <Field
-          name="agreementTerms"
-          component={this.renderTermField}
-        />
+        <div className="menu-item">
+          <Field
+            name="agreementTerms"
+            component={this.renderTermField}
+          />
+        </div>
         {this.renderTerms()}
         <Button
           content={formatMessage(messages.signup)}
@@ -601,7 +605,8 @@ SignupForm.propTypes = {
     loading: PropTypes.bool
   }),
   authActions: PropTypes.shape({
-    signup: PropTypes.func
+    signup: PropTypes.func,
+    showTermsModal: PropTypes.func
   }),
   initialize: PropTypes.func,
   intl: PropTypes.shape({
@@ -637,7 +642,7 @@ export default connect(
     formValues: getFormValues('signupForm')(state)
   }),
   (dispatch) => ({
-    authActions: bindActionCreators({ signup }, dispatch),
+    authActions: bindActionCreators({ signup, showTermsModal }, dispatch),
     formActions: bindActionCreators({
       change: (field, value) => change('signupForm', field, value)
     }, dispatch)

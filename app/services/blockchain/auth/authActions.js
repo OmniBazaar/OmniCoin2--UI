@@ -10,7 +10,8 @@ const {
   signup,
   requestPcIds,
   getAccount,
-  getLastLoginUserName
+  getLastLoginUserName,
+  showTermsModal
 } = createActions({
   GET_CURRENT_USER: () => ({}),
   LOGIN: (username, password) => ({ username, password }),
@@ -23,6 +24,7 @@ const {
   REQUEST_PC_IDS: () => ({}),
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
+  SHOW_TERMS_MODAL: () => ({}),
 });
 
 export {
@@ -32,5 +34,6 @@ export {
   signup,
   requestPcIds,
   getAccount,
-  getLastLoginUserName
+  getLastLoginUserName,
+  showTermsModal
 };

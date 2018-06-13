@@ -1,4 +1,3 @@
-
 import { handleActions } from 'redux-actions';
 import { ipcRenderer } from 'electron';
 
@@ -9,7 +8,8 @@ import {
   getCurrentUser,
   requestPcIds,
   getAccount,
-  getLastLoginUserName
+  getLastLoginUserName,
+  showTermsModal
 } from './authActions';
 
 import {
@@ -24,7 +24,8 @@ const defaultState = {
   error: null,
   loading: false,
   isAccountLoading: false,
-  lastLoginUserName: null
+  lastLoginUserName: null,
+  showTermsModal: false
 };
 
 const reducer = handleActions({
@@ -120,7 +121,13 @@ const reducer = handleActions({
     account: null,
     error,
     isAccountLoading: false
-  })
+  }),
+  [showTermsModal](state) {
+    return {
+      ...state,
+      showTermsModal: !state.showTermsModal
+    };
+  },
 }, defaultState);
 
 export default reducer;
