@@ -14,7 +14,7 @@ import {
   reduxForm,
   formValueSelector,
   change,
-  initialize
+  initialize,
 } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -33,9 +33,7 @@ import {
   saleBonus
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
-import {
-  makePayment
-} from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 
 
@@ -354,13 +352,13 @@ class Transfer extends Component {
   }
 
   getBalanceFee() {
-    const { balance } = this.props.blockchainWallet;
+    const { amount } = this.props.transferForm;
 
-    if (balance && balance.balance) {
-      return (balance.balance / 100000) * FEE_PERCENT;
+    if (amount) {
+      return amount * FEE_PERCENT;
     }
 
-    return 0;
+    return 0.00;
   }
 
   renderDropdownUnitsField = ({
@@ -413,15 +411,13 @@ class Transfer extends Component {
 
   renderHiddenField = ({
     input
-  }) => {
-    return (
-      <input
-        {...input}
-        type="hidden"
-        className="textfield"
-      />
-    );
-  };
+  }) => (
+    <input
+      {...input}
+      type="hidden"
+      className="textfield"
+    />
+  );
 
   renderUnitsField = ({
     input, placeholder, buttonText, disabled, buttonClass, meta: { touched, error }
@@ -465,19 +461,17 @@ class Transfer extends Component {
 
   renderCurrencyField = ({
     input, options
-  }) => {
-    return (
-      <Select
-        className="textfield"
-        value={this.props.transfer.transferCurrency}
-        options={options}
-        onChange={(param, data) => {
-          input.onChange(data.value);
-          this.onChangeCurrency(data);
-        }}
-      />
-    );
-  };
+  }) => (
+    <Select
+      className="textfield"
+      value={this.props.transfer.transferCurrency}
+      options={options}
+      onChange={(param, data) => {
+        input.onChange(data.value);
+        this.onChangeCurrency(data);
+      }}
+    />
+  );
 
   renderDealRatingField = ({
     input, options, meta: { touched, error }
@@ -517,7 +511,8 @@ class Transfer extends Component {
   handleEscrowTransactionChecked(value) {
     const { currentUser } = this.props.auth;
     if (value) {
-      this.props.transferActions.getCommonEscrows(this.props.transferForm.toName, currentUser.username);
+      this.props.transferActions
+        .getCommonEscrows(this.props.transferForm.toName, currentUser.username);
     }
   }
 
@@ -812,7 +807,7 @@ class Transfer extends Component {
     const values = {
       ...paramValues,
       memo: paramValues.memo ? paramValues.memo : '',
-      amount: parseInt(paramValues.amount).toFixed(2)
+      amount: parseFloat(paramValues.amount).toFixed(2)
     };
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {
@@ -844,7 +839,8 @@ Transfer.propTypes = {
     submitTransfer: PropTypes.func,
     getCommonEscrows: PropTypes.func,
     createEscrowTransaction: PropTypes.func,
-    setCurrency: PropTypes.func
+    setCurrency: PropTypes.func,
+    saleBonus: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -862,7 +858,8 @@ Transfer.propTypes = {
     currencySelected: PropTypes.string,
     fromName: PropTypes.string,
     toName: PropTypes.string,
-    useEscrow: PropTypes.bool
+    useEscrow: PropTypes.bool,
+    amount: PropTypes.string,
   }),
   changeFieldValue: PropTypes.func,
   auth: PropTypes.shape({
@@ -898,7 +895,8 @@ export default compose(
       transferForm: {
         toName: selector(state, 'toName'),
         fromName: selector(state, 'fromName'),
-        useEscrow: selector(state, 'useEscrow')
+        useEscrow: selector(state, 'useEscrow'),
+        amount: selector(state, 'amount'),
       }
     }),
     (dispatch) => ({
