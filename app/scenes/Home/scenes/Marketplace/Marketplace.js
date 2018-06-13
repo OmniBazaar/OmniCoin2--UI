@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
+import { withRouter } from 'react-router-dom';
 
 import OverviewIcon from './images/tile-overview.svg';
 import VersatilityIcon from './images/tile-versatility.svg';
@@ -549,7 +550,6 @@ class Marketplace extends Component {
     const subCategory = parent ? Marketplace.getValue(categoryId) : null;
 
     this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
-    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderListItems(type, title, itemsList, loading) {
@@ -563,13 +563,11 @@ class Marketplace extends Component {
       <div className="list-container">
         <div className="top-detail">
           <span className="heading">{title}</span>
-          <NavLink to="/marketplace">
-            <Button
-              onClick={() => this.viewCategory(type)}
-              content={formatMessage(messages.seeAll)}
-              className="button--blue"
-            />
-          </NavLink>
+          <Button
+            onClick={() => this.viewCategory(type)}
+            content={formatMessage(messages.seeAll)}
+            className="button--blue"
+          />
         </div>
         <div className="items">
           {
@@ -697,11 +695,7 @@ class Marketplace extends Component {
   render() {
     const { props } = this;
 
-    if (props.marketplace.activeCategory === mainCategories.home.id) {
-      return this.renderMarketHome();
-    }
-
-    return <CategoryListing />;
+    return this.renderMarketHome();
   }
 }
 
@@ -758,4 +752,4 @@ export default connect(
       filterSearchByCategory
     }, dispatch)
   }),
-)(injectIntl(Marketplace));
+)(injectIntl(withRouter(Marketplace)));

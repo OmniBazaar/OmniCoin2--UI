@@ -157,9 +157,9 @@ class GridTable extends Component {
     const {
       showTrailingLoader
     } = this.props;
-    const rows = _.chunk(gridTableDataFiltered, 6);
+    let data = gridTableDataFiltered.filter(item => item.listing_id);
+    const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
-    console.log('ROWS ', rows);
 
     return (
       <div className="data-table">
@@ -171,7 +171,7 @@ class GridTable extends Component {
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
                       const image = item.ip ?
-                        `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                        `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
                       const style = image ? { backgroundImage: `url(${image})` } : {};
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;

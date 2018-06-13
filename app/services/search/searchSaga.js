@@ -71,7 +71,7 @@ export function* searchListingsByPeersMap({
   const id = getNewId();
   const filters = [];
 
-  if (category && category !== 'All') {
+  if (category && category !== 'All' && category !== 'featuredListings') {
     filters.push({
       op: '=',
       name: 'category',

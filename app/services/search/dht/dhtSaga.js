@@ -103,7 +103,7 @@ export function* getPeersFor({
     const subcategoryKey = `subcategory:${subCategory}`;
 
     let extraKeywordsResponse = yield Promise.all([
-      (category !== 'All' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      (category !== 'All' && category!=='featuredListings' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
 
