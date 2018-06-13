@@ -262,12 +262,19 @@ const reducer = handleActions({
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
+    const copiedData = { ...data };
+
+    if (!data.country) {
+      copiedData.city = '';
+    }
+
     const publisherData = {
       ...state.publisherData,
-      ...data
+      ...copiedData,
     };
-    
+
     const newData = savePublisherData(publisherData);
+
     return {
       ...state,
       publisherData: newData
