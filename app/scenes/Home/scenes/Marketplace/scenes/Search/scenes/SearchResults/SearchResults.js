@@ -148,7 +148,6 @@ class SearchResults extends Component {
     const { handleSubmit } = this.props;
     let {
       searchTerm,
-      searchResults,
       searchResultsFiltered,
       category,
       fromSearchMenu
@@ -197,7 +196,7 @@ class SearchResults extends Component {
           </div>
         </Form>
         <TabsData
-          data={searchResultsFiltered || searchResults}
+          data={searchResultsFiltered}
           tabs={[
             {
               title: formatMessage(messages.featured),

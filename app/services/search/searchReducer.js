@@ -284,6 +284,7 @@ const reducer = handleActions({
       ...state,
       searchId,
       searchResults: [],
+      searchResultsFiltered: [],
       searching: true,
       searchTerm,
       category,
@@ -302,6 +303,7 @@ const reducer = handleActions({
       return {
         ...state,
         searchResults: [...state.searchResults, ...listings],
+        searchResultsFiltered: [...state.searchResults, ...listings],
         searching: false,
       };
     }
