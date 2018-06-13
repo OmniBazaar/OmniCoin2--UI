@@ -34,6 +34,15 @@ import {
   changeSearchPriorityData
 } from './accountActions';
 
+const defaultPublisherData = {
+  priority: 'local',
+  country: '',
+  city: '',
+  category: '',
+  publisherName: '',
+  keywords: []
+};
+
 const defaultState = {
   referrer: false,
   publisher: false,
@@ -224,28 +233,48 @@ const reducer = handleActions({
     const data = AccountSettingsStorage.getPrivateData();
     return {
       ...state,
-      privateData: data,
+      privateData: {
+        ...state.privateData,
+        ...data
+      },
     };
   },
   [updatePrivateData](state, { payload: { data } }) {
-    AccountSettingsStorage.updatePrivateData(data);
+    const privateData = {
+      ...state.privateData,
+      ...data
+    };
+
+    AccountSettingsStorage.updatePrivateData(privateData);
     return {
       ...state,
-      privateData: data
+      privateData
     };
   },
   [getPublisherData](state) {
+    const data = AccountSettingsStorage.getPublisherData();
     return {
       ...state,
-      publisherData: AccountSettingsStorage.getPublisherData()
+      publisherData: {
+        ...state.publisherData,
+        ...data
+      }
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
+    const copiedData = { ...data };
+
     if (!data.country) {
-      data.city = '';
+      copiedData.city = '';
     }
-    
-    const newData = savePublisherData(data);
+
+    const publisherData = {
+      ...state.publisherData,
+      ...copiedData,
+    };
+
+    const newData = savePublisherData(publisherData);
+
     return {
       ...state,
       publisherData: newData

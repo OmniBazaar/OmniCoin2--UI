@@ -19,6 +19,8 @@ export function* accountSubscriber() {
     takeLatest('UPDATE_PUBLIC_DATA', updatePublicData),
     takeLatest('GET_PUBLISHERS', getPublishers),
     takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions),
+    takeLatest('CHANGE_SEARCH_PRIORITY_DATA', updatePublisherData),
+    takeLatest('UPDATE_PUBLISHER_DATA', updatePublisherData),
   ]);
 }
 
@@ -82,4 +84,8 @@ export function* getRecentTransactions() {
     console.log('ERROR', e);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });
   }
+}
+
+export function* updatePublisherData() {
+  yield put({ type: 'DHT_RECONNECT' });
 }

@@ -94,7 +94,7 @@ class Compose extends Component {
       this.props.initialize({
         recipient: message.sender,
         subject: `RE: ${message.subject}`,
-        body: `\n${message.body}`,
+        body: `\n\n${message.body}`,
       });
     }
   }

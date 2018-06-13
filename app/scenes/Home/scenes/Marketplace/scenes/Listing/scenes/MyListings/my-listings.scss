@@ -17,6 +17,24 @@
   .my-listings {
     position: relative;
 
+    .search-form {
+      display: flex;
+
+      .selection {
+        &.dropdown {
+          min-width: 200px;
+          margin-right: 10px;
+        }
+      }
+
+      button {
+        padding: 0.78571429em 1em 0.785714em;
+        i {
+          margin: 0!important;
+        }
+      }
+    }
+
     .filters {
       position: absolute;
       right: 0;

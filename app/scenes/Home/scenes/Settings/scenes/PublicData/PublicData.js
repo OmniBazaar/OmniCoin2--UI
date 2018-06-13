@@ -156,10 +156,6 @@ class PublicData extends Component {
     this.props.authActions.getAccount(this.props.auth.currentUser.username);
   }
 
-  getExternalIp() {
-
-  }
-
   freezeSettings() {
     const {
       referrer,

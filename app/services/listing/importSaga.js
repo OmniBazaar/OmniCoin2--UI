@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { generate } from 'shortid';
 import fs from 'fs';
 
@@ -7,7 +7,7 @@ import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
 
 export function* importSubscriber() {
-  yield takeEvery('IMPORT_FILE', importLisingsFromFile);
+  yield takeLatest('IMPORT_FILE', importLisingsFromFile);
 }
 
 export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
@@ -65,6 +65,7 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
       });
     });
 
+    yield put({ type: 'DHT_RECONNECT' });
     yield put({
       type: 'IMPORT_FILE_SUCCEEDED',
       file: { items, title: name }

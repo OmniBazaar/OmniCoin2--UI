@@ -360,7 +360,6 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                buttonText={formatMessage(messages.na)}
                 validate={[...requiredFieldValidator, ...numericFieldValidator]}
               />
             </Grid.Column>

@@ -210,6 +210,13 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <div className="menu-item" onClick={this.toggleSettingsAccount}>
+                  <Image src={UserIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id='SettingsMenu.accountSettings'
+                    defaultMessage='Account Settings'
+                  />
+                </div>
                 <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}

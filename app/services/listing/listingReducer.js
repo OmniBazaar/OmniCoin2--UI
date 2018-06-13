@@ -36,10 +36,13 @@ import {
   getFavorites,
   searchPublishers,
   searchPublishersFinish,
-  setNumberToBuy
+  setNumberToBuy,
+  filterMyListings,
+  filterFavorites,
+  filterSearch
 } from './listingActions';
 
-import { marketplaceReturnListings } from "../search/searchActions";
+import { marketplaceReturnListings } from '../search/searchActions';
 
 const CoinTypes = Object.freeze({
   OMNI_COIN: 'OmniCoin',
@@ -47,18 +50,27 @@ const CoinTypes = Object.freeze({
 
 const defaultState = {
   listingDetail: null,
+  listingDetailRequest: {
+    loading: false,
+    error: null
+  },
   myListings: [],
   requestMyListings: {
     ids: [],
     isRequest: false,
     error: null
   },
-  myListingsFiltered: {},
+  myListingsFiltered: [],
+  myListingsCurrency: 'all',
+  myListingsCategory: 'all',
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
   isFavorite: false,
   favoriteListings: [],
+  favoriteFiltered: [],
+  favoriteCurrency: 'all',
+  favoriteCategory: 'all',
   listingImages: {},
   saveListing: {
     saving: false,
@@ -128,19 +140,31 @@ const reducer = handleActions({
   [getListingDetail](state) {
     return {
       ...state,
-      listingDetail: null
+      listingDetail: null,
+      listingDetailRequest: {
+        loading: true,
+        error: null
+      }
     }
   },
   [getListingDetailSucceeded](state, { payload: { listingDetail }}) {
     return {
       ...state,
       listingDetail,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false
+      }
     }
   },
   [getListingDetailFailed](state, { payload: { error }}) {
     return {
       ...state,
-      error,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false,
+        error: true
+      }
     }
   },
   [isListingFine](state, { payload: { listing } }) {
@@ -512,7 +536,7 @@ const reducer = handleActions({
     };
 
     if (error) {
-      pubs.error = error; 
+      pubs.error = error;
     } else {
       pubs.publishers = publishers;
     }
@@ -529,6 +553,45 @@ const reducer = handleActions({
         ...state.buyListing,
         numberToBuy: number
       }
+    };
+  },
+  [filterMyListings](state, { payload: { currency, category } }) {
+    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+    const categoryFilter = (category && category.toLowerCase()) || 'all';
+    let myListingsFiltered = [];
+    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+      myListingsFiltered = state.myListings
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter);
+    } else {
+      if (currencyFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    }
+    return {
+      ...state,
+      myListingsCurrency: currency,
+      myListingsCategory: category,
+      myListingsFiltered
+    };
+  },
+  [filterFavorites](state, { payload: { currency, category } }) {
+    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+    const categoryFilter = (category && category.toLowerCase()) || 'all';
+
+    let favoriteFiltered = [];
+    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+      favoriteFiltered = state.favoriteListings
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter);
+    } else {
+      if (currencyFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    }
+    return {
+      ...state,
+      favoriteCurrency: currency,
+      favoriteCategory: category,
+      favoriteFiltered
     };
   }
 }, defaultState);

@@ -44,6 +44,7 @@ import {
   createListing,
   editListing,
   deleteListing,
+  getListingFromBlockchain
 } from './apis';
 import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 
@@ -129,14 +130,16 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     if (listingId) {
       result = yield call(editListing, publisher, listingId, listing);
     } else {
-    	yield checkAndUploadImages(publisher, listing);
+      yield checkAndUploadImages(publisher, listing);
       result = yield call(createListing, publisher, listing);
     }
 
     if (!listingId) {
       listingId = result.listing_id;
     }
-	 	yield put(saveListingSuccess(result, listingId));
+
+    yield put({ type: 'DHT_RECONNECT' });
+    yield put(saveListingSuccess(result, listingId));
   } catch (err) {
     console.log(err);
     yield put(saveListingError(listingId, err));
@@ -151,12 +154,19 @@ function* getListingDetail({ payload: { listingId }}) {
       listings = (yield select()).default.listing.myListings;
       listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
     }
+
+    const blockchainListingData = yield call(getListingFromBlockchain, listingId);
+    if (!blockchainListingData) {
+      throw new Error('Listing not valid on blockchain');
+    }
+    listingDetail.quantity = blockchainListingData.quantity;
+
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
-    console.log('Error ', error);
+    console.log(error);
     yield put(getListingDetailFailed(error));
   }
 }
@@ -259,5 +269,5 @@ function* searchPublishers({ payload: { keywords } }) {
     }
   } catch (err) {
     yield put(searchPublishersFinish(err));
-  }  
+  }
 }

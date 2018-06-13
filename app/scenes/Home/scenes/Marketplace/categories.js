@@ -56,6 +56,10 @@ const mainCategories = defineMessages({
   gigs: {
     id: 'Marketplace.gigs',
     defaultMessage: 'Gigs'
+  },
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
   }
 });
 
