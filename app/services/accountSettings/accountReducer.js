@@ -244,7 +244,7 @@ const reducer = handleActions({
     if (!data.country) {
       data.city = '';
     }
-    
+
     const newData = savePublisherData(data);
     return {
       ...state,
