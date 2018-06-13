@@ -138,7 +138,7 @@ const messages = defineMessages({
   },
   escrowFee: {
     id: 'Transfer.escrowFee',
-    defaultMessage: 'Escrow Fee: 0.1%(0,00 XOM)'
+    defaultMessage: 'Escrow Fee: 1%({xomAmount} XOM)'
   },
   transferToEscrowLabel: {
     id: 'Transfer.transferToEscrowLabel',
@@ -203,6 +203,8 @@ const currencyOptions = [
     description: 'OmniCoin Currency'
   }
 ];
+
+const FEE_PERCENT = 0.01;
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
@@ -349,6 +351,16 @@ class Transfer extends Component {
 
   hideEscrow() {
     setTimeout(() => this.props.changeFieldValue('useEscrow', false), 200);
+  }
+
+  getBalanceFee() {
+    const { balance } = this.props.blockchainWallet;
+
+    if (balance && balance.balance) {
+      return (balance.balance / 100000) * FEE_PERCENT;
+    }
+
+    return 0;
   }
 
   renderDropdownUnitsField = ({
@@ -592,7 +604,7 @@ class Transfer extends Component {
                 name="useEscrow"
                 component={this.renderCheckboxField}
                 onCheck={this.handleEscrowTransactionChecked}
-                label={formatMessage(messages.escrowFee)}
+                label={formatMessage(messages.escrowFee).replace('{xomAmount}', this.getBalanceFee())}
               />
             </div>
             <div className="col-1" />
@@ -856,10 +868,16 @@ Transfer.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     })
-  })
+  }),
+  blockchainWallet: PropTypes.shape({
+    balance: PropTypes.shape({
+      balance: PropTypes.string,
+    }),
+  }),
 };
 
 Transfer.defaultProps = {
+  blockchainWallet: {},
   transferActions: {},
   intl: {},
   initialize: {},
