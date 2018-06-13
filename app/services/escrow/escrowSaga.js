@@ -53,19 +53,14 @@ function* loadEscrowTransactions(action) {
 
 function* loadEscrowAgents({
   payload: {
-    start, limit, searchTerm, filters
+    start, limit, searchTerm
   }
 }) {
   try {
     const result = yield (Apis.instance().db_api().exec('filter_current_escrows', [
       start,
       limit,
-      searchTerm,
-      {
-        any_user_i_give_pos_rating: filters.positiveRating,
-        any_user_i_votes_as_trans_proc: filters.transactionProcessor,
-        any_user_who_is_trans_proc: filters.activeTransactionProcessor
-      }
+      searchTerm
     ]));
     yield put({
       type: 'LOAD_ESCROW_AGENTS_SUCCEEDED',
@@ -211,6 +206,7 @@ function* updateEscrowSettings({ payload: { settings } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
+    console.log('SETTINGS ', settings);
     yield put(updateEscrowSettingsSucceeded(settings))
   } catch (error) {
     console.log("ERROR ", error);
