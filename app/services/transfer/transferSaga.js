@@ -150,8 +150,9 @@ function* createEscrowTransaction({ payload: {
     yield tr.broadcast();
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
+    const errorMsg = error.message.indexOf("Insufficient Balance") !== -1 ? "Not enough funds" : error.message;
     console.log('ERROR', error);
-    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: error.message });
+    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
 }
 
