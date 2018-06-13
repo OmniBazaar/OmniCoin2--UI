@@ -65,6 +65,7 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
       });
     });
 
+    yield put({ type: 'DHT_RECONNECT' });
     yield put({
       type: 'IMPORT_FILE_SUCCEEDED',
       file: { items, title: name }
