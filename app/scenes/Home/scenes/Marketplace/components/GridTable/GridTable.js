@@ -170,12 +170,18 @@ class GridTable extends Component {
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}`; //todo
-                      const style = { backgroundImage: `url(${image})` };
+                      const image = item.ip ?
+                        `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                      const style = image ? { backgroundImage: `url(${image})` } : {};
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-                      const categoryTitle = item.category && item.category !== 'All' ?
-                                            formatMessage(mainCategories[item.category]) : item.category || '';
+
+                      let categoryTitle = '';
+                      if (item.category && item.category.toLowerCase() !== 'all') {
+                        categoryTitle = mainCategories[item.category] ?
+                          formatMessage(mainCategories[item.category]) : item.category;
+                      }
+
                       const subcategory = getSubCategoryTitle(item.category, item.subcategory);
                       const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 

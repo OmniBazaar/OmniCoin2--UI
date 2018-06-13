@@ -38,6 +38,8 @@ const defaultState = {
     direction: 'descending'
   },
   searchResults: [],
+  searchCategory: 'all',
+  searchCurrency: 'all',
   searchResultsFiltered: null,
   searchId: null,
   searchText: '',
@@ -47,6 +49,7 @@ const defaultState = {
   saving: false,
   deleting: false,
   searching: false,
+  fromSearchMenu: false,
   error: null
 };
 
@@ -58,12 +61,33 @@ const sliceData = (data, activePage, rowsPerPage) => (
 
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
+const searchByFilters = (listings, currency, category) => {
+  const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+  const categoryFilter = (category && category.toLowerCase()) || 'all';
+
+  let searchesFiltered = listings;
+  if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+    searchesFiltered = listings
+      .filter(el => el.currency.toLowerCase() === currencyFilter)
+      .filter(el => el.category.toLowerCase() === categoryFilter);
+  } else {
+    if (currencyFilter !== 'all') searchesFiltered = listings.filter(el => el.currency.toLowerCase() === currencyFilter);
+    if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+  }
+  return {
+    searchCurrency: currency,
+    searchCategory: category,
+    searchesFiltered
+  };
+};
+
 const reducer = handleActions({
-  [filterSearchResults](state, { payload: { searchText } }) {
+  [filterSearchResults](state, { payload: { searchText, currency, category } }) {
     const data = state.searchResults;
     const activePageSearchResults = 1;
     let totalPagesSearchResults;
     let currentData = [];
+    let resultByFilters = [];
 
     if (searchText !== '') {
       let filteredData = data.filter(listing => {
@@ -72,13 +96,16 @@ const reducer = handleActions({
         ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
-      totalPagesSearchResults = getTotalPages(filteredData, rowsPerPageSearchResults);
-      currentData = sliceData(filteredData, activePageSearchResults, rowsPerPageSearchResults);
+      resultByFilters = searchByFilters(filteredData, currency, category);
+      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     } else {
       currentData = data;
-      totalPagesSearchResults = getTotalPages(currentData, rowsPerPageSearchResults);
-      currentData = sliceData(currentData, activePageSearchResults, rowsPerPageSearchResults);
+      resultByFilters = searchByFilters(currentData, currency, category);
+      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     }
+
     return {
       ...state,
       searchText,
@@ -252,7 +279,7 @@ const reducer = handleActions({
       searchResultsFiltered: null
     };
   },
-  [searching](state, { payload: { searchId, searchTerm, category, subCategory }}) {
+  [searching](state, { payload: { searchId, searchTerm, category, subCategory, fromSearchMenu }}) {
     return {
       ...state,
       searchId,
@@ -260,7 +287,8 @@ const reducer = handleActions({
       searching: true,
       searchTerm,
       category,
-      subCategory
+      subCategory,
+      fromSearchMenu
     };
   },
   [marketplaceReturnListings](state, { data }) {

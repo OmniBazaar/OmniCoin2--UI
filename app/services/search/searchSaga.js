@@ -34,7 +34,7 @@ export function* searchSubscriber() {
 
 function* searchListings({
   payload: {
-    searchTerm, category, country, city, historify, subCategory
+    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
   }
 }) {
   try {
@@ -53,6 +53,7 @@ function* searchListings({
         city,
         searchListings: true,
         subCategory,
+        fromSearchMenu,
       }
     });
   } catch (e) {
@@ -63,7 +64,7 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm
+    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
   }
 }) {
   let message;
@@ -135,7 +136,7 @@ export function* searchListingsByPeersMap({
   }
 
   ws.send(JSON.stringify(message));
-  yield put(searching(id, searchTerm, category, subCategory));
+  yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
 }
 
 function* getRecentSearches() {
