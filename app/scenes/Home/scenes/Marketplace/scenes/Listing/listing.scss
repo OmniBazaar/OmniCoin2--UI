@@ -18,8 +18,11 @@
   .listing-body {
     display: flex;
     padding: 20px;
-    align-self: center;
-    flex: 0 0 auto;
+
+    &.detail {
+      align-self: center;
+      flex: 0 0 auto;
+    }
 
     $galleryWidth: 0.45;
     $descriptionWidth: 0.55;

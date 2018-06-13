@@ -253,7 +253,7 @@ class Listing extends Component {
     } else if (v < 1) {
       v = 1;
     }
-    
+
     this.props.listingActions.setNumberToBuy(v);
   };
 
@@ -418,7 +418,7 @@ class Listing extends Component {
     }
 
     return [
-      <div className="listing-body">
+      <div className="listing-body detail">
         {this.renderGallery(listingDetail)}
         {this.renderItemDetails(listingDetail)}
       </div>,
