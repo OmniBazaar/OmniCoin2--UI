@@ -369,6 +369,7 @@ class ListingForm extends Component {
             <Grid.Column width={4}>
               <Field
                 name="price_using_btc"
+                input={{ value: true }}
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.bitcoinPrice)
@@ -378,6 +379,7 @@ class ListingForm extends Component {
             <Grid.Column width={4}>
               <Field
                 name="price_using_omnicoin"
+                input={{ value: true }}
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.omnicoinPrice)
