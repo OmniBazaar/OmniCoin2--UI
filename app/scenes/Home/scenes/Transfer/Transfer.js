@@ -604,7 +604,9 @@ class Transfer extends Component {
                 name="useEscrow"
                 component={this.renderCheckboxField}
                 onCheck={this.handleEscrowTransactionChecked}
-                label={formatMessage(messages.escrowFee).replace('{xomAmount}', this.getBalanceFee())}
+                label={formatMessage(messages.escrowFee, {
+                  xomAmount: this.getBalanceFee(),
+                })}
               />
             </div>
             <div className="col-1" />
