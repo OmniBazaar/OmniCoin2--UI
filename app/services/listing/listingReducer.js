@@ -47,6 +47,10 @@ const CoinTypes = Object.freeze({
 
 const defaultState = {
   listingDetail: null,
+  listingDetailRequest: {
+    loading: false,
+    error: null
+  },
   myListings: [],
   requestMyListings: {
     ids: [],
@@ -128,19 +132,31 @@ const reducer = handleActions({
   [getListingDetail](state) {
     return {
       ...state,
-      listingDetail: null
+      listingDetail: null,
+      listingDetailRequest: {
+        loading: true,
+        error: null
+      }
     }
   },
   [getListingDetailSucceeded](state, { payload: { listingDetail }}) {
     return {
       ...state,
       listingDetail,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false
+      }
     }
   },
   [getListingDetailFailed](state, { payload: { error }}) {
     return {
       ...state,
-      error,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false,
+        error: true
+      }
     }
   },
   [isListingFine](state, { payload: { listing } }) {
