@@ -10,6 +10,7 @@ import {
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import {currencyConverter} from "../utils";
 
 let authUser = null;
 let authHeaders = null;
@@ -85,7 +86,7 @@ const createListingOnBlockchain = async (publisher, listing) => {
     seller: seller.get('id'),
     price: {
       asset_id: '1.3.0',
-      amount: parseFloat(listing.price) * 100000
+      amount: currencyConverter(parseFloat(listing.price), listing.currency, 'OMC') * 100000
     },
     quantity: parseInt(listing.quantity),
     listing_hash: hash.listingSHA256({
@@ -124,7 +125,7 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
     listing_id: listingId,
     price: {
       asset_id: '1.3.0',
-      amount: parseFloat(listing.price) * 100000
+      amount: currencyConverter(parseFloat(listing.price), listing.currency, 'OMC') * 100000
     },
     quantity: parseInt(listing.quantity),
     listing_hash: hash.listingSHA256({

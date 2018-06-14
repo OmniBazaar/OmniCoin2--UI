@@ -196,7 +196,7 @@ class MyPurchases extends Component {
                           <TableCell>{dateformat(row.date, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>{row.count}</TableCell>
-                          <TableCell>{row.price}</TableCell>
+                          <TableCell>{row.price} OMC</TableCell>
                           <TableCell>{row.publisher}</TableCell>
                           <TableCell>{row.seller}</TableCell>
                         </TableRow>
