@@ -812,7 +812,7 @@ class Transfer extends Component {
     const values = {
       ...paramValues,
       memo: paramValues.memo ? paramValues.memo : '',
-      amount: parseInt(paramValues.amount).toFixed(2)
+      amount: parseFloat(paramValues.amount).toFixed(2)
     };
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {

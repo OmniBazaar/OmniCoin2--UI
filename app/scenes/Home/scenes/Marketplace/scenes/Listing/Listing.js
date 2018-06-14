@@ -53,7 +53,7 @@ class Listing extends Component {
 
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
-    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL_CURRENCY);
+    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL);
   }
 
   componentDidMount() {
@@ -491,6 +491,7 @@ Listing.propTypes = {
     formatMessage: PropTypes.func,
   }).isRequired,
 };
+
 
 Listing = withRouter(Listing);
 
