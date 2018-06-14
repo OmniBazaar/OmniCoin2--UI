@@ -16,14 +16,18 @@ class AccountBalance extends Component {
   componentWillMount() {
     const { account } = this.props.auth;
     if (account) {
-      this.props.walletActions.getAccountBalance(this.props.auth.account);
+      this.requestBalance(account);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.account !== this.props.auth.account && nextProps.auth.account) {
-      this.props.walletActions.getAccountBalance(nextProps.auth.account);
+      this.requestBalance(nextProps.auth.account);
     }
+  }
+
+  requestBalance(account) {
+    this.props.walletActions.getAccountBalance(account);
   }
 
   getBalance() {

@@ -11,6 +11,7 @@ import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
 import { faucetAddresses } from '../settings';
 import { changeSearchPriorityData } from '../../accountSettings/accountActions';
+import { getAccount as getAccountAction } from './authActions';
 
 
 const messages = defineMessages({
@@ -51,6 +52,7 @@ export function* login(action) {
       });
     });
     if (isAuthorized) {
+      yield put(getAccountAction(username));
       yield put({
         type: 'LOGIN_SUCCEEDED',
         user: {
@@ -99,6 +101,7 @@ export function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(changeSearchPriorityData(searchPriorityData));
+      yield put(getAccountAction(username));
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
