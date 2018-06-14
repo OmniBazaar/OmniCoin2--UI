@@ -126,9 +126,11 @@ export function* signup(action) {
       console.log('ERROR', error);
       let e;
       if(error.base && error.base.length && error.base.length > 0) {
-        e = error.base[0]
+        e = "Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash."
       } else if (error.remote_ip && error.remote_ip.length && error.remote_ip.length > 0) {
         e = error.remote_ip[0]
+      } else if (error.name && error.name.length && error.name.length > 0) {
+        e = error.name[0]
       } else {
         e = JSON.stringify(error)
       }
