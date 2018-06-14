@@ -13,6 +13,7 @@ const defaultState = {
   wallets: [],
   password: null,
   guid: null,
+  isGettingWallets: false,
   loading: false,
   error: null,
   message: null,
@@ -49,6 +50,7 @@ const reducer = handleActions({
   [getWallets](state) {
     return {
       ...state,
+      isGettingWallets: true,
       loading: true,
       error: null,
       message: null
@@ -59,11 +61,13 @@ const reducer = handleActions({
     wallets,
     guid,
     password,
+    isGettingWallets: false,
     loading: false,
     error: null
   }),
   GET_WALLETS_FAILED: (state, { error }) => ({
     ...state,
+    isGettingWallets: false,
     loading: false,
     error
   }),

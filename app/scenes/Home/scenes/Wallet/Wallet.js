@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Image } from 'semantic-ui-react';
+import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 
@@ -60,7 +60,7 @@ class Wallet extends Component {
   }
 
   openWalletModal() {
-
+    
   }
 
   getBitcoinContent() {
@@ -112,7 +112,11 @@ class Wallet extends Component {
                    (<Tab.Pane>
                      {this.props.bitcoin.wallets.length ?
                        <div className="content">
-                         {this.getBitcoinContent()}
+                        {
+                          this.props.bitcoin.isGettingWallets ?
+                          <div className='load-container'><Loader inline active /></div> :
+                          this.getBitcoinContent()
+                        }
                        </div>
                     :
                        <div className="no-wallet-yet">
@@ -136,15 +140,12 @@ Wallet.propTypes = {
   walletActions: PropTypes.shape({
     getBitcoinWallets: PropTypes.func,
     getOmniCoinWallets: PropTypes.func
-  })
-};
-
-Wallet.defaultProps = {
-  walletActions: {},
+  }),
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
     guid: PropTypes.string,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    isGettingWallets: PropTypes.bool
   }).isRequired,
   bitcoinActions: PropTypes.shape({
     toggleModal: PropTypes.func,

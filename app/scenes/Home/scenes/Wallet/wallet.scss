@@ -17,6 +17,11 @@
   color: $primary-gray;
 }
 
+.load-container {
+  text-align: center;
+  width: 100%;
+}
+
 .container {
   &.wallet {
     background-color: $lighter-gray;
