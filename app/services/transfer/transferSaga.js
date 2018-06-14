@@ -49,12 +49,14 @@ function* submitOmniCoinTransfer(data) {
       from: senderName.get('id'),
       to: toName.get('id'),
       reputation_vote: parseInt(reputation),
-      memo: memoObject(memo, senderName, toName, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
     };
+    if (memo.trim()) {
+      operationObj.memo = memoObject(memo.trim(), senderName, toName, key.privKey);
+    }
     if (data.payload.data.listingId) {
       operationObj.listing = data.payload.data.listingId;
       operationObj.listing_count = parseInt(data.payload.data.listingCount);
@@ -134,13 +136,15 @@ function* createEscrowTransaction({ payload: {
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
       escrow: escrowAcc.get('id'),
-      memo: memoObject(memo, buyerAcc, sellerAcc, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
       transfer_to_escrow: transferToEscrow
     };
+    if (memo.trim()) {
+      operationObj.memo = memoObject(memo.trim(), buyerAcc, sellerAcc, key.privKey);
+    }
     if (listingId) {
       operationObj.listing = listingId;
       operationObj.listing_count = Number(listingCount);
