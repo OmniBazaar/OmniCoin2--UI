@@ -179,6 +179,17 @@ class RecentTransactions extends Component {
     }
   }
 
+  getTypeIcon(row) {
+    if (row.type === ChainTypes.operations.referral_bonus_operation
+    || row.type === ChainTypes.operations.welcome_bonus_operation) {
+      return IncomingIcon;
+    }
+    if (row.fromTo !== row.from || !row.fromTo) {
+     return OutgoingIcon;
+    }
+    return IncomingIcon;
+  }
+
   render() {
     const {
       activePage,
@@ -276,7 +287,7 @@ class RecentTransactions extends Component {
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                               <Image
-                                src={(row.fromTo !== row.from || !row.fromTo) ? OutgoingIcon : IncomingIcon}
+                                src={this.getTypeIcon(row)}
                                 width={iconSize}
                                 height={iconSize}
                                 className="from-icon"
