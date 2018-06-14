@@ -12,7 +12,6 @@ const key = 'historyStorage';
 class HistoryStorage extends BaseStorage {
   constructor(accountName) {
     super(key, accountName);
-    this.clear();
     this.cache = this.getData();
     if (!this.cache) {
       this.init();
@@ -247,7 +246,7 @@ class HistoryStorage extends BaseStorage {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
             fee: el.op[1].fee.amount / 100000,
             operationType: el.op[0],
-            amount: el.op[1].amount ? el.op[1].amount : 10000,
+            amount: el.result[1].amount / 100000,
             type: HistoryStorage.OperationTypes.deposit
           });
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
@@ -259,7 +258,7 @@ class HistoryStorage extends BaseStorage {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
             fee: el.op[1].fee.amount / 100000,
             operationType: el.op[0],
-            amount: el.op[1].amount ? el.op[1].amount : 2500,
+            amount: el.result[1].amount / 100000,
             type: HistoryStorage.OperationTypes.deposit
           });
         } else if ([ChainTypes.operations.listing_create_operation,
