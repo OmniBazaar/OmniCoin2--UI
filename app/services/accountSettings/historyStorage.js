@@ -229,12 +229,40 @@ class HistoryStorage extends BaseStorage {
       ChainTypes.operations.account_update,
       ChainTypes.operations.listing_create_operation,
       ChainTypes.operations.listing_update_operation,
-      ChainTypes.operations.listing_delete_operation
+      ChainTypes.operations.listing_delete_operation,
+      ChainTypes.operations.welcome_bonus_operation,
+      ChainTypes.operations.referral_bonus_operation,
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
       if (!this.exists(el.id)) {
-        if ([ChainTypes.operations.listing_create_operation,
+        if (el.op[0] === ChainTypes.operations.welcome_bonus_operation) {
+          console.log('WELCOME BONUS ', JSON.stringify(el, null, 2));
+          console.log('AMOUNT ', el.op[1].amount);
+          this.addOperation({
+            id: el.id,
+            blockNum: el.block_num,
+            opInTrx: el.op_in_trx,
+            trxInBlock: el.trx_in_block,
+            date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
+            fee: el.op[1].fee.amount / 100000,
+            operationType: el.op[0],
+            amount: el.op[1].amount ? el.op[1].amount : 10000,
+            type: HistoryStorage.OperationTypes.deposit
+          });
+        } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
+          this.addOperation({
+            id: el.id,
+            blockNum: el.block_num,
+            opInTrx: el.op_in_trx,
+            trxInBlock: el.trx_in_block,
+            date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
+            fee: el.op[1].fee.amount / 100000,
+            operationType: el.op[0],
+            amount: el.op[1].amount ? el.op[1].amount : 2500,
+            type: HistoryStorage.OperationTypes.deposit
+          });
+        } else if ([ChainTypes.operations.listing_create_operation,
               ChainTypes.operations.listing_update_operation,
               ChainTypes.operations.listing_delete_operation,
               ChainTypes.operations.account_update].includes(el.op[0])) {
