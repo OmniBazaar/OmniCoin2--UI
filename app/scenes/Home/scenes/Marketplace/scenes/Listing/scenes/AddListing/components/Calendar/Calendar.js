@@ -22,14 +22,14 @@ class Calendar extends Component {
     const { value } = this.props.input;
     return (
       <div className="hybrid-input">
-        <DatePicker
-          selected={value ? moment(value) : null}
-          placeholderText={this.props.placeholder}
-          onChange={this.onChange.bind(this)}
-        />
-        <Button className="copy-btn button--gray-text" type='button'>
-          <Image src={CalendarIcon} width={size} height={size} />
-        </Button>
+        <label>
+          <DatePicker
+            selected={value ? moment(value) : null}
+            placeholderText={this.props.placeholder}
+            onChange={this.onChange.bind(this)}
+          />
+          <Image className='calendar-icon' src={CalendarIcon} width={size} height={size} />
+        </label>
       </div>
     );
   }
