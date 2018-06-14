@@ -38,6 +38,7 @@ import AccountFooter from './components/AccountFooter/AccountFooter';
 import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
+import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -254,6 +255,8 @@ class Home extends Component {
           </div>
           <ChainFooter />
         </div>
+
+        <BalanceUpdateBackground />
       </div>
     );
   }
