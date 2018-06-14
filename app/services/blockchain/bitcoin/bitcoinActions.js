@@ -10,7 +10,7 @@ const {
   toggleAddAddressModal
 } = createActions({
   CREATE_WALLET: (password, label, email) => ({ password, label, email }),
-  GET_WALLETS: (guid, password) => ({ guid, password }),
+  GET_WALLETS: () => ({}),
   MAKE_PAYMENT: (guid, password, to, amount, from, fee) => ({
     guid, password, to, amount, from, fee
   }),

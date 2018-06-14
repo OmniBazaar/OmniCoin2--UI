@@ -2,10 +2,12 @@ import {
   put,
   call,
   all,
-  takeEvery
+  takeEvery,
+  select
 } from 'redux-saga/effects';
 
 import * as BitcoinApi from './BitcoinApi';
+import { persitBitcoinWalletData, getBitcoinWalletData } from './services';
 
 export function* bitcoinSubscriber() {
   yield all([
@@ -20,7 +22,8 @@ export function* bitcoinSubscriber() {
 function* createWallet({ payload: { password, label, email } }) {
   try {
     const res = yield call(BitcoinApi.createWallet, password, label, email);
-    console.log('GUID ', res.guid);
+    const { currentUser } = (yield select()).default.auth;
+    yield call(persitBitcoinWalletData, res.guid, password, currentUser);
     yield put({ type: 'CREATE_WALLET_SUCCEEDED', guid: res.guid });
   } catch (error) {
     console.log('ERROR ', error);
@@ -28,12 +31,17 @@ function* createWallet({ payload: { password, label, email } }) {
   }
 }
 
-function* getWallets({ payload: { guid, password } }) {
+function* getWallets() {
   try {
-    console.log('GUID', guid);
-    const res = yield call(BitcoinApi.getWallets, password, guid);
-    console.log('RESULT ', res);
-    yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res });
+    const { currentUser } = (yield select()).default.auth;
+    const walletData = yield call(getBitcoinWalletData, currentUser);
+    if (walletData) {
+      const { guid, password } = walletData;
+      const res = yield call(BitcoinApi.getWallets, password, guid);
+      yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password });
+    } else {
+      yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: [] });
+    }
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'GET_WALLETS_FAILED', error });

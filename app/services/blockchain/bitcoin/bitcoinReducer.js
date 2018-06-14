@@ -46,19 +46,19 @@ const reducer = handleActions({
     password: null,
     error
   }),
-  [getWallets](state, { payload: { guid, password } }) {
+  [getWallets](state) {
     return {
       ...state,
-      guid,
-      password,
       loading: true,
       error: null,
       message: null
     };
   },
-  GET_WALLETS_SUCCEEDED: (state, { wallets }) => ({
+  GET_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
     ...state,
     wallets,
+    guid,
+    password,
     loading: false,
     error: null
   }),
