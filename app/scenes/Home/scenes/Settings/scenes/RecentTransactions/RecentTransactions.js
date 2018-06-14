@@ -102,6 +102,14 @@ const messages = defineMessages({
   [ChainTypes.operations.account_update]: {
     id: 'Settings.updateAccount',
     defaultMessage: 'ACCOUNT'
+  },
+  [ChainTypes.operations.referral_bonus_operation]: {
+    id: 'Settings.referralBonus',
+    defaultMessage: 'REFERRAL BONUS'
+  },
+  [ChainTypes.operations.welcome_bonus_operation]: {
+    id: 'Settings.welcomeBonus',
+    defaultMessage: 'WELCOME BONUS'
   }
 });
 
@@ -164,6 +172,10 @@ class RecentTransactions extends Component {
         return 'listing';
       case ChainTypes.operations.account_update:
         return 'account';
+      case ChainTypes.operations.welcome_bonus_operation:
+        return 'bonus';
+      case ChainTypes.operations.referral_bonus_operation:
+        return 'bonus';
     }
   }
 
