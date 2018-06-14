@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import ReactStars from 'react-stars';
 import {
@@ -20,12 +20,12 @@ import 'react-image-gallery/styles/scss/image-gallery.scss';
 
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import CategoryHeader from '../../../Marketplace/scenes/CategoryHeader';
+import Breadcrumb from '../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 import PriceItem from './components/PriceItem';
 import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
-import { currencyConverter } from "../../../../../../services/utils";
+import { currencyConverter } from '../../../../../../services/utils';
 
 import messages from './messages';
 import './listing.scss';
@@ -44,7 +44,6 @@ import {
 
 const iconSizeSmall = 12;
 
-
 class Listing extends Component {
 
   state = {
@@ -58,7 +57,9 @@ class Listing extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.setGallerySize.bind(this));
-    this.setGallerySize();
+    setTimeout(() => {
+      this.setGallerySize();
+    }, 100);
     this.props.listingActions.getFavorites();
   }
 
@@ -418,6 +419,7 @@ class Listing extends Component {
     }
 
     return [
+      <Breadcrumb category={listingDetail.category} subCategory={listingDetail.subcategory} />,
       <div className="listing-body detail">
         {this.renderGallery(listingDetail)}
         {this.renderItemDetails(listingDetail)}
@@ -439,16 +441,11 @@ class Listing extends Component {
           <Menu />
         </div>
         <div className="body">
-          <div className="top-header">
-            <div className="content">
-              <CategoryHeader />
-            </div>
-          </div>
           {
             listingDetailRequest.loading ?
-            <div className='loader-container'>
-              <Loader active inline>{formatMessage(messages.loadListing)}</Loader>
-            </div> :
+              <div className="loader-container">
+                <Loader active inline>{formatMessage(messages.loadListing)}</Loader>
+              </div> :
             this.renderDetail()
           }
           <ConfirmationModal

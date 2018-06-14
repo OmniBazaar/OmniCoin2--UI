@@ -10,20 +10,15 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import { NavLink } from 'react-router-dom';
 import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
 import CurrencyDropdown from '../../../Listing/scenes/AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
+import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 
 import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
 import { setActiveCategory } from '../../../../../../../../services/marketplace/marketplaceActions';
-
-import {
-  mainCategories,
-  getSubCategoryTitle
-} from '../../../../categories';
 
 import './search-results.scss';
 
@@ -238,9 +233,6 @@ class SearchResults extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { category, subCategory } = this.props.search;
-    const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
-    const subcategory = getSubCategoryTitle(category, subCategory);
-    const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -248,41 +240,7 @@ class SearchResults extends Component {
           <Menu />
         </div>
         <div className="body">
-          <div className="top-header">
-            <div className="content">
-              <div className="category-title">
-                <div className="parent">
-                  <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
-                    <span className="link">
-                      {formatMessage(messages.marketplace)}
-                    </span>
-                  </NavLink>
-                  {category ?
-                    <div>
-                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                      <span
-                        className="link"
-                        onClick={() => this.viewCategory(category, null)}
-                        onKeyDown={() => this.viewCategory(category, null)}
-                        tabIndex={0}
-                        role="link"
-                      >
-                        {categoryTitle || ''}
-                      </span>
-                    </div>
-                  : null}
-                  {subCategory ?
-                    <div>
-                      <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                      <span className="link child">
-                        {subCategoryTitle || ''}
-                      </span>
-                    </div>
-                  : null}
-                </div>
-              </div>
-            </div>
-          </div>
+          <Breadcrumb category={category} subCategory={subCategory} />
           {(this.props.dht.isLoading || this.props.search.searching)
             ?
               <Loader

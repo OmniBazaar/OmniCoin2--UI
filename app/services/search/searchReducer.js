@@ -271,14 +271,15 @@ const reducer = handleActions({
       deleting: false
     };
   },
-  [searchListings](state, { payload: { searchTerm, category }}) {
+  [searchListings](state, { payload: { searchTerm, category, subCategory }}) {
     return {
       ...state,
       searchId: null,
       searchResults: [],
       searchResultsFiltered: null,
       searchTerm,
-      category
+      category,
+      subCategory
     };
   },
   [searching](state, { payload: { searchId, searchTerm, category, subCategory, fromSearchMenu }}) {
