@@ -68,8 +68,12 @@ function* submitOmniCoinTransfer(data) {
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
   } catch (error) {
+    let e = JSON.stringify(error);
     console.log('ERROR', error);
-    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+    if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
+      e = 'Not enough funds'
+    }
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error: e });
   }
 }
 
