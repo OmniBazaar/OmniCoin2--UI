@@ -61,18 +61,21 @@ const sliceData = (data, activePage, rowsPerPage) => (
 
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
-const searchByFilters = (listings, currency, category) => {
+const searchByFilters = (listings, currency, category, subCategory) => {
   const currencyFilter = (currency && currency.toLowerCase()) || 'all';
   const categoryFilter = (category && category.toLowerCase()) || 'all';
+  const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
   let searchesFiltered = listings;
-  if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+  if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
     searchesFiltered = listings
       .filter(el => el.currency.toLowerCase() === currencyFilter)
-      .filter(el => el.category.toLowerCase() === categoryFilter);
+      .filter(el => el.category.toLowerCase() === categoryFilter)
+      .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
   } else {
     if (currencyFilter !== 'all') searchesFiltered = listings.filter(el => el.currency.toLowerCase() === currencyFilter);
     if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+    if (subCategoryFilter !== 'all') searchesFiltered = listings.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
   }
   return {
     searchCurrency: currency,
@@ -82,7 +85,7 @@ const searchByFilters = (listings, currency, category) => {
 };
 
 const reducer = handleActions({
-  [filterSearchResults](state, { payload: { searchText, currency, category } }) {
+  [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
     const data = state.searchResults;
     const activePageSearchResults = 1;
     let totalPagesSearchResults;
@@ -96,12 +99,12 @@ const reducer = handleActions({
         ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
-      resultByFilters = searchByFilters(filteredData, currency, category);
+      resultByFilters = searchByFilters(filteredData, currency, category, subCategory);
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     } else {
       currentData = data;
-      resultByFilters = searchByFilters(currentData, currency, category);
+      resultByFilters = searchByFilters(currentData, currency, category, subCategory);
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     }

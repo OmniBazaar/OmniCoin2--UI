@@ -3,6 +3,7 @@ import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import {
+  allCategories,
   saleCategories,
   servicesCategories,
   jobsCategories,
@@ -13,6 +14,7 @@ import {
 } from '../../../../../../categories';
 
 const subcategoryMap = {
+  all: allCategories,
   forSale: saleCategories,
   services: servicesCategories,
   jobs: jobsCategories,
