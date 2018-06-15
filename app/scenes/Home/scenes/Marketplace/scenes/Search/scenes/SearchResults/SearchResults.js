@@ -144,6 +144,7 @@ class SearchResults extends Component {
     const {
       searchResultsFiltered,
       category,
+      currency
     } = this.props.search;
     const searchCategory = category && category === 'All' ? category.toLowerCase() : category;
 
@@ -188,6 +189,7 @@ class SearchResults extends Component {
         </Form>
         <TabsData
           data={searchResultsFiltered}
+          currency={currency}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -292,7 +294,7 @@ export default compose(
       searchActions: bindActionCreators({
         filterSearchResults,
         searchListings,
-        setActiveCategory
+        setActiveCategory,
       }, dispatch),
     })
   ),

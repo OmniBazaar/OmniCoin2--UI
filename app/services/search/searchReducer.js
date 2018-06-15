@@ -50,7 +50,8 @@ const defaultState = {
   deleting: false,
   searching: false,
   fromSearchMenu: false,
-  error: null
+  error: null,
+  currency: null
 };
 
 const rowsPerPageSearchResults = 20;
@@ -61,87 +62,125 @@ const sliceData = (data, activePage, rowsPerPage) => (
 
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
-const searchByFilters = (listings, currency, category) => {
-  const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+const searchByFilters = (listings, category) => {
+  
   const categoryFilter = (category && category.toLowerCase()) || 'all';
-
+  
   let searchesFiltered = listings;
-  if (currencyFilter !== 'all' && categoryFilter !== 'all') {
-    searchesFiltered = listings
-      .filter(el => el.currency.toLowerCase() === currencyFilter)
-      .filter(el => el.category.toLowerCase() === categoryFilter);
-  } else {
-    if (currencyFilter !== 'all') searchesFiltered = listings.filter(el => el.currency.toLowerCase() === currencyFilter);
-    if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+  
+  if (categoryFilter !== 'all') {
+    searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
   }
+  
   return {
-    searchCurrency: currency,
-    searchCategory: category,
     searchesFiltered
   };
 };
 
+// Temporary solution, need to get from API
+const coefficients = {
+  USDtoEUR: 0.86,
+  USDtoBITCOIN: 0.000153,
+  USDtoOMNICOIN: 0.3849,
+  EURtoBITCOIN: 1,
+  EURtoOMNICOIN: 0.45,
+  EURtoUSD: 1.16,
+  BITCOINtoUSD: 6542.60,
+  BITCOINtoEUR: 5654.7,
+  BITCOINtoOMNICOIN: 1,
+  OMNICOINtoUSD: 1,
+  OMNICOINtoEUR: 1,
+  OMNICOINtoBITCOIN: 1,
+};
+
+const changeCurrencies = (selectedCurrency, listing ) => {
+  
+  let fromTo;
+  
+  return listing.map((item) => {
+    fromTo = `${item.currency}to${selectedCurrency}`;
+    
+    if (selectedCurrency === item.currency) {
+      return {
+        ...item,
+        convertedPrice : item.price
+      }
+    }  else {
+      return {
+        ...item,
+        convertedPrice: item.price * coefficients[fromTo]
+      }
+    }
+  })
+  
+};
+
 const reducer = handleActions({
   [filterSearchResults](state, { payload: { searchText, currency, category } }) {
-    const data = state.searchResults;
+    let data = state.searchResults;
     const activePageSearchResults = 1;
     let totalPagesSearchResults;
+    if (currency !== 'all' && currency !== undefined) {
+      data = changeCurrencies(currency, data)
+    }
     let currentData = [];
     let resultByFilters = [];
-
+    
     if (searchText !== '') {
       let filteredData = data.filter(listing => {
         return Object.values(listing).filter(
-         value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
-        ).length !== 0;
+            value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
+          ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
-      resultByFilters = searchByFilters(filteredData, currency, category);
+      
+      resultByFilters = searchByFilters(filteredData, category);
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     } else {
       currentData = data;
-      resultByFilters = searchByFilters(currentData, currency, category);
+      resultByFilters = searchByFilters(currentData, category);
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     }
-
+    
     return {
       ...state,
       searchText,
       activePageSearchResults,
       totalPagesSearchResults,
       searchResultsFiltered: currentData,
+      currency
     };
   },
   [filterSearchByCategory](state) {
     const data = state.searchResults;
-
+    
     const forSaleListings = {
       category: categories.forSale,
       listings: []
     };
-
+    
     const jobsListings = {
       category: categories.jobs,
       listings: []
     };
-
+    
     const servicesListings = {
       category: categories.services,
       listings: []
     };
-
+    
     const cryptoBazaarListings = {
       category: categories.cryptoBazaar,
       listings: []
     };
-
+    
     const rentalsListings = {
       category: categories.rentals,
       listings: []
     };
-
+    
     data.forEach((listing) => {
       switch (listing.category) {
         case categories.forSale:
@@ -162,7 +201,7 @@ const reducer = handleActions({
         default:
       }
     });
-
+    
     return {
       ...state,
       searchResultsByCategory: [
@@ -298,10 +337,10 @@ const reducer = handleActions({
   [marketplaceReturnListings](state, { data }) {
     const commandListings = JSON.parse(data.command.listings);
     const listings = commandListings.listings ? commandListings.listings.map(listing => ({
-      ...listing,
-      ip: data.command.address
-    })) : [];
-
+        ...listing,
+        ip: data.command.address
+      })) : [];
+    
     if (parseInt(data.id, 10) === state.searchId) {
       return {
         ...state,
@@ -310,7 +349,7 @@ const reducer = handleActions({
         searching: false,
       };
     }
-
+    
     return {
       ...state,
       searching: false

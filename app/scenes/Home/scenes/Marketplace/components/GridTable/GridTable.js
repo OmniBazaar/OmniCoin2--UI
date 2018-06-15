@@ -14,13 +14,18 @@ import {
   Icon,
   Button,
   Dimmer,
-  Loader
+  Loader,
+  Image
 } from 'semantic-ui-react';
 import hash from 'object-hash';
 import './grid-table.scss';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
+import Dollar from '../../../../../../assets/images/currency-icons/dollar.png';
+import Euro from '../../../../../../assets/images/currency-icons/euro.png';
+import Btc from '../../../../../../assets/images/currency-icons/btc.png';
+import Omni from '../../../../../../assets/images/currency-icons/omnic.svg';
 
 import {
   setPaginationGridTable,
@@ -135,6 +140,20 @@ class GridTable extends Component {
   showErrorToast(title, message) {
     toastr.error(title, message);
   }
+  
+  getIcon(showConvertedPrice, itemCurrency, currency){
+    const type = showConvertedPrice ? currency : itemCurrency;
+    
+    if (type === "USD") {
+      return <Image src={Dollar} className="currency-icon"/>
+    } else if (type === "EUR") {
+      return <Image src={Euro} className="currency-icon"/>
+    } else if (type === "BITCOIN") {
+      return <Image src={Btc} className="currency-icon"/>
+    } else {
+      return <Image src={Omni} className="currency-icon"/>
+    }
+  }
 
   renderLoading() {
     const { deleting } = this.props.listing.deleteListing;
@@ -152,12 +171,17 @@ class GridTable extends Component {
       gridTableDataFiltered
     } = this.props.marketplace;
     const {
-      showTrailingLoader
+      showTrailingLoader,
+      currency
     } = this.props;
     let data = gridTableDataFiltered.filter(item => item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
-
+    let showConvertedPrice = false;
+    if (currency && currency !== 'ALL') {
+      showConvertedPrice = true
+    }
+    
     return (
       <div className="data-table">
         <div className="table-container">
@@ -178,7 +202,6 @@ class GridTable extends Component {
                         categoryTitle = mainCategories[item.category] ?
                           formatMessage(mainCategories[item.category]) : item.category;
                       }
-
                       const subcategory = getSubCategoryTitle(item.category, item.subcategory);
                       const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
@@ -200,7 +223,10 @@ class GridTable extends Component {
                             {subCategoryTitle}
                           </span>
                           <span className="description">{description}</span>
-                          <span className="price">$ {numberWithCommas(parseFloat(item.price))}</span>
+                          <span className="price">
+                            {this.getIcon(showConvertedPrice, item.currency, currency)}
+                            {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
+                            </span>
                           {this.props.showActions ?
                             <div className="actions">
                               <Button
