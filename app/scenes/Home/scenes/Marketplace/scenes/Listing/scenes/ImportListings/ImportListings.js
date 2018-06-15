@@ -314,7 +314,7 @@ class ImportListings extends Component {
           <div className="bottom-section">
             <div className="listing-body">
               <span className="title">{formatMessage(messages.importedData)}</span>
-              {(stagingFile || importingFile) ? renderLoader() : <ImportedFilesTable
+              {stagingFile ? renderLoader() : <ImportedFilesTable
                 importedFiles={importedFiles}
                 tableProps={{
                   sortable: true,
@@ -329,6 +329,7 @@ class ImportListings extends Component {
             <Button
               content={formatMessage(messages.importListings).toUpperCase()}
               className="button--green-bg"
+              loading={importingFile}
               onClick={() => this.importListings()}
             />
           </div>
