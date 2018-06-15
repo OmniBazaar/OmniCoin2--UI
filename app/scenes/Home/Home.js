@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
+import Idled from "react-idled";
 
 import {
   Route,
@@ -107,6 +108,10 @@ class Home extends Component {
       this.props.menuActions.setActiveCategory('Marketplace.home');
     }
   };
+  
+  handleChange = ({ idle }) => {
+    this.props.history.push('/login');
+  };
 
   render() {
     const { visible } = this.state;
@@ -204,13 +209,6 @@ class Home extends Component {
                     defaultMessage='New Listing Defaults'
                   />
                 </NavLink>
-                <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
-                  <Image src={SupportIcon} height={iconSize} width={iconSize} />
-                  <FormattedMessage
-                    id="Home.support"
-                    defaultMessage="Support"
-                  />
-                </NavLink>
                 <div className="menu-item" onClick={this.toggleSettingsAccount}>
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -218,6 +216,13 @@ class Home extends Component {
                     defaultMessage='Account Settings'
                   />
                 </div>
+                <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
+                  <Image src={SupportIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id="Home.support"
+                    defaultMessage="Support"
+                  />
+                </NavLink>
                 <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
@@ -257,6 +262,10 @@ class Home extends Component {
         </div>
 
         <BalanceUpdateBackground />
+        <Idled
+          onChange={this.handleChange}
+          timeout={3000}
+        />
       </div>
     );
   }
