@@ -110,7 +110,7 @@ const reducer = handleActions({
   },
   [isFavorite](state, { payload: { listingDetailId } }) {
     const index = state.favoriteListings.length > 0 ?
-      state.favoriteListings.findIndex(x => x.id === listingDetailId) : -1;
+      state.favoriteListings.findIndex(x => x.listing_id === listingDetailId) : -1;
     return {
       ...state,
       isFavorite: index !== -1
