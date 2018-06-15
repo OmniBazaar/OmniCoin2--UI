@@ -65,7 +65,7 @@ const iconSize = 20;
 
 
 class Home extends Component {
-  state = { visible: true };
+  state = {visible: true};
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
@@ -110,11 +110,13 @@ class Home extends Component {
   };
   
   handleChange = ({ idle }) => {
-    this.props.history.push('/login');
+    this.props.history.push('/signup');
   };
 
   render() {
     const { visible } = this.state;
+    let { logoutTimeout } = this.props.preferences.preferences;
+    logoutTimeout = logoutTimeout * 100;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -260,11 +262,10 @@ class Home extends Component {
           </div>
           <ChainFooter />
         </div>
-
         <BalanceUpdateBackground />
         <Idled
           onChange={this.handleChange}
-          timeout={3000}
+          timeout={logoutTimeout}
         />
       </div>
     );
