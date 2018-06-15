@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { generate } from 'shortid';
 import fs from 'fs';
 
@@ -6,16 +6,24 @@ import { getListings } from './../../utils/listings';
 import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
 
+const listingHandlersByVendor = {
+  amazon: getListings,
+  all: getListings,
+};
+
 export function* importSubscriber() {
-  yield takeLatest('IMPORT_FILE', importLisingsFromFile);
+  yield all([
+    takeLatest('STAGE_FILE', importListingsFromFile),
+    takeLatest('IMPORT_FILES', saveFiles),
+  ]);
 }
 
-export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
+export function* importListingsFromFile({ payload: { file, defaultValues, vendor } }) {
   try {
-    const { content, name, publisher } = file;
-    const listings = yield call(getListings, content);
+    const { content, name } = file;
+    const listings = yield call(listingHandlersByVendor[vendor] || getListings, content);
 
-    const items = yield listings.map(async item => {
+    const items = yield listings.map(async (item) => {
       let imageToSave;
       const itemToSave = {
         ...item,
@@ -41,36 +49,65 @@ export function* importLisingsFromFile({ payload: { file, defaultValues } }) {
 
           fs.writeFileSync(imageToSave.path, Buffer.from(imgContent, 'base64'), { flag: 'w' });
 
-          const { image, fileName, thumb } = await saveImage(publisher, imageToSave);
-
-          fs.unlink(imageToSave.path, console.log);
-
-          delete itemToSave.productId;
-          delete itemToSave.imageURL;
-
-          const listing = await createListing(publisher, {
+          resolve({
             ...defaultValues,
             ...itemToSave,
+            listing_type: 'Listing',
             images: [{
-              thumb,
-              image_name: fileName,
-              path: image,
-            }],
+              ...imageToSave,
+            }]
           });
-
-          resolve(listing);
         };
 
         reader.readAsDataURL(imageToSave);
       });
     });
 
-    yield put({ type: 'DHT_RECONNECT' });
     yield put({
-      type: 'IMPORT_FILE_SUCCEEDED',
+      type: 'STAGING_FILE_SUCCEEDED',
       file: { items, title: name }
     });
   } catch (e) {
-    yield put({ type: 'IMPORT_FILE_FAILED', error: e.message });
+    yield put({ type: 'STAGING_FILE_FAILED', error: e.message });
+  }
+}
+
+export function* saveFiles({ payload: { publisher, filesToImport } }) {
+  try {
+    const allFiles = filesToImport.map(async (file) => {
+      const newFile = { ...file };
+
+      const newItems = newFile.items.map(async (item) => {
+        const { image, fileName, thumb } = await saveImage(publisher, item.images[0]);
+        const itemToSave = { ...item };
+
+        if (item.images[0].path) {
+          fs.unlink(item.images[0].path, console.log);
+        }
+
+        delete itemToSave.productId;
+        delete itemToSave.imageURL;
+
+        return createListing(publisher, {
+          ...itemToSave,
+          images: [{
+            thumb,
+            image_name: fileName,
+            path: image,
+          }],
+        });
+      });
+
+      newFile.items = await Promise.all(newItems);
+
+      return newFile;
+    });
+
+    const importedFiles = yield Promise.all(allFiles);
+
+    yield put({ type: 'DHT_RECONNECT' });
+    yield put({ type: 'IMPORT_FILES_SUCCEEDED', importedFiles });
+  } catch (e) {
+    yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
   }
 }

@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Dropdown, Button, Grid, Modal, Input } from 'semantic-ui-react';
+import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
+import { toastr } from 'react-redux-toastr';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
 import {
-  importFile,
+  stageFile,
+  importFiles,
   removeFile,
   removeAllFiles
 } from '../../../../../../../../services/listing/importActions';
@@ -23,7 +25,12 @@ const options = [
   {
     key: 'all',
     value: 'all',
-    text: 'All'
+    text: 'All',
+  },
+  {
+    key: 'amazon',
+    value: 'amazon',
+    text: 'Amazon',
   },
 ];
 
@@ -76,7 +83,21 @@ const messages = defineMessages({
     id: 'AddListing.selectPublisher',
     defaultMessage: 'Select publisher'
   },
+  importationErrorTitle: {
+    id: 'ImportListings.errorTitle',
+    defaultMessage: 'Error'
+  },
+  importationSuccessTitle: {
+    id: 'ImportListings.successTitle',
+    defaultMessage: 'Success'
+  },
+  importationSuccess: {
+    id: 'ImportListings.success',
+    defaultMessage: 'The files has been imported successfully'
+  }
 });
+
+const renderLoader = () => <div className="loading-container"><Loader inline active /></div>;
 
 class ImportListings extends Component {
   constructor(props) {
@@ -84,8 +105,28 @@ class ImportListings extends Component {
 
     this.state = {
       open: false,
-      selectedPublisher: null
+      selectedPublisher: null,
+      selectedVendor: null,
     };
+  }
+
+  componentWillReceiveProps({ listingImport }) {
+    const { formatMessage } = this.props.intl;
+    const { importingFile, error } = listingImport;
+
+    if (!importingFile && importingFile !== this.props.listingImport.importingFile) {
+      if (listingImport.error) {
+        return toastr.error(
+          formatMessage(messages.importationErrorTitle),
+          error
+        );
+      }
+
+      toastr.success(
+        formatMessage(messages.importationSuccessTitle),
+        formatMessage(messages.importationSuccess)
+      );
+    }
   }
 
   removeFile(index) {
@@ -126,11 +167,14 @@ class ImportListings extends Component {
 
       const file = this.inputElement.files[0];
 
-      this.props.listingActions.importFile({
-        publisher: this.state.selectedPublisher,
-        content: file,
-        name: file.name,
-      }, this.props.listingDefaults);
+      this.props.listingActions.stageFile(
+        {
+          content: file,
+          name: file.name,
+        },
+        this.props.listingDefaults,
+        this.state.selectedVendor
+      );
     }
   }
 
@@ -142,8 +186,16 @@ class ImportListings extends Component {
     this.inputElement.click();
   }
 
+  importListings() {
+    this.props.listingActions.importFiles({
+      publisher: this.state.selectedPublisher,
+      filesToImport: this.props.listingImport.importedFiles,
+    });
+  }
+
   importForm() {
     const { formatMessage } = this.props.intl;
+    const { stagingFile } = this.props.listingImport;
 
     return (
       <Form className="import-listing-form">
@@ -163,6 +215,8 @@ class ImportListings extends Component {
                 selection
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
+                value={this.state.selectedVendor}
+                onChange={(e, { value }) => this.setState({ selectedVendor: value })}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -199,7 +253,7 @@ class ImportListings extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={12}>
-              {this.importedFiles()}
+              {stagingFile ? renderLoader() : this.importedFiles()}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -233,7 +287,7 @@ class ImportListings extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { importedFiles } = this.props.listingImport;
+    const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
 
     return (
       <div className="marketplace-container category-listing import-listings">
@@ -260,7 +314,7 @@ class ImportListings extends Component {
           <div className="bottom-section">
             <div className="listing-body">
               <span className="title">{formatMessage(messages.importedData)}</span>
-              <ImportedFilesTable
+              {stagingFile ? renderLoader() : <ImportedFilesTable
                 importedFiles={importedFiles}
                 tableProps={{
                   sortable: true,
@@ -268,11 +322,16 @@ class ImportListings extends Component {
                   basic: 'very',
                   size: 'small'
                 }}
-              />
+              />}
             </div>
           </div>
           <div className="footer-section">
-            <Button content={formatMessage(messages.importListings).toUpperCase()} className="button--green-bg" />
+            <Button
+              content={formatMessage(messages.importListings).toUpperCase()}
+              className="button--green-bg"
+              loading={importingFile}
+              onClick={() => this.importListings()}
+            />
           </div>
         </div>
         {this.showWarningMessage()}
@@ -287,9 +346,13 @@ ImportListings.propTypes = {
   }),
   listingImport: PropTypes.shape({
     importedFiles: PropTypes.arrayOf(PropTypes.object),
+    error: PropTypes.string,
+    importingFile: PropTypes.bool,
+    stagingFile: PropTypes.bool,
   }),
   listingActions: PropTypes.shape({
-    importFile: PropTypes.func,
+    stageFile: PropTypes.func,
+    importFiles: PropTypes.func,
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
   }),
@@ -318,7 +381,8 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      importFile,
+      stageFile,
+      importFiles,
       removeFile,
       removeAllFiles
     }, dispatch),
