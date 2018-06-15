@@ -80,7 +80,6 @@ sagaMiddleware.run(searchSubscriber);
 sagaMiddleware.run(wsMarketplaceSubscriber);
 sagaMiddleware.run(dhtSubscriber);
 sagaMiddleware.run(listingSubscriber);
-sagaMiddleware.run(importSubscriber);
 sagaMiddleware.run(listingDefaultsSubscriber);
 sagaMiddleware.run(preferencesSubscriber);
 sagaMiddleware.run(importSubscriber);
