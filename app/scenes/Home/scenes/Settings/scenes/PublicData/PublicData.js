@@ -217,7 +217,7 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account } = this.props;
+    const { account, auth } = this.props;
     return (
       <div className="check-form">
         <div className="description">
@@ -231,6 +231,12 @@ class PublicData extends Component {
             </div>
           </div>
         </div>
+        {account.referrer &&
+        <div className="ref-link-cont">
+          <div className="ref-link-label">Your custom OmniBazaar download address:</div>
+          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.lastLoginUserName}`}/>
+        </div>
+        }
         <div className="description">
           <div className="check-container">
             <Image src={this.getPublisherIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.togglePublisher} />
