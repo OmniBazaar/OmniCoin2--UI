@@ -8,9 +8,13 @@ const {
   login,
   logout,
   signup,
+  welcomeBonus,
+  welcomeBonusSucceeded,
+  welcomeBonusFailed,
   requestPcIds,
   getAccount,
-  getLastLoginUserName
+  getLastLoginUserName,
+  showTermsModal
 } = createActions({
   GET_CURRENT_USER: () => ({}),
   LOGIN: (username, password) => ({ username, password }),
@@ -20,9 +24,13 @@ const {
       username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
+  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({ username, referrer, macAddress, harddriveId }),
+  WELCOME_BONUS_SUCCEEDED: () => ({ }),
+  WELCOME_BONUS_FAILED: (error) => ({ error }),
   REQUEST_PC_IDS: () => ({}),
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
+  SHOW_TERMS_MODAL: () => ({}),
 });
 
 export {
@@ -30,7 +38,11 @@ export {
   login,
   logout,
   signup,
+  welcomeBonus,
+  welcomeBonusSucceeded,
+  welcomeBonusFailed,
   requestPcIds,
   getAccount,
-  getLastLoginUserName
+  getLastLoginUserName,
+  showTermsModal
 };

@@ -9,6 +9,9 @@ import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
 import { searchListings } from '../../../../../../services/search/searchActions';
+
+import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
+
 import SearchMenu from './components/SearchMenu/SearchMenu';
 
 import AddIcon from '../../images/btn-add-listing.svg';
@@ -94,6 +97,14 @@ class Menu extends Component {
               props.marketplace.activeCategory === category.id
     });
 
+    if (category.id === mainCategories.about.id) {
+      return (
+        <li className={optionMenuClass}>
+          <span>{title}</span>
+        </li>
+      );
+    }
+
     return (
       <li className={optionMenuClass}>
         <span
@@ -139,13 +150,20 @@ class Menu extends Component {
     );
   }
 
+  setActiveCategory = () => {
+    if (this.props.marketplaceActions.setActiveCategory) {
+      this.props.marketplaceActions.setActiveCategory('Marketplace.home');
+    }
+  };
+
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
     const { country, city } = this.props.account.publisherData;
     const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);
     const subCategory = parent ? Menu.getValue(categoryId) : null;
 
-    this.props.searchActions.searchListings('test', category, country, city, true, subCategory);
+    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
   renderForSaleSubMenu() {
@@ -333,8 +351,10 @@ class Menu extends Component {
         <div className="menu-wrapper about">
           <div className="submenu logo">
             <div>
-              <Image src={OmniLogo} width={logoWidth} />
-              <p className="link">{formatMessage(messages.omniLink)}</p>
+              <a href="http://omnibazaar.com/" target="_blank" rel="noopener noreferrer">
+                <Image src={OmniLogo} width={logoWidth} />
+                <p className="link">{formatMessage(messages.omniLink)}</p>
+              </a>
             </div>
           </div>
           <div className="submenu">
@@ -391,17 +411,16 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/listings">{formatMessage(userMenu.myListings)}</NavLink>
         </div>
-        <div className="link-menu">{formatMessage(userMenu.myPurchases)}</div>
+        <div className="link-menu">
+          <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
+        </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>
         <div className="link-menu">
-          <NavLink to="/listings-defaults">{formatMessage(userMenu.newListingDefaults)}</NavLink>
-        </div>
-        <div className="link-menu">
           <NavLink to="/search-priority">{formatMessage(userMenu.searchPriority)}</NavLink>
         </div>
-        <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
+        {/*<div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>*/}
       </Popup>
     );
   }
@@ -417,13 +436,8 @@ class Menu extends Component {
       <div className="menu">
         <ul>
           <li className={optionMenuClass}>
-            <NavLink to="/marketplace">
-              <span
-                onClick={() => this.viewCategory(mainCategories.home.id)}
-                onKeyDown={() => this.viewCategory(mainCategories.home.id)}
-                tabIndex={0}
-                role="link"
-              >
+            <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
+              <span>
                 {formatMessage(mainCategories.home)}
               </span>
             </NavLink>
@@ -460,6 +474,9 @@ Menu.propTypes = {
   searchActions: PropTypes.shape({
     searchListings: PropTypes.func,
   }),
+  marketplaceActions: PropTypes.shape({
+    setActiveCategory: PropTypes.func,
+  }),
 };
 
 Menu.defaultProps = {
@@ -474,6 +491,9 @@ Menu = withRouter(Menu);
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
+    marketplaceActions: bindActionCreators({
+      setActiveCategory
+    }, dispatch),
     searchActions: bindActionCreators({
       searchListings
     }, dispatch)

@@ -4,6 +4,9 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import { bindActionCreators, compose } from 'redux';
+import { FetchChain } from "omnibazaarjs";
+import { required } from 'redux-form-validators';
+
 
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
@@ -79,9 +82,35 @@ const mailMessages = defineMessages({
     id: 'Mail.mailNotSent',
     defaultMessage: 'There was an error while trying to send your mail'
   },
+  usernameDoesNotExist: {
+    id: 'Mail.usernameDoesNotExist',
+    defaultMessage: 'Not found'
+  },
+  required: {
+    id: 'Mail.required',
+    defaultMessage: 'Required'
+  }
 });
 
 class Compose extends Component {
+
+  static asyncValidate = async (values, dispatch, props, field) => {
+    const previousErrors = props.asyncErrors;
+    if (field === 'recipient') {
+      try {
+        const account = await FetchChain('getAccount', values.recipient);
+      } catch (e) {
+        throw  {
+          ...previousErrors,
+          recipient: mailMessages.usernameDoesNotExist
+        }
+      }
+    }
+    if (previousErrors) {
+      throw previousErrors;
+    }
+  };
+
   constructor(props) {
     super(props);
 
@@ -94,6 +123,7 @@ class Compose extends Component {
       this.props.initialize({
         recipient: message.sender,
         subject: `RE: ${message.subject}`,
+        body: `\n\n${message.body}`,
       });
     }
   }
@@ -157,15 +187,45 @@ class Compose extends Component {
     return messages[activeFolder][activeMessage];
   }
 
+  renderRecipientField = ({
+                           input, disabled, loading, meta: { touched, error, warning }
+                         }) => {
+    const { formatMessage } = this.props.intl;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+    return (
+        <div className="form-group address-wrap">
+          <label>
+            {formatMessage(mailMessages.to)}
+            <br/>
+            {touched && ((error && <span className="error">{errorMessage}</span>))}
+          </label>
+          <input
+            {...input}
+            type="text"
+            className="textfield"
+            placeholder={formatMessage(mailMessages.startTyping)}
+          />
+          {/*<Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" />*/}
+        </div>
+    );
+  };
+
   render() {
     const containerClass = classNames({
       visible: true,
       'compose-container': true
     });
 
-    const { handleSubmit } = this.props;
-    const { formatMessage } = this.props.intl;
+    const {
+      loading
+    } = this.props.mail;
 
+    const {
+      handleSubmit,
+      asyncValidating,
+      invalid
+    } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <div className={containerClass}>
         <div className="top-detail">
@@ -176,18 +236,12 @@ class Compose extends Component {
           <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="mail-form-container">
             <p className="title">{formatMessage(mailMessages.newMessage)}</p>
             <div>
-              <div className="form-group address-wrap">
-                <label>{formatMessage(mailMessages.to)}</label>
-                <Field
-                  type="text"
-                  name="recipient"
-                  placeholder={formatMessage(mailMessages.startTyping)}
-                  component="input"
-                  className="textfield"
-                  autoFocus
-                />
-                <Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" />
-              </div>
+              <Field
+                name="recipient"
+                component={this.renderRecipientField}
+                validate={required({ message: formatMessage(mailMessages.required) })}
+                autoFocus
+              />
               <div className="form-group">
                 <label>{formatMessage(mailMessages.subject)}</label>
                 <Field
@@ -211,8 +265,20 @@ class Compose extends Component {
               <div className="form-group submit-group">
                 <label />
                 <div className="field">
-                  <Button type="button" content={formatMessage(mailMessages.cancel)} onClick={this.closeCompose} className="button--transparent" />
-                  <Button type="submit" content={formatMessage(mailMessages.send)} className="button--primary" />
+                  <Button
+                    type="button"
+                    content={formatMessage(mailMessages.cancel)}
+                    onClick={this.closeCompose}
+                    loading={loading}
+                    className="button--transparent"
+                  />
+                  <Button
+                    type="submit"
+                    content={formatMessage(mailMessages.send)}
+                    className="button--primary"
+                    loading={loading}
+                    disabled={invalid || asyncValidating}
+                  />
                 </div>
               </div>
             </div>
@@ -271,6 +337,8 @@ export default compose(
   ),
   reduxForm({
     form: 'sendMailForm',
+    asyncValidate: Compose.asyncValidate,
+    asyncBlurFields: ['recipient'],
     destroyOnUnmount: true,
   }),
 )(injectIntl(Compose));

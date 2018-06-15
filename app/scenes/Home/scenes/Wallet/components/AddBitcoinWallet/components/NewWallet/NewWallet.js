@@ -99,7 +99,7 @@ class NewWallet extends Component {
         toastr.error(formatMessage(messages.error, nextProps.bitcoin.error));
       } else {
         toastr.success(formatMessage(messages.success), formatMessage(messages.rememberGuid));
-        this.props.bitcoinActions.getWallets(nextProps.bitcoin.guid, nextProps.bitcoin.password);
+        this.props.bitcoinActions.getWallets();
         this.props.bitcoinActions.toggleModal();
       }
     }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { toastr } from 'react-redux-toastr';
@@ -27,9 +27,12 @@ import {
   setActivePageGridTable,
   sortGridTableBy
 } from '../../../../../../services/marketplace/marketplaceActions';
+import { deleteListing } from '../../../../../../services/listing/listingActions';
+
 import {
-  deleteListing
-} from '../../../../../../services/listing/listingActions';
+  mainCategories,
+  getSubCategoryTitle
+} from '../../categories';
 
 import { numberWithCommas } from '../../../../../../utils/numeric';
 import messages from './messages';
@@ -39,7 +42,7 @@ const iconSizeSmall = 12;
 class GridTable extends Component {
   state = {
     confirmDeleteOpen: false
-  }
+  };
 
   componentDidMount() {
     this.props.gridTableActions.sortGridTableBy(
@@ -48,6 +51,7 @@ class GridTable extends Component {
       this.props.sortDirection
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+    this.props.gridTableActions.setActivePageGridTable(1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,6 +64,7 @@ class GridTable extends Component {
         nextProps.sortDirection
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
+      this.props.gridTableActions.setActivePageGridTable(1);
     }
 
     if (
@@ -140,7 +145,6 @@ class GridTable extends Component {
     );
   }
 
-
   render() {
     const {
       activePageGridTable,
@@ -150,9 +154,10 @@ class GridTable extends Component {
     const {
       showTrailingLoader
     } = this.props;
-    const rows = _.chunk(gridTableDataFiltered, 6);
+    let data = gridTableDataFiltered.filter(item => item.listing_id);
+    const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
-    console.log('ROWS ', rows);
+
     return (
       <div className="data-table">
         <div className="table-container">
@@ -162,26 +167,37 @@ class GridTable extends Component {
                 (
                   <TableRow key={hash(row)} className="items">
                     {row.map(item => {
-                      const image = `http://${item.ip}/publisher-images/${item.images[0] ? item.images[0].thumb : ''}`; //todo
-                      const style = { backgroundImage: `url(${image})` };
+                      const image = item.ip ?
+                        `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                      const style = image ? { backgroundImage: `url(${image})` } : {};
                       let { description } = item;
                       description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
+
+                      let categoryTitle = '';
+                      if (item.category && item.category.toLowerCase() !== 'all') {
+                        categoryTitle = mainCategories[item.category] ?
+                          formatMessage(mainCategories[item.category]) : item.category;
+                      }
+
+                      const subcategory = getSubCategoryTitle(item.category, item.subcategory);
+                      const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+
                       return (
                         <TableCell className="item" key={hash(item)}>
-                          <Link to={`listing/${item['listing_id']}`}>
+                          <Link to={`listing/${item.listing_id}`}>
                             <div className="img-wrapper" style={style} />
                           </Link>
 
-                          <Link to={`listing/${item['listing_id']}`}>
-                            <span className="title">{item['listing_title']}</span>
+                          <Link to={`listing/${item.listing_id}`}>
+                            <span className="title">{item.listing_title}</span>
                           </Link>
 
                           <span className="subtitle">
-                            {item.category}
+                            {categoryTitle}
                             <span>
                               <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
                             </span>
-                            {item.subCategory}
+                            {subCategoryTitle}
                           </span>
                           <span className="description">{description}</span>
                           <span className="price">$ {numberWithCommas(parseFloat(item.price))}</span>
@@ -190,11 +206,13 @@ class GridTable extends Component {
                               <Button
                                 content={formatMessage(messages.edit)}
                                 className="button--blue"
-                                onClick={this.onEditClick.bind(this, item)} />
+                                onClick={this.onEditClick.bind(this, item)}
+                              />
                               <Button
                                 content={formatMessage(messages.delete)}
                                 className="button--gray-text"
-                                onClick={this.onDeleteClick.bind(this, item)} />
+                                onClick={this.onDeleteClick.bind(this, item)}
+                              />
                             </div>
                             : null
                           }
@@ -213,7 +231,7 @@ class GridTable extends Component {
               {showTrailingLoader && rows.length === 0 &&
                 <TableRow>
                   <TableCell className="item">
-                    <Loader active/>
+                    <Loader active />
                   </TableCell>
                 </TableRow>
               }

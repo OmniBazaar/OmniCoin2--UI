@@ -1,6 +1,5 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
-import ip from 'ip';
 
 import PriorityTypes from '../../common/SearchPriorityType';
 
@@ -34,6 +33,15 @@ import {
   changeIpAddress,
   changeSearchPriorityData
 } from './accountActions';
+
+const defaultPublisherData = {
+  priority: 'local',
+  country: '',
+  city: '',
+  category: '',
+  publisherName: '',
+  keywords: []
+};
 
 const defaultState = {
   referrer: false,
@@ -76,7 +84,7 @@ const defaultState = {
     loading: false,
     error: null
   },
-  ipAddress: ip.address()
+  ipAddress: ''
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -225,24 +233,48 @@ const reducer = handleActions({
     const data = AccountSettingsStorage.getPrivateData();
     return {
       ...state,
-      privateData: data,
+      privateData: {
+        ...state.privateData,
+        ...data
+      },
     };
   },
   [updatePrivateData](state, { payload: { data } }) {
-    AccountSettingsStorage.updatePrivateData(data);
+    const privateData = {
+      ...state.privateData,
+      ...data
+    };
+
+    AccountSettingsStorage.updatePrivateData(privateData);
     return {
       ...state,
-      privateData: data
+      privateData
     };
   },
   [getPublisherData](state) {
+    const data = AccountSettingsStorage.getPublisherData();
     return {
       ...state,
-      publisherData: AccountSettingsStorage.getPublisherData()
+      publisherData: {
+        ...state.publisherData,
+        ...data
+      }
     };
   },
   [updatePublisherData](state, { payload: { data } }) {
-    const newData = savePublisherData(data);
+    const copiedData = { ...data };
+
+    if (!data.country) {
+      copiedData.city = '';
+    }
+
+    const publisherData = {
+      ...state.publisherData,
+      ...copiedData,
+    };
+
+    const newData = savePublisherData(publisherData);
+
     return {
       ...state,
       publisherData: newData

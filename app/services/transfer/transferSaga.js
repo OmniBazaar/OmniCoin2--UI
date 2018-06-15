@@ -18,6 +18,7 @@ import { Apis } from 'omnibazaarjs-ws';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
+import { getAccountBalance } from '../blockchain/wallet/walletActions';
 
 export function* transferSubscriber() {
   yield all([
@@ -29,7 +30,7 @@ export function* transferSubscriber() {
 }
 
 function* submitOmniCoinTransfer(data) {
-  const { currentUser } = (yield select()).default.auth;
+  const { currentUser, account } = (yield select()).default.auth;
   const senderNameStr = currentUser.username;
   const toNameStr = data.payload.data.toName;
   const {
@@ -48,23 +49,31 @@ function* submitOmniCoinTransfer(data) {
       from: senderName.get('id'),
       to: toName.get('id'),
       reputation_vote: parseInt(reputation),
-      memo: memoObject(memo, senderName, toName, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
     };
-    if (data.listingId) {
-      operationObj.listing = data.listingId;
-      operationObj.listing_count = data.listingCount;
+    if (memo.trim()) {
+      operationObj.memo = memoObject(memo.trim(), senderName, toName, key.privKey);
+    }
+    if (data.payload.data.listingId) {
+      operationObj.listing = data.payload.data.listingId;
+      operationObj.listing_count = parseInt(data.payload.data.listingCount);
     }
     tr.add_type_operation('transfer', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+    yield put(getAccountBalance(account));
   } catch (error) {
-    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+    let e = JSON.stringify(error);
+    console.log('ERROR', error);
+    if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
+      e = 'Not enough funds'
+    }
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error: e });
   }
 }
 
@@ -88,8 +97,7 @@ function* submitBitcoinTransfer(data) {
 }
 
 export function* submitTransfer(data) {
-  const currencySelectedStr = data.payload.data.currencySelected;
-
+  const currencySelectedStr = (yield select()).default.transfer.transferCurrency;
   switch (currencySelectedStr) {
     case 'omnicoin':
       yield fork(submitOmniCoinTransfer, data);
@@ -132,16 +140,18 @@ function* createEscrowTransaction({ payload: {
       buyer: buyerAcc.get('id'),
       seller: sellerAcc.get('id'),
       escrow: escrowAcc.get('id'),
-      memo: memoObject(memo, buyerAcc, sellerAcc, key.privKey),
       amount: {
         asset_id: '1.3.0',
         amount: amount * 100000
       },
       transfer_to_escrow: transferToEscrow
     };
+    if (memo.trim()) {
+      operationObj.memo = memoObject(memo.trim(), buyerAcc, sellerAcc, key.privKey);
+    }
     if (listingId) {
       operationObj.listing = listingId;
-      operationObj.listing_count = listingCount;
+      operationObj.listing_count = Number(listingCount);
     }
     tr.add_type_operation('escrow_create_operation', operationObj);
     yield tr.set_required_fees();
@@ -149,20 +159,27 @@ function* createEscrowTransaction({ payload: {
     yield tr.broadcast();
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
+    const errorMsg = error.message.indexOf("Insufficient Balance") !== -1 ? "Not enough funds" : error.message;
     console.log('ERROR', error);
-    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: error.message });
+    yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
 }
 
-function* getCommonEscrows({ payload: { fromAccount, toAccount } }) {
+function* getCommonEscrows({ payload: { from, to } }) {
   try {
-    if (!fromAccount || !toAccount) {
+    if (!from || !to) {
       return yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: [] });
     }
-    let [fromEscrows, toEscrows] = yield Promise.all([
-      fetchAccount(fromAccount),
-      fetchAccount(toAccount)
-    ]).then(res => res.map(el => el.escrows));
+    const [fromAcc, toAcc] = yield Promise.all([
+      fetchAccount(from),
+      fetchAccount(to)
+    ]);
+    const [implicitFromEscrows, implicitToEscrows] = yield Promise.all([
+      Apis.instance().db_api().exec('get_implicit_escrows', [fromAcc.id]),
+      Apis.instance().db_api().exec('get_implicit_escrows', [toAcc.id])
+    ]);
+    let fromEscrows = _.union(fromAcc.escrows, implicitFromEscrows);
+    let toEscrows = _.union(toAcc.escrows, implicitToEscrows);
     fromEscrows = yield Promise.all(fromEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     toEscrows = yield Promise.all(toEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id') });

@@ -35,6 +35,10 @@ import SearchPriority from './scenes/Marketplace/scenes/Search/scenes/SearchPrio
 import SocialNetworksFooter from '../../components/SocialNetworksFooter/SocialNetworksFooter';
 import ChainFooter from '../../components/ChainFooter/ChainFooter';
 import AccountFooter from './components/AccountFooter/AccountFooter';
+import StartGuide from './components/StartGuide/StartGuide';
+import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
+import AccountBalance from './components/AccountBalance/AccountBalance';
+import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -49,12 +53,12 @@ import ProcessorsIcon from './images/sdb-processors.svg';
 import SupportIcon from './images/sdb-support.svg';
 import TransferIcon from './images/sdb-transfer.svg';
 import WalletIcon from './images/sdb-wallet.svg';
+import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount } from '../../services/blockchain/auth/authActions';
 import { getListingDefault } from '../../services/listing/listingDefaultsActions';
-
 
 const iconSize = 20;
 
@@ -123,6 +127,13 @@ class Home extends Component {
         }}
       />);
     }
+    if (this.props.location.pathname === '/') {
+      return (<Redirect
+        to={{
+          pathname: '/start-guide',
+        }}
+      />);
+    }
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -186,13 +197,28 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
-                <NavLink to="/support" activeClassName="active" className="menu-item">
+                <NavLink to="/listings-defaults" activeClassName="active" className="menu-item">
+                  <Image src={UserIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id='Marketplace.newListingDefaults'
+                    defaultMessage='New Listing Defaults'
+                  />
+                </NavLink>
+                <div className="menu-item" onClick={this.toggleSettingsAccount}>
+                  <Image src={UserIcon} height={iconSize} width={iconSize} />
+                  <FormattedMessage
+                    id='SettingsMenu.accountSettings'
+                    defaultMessage='Account Settings'
+                  />
+                </div>
+                <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.support"
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -205,6 +231,7 @@ class Home extends Component {
         </div>
         <div className={homeContentClass}>
           <div className="route">
+            <Route path="/start-guide" render={(props) => <StartGuide {...props} />} />
             <Route path="/escrow" render={(props) => <Escrow {...props} />} />
             <Route path="/mail" render={(props) => <Mail {...props} />} />
             <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
@@ -215,6 +242,7 @@ class Home extends Component {
             <Route path="/wallet" render={(props) => <Wallet {...props} />} />
             <Route path="/listing/:id" render={(props) => <Listing {...props} />} />
             <Route path="/listings" render={(props) => <MyListings {...props} />} />
+            <Route path="/my-purchases" render={(props) => <MyPurchases {...props} />} />
             <Route path="/favorite-listings" render={(props) => <FavoriteListings {...props} />} />
             <Route path="/add-listing" render={(props) => <AddListing {...props} />} />
             <Route path="/edit-listing/:id" render={(props) => <EditListing {...props} />} />
@@ -227,6 +255,8 @@ class Home extends Component {
           </div>
           <ChainFooter />
         </div>
+
+        <BalanceUpdateBackground />
       </div>
     );
   }

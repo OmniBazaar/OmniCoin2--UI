@@ -1,52 +1,16 @@
-import electron from 'electron';
 import fs from 'fs';
 import uuid from 'uuid/v4';
 import path from 'path';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
-
-const isDir = (path) => {
-  return fs.lstatSync(path).isDirectory();
-}
-
-const checkDir = (dir) => {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(dir) || !isDir(dir)) {
-      fs.mkdir(dir,  (err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve();
-      });
-    } else {
-      resolve();
-    }
-  });
-};
+import { getUserDataFolder, checkDir, copyFile } from '../fileUtils';
 
 const getImageFolder = () => {
-  const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+  const userDataPath = getUserDataFolder();
   return path.resolve(userDataPath, 'listingDefaults');
 }
 
 export const getImageFilePath = (fileName) => {
   return path.resolve(getImageFolder(), fileName);
-}
-
-const copyFile = (source, target) => {
-  return new Promise((resolve, reject) => {
-    const r = fs.createReadStream(source);
-    r.on('error', err => {
-      reject(err);
-    });
-    const w = fs.createWriteStream(target);
-    w.on("error", err => {
-      reject(err);
-    });
-    w.on("close", () => {
-      resolve(target);
-    });
-    r.pipe(w);
-  });
 }
 
 export const saveImage = (file) => {
@@ -91,10 +55,12 @@ const listingDefautlStorageKey = 'listingDefault';
 
 export const getStoredListingDefautls = () => {
   const user = getStoredCurrentUser();
-  const key = `${listingDefautlStorageKey}_${user.username}`;
-  const data = localStorage.getItem(key);
-  if (data) {
-    return JSON.parse(data);
+  if (user) {
+    const key = `${listingDefautlStorageKey}_${user.username}`;
+    const data = localStorage.getItem(key);
+    if (data) {
+      return JSON.parse(data);
+    }
   }
 
   return {};
@@ -102,6 +68,8 @@ export const getStoredListingDefautls = () => {
 
 export const storeListingDefaults = (listingDefaults) => {
   const user = getStoredCurrentUser();
-  const key = `${listingDefautlStorageKey}_${user.username}`;
-  localStorage.setItem(key, JSON.stringify(listingDefaults));
+  if (user) {
+    const key = `${listingDefautlStorageKey}_${user.username}`;
+    localStorage.setItem(key, JSON.stringify(listingDefaults));
+  }
 }

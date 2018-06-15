@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Image } from 'semantic-ui-react';
+import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 
@@ -19,38 +19,17 @@ import {
   getBitcoinWallets,
   getOmniCoinWallets,
 } from '../../../../services/wallet/walletActions';
+import {
+  getWallets
+} from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import {
+  encrypt, decrypt
+} from '../../../../services/blockchain/bitcoin/services';
 import AddIcon from '../../images/btn-add-image.svg';
 
+import messages from './messages';
 import './wallet.scss';
-
-
-const messages = defineMessages({
-  quickStart: {
-    id: 'Wallet.quickStart',
-    defaultMessage: 'Quick-start Guide! (Please read...)'
-  },
-  welcome: {
-    id: 'Wallet.welcome',
-    defaultMessage: 'Welcome to OmniBazaar!'
-  },
-  launch: {
-    id: 'Wallet.launch',
-    defaultMessage: 'If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched, configured and populated in the background. This process will take a few minutes ~ about the same amount of time it will take you to read this orientation page.'
-  },
-  addWallet: {
-    id: 'Wallet.addWallet',
-    defaultMessage: 'ADD WALLET'
-  },
-  noWalletYet: {
-    id: 'Wallet.noWalletYet',
-    defaultMessage: 'You haven\'t added a wallet yet'
-  },
-  error: {
-    id: 'Wallet.error',
-    defaultMessage: 'Error'
-  }
-});
-
+import StartGuide from '../../components/StartGuide/StartGuide';
 
 class Wallet extends Component {
   constructor(props) {
@@ -59,6 +38,10 @@ class Wallet extends Component {
     this.openWalletModal = this.openWalletModal.bind(this);
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.bitcoinActions.getWallets();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -77,7 +60,7 @@ class Wallet extends Component {
   }
 
   openWalletModal() {
-
+    
   }
 
   getBitcoinContent() {
@@ -123,29 +106,28 @@ class Wallet extends Component {
             className="tabs"
             menu={{ secondary: true, pointing: true }}
             panes={[
-                   {
-                     menuItem: 'BitCoin',
-                     render: () =>
-                       (<Tab.Pane>
-                         {this.props.bitcoin.wallets.length ?
-                           <div className="content">
-                             {this.getBitcoinContent()}
-                           </div>
-                        :
-                           <div className="no-wallet-yet">
-                             <span>{formatMessage(messages.noWalletYet)}</span>
-                           </div>
-                       }
-                        </Tab.Pane>)
-
-                   },
-                 ]}
+               {
+                 menuItem: 'BitCoin',
+                 render: () =>
+                   (<Tab.Pane>
+                     {this.props.bitcoin.wallets.length ?
+                       <div className="content">
+                        {
+                          this.props.bitcoin.isGettingWallets ?
+                          <div className='load-container'><Loader inline active /></div> :
+                          this.getBitcoinContent()
+                        }
+                       </div>
+                    :
+                       <div className="no-wallet-yet">
+                         <span>{formatMessage(messages.noWalletYet)}</span>
+                       </div>
+                   }
+                   </Tab.Pane>)
+               },
+             ]}
           />
-          <div className="quick-start">
-            <h1>{formatMessage(messages.quickStart)}</h1>
-            <h3>{formatMessage(messages.welcome)}</h3>
-            <p>{formatMessage(messages.launch)}</p>
-          </div>
+          <StartGuide />
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />
@@ -158,19 +140,17 @@ Wallet.propTypes = {
   walletActions: PropTypes.shape({
     getBitcoinWallets: PropTypes.func,
     getOmniCoinWallets: PropTypes.func
-  })
-};
-
-Wallet.defaultProps = {
-  walletActions: {},
+  }),
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
     guid: PropTypes.string,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    isGettingWallets: PropTypes.bool
   }).isRequired,
   bitcoinActions: PropTypes.shape({
     toggleModal: PropTypes.func,
     toggleAddAddressModal: PropTypes.func,
+    getWallets: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
@@ -181,6 +161,10 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets }, dispatch),
-    bitcoinActions: bindActionCreators({ toggleModal, toggleAddAddressModal }, dispatch),
+    bitcoinActions: bindActionCreators({
+      toggleModal,
+      toggleAddAddressModal,
+      getWallets
+    }, dispatch),
   }),
 )(injectIntl(Wallet));

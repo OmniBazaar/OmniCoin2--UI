@@ -1,0 +1,11 @@
+@import '../../../../../../styles/index';
+
+.top-header {
+  .link:focus {
+    outline: none;
+  }
+
+  .child {
+    color: $dark-gray;
+  }
+}

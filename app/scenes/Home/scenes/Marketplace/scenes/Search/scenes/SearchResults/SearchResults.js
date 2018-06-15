@@ -6,31 +6,24 @@ import {
   Icon,
   Button,
   Form,
-  Dropdown,
   Loader
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
-import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
+import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
+import CurrencyDropdown from '../../../Listing/scenes/AddListing/components/CurrencyDropdown/CurrencyDropdown';
+import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
-import CategoryDropdown from '../../../../../Marketplace/scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
-
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
+import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 
-import {
-  filterSearchResults
-} from '../../../../../../../../services/search/searchActions';
+import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
+import { setActiveCategory } from '../../../../../../../../services/marketplace/marketplaceActions';
 
 import './search-results.scss';
 
-const iconSizeMedium = 15;
 const iconSizeSmall = 12;
-
-const options = [
-  { key: 1, text: 'All Categories', value: 'all' },
-  { key: 2, text: 'Category 1', value: 'category1' },
-  { key: 3, text: 'Category 2', value: 'category2' },
-];
 
 const messages = defineMessages({
   marketplace: {
@@ -73,14 +66,65 @@ const messages = defineMessages({
     id: 'SearchMenu.loadingListings',
     defaultMessage: 'Loading listings'
   },
+  currency: {
+    id: 'SearchMenu.currency',
+    defaultMessage: 'Currency'
+  },
+  category: {
+    id: 'AddListing.category',
+    defaultMessage: 'Category'
+  },
+  subCategory: {
+    id: 'SearchMenu.subCategory',
+    defaultMessage: 'Sub-category'
+  },
 });
 
-
 class SearchResults extends Component {
+  constructor(props) {
+    super(props);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.CategoryDropdown = makeValidatableField(CategoryDropdown);
+    this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-  onSearch = () => {
-    this.props.searchActions.filterSearchResults(this.searchInput.value);
-  };
+  componentDidMount() {
+    const { searchTerm, category, subCategory } = this.props.search;
+    this.props.change('searchTerm', searchTerm);
+    this.props.change('category', category);
+    this.props.change('subCategory', subCategory);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { searchTerm, category, subCategory } = this.props.search;
+
+    if (searchTerm !== nextProps.search.searchTerm) {
+      if (nextProps.search.searchTerm) {
+        this.props.change('searchTerm', nextProps.search.searchTerm);
+      }
+    }
+
+    if (category !== nextProps.search.category) {
+      const categoryName = nextProps.search.category;
+      const searchCategory = categoryName && categoryName === 'All' ? categoryName.toLowerCase() : categoryName;
+      this.props.change('category', searchCategory);
+    }
+
+    if (subCategory !== nextProps.search.subCategory) {
+      const subCategoryName = nextProps.search.subCategory;
+      const searchSubCategory = subCategoryName && subCategoryName === 'All' ? subCategoryName.toLowerCase() : subCategoryName;
+      this.props.change('subcategory', searchSubCategory);
+    }
+
+    if (this.props.dht.isLoading !== nextProps.dht.isLoading) {
+      if (!nextProps.dht.isLoading) {
+        const subCategoryName = nextProps.search.subCategory;
+        const searchSubCategory = subCategoryName && subCategoryName === 'All' ? subCategoryName.toLowerCase() : subCategoryName;
+        this.props.change('subcategory', searchSubCategory);
+      }
+    }
+  }
 
   renderButtonField = ({
     input, placeholder
@@ -93,30 +137,70 @@ class SearchResults extends Component {
         className="textfield"
         placeholder={placeholder}
       />
-      <div className="search-actions">
-        <Button
-          content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-          className="button--primary search-btn"
-          onClick={this.onSearch}
-        />
-      </div>
     </div>
   );
 
+  handleSubmit(values) {
+    const currency = values.currency;
+    const searchTerm = (this.searchInput && this.searchInput.value) || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.searchActions.filterSearchResults(searchTerm, currency, category, subcategory);
+  }
+
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
-    const {
-      searchResults,
-      searchResultsFiltered
-    } = this.props.search;
+    const { handleSubmit } = this.props;
+    const { searchResultsFiltered, subCategory } = this.props.search;
+    const { category } = this.props.formValues ? this.props.formValues : {};
 
     return (
       <div className="list-container search-filters">
-        <div className="filters">
-          <CurrencyDropdown />
-        </div>
+        <Form className="filter search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+          <div className="content">
+            <div className="search-container">
+              <Field
+                type="text"
+                name="searchTerm"
+                placeholder={formatMessage(messages.search)}
+                component={this.renderButtonField}
+                className="textfield"
+              />
+              <div className="search-filters">
+                <Field
+                  name="category"
+                  component={this.CategoryDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.category)
+                  }}
+                />
+                <Field
+                  name="subcategory"
+                  value={subCategory}
+                  component={this.SubCategoryDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.subCategory),
+                    parentCategory: category
+                  }}
+                />
+                <Field
+                  name="currency"
+                  component={this.CurrencyDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.currency)
+                  }}
+                />
+                <Button
+                  content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+                  className="button--primary search-btn"
+                  type="submit"
+                />
+              </div>
+            </div>
+          </div>
+        </Form>
         <TabsData
-          data={searchResultsFiltered ? searchResultsFiltered : searchResults}
+          data={searchResultsFiltered}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -144,8 +228,15 @@ class SearchResults extends Component {
     );
   }
 
+  setActiveCategory = () => {
+    if (this.props.searchActions.setActiveCategory) {
+      this.props.searchActions.setActiveCategory('Marketplace.home');
+    }
+  };
+
   render() {
     const { formatMessage } = this.props.intl;
+    const { category, subCategory } = this.props.search;
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -153,28 +244,7 @@ class SearchResults extends Component {
           <Menu />
         </div>
         <div className="body">
-          <div className="top-header">
-            <div className="content">
-              <div className="category-title">
-                <div className="parent">
-                  <span>{formatMessage(messages.marketplace)}</span>
-                  <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
-                </div>
-                <span className="child">{formatMessage(messages.searchResults)}</span>
-              </div>
-              <div className="search-container">
-                <Form className="search-form">
-                  <Field
-                    type="text"
-                    name="search"
-                    placeholder={formatMessage(messages.search)}
-                    component={this.renderButtonField}
-                    className="textfield"
-                  />
-                </Form>
-              </div>
-            </div>
-          </div>
+          <Breadcrumb category={category} subCategory={subCategory} />
           {(this.props.dht.isLoading || this.props.search.searching)
             ?
               <Loader
@@ -189,7 +259,6 @@ class SearchResults extends Component {
             :
             this.renderSearchResults()
           }
-
         </div>
       </div>
     );
@@ -197,35 +266,54 @@ class SearchResults extends Component {
 }
 
 SearchResults.propTypes = {
+  account: PropTypes.shape({
+    publisherData: PropTypes.object
+  }),
   search: PropTypes.shape({
+    searchResults: PropTypes.array,
     recentSearches: PropTypes.array,
-    searchResultsFiltered: PropTypes.array
+    searchResultsFiltered: PropTypes.array,
+    searchTerm: PropTypes.string,
+    category: PropTypes.string,
+    subCategory: PropTypes.string,
+    searching: PropTypes.bool,
   }),
   searchActions: PropTypes.shape({
     dhtGetPeersFor: PropTypes.func,
+    filterSearchResults: PropTypes.func,
+    searchListings: PropTypes.func,
+    setActiveCategory: PropTypes.func,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  handleSubmit: PropTypes.func
 };
 
 SearchResults.defaultProps = {
   intl: {},
   search: {},
+  account: {},
   searchActions: {},
+  handleSubmit: () => {},
 };
 
 export default compose(
-  connect(
-    state => ({ ...state.default }),
-    (dispatch) => ({
-      searchActions: bindActionCreators({
-        filterSearchResults
-      }, dispatch),
-    })
-  ),
   reduxForm({
     form: 'searchForm',
     destroyOnUnmount: true,
-  })
+  }),
+  connect(
+    (state) => ({
+      ...state.default,
+      formValues: getFormValues('searchForm')(state)
+    }),
+    (dispatch) => ({
+      searchActions: bindActionCreators({
+        filterSearchResults,
+        searchListings,
+        setActiveCategory
+      }, dispatch),
+    })
+  )
 )(injectIntl(SearchResults));

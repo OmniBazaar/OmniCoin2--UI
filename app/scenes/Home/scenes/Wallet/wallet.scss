@@ -3,6 +3,10 @@
 
 .quick-start {
   padding: 20px;
+
+  .red {
+    color: $red;
+  }
 }
 
 .badge-tag {
@@ -11,6 +15,11 @@
   padding: 0 5px;
   font-size: 9px;
   color: $primary-gray;
+}
+
+.load-container {
+  text-align: center;
+  width: 100%;
 }
 
 .container {

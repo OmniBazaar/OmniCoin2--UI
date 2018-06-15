@@ -16,8 +16,9 @@ import Radio from '../../../../components/Radio/Radio';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import TagsInput from '../../../../components/TagsInput';
 import PriorityTypes from '../../../../common/SearchPriorityType';
+import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 
-import { signup } from '../../../../services/blockchain/auth/authActions';
+import { signup, showTermsModal } from '../../../../services/blockchain/auth/authActions';
 
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import './signup-form.scss';
@@ -89,13 +90,13 @@ const messages = defineMessages({
     id: 'SignupForm.searchPriority',
     defaultMessage: 'Marketplace Search priority'
   },
-  localArea: {
-    id: 'SignupForm.localArea',
-    defaultMessage: 'Local Area'
+  specificLocation: {
+    id: 'SignupForm.specificLocation',
+    defaultMessage: 'Specific Location'
   },
-  byCategoryType: {
-    id: 'SignupForm.byCategoryType',
-    defaultMessage: 'By Category/Type'
+  anywhere: {
+    id: 'SignupForm.anywhere',
+    defaultMessage: 'Anywhere'
   },
   country: {
     id: 'SignupForm.country',
@@ -120,8 +121,6 @@ const messages = defineMessages({
 });
 
 class SignupForm extends Component {
-  state = { open: false };
-
   static asyncValidate = async (values, dispatch, props, field) => {
     const previousErrors = props.asyncErrors;
     if (field === 'username') {
@@ -158,6 +157,10 @@ class SignupForm extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      keywordsTouched: false
+    };
+
     this.submit = this.submit.bind(this);
     this.signIn = this.signIn.bind(this);
   }
@@ -193,6 +196,11 @@ class SignupForm extends Component {
     this.props.formActions.change('keywords', keywords);
   }
 
+  onChangeKeywordsInput(value) {
+    if (!this.state.keywordsTouched) this.setState({ keywordsTouched: true });
+    this.props.formActions.change('keywordsStr', value);
+  }
+
   onTermAndConditionCheck(isChecked) {
     this.props.formActions.change('agreementTerms', isChecked);
   }
@@ -224,6 +232,12 @@ class SignupForm extends Component {
     );
   }
 
+  showSuccessCopy(e) {
+    const { formatMessage } = this.props.intl;
+    toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied));
+    e.preventDefault();
+  }
+
   renderPasswordGeneratorField = ({
     input, meta: {
       asyncValidating, touched, error, warning
@@ -238,10 +252,7 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={() =>
-            toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied))
-          }
-          >
+          <Button onClick={this.showSuccessCopy.bind(this)}>
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
@@ -281,39 +292,94 @@ class SignupForm extends Component {
     );
   };
 
-  show = () => this.setState({ open: true });
-  close = () => this.setState({ open: false });
+  renderCountryField = ({
+    input, meta: {
+      asyncValidating, touched, error, placeholder
+    }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const { country } = this.props.formValues;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+
+    return (
+      [
+        <div>
+          {touched && (error && <span className="error">{errorMessage}</span>)}
+        </div>,
+        <CountryDropdown
+          {...input}
+          value={country}
+          defaultOptionLabel={formatMessage(messages.country)}
+          placeholder={placeholder}
+          classes="ui dropdown textfield"
+          onChange={this.onChangeCountry.bind(this)}
+        />
+      ]
+    );
+  };
+
+  renderCityField = ({
+    input, meta: {
+      asyncValidating, touched, error
+    }
+  }) => {
+    const { formatMessage } = this.props.intl;
+    const { country, city } = this.props.formValues;
+    const errorMessage = error && error.id ? formatMessage(error) : error;
+
+    return (
+      [
+        <div>
+          {touched && (error && <span className="error">{errorMessage}</span>)}
+        </div>,
+        <RegionDropdown
+          {...input}
+          country={country}
+          value={city}
+          defaultOptionLabel={formatMessage(messages.city)}
+          blankOptionLabel={formatMessage(messages.city)}
+          classes="ui dropdown textfield"
+          onChange={this.onChangeCity.bind(this)}
+        />
+      ]
+    );
+  };
 
   renderTerms() {
-    const { open } = this.state;
+    const { props } = this;
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(messages.termsAndCond);
 
-    return (
-      <Modal
-        size="normal"
-        open={open}
-        closeIcon
-        onClose={this.close}
-      >
-        <Modal.Content>
-          <div className="modal-container terms-container">
-            <p className="title">{categoryTitle}</p>
-            <div className="body">
-              Terms & conditions here.
+    if (props.auth.showTermsModal) {
+      return (
+        <Modal
+          size="normal"
+          open={props.auth.showTermsModal}
+          className="terms-modal"
+          closeIcon
+          onClose={this.toggleTermsModal}
+        >
+          <Modal.Content>
+            <div className="modal-container terms-container">
+              <p className="title">{categoryTitle}</p>
+              <div className="body">
+                <TermsAndConditions />
+              </div>
             </div>
-          </div>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            className="button--primary"
-            content={formatMessage(messages.done)}
-            onClick={this.close}
-          />
-        </Modal.Actions>
-      </Modal>
-    );
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              className="button--primary"
+              content={formatMessage(messages.done)}
+              onClick={this.toggleTermsModal}
+            />
+          </Modal.Actions>
+        </Modal>
+      );
+    }
   }
+
+  toggleTermsModal = () => this.props.authActions.showTermsModal();
 
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
@@ -326,7 +392,9 @@ class SignupForm extends Component {
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
-          <a href="#" onClick={this.show}>{formatMessage(messages.termsAndCond)}</a>
+          <span className="link" onClick={this.toggleTermsModal}>
+            {formatMessage(messages.termsAndCond)}
+          </span>
         </div>
       ]
     );
@@ -335,6 +403,7 @@ class SignupForm extends Component {
   renderSearchPriority() {
     const { formatMessage } = this.props.intl;
     const { searchPriority } = this.props.formValues;
+
     return (
       <div>
         <div className="search-priority">
@@ -348,7 +417,7 @@ class SignupForm extends Component {
                 checked={searchPriority === PriorityTypes.LOCAL_DATA}
                 onChecked={this.onChangeSearchPriority.bind(this)}
               />
-              <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+              <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
             </div>
 
             <div className="radio-wrapper">
@@ -359,7 +428,7 @@ class SignupForm extends Component {
                 checked={searchPriority === PriorityTypes.BY_CATEGORY}
                 onChecked={this.onChangeSearchPriority.bind(this)}
               />
-              <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+              <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
             </div>
           </div>
 
@@ -370,48 +439,80 @@ class SignupForm extends Component {
   }
 
   renderSearchPriorityFormFields() {
-    const { searchPriority } = this.props.formValues;
+    let { searchPriority } = this.props.formValues;
     const { formatMessage } = this.props.intl;
+
+    if (!searchPriority) {
+      searchPriority = PriorityTypes.LOCAL_DATA;
+      this.props.formActions.change('searchPriority', searchPriority);
+    }
 
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
         const { country, city } = this.props.formValues;
         return (
           <div className="location-container">
-            <CountryDropdown
-              value={country}
-              defaultOptionLabel={formatMessage(messages.country)}
-              classes="ui dropdown textfield"
-              onChange={this.onChangeCountry.bind(this)}
-            />
-            <RegionDropdown
+            <Field
+              name="country"
               country={country}
-              value={city}
-              defaultOptionLabel={formatMessage(messages.city)}
-              blankOptionLabel={formatMessage(messages.city)}
-              classes="ui dropdown textfield"
-              onChange={this.onChangeCity.bind(this)}
+              placeholder={formatMessage(messages.country)}
+              component={this.renderCountryField}
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+            />
+            <Field
+              name="city"
+              country={country}
+              city={city}
+              component={this.renderCityField}
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
         );
       case PriorityTypes.BY_CATEGORY:
-        let { keywords } = this.props.formValues;
+        let { keywords, keywordsStr } = this.props.formValues;
+        const touched = this.state.keywordsTouched;
         if (!keywords) keywords = [];
+        if (!keywordsStr) keywordsStr = '';
+        const error = keywords.length === 0 && keywordsStr === '';
+
         return (
-          <TagsInput
-            value={keywords}
-            inputProps={{
+          <div>
+            <div>
+              {touched && (error && <span className="error">{formatMessage(messages.fieldRequired)}</span>)}
+            </div>
+            <TagsInput
+              name="keywords"
+              preventSubmit={false}
+              value={keywords}
+              inputValue={keywordsStr}
+              addOnBlur
+              inputProps={{
                 className: cn('react-tagsinput-input', { empty: !keywords.length }),
                 placeholder: (
                   formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
                 )
               }}
-            onChange={this.onChangeKeywords.bind(this)}
-          />
+              onChange={this.onChangeKeywords.bind(this)}
+              onChangeInput={this.onChangeKeywordsInput.bind(this)}
+            />
+          </div>
         );
       default:
         return null;
     }
+  }
+
+  keywordVal() {
+    const { searchPriority } = this.props.formValues;
+    let { keywords } = this.props.formValues;
+    if (!keywords) keywords = [];
+    let disabled = false;
+
+    if (searchPriority === PriorityTypes.BY_CATEGORY) {
+      disabled = keywords.length === 0;
+    }
+
+    return disabled;
   }
 
   render() {
@@ -452,14 +553,16 @@ class SignupForm extends Component {
           component={this.renderReferrerField}
         />
         {this.renderSearchPriority()}
-        <Field
-          name="agreementTerms"
-          component={this.renderTermField}
-        />
+        <div className="menu-item">
+          <Field
+            name="agreementTerms"
+            component={this.renderTermField}
+          />
+        </div>
         {this.renderTerms()}
         <Button
           content={formatMessage(messages.signup)}
-          disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating}
+          disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating || this.keywordVal()}
           color="green"
           className={btnClass}
           type="submit"
@@ -505,7 +608,8 @@ SignupForm.propTypes = {
     loading: PropTypes.bool
   }),
   authActions: PropTypes.shape({
-    signup: PropTypes.func
+    signup: PropTypes.func,
+    showTermsModal: PropTypes.func
   }),
   initialize: PropTypes.func,
   intl: PropTypes.shape({
@@ -541,7 +645,7 @@ export default connect(
     formValues: getFormValues('signupForm')(state)
   }),
   (dispatch) => ({
-    authActions: bindActionCreators({ signup }, dispatch),
+    authActions: bindActionCreators({ signup, showTermsModal }, dispatch),
     formActions: bindActionCreators({
       change: (field, value) => change('signupForm', field, value)
     }, dispatch)

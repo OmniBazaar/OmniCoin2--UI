@@ -13,6 +13,7 @@ const defaultState = {
   wallets: [],
   password: null,
   guid: null,
+  isGettingWallets: false,
   loading: false,
   error: null,
   message: null,
@@ -46,24 +47,27 @@ const reducer = handleActions({
     password: null,
     error
   }),
-  [getWallets](state, { payload: { guid, password } }) {
+  [getWallets](state) {
     return {
       ...state,
-      guid,
-      password,
+      isGettingWallets: true,
       loading: true,
       error: null,
       message: null
     };
   },
-  GET_WALLETS_SUCCEEDED: (state, { wallets }) => ({
+  GET_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
     ...state,
     wallets,
+    guid,
+    password,
+    isGettingWallets: false,
     loading: false,
     error: null
   }),
   GET_WALLETS_FAILED: (state, { error }) => ({
     ...state,
+    isGettingWallets: false,
     loading: false,
     error
   }),

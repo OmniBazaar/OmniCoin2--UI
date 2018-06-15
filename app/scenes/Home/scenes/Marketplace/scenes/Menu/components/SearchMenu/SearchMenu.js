@@ -5,9 +5,10 @@ import { Field, reduxForm } from 'redux-form';
 import { NavLink } from 'react-router-dom';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
+import { history } from 'react-router-prop-types';
 import {
   Popup,
-  Dropdown,
   Button,
   Grid,
   Dimmer,
@@ -22,9 +23,8 @@ import './search-menu.scss';
 
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 import SearchIcon from '../../../../images/btn-search-norm.svg';
-import { getSavedSearches } from '../../../../../../../../services/search/searchActions';
-import { searchListings } from '../../../../../../../../services/search/searchActions';
-import { getPublisherData } from "../../../../../../../../services/accountSettings/accountActions";
+import { getSavedSearches, searchListings } from '../../../../../../../../services/search/searchActions';
+import { getPublisherData } from '../../../../../../../../services/accountSettings/accountActions';
 
 const messages = defineMessages({
   default: {
@@ -58,13 +58,6 @@ const maxSearches = 5;
 const iconSizeMedium = 15;
 const iconSizeBig = 25;
 
-const options = [
-  { key: 1, text: 'All Categories', value: 'all' },
-  { key: 2, text: 'Category 1', value: 'category1' },
-  { key: 3, text: 'Category 2', value: 'category2' },
-  { key: 4, text: 'Category 3', value: 'category3' },
-];
-
 class SearchMenu extends Component {
   constructor(props) {
     super(props);
@@ -94,17 +87,15 @@ class SearchMenu extends Component {
       />
       <div className="search-actions">
         <CategoryDropdown
-           placeholder={dropdownPlaceholder}
-           selection
-           input={{
-             value: input.category,
-             onChange: (value) => {
-               input.onChange({
-                 ...input.value,
-                 category: value
-               })
-             }
-           }}
+          placeholder={dropdownPlaceholder}
+          selection
+          input={{
+            value: input.category,
+            onChange: (value) => input.onChange({
+              ...input.value,
+              category: value
+            }),
+          }}
         />
         <Button
           content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
@@ -142,10 +133,18 @@ class SearchMenu extends Component {
   }
 
   handleSubmit(values) {
-    const { searchTerm, category } = values.search;
+    let searchTerm = '';
+    let category = 'all';
+    if (values && values.search) {
+      searchTerm = values.search.searchTerm;
+      category = values.search.category;
+    }
+
     this.props.history.push('/search-results');
+
     const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city);
+
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city, true, null, true);
   }
 
   render() {
@@ -201,7 +200,45 @@ class SearchMenu extends Component {
   }
 }
 
-SearchMenu = withRouter(SearchMenu);
+SearchMenu.propTypes = {
+  history,
+  auth: PropTypes.shape({
+    currentUser: PropTypes.shape(),
+  }),
+  searchActions: PropTypes.shape({
+    searchListings: PropTypes.func,
+    getSavedSearches: PropTypes.func,
+  }),
+  account: PropTypes.shape({
+    publisherData: PropTypes.shape(),
+  }),
+  dht: PropTypes.shape({
+    isConnecting: PropTypes.bool,
+  }),
+  handleSubmit: PropTypes.func,
+  // eslint-disable-next-line react/no-typos
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
+  search: PropTypes.shape({
+    savedSearches: PropTypes.array,
+  }),
+  publisherActions: PropTypes.shape({
+    getPublisherData: PropTypes.func,
+  }),
+};
+
+SearchMenu.defaultProps = {
+  auth: {},
+  account: {},
+  dht: {},
+  history: null,
+  intl: {},
+  search: {},
+  searchActions: {},
+  publisherActions: {},
+  handleSubmit: () => null,
+};
 
 export default compose(
   connect(
@@ -214,10 +251,10 @@ export default compose(
       publisherActions: bindActionCreators({
         getPublisherData
       }, dispatch)
-    }),
+    })
   ),
   reduxForm({
     form: 'searchMenu',
     destroyOnUnmount: true,
-  }),
-)(injectIntl(SearchMenu));
+  })
+)(injectIntl(withRouter(SearchMenu)));

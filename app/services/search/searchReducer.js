@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import SearchHistory from './searchHistory';
+import { categories } from '../../scenes/Home/scenes/Marketplace/categories';
 
 import {
   filterSearchResults,
@@ -21,7 +22,8 @@ import {
   searching,
   marketplaceReturnListings,
   marketplaceReturnBool,
-  searchListings
+  searchListings,
+  filterSearchByCategory
 } from './searchActions';
 
 const defaultState = {
@@ -36,13 +38,18 @@ const defaultState = {
     direction: 'descending'
   },
   searchResults: [],
+  searchCategory: 'all',
+  searchCurrency: 'all',
   searchResultsFiltered: null,
   searchId: null,
   searchText: '',
+  searchTerm: '',
+  category: '',
   loading: false,
   saving: false,
   deleting: false,
   searching: false,
+  fromSearchMenu: false,
   error: null
 };
 
@@ -54,12 +61,36 @@ const sliceData = (data, activePage, rowsPerPage) => (
 
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
+const searchByFilters = (listings, currency, category, subCategory) => {
+  const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+  const categoryFilter = (category && category.toLowerCase()) || 'all';
+  const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
+
+  let searchesFiltered = listings;
+  if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+    searchesFiltered = listings
+      .filter(el => el.currency.toLowerCase() === currencyFilter)
+      .filter(el => el.category.toLowerCase() === categoryFilter)
+      .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+  } else {
+    if (currencyFilter !== 'all') searchesFiltered = listings.filter(el => el.currency.toLowerCase() === currencyFilter);
+    if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+    if (subCategoryFilter !== 'all') searchesFiltered = listings.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+  }
+  return {
+    searchCurrency: currency,
+    searchCategory: category,
+    searchesFiltered
+  };
+};
+
 const reducer = handleActions({
-  [filterSearchResults](state, { payload: { searchText } }) {
+  [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
     const data = state.searchResults;
     const activePageSearchResults = 1;
     let totalPagesSearchResults;
     let currentData = [];
+    let resultByFilters = [];
 
     if (searchText !== '') {
       let filteredData = data.filter(listing => {
@@ -68,19 +99,77 @@ const reducer = handleActions({
         ).length !== 0;
       });
       filteredData = _.without(filteredData, undefined);
-      totalPagesSearchResults = getTotalPages(filteredData, rowsPerPageSearchResults);
-      currentData = sliceData(filteredData, activePageSearchResults, rowsPerPageSearchResults);
+      resultByFilters = searchByFilters(filteredData, currency, category, subCategory);
+      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     } else {
       currentData = data;
-      totalPagesSearchResults = getTotalPages(currentData, rowsPerPageSearchResults);
-      currentData = sliceData(currentData, activePageSearchResults, rowsPerPageSearchResults);
+      resultByFilters = searchByFilters(currentData, currency, category, subCategory);
+      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     }
+
     return {
       ...state,
       searchText,
       activePageSearchResults,
       totalPagesSearchResults,
       searchResultsFiltered: currentData,
+    };
+  },
+  [filterSearchByCategory](state) {
+    const data = state.searchResults;
+
+    const forSaleListings = {
+      category: categories.forSale,
+      listings: []
+    };
+
+    const jobsListings = {
+      category: categories.jobs,
+      listings: []
+    };
+
+    const servicesListings = {
+      category: categories.services,
+      listings: []
+    };
+
+    const cryptoBazaarListings = {
+      category: categories.cryptoBazaar,
+      listings: []
+    };
+
+    const rentalsListings = {
+      category: categories.rentals,
+      listings: []
+    };
+
+    data.forEach((listing) => {
+      switch (listing.category) {
+        case categories.forSale:
+          forSaleListings.listings.push(listing);
+          break;
+        case categories.jobs:
+          jobsListings.listings.push(listing);
+          break;
+        case categories.services:
+          servicesListings.listings.push(listing);
+          break;
+        case categories.cryptoBazaar:
+          cryptoBazaarListings.listings.push(listing);
+          break;
+        case categories.rentals:
+          rentalsListings.listings.push(listing);
+          break;
+        default:
+      }
+    });
+
+    return {
+      ...state,
+      searchResultsByCategory: [
+        forSaleListings, jobsListings, servicesListings, cryptoBazaarListings, rentalsListings]
     };
   },
   [getRecentSearches](state) {
@@ -185,20 +274,28 @@ const reducer = handleActions({
       deleting: false
     };
   },
-  [searchListings](state) {
+  [searchListings](state, { payload: { searchTerm, category, subCategory }}) {
     return {
       ...state,
       searchId: null,
       searchResults: [],
-      searchResultsFiltered: null
+      searchResultsFiltered: null,
+      searchTerm,
+      category,
+      subCategory
     };
   },
-  [searching](state, { payload: { searchId }}) {
+  [searching](state, { payload: { searchId, searchTerm, category, subCategory, fromSearchMenu }}) {
     return {
       ...state,
       searchId,
       searchResults: [],
+      searchResultsFiltered: [],
       searching: true,
+      searchTerm,
+      category,
+      subCategory,
+      fromSearchMenu
     };
   },
   [marketplaceReturnListings](state, { data }) {
@@ -212,6 +309,7 @@ const reducer = handleActions({
       return {
         ...state,
         searchResults: [...state.searchResults, ...listings],
+        searchResultsFiltered: [...state.searchResults, ...listings],
         searching: false,
       };
     }

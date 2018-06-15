@@ -33,10 +33,16 @@ import {
   addToFavorites,
   removeFromFavorites,
   isFavorite,
-  getFavorites
+  getFavorites,
+  searchPublishers,
+  searchPublishersFinish,
+  setNumberToBuy,
+  filterMyListings,
+  filterFavorites,
+  filterSearch
 } from './listingActions';
 
-import { marketplaceReturnListings } from "../search/searchActions";
+import { marketplaceReturnListings } from '../search/searchActions';
 
 const CoinTypes = Object.freeze({
   OMNI_COIN: 'OmniCoin',
@@ -44,18 +50,27 @@ const CoinTypes = Object.freeze({
 
 const defaultState = {
   listingDetail: null,
+  listingDetailRequest: {
+    loading: false,
+    error: null
+  },
   myListings: [],
   requestMyListings: {
     ids: [],
     isRequest: false,
     error: null
   },
-  myListingsFiltered: {},
+  myListingsFiltered: [],
+  myListingsCurrency: 'all',
+  myListingsCategory: 'all',
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
   isFavorite: false,
   favoriteListings: [],
+  favoriteFiltered: [],
+  favoriteCurrency: 'all',
+  favoriteCategory: 'all',
   listingImages: {},
   saveListing: {
     saving: false,
@@ -75,6 +90,11 @@ const defaultState = {
     numberToBuy: 1,
     loading: false,
     error: null
+  },
+  publishers: {
+    searching: false,
+    publishers: [],
+    error: null
   }
 };
 
@@ -90,7 +110,7 @@ const reducer = handleActions({
   },
   [isFavorite](state, { payload: { listingDetailId } }) {
     const index = state.favoriteListings.length > 0 ?
-      state.favoriteListings.findIndex(x => x.id === listingDetailId) : -1;
+      state.favoriteListings.findIndex(x => x.listing_id === listingDetailId) : -1;
     return {
       ...state,
       isFavorite: index !== -1
@@ -120,19 +140,31 @@ const reducer = handleActions({
   [getListingDetail](state) {
     return {
       ...state,
-      listingDetail: null
+      listingDetail: null,
+      listingDetailRequest: {
+        loading: true,
+        error: null
+      }
     }
   },
   [getListingDetailSucceeded](state, { payload: { listingDetail }}) {
     return {
       ...state,
       listingDetail,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false
+      }
     }
   },
   [getListingDetailFailed](state, { payload: { error }}) {
     return {
       ...state,
-      error,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        loading: false,
+        error: true
+      }
     }
   },
   [isListingFine](state, { payload: { listing } }) {
@@ -143,7 +175,8 @@ const reducer = handleActions({
         listing,
         blockchainListing: null,
         loading: true,
-        error: null
+        error: null,
+        numberToBuy: 1
       }
     }
   },
@@ -483,6 +516,82 @@ const reducer = handleActions({
       }
     } else return  {
       ...state
+    };
+  },
+  [searchPublishers](state) {
+    return {
+      ...state,
+      publishers: {
+        ...state.publishers,
+        searching: true,
+        publishers: [],
+        error: null
+      }
+    }
+  },
+  [searchPublishersFinish](state, { payload: { error, publishers }}) {
+    const pubs = {
+      ...state.publishers,
+      searching: false
+    };
+
+    if (error) {
+      pubs.error = error;
+    } else {
+      pubs.publishers = publishers;
+    }
+
+    return {
+      ...state,
+      publishers: pubs
+    };
+  },
+  [setNumberToBuy](state, { payload: { number } }) {
+    return {
+      ...state,
+      buyListing: {
+        ...state.buyListing,
+        numberToBuy: number
+      }
+    };
+  },
+  [filterMyListings](state, { payload: { currency, category } }) {
+    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+    const categoryFilter = (category && category.toLowerCase()) || 'all';
+    let myListingsFiltered = [];
+    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+      myListingsFiltered = state.myListings
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter);
+    } else {
+      if (currencyFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    }
+    return {
+      ...state,
+      myListingsCurrency: currency,
+      myListingsCategory: category,
+      myListingsFiltered
+    };
+  },
+  [filterFavorites](state, { payload: { currency, category } }) {
+    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
+    const categoryFilter = (category && category.toLowerCase()) || 'all';
+
+    let favoriteFiltered = [];
+    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
+      favoriteFiltered = state.favoriteListings
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter);
+    } else {
+      if (currencyFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    }
+    return {
+      ...state,
+      favoriteCurrency: currency,
+      favoriteCategory: category,
+      favoriteFiltered
     };
   }
 }, defaultState);

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import ReactStars from 'react-stars';
 import {
@@ -20,13 +20,14 @@ import 'react-image-gallery/styles/scss/image-gallery.scss';
 
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
-import CategoryHeader from '../../../Marketplace/scenes/CategoryHeader';
+import Breadcrumb from '../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 import PriceItem from './components/PriceItem';
 import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
-import { currencyConverter } from "../../../../../../services/utils";
+import { currencyConverter } from '../../../../../../services/utils';
 
+import messages from './messages';
 import './listing.scss';
 
 import {
@@ -43,97 +44,6 @@ import {
 
 const iconSizeSmall = 12;
 
-const messages = defineMessages({
-  seller: {
-    id: 'Listing.seller',
-    defaultMessage: 'Seller'
-  },
-  editListing: {
-    id: 'Listing.editListing',
-    defaultMessage: 'EDIT LISTING'
-  },
-  delete: {
-    id: 'Listing.delete',
-    defaultMessage: 'DELETE'
-  },
-  available: {
-    id: 'Listing.available',
-    defaultMessage: 'Available:'
-  },
-  itemDescription: {
-    id: 'Listing.itemDescription',
-    defaultMessage: 'Item Description'
-  },
-  preferredContact: {
-    id: 'Listing.preferredContact',
-    defaultMessage: 'Preferred Contact'
-  },
-  name: {
-    id: 'Listing.name',
-    defaultMessage: 'Name'
-  },
-  city: {
-    id: 'Listing.city',
-    defaultMessage: 'City'
-  },
-  postalCode: {
-    id: 'Listing.postalCode',
-    defaultMessage: 'Postal Code'
-  },
-  address: {
-    id: 'Listing.address',
-    defaultMessage: 'Address'
-  },
-  listingDate: {
-    id: 'Listing.listingDate',
-    defaultMessage: 'Listing date'
-  },
-  condition: {
-    id: 'Listing.condition',
-    defaultMessage: 'condition'
-  },
-  cityLocation: {
-    id: 'Listing.cityLocation',
-    defaultMessage: 'City of Specific Location'
-  },
-  itemPrice: {
-    id: 'Listing.itemPrice',
-    defaultMessage: 'Item Price'
-  },
-  selectCurrency: {
-    id: 'Listing.selectCurrency',
-    defaultMessage: 'Select Payment Currency'
-  },
-  buyNow: {
-    id: 'Listing.buyNow',
-    defaultMessage: 'BUY NOW'
-  },
-  addToFavorites: {
-    id: 'Listing.addToFavorites',
-    defaultMessage: 'ADD TO FAVORITES'
-  },
-  removeFromFavorites: {
-    id: 'Listing.removeFromFavorites',
-    defaultMessage: 'REMOVE FROM FAVORITES'
-  },
-  hashIsInvalid: {
-    id: 'Listing.hashIsInvalid',
-    defaultMessage: 'Listing is corrupted'
-  },
-  error: {
-    id: 'Listing.error',
-    defaultMessage: 'Error'
-  },
-  success: {
-    id: 'Listing.success',
-    defaultMessage: 'Success'
-  },
-  deleteListingError: {
-    id: "Listing.deleteListingError",
-    defaultMessage: 'Delete listing error'
-  }
-});
-
 class Listing extends Component {
 
   state = {
@@ -142,25 +52,36 @@ class Listing extends Component {
 
   componentWillMount() {
     this.props.listingActions.getListingDetail(this.props.match.params.id);
-    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL_CURRENCY);
+    this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL);
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.setGallerySize.bind(this));
-    this.setGallerySize();
+    setTimeout(() => {
+      this.setGallerySize();
+    }, 100);
     this.props.listingActions.getFavorites();
+    this.props.listingActions.isFavorite(this.props.match.params.id);
   }
 
   componentWillReceiveProps(nextProps) {
     const { props } = this;
     const {
       listingDetail,
+      listingDetailRequest,
       favoriteListings,
     } = props.listing;
+
+    if (listingDetailRequest.loading && !nextProps.listing.listingDetailRequest.loading) {
+      if (nextProps.listing.listingDetailRequest.error) {
+        this.errorToast(messages.loadListingError);
+      }
+    }
+
     if (listingDetail && nextProps.listing.listingDetail) {
-      if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
+      if (listingDetail.listing_id !== nextProps.listing.listingDetail.listing_id ||
         favoriteListings.length !== nextProps.listing.favoriteListings.length) {
-        props.listingActions.isFavorite(nextProps.listing.listingDetail['listing_id']);
+        props.listingActions.isFavorite(nextProps.listing.listingDetail.listing_id);
       }
     }
     if (listingDetail !== nextProps.listing.listingDetail) {
@@ -170,9 +91,9 @@ class Listing extends Component {
       const { error } = nextProps.listing.buyListing;
       if (error) {
         if (error === 'hash') {
-           this.errorToast(messages.hashIsInvalid);
+          this.errorToast(messages.hashIsInvalid);
         } else {
-           this.errorToast(messages.error);
+          this.errorToast(messages.error);
         }
       }
     }
@@ -296,7 +217,8 @@ class Listing extends Component {
 
   buyItem = () => {
     const { listingDetail } = this.props.listing;
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.OMNI_COIN) {
+    const { activeCurrency } = this.props.listing.buyListing;
+    if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
@@ -304,7 +226,7 @@ class Listing extends Component {
       const to = listingDetail.owner;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
     }
-    if (this.props.listing.buyListing.activeCurrency === CoinTypes.BIT_COIN) {
+    if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
@@ -326,14 +248,20 @@ class Listing extends Component {
     props.listingActions.removeFromFavorites(listingDetail['listing_id']);
   };
 
-  setItemsAmount = (valueAsNumber) => {
-    this.props.listingActions.setNumberToBuy(valueAsNumber);
+  setItemsAmount = (valueAsNumber, max) => {
+    let v = valueAsNumber;
+    if (v > max) {
+      v = max;
+    } else if (v < 1) {
+      v = 1;
+    }
+
+    this.props.listingActions.setNumberToBuy(v);
   };
 
-  renderUserButtons(amountAvailable) {
+  renderUserButtons(maxQuantity) {
     const { formatMessage } = this.props.intl;
-    const { buyListing } = this.props.listing;
-    const { quantity } = this.props.listing.buyListing;
+    const { loading, error, numberToBuy } = this.props.listing.buyListing;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -341,16 +269,16 @@ class Listing extends Component {
             onClick={() => this.buyItem()}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
-            loading={buyListing.loading}
-            disabled={!!buyListing.error}
+            loading={loading}
+            disabled={!!error}
           />
           <NumericInput
             mobile
             className="form-control"
-            min={0}
-            value={1}
-            max={quantity}
-            onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber)}
+            min={1}
+            value={numberToBuy}
+            max={maxQuantity}
+            onChange={(valueAsNumber) => this.setItemsAmount(valueAsNumber, maxQuantity)}
           />
         </div>
         {this.props.listing.isFavorite ?
@@ -387,6 +315,17 @@ class Listing extends Component {
     );
   }
 
+  getLocation(listingDetail) {
+    const locations = [];
+    const keys = ['city', 'state', 'country'];
+    keys.forEach(k => {
+      if (listingDetail[k]) {
+        locations.push(listingDetail[k]);
+      }
+    });
+    return locations.join(', ');
+  }
+
   renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
@@ -397,7 +336,7 @@ class Listing extends Component {
 
     return (
       <div className="item-description">
-        <span className="title">{listingDetail.title}</span>
+        <span className="title">{listingDetail.listing_title}</span>
         <div className="seller-wrapper">
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
@@ -421,7 +360,7 @@ class Listing extends Component {
         <div className="details-wrapper">
           <div className="info">
             <span>{formatMessage(messages.listingDate)}</span>
-            <span className="value">{listingDetail['end_date']}</span>
+            <span className="value">{listingDetail['start_date']}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.condition)}</span>
@@ -429,7 +368,7 @@ class Listing extends Component {
           </div>
           <div className="info">
             <span>{formatMessage(messages.cityLocation)}</span>
-            <span className="value">{listingDetail['city']}</span>
+            <span className="value">{ this.getLocation(listingDetail) }</span>
           </div>
         </div>
         <div className="price-wrapper">
@@ -472,10 +411,30 @@ class Listing extends Component {
     );
   }
 
-  render() {
+  renderDetail() {
     const { listingDetail } = this.props.listing;
     const { formatMessage } = this.props.intl;
 
+    if (!listingDetail) {
+      return null;
+    }
+
+    return [
+      <Breadcrumb category={listingDetail.category} subCategory={listingDetail.subcategory} />,
+      <div className="listing-body detail">
+        {this.renderGallery(listingDetail)}
+        {this.renderItemDetails(listingDetail)}
+      </div>,
+      <div className="listing-description">
+        <span className="title">{formatMessage(messages.itemDescription)}</span>
+        <p className="description">{listingDetail.description}</p>
+      </div>
+    ];
+  }
+
+  render() {
+    const { listingDetailRequest } = this.props.listing;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div className="marketplace-container category-listing listing">
@@ -483,25 +442,12 @@ class Listing extends Component {
           <Menu />
         </div>
         <div className="body">
-          <div className="top-header">
-            <div className="content">
-              <CategoryHeader />
-            </div>
-          </div>
-          {!listingDetail
-            ?
-            <Loader active inline/>
-            :
-            [
-              <div className="listing-body">
-                {this.renderGallery(listingDetail)}
-                {this.renderItemDetails(listingDetail)}
-              </div>,
-              <div className="listing-description">
-                <span className="title">{formatMessage(messages.itemDescription)}</span>
-                <p className="description">{listingDetail.description}</p>
-              </div>
-            ]
+          {
+            listingDetailRequest.loading ?
+              <div className="loader-container">
+                <Loader active inline>{formatMessage(messages.loadListing)}</Loader>
+              </div> :
+            this.renderDetail()
           }
           <ConfirmationModal
             onApprove={() => this.onOkDelete()}
@@ -521,22 +467,29 @@ Listing.propTypes = {
     addToFavorites: PropTypes.func,
     removeFromFavorites: PropTypes.func,
     getFavorites: PropTypes.func,
-  }),
+  }).isRequired,
   listing: PropTypes.shape({
     listingDetail: PropTypes.object,
+    listingDetailRequest: PropTypes.shape({
+      loading: PropTypes.bool,
+      error: PropTypes.bool
+    }),
     favoriteListings: PropTypes.array,
     isFavorite: PropTypes.bool,
-  }),
+    buyListing: PropTypes.shape({
+      activeCurrency: PropTypes.string,
+      loading: PropTypes.bool,
+      numberToBuy: PropTypes.number,
+      quantity: PropTypes.number,
+      blockchainListing: PropTypes.object,
+      error: PropTypes.object
+    })
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  }),
+  }).isRequired,
 };
 
-Listing.defaultProps = {
-  listingActions: {},
-  listing: {},
-  intl: {},
-};
 
 Listing = withRouter(Listing);
 

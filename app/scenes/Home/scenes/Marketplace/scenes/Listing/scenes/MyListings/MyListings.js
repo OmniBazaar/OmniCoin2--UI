@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Dropdown, Icon, Dimmer, Loader } from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
+import { Form, Icon, Button } from 'semantic-ui-react';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
-import CurrencyDropdown from '../../../../../../components/CurrencyDropdown/CurrencyDropdown';
+import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
+import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
+
 import {
   requestMyListings,
-  resetDeleteListing
+  resetDeleteListing,
+  filterMyListings
 } from '../../../../../../../../services/listing/listingActions';
 
 import './my-listings.scss';
 import '../../../../../Marketplace/marketplace.scss';
 import '../../../../../Marketplace/scenes/CategoryListing/listings.scss';
 
+import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
+
 const iconSize = 42;
+const iconSizeSmall = 12;
 
 const messages = defineMessages({
   byDate: {
@@ -45,36 +52,101 @@ const messages = defineMessages({
     id: 'MyListings.myListings',
     defaultMessage: 'My Listings'
   },
+  currency: {
+    id: 'MyListings.currency',
+    defaultMessage: 'Currency'
+  },
 });
 
-const options = [
-  { key: 1, text: 'Category 1', value: 'category1' },
-  { key: 2, text: 'Category 2', value: 'category2' },
-];
-
 class MyListings extends Component {
+  constructor(props) {
+    super(props);
+    this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   componentDidMount() {
     this.props.listingActions.resetDeleteListing();
     this.props.listingActions.requestMyListings();
+    this.props.listingActions.filterMyListings('all', 'all');
+  }
+
+  renderFilters = ({
+    input, dropdownPlaceholder
+  }) => (
+    <div className="search-actions">
+      <CategoryDropdown
+        placeholder={dropdownPlaceholder}
+        selection
+        input={{
+          value: input.category,
+          onChange: (value) => {
+            input.onChange({
+              ...input.value,
+              category: value
+            });
+          }
+        }}
+      />
+    </div>
+  );
+
+  handleSubmit(values) {
+    const currency = values.currency;
+    const category = (values && values.search) ? values.search.category : null;
+    this.props.listingActions.filterMyListings(currency, category);
   }
 
   renderMyListings() {
     const { formatMessage } = this.props.intl;
-    const { myListings, requestMyListings } = this.props.listing;
+    const { handleSubmit } = this.props;
+    const {
+      myListings,
+      requestMyListings,
+      myListingsFiltered,
+      myListingsCurrency,
+      myListingsCategory
+    } = this.props.listing;
+
+    let data = myListings;
+    if ((myListingsCurrency && myListingsCurrency.toLowerCase() !== 'all') ||
+        (myListingsCategory && myListingsCategory !== 'all')) {
+      data = myListingsFiltered;
+    }
+
     return (
       <div className="list-container my-listings">
         <div className="filters">
-          <Dropdown
-            button
-            className="categories icon"
-            floating
-            options={options}
-            placeholder={formatMessage(messages.allCategories)}
-          />
-          <CurrencyDropdown />
+          <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
+            <Field
+              type="text"
+              name="search"
+              placeholder="Search"
+              defaultValue={myListingsCategory}
+              dropdownPlaceholder="Categories"
+              component={this.renderFilters}
+              className="textfield"
+              props={{
+                value: myListingsCategory
+              }}
+            />
+            <Field
+              name="currency"
+              component={this.CurrencyDropdown}
+              props={{
+                value: myListingsCurrency,
+                placeholder: formatMessage(messages.currency)
+              }}
+            />
+            <Button
+              content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
+              className="button--primary search-btn"
+              type="submit"
+            />
+          </Form>
         </div>
         <TabsData
-          data={myListings}
+          data={data}
           showTrailingLoader={requestMyListings.ids.length !== 0}
           showActions
           tabs={[
@@ -131,28 +203,42 @@ class MyListings extends Component {
 MyListings.propTypes = {
   listingActions: PropTypes.shape({
     requestMyListings: PropTypes.func,
-    resetDeleteListing: PropTypes.func
+    resetDeleteListing: PropTypes.func,
+    filterMyListings: PropTypes.func
   }),
   listing: PropTypes.shape({
     myListings: PropTypes.object,
+    myListingsFiltered: PropTypes.array,
+    myListingsCurrency: PropTypes.string,
+    myListingsCategory: PropTypes.string
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  handleSubmit: PropTypes.func,
 };
 
 MyListings.defaultProps = {
   listingActions: {},
+  handleSubmit: {},
   listing: {},
   intl: {},
 };
 
-export default connect(
-  state => ({ ...state.default }),
-  (dispatch) => ({
-    listingActions: bindActionCreators({
-      requestMyListings,
-      resetDeleteListing
-    }, dispatch),
-  }),
+export default compose(
+  connect(
+    state => ({ ...state.default }),
+    (dispatch) => ({
+      listingActions: bindActionCreators({
+        requestMyListings,
+        resetDeleteListing,
+        filterMyListings
+      }, dispatch),
+    }),
+  ),
+  reduxForm({
+    form: 'myListingsForm',
+    destroyOnUnmount: true,
+  })
 )(injectIntl(MyListings));
+

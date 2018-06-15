@@ -87,6 +87,30 @@ const messages = defineMessages({
     id: 'Settings.release',
     defaultMessage: 'RELEASED'
   },
+  [ChainTypes.operations.listing_create_operation]: {
+    id: 'Settings.createListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.listing_update_operation]: {
+    id: 'Settings.updateListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.listing_delete_operation]: {
+    id: 'Settings.deleteListing',
+    defaultMessage: 'LISTING'
+  },
+  [ChainTypes.operations.account_update]: {
+    id: 'Settings.updateAccount',
+    defaultMessage: 'ACCOUNT'
+  },
+  [ChainTypes.operations.referral_bonus_operation]: {
+    id: 'Settings.referralBonus',
+    defaultMessage: 'REFERRAL BONUS'
+  },
+  [ChainTypes.operations.welcome_bonus_operation]: {
+    id: 'Settings.welcomeBonus',
+    defaultMessage: 'WELCOME BONUS'
+  }
 });
 
 
@@ -140,7 +164,30 @@ class RecentTransactions extends Component {
         return 'released';
       case ChainTypes.operations.escrow_return_operation:
         return 'returned';
+      case ChainTypes.operations.listing_delete_operation:
+        return 'listing';
+      case ChainTypes.operations.listing_update_operation:
+        return 'listing';
+      case ChainTypes.operations.listing_create_operation:
+        return 'listing';
+      case ChainTypes.operations.account_update:
+        return 'account';
+      case ChainTypes.operations.welcome_bonus_operation:
+        return 'bonus';
+      case ChainTypes.operations.referral_bonus_operation:
+        return 'bonus';
     }
+  }
+
+  getTypeIcon(row) {
+    if (row.type === ChainTypes.operations.referral_bonus_operation
+    || row.type === ChainTypes.operations.welcome_bonus_operation) {
+      return IncomingIcon;
+    }
+    if (row.fromTo !== row.from || !row.fromTo) {
+     return OutgoingIcon;
+    }
+    return IncomingIcon;
   }
 
   render() {
@@ -240,7 +287,7 @@ class RecentTransactions extends Component {
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                               <Image
-                                src={row.fromTo === row.from ? IncomingIcon : OutgoingIcon}
+                                src={this.getTypeIcon(row)}
                                 width={iconSize}
                                 height={iconSize}
                                 className="from-icon"

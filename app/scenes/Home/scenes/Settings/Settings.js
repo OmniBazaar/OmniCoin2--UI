@@ -7,11 +7,11 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import UserIcon from '../../images/th-user-white.svg';
-import OmniIcon from '../../images/th-omnicoin.svg';
 import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
 import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
+import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
@@ -20,61 +20,21 @@ import {
   getPrivateData,
   getPublisherData
 } from '../../../../services/accountSettings/accountActions';
-import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
+import messages from './messages';
 
 
 const iconSize = 20;
-
-const messages = defineMessages({
-  account: {
-    id: 'Settings.account',
-    defaultMessage: 'Account'
-  },
-  registered: {
-    id: 'Settings.registered',
-    defaultMessage: 'REGISTERED'
-  },
-  xom: {
-    id: 'Settings.xom',
-    defaultMessage: 'XOM'
-  },
-  accountId: {
-    id: 'Settings.accountId',
-    defaultMessage: 'Account ID'
-  },
-  currentBalance: {
-    id: 'Settings.currentBalance',
-    defaultMessage: 'Current Balance'
-  },
-  publicData: {
-    id: 'Settings.publicData',
-    defaultMessage: 'Public Data'
-  },
-  privateData: {
-    id: 'Settings.privateData',
-    defaultMessage: 'Private Data'
-  },
-  recentTransactions: {
-    id: 'Settings.recentTransactions',
-    defaultMessage: 'Recent Transactions'
-  }
-});
 
 class Settings extends Component {
   constructor(props) {
     super(props);
 
     this.onCloseDetails = this.onCloseDetails.bind(this);
-    this.getBalance = this.getBalance.bind(this);
   }
 
   componentWillMount() {
     this.props.accountSettingsActions.getPrivateData();
     this.props.accountSettingsActions.getPublisherData();
-  }
-
-  componentDidMount() {
-    this.props.walletActions.getAccountBalance(this.props.auth.account);
   }
 
   close = () => {
@@ -85,14 +45,6 @@ class Settings extends Component {
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
-  }
-
-  getBalance() {
-    const { balance } = this.props.blockchainWallet;
-    if (balance && balance.balance) {
-      return balance.balance / 100000;
-    }
-    return 0;
   }
 
   sideMenu() {
@@ -112,17 +64,7 @@ class Settings extends Component {
             <span className="accountId">{formatMessage(messages.accountId)}: {account.id}</span>
           </div>
         </div>
-        <div className="info">
-          <Image src={OmniIcon} width={iconSize} height={iconSize} />
-          <div className="top-detail">
-            <div className="title">
-              <span>{formatMessage(messages.currentBalance)}</span>
-            </div>
-            <span className="balance">
-              {this.getBalance()} {formatMessage(messages.xom)}
-            </span>
-          </div>
-        </div>
+        <AccountBalance />
       </div>
     );
   }
@@ -199,18 +141,12 @@ Settings.propTypes = {
     getPublisherData: PropTypes.func,
     getCurrentUser: PropTypes.func
   }),
-  walletActions: PropTypes.shape({
-    getAccountBalance: PropTypes.func
-  }),
   onClose: PropTypes.func,
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
       username: PropTypes.string,
     }),
     account: PropTypes.shape({})
-  }),
-  blockchainWallet: PropTypes.shape({
-    balance: PropTypes.shape({})
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -221,9 +157,7 @@ Settings.defaultProps = {
   accountSettingsActions: {},
   onClose: () => {},
   auth: {},
-  intl: {},
-  walletActions: {},
-  blockchainWallet: {}
+  intl: {}
 };
 
 export default connect(
@@ -234,9 +168,6 @@ export default connect(
       showDetailsModal,
       getPrivateData,
       getPublisherData
-    }, dispatch),
-    walletActions: bindActionCreators({
-      getAccountBalance
-    }, dispatch),
+    }, dispatch)
   }),
 )(injectIntl(Settings));

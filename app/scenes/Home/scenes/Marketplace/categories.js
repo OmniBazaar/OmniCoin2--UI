@@ -1,5 +1,20 @@
 import { defineMessages } from 'react-intl';
 
+const categories = Object.freeze({
+  forSale: 'forSale',
+  services: 'services',
+  jobs: 'jobs',
+  cryptoBazaar: 'cryptoBazaar',
+  rentals: 'rentals',
+});
+
+const allCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  }
+});
+
 const mainCategories = defineMessages({
   featuredListings: {
     id: 'Marketplace.featuredListings',
@@ -48,6 +63,10 @@ const mainCategories = defineMessages({
   gigs: {
     id: 'Marketplace.gigs',
     defaultMessage: 'Gigs'
+  },
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
   }
 });
 
@@ -785,6 +804,21 @@ const userMenu = defineMessages({
   }
 });
 
+export const getSubCategoryTitle = (category, subCategory) => {
+  switch (category) {
+    case categories.forSale:
+      return subCategory ? saleCategories[subCategory] : '';
+    case categories.services:
+      return subCategory ? servicesCategories[subCategory] : '';
+    case categories.jobs:
+      return subCategory ? jobsCategories[subCategory] : '';
+    case categories.cryptoBazaar:
+      return subCategory ? cryptoCategories[subCategory] : '';
+    default:
+      return '';
+  }
+};
+
 export {
   mainCategories,
   saleCategories,
@@ -796,5 +830,7 @@ export {
   userMenu,
   communityCategories,
   housingCategories,
-  gigsCategories
+  gigsCategories,
+  categories,
+  allCategories
 };

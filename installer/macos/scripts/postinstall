@@ -5,6 +5,13 @@ fi
 
 echo "$2/Contents/MacOS/ob2"
 
-cp "$2/Contents/MacOS/ob2" "$HOME/Library/Application Support/OmniBazaar 2/.";
+cp "$2/Contents/MacOS/ob2" "$HOME/Library/Application Support/OmniBazaar 2/."
+chown -R $USER "$HOME/Library/Application Support/OmniBazaar 2"
+
+name=$(basename "$1")
+
+mkdir "$HOME/Library/Preferences/OmniBazaar 2"
+chown -R $USER "$HOME/Library/Preferences/OmniBazaar 2"
+echo "referrer=$name" >> "$HOME/Library/Preferences/OmniBazaar 2/omnibazaar.set"
 
 exit 0

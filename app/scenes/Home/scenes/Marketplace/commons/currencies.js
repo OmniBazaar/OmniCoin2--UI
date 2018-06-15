@@ -1,4 +1,8 @@
 const currencies = {
+  ALL: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   USD: {
     id: 'Marketplace.currencyUsd',
     defaultMessage: 'US Dollar'
@@ -7,7 +11,15 @@ const currencies = {
     id: 'Marketplace.currencyEur',
     defaultMessage: 'Euro'
   },
-  GBP: {
+  BITCOIN: {
+    id: 'Marketplace.currencyBitcoin',
+    defaultMessage: 'Bitcoin'
+  },
+  OMNICOIN: {
+    id: 'Marketplace.currencyOmnycoin',
+    defaultMessage: 'Omnicoin'
+  }
+  /*GBP: {
     id: 'Marketplace.currencyGbp',
     defaultMessage: 'Sterling'
   },
@@ -26,7 +38,7 @@ const currencies = {
   JPY: {
     id: 'Marketplace.currencyJpy',
     defaultMessage: 'Yen'
-  },
+  },*/
 };
 
 export default currencies;

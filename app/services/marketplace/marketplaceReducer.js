@@ -2,7 +2,6 @@ import { handleActions } from 'redux-actions';
 import { defineMessages } from 'react-intl';
 import _ from 'lodash';
 
-import SearchStorage from '../search/searchHistory';
 
 import {
   getFeatureList,

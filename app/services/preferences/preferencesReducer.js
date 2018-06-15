@@ -15,7 +15,6 @@ const defaultState = {
     language: 'en',
     isReferrer: false,
     listingPriority: 'normal',
-    publisherFee: '',
     chargeFee: '',
     searchListingOption: 'anyKeyword'
   },

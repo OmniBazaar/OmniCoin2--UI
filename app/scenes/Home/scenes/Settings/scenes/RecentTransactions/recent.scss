@@ -29,6 +29,18 @@
       border: 1px solid $primary-blue;
       color: $primary-blue;
     }
+    &.listing {
+      border: 1px solid $primary-orange;
+      color: $primary-orange;
+    }
+    &.update {
+      border: 1px solid $primary-orange;
+      color: $primary-orange;
+    }
+    &.bonus {
+      border: 1px solid $dark-yellow;
+      color: $dark-yellow;
+    }
   }
 }
 

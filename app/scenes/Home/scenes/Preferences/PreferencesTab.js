@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 import {
   savePreferences
 } from '../../../../services/preferences/preferencesActions';
-import FormInputWithIconOnRight 
+import FormInputWithIconOnRight
 from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
 import Dropdown from './components/Dropdown';
 import Checkbox from '../Marketplace/scenes/Listing/scenes/AddListing/components/Checkbox/Checkbox';
@@ -79,6 +79,10 @@ class PreferencesTab extends Component {
   }
 
   onSubmit(values) {
+    const { publisher } = this.props.account;
+    if (!publisher) {
+      values.chargeFee = '';
+    }
     this.props.preferencesActions.savePreferences(values);
   }
 
@@ -86,6 +90,7 @@ class PreferencesTab extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { saving } = this.props.preferences;
+    const { publisher } = this.props.account;
 
     return (
       <div className="preferences-form-container">
@@ -99,23 +104,23 @@ class PreferencesTab extends Component {
               className="textfield"
               props={{
                 rightButtonText: formatMessage(messages.seconds)
-              }}             
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.transactionFee)}</span>
-            <Field
-              name='transactionFee'
-              placeholder={formatMessage(messages.transactionFee)}
-              component={FormInputWithIconOnRight}
-              className="textfield"
-              props={{
-                rightButtonText: formatMessage(messages.xomUnit)
               }}
             />
             <div className="col-1" />
           </div>
+          {/*<div className="form-group">*/}
+            {/*<span>{formatMessage(messages.transactionFee)}</span>*/}
+            {/*<Field*/}
+              {/*name='transactionFee'*/}
+              {/*placeholder={formatMessage(messages.transactionFee)}*/}
+              {/*component={FormInputWithIconOnRight}*/}
+              {/*className="textfield"*/}
+              {/*props={{*/}
+                {/*rightButtonText: formatMessage(messages.xomUnit)*/}
+              {/*}}*/}
+            {/*/>*/}
+            {/*<div className="col-1" />*/}
+          {/*</div>*/}
           <div className="form-group">
             <span>{formatMessage(messages.byDefaultVote)}</span>
             <Field
@@ -138,7 +143,7 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group top referrer">
+          {/*<div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
               <div className="description">
@@ -160,7 +165,7 @@ class PreferencesTab extends Component {
               </div>
             </div>
             <div className="col-1" />
-          </div>
+          </div>*/}
           <div className="form-group">
             <span>{formatMessage(messages.priorityForListing)}</span>
             <Field
@@ -172,30 +177,20 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.publisherFee)}</span>
-            <Field
-              name="publisherFee"
-              placeholder={formatMessage(messages.publisherFee)}
-              component={FormInputWithIconOnRight}
-              className="textfield"
-              props={{
-                rightButtonText: formatMessage(messages.xomUnit)
-              }}
-            />
-            <div className="col-1" />
-          </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.chargeFee)}</span>
-            <Field
-              type="text"
-              name="chargeFee"
-              component="input"
-              className="textfield"
-              placeholder={formatMessage(messages.chargeFee)}
-            />
-            <div className="col-1" />
-          </div>
+          {
+            publisher &&
+            <div className="form-group">
+              <span>{formatMessage(messages.chargeFee)}</span>
+              <Field
+                type="text"
+                name="chargeFee"
+                component="input"
+                className="textfield"
+                placeholder={formatMessage(messages.chargeFee)}
+              />
+              <div className="col-1" />
+            </div>
+          }
           <div className='form-group'>
             <span>{formatMessage(messages.searchListingOptions)}</span>
             <div className='radios field'>
@@ -241,6 +236,9 @@ class PreferencesTab extends Component {
 }
 
 PreferencesTab.propTypes = {
+  account: PropTypes.shape({
+    publisher: PropTypes.bool
+  }).isRequired,
   preferences: PropTypes.shape({
     preferences: PropTypes.object,
     saving: PropTypes.bool,
@@ -257,7 +255,8 @@ PreferencesTab.propTypes = {
 export default compose(
   connect(
     state => ({
-      preferences: state.default.preferences
+      preferences: state.default.preferences,
+      account: state.default.account
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({

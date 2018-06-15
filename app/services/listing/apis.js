@@ -2,6 +2,7 @@ import request from 'request-promise-native';
 import fs from 'fs';
 import { Signature } from 'omnibazaarjs';
 import { hash } from 'omnibazaarjs/es';
+import { Apis } from 'omnibazaarjs-ws';
 import {
   FetchChain,
   TransactionBuilder
@@ -9,6 +10,7 @@ import {
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import {currencyConverter} from "../utils";
 
 let authUser = null;
 let authHeaders = null;
@@ -84,7 +86,7 @@ const createListingOnBlockchain = async (publisher, listing) => {
     seller: seller.get('id'),
     price: {
       asset_id: '1.3.0',
-      amount: parseFloat(listing.price) * 100000
+      amount: currencyConverter(parseFloat(listing.price), listing.currency, 'OMC') * 100000
     },
     quantity: parseInt(listing.quantity),
     listing_hash: hash.listingSHA256({
@@ -123,7 +125,7 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
     listing_id: listingId,
     price: {
       asset_id: '1.3.0',
-      amount: parseFloat(listing.price) * 100000
+      amount: currencyConverter(parseFloat(listing.price), listing.currency, 'OMC') * 100000
     },
     quantity: parseInt(listing.quantity),
     listing_hash: hash.listingSHA256({
@@ -137,6 +139,15 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
   await tr.add_signer(key.privKey, key.pubKey);
   await tr.broadcast();
 };
+
+export const getListingFromBlockchain = async listingId => {
+  const listing = await Apis.instance().db_api().exec('get_objects', [[listingId]]);
+  if (listing) {
+    return listing[0];
+  }
+
+  return null;
+}
 
 export const createListing = async (publisher, listing) => {
   const listingId = await createListingOnBlockchain(publisher, listing);

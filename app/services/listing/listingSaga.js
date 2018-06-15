@@ -31,14 +31,20 @@ import {
   requestMyListingsError,
   isListingFine,
   isListingFineSucceeded,
-  isListingFineFailed
+  isListingFineFailed,
+  searchPublishersFinish
 } from './listingActions';
+import {
+  countPeersForKeywords
+} from '../search/dht/dhtSaga';
+import { getAllPublishers } from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
   createListing,
   editListing,
   deleteListing,
+  getListingFromBlockchain
 } from './apis';
 import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 
@@ -50,7 +56,8 @@ export function* listingSubscriber() {
     takeEvery('GET_LISTING_DETAIL', getListingDetail),
     takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
     takeEvery('DELETE_LISTING', deleteMyListing),
-    takeEvery('IS_LISTING_FINE', checkListingHash)
+    takeEvery('IS_LISTING_FINE', checkListingHash),
+    takeEvery('SEARCH_PUBLISHERS', searchPublishers)
   ]);
 }
 
@@ -123,14 +130,16 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     if (listingId) {
       result = yield call(editListing, publisher, listingId, listing);
     } else {
-    	yield checkAndUploadImages(publisher, listing);
+      yield checkAndUploadImages(publisher, listing);
       result = yield call(createListing, publisher, listing);
     }
 
     if (!listingId) {
       listingId = result.listing_id;
     }
-	 	yield put(saveListingSuccess(result, listingId));
+
+    yield put({ type: 'DHT_RECONNECT' });
+    yield put(saveListingSuccess(result, listingId));
   } catch (err) {
     console.log(err);
     yield put(saveListingError(listingId, err));
@@ -145,12 +154,19 @@ function* getListingDetail({ payload: { listingId }}) {
       listings = (yield select()).default.listing.myListings;
       listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
     }
+
+    const blockchainListingData = yield call(getListingFromBlockchain, listingId);
+    if (!blockchainListingData) {
+      throw new Error('Listing not valid on blockchain');
+    }
+    listingDetail.quantity = blockchainListingData.quantity;
+
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
-    console.log('Error ', error);
+    console.log(error);
     yield put(getListingDetailFailed(error));
   }
 }
@@ -225,5 +241,33 @@ function* checkListingHash({ payload: { listing } }) {
     }
   } catch (error) {
     yield put(isListingFineFailed(error));
+  }
+}
+
+function* searchPublishers({ payload: { keywords } }) {
+  try {
+    const publishers = yield call(getAllPublishers);
+    if (!keywords || !keywords.length) {
+      yield put(searchPublishersFinish(null, publishers));
+      return;
+    }
+
+    const peers = yield call(countPeersForKeywords, keywords);
+
+    const results = [];
+    publishers.forEach(pub => {
+      if (peers[pub.publisher_ip]) {
+        pub.listingCount = peers[pub.publisher_ip];
+        results.push(pub);
+      }
+    });
+
+    if (!results.length) {
+      yield put(searchPublishersFinish(null, publishers));
+    } else {
+      yield put(searchPublishersFinish(null, results));
+    }
+  } catch (err) {
+    yield put(searchPublishersFinish(err));
   }
 }

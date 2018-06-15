@@ -1,4 +1,8 @@
 import { eventChannel } from 'redux-saga';
+import {
+  ob2SocketClosed,
+  ob2SocketOpened
+} from "./marketplace/marketplaceActions";
 
 function wrapRequest(func) {
   return async (...args) => {
@@ -16,9 +20,11 @@ function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
       console.log('Connection opened');
+      emitter(ob2SocketOpened())
     };
     socket.onerror = (error) => {
       console.log(`WebSocket error ${error}`);
+      emitter(ob2SocketClosed())
     };
     socket.onmessage = (e) => {
       try {
@@ -66,10 +72,10 @@ function currencyConverter(amount, from, to) {
   const omcUSD = 0.00333;
   const btcUSD = 7500;
   if (to === 'OMC') {
-    return amount  / (omcUSD * (usdRates[from] || 1));
+    return (amount  / (omcUSD * (usdRates[from] || 1))).toFixed(2);
   }
   if (to === 'BTC') {
-    return amount  / (btcUSD * (usdRates[from] || 1));
+    return (amount  / (btcUSD * (usdRates[from] || 1))).toFixed(8);
   }
 }
 

@@ -2,28 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid } from 'semantic-ui-react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { showSettingsModal, showPreferencesModal } from '../../../../../../services/menu/menuActions';
 
 import { logout } from '../../../../../../services/blockchain/auth/authActions';
+import messages from './messages';
 
 import './menu.scss';
-
-const messages = defineMessages({
-  accountSettings: {
-    id: 'SettingsMenu.accountSettings',
-    defaultMessage: 'Account Settings'
-  },
-  preferences: {
-    id: 'SettingsMenu.preferences',
-    defaultMessage: 'Preferences'
-  },
-  logout: {
-    id: 'SettingsMenu.logout',
-    defaultMessage: 'Logout'
-  }
-});
 
 class SettingsMenu extends Component {
   render() {
@@ -33,15 +19,6 @@ class SettingsMenu extends Component {
     return (
       <Grid centered textAlign="left" divided columns={1}>
         <Grid.Column textAlign="left">
-          <div
-            className="menu-option"
-            onClick={showSettingsModal}
-            onKeyDown={showSettingsModal}
-            role="link"
-            tabIndex={0}
-          >
-            {formatMessage(messages.accountSettings)}
-          </div>
           <div
             className="menu-option"
             onClick={showPreferencesModal}

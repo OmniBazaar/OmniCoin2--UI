@@ -11,6 +11,8 @@ import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CategoryDropdown from '../AddListing/components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from '../AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
+import StateDropdown from '../AddListing/components/StateDropdown/StateDropdown';
+import CountryDropdown from '../AddListing/components/CountryDropdown/CountryDropdown';
 import Checkbox from '../AddListing/components/Checkbox/Checkbox';
 import Images, { getImageId } from '../AddListing/components/Images/Images';
 import addListingMessages from '../AddListing/messages';
@@ -35,6 +37,8 @@ class MyListingsDefaults extends Component {
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.CountryDropdown = makeValidatableField(CountryDropdown);
+    this.StateDropdown = makeValidatableField(StateDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
   }
 
@@ -53,7 +57,7 @@ class MyListingsDefaults extends Component {
     });
 
     this.showSuccessToast(
-      formatMessage(listingDefaultMessages.success), 
+      formatMessage(listingDefaultMessages.success),
       formatMessage(listingDefaultMessages.saveListingSuccessMessage)
     );
   }
@@ -84,7 +88,7 @@ class MyListingsDefaults extends Component {
   defaultsForm() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    const { category } = this.props.formValues ? this.props.formValues : {};
+    const { category, country } = this.props.formValues ? this.props.formValues : {};
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -182,7 +186,30 @@ class MyListingsDefaults extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
+              <span>{formatMessage(addListingMessages.ownerDetails)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="name"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(addListingMessages.ownerName)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
               <span>{formatMessage(addListingMessages.location)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="country"
+                component={this.CountryDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.country)
+                }}
+              />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -200,6 +227,19 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.city)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4} />
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="state"
+                component={this.StateDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.state),
+                  country
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">

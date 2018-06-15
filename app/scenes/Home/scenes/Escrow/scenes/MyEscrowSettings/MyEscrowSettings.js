@@ -34,6 +34,10 @@ const messages = defineMessages({
   saved: {
     id: 'MyEscrowSettings.saved',
     defaultMessage: 'Successfully saved'
+  },
+  error: {
+    id: 'MyEscrowSettings.error',
+    defaultMessage: 'Error'
   }
 });
 
@@ -43,6 +47,17 @@ class MyEscrowSettings extends Component {
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.save = this.save.bind(this);
     this.checkboxes = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+    if (this.props.escrow.updatingSettings && !nextProps.escrow.updatingSettings) {
+      if (!nextProps.escrow.error) {
+        toastr.success(formatMessage(messages.saved), formatMessage(messages.saved));
+      } else {
+        toastr.error(formatMessage(messages.error), nextProps.escrow.error);
+      }
+    }
   }
 
   renderMenuItem(text, id, value) {
@@ -69,7 +84,6 @@ class MyEscrowSettings extends Component {
       transactionProcessor: second.state.isChecked,
       activeTransactionProcessor: third.state.isChecked
     });
-    toastr.success(formatMessage(messages.saved), formatMessage(messages.saved));
   }
 
   render() {
@@ -79,6 +93,7 @@ class MyEscrowSettings extends Component {
       transactionProcessor,
       activeTransactionProcessor
     } = this.props.escrow.settings;
+    const { updatingSettings } = this.props.escrow;
     return (
       <div className="escrow-settings">
         <div className="title">
@@ -90,6 +105,7 @@ class MyEscrowSettings extends Component {
         <Button
           content={formatMessage(messages.save)}
           onClick={this.save}
+          loading={updatingSettings}
           className="button--primary"
         />
       </div>

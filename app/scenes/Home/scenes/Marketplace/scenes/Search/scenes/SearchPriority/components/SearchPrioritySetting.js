@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -19,22 +19,24 @@ import {
   changePublisherName,
   changeKeywords,
   updatePublisherData,
-  getPublishers
+  getPublishers,
+  getPublisherData
 } from '../../../../../../../../../services/accountSettings/accountActions';
+import { dhtReconnect } from '../../../../../../../../../services/search/dht/dhtActions';
 import './search-priority-setting.scss';
 
 const messages = defineMessages({
-  localArea: {
-    id: 'SearchPrioritySetting.localArea',
-    defaultMessage: 'Local area.'
+  specificLocation: {
+    id: 'SearchPrioritySetting.specificLocation',
+    defaultMessage: 'Specific Location'
   },
-  byCategoryType: {
-    id: 'SearchPrioritySetting.byCategoryType',
-    defaultMessage: 'By Category / Type'
+  anywhere: {
+    id: 'SearchPrioritySetting.anywhere',
+    defaultMessage: 'Anywhere'
   },
   publisherName: {
     id: 'SearchPrioritySetting.publisherName',
-    defaultMessage: 'Publisher Name'
+    defaultMessage: 'Specific Publisher'
   },
   country: {
     id: 'SearchPrioritySetting.country',
@@ -86,6 +88,8 @@ class SearchPrioritySetting extends Component {
   constructor(props) {
     super(props);
 
+    this.publishers = [];
+
     this.onChangePriority = this.onChangePriority.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
@@ -96,6 +100,17 @@ class SearchPrioritySetting extends Component {
 
   componentWillMount() {
     this.props.accountSettingsActions.getPublishers();
+    this.props.accountSettingsActions.getPublisherData();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
+      this.publishers = nextProps.account.publishers.publishers.map(publisher => ({
+        value: publisher,
+        text: publisher.name,
+        key: publisher.name,
+      }));
+    }
   }
 
   onChangePriority(priority) {
@@ -120,7 +135,9 @@ class SearchPrioritySetting extends Component {
 
   submitPublisherData() {
     const { formatMessage } = this.props.intl;
+
     this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
+    this.props.dhtActions.dhtReconnect();
     toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
   }
 
@@ -184,11 +201,7 @@ class SearchPrioritySetting extends Component {
               loading={publishers.loading}
               fluid
               selection
-              options={publishers.names.map(el => ({
-                  key: el,
-                  value: el,
-                  text: el
-                }))}
+              options={this.publishers.length && this.publishers}
               onChange={this.onChangePublisherName}
             />
             <div className="col-1" />
@@ -200,7 +213,7 @@ class SearchPrioritySetting extends Component {
   }
 
   render() {
-  	const { publisherData } = this.props.account;
+    const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
 
@@ -218,7 +231,7 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.LOCAL_DATA}
                   onChecked={this.onChangePriority}
                 />
-                <span className="checkbox-inline">{formatMessage(messages.localArea)}</span>
+                <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
               </div>
 
               <div className="radio-wrapper">
@@ -229,7 +242,7 @@ class SearchPrioritySetting extends Component {
                   checked={publisherData.priority === PriorityTypes.BY_CATEGORY}
                   onChecked={this.onChangePriority}
                 />
-                <span className="checkbox-inline">{formatMessage(messages.byCategoryType)}</span>
+                <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
               </div>
 
               <div className="radio-wrapper">
@@ -245,7 +258,9 @@ class SearchPrioritySetting extends Component {
             </div>
             <div className="col-1" />
           </div>
-          {this.renderPublisherFormFields()}
+          <div style={{marginBottom: '5px'}}>
+            {this.renderPublisherFormFields()}
+          </div>
           <div className="form-group">
             <span />
             <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
@@ -268,6 +283,9 @@ SearchPrioritySetting.propTypes = {
     getPublishers: PropTypes.func,
     updatePublisherData: PropTypes.func
   }).isRequired,
+  dhtActions: PropTypes.shape({
+    dhtReconnect: PropTypes.func,
+  }),
   account: PropTypes.shape({
     priority: PropTypes.string,
     publisherData: PropTypes.shape({}),
@@ -280,6 +298,7 @@ SearchPrioritySetting.propTypes = {
 };
 
 SearchPrioritySetting.defaultProps = {
+  dhtActions: {},
   account: {},
   intl: {},
 };
@@ -297,12 +316,16 @@ export default compose(
         changeKeywords,
         changePublisherName,
         getPublishers,
-        updatePublisherData
-      }, dispatch)
-    }),
+        updatePublisherData,
+        getPublisherData
+      }, dispatch),
+      dhtActions: bindActionCreators({
+        dhtReconnect,
+      }, dispatch),
+    })
   ),
   reduxForm({
     form: 'searchPriorityForm',
     destroyOnUnmount: true,
-  }),
+  })
 )(injectIntl(SearchPrioritySetting));

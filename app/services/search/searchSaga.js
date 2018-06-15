@@ -5,6 +5,7 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
+import { uniq, uniqBy } from 'lodash';
 
 import {
   getSavedSearchesSucceeded,
@@ -33,7 +34,7 @@ export function* searchSubscriber() {
 
 function* searchListings({
   payload: {
-    searchTerm, category, country, city, historify, subCategory
+    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
   }
 }) {
   try {
@@ -52,6 +53,7 @@ function* searchListings({
         city,
         searchListings: true,
         subCategory,
+        fromSearchMenu,
       }
     });
   } catch (e) {
@@ -62,14 +64,14 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory, searchByAllKeywords,
+    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
   }
 }) {
   let message;
   const id = getNewId();
   const filters = [];
 
-  if (category) {
+  if (category && category !== 'All' && category !== 'featuredListings') {
     filters.push({
       op: '=',
       name: 'category',
@@ -102,12 +104,19 @@ export function* searchListingsByPeersMap({
   }
 
   if (searchByAllKeywords) {
+    const keywords = [];
+    peersMap.forEach(item => {
+      if (item.keyword) {
+        keywords.push(item.keyword);
+      }
+    });
     message = {
       id,
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
       command: {
-        keywords: peersMap.reduce((keywords, curr) => [...keywords, curr.keyword], []),
-        publishers: peersMap.reduce((publishers, curr) => [...publishers, curr.publishers], []),
+        keywords,
+        publishers: peersMap.reduce((publishers, curr) =>
+          uniqBy([...publishers, ...(curr.publishers || [])], ({ address }) => address), []),
         currency: 'BTC',
         range: '20',
         filters
@@ -125,15 +134,9 @@ export function* searchListingsByPeersMap({
       },
     };
   }
-  if (city) {
-    message.city = city;
-  }
-  if (country) {
-    message.country = country;
-  }
 
   ws.send(JSON.stringify(message));
-  yield put(searching(id));
+  yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
 }
 
 function* getRecentSearches() {
