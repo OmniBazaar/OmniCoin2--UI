@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Dropdown, Button, Grid, Modal, Input } from 'semantic-ui-react';
 import hash from 'object-hash';
+import { toastr } from 'react-redux-toastr';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
@@ -76,6 +77,18 @@ const messages = defineMessages({
     id: 'AddListing.selectPublisher',
     defaultMessage: 'Select publisher'
   },
+  importationErrorTitle: {
+    id: 'ImportListings.errorTitle',
+    defaultMessage: 'Error'
+  },
+  importationSuccessTitle: {
+    id: 'ImportListings.successTitle',
+    defaultMessage: 'Success'
+  },
+  importationSuccess: {
+    id: 'ImportListings.success',
+    defaultMessage: 'The files has been imported successfully'
+  }
 });
 
 class ImportListings extends Component {
@@ -86,6 +99,26 @@ class ImportListings extends Component {
       open: false,
       selectedPublisher: null
     };
+  }
+
+  componentWillReceiveProps({ listingImport }) {
+    const { formatMessage } = this.props.intl;
+    const { importingFile, error } = listingImport;
+    console.log(importingFile, this.props.listingImport.importingFile);
+
+    if (!importingFile && importingFile !== this.props.listingImport.importingFile) {
+      if (listingImport.error) {
+        return toastr.error(
+          formatMessage(messages.importationErrorTitle),
+          error
+        );
+      }
+
+      toastr.success(
+        formatMessage(messages.importationSuccessTitle),
+        formatMessage(messages.importationSuccess)
+      );
+    }
   }
 
   removeFile(index) {
@@ -287,6 +320,8 @@ ImportListings.propTypes = {
   }),
   listingImport: PropTypes.shape({
     importedFiles: PropTypes.arrayOf(PropTypes.object),
+    error: PropTypes.string,
+    importingFile: PropTypes.bool,
   }),
   listingActions: PropTypes.shape({
     importFile: PropTypes.func,

@@ -19,7 +19,7 @@ const reducer = handleActions({
   [importFile](state) {
     return {
       ...state,
-      importigFile: true,
+      importingFile: true,
       error: null,
     };
   },
