@@ -67,9 +67,9 @@ export function* importListingsFromFile({ payload: { file, defaultValues } }) {
   }
 }
 
-export async function* saveFiles({ payload: { publisher, filesToImport } }) {
+export function* saveFiles({ payload: { publisher, filesToImport } }) {
   try {
-    const allFiles = yield* filesToImport.map(async (file) => {
+    const allFiles = filesToImport.map(async (file) => {
       const newFile = { ...file, display: true };
 
       const newItems = newFile.items.map(async (item) => {
@@ -98,8 +98,10 @@ export async function* saveFiles({ payload: { publisher, filesToImport } }) {
       return newFile;
     });
 
+    const importedFiles = yield Promise.all(allFiles);
+
     yield put({ type: 'DHT_RECONNECT' });
-    yield put({ type: 'IMPORT_FILES_SUCCEEDED', importedFiles: allFiles });
+    yield put({ type: 'IMPORT_FILES_SUCCEEDED', importedFiles });
   } catch (e) {
     yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
   }
