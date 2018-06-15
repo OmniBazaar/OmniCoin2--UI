@@ -6,6 +6,11 @@ import { getListings } from './../../utils/listings';
 import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
 
+const listingHandlersByVendor = {
+  amazon: getListings,
+  all: getListings,
+};
+
 export function* importSubscriber() {
   yield all([
     takeLatest('STAGE_FILE', importListingsFromFile),
@@ -13,10 +18,10 @@ export function* importSubscriber() {
   ]);
 }
 
-export function* importListingsFromFile({ payload: { file, defaultValues } }) {
+export function* importListingsFromFile({ payload: { file, defaultValues, vendor } }) {
   try {
     const { content, name } = file;
-    const listings = yield call(getListings, content);
+    const listings = yield call(listingHandlersByVendor[vendor] || getListings, content);
 
     const items = yield listings.map(async (item) => {
       let imageToSave;

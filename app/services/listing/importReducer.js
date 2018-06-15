@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
-  stashFile,
+  stageFile,
   importFiles,
   removeFile,
   removeAllFiles,
@@ -18,7 +18,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [stashFile](state) {
+  [stageFile](state) {
     return {
       ...state,
       stagingFile: true,

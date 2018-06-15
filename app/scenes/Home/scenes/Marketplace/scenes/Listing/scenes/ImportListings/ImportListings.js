@@ -105,14 +105,14 @@ class ImportListings extends Component {
 
     this.state = {
       open: false,
-      selectedPublisher: null
+      selectedPublisher: null,
+      selectedVendor: null,
     };
   }
 
   componentWillReceiveProps({ listingImport }) {
     const { formatMessage } = this.props.intl;
     const { importingFile, error } = listingImport;
-    console.log(importingFile, this.props.listingImport.importingFile);
 
     if (!importingFile && importingFile !== this.props.listingImport.importingFile) {
       if (listingImport.error) {
@@ -167,10 +167,14 @@ class ImportListings extends Component {
 
       const file = this.inputElement.files[0];
 
-      this.props.listingActions.stageFile({
-        content: file,
-        name: file.name,
-      }, this.props.listingDefaults);
+      this.props.listingActions.stageFile(
+        {
+          content: file,
+          name: file.name,
+        },
+        this.props.listingDefaults,
+        this.state.selectedVendor
+      );
     }
   }
 
@@ -211,6 +215,8 @@ class ImportListings extends Component {
                 selection
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
+                value={this.state.selectedVendor}
+                onChange={(e, { value }) => this.setState({ selectedVendor: value })}
               />
             </Grid.Column>
             <Grid.Column width={4}>

@@ -7,7 +7,7 @@ const {
   removeAllFiles,
   sortImportData
 } = createActions({
-  STAGE_FILE: (file, defaultValues) => ({ file, defaultValues }),
+  STAGE_FILE: (file, defaultValues, vendor) => ({ file, defaultValues, vendor }),
   IMPORT_FILES: ({ publisher, filesToImport }) => ({ publisher, filesToImport }),
   REMOVE_FILE: (fileIndex) => ({ fileIndex }),
   REMOVE_ALL_FILES: () => ({}),
