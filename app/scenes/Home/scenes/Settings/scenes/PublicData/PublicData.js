@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import ip from 'ip';
 import { debounce } from 'lodash';
+import cn from 'classnames';
 
 import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
@@ -135,7 +136,10 @@ class PublicData extends Component {
     if (account.publisher_ip) {
       this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
     }
-    // todo add TransactionProcessor and referrer
+    if (account.is_a_processor) {
+      this.toggleTransactionProcessor();
+    }
+    // todo referrer
     this.freezeSettings();
   }
 
@@ -188,7 +192,11 @@ class PublicData extends Component {
   }
 
   toggleTransactionProcessor() {
-    this.props.accountSettingsActions.setTransactionProcessor();
+    if (this.props.auth.account.is_a_processor && !this.props.account.transactionProcessor) {
+      this.props.accountSettingsActions.setTransactionProcessor();
+    } else if (!this.props.auth.account.is_a_processor) {
+      this.props.accountSettingsActions.setTransactionProcessor();
+    }
   }
 
   toggleEscrow() {
@@ -260,7 +268,12 @@ class PublicData extends Component {
         }
         <div className="description">
           <div className="check-container">
-            <Image src={this.getTransactionIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleTransactionProcessor} />
+            <Image
+              src={this.getTransactionIcon()}
+              width={iconSize}
+              height={iconSize}
+              className={cn("checkbox", this.props.auth.account.is_a_processor ? "disabled" : "")}
+              onClick={this.toggleTransactionProcessor} />
           </div>
           <div className="description-text">
             <p className="title">{formatMessage(messages.processorTitle)}</p>

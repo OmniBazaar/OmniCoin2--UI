@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 
 import CheckNormal from './images/ch-box-0-norm.svg';
 import CheckPreNom from './images/ch-box-1-norm.svg';
@@ -45,7 +46,7 @@ class Checkbox extends Component {
           src={this.getIcon()}
           width={this.props.width}
           height={this.props.height}
-          className="checkbox"
+          className={cn('checkbox', this.props.disabled ? 'disabled' : '')}
           onClick={this.handleClick}
         />
       </div>
@@ -59,12 +60,14 @@ Checkbox.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   value: PropTypes.bool,
-  onChecked: PropTypes.func
+  onChecked: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 Checkbox.defaultProps = {
   height: 20,
   width: 20,
   value: false,
-  onChecked: null
+  onChecked: null,
+  disabled: false
 };
