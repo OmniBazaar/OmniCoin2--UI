@@ -65,7 +65,7 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
 
     yield put({
       type: 'STAGING_FILE_SUCCEEDED',
-      file: { items, title: name, display: false }
+      file: { items, title: name }
     });
   } catch (e) {
     yield put({ type: 'STAGING_FILE_FAILED', error: e.message });
@@ -75,7 +75,7 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
 export function* saveFiles({ payload: { publisher, filesToImport } }) {
   try {
     const allFiles = filesToImport.map(async (file) => {
-      const newFile = { ...file, display: true };
+      const newFile = { ...file };
 
       const newItems = newFile.items.map(async (item) => {
         const { image, fileName, thumb } = await saveImage(publisher, item.images[0]);

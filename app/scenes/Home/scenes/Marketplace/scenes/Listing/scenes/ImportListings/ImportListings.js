@@ -287,7 +287,7 @@ class ImportListings extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { importedFiles, importingFile } = this.props.listingImport;
+    const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
 
     return (
       <div className="marketplace-container category-listing import-listings">
@@ -314,7 +314,7 @@ class ImportListings extends Component {
           <div className="bottom-section">
             <div className="listing-body">
               <span className="title">{formatMessage(messages.importedData)}</span>
-              {importingFile ? renderLoader() : <ImportedFilesTable
+              {(stagingFile || importingFile) ? renderLoader() : <ImportedFilesTable
                 importedFiles={importedFiles}
                 tableProps={{
                   sortable: true,

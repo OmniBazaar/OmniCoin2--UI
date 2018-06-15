@@ -63,7 +63,6 @@ class ImportedFilesTable extends Component {
       sortDirection,
       importedFiles
     } = this.props.listingImport;
-    const filesToDisplay = importedFiles.filter(file => file.display);
 
     return (
       <div className="data-table">
@@ -99,9 +98,9 @@ class ImportedFilesTable extends Component {
             </TableHeader>
             <TableBody>
               {
-                filesToDisplay.map(row => row.items && row.items.map((item, index) => (
+                importedFiles.map(row => row.items && row.items.map((item, index) => (
                   <TableRow key={hash(row) + hash(item) + hash(index)}>
-                    <TableCell>{item.type}</TableCell>
+                    <TableCell>{item.listing_type}</TableCell>
                     <TableCell>{item.category}</TableCell>
                     <TableCell>{item.subcategory}</TableCell>
                     <TableCell>{item.contactType}</TableCell>
