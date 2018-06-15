@@ -10,7 +10,8 @@ import { toastr } from 'react-redux-toastr';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
 import {
-  importFile,
+  stageFile,
+  importFiles,
   removeFile,
   removeAllFiles
 } from '../../../../../../../../services/listing/importActions';
@@ -164,8 +165,7 @@ class ImportListings extends Component {
 
       const file = this.inputElement.files[0];
 
-      this.props.listingActions.importFile({
-        publisher: this.state.selectedPublisher,
+      this.props.listingActions.stageFile({
         content: file,
         name: file.name,
       }, this.props.listingDefaults);
@@ -178,6 +178,13 @@ class ImportListings extends Component {
 
   onClickImportFile() {
     this.inputElement.click();
+  }
+
+  importListings() {
+    this.props.listingActions.importFiles({
+      publisher: this.state.selectedPublisher,
+      filesToImport: this.props.listingImport.importedFiles,
+    });
   }
 
   importForm() {
@@ -310,7 +317,11 @@ class ImportListings extends Component {
             </div>
           </div>
           <div className="footer-section">
-            <Button content={formatMessage(messages.importListings).toUpperCase()} className="button--green-bg" />
+            <Button
+              content={formatMessage(messages.importListings).toUpperCase()}
+              className="button--green-bg"
+              onClick={() => this.importListings()}
+            />
           </div>
         </div>
         {this.showWarningMessage()}
@@ -329,7 +340,8 @@ ImportListings.propTypes = {
     importingFile: PropTypes.bool,
   }),
   listingActions: PropTypes.shape({
-    importFile: PropTypes.func,
+    stageFile: PropTypes.func,
+    importFiles: PropTypes.func,
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
   }),
@@ -358,7 +370,8 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     listingActions: bindActionCreators({
-      importFile,
+      stageFile,
+      importFiles,
       removeFile,
       removeAllFiles
     }, dispatch),

@@ -1,7 +1,8 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import {
-  importFile,
+  stashFile,
+  importFiles,
   removeFile,
   removeAllFiles,
   sortImportData
@@ -12,17 +13,27 @@ const defaultState = {
   sortDirection: 'descending',
   sortColumn: 'type',
   importingFile: false,
+  stagingFile: false,
   error: null,
 };
 
 const reducer = handleActions({
-  [importFile](state) {
+  [stashFile](state) {
+    return {
+      ...state,
+      stagingFile: true,
+      error: null,
+    };
+  },
+
+  [importFiles](state) {
     return {
       ...state,
       importingFile: true,
       error: null,
     };
   },
+
   [removeFile](state, { payload: { fileIndex } }) {
     return {
       ...state,
@@ -32,12 +43,14 @@ const reducer = handleActions({
       ],
     };
   },
+
   [removeAllFiles](state) {
     return {
       ...state,
       importedFiles: []
     };
   },
+
   [sortImportData](state, { payload: { sortColumn } }) {
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
     const sortBy = _.sortBy(state.importedFiles, [sortColumn]);
@@ -58,17 +71,30 @@ const reducer = handleActions({
     };
   },
 
-  IMPORT_FILE_SUCCEEDED: (state, { file }) => ({
+  IMPORT_FILES_SUCCEEDED: (state, { importedFiles }) => ({
     ...state,
-    importedFiles: [...state.importedFiles, file],
+    importedFiles,
     importingFile: false,
     error: null,
   }),
 
-  IMPORT_FILE_FAILED: (state, { error }) => ({
+  IMPORT_FILES_FAILED: (state, { error }) => ({
     ...state,
     error,
     importingFile: false,
+  }),
+
+  STAGING_FILE_SUCCEEDED: (state, { file }) => ({
+    ...state,
+    importedFiles: [...state.importedFiles, file],
+    stagingFile: false,
+    error: null,
+  }),
+
+  STAGING_FILE_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    stagingFile: false,
   }),
 }, defaultState);
 
