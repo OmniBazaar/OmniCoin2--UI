@@ -8,7 +8,7 @@ import GridTable from '../GridTable/GridTable';
 
 class TabsData extends Component {
   renderPanes() {
-    const { data, tabs, showActions, showTrailingLoader } = this.props;
+    const { data, tabs, showActions, showTrailingLoader, currency } = this.props;
     const rowsPerPage = 3 * 6;
 
     return (
@@ -19,6 +19,7 @@ class TabsData extends Component {
             <Tab.Pane>
               <GridTable
                 data={data}
+                currency={currency}
                 sortBy={tab.sortBy}
                 sortDirection={tab.sortDirection}
                 rowsPerPage={rowsPerPage}
