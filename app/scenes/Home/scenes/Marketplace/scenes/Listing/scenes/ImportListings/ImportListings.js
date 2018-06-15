@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Dropdown, Button, Grid, Modal, Input } from 'semantic-ui-react';
+import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 
@@ -97,6 +97,8 @@ const messages = defineMessages({
   }
 });
 
+const renderLoader = () => <div className="loading-container"><Loader inline active /></div>;
+
 class ImportListings extends Component {
   constructor(props) {
     super(props);
@@ -189,6 +191,7 @@ class ImportListings extends Component {
 
   importForm() {
     const { formatMessage } = this.props.intl;
+    const { stagingFile } = this.props.listingImport;
 
     return (
       <Form className="import-listing-form">
@@ -244,7 +247,7 @@ class ImportListings extends Component {
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={12}>
-              {this.importedFiles()}
+              {stagingFile ? renderLoader() : this.importedFiles()}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -278,7 +281,7 @@ class ImportListings extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { importedFiles } = this.props.listingImport;
+    const { importedFiles, importingFile } = this.props.listingImport;
 
     return (
       <div className="marketplace-container category-listing import-listings">
@@ -305,7 +308,7 @@ class ImportListings extends Component {
           <div className="bottom-section">
             <div className="listing-body">
               <span className="title">{formatMessage(messages.importedData)}</span>
-              <ImportedFilesTable
+              {importingFile ? renderLoader() : <ImportedFilesTable
                 importedFiles={importedFiles}
                 tableProps={{
                   sortable: true,
@@ -313,7 +316,7 @@ class ImportListings extends Component {
                   basic: 'very',
                   size: 'small'
                 }}
-              />
+              />}
             </div>
           </div>
           <div className="footer-section">
@@ -338,6 +341,7 @@ ImportListings.propTypes = {
     importedFiles: PropTypes.arrayOf(PropTypes.object),
     error: PropTypes.string,
     importingFile: PropTypes.bool,
+    stagingFile: PropTypes.bool,
   }),
   listingActions: PropTypes.shape({
     stageFile: PropTypes.func,
