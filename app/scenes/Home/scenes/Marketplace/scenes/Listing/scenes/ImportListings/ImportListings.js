@@ -24,7 +24,12 @@ const options = [
   {
     key: 'all',
     value: 'all',
-    text: 'All'
+    text: 'All',
+  },
+  {
+    key: 'amazon',
+    value: 'amazon',
+    text: 'Amazon',
   },
 ];
 
