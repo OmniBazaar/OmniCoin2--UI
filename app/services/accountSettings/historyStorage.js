@@ -236,8 +236,6 @@ class HistoryStorage extends BaseStorage {
       const el = history[i];
       if (!this.exists(el.id)) {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation) {
-          console.log('WELCOME BONUS ', JSON.stringify(el, null, 2));
-          console.log('AMOUNT ', el.op[1].amount);
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
@@ -250,17 +248,26 @@ class HistoryStorage extends BaseStorage {
             type: HistoryStorage.OperationTypes.deposit
           });
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
-          this.addOperation({
-            id: el.id,
-            blockNum: el.block_num,
-            opInTrx: el.op_in_trx,
-            trxInBlock: el.trx_in_block,
-            date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
-            fee: el.op[1].fee.amount / 100000,
-            operationType: el.op[0],
-            amount: el.result[1].amount / 100000,
-            type: HistoryStorage.OperationTypes.deposit
-          });
+          if (el.op[1].referred_account !== account.get('id')) {
+            const [referredAcc, referrerAcc] = await Promise.all([
+              FetchChain('getAccount', el.op[1].referred_account),
+              FetchChain('getAccount', el.op[1].referrer_account)
+            ]);
+            this.addOperation({
+              id: el.id,
+              blockNum: el.block_num,
+              opInTrx: el.op_in_trx,
+              trxInBlock: el.trx_in_block,
+              date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).toString(),
+              fee: el.op[1].fee.amount / 100000,
+              operationType: el.op[0],
+              amount: el.result[1].amount / 100000,
+              type: HistoryStorage.OperationTypes.deposit,
+              from: referrerAcc.get('name'),
+              to: referredAcc.get('name'),
+              fromTo: referredAcc.get('name')
+            });
+          }
         } else if ([ChainTypes.operations.listing_create_operation,
               ChainTypes.operations.listing_update_operation,
               ChainTypes.operations.listing_delete_operation,

@@ -1,6 +1,8 @@
 import { put, takeEvery, all } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
+import { FetchChain } from 'omnibazaarjs/es';
 import _ from 'lodash';
+
 import {
   storeMessage,
   getMessagesFromFolder,
@@ -65,6 +67,7 @@ export function* sendMail(action) {
   };
 
   try {
+    yield FetchChain('getAccount', recipient);
     yield (Apis.instance().network_api().exec('mail_send', [afterDeliveredCallback, mailObject]).then(() => {
       console.log('Mail is in the outbox:', mailObject);
       storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);

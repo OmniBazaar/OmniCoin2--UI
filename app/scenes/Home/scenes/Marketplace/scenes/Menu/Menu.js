@@ -97,6 +97,14 @@ class Menu extends Component {
               props.marketplace.activeCategory === category.id
     });
 
+    if (category.id === mainCategories.about.id) {
+      return (
+        <li className={optionMenuClass}>
+          <span>{title}</span>
+        </li>
+      );
+    }
+
     return (
       <li className={optionMenuClass}>
         <span

@@ -1,4 +1,4 @@
-import { handleActions, combineActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import {
   showComposeModal,
   setActiveFolder,
@@ -22,6 +22,7 @@ const defaultState = {
   subject: '',
   body: '',
   error: null,
+  loading: false,
   activeFolder: MailTypes.INBOX,
   activeMessage: 0,
   showCompose: false,
@@ -30,7 +31,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [combineActions(showComposeModal)](state) {
+  [showComposeModal](state) {
     return {
       ...state,
       reply: false,
@@ -39,28 +40,30 @@ const reducer = handleActions({
       showCompose: !state.showCompose
     };
   },
-  [combineActions(setActiveFolder)](state, { payload: { activeFolder } }) {
+  [setActiveFolder](state, { payload: { activeFolder } }) {
     return {
       ...state,
       activeFolder
     };
   },
-  [combineActions(setActiveMessage)](state, { payload: { activeMessage } }) {
+  [setActiveMessage](state, { payload: { activeMessage } }) {
     return {
       ...state,
       activeMessage
     };
   },
-  [combineActions(showReplyModal)](state) {
+  [showReplyModal](state) {
     return {
       ...state,
       reply: true,
       showCompose: !state.showCompose
     };
   },
-  [combineActions(sendMail)](state) {
+  [sendMail](state) {
     return {
-      ...state
+      ...state,
+      loading: true,
+      error: null
     };
   },
   LOAD_FOLDER_UPDATE: (state, action) => ({
@@ -73,11 +76,13 @@ const reducer = handleActions({
   EMAIL_SENT_SUCCEEDED: (state, {}) => ({
     ...state,
     mailSent: true,
+    loading: false,
     error: null,
   }),
   EMAIL_SENT_FAILED: (state, { error }) => ({
     ...state,
     mailSent: false,
+    loading: false,
     error
   }),
 }, defaultState);

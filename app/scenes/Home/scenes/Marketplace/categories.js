@@ -8,6 +8,13 @@ const categories = Object.freeze({
   rentals: 'rentals',
 });
 
+const allCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  }
+});
+
 const mainCategories = defineMessages({
   featuredListings: {
     id: 'Marketplace.featuredListings',
@@ -824,5 +831,6 @@ export {
   communityCategories,
   housingCategories,
   gigsCategories,
-  categories
+  categories,
+  allCategories
 };

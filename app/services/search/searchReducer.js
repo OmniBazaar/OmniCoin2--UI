@@ -62,14 +62,19 @@ const sliceData = (data, activePage, rowsPerPage) => (
 
 const getTotalPages = (data, rowsPerPage) => Math.ceil(data.length / rowsPerPage);
 
-const searchByFilters = (listings, category) => {
-  
+const searchByFilters = (listings, category, subCategory) => {
   const categoryFilter = (category && category.toLowerCase()) || 'all';
-  
+  const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
+
   let searchesFiltered = listings;
-  
-  if (categoryFilter !== 'all') {
-    searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+  if (categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+    searchesFiltered = listings
+      .filter(el => el.category.toLowerCase() === categoryFilter)
+      .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+  } else {
+    if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
+    if (subCategoryFilter !== 'all') searchesFiltered = listings.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+
   }
   
   return {
@@ -116,8 +121,10 @@ const changeCurrencies = (selectedCurrency, listing ) => {
 };
 
 const reducer = handleActions({
-  [filterSearchResults](state, { payload: { searchText, currency, category } }) {
+  
+  [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
     let data = state.searchResults;
+
     const activePageSearchResults = 1;
     let totalPagesSearchResults;
     if (currency !== 'all' && currency !== undefined) {
@@ -134,12 +141,13 @@ const reducer = handleActions({
       });
       filteredData = _.without(filteredData, undefined);
       
-      resultByFilters = searchByFilters(filteredData, category);
+      resultByFilters = searchByFilters(filteredData, category, subCategory);
+
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     } else {
       currentData = data;
-      resultByFilters = searchByFilters(currentData, category);
+      resultByFilters = searchByFilters(currentData, category, subCategory);
       totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
       currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
     }
