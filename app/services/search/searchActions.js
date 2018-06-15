@@ -26,7 +26,7 @@ const {
   SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory, fromSearchMenu) => ({
     searchTerm, category, country, city, historify, subCategory, fromSearchMenu
   }),
-  FILTER_SEARCH_RESULTS: (searchText, currency, category) => ({ searchText, currency, category }),
+  FILTER_SEARCH_RESULTS: (searchText, currency, category, subCategory) => ({ searchText, currency, category, subCategory }),
   FILTER_SEARCH_BY_CATEGORY: () => ({}),
   GET_RECENT_SEARCHES: () => ({ }),
   GET_RECENT_SEARCHES_SUCCEEDED: (recentSearches) => ({ recentSearches }),

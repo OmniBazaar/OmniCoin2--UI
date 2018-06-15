@@ -61,6 +61,7 @@ class Listing extends Component {
       this.setGallerySize();
     }, 100);
     this.props.listingActions.getFavorites();
+    this.props.listingActions.isFavorite(this.props.match.params.id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,9 +79,9 @@ class Listing extends Component {
     }
 
     if (listingDetail && nextProps.listing.listingDetail) {
-      if (listingDetail['listing_id'] !== nextProps.listing.listingDetail['listing_id'] ||
+      if (listingDetail.listing_id !== nextProps.listing.listingDetail.listing_id ||
         favoriteListings.length !== nextProps.listing.favoriteListings.length) {
-        props.listingActions.isFavorite(nextProps.listing.listingDetail['listing_id']);
+        props.listingActions.isFavorite(nextProps.listing.listingDetail.listing_id);
       }
     }
     if (listingDetail !== nextProps.listing.listingDetail) {
@@ -90,9 +91,9 @@ class Listing extends Component {
       const { error } = nextProps.listing.buyListing;
       if (error) {
         if (error === 'hash') {
-           this.errorToast(messages.hashIsInvalid);
+          this.errorToast(messages.hashIsInvalid);
         } else {
-           this.errorToast(messages.error);
+          this.errorToast(messages.error);
         }
       }
     }

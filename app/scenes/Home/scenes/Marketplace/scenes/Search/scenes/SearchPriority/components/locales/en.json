@@ -1,7 +1,7 @@
 {
   "SearchPrioritySetting.specificLocation": "Specific Location",
   "SearchPrioritySetting.anywhere": "Anywhere",
-  "SearchPrioritySetting.publisherName": "Publisher Name",
+  "SearchPrioritySetting.publisherName": "Specific Publisher",
   "SearchPrioritySetting.country": "Country",
   "SearchPrioritySetting.startTyping": "Start typing...",
   "SearchPrioritySetting.apply": "APPLY",

@@ -97,6 +97,14 @@ class Menu extends Component {
               props.marketplace.activeCategory === category.id
     });
 
+    if (category.id === mainCategories.about.id) {
+      return (
+        <li className={optionMenuClass}>
+          <span>{title}</span>
+        </li>
+      );
+    }
+
     return (
       <li className={optionMenuClass}>
         <span
@@ -412,7 +420,7 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/search-priority">{formatMessage(userMenu.searchPriority)}</NavLink>
         </div>
-        <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>
+        {/*<div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>*/}
       </Popup>
     );
   }

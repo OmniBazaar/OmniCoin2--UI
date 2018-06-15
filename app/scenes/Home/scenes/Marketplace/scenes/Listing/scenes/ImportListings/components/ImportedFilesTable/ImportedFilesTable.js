@@ -58,7 +58,6 @@ class ImportedFilesTable extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-
     const {
       sortColumn,
       sortDirection,
@@ -101,7 +100,7 @@ class ImportedFilesTable extends Component {
               {
                 importedFiles.map(row => row.items && row.items.map((item, index) => (
                   <TableRow key={hash(row) + hash(item) + hash(index)}>
-                    <TableCell>{item.type}</TableCell>
+                    <TableCell>{item.listing_type}</TableCell>
                     <TableCell>{item.category}</TableCell>
                     <TableCell>{item.subcategory}</TableCell>
                     <TableCell>{item.contactType}</TableCell>

@@ -9,10 +9,11 @@ import {
   Loader
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
 import CurrencyDropdown from '../../../Listing/scenes/AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
@@ -69,21 +70,34 @@ const messages = defineMessages({
     id: 'SearchMenu.currency',
     defaultMessage: 'Currency'
   },
+  category: {
+    id: 'AddListing.category',
+    defaultMessage: 'Category'
+  },
+  subCategory: {
+    id: 'SearchMenu.subCategory',
+    defaultMessage: 'Sub-category'
+  },
 });
 
 class SearchResults extends Component {
   constructor(props) {
     super(props);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.CategoryDropdown = makeValidatableField(CategoryDropdown);
+    this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    this.props.change('search', null);
+    const { searchTerm, category, subCategory } = this.props.search;
+    this.props.change('searchTerm', searchTerm);
+    this.props.change('category', category);
+    this.props.change('subCategory', subCategory);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { searchTerm, category } = this.props.search;
+    const { searchTerm, category, subCategory } = this.props.search;
 
     if (searchTerm !== nextProps.search.searchTerm) {
       if (nextProps.search.searchTerm) {
@@ -94,7 +108,21 @@ class SearchResults extends Component {
     if (category !== nextProps.search.category) {
       const categoryName = nextProps.search.category;
       const searchCategory = categoryName && categoryName === 'All' ? categoryName.toLowerCase() : categoryName;
-      this.props.change('search', searchCategory);
+      this.props.change('category', searchCategory);
+    }
+
+    if (subCategory !== nextProps.search.subCategory) {
+      const subCategoryName = nextProps.search.subCategory;
+      const searchSubCategory = subCategoryName && subCategoryName === 'All' ? subCategoryName.toLowerCase() : subCategoryName;
+      this.props.change('subcategory', searchSubCategory);
+    }
+
+    if (this.props.dht.isLoading !== nextProps.dht.isLoading) {
+      if (!nextProps.dht.isLoading) {
+        const subCategoryName = nextProps.search.subCategory;
+        const searchSubCategory = subCategoryName && subCategoryName === 'All' ? subCategoryName.toLowerCase() : subCategoryName;
+        this.props.change('subcategory', searchSubCategory);
+      }
     }
   }
 
@@ -112,67 +140,48 @@ class SearchResults extends Component {
     </div>
   );
 
-  renderFilters = ({
-    input, dropdownPlaceholder, defaultValue
-  }) => (
-    <CategoryDropdown
-      placeholder={dropdownPlaceholder}
-      selection
-      input={{
-        defaultValue,
-        value: input.category,
-        onChange: (value) => {
-          input.onChange({
-            ...input.value,
-            category: value
-          });
-        }
-      }}
-    />
-  );
-
   handleSubmit(values) {
     const currency = values.currency;
     const searchTerm = (this.searchInput && this.searchInput.value) || '';
-    const category = (values && values.search) ? values.search.category : null;
-    this.props.searchActions.filterSearchResults(searchTerm, currency, category);
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.searchActions.filterSearchResults(searchTerm, currency, category, subcategory);
   }
 
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    let {
-      searchTerm,
-      searchResultsFiltered,
-      category,
-      fromSearchMenu
-    } = this.props.search;
-    const searchCategory = category && category === 'All' ? category.toLowerCase() : category;
+    const { searchResultsFiltered, subCategory } = this.props.search;
+    const { category } = this.props.formValues ? this.props.formValues : {};
 
     return (
       <div className="list-container search-filters">
         <Form className="filter search-form" onSubmit={handleSubmit(this.handleSubmit)}>
           <div className="content">
             <div className="search-container">
-              {fromSearchMenu || (searchTerm && searchTerm !== '') ?
-                <Field
-                  type="text"
-                  name="searchTerm"
-                  placeholder={formatMessage(messages.search)}
-                  component={this.renderButtonField}
-                  className="textfield"
-                />
-              : null}
+              <Field
+                type="text"
+                name="searchTerm"
+                placeholder={formatMessage(messages.search)}
+                component={this.renderButtonField}
+                className="textfield"
+              />
               <div className="search-filters">
                 <Field
-                  type="text"
-                  name="search"
-                  inputName="search"
-                  placeholder="Search"
-                  dropdownPlaceholder="Categories"
-                  component={this.renderFilters}
-                  defaultValue={searchCategory}
-                  className="textfield"
+                  name="category"
+                  component={this.CategoryDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.category)
+                  }}
+                />
+                <Field
+                  name="subcategory"
+                  value={subCategory}
+                  component={this.SubCategoryDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.subCategory),
+                    parentCategory: category
+                  }}
                 />
                 <Field
                   name="currency"
@@ -218,11 +227,6 @@ class SearchResults extends Component {
       </div>
     );
   }
-
-  viewCategory = (category, subCategory) => {
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
-  };
 
   setActiveCategory = () => {
     if (this.props.searchActions.setActiveCategory) {
@@ -295,8 +299,15 @@ SearchResults.defaultProps = {
 };
 
 export default compose(
+  reduxForm({
+    form: 'searchForm',
+    destroyOnUnmount: true,
+  }),
   connect(
-    state => ({ ...state.default }),
+    (state) => ({
+      ...state.default,
+      formValues: getFormValues('searchForm')(state)
+    }),
     (dispatch) => ({
       searchActions: bindActionCreators({
         filterSearchResults,
@@ -304,9 +315,5 @@ export default compose(
         setActiveCategory
       }, dispatch),
     })
-  ),
-  reduxForm({
-    form: 'searchForm',
-    destroyOnUnmount: true,
-  })
+  )
 )(injectIntl(SearchResults));

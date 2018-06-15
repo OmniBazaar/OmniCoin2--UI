@@ -108,19 +108,19 @@ class PreferencesTab extends Component {
             />
             <div className="col-1" />
           </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.transactionFee)}</span>
-            <Field
-              name='transactionFee'
-              placeholder={formatMessage(messages.transactionFee)}
-              component={FormInputWithIconOnRight}
-              className="textfield"
-              props={{
-                rightButtonText: formatMessage(messages.xomUnit)
-              }}
-            />
-            <div className="col-1" />
-          </div>
+          {/*<div className="form-group">*/}
+            {/*<span>{formatMessage(messages.transactionFee)}</span>*/}
+            {/*<Field*/}
+              {/*name='transactionFee'*/}
+              {/*placeholder={formatMessage(messages.transactionFee)}*/}
+              {/*component={FormInputWithIconOnRight}*/}
+              {/*className="textfield"*/}
+              {/*props={{*/}
+                {/*rightButtonText: formatMessage(messages.xomUnit)*/}
+              {/*}}*/}
+            {/*/>*/}
+            {/*<div className="col-1" />*/}
+          {/*</div>*/}
           <div className="form-group">
             <span>{formatMessage(messages.byDefaultVote)}</span>
             <Field

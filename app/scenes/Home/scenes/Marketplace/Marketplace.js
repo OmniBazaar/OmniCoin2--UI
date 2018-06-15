@@ -124,7 +124,9 @@ class Marketplace extends Component {
   }
 
   viewAllSubCategories = (category) => {
-    console.log('View all sub categories for: ', category);
+    const { country, city } = this.props.account.publisherData;
+    this.props.history.push('/search-results');
+    this.props.searchActions.searchListings(null, category || 'All', country, city, true, null);
   };
 
   renderOption(category, parentCategory) {
