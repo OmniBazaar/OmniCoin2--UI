@@ -141,11 +141,9 @@ class SearchResults extends Component {
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    let {
-      searchTerm,
+    const {
       searchResultsFiltered,
       category,
-      fromSearchMenu
     } = this.props.search;
     const searchCategory = category && category === 'All' ? category.toLowerCase() : category;
 
@@ -154,15 +152,13 @@ class SearchResults extends Component {
         <Form className="filter search-form" onSubmit={handleSubmit(this.handleSubmit)}>
           <div className="content">
             <div className="search-container">
-              {fromSearchMenu || (searchTerm && searchTerm !== '') ?
-                <Field
-                  type="text"
-                  name="searchTerm"
-                  placeholder={formatMessage(messages.search)}
-                  component={this.renderButtonField}
-                  className="textfield"
-                />
-              : null}
+              <Field
+                type="text"
+                name="searchTerm"
+                placeholder={formatMessage(messages.search)}
+                component={this.renderButtonField}
+                className="textfield"
+              />
               <div className="search-filters">
                 <Field
                   type="text"
@@ -218,11 +214,6 @@ class SearchResults extends Component {
       </div>
     );
   }
-
-  viewCategory = (category, subCategory) => {
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
-  };
 
   setActiveCategory = () => {
     if (this.props.searchActions.setActiveCategory) {
