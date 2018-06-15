@@ -19,7 +19,8 @@ import {
   changePublisherName,
   changeKeywords,
   updatePublisherData,
-  getPublishers
+  getPublishers,
+  getPublisherData
 } from '../../../../../../../../../services/accountSettings/accountActions';
 import { dhtReconnect } from '../../../../../../../../../services/search/dht/dhtActions';
 import './search-priority-setting.scss';
@@ -99,6 +100,7 @@ class SearchPrioritySetting extends Component {
 
   componentWillMount() {
     this.props.accountSettingsActions.getPublishers();
+    this.props.accountSettingsActions.getPublisherData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -256,7 +258,9 @@ class SearchPrioritySetting extends Component {
             </div>
             <div className="col-1" />
           </div>
-          {this.renderPublisherFormFields()}
+          <div style={{marginBottom: '5px'}}>
+            {this.renderPublisherFormFields()}
+          </div>
           <div className="form-group">
             <span />
             <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
@@ -312,7 +316,8 @@ export default compose(
         changeKeywords,
         changePublisherName,
         getPublishers,
-        updatePublisherData
+        updatePublisherData,
+        getPublisherData
       }, dispatch),
       dhtActions: bindActionCreators({
         dhtReconnect,

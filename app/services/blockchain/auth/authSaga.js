@@ -111,7 +111,6 @@ export function* signup(action) {
     });
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
-      yield put(changeSearchPriorityData(searchPriorityData));
       yield put(getAccountAction(username));
       yield put({
         type: 'SIGNUP_SUCCEEDED',
@@ -120,6 +119,7 @@ export function* signup(action) {
           password
         }
       });
+      yield put(changeSearchPriorityData(searchPriorityData));
       yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId))
     } else {
       const { error } = resJson;
