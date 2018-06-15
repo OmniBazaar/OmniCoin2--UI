@@ -26,9 +26,10 @@ export function* accountSubscriber() {
 
 export function* updatePublicData() {
   const { account } = (yield select()).default;
+  const { is_a_processor } = (yield select()).default.auth.account;
   try {
     yield updateAccount({
-      transactionProcessor: account.transactionProcessor,
+      transactionProcessor: is_a_processor ? false: account.transactionProcessor,
       referrer: account.referrer,
       is_a_publisher: account.publisher,
       is_an_escrow: account.escrow,
