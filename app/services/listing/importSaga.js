@@ -11,6 +11,23 @@ const listingHandlersByVendor = {
   all: getListings,
 };
 
+const imagesDevPath = {
+  win32: './app/ob2/windows/',
+  linux: './app/ob2/linux/',
+  darwin: './app/ob2/mac/',
+};
+
+const imagesProdPath = {
+  win32: `${process.env.LOCALAPPDATA}/OmniBazaar 2/`,
+  linux: `${process.env.HOME}/.OmniBazaar/`,
+  darwin: `${process.env.HOME}/Library/Application Support/OmniBazaar 2/`,
+};
+
+const imageStoragePath = {
+  production: imagesProdPath[process.platform],
+  development: imagesDevPath[process.platform],
+};
+
 export function* importSubscriber() {
   yield all([
     takeLatest('STAGE_FILE', importListingsFromFile),
@@ -38,7 +55,10 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
       }
 
       imageToSave.name = `${generate()}-${itemToSave.productId}.${imageToSave.type.split('/')[1]}`;
-      imageToSave.path = `tmp/${imageToSave.name}`;
+
+      const path = process.env.DEBUG_PROD === 'true' ? imageStoragePath.development : imageStoragePath[process.env.NODE_ENV];
+
+      imageToSave.path = `${path}${imageToSave.name}`;
       imageToSave.lastModifiedDate = new Date();
 
       return new Promise((resolve) => {
