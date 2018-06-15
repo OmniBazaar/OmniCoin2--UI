@@ -232,6 +232,12 @@ class SignupForm extends Component {
     );
   }
 
+  showSuccessCopy(e) {
+    const { formatMessage } = this.props.intl;
+    toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied));
+    e.preventDefault();
+  }
+
   renderPasswordGeneratorField = ({
     input, meta: {
       asyncValidating, touched, error, warning
@@ -246,10 +252,7 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={() =>
-            toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied))
-          }
-          >
+          <Button onClick={this.showSuccessCopy.bind(this)}>
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
