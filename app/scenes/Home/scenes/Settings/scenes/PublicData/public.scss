@@ -38,5 +38,17 @@
         }
       }
     }
+
+    .ref-link-cont {
+      padding-bottom: 20px;
+
+      .ref-link-label {
+        margin: 10px 0px;
+      }
+      .ref-link-input {
+        width: 500px;
+      }
+
+    }
   }
 }
