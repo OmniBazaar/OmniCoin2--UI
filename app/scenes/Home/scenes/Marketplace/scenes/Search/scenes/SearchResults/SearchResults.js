@@ -151,8 +151,10 @@ class SearchResults extends Component {
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    const { searchResultsFiltered, subCategory } = this.props.search;
+    
+    const { searchResultsFiltered, subCategory, currency } = this.props.search;
     const { category } = this.props.formValues ? this.props.formValues : {};
+
 
     return (
       <div className="list-container search-filters">
@@ -201,6 +203,7 @@ class SearchResults extends Component {
         </Form>
         <TabsData
           data={searchResultsFiltered}
+          currency={currency}
           tabs={[
             {
               title: formatMessage(messages.featured),
@@ -312,7 +315,7 @@ export default compose(
       searchActions: bindActionCreators({
         filterSearchResults,
         searchListings,
-        setActiveCategory
+        setActiveCategory,
       }, dispatch),
     })
   )
