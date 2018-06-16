@@ -24,7 +24,8 @@ import {
 } from '../../../../../../../../components/ValidatableField/ValidatableField';
 
 import {
-  saveListingDefault
+  saveListingDefault,
+  loadListingDefault
 } from '../../../../../../../../services/listing/listingDefaultsActions';
 
 import '../AddListing/add-listing.scss';
@@ -45,6 +46,13 @@ class MyListingsDefaults extends Component {
   componentWillMount() {
     const { listingDefaults } = this.props;
     this.props.initialize(listingDefaults);
+    this.props.listingDefaultsActions.loadListingDefault();
+  }
+  
+  componentWillReceiveProps(newProps) {
+    if(newProps.listingDefaults.name !== this.props.listingDefaults.name) {
+      this.props.initialize(newProps.listingDefaults);
+      }
   }
 
   submit(values) {
@@ -323,7 +331,8 @@ export default compose(
     }),
     (dispatch) => ({
       listingDefaultsActions: bindActionCreators({
-        saveListingDefault
+        saveListingDefault,
+        loadListingDefault
       }, dispatch),
     }),
   ),
