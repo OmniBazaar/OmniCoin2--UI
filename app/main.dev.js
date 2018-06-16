@@ -16,7 +16,7 @@ import getmac from 'getmac';
 import MenuBuilder from './menu';
 import bitcoincli from 'blockchain-wallet-service';
 import { spawn } from 'child_process';
-
+import fs from 'fs';
 
 let mainWindow = null;
 
@@ -83,7 +83,6 @@ const runOb2 = async () => {
       case 'darwin':
         return process.env.HOME + '/Library/Application Support/OmniBazaar 2/ob2';
     }
-
   };
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     const path = getOb2DevPath();
@@ -93,6 +92,57 @@ const runOb2 = async () => {
     const path = getOb2ProdPath();
     handleOb2Connection(path);
    }
+};
+
+const processReferrer = async () => {
+  let path = './';
+  switch (process.platform) {
+    case 'win32':
+      path = process.env.LOCALAPPDATA + '/OmniBazaar 2/omnibazaar.set';
+      break;
+    case 'linux':
+      path = process.env.HOME + '/.OmniBazaar/omnibazaar.set';
+      break;
+    case 'darwin':
+      path = '/Library/Preferences/OmniBazaar 2/omnibazaar.set';
+      break;
+  }
+  ipcMain.on('get-referrer', (event) => {
+    fs.readFile(path, 'utf8', function (err, data) {
+      if (err) {
+        console.log('ERR ', err);
+        event.sender.send('receive-referrer', { referrer: null });
+      } else {
+        const start = data.lastIndexOf('_') + 1;
+        const end = data.lastIndexOf('.');
+        event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
+      }
+    });
+
+  });
+};
+
+const processMacAddress = async () => {
+  getmac.getMac((err, macAddress) => {
+    if (err) throw err;
+    machineId().then((hardDriveId) => {
+      if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+        macAddress += Math.random();
+        hardDriveId += Math.random();
+      }
+      ipcMain.on('get-pc-ids', (event) => {
+        event.sender.send('receive-pc-ids', { macAddress, hardDriveId });
+      });
+    });
+  });
+};
+
+const runBitcoinCli =  async () => {
+  bitcoincli.start({
+    port: 3000,
+    bind: 'localhost',
+    logLevel: 'info'
+  });
 };
 
 /**
@@ -113,27 +163,10 @@ app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
-
+  await processReferrer();
   await runOb2();
-
-  bitcoincli.start({
-    port: 3000,
-    bind: 'localhost',
-    logLevel: 'info'
-  });
-
-  getmac.getMac((err, macAddress) => {
-    if (err) throw err;
-    machineId().then((hardDriveId) => {
-      if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-        macAddress += Math.random();
-        hardDriveId += Math.random();
-      }
-      ipcMain.on('get-pc-ids', (event) => {
-        event.sender.send('receive-pc-ids', { macAddress, hardDriveId });
-      });
-    });
-  });
+  await processMacAddress();
+  await runBitcoinCli();
 
 
   mainWindow = new BrowserWindow({

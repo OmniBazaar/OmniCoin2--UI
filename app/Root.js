@@ -11,7 +11,12 @@ import StartGuide from './scenes/Home/components/StartGuide/StartGuide';
 import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
-import { getCurrentUser, getLastLoginUserName, requestPcIds } from './services/blockchain/auth/authActions';
+import {
+  getCurrentUser,
+  getLastLoginUserName,
+  requestPcIds,
+  requestReferrer
+} from './services/blockchain/auth/authActions';
 import { dhtConnect } from './services/search/dht/dhtActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
@@ -21,6 +26,7 @@ class Root extends Component {
   componentWillMount() {
     this.props.connectionActions.connectToNode(this.props.settings.activeNode);
     this.props.authActions.requestPcIds();
+    this.props.authActions.requestReferrer();
     this.props.authActions.getLastLoginUserName();
     this.props.dhtActions.dhtConnect();
     this.props.listingDefaultsActions.loadListingDefault();
@@ -97,7 +103,7 @@ export default connect(
       connectToNode, getDynGlobalObject
     }, dispatch),
     authActions: bindActionCreators({
-      requestPcIds, getCurrentUser, getLastLoginUserName
+      requestPcIds, getCurrentUser, getLastLoginUserName, requestReferrer
     }, dispatch),
     dhtActions: bindActionCreators({
       dhtConnect,

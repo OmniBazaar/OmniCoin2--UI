@@ -160,7 +160,7 @@ class SignupForm extends Component {
     this.state = {
       keywordsTouched: false
     };
-
+    this.defaultReferrer = localStorage.getItem('referrer');
     this.submit = this.submit.bind(this);
     this.signIn = this.signIn.bind(this);
   }
@@ -168,8 +168,15 @@ class SignupForm extends Component {
   componentWillMount() {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
-      searchPriority: PriorityTypes.LOCAL_DATA
+      searchPriority: PriorityTypes.LOCAL_DATA,
     });
+  }
+
+  componentDidMount() {
+    if (this.defaultReferrer) {
+      this.props.formActions.change('referrer', this.defaultReferrer);
+      this.referrerInput.focus();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -280,6 +287,7 @@ class SignupForm extends Component {
             {...input}
             type="text"
             placeholder={formatMessage(messages.referrerName)}
+            ref={(input) => { this.referrerInput = input; }}
             className={inputClassName}
           />
           <Icon
