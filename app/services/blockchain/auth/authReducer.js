@@ -7,6 +7,7 @@ import {
   logout,
   getCurrentUser,
   requestPcIds,
+  requestReferrer,
   getAccount,
   getLastLoginUserName,
   showTermsModal
@@ -72,6 +73,15 @@ const reducer = handleActions({
       localStorage.setItem('macAddress', arg.macAddress);
     });
     ipcRenderer.send('get-pc-ids', null);
+    return state;
+  },
+  [requestReferrer](state) {
+    console.log('REQUESTING REFERRER ');
+    ipcRenderer.once('receive-referrer', (event, arg) => {
+      localStorage.setItem('referrer', arg.referrer);
+    });
+    ipcRenderer.send('get-referrer', null);
+    return state;
   },
   [getLastLoginUserName]: (state) => {
     const user = getStoredCurrentUser();

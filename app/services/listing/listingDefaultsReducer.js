@@ -26,7 +26,10 @@ const defaultState = {
   images: {},
   address: '',
   city: '',
-  post_code: ''
+  post_code: '',
+  country: '',
+  state: '',
+  name: ''
 };
 
 const fixImagesData = (data) => {
@@ -43,14 +46,17 @@ const reducer = handleActions({
   [loadListingDefault](state) {
     const data = getStoredListingDefautls();
 
-    if (data) {
+    if (Object.keys(data).length) {
       return {
         ...state,
         ...fixImagesData(data)
       };
     }
 
-    return state;
+    return {
+      ...state,
+      ...defaultState
+    };
   },
   [saveListingDefault](state, { payload: { listingDefault } }) {
     const data = {
