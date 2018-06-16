@@ -148,7 +148,7 @@ export function* getAccount({ payload: { username } }) {
   try {
     const account = yield call(fetchAccount, username);
     const isProcessor = yield Apis.instance().db_api().exec('lookup_witness_accounts', [username, 1]);
-    account.is_a_processor = isProcessor[0][0] === username;
+    account.is_a_processor = isProcessor[0] && isProcessor[0][0] === username;
     yield put({ type: 'GET_ACCOUNT_SUCCEEDED', account });
   } catch (e) {
     console.log('ERROR ', e);
