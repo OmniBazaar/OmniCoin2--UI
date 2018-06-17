@@ -18,6 +18,11 @@ import ServicesIcon from './images/bg-services.jpg';
 import JobsIcon from './images/bg-jobs.jpg';
 import CryptoIcon from './images/bg-crypto.jpg';
 import Logo from '../../../../assets/images/logo.png';
+import Overview from './images/Overview.png';
+import Versatility from './images/Versatility.png';
+import Rewards from './images/Rewards.png';
+import Fees from './images/Fees.png';
+import Benefits from './images/Benefits.png';
 import EbayNet from '../../../../assets/images/ebay-net.png';
 import ObNet from '../../../../assets/images/ob-net.png';
 
@@ -276,30 +281,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper overview">
-        <div className="items">
-          <div className="left-items">
-            <div className="title">{formatMessage(messages.marketsLabel)}</div>
-            <Image src={EbayNet} width={300} className="net-img" />
-            <div className="title">{formatMessage(messages.highSellerFees)}</div>
-            <div className="small">{formatMessage(messages.includingPayment1)}</div>
-            <div>{formatMessage(messages.authorizationControl)}</div>
-            <div>{formatMessage(messages.tracksEvery)}</div>
-            <div>{formatMessage(messages.pushesContent)}</div>
-            <div>{formatMessage(messages.requiresBank)}</div>
-            <div>{formatMessage(messages.contentCensorship)}</div>
-          </div>
-          <div className="right-items">
-            <Image src={Logo} width={300} />
-            <Image src={ObNet} width={300} className="net-img" />
-            <div className="title">{formatMessage(messages.lowerFees)}</div>
-            <div className="small">{formatMessage(messages.includingPayment2)}</div>
-            <div>{formatMessage(messages.communityOwned)}</div>
-            <div>{formatMessage(messages.noTrackingUser)}</div>
-            <div>{formatMessage(messages.listingsYouChoose)}</div>
-            <div>{formatMessage(messages.useBitcoin)}</div>
-            <div>{formatMessage(messages.communityPolicing)}</div>
-          </div>
-        </div>
+        <Image src={Overview} width={490} height={380}/>
       </div>
     );
   }
@@ -309,27 +291,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper versatility">
-        <p className="title">{formatMessage(messages.whatYouCanSell)}</p>
-        <div className="items">
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.productsServices)}</span> {formatMessage(messages.likeAmazon)}
-          </div>
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.personalItems)}</span> {formatMessage(messages.likeEbay)}
-          </div>
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.professionalServices)}</span> {formatMessage(messages.likeUpwork)}
-          </div>
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.gigsServices)}</span> {formatMessage(messages.likeFiverr)}
-          </div>
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.localCrypto)}</span> {formatMessage(messages.likeLocalBitcoins)}
-          </div>
-          <div className="item">
-            <Icon name="check" /><span className="subtitle">{formatMessage(messages.overstockUnused)}</span> {formatMessage(messages.likeBarter)}
-          </div>
-        </div>
+        <Image src={Versatility} width={456} height={300}/>
       </div>
     );
   }
@@ -339,49 +301,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper rewards">
-        <p className="title">{formatMessage(messages.incentivesBonuses)}</p>
-        <div className="items">
-          <div className="left-items">
-            <div className="subtitle">{formatMessage(messages.earlyAdopters)}</div>
-            <div className="item">
-              <div>{formatMessage(messages.registrationAir)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>10,000 XOM</div>
-            </div>
-            <div className="separator" />
-            <div className="item">
-              <div>{formatMessage(messages.referralsNewUser)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>2,500 XOM</div>
-            </div>
-            <div className="separator" />
-            <div className="item">
-              <div>{formatMessage(messages.firstSale)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>500 XOM</div>
-            </div>
-          </div>
-          <div className="right-items">
-            <div className="subtitle">{formatMessage(messages.continuing)}</div>
-            <div className="item">
-              <div>{formatMessage(messages.transactionProcessing)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>50 XOM {formatMessage(messages.perBlock)}</div>
-            </div>
-            <div className="separator" />
-            <div className="item">
-              <div>{formatMessage(messages.referralsEachTransaction)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>0.25% {formatMessage(messages.perSale)}</div>
-            </div>
-            <div className="separator" />
-            <div className="item">
-              <div>{formatMessage(messages.proxyListing)}</div>
-              <div>{formatMessage(messages.upTo)}</div>
-              <div>0.50% {formatMessage(messages.perListing)}</div>
-            </div>
-          </div>
-        </div>
+        <Image src={Rewards} width={456} height={300} />
       </div>
     );
   }
@@ -391,49 +311,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper benefits">
-        <p className="title">{formatMessage(messages.omniBazaarFeatures)}</p>
-        <Table className="benefits-table" celled striped fixed singleLine>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell colSpan="1">
-                <Icon name="caret down" size={32} /> {formatMessage(messages.omniBazaarFeature)}
-              </Table.HeaderCell>
-              <Table.HeaderCell colSpan="2">
-                <Icon name="caret down" size={32} /> {formatMessage(messages.yourBenefit)}
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.lowerPlatformFees)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.moreProfit)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.lowerPricesBuyers)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.userOwned)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.shopWithoutMiddlemen)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.payWithoutBank)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.noTrackUserInfo)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.noPushMarketing)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.morePrivacy)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.useBitcoin)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.paymentsAreSecure)}</Table.Cell>
-              <Table.Cell>{formatMessage(messages.noChargeBacks)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.communityPolicing)}</Table.Cell>
-              <Table.Cell colSpan="2">{formatMessage(messages.usersProtectFromIllegal)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>{formatMessage(messages.priorityListingsAvailable)}</Table.Cell>
-              <Table.Cell colSpan="2">{formatMessage(messages.makeImportantListings)}</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
+        <Image src={Benefits} width={760} height={500}/>
       </div>
     );
   }
@@ -443,60 +321,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper fees">
-        <div className="items">
-          <div className="left-items">
-            <div className="title">{formatMessage(messages.mandatoryFees)}</div>
-            <div className="row">
-              <div className="item">
-                <div>{formatMessage(messages.monthlyFees)}</div>
-                <div className="amount">$0</div>
-              </div>
-              <div className="item">
-                <div>{formatMessage(messages.listingFees)}</div>
-                <div className="amount">$0</div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="item">
-                <div>{formatMessage(messages.transactionFees)}</div>
-                <div className="amount">$0</div>
-              </div>
-              <div className="item">
-                <div>{formatMessage(messages.softwareCost)}</div>
-                <div className="amount">$0</div>
-              </div>
-            </div>
-            <div className="small">{formatMessage(messages.feesNote1)}</div>
-          </div>
-          <div className="right-items">
-            <div className="title">{formatMessage(messages.optionalServices)}</div>
-            <div className="row">
-              <div className="item">
-                <div>{formatMessage(messages.affiliateProgram)}</div>
-                <div className="amount">0 - .5%</div>
-                <div className="note">{formatMessage(messages.userSelectable)}</div>
-              </div>
-              <div className="item">
-                <div>{formatMessage(messages.escrowAgents)}</div>
-                <div className="amount">0 - .5%</div>
-                <div className="note">{formatMessage(messages.marketDrivenPrice)}</div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="item">
-                <div>{formatMessage(messages.proxyListing)}:</div>
-                <div className="amount">0 - .5%</div>
-                <div className="note">{formatMessage(messages.marketDrivenPrice)}</div>
-              </div>
-              <div className="item">
-                <div>{formatMessage(messages.priorityListing)}</div>
-                <div className="amount">0 - 2%</div>
-                <div className="note">{formatMessage(messages.userSelectable)}</div>
-              </div>
-            </div>
-            <div className="small">{formatMessage(messages.feesNote2)}</div>
-          </div>
-        </div>
+        <Image src={Fees} width={456} height={300}/>
       </div>
     );
   }
