@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'Preferences.seconds',
     defaultMessage: 'SECONDS'
   },
+  minutes: {
+    id: 'Preferences.minutes',
+    defaultMessage: 'MINUTES'
+  },
   xomUnit: {
     id: 'Preferences.xomUnit',
     defaultMessage: 'XOM'
