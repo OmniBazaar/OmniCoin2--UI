@@ -8,6 +8,7 @@ import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import { NavLink } from 'react-router-dom';
+import moment from 'moment';
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
@@ -455,6 +456,7 @@ class ListingForm extends Component {
                 name="start_date"
                 component={this.Calendar}
                 className="textfield"
+                maxDate={(formValues && formValues.end_date) ? formValues.end_date : null}
                 props={{
                   placeholder: formatMessage(messages.from)
                 }}
@@ -463,17 +465,18 @@ class ListingForm extends Component {
             </Grid.Column>
             {!this.state.toDateDisabled &&
             (<Grid.Column width={4} className="align-top">
-                <Field
-                  type="text"
-                  name="end_date"
-                  component={this.Calendar}
-                  className="textfield"
-                  props={{
-                    placeholder: formatMessage(messages.to)
-                  }}
-                  validate={requiredFieldValidator}
-                />
-              </Grid.Column>)
+              <Field
+                type="text"
+                name="end_date"
+                component={this.Calendar}
+                className="textfield"
+                minDate={(formValues && formValues.start_date) ? formValues.start_date : null}
+                props={{
+                  placeholder: formatMessage(messages.to)
+                }}
+                validate={requiredFieldValidator}
+              />
+            </Grid.Column>)
             }
             <Grid.Column width={4}>
               <Field
@@ -646,6 +649,7 @@ class ListingForm extends Component {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
+                validate={requiredFieldValidator}
               />
             </Grid.Column>
           </Grid.Row>

@@ -17,9 +17,11 @@ class Calendar extends Component {
       onChange(date ? date.format('YYYY-MM-DD') : '');
     }
   }
-
+  
   render() {
     const { value } = this.props.input;
+    const minDate = this.props.minDate ? moment(this.props.minDate) : moment();
+    const maxDate = this.props.maxDate ? moment(this.props.maxDate) : null;
     return (
       <div className="hybrid-input">
         <label>
@@ -27,6 +29,8 @@ class Calendar extends Component {
             selected={value ? moment(value) : null}
             placeholderText={this.props.placeholder}
             onChange={this.onChange.bind(this)}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           <Image className='calendar-icon' src={CalendarIcon} width={size} height={size} />
         </label>
