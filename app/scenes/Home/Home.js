@@ -205,13 +205,6 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
-                <NavLink to="/listings-defaults" activeClassName="active" className="menu-item">
-                  <Image src={UserIcon} height={iconSize} width={iconSize} />
-                  <FormattedMessage
-                    id='Marketplace.newListingDefaults'
-                    defaultMessage='New Listing Defaults'
-                  />
-                </NavLink>
                 <div className="menu-item" onClick={this.toggleSettingsAccount}>
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
