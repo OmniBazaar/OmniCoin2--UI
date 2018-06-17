@@ -242,7 +242,7 @@ class PublicData extends Component {
         {account.referrer &&
         <div className="ref-link-cont">
           <div className="ref-link-label">Your custom OmniBazaar download address:</div>
-          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.lastLoginUserName}`}/>
+          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
         </div>
         }
         <div className="description">
