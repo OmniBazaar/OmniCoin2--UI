@@ -64,7 +64,8 @@ class ListingForm extends Component {
     this.PriceInput = makeValidatableField(this.renderLabeledField);
 
     this.state = {
-      keywords: ''
+      keywords: '',
+      toDateDisabled: true
     };
   }
 
@@ -176,6 +177,12 @@ class ListingForm extends Component {
 
     this.props.formActions.change('contact_info', contactInfo);
   }
+  
+  onContinuousChange = (event, newValue) => {
+    this.setState({
+      toDateDisabled: !this.state.toDateDisabled
+    })
+  };
 
   onKeywordsBlur(e) {
     this.setState({
@@ -264,6 +271,8 @@ class ListingForm extends Component {
       invalid,
       formValues
     } = this.props;
+  
+    const formValues = this.props.formValues || {};
     const { error, saving } = this.props.listing.saveListing;
 
     return (
@@ -455,7 +464,8 @@ class ListingForm extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top">
+            {!this.state.toDateDisabled &&
+            (<Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="end_date"
@@ -467,11 +477,16 @@ class ListingForm extends Component {
                 }}
                 validate={requiredFieldValidator}
               />
-            </Grid.Column>
+            </Grid.Column>)
+            }
             <Grid.Column width={4}>
               <Field
                 name="continuous"
                 component={Checkbox}
+                input={{
+                  value: true,
+                  onChange: this.onContinuousChange
+                }}
                 props={{
                   label: formatMessage(messages.continuous)
                 }}

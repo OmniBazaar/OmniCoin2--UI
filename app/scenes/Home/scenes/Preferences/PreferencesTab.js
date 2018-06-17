@@ -103,7 +103,7 @@ class PreferencesTab extends Component {
               component={FormInputWithIconOnRight}
               className="textfield"
               props={{
-                rightButtonText: formatMessage(messages.seconds)
+                rightButtonText: formatMessage(messages.minutes)
               }}
             />
             <div className="col-1" />
