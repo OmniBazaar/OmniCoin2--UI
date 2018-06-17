@@ -405,7 +405,7 @@ class Listing extends Component {
         }
         <div className="availability">
           <span>{formatMessage(messages.available)}</span>
-          <span>{listingDetail.quantity}</span>
+          <span>{listingDetail.quantity + ' ' + listingDetail.units}</span>
         </div>
       </div>
     );
