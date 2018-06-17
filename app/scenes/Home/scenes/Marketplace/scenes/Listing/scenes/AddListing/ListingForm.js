@@ -268,8 +268,7 @@ class ListingForm extends Component {
     const {
       handleSubmit,
       editingListing,
-      invalid,
-      formValues
+      invalid
     } = this.props;
   
     const formValues = this.props.formValues || {};
