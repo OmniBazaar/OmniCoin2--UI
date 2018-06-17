@@ -58,13 +58,14 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { getListingDefault } from '../../services/listing/listingDefaultsActions';
 
 const iconSize = 20;
 
 
 class Home extends Component {
+  
   state = {visible: true};
 
   componentWillReceiveProps(nextProps) {
@@ -110,13 +111,13 @@ class Home extends Component {
   };
   
   handleChange = ({ idle }) => {
-    this.props.history.push('/signup');
+    idle && this.props.authActions.logout();
   };
 
   render() {
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
-    logoutTimeout = logoutTimeout * 100;
+    logoutTimeout = logoutTimeout * 100 * 60;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -280,7 +281,7 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout }, dispatch),
     listingActions: bindActionCreators({ getListingDefault }, dispatch)
   })
 )(Home);
@@ -304,7 +305,8 @@ Home.propTypes = {
     setActiveCategory: PropTypes.func
   }),
   authActions: PropTypes.shape({
-    getAccount: PropTypes.func
+    getAccount: PropTypes.func,
+    logout: PropTypes.func
   })
 };
 
