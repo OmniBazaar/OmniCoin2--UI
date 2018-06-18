@@ -60,6 +60,48 @@ function reputationOptions(from = 0, to = 10) {
   return options;
 }
 
+const coefficients = {
+  USDtoEUR: 0.86,
+  USDtoBITCOIN: 0.000133,
+  USDtoOMNICOIN: 300.03,
+  USDtoGBP: 0.75,
+  USDtoCAD: 0.76,
+  USDtoSEK: 8.89,
+  USDtoAUD: 0.75,
+  USDtoJPY: 108.5
+};
+
+Object.keys(coefficients).forEach(key => {
+  const units = key.split('to');
+  coefficients[`${units[1]}to${units[0]}`] = 1/coefficients[key];
+});
+
+const currencyConverter = (amount, fromCur, toCur) => {
+  if (fromCur === toCur) {
+    return amount;
+  }
+
+  const d = `${fromCur}to${toCur}`;
+  if (coefficients[d]) {
+    return amount * coefficients[d];
+  }
+
+  const inverD = `${toCur}to${fromCur}`;
+  if (coefficients[inverD]) {
+    coefficients[d] = 1/coefficients[inverD];
+    return amount * coefficients[d];
+  }
+
+  const toUSD = `${fromCur}toUSD`;
+  const fromUSD = `USDto${toCur}`;
+  if (!coefficients[toUSD] || !coefficients[fromUSD]) {
+    return amount;
+  }
+
+  coefficients[d] = coefficients[toUSD] * coefficients[fromUSD];
+  return amount * coefficients[d];
+}
+/*
 function currencyConverter(amount, from, to) {
   const usdRates = {
      EUR: 0.86,
@@ -77,7 +119,7 @@ function currencyConverter(amount, from, to) {
   if (to === 'BTC') {
     return (amount  / (btcUSD * (usdRates[from] || 1))).toFixed(8);
   }
-}
+}*/
 
 export {
   wrapRequest,

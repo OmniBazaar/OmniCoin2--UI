@@ -221,7 +221,7 @@ class Listing extends Component {
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC');
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(2);
       const number =  this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
@@ -229,7 +229,7 @@ class Listing extends Component {
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC');
+      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(9);
       const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail['bitcoin_address'];
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
@@ -380,13 +380,13 @@ class Listing extends Component {
             }
           </span>
           {listingDetail['price_using_omnicoin'] &&
-              <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMC')}
+              <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(2)}
                          coinLabel={CoinTypes.OMNI_COIN}
                          currency={CoinTypes.OMNI_CURRENCY}
                          isUserOwner={this.isOwner()}/>
           }
           {listingDetail['price_using_btc'] &&
-            <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BTC')}
+            <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(8)}
                        coinLabel={CoinTypes.BIT_COIN}
                        currency={CoinTypes.BIT_CURRENCY}
                        isUserOwner={this.isOwner()}/>
