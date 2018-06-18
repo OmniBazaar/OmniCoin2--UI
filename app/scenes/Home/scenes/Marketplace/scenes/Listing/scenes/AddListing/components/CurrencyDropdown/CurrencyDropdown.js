@@ -18,6 +18,9 @@ class CurrencyDropdown extends Component {
     if (onChange) {
       onChange(data.value);
     }
+    if (this.props.onChange) {
+      this.props.onChange(data.value);
+    }
   }
 
   render() {
@@ -40,7 +43,8 @@ CurrencyDropdown.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
-  input: PropTypes.object.isRequired
+  input: PropTypes.object.isRequired,
+  onChange: PropTypes.func
 };
 
 export default injectIntl(CurrencyDropdown);

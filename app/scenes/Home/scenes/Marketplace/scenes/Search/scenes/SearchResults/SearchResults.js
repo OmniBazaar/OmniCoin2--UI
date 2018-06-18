@@ -143,6 +143,12 @@ class SearchResults extends Component {
     </div>
   );
 
+  changeCurrency(currency) {
+    const { filterSearchResults } = this.props.searchActions;
+    const { searchTerm, category, subCategory } = this.props.search;
+    filterSearchResults(searchTerm, currency, category, subCategory);
+  }
+
   handleSubmit(values) {
     const currency = values.currency;
     const searchTerm = (this.searchInput && this.searchInput.value) || '';
@@ -188,17 +194,19 @@ class SearchResults extends Component {
                     parentCategory: category
                   }}
                 />
-                <Field
-                  name="currency"
-                  component={this.CurrencyDropdown}
-                  props={{
-                    placeholder: formatMessage(messages.currency)
-                  }}
-                />
                 <Button
                   content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
                   className="button--primary search-btn"
                   type="submit"
+                />
+
+                <Field
+                  name="currency"
+                  component={this.CurrencyDropdown}
+                  props={{
+                    placeholder: formatMessage(messages.currency),
+                    onChange: this.changeCurrency.bind(this)
+                  }}
                 />
               </div>
             </div>

@@ -143,5 +143,10 @@
       flex-basis: 200px;
       margin-right: 10px;
     }
+
+    .search-filters > div:last-child {
+      flex: 0.8 !important;
+      margin-left: 25px;
+    }
   }
 }
