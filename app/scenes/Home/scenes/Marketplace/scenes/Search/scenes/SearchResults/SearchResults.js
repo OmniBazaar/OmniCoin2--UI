@@ -90,10 +90,13 @@ class SearchResults extends Component {
   }
 
   componentDidMount() {
-    const { searchTerm, category, subCategory } = this.props.search;
-    this.props.change('searchTerm', searchTerm);
-    this.props.change('category', category);
-    this.props.change('subCategory', subCategory);
+    const { searchTerm, category, subCategory, currency } = this.props.search;
+    this.props.initialize({
+      searchTerm,
+      category,
+      subCategory,
+      currency
+    });
   }
 
   componentWillReceiveProps(nextProps) {

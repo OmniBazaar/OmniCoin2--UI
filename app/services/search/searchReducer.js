@@ -120,45 +120,55 @@ const changeCurrencies = (selectedCurrency, listing ) => {
   
 };
 
+const filterResultData = (searchResults, { searchText, currency, category, subCategory }) => {
+  let data = searchResults;
+
+  const activePageSearchResults = 1;
+  let totalPagesSearchResults;
+  if (currency !== 'all' && currency !== undefined) {
+    data = changeCurrencies(currency, data)
+  }
+  let currentData = [];
+  let resultByFilters = [];
+  
+  if (searchText !== '') {
+    let filteredData = data.filter(listing => {
+      return Object.values(listing).filter(
+          value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
+        ).length !== 0;
+    });
+    filteredData = _.without(filteredData, undefined);
+    
+    resultByFilters = searchByFilters(filteredData, category, subCategory);
+
+    totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+    currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
+  } else {
+    currentData = data;
+    resultByFilters = searchByFilters(currentData, category, subCategory);
+    totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
+    currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
+  }
+  
+  return {
+    searchText,
+    activePageSearchResults,
+    totalPagesSearchResults,
+    searchResultsFiltered: currentData,
+    currency
+  };
+}
+
 const reducer = handleActions({
   
   [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
-    let data = state.searchResults;
-
-    const activePageSearchResults = 1;
-    let totalPagesSearchResults;
-    if (currency !== 'all' && currency !== undefined) {
-      data = changeCurrencies(currency, data)
-    }
-    let currentData = [];
-    let resultByFilters = [];
-    
-    if (searchText !== '') {
-      let filteredData = data.filter(listing => {
-        return Object.values(listing).filter(
-            value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
-          ).length !== 0;
-      });
-      filteredData = _.without(filteredData, undefined);
-      
-      resultByFilters = searchByFilters(filteredData, category, subCategory);
-
-      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
-      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
-    } else {
-      currentData = data;
-      resultByFilters = searchByFilters(currentData, category, subCategory);
-      totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
-      currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
-    }
+    const filterData = filterResultData(state.searchResults, {
+      searchText, currency, category, subCategory
+    });
     
     return {
       ...state,
-      searchText,
-      activePageSearchResults,
-      totalPagesSearchResults,
-      searchResultsFiltered: currentData,
-      currency
+      ...filterData
     };
   },
   [filterSearchByCategory](state) {
@@ -350,10 +360,20 @@ const reducer = handleActions({
       })) : [];
     
     if (parseInt(data.id, 10) === state.searchId) {
+      const searchResults = [
+        ...state.searchResults,
+        ...listings
+      ];
+      const filterResults = filterResultData(searchResults, {
+        searchText: '',
+        currency: state.currency,
+        category: state.category,
+        subCategory: state.subcategory
+      });
       return {
         ...state,
-        searchResults: [...state.searchResults, ...listings],
-        searchResultsFiltered: [...state.searchResults, ...listings],
+        searchResults: searchResults,
+        searchResultsFiltered: filterResults.searchResultsFiltered,
         searching: false,
       };
     }
