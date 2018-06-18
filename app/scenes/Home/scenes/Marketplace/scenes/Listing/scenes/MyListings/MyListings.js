@@ -152,7 +152,7 @@ class MyListings extends Component {
           tabs={[
             {
               title: formatMessage(messages.byDate),
-              sortBy: 'date',
+              sortBy: 'start_date',
               sortDirection: 'descending'
             },
             {

@@ -104,12 +104,12 @@ class CategoryListing extends Component {
           tabs={[
             {
               title: formatMessage(messages.featured),
-              sortBy: 'date',
+              sortBy: 'start_date',
               sortDirection: 'ascending'
             },
             {
               title: formatMessage(messages.newArrivals),
-              sortBy: 'date',
+              sortBy: 'start_date',
               sortDirection: 'descending'
             },
             {
