@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import SearchHistory from './searchHistory';
 import { categories } from '../../scenes/Home/scenes/Marketplace/categories';
+import { currencyConverter } from '../utils';
 
 import {
   filterSearchResults,
@@ -82,42 +83,22 @@ const searchByFilters = (listings, category, subCategory) => {
   };
 };
 
-// Temporary solution, need to get from API
-const coefficients = {
-  USDtoEUR: 0.86,
-  USDtoBITCOIN: 0.000153,
-  USDtoOMNICOIN: 0.3849,
-  EURtoBITCOIN: 1,
-  EURtoOMNICOIN: 0.45,
-  EURtoUSD: 1.16,
-  BITCOINtoUSD: 6542.60,
-  BITCOINtoEUR: 5654.7,
-  BITCOINtoOMNICOIN: 1,
-  OMNICOINtoUSD: 1,
-  OMNICOINtoEUR: 1,
-  OMNICOINtoBITCOIN: 1,
-};
-
 const changeCurrencies = (selectedCurrency, listing ) => {
-  
-  let fromTo;
-  
   return listing.map((item) => {
-    fromTo = `${item.currency}to${selectedCurrency}`;
-    
     if (selectedCurrency === item.currency) {
       return {
         ...item,
         convertedPrice : item.price
       }
     }  else {
+      const price = currencyConverter(item.price, item.currency, selectedCurrency);
+
       return {
         ...item,
-        convertedPrice: item.price * coefficients[fromTo]
+        convertedPrice: price
       }
     }
-  })
-  
+  });
 };
 
 const filterResultData = (searchResults, { searchText, currency, category, subCategory }) => {
