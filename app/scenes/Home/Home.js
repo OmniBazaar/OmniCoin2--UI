@@ -63,7 +63,6 @@ import { getListingDefault } from '../../services/listing/listingDefaultsActions
 
 const iconSize = 20;
 
-
 class Home extends Component {
   
   state = {visible: true};
@@ -111,13 +110,14 @@ class Home extends Component {
   };
   
   handleChange = ({ idle }) => {
-    idle && this.props.authActions.logout();
+    let { logoutTimeout } = this.props.preferences.preferences;
+    logoutTimeout && idle && this.props.authActions.logout();
   };
 
   render() {
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
-    logoutTimeout = logoutTimeout * 100 * 60;
+    logoutTimeout = logoutTimeout * 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -257,10 +257,12 @@ class Home extends Component {
           <ChainFooter />
         </div>
         <BalanceUpdateBackground />
-        <Idled
-          onChange={this.handleChange}
-          timeout={logoutTimeout}
-        />
+        {logoutTimeout &&
+          <Idled
+            onChange={this.handleChange}
+            timeout={logoutTimeout}
+          />
+        }
       </div>
     );
   }
