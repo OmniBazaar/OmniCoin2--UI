@@ -96,5 +96,9 @@ export default defineMessages({
   loadListing: {
     id: 'Listing.loadListing',
     defaultMessage: 'Load listing'
+  },
+  outOfStock: {
+    id: 'Listing.outOfStock',
+    defaultMessage: 'Out of stock'
   }
 });

@@ -121,7 +121,7 @@ class PreferencesTab extends Component {
             {/*/>*/}
             {/*<div className="col-1" />*/}
           {/*</div>*/}
-          <div className="form-group">
+          {/*<div className="form-group">
             <span>{formatMessage(messages.byDefaultVote)}</span>
             <Field
               name="vote"
@@ -142,7 +142,7 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div>
+          </div>*/}
           {/*<div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
