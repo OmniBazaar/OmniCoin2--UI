@@ -86,8 +86,8 @@ class Listing extends Component {
     }
     if (listingDetail !== nextProps.listing.listingDetail) {
       this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
-      if (nextProps.listing.listingDetail.quantity === 0) {
-        this.errorToast(messages.outOfStock)
+      if (nextProps.listing.listingDetail && nextProps.listing.listingDetail.quantity === 0) {
+        this.errorToast(messages.outOfStock);
       }
     }
     if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
