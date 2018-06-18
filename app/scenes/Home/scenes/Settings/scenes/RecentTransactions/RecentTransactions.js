@@ -172,6 +172,8 @@ class RecentTransactions extends Component {
         return 'listing';
       case ChainTypes.operations.account_update:
         return 'account';
+      case ChainTypes.operations.witness_create:
+        return 'account';
       case ChainTypes.operations.welcome_bonus_operation:
         return 'bonus';
       case ChainTypes.operations.referral_bonus_operation:
