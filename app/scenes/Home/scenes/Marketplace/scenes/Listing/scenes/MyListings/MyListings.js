@@ -8,6 +8,7 @@ import { Form, Icon, Button } from 'semantic-ui-react';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
+import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/SearchFilters';
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
@@ -63,6 +64,7 @@ class MyListings extends Component {
     super(props);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChangeCurrency = this.onChangeCurrency.bind(this);
   }
 
   componentDidMount() {
@@ -71,80 +73,41 @@ class MyListings extends Component {
     this.props.listingActions.filterMyListings('all', 'all');
   }
 
-  renderFilters = ({
-    input, dropdownPlaceholder
-  }) => (
-    <div className="search-actions">
-      <CategoryDropdown
-        placeholder={dropdownPlaceholder}
-        selection
-        input={{
-          value: input.category,
-          onChange: (value) => {
-            input.onChange({
-              ...input.value,
-              category: value
-            });
-          }
-        }}
-      />
-    </div>
-  );
-
-  handleSubmit(values) {
+  handleSubmit(values, searchTerm) {
     const currency = values.currency;
-    const category = (values && values.search) ? values.search.category : null;
-    this.props.listingActions.filterMyListings(currency, category);
+    const searchText = searchTerm || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.listingActions.filterMyListings(currency, category, subcategory, searchText);
+  }
+
+  onChangeCurrency(currency) {
+    this.props.listingActions.filterMyListings(currency);
   }
 
   renderMyListings() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
     const {
       myListings,
       requestMyListings,
       myListingsFiltered,
       myListingsCurrency,
-      myListingsCategory
+      myListingsCategory,
+      myListingsSubCategory,
+      myListingsSearchTerm,
     } = this.props.listing;
 
     let data = myListings;
     if ((myListingsCurrency && myListingsCurrency.toLowerCase() !== 'all') ||
-        (myListingsCategory && myListingsCategory !== 'all')) {
+        (myListingsCategory && myListingsCategory !== 'all') ||
+        (myListingsSubCategory && myListingsSubCategory !== 'all') ||
+        (myListingsSearchTerm && myListingsSearchTerm !== '')) {
       data = myListingsFiltered;
     }
 
     return (
       <div className="list-container my-listings">
-        <div className="filters">
-          <Form className="search-form" onSubmit={handleSubmit(this.handleSubmit)}>
-            <Field
-              type="text"
-              name="search"
-              placeholder="Search"
-              defaultValue={myListingsCategory}
-              dropdownPlaceholder="Categories"
-              component={this.renderFilters}
-              className="textfield"
-              props={{
-                value: myListingsCategory
-              }}
-            />
-            <Field
-              name="currency"
-              component={this.CurrencyDropdown}
-              props={{
-                value: myListingsCurrency,
-                placeholder: formatMessage(messages.currency)
-              }}
-            />
-            <Button
-              content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-              className="button--primary search-btn"
-              type="submit"
-            />
-          </Form>
-        </div>
+        <SearchFilters onSubmit={this.handleSubmit} onChangeCurrency={this.onChangeCurrency} />
         <TabsData
           data={data}
           showTrailingLoader={requestMyListings.ids.length !== 0}
@@ -175,7 +138,7 @@ class MyListings extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <div className="marketplace-container category-listing listing container">
+      <div className="marketplace-container category-listing container">
         <div className="header">
           <Menu />
         </div>
