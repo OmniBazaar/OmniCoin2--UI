@@ -231,6 +231,7 @@ class HistoryStorage extends BaseStorage {
       ChainTypes.operations.listing_delete_operation,
       ChainTypes.operations.welcome_bonus_operation,
       ChainTypes.operations.referral_bonus_operation,
+      ChainTypes.operations.witness_create
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
@@ -271,6 +272,7 @@ class HistoryStorage extends BaseStorage {
         } else if ([ChainTypes.operations.listing_create_operation,
               ChainTypes.operations.listing_update_operation,
               ChainTypes.operations.listing_delete_operation,
+              ChainTypes.operations.witness_create,
               ChainTypes.operations.account_update].includes(el.op[0])) {
           this.addOperation({
             id: el.id,
