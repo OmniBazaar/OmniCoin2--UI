@@ -131,7 +131,7 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
   let currentData = [];
   let resultByFilters = [];
   
-  if (searchText !== '') {
+  if (searchText) {
     let filteredData = data.filter(listing => {
       return Object.values(listing).filter(
           value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
