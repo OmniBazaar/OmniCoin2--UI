@@ -253,7 +253,7 @@ class PublicData extends Component {
             <p className="title">{formatMessage(messages.publisherTitle)}</p>
             <div>
               {formatMessage(messages.publisherBody)}
-              <a>DynDNS</a> {formatMessage(messages.or)} <a>NoIP</a>.
+              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {formatMessage(messages.or)} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
           </div>
         </div>
