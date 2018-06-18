@@ -375,8 +375,11 @@ class Marketplace extends Component {
     const { country, city } = this.props.account.publisherData;
     const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
     const subCategory = parent ? Marketplace.getValue(categoryId) : null;
-
-    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    if (categoryId !== 'featuredListings') {
+      this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    } else {
+      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, city, true, null);
+    }
   };
 
   renderListItems(type, title, itemsList, loading) {
