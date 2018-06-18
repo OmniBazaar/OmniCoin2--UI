@@ -127,8 +127,8 @@ class Menu extends Component {
     const menuItem = (
       <div>
         <span
-          onClick={() => this.viewCategory(type, parent)}
-          onKeyDown={() => this.viewCategory(type, parent)}
+          onClick={() =>  { if (!isExternal) this.viewCategory(type, parent) }}
+          onKeyDown={() => { if (!isExternal) this.viewCategory(type, parent) }}
           tabIndex={0}
           role="link"
         >
