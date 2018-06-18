@@ -86,6 +86,9 @@ class Listing extends Component {
     }
     if (listingDetail !== nextProps.listing.listingDetail) {
       this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
+      if (nextProps.listing.listingDetail.quantity === 0) {
+        this.errorToast(messages.outOfStock)
+      }
     }
     if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
       const { error } = nextProps.listing.buyListing;
@@ -270,7 +273,7 @@ class Listing extends Component {
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
             loading={loading}
-            disabled={!!error}
+            disabled={!!error || maxQuantity === 0}
           />
           <NumericInput
             mobile
