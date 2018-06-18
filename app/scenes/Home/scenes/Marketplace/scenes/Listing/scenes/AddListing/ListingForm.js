@@ -64,8 +64,7 @@ class ListingForm extends Component {
     this.PriceInput = makeValidatableField(this.renderLabeledField);
 
     this.state = {
-      keywords: '',
-      toDateDisabled: true
+      keywords: ''
     };
   }
 
@@ -105,7 +104,7 @@ class ListingForm extends Component {
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
         price_using_omnicoin: false,
-        continuous: false,
+        continuous: true,
         ...defaultData
       };
     }
@@ -147,7 +146,15 @@ class ListingForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if ((
+      nextProps.formValues !== this.props.formValues
+      && !nextProps.formValues
+    )) {
+      this.resetForm();
+    }
+
     const { error, saving } = nextProps.listing.saveListing;
+
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
@@ -264,7 +271,13 @@ class ListingForm extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { category, country, publisher, price_using_btc } = this.props.formValues ? this.props.formValues : {};
+    const {
+      category,
+      country,
+      publisher,
+      price_using_btc,
+      continuous
+    } = this.props.formValues ? this.props.formValues : {};
     const {
       handleSubmit,
       editingListing,
@@ -379,7 +392,6 @@ class ListingForm extends Component {
             <Grid.Column width={4}>
               <Field
                 name="price_using_btc"
-                input={{ value: true }}
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.bitcoinPrice)
@@ -463,29 +475,26 @@ class ListingForm extends Component {
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
-            {!this.state.toDateDisabled &&
-            (<Grid.Column width={4} className="align-top">
-              <Field
-                type="text"
-                name="end_date"
-                component={this.Calendar}
-                className="textfield"
-                minDate={(formValues && formValues.start_date) ? formValues.start_date : null}
-                props={{
-                  placeholder: formatMessage(messages.to)
-                }}
-                validate={requiredFieldValidator}
-              />
-            </Grid.Column>)
+            {
+              !continuous &&
+              <Grid.Column width={4} className="align-top">
+                <Field
+                  type="text"
+                  name="end_date"
+                  component={this.Calendar}
+                  className="textfield"
+                  minDate={(formValues && formValues.start_date) ? formValues.start_date : null}
+                  props={{
+                    placeholder: formatMessage(messages.to)
+                  }}
+                  validate={requiredFieldValidator}
+                />
+              </Grid.Column>
             }
             <Grid.Column width={4}>
               <Field
                 name="continuous"
                 component={Checkbox}
-                input={{
-                  value: true,
-                  onChange: this.onContinuousChange
-                }}
                 props={{
                   label: formatMessage(messages.continuous)
                 }}

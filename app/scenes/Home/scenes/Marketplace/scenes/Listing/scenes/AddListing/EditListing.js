@@ -19,6 +19,9 @@ class EditListing extends Component {
     const { id } = this.props.match.params;
     const { myListings } = this.props;
     this.listing = myListings.find(el => el.listing_id === id);
+    if (!this.listing) {
+      this.listing = this.props.listingDetail;
+    }
   }
 
   render() {
@@ -58,12 +61,14 @@ EditListing.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
-  myListings: PropTypes.object.isRequired
+  myListings: PropTypes.object,
+  listingDetail: PropTypes.object
 };
 
 const mapState = state => {
   return {
-    myListings: state.default.listing.myListings
+    myListings: state.default.listing.myListings,
+    listingDetail: state.default.listing.listingDetail
   };
 }
 
