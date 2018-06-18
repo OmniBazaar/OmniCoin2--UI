@@ -31,16 +31,21 @@ function* createWallet({ payload: { password, label, email } }) {
   }
 }
 
-function* getWallets() {
+function* getWallets({ payload: { guid, password }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const walletData = yield call(getBitcoinWalletData, currentUser);
-    if (walletData) {
-      const { guid, password } = walletData;
+    if (guid && password) {
       const res = yield call(BitcoinApi.getWallets, password, guid);
       yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password });
     } else {
-      yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: [] });
+      const walletData = yield call(getBitcoinWalletData, currentUser);
+      if (walletData) {
+        const {guid, password} = walletData;
+        const res = yield call(BitcoinApi.getWallets, password, guid);
+        yield put({type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password});
+      } else {
+        yield put({type: 'GET_WALLETS_SUCCEEDED', wallets: []});
+      }
     }
   } catch (error) {
     console.log('ERROR ', error);
