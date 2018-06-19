@@ -124,10 +124,11 @@ class SignupForm extends Component {
   static asyncValidate = async (values, dispatch, props, field) => {
     const previousErrors = props.asyncErrors;
     if (field === 'username') {
+      if (!values.username) return;
       try {
         const account = await FetchChain('getAccount', values.username);
       } catch (e) {
-        throw previousErrors;
+        return;
       }
       throw Object.assign({}, previousErrors, { username: messages.usernameExists });
     }
