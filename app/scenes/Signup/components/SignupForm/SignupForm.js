@@ -173,7 +173,7 @@ class SignupForm extends Component {
   }
 
   componentDidMount() {
-    if (this.defaultReferrer) {
+    if (this.defaultReferrer && this.defaultReferrer !== 'null') {
       this.props.formActions.change('referrer', this.defaultReferrer);
       this.referrerInput.focus();
     }

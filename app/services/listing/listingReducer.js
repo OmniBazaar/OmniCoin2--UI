@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import { getStoredCurrentUser } from '../blockchain/auth/services';
 import _ from 'lodash';
 import {
   getListingDetail,
@@ -98,11 +99,18 @@ const defaultState = {
   }
 };
 
+const storageKey = 'favoritesListings';
+
 const reducer = handleActions({
   [getFavorites](state) {
     // localStorage.removeItem('favoritesListings');
-    const favorites = localStorage.getItem('favoritesListings');
-    const favoriteListings = favorites ? JSON.parse(favorites) : [];
+    const user = getStoredCurrentUser();
+    let key, favorites, favoriteListings;
+    if(user) {
+      key = `${storageKey}_${user.username}`;
+      favorites = localStorage.getItem(key);
+      favoriteListings = favorites ? JSON.parse(favorites) : [];
+    }
     return {
       ...state,
       favoriteListings
@@ -117,21 +125,33 @@ const reducer = handleActions({
     };
   },
   [addToFavorites](state, { payload: { listingDetail } }) {
-    const favoriteListings = [...state.favoriteListings, listingDetail];
-    localStorage.setItem('favoritesListings', JSON.stringify(favoriteListings));
+    const user = getStoredCurrentUser();
+    let key, favoriteListings;
+    if(user) {
+      key = `${storageKey}_${user.username}`;
+      favoriteListings = [...state.favoriteListings, listingDetail];
+      localStorage.setItem(key, JSON.stringify(favoriteListings));
+      return {
+        ...state,
+        favoriteListings
+      };
+    }
     return {
-      ...state,
-      favoriteListings
-    };
+      ...state
+    }
   },
   [removeFromFavorites](state, { payload: { listingDetailId } }) {
+    const user = getStoredCurrentUser();
     const index = state.favoriteListings.length > 0 ?
       state.favoriteListings.findIndex(x => x['listing_id'] === listingDetailId) : -1;
     const favoriteListings = [
       ...state.favoriteListings.slice(0, index),
       ...state.favoriteListings.slice(index + 1)
     ];
-    localStorage.setItem('favoritesListings', favoriteListings);
+    if (user) {
+      const key = `${storageKey}_${user.username}`;
+      localStorage.setItem(key, favoriteListings);
+    }
     return {
       ...state,
       favoriteListings

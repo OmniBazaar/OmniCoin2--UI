@@ -35,7 +35,7 @@ const defaultState = {
   totalPagesGridTable: 1,
   rowsPerPageGridTable: 3 * 6,
   dataTableData: [],
-  sortTableBy: 'date',
+  sortTableBy: 'start_date',
   sortTableDirection: 'descending'
 };
 

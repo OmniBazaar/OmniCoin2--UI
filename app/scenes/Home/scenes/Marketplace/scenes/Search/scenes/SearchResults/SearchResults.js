@@ -160,10 +160,9 @@ class SearchResults extends Component {
   renderSearchResults() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    
+
     const { searchResultsFiltered, subCategory, currency } = this.props.search;
     const { category } = this.props.formValues ? this.props.formValues : {};
-
 
     return (
       <div className="list-container search-filters">
@@ -218,12 +217,12 @@ class SearchResults extends Component {
           tabs={[
             {
               title: formatMessage(messages.featured),
-              sortBy: 'date',
+              sortBy: 'start_date',
               sortDirection: 'ascending'
             },
             {
               title: formatMessage(messages.newArrivals),
-              sortBy: 'date',
+              sortBy: 'start_date',
               sortDirection: 'descending'
             },
             {
