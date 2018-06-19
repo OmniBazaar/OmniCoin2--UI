@@ -284,10 +284,10 @@ class Transfer extends Component {
     const number = params.get('number');
     this.setState({ listingId, price, number });
     this.handleInitialize(price * number, to);
-    if (type === CoinTypes.OMNI_COIN) {
-      this.props.transferActions.setCurrency('omnicoin');
-    } else if (type === CoinTypes.BIT_COIN) {
+    if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
+    } else {
+      this.props.transferActions.setCurrency('omnicoin');
     }
   }
 
