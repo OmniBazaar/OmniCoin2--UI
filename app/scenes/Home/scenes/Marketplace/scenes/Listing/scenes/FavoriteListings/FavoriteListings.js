@@ -3,23 +3,22 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Form, Icon, Button } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import TabsData from '../../../../components/TabsData/TabsData';
+import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/SearchFilters';
 import { getFavorites, filterFavorites } from '../../../../../../../../services/listing/listingActions';
 import { makeValidatableField } from '../../../../../../../../components/ValidatableField/ValidatableField';
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
-import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
 
 import './favorite-listings.scss';
 import '../../../../../Marketplace/marketplace.scss';
 import '../../../../../Marketplace/scenes/CategoryListing/listings.scss';
 
 const iconSize = 42;
-const iconSizeSmall = 12;
 
 const messages = defineMessages({
   byDate: {
@@ -53,6 +52,7 @@ class FavoriteListings extends Component {
     super(props);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChangeCurrency = this.onChangeCurrency.bind(this);
   }
 
   componentDidMount() {
@@ -60,80 +60,41 @@ class FavoriteListings extends Component {
     this.props.listingActions.filterFavorites('all', 'all');
   }
 
-  renderFilters = ({
-    input, dropdownPlaceholder
-  }) => (
-    <div className="search-actions">
-      <CategoryDropdown
-        placeholder={dropdownPlaceholder}
-        selection
-        input={{
-          value: input.category,
-          onChange: (value) => {
-            input.onChange({
-              ...input.value,
-              category: value
-            });
-          }
-        }}
-      />
-    </div>
-  );
-
-  handleSubmit(values) {
+  handleSubmit(values, searchTerm) {
     const currency = values.currency;
-    const category = (values && values.search) ? values.search.category : null;
-    this.props.listingActions.filterFavorites(currency, category);
+    const searchText = searchTerm || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.listingActions.filterFavorites(currency, category, subcategory, searchText);
+  }
+
+  onChangeCurrency(currency) {
+    this.props.listingActions.filterFavorites(currency);
   }
 
   renderFavoriteListings() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
 
     const {
       favoriteListings,
       favoriteFiltered,
       favoriteCurrency,
-      favoriteCategory
+      favoriteCategory,
+      favoriteSubCategory,
+      favoriteSearchTerm,
     } = this.props.listing;
 
     let data = favoriteListings;
     if ((favoriteCurrency && favoriteCurrency.toLowerCase() !== 'all') ||
-      (favoriteCategory && favoriteCategory !== 'all')) {
+        (favoriteCategory && favoriteCategory !== 'all') ||
+        (favoriteSubCategory && favoriteSubCategory !== 'all') ||
+        (favoriteSearchTerm && favoriteSearchTerm !== '')) {
       data = favoriteFiltered;
     }
 
     return (
       <div className="list-container my-listings">
-        <div className="filters">
-          <Form className="favorites-form" onSubmit={handleSubmit(this.handleSubmit)}>
-            <Field
-              type="text"
-              name="search"
-              placeholder="Search"
-              defaultValue={favoriteCategory}
-              dropdownPlaceholder="Categories"
-              component={this.renderFilters}
-              className="textfield"
-              props={{
-                value: favoriteCategory
-              }}
-            />
-            <Field
-              name="currency"
-              component={this.CurrencyDropdown}
-              props={{
-                value: favoriteCurrency,
-                placeholder: formatMessage(messages.currency)
-              }}
-            />
-            <Button
-              content={<Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />}
-              className="button--primary search-btn"
-              type="submit"
-            />
-          </Form>
-        </div>
+        <SearchFilters onSubmit={this.handleSubmit} onChangeCurrency={this.onChangeCurrency} />
         <TabsData
           data={data}
           showActions={false}
@@ -163,7 +124,7 @@ class FavoriteListings extends Component {
     const { formatMessage } = this.props.intl;
 
     return (
-      <div className="marketplace-container category-listing listing container">
+      <div className="marketplace-container category-listing container">
         <div className="header">
           <Menu />
         </div>
@@ -195,6 +156,11 @@ FavoriteListings.propTypes = {
   }),
   listing: PropTypes.shape({
     favoriteListings: PropTypes.array,
+    favoriteFiltered: PropTypes.array,
+    favoriteCurrency: PropTypes.string,
+    favoriteCategory: PropTypes.string,
+    favoriteSubCategory: PropTypes.string,
+    favoriteSearchTerm: PropTypes.string,
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
