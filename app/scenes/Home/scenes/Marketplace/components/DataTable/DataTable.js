@@ -12,7 +12,7 @@ import {
 } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
 import { defineMessages, injectIntl } from 'react-intl';
-
+import dateformat from 'dateformat';
 
 const messages = defineMessages({
   default: {
@@ -157,7 +157,7 @@ class DataTable extends Component {
               {data.map(row =>
                 (
                   <TableRow key={hash(row)}>
-                    <TableCell>{row.date}</TableCell>
+                    <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                     <TableCell>
                       <a onClick={() => onSearch(row.searchTerm, '')}>
                         {row.searchTerm}

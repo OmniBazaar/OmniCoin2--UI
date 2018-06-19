@@ -193,7 +193,7 @@ class MyPurchases extends Component {
                       (
                         <TableRow key={hash(row)}>
                           <TableCell>{row.id}</TableCell>
-                          <TableCell>{dateformat(row.date, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
+                          <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>{row.count}</TableCell>
                           <TableCell>{row.price} XOM</TableCell>
