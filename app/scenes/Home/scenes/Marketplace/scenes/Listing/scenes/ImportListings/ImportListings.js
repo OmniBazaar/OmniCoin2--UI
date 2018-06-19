@@ -6,6 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
+import { pick } from 'lodash';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
@@ -94,7 +95,15 @@ const messages = defineMessages({
   importationSuccess: {
     id: 'ImportListings.success',
     defaultMessage: 'The files has been imported successfully'
-  }
+  },
+  importationPublisherRequired: {
+    id: 'ImportListings.publisherRequired',
+    defaultMessage: 'A publisher must be selected'
+  },
+  importationMissingDefaults: {
+    id: 'ImportListings.missingDefaults',
+    defaultMessage: 'You should fill you Listing Default values to proceed...'
+  },
 });
 
 const renderLoader = () => <div className="loading-container"><Loader inline active /></div>;
@@ -158,6 +167,30 @@ class ImportListings extends Component {
   }
 
   importFile(event) {
+    const { formatMessage } = this.props.intl;
+
+    if (!this.state.selectedPublisher) {
+      return toastr.error(
+        formatMessage(messages.importationErrorTitle),
+        formatMessage(messages.importationPublisherRequired)
+      );
+    }
+
+    const {
+      category, currency, description, name,
+    } = pick(
+      this.props.listingDefaults,
+      ['category', 'currency', 'description', 'name']
+    );
+
+    if (!category || !currency || !description || !name) {
+      return toastr.error(
+        formatMessage(messages.importationErrorTitle),
+        formatMessage(messages.importationMissingDefaults)
+      );
+    }
+
+
     if (event.target.files && event.target.files[0]) {
       const extFile = getFileExtension(event);
 
@@ -371,6 +404,7 @@ ImportListings.propTypes = {
 };
 
 ImportListings.defaultProps = {
+  account: {},
   listingImport: {},
   listingActions: {},
   listingDefaults: {},
