@@ -64,6 +64,8 @@ const defaultState = {
   myListingsFiltered: [],
   myListingsCurrency: 'all',
   myListingsCategory: 'all',
+  myListingsSubCategory: 'all',
+  myListingsSearchTerm: '',
   bitcoinPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
@@ -72,6 +74,8 @@ const defaultState = {
   favoriteFiltered: [],
   favoriteCurrency: 'all',
   favoriteCategory: 'all',
+  favoriteSubCategory: 'all',
+  favoriteSearchTerm: '',
   listingImages: {},
   saveListing: {
     saving: false,
@@ -575,42 +579,74 @@ const reducer = handleActions({
       }
     };
   },
-  [filterMyListings](state, { payload: { currency, category } }) {
+  [filterMyListings](state, { payload: { currency, category, subCategory, searchTerm } }) {
     const currencyFilter = (currency && currency.toLowerCase()) || 'all';
     const categoryFilter = (category && category.toLowerCase()) || 'all';
-    let myListingsFiltered = [];
-    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
-      myListingsFiltered = state.myListings
+    const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
+
+    let myListingsFiltered = state.myListings;
+
+    if (searchTerm) {
+      myListingsFiltered = myListingsFiltered.filter(listing => {
+        return Object.values(listing).filter(
+          value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        ).length !== 0;
+      });
+      myListingsFiltered = _.without(myListingsFiltered, undefined);
+    }
+
+    if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+      myListingsFiltered = myListingsFiltered
         .filter(el => el.currency.toLowerCase() === currencyFilter)
-        .filter(el => el.category.toLowerCase() === categoryFilter);
+        .filter(el => el.category.toLowerCase() === categoryFilter)
+        .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     } else {
-      if (currencyFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.currency.toLowerCase() === currencyFilter);
-      if (categoryFilter !== 'all') myListingsFiltered = state.myListings.filter(el => el.category.toLowerCase() === categoryFilter);
+      if (currencyFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.category.toLowerCase() === categoryFilter);
+      if (subCategoryFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     }
     return {
       ...state,
       myListingsCurrency: currency,
       myListingsCategory: category,
+      myListingsSubCategory: subCategory,
+      myListingsSearchTerm: searchTerm,
       myListingsFiltered
     };
   },
-  [filterFavorites](state, { payload: { currency, category } }) {
+  [filterFavorites](state, { payload: { currency, category, subCategory, searchTerm } }) {
     const currencyFilter = (currency && currency.toLowerCase()) || 'all';
     const categoryFilter = (category && category.toLowerCase()) || 'all';
+    const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
-    let favoriteFiltered = [];
-    if (currencyFilter !== 'all' && categoryFilter !== 'all') {
-      favoriteFiltered = state.favoriteListings
-        .filter(el => el.currency.toLowerCase() === currencyFilter)
-        .filter(el => el.category.toLowerCase() === categoryFilter);
-    } else {
-      if (currencyFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.currency.toLowerCase() === currencyFilter);
-      if (categoryFilter !== 'all') favoriteFiltered = state.favoriteListings.filter(el => el.category.toLowerCase() === categoryFilter);
+    let favoriteFiltered = state.favoriteListings;
+
+    if (searchTerm) {
+      favoriteFiltered = favoriteFiltered.filter(listing => {
+        return Object.values(listing).filter(
+          value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        ).length !== 0;
+      });
+      favoriteFiltered = _.without(favoriteFiltered, undefined);
     }
+
+    if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+      favoriteFiltered = favoriteFiltered
+        .filter(el => el.currency.toLowerCase() === currencyFilter)
+        .filter(el => el.category.toLowerCase() === categoryFilter)
+        .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+    } else {
+      if (currencyFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.currency.toLowerCase() === currencyFilter);
+      if (categoryFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.category.toLowerCase() === categoryFilter);
+      if (subCategoryFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
+    }
+
     return {
       ...state,
       favoriteCurrency: currency,
       favoriteCategory: category,
+      favoriteSubCategory: subCategory,
+      favoriteSearchTerm: searchTerm,
       favoriteFiltered
     };
   }

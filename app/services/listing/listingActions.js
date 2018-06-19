@@ -85,8 +85,18 @@ const {
   GET_FAVORITES: () => ({}),
   SEARCH_PUBLISHERS: (keywords) => ({ keywords }),
   SEARCH_PUBLISHERS_FINISH: (error, publishers) => ({ error, publishers }),
-  FILTER_MY_LISTINGS: (currency, category) => ({ currency, category }),
-  FILTER_FAVORITES: (currency, category) => ({ currency, category }),
+  FILTER_MY_LISTINGS: (currency, category, subCategory, searchTerm) => ({
+    currency,
+    category,
+    subCategory,
+    searchTerm
+  }),
+  FILTER_FAVORITES: (currency, category, subCategory, searchTerm) => ({
+    currency,
+    category,
+    subCategory,
+    searchTerm
+  }),
 });
 
 export {
