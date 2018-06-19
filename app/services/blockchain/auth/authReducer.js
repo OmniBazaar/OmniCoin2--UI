@@ -16,7 +16,8 @@ import {
 import {
   getStoredCurrentUser,
   storeCurrentUser,
-  removeStoredCurrentUser
+  removeStoredCurrentUser,
+  getLastStoredUserName
 } from './services';
 
 const defaultState = {
@@ -84,10 +85,10 @@ const reducer = handleActions({
     return state;
   },
   [getLastLoginUserName]: (state) => {
-    const user = getStoredCurrentUser();
+    const username = getLastStoredUserName();
     return {
       ...state,
-      lastLoginUserName: user ? user.username : null
+      lastLoginUserName: username ? username : null
     };
   },
   LOGIN_FAILED: (state, action) => ({
@@ -102,7 +103,8 @@ const reducer = handleActions({
       ...state,
       currentUser: action.user,
       error: null,
-      loading: false
+      loading: false,
+      lastLoginUserName: action.user.username
     };
   },
   SIGNUP_SUCCEEDED: (state, action) => {
