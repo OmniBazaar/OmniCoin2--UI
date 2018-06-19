@@ -44,7 +44,7 @@ export default class DHTConnector {
     asPublisher = true,
   } = {}) {
     if (!connector) {
-      return this.init({
+      await this.init({
         host,
         publishers,
         keywords,
@@ -64,7 +64,17 @@ export default class DHTConnector {
   async findPeersFor(text) {
     await this.reconnectIfNeeded();
 
-    return connector.findPeersFor(text);
+    try {
+      return connector.findPeersFor(text);
+    } catch (e) {
+      console.log('DHT ERROR', e);
+
+      if (!connector) {
+        return this.findPeersFor(text);
+      }
+
+      throw e;
+    }
   }
 
   disconnect = async () => {

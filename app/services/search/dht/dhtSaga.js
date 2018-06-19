@@ -21,7 +21,7 @@ export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
     takeEvery('DHT_RECONNECT', reconnect),
-    takeEvery('DHT_GET_PEERS_FOR', getPeersFor)
+    takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
   ]);
 }
 
@@ -99,11 +99,11 @@ export function* getPeersFor({
 
     const publisherData = AccountSettingsStorage.getPublisherData();
 
-    const categoryKey = `category:${category}`;
-    const subcategoryKey = `subcategory:${subCategory}`;
+    const categoryKey = category ? `category:${category}` : '';
+    const subcategoryKey = subCategory ? `subcategory:${subCategory}` : '';
 
     let extraKeywordsResponse = yield Promise.all([
-      (category !== 'All' && category!=='featuredListings' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      (category !== 'All' && category !== 'featuredListings' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
       subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
 
