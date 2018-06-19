@@ -9,9 +9,10 @@ async function parseEscrowTransactions(escrowObjects, username) {
     const parties = res.filter(el => el.get('name') !== username);
     return {
       transactionID: el.id,
+      listingID: el.listing_id,
       amount: el.amount.amount / 100000,
       parties: `You, ${parties[0].get('name')}, ${parties[1].get('name')}`,
-      expirationTime: el.expiration_time.replace('T', ' '),
+      expirationTime: new Date(el.expiration_time).getTime(),
       buyer: res[0].toJS(),
       seller: res[1].toJS(),
       escrow: res[2].toJS()

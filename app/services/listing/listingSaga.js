@@ -175,7 +175,6 @@ function* requestMyListings() {
 	try {
     const { currentUser } = (yield select()).default.auth;
 		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
-    const publishers = yield Apis.instance().db_api().exec('get_publisher_nodes_names', []);
 		let getListingCommands = (yield Promise.all(
 		  myListings.map(
 		    listing => FetchChain('getAccount', listing.publisher)
@@ -183,13 +182,9 @@ function* requestMyListings() {
     )).map((account, idx) => {
       return {
         listing_id: myListings[idx].id,
-        address: account.get('publisher_ip'),
-        name: account.get('name')
+        address: account.get('publisher_ip')
       }
     }).reduce((arr, curr) => {
-      if (!publishers.includes(curr.name)) {
-        return arr;
-      }
       const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
       if (!val) {
         return [

@@ -23,7 +23,7 @@ class SearchHistory extends BaseStorage {
   add(historyItem) {
     const withDate = {
       ...historyItem,
-      date: dateformat(new Date(), '	yyyy-mm-dd HH:MM:ss'),
+      date: new Date().getTime(),
       id: uuidv4(),
       saved: false
     };

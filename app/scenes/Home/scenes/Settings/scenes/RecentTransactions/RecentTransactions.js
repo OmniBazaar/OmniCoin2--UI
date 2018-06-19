@@ -285,7 +285,7 @@ class RecentTransactions extends Component {
                 {recentTransactionsFiltered && recentTransactionsFiltered.map(row =>
                       (
                         <TableRow key={hash(row)}>
-                          <TableCell>{dateformat(row.date, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
+                          <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                               <Image

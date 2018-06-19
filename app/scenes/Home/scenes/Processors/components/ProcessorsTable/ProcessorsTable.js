@@ -102,12 +102,12 @@ class ProcessorsTable extends Component {
                 <TableRow key={hash(row)}>
                   <TableCell>{row.rank}</TableCell>
                   <TableCell><a>{row.witness_account.name}</a></TableCell>
-                  <TableCell>{row.trust_score / 100}%</TableCell>
-                  <TableCell>{row.reliability_score / 100}%</TableCell>
-                  <TableCell>{row.reputation_score / 100}%</TableCell>
-                  <TableCell>{row.referral_score / 100}%</TableCell>
-                  <TableCell>{row.listings_score / 100}%</TableCell>
-                  <TableCell>{row.pop_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.trust_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.reliability_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.reputation_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.referral_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.listings_score / 100}%</TableCell>
+                  <TableCell>{row.witness_account.pop_score / 100}%</TableCell>
                   <TableCell>
                     <VotingToggle
                       type="up"

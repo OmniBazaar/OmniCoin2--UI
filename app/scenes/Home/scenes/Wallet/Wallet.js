@@ -12,20 +12,19 @@ import { toastr } from 'react-redux-toastr';
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
-import OmnicoinWalletDetail from './components/OmnicoinWalletDetail/OmnicoinWalletDetail';
 import AddBitcoinWallet from './components/AddBitcoinWallet/AddBitcoinWallet';
 import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress';
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
-  getOmniCoinWallets
+  getOmniCoinWallets,
 } from '../../../../services/wallet/walletActions';
-import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
-
 import {
   getWallets
 } from '../../../../services/blockchain/bitcoin/bitcoinActions';
-
+import {
+  encrypt, decrypt
+} from '../../../../services/blockchain/bitcoin/services';
 import AddIcon from '../../images/btn-add-image.svg';
 
 import messages from './messages';
@@ -43,7 +42,6 @@ class Wallet extends Component {
 
   componentWillMount() {
     this.props.bitcoinActions.getWallets();
-    this.requestBalance();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,18 +49,6 @@ class Wallet extends Component {
     if (nextProps.bitcoin.error && !this.props.bitcoin.error) {
       toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
     }
-  }
-
-  requestBalance() {
-    this.props.walletActions.getAccountBalance(this.props.auth.account);
-  }
-
-  getBalance() {
-    const { balance } = this.props.blockchainWallet;
-    if (balance && balance.balance) {
-      return balance.balance / 100000;
-    }
-    return 0.00;
   }
 
   onClickAddWallet() {
@@ -74,7 +60,7 @@ class Wallet extends Component {
   }
 
   openWalletModal() {
-
+    
   }
 
   getBitcoinContent() {
@@ -105,7 +91,6 @@ class Wallet extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account } = this.props.auth;
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
@@ -121,21 +106,6 @@ class Wallet extends Component {
             className="tabs"
             menu={{ secondary: true, pointing: true }}
             panes={[
-              {
-                menuItem: 'OmniCoin',
-                render: () => (
-                  <Tab.Pane>
-                    <div className="content">
-                      <OmnicoinWalletDetail
-                        id={account.id}
-                        name={account.name}
-                        publicKey={account.active.key_auths[0][0]}
-                        balance={this.getBalance()}
-                      />
-                    </div>
-                  </Tab.Pane>
-                )
-              },
                {
                  menuItem: 'BitCoin',
                  render: () =>
@@ -190,7 +160,7 @@ Wallet.propTypes = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
+    walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets }, dispatch),
     bitcoinActions: bindActionCreators({
       toggleModal,
       toggleAddAddressModal,
