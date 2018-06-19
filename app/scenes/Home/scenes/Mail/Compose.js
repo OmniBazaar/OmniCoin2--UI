@@ -4,9 +4,9 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import { bindActionCreators, compose } from 'redux';
-import { FetchChain } from "omnibazaarjs";
+import { FetchChain } from 'omnibazaarjs';
 import { required } from 'redux-form-validators';
-
+import dateformat from 'dateformat';
 
 import classNames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
@@ -120,10 +120,13 @@ class Compose extends Component {
   componentWillMount() {
     if (this.props.mail.reply) {
       const message = this.getActiveMessage();
+      const creationTime = new Date(message.creation_time * 1000).toLocaleString();
+      const date = dateformat(creationTime, 'dddd, mmmm dS, yyyy "at" h:MM:ss TT');
+
       this.props.initialize({
         recipient: message.sender,
         subject: `RE: ${message.subject}`,
-        body: `\n\n${message.body}`,
+        body: `\n\nOn ${date} <${message.sender}> wrote:\n\n${message.body}`,
       });
     }
   }
