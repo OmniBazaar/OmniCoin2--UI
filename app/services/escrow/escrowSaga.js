@@ -145,6 +145,7 @@ function* releaseEscrowTransaction({ payload: { escrowObject, votes } }) {
       [`reputation_vote_for_${keys[0]}`]: votes[keys[0]],
       [`reputation_vote_for_${keys[1]}`]: votes[keys[1]],
       [`reputation_vote_for_${keys[2]}`]: votes[keys[2]],
+      is_sale: !!escrowObject.listingID
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();
@@ -176,7 +177,8 @@ function* returnEscrowTransaction({ payload: { escrowObject, votes } }) {
       buyer_account: buyerAcc.get('id'),
       [`reputation_vote_for_${keys[0]}`]: votes[keys[0]],
       [`reputation_vote_for_${keys[1]}`]: votes[keys[1]],
-      [`reputation_vote_for_${keys[2]}`]: votes[keys[2]]
+      [`reputation_vote_for_${keys[2]}`]: votes[keys[2]],
+      is_sale: !!escrowObject.listingID
     });
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     yield tr.set_required_fees();
