@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Modal, Tab } from 'semantic-ui-react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import PreferencesTab from './PreferencesTab';
-import ConsoleTab from './ConsoleTab';
 import messages from './messages';
 
 import './preferences.scss';
@@ -22,7 +21,7 @@ class Preferences extends Component {
     const { formatMessage } = this.props.intl;
     const { props } = this;
     return (
-      <Modal size="large" open={props.menu.showPreferences} onClose={this.close} closeIcon>
+      <Modal size="fullscreen" open={props.menu.showPreferences} onClose={this.close} closeIcon>
         <Modal.Content>
           <div className="modal-container settings-container">
             <div className="modal-content">
