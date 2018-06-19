@@ -179,7 +179,6 @@ SearchResults.propTypes = {
     searching: PropTypes.bool,
   }),
   searchActions: PropTypes.shape({
-    dhtGetPeersFor: PropTypes.func,
     filterSearchResults: PropTypes.func,
     searchListings: PropTypes.func,
     setActiveCategory: PropTypes.func,
