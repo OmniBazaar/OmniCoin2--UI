@@ -135,9 +135,14 @@ class SearchPrioritySetting extends Component {
 
   submitPublisherData() {
     const { formatMessage } = this.props.intl;
+    const { publisherData } = this.props.account;
 
-    this.props.accountSettingsActions.updatePublisherData(this.props.account.publisherData);
-    this.props.dhtActions.dhtReconnect();
+    this.props.accountSettingsActions.updatePublisherData(publisherData);
+
+    if (publisherData.publisherName && publisherData.publisherName.publisher_ip) {
+      this.props.dhtActions.dhtReconnect();
+    }
+
     toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
   }
 
