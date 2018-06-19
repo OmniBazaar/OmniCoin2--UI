@@ -13,6 +13,7 @@ import {
   Loader
 } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
+import dateformat from 'dateformat';
 
 import {
   releaseEscrowTransaction,
@@ -273,7 +274,7 @@ class MyEscrowTransactions extends Component {
         <TableCell>{escrowObject.transactionID}</TableCell>
         <TableCell>{escrowObject.amount} XOM</TableCell>
         <TableCell>{escrowObject.parties}</TableCell>
-        <TableCell>{escrowObject.expirationTime}</TableCell>
+        <TableCell>{dateformat(escrowObject.expirationTime, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
         <TableCell>
           {escrowObject.escrow.name === username ?
             <div className="finalize">
