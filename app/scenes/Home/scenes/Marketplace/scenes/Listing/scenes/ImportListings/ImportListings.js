@@ -220,6 +220,15 @@ class ImportListings extends Component {
   }
 
   importListings() {
+    const { formatMessage } = this.props.intl;
+
+    if (!this.state.selectedPublisher) {
+      return toastr.error(
+        formatMessage(messages.importationErrorTitle),
+        formatMessage(messages.importationPublisherRequired)
+      );
+    }
+
     this.props.listingActions.importFiles({
       publisher: this.state.selectedPublisher,
       filesToImport: this.props.listingImport.importedFiles,
