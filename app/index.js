@@ -37,7 +37,7 @@ import {
   myPurchasesSubscriber
 } from './services/saga';
 
-ChainConfig.address_prefix = 'BTS';
+ChainConfig.address_prefix = 'XOM';
 
 addLocaleData([...en, ...es, ...fr, ...it]);
 
