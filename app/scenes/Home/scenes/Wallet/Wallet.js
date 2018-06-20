@@ -139,7 +139,8 @@ class Wallet extends Component {
                {
                  menuItem: 'BitCoin',
                  render: () =>
-                   (<Tab.Pane>
+                   (
+                     <Tab.Pane>
                      {this.props.bitcoin.wallets.length ?
                        <div className="content">
                         {
@@ -153,7 +154,8 @@ class Wallet extends Component {
                          <span>{formatMessage(messages.noWalletYet)}</span>
                        </div>
                    }
-                   </Tab.Pane>)
+                   </Tab.Pane>
+                   )
                },
              ]}
           />
