@@ -17,18 +17,19 @@ class ModalFooter extends Component {
     return (
       <div className="modal-footer">
         <Button
+          type="button"
           className="button--transparent"
           content={cancelContent}
           loading={loading}
           onClick={handleCancel}
         />
         <Button
+          type="submit"
           className="button--primary"
           disabled={disabled}
           loading={loading}
           content={successContent}
           onClick={handleSuccess}
-          type="submit"
         />
       </div>
     );
