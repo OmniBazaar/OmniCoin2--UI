@@ -394,12 +394,14 @@ class Listing extends Component {
                        currency={CoinTypes.BIT_CURRENCY}
                        isUserOwner={this.isOwner()}/>
           }
-          <PriceItem
-            amount={listingDetail.price}
-            coinLabel={CoinTypes.LOCAL}
-            currency={listingDetail['currency']}
-            isUserOwner={this.isOwner()}
-          />
+          {!(listingDetail['currency'] === 'OMNICOIN' && listingDetail['price_using_omnicoin']) &&
+            <PriceItem
+              amount={listingDetail.price}
+              coinLabel={CoinTypes.LOCAL}
+              currency={listingDetail['currency']}
+              isUserOwner={this.isOwner()}
+            />
+          }
         </div>
         {this.isOwner() ?
           this.renderOwnerButtons()
