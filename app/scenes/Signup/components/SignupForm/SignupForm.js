@@ -121,37 +121,26 @@ const messages = defineMessages({
 });
 
 class SignupForm extends Component {
-  static asyncValidate = async (values, dispatch, props, field) => {
-    const previousErrors = props.asyncErrors;
-    if (field === 'username') {
-      if (!values.username) return;
-      try {
-        const account = await FetchChain('getAccount', values.username);
-      } catch (e) {
-        return;
-      }
-      throw Object.assign({}, previousErrors, { username: messages.usernameExists });
-    }
-    if (field === 'referrer') {
-      if (!values.referrer) return;
-      try {
-        const account = await FetchChain('getAccount', values.referrer);
-      } catch (e) {
-        throw Object.assign({}, previousErrors, { referrer: messages.noAccount });
-      }
-    }
-    if (previousErrors) {
-      throw previousErrors;
-    }
-  };
-
+  
   static validate = (values) => {
     const errors = {};
+    if (!values.username) {
+      errors.username = messages.fieldRequired;
+    }
     if (!values.agreementTerms) {
       errors.agreementTerms = messages.fieldRequired;
     }
+    if (!values.referrer) {
+      errors.referrer = messages.fieldRequired;
+    }
     if (values.password !== values.passwordConfirmation) {
       errors.passwordConfirmation = messages.passwordDoesntMatch;
+    }
+    if (!values.country) {
+      errors.country = messages.fieldRequired;
+    }
+    if (!values.city) {
+      errors.referrer = messages.fieldRequired;
     }
     return errors;
   };
@@ -225,6 +214,7 @@ class SignupForm extends Component {
     const {
       username, password, referrer, searchPriority, country, city, keywords
     } = values;
+    
     this.props.authActions.signup(
       username,
       password,
@@ -629,7 +619,6 @@ SignupForm.propTypes = {
   }),
   handleSubmit: PropTypes.func,
   valid: PropTypes.bool,
-  asyncValidating: PropTypes.bool,
   formValues: PropTypes.object,
   formActions: PropTypes.shape({
     change: PropTypes.func
@@ -641,8 +630,7 @@ SignupForm = withRouter(SignupForm);
 SignupForm = reduxForm({
   form: 'signupForm',
   validate: SignupForm.validate,
-  asyncValidate: SignupForm.asyncValidate,
-  asyncBlurFields: ['username', 'referrer'],
+  asyncBlurFields: [],
   destroyOnUnmount: true
 })(SignupForm);
 
