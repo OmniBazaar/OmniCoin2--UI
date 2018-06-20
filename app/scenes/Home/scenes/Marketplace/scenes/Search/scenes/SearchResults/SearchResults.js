@@ -85,10 +85,12 @@ class SearchResults extends Component {
     this.props.searchActions.filterSearchResults(searchText, currency, category, subcategory);
   }
 
-  onChangeCurrency(currency) {
+  onChangeCurrency(values, currency) {
+    const searchText = values.searchTerm || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
     const { filterSearchResults } = this.props.searchActions;
-    const { searchTerm, category, subCategory } = this.props.search;
-    filterSearchResults(searchTerm, currency, category, subCategory);
+    filterSearchResults(searchText, currency, category, subcategory);
   }
 
   renderSearchResults() {
