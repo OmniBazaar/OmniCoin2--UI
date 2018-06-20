@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Icon } from 'semantic-ui-react';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';

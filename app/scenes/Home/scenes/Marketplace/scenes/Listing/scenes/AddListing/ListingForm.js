@@ -46,6 +46,9 @@ const numericFieldValidator = [
   numericality({ message: messages.fieldNumeric })
 ];
 
+const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
+const MAX_IMAGE_SIZE = '10mb';
+
 class ListingForm extends Component {
   constructor(props) {
     super(props);
@@ -184,7 +187,7 @@ class ListingForm extends Component {
 
     this.props.formActions.change('contact_info', contactInfo);
   }
-  
+
   onContinuousChange = (event, newValue) => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
@@ -283,7 +286,7 @@ class ListingForm extends Component {
       editingListing,
       invalid
     } = this.props;
-  
+
     const formValues = this.props.formValues || {};
     const { error, saving } = this.props.listing.saveListing;
 
@@ -522,6 +525,14 @@ class ListingForm extends Component {
             <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.images)}</span>
             </Grid.Column>
+            <Grid.Column width={16}>
+              <span className="error">
+                {formatMessage(messages.imagesSpecification, {
+                  imageSize: MAX_IMAGE_SIZE,
+                  supportedTypes: SUPPORTED_IMAGE_TYPES
+                })}
+              </span>
+            </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
@@ -733,6 +744,6 @@ export default compose(
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)
       }, dispatch)
-    }),
-  ),
+    })
+  )
 )(injectIntl(ListingForm));
