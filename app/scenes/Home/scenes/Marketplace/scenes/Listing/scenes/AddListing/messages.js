@@ -10,8 +10,8 @@ const messages = defineMessages({
     defaultMessage: 'Create Listing'
   },
   editListing: {
-  	id: 'AddListing.editListing',
-  	defaultMessage: 'Edit Listing'
+    id: 'AddListing.editListing',
+    defaultMessage: 'Edit Listing'
   },
   primaryInfo: {
     id: 'AddListing.primaryInfo',
@@ -190,44 +190,44 @@ const messages = defineMessages({
     defaultMessage: 'This field is required'
   },
   numberImageLimit: {
-  	id: 'AddListing.numberImageLimit',
-  	defaultMessage: 'Only {max} images is allowed'
+    id: 'AddListing.numberImageLimit',
+    defaultMessage: 'Only {max} images is allowed'
   },
   uploadImageError: {
-  	id: 'AddListing.uploadImageError',
-  	defaultMessage: 'Upload error'
+    id: 'AddListing.uploadImageError',
+    defaultMessage: 'Upload error'
   },
   deleteImageError: {
-  	id: 'AddListing.deleteImageError',
-  	defaultMessage: 'Delete error'
+    id: 'AddListing.deleteImageError',
+    defaultMessage: 'Delete error'
   },
   close: {
-  	id: 'AddListing.close',
-  	defaultMessage: 'Close'
+    id: 'AddListing.close',
+    defaultMessage: 'Close'
   },
   saveListingErrorMessage: {
-  	id: 'AddListing.saveListingErrorMessage',
-  	defaultMessage: 'Have error when saving listing'
+    id: 'AddListing.saveListingErrorMessage',
+    defaultMessage: 'Have error when saving listing'
   },
   saveListingSuccessMessage: {
-  	id: 'AddListing.saveListingSuccessMessage',
-  	defaultMessage: 'Listing is saved successful'
+    id: 'AddListing.saveListingSuccessMessage',
+    defaultMessage: 'Listing is saved successful'
   },
   error: {
-  	id: 'AddListing.error',
-  	defaultMessage: 'Error'
+    id: 'AddListing.error',
+    defaultMessage: 'Error'
   },
   success: {
-  	id: 'AddListing.success',
-  	defaultMessage: 'Success'
+    id: 'AddListing.success',
+    defaultMessage: 'Success'
   },
   listingNotFound: {
-  	id: 'AddListing.listingNotFound',
-  	defaultMessage: 'Listing not found'
+    id: 'AddListing.listingNotFound',
+    defaultMessage: 'Listing not found'
   },
   saveListing: {
-  	id: 'AddListing.saveListing',
-  	defaultMessage: 'Save Listing'
+    id: 'AddListing.saveListing',
+    defaultMessage: 'Save Listing'
   },
   publisher: {
     id: 'AddListing.publisher',
@@ -252,6 +252,10 @@ const messages = defineMessages({
   keywordsNote: {
     id: 'AddListing.keywordsNote',
     defaultMessage: 'Keywords will be used to find appropriate publishers'
+  },
+  imagesSpecification: {
+    id: 'AddListing.imagesSpecification',
+    defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
   }
 });
 

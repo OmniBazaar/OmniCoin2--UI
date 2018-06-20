@@ -17,12 +17,17 @@ AppCopyright=© {#GetDateTimeString('yyyy', '', '')} {#APP_PUBLISHER}
 DefaultDirName={pf}\{#APP_NAME}
 DefaultGroupName={#APP_NAME}
 AllowNoIcons=yes
+#ifdef INCLUDE_WITNESS_NODE
+OutputBaseFilename={#APP_NAME}_setup_full_{#APP_VERSION}
+#else
 OutputBaseFilename={#APP_NAME}_setup_{#APP_VERSION}
+#endif
 SetupIconFile=icon.ico
 Compression=lzma/Ultra
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
+SetupLogging=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -30,6 +35,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion recursesubdirs
 Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR}; Flags: ignoreversion
+#ifdef INCLUDE_WITNESS_NODE
+Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion recursesubdirs
+#endif
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
