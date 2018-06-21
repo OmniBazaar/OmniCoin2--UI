@@ -132,7 +132,7 @@ class HistoryStorage extends BaseStorage {
   }
 
   async getBuyHistory() {
-    let listings = Object.keys(this.cache)
+    let buyOperations = Object.keys(this.cache)
       .map(key => this.cache[key])
       .filter(op => !!op.listingId)
       .map(op => ({
@@ -141,7 +141,7 @@ class HistoryStorage extends BaseStorage {
         count: op.listingCount,
         date: op.date,
       }));
-    const listingIds = listings.map(listing => listing.id);
+    const listingIds = buyOperations.map(op => op.id);
     let listingObjects = await Apis.instance().db_api().exec('get_objects', [listingIds]);
     listingObjects = await Promise.all(
       listingObjects.map(async el => await Promise.all([
@@ -156,16 +156,14 @@ class HistoryStorage extends BaseStorage {
         }
       }))
     );
-    const mapped = listingObjects.map(listing => {
-      const item = listings.find(item => item.id === listing.id);
+    const mappedOperations = buyOperations.map(op => {
+      const item = listingObjects.find(item => item.id === op.id);
       return {
-        ...listing,
-        count: item.count,
-        date: item.date,
-        key: item.key,
+        ...item,
+        ...op,
       }
     });
-    return uniqBy(mapped, 'key');
+    return mappedOperations;
   }
 
   save() {

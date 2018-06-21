@@ -36,7 +36,6 @@ function* submitOmniCoinTransfer(data) {
   const {
     amount, memo, reputation
   } = data.payload.data;
-
   try {
     const [senderName, toName] = yield Promise.all([
       FetchChain('getAccount', senderNameStr),
@@ -51,7 +50,7 @@ function* submitOmniCoinTransfer(data) {
       reputation_vote: parseInt(reputation),
       amount: {
         asset_id: '1.3.0',
-        amount: amount * 100000
+        amount: Math.ceil(amount * 100000)
       },
     };
     if (memo.trim()) {
