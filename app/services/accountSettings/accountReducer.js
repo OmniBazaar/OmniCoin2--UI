@@ -347,32 +347,14 @@ const reducer = handleActions({
     error
   }),
   [filterData](state, { payload: { filterText } }) {
-    const data = state.recentTransactions;
     const activePage = 1;
-    let { totalPages } = state;
     const { rowsPerPage } = state;
-    let currentData = [];
-
-    if (filterText !== '') {
-      let filteredData = _.map(data, (o) => {
-        const values = Object.values(o);
-        const result = _.map(values, (val) => {
-          if (val) {
-            if (val.toString().indexOf(filterText) !== -1) return o;
-          }
-        });
-        return _.without(result, undefined)[0];
-      });
-
-      filteredData = _.without(filteredData, undefined);
-      totalPages = getTotalPages(filteredData, rowsPerPage);
-      currentData = sliceData(filteredData, activePage, rowsPerPage);
-    } else {
-      currentData = data;
-      totalPages = getTotalPages(currentData, rowsPerPage);
-      currentData = sliceData(currentData, activePage, rowsPerPage);
+    let filteredData = state.recentTransactions;
+    if (filterText) {
+      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
-
+    const totalPages = getTotalPages(filteredData, rowsPerPage);
+    const currentData = sliceData(filteredData, activePage, rowsPerPage);
     return {
       ...state,
       filterText,
@@ -414,18 +396,11 @@ const reducer = handleActions({
   [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    const sortByFilter = _.sortBy(state.recentTransactionsFiltered, [sortColumn]);
-    const sortByData = _.sortBy(state.recentTransactions, [sortColumn]);
-    const sortBy = filterText !== '' ? sortByFilter : sortByData;
-    let sortedData = [];
-
-    if (state.sortColumn !== sortColumn) {
-      sortedData = sortBy.reverse();
-      sortDirection = 'ascending';
-    } else {
-      sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+    let data = state.recentTransactions;
+    if (!!filterText) {
+      data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
-
+    const sortedData = _.orderBy(data, [sortColumn], [sortDirection === 'ascending' ? 'asc' : 'desc']);
     const { activePage, rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePage, rowsPerPage);
 
