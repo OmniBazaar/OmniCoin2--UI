@@ -42,12 +42,16 @@ const messages = defineMessages({
   },
   amountOfAsset: {
     id: 'Settings.amountOfAsset',
-    defaultMessage: 'amount of asset'
+    defaultMessage: 'amount of asset,'
   },
   next: {
     id: 'Settings.next',
     defaultMessage: 'Next'
   },
+  feeDetail: {
+    id: 'Settings.feeDetail',
+    defaultMessage: 'fee: {fee} XOM'
+  }
 });
 
 class TransactionDetails extends Component {
@@ -79,11 +83,11 @@ class TransactionDetails extends Component {
 
       const { formatMessage } = props.intl;
       const operationTitle = operation.type === 'withdraw' ? formatMessage(messages.withdraw) : formatMessage(messages.deposit);
-      const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : '';
-
+      const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : ',';
+      const feeDetail = formatMessage(messages.feeDetail, {fee: operation.fee});
       return (
         <div className={operationClass}>
-          {operationTitle} {operation.amount} (XOM) {text}
+          {operationTitle} {operation.amount} (XOM) {text} {feeDetail}
         </div>
       );
     });
