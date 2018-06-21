@@ -1,4 +1,7 @@
 1. Build UI code.
+npm install
+npm run package
+
 2. Download latest build of witness_node and put it in "\omnibazaar-ui\installer\windows\witness_node", so that directory tree would be:
 
 │   build_installers.bat

@@ -103,7 +103,12 @@ class SearchFilters extends Component {
   );
 
   changeCurrency(currency) {
-    this.props.onChangeCurrency(currency);
+    const searchTerm = (this.searchInput && this.searchInput.value) || '';
+    const values = {
+      ...this.props.formValues,
+      searchTerm
+    };
+    this.props.onChangeCurrency(values, currency);
   }
 
   handleSubmit(values) {
