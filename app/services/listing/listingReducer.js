@@ -154,7 +154,7 @@ const reducer = handleActions({
     ];
     if (user) {
       const key = `${storageKey}_${user.username}`;
-      localStorage.setItem(key, favoriteListings);
+      localStorage.setItem(key, JSON.stringify(favoriteListings));
     }
     return {
       ...state,
