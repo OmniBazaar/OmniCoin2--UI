@@ -127,7 +127,7 @@ class NewWallet extends Component {
           name="password"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
-          message={formatMessage(messages.createPassword)}
+          message={formatMessage(messages.createPassword) + '*'}
           validate={[
             required({ message: formatMessage(messages.fieldRequired) }),
             length({ min: 10, message: formatMessage(messages.minLength) })
@@ -138,7 +138,7 @@ class NewWallet extends Component {
           name="repeatPassword"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
-          message={formatMessage(messages.repeatPassword)}
+          message={formatMessage(messages.repeatPassword) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />

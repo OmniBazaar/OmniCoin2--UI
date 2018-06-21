@@ -546,7 +546,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
+            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
             <Field
               type="text"
               name="toName"
@@ -563,7 +563,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.transfer)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.amount)}</span>
+            <span>{formatMessage(messages.amount)}*</span>
             <Field
               type="text"
               name="amount"
@@ -708,7 +708,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}</span>
+            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
             <Field
               type="text"
               name="toName"
@@ -725,7 +725,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.transfer)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.amount)}</span>
+            <span>{formatMessage(messages.amount)}*</span>
             <Field
               type="text"
               name="amount"
