@@ -81,14 +81,14 @@ class ExistingWallet extends Component {
           name="password"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
-          message={formatMessage(messages.enterPassword)}
+          message={formatMessage(messages.enterPassword) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />
         <Field
           name="guid"
           placeholder={formatMessage(messages.pleaseEnter)}
-          message={formatMessage(messages.walletGuid)}
+          message={formatMessage(messages.walletGuid) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />
