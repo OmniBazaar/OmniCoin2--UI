@@ -117,6 +117,10 @@ const messages = defineMessages({
   done: {
     id: 'SignupForm.done',
     defaultMessage: 'Done'
+  },
+  savePassword: {
+    id: 'SignupForm.savePassword',
+    defaultMessage: "Please save your password. In case it is lost it can't be recovered."
   }
 });
 
@@ -144,7 +148,7 @@ class SignupForm extends Component {
     }
     return errors;
   };
-
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -154,21 +158,21 @@ class SignupForm extends Component {
     this.submit = this.submit.bind(this);
     this.signIn = this.signIn.bind(this);
   }
-
+  
   componentWillMount() {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
       searchPriority: PriorityTypes.LOCAL_DATA,
     });
   }
-
+  
   componentDidMount() {
     if (this.defaultReferrer && this.defaultReferrer !== 'null') {
       this.props.formActions.change('referrer', this.defaultReferrer);
       this.referrerInput.focus();
     }
   }
-
+  
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
@@ -180,36 +184,36 @@ class SignupForm extends Component {
       toastr.error(formatMessage(messages.error), content);
     }
   }
-
+  
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
   }
-
+  
   onChangeCity(city) {
     this.props.formActions.change('city', city);
   }
-
+  
   onChangeKeywords(keywords) {
     this.props.formActions.change('keywords', keywords);
   }
-
+  
   onChangeKeywordsInput(value) {
     if (!this.state.keywordsTouched) this.setState({ keywordsTouched: true });
     this.props.formActions.change('keywordsStr', value);
   }
-
+  
   onTermAndConditionCheck(isChecked) {
     this.props.formActions.change('agreementTerms', isChecked);
   }
-
+  
   onChangeSearchPriority(priority) {
     this.props.formActions.change('searchPriority', priority);
   }
-
+  
   signIn() {
     this.props.history.push('/login');
   }
-
+  
   submit(values) {
     const {
       username, password, referrer, searchPriority, country, city, keywords
@@ -229,17 +233,17 @@ class SignupForm extends Component {
       null,
     );
   }
-
+  
   showSuccessCopy(e) {
     const { formatMessage } = this.props.intl;
     toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied));
     e.preventDefault();
   }
-
+  
   renderPasswordGeneratorField = ({
     input, meta: {
-      asyncValidating, touched, error, warning
-    }
+    asyncValidating, touched, error, warning
+  }
   }) => {
     const { formatMessage } = this.props.intl;
     return (
@@ -257,11 +261,11 @@ class SignupForm extends Component {
       </div>
     );
   };
-
+  
   renderReferrerField = ({
     input, meta: {
-      asyncValidating, touched, error, warning, active
-    }
+    asyncValidating, touched, error, warning, active
+  }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
@@ -275,11 +279,11 @@ class SignupForm extends Component {
         </div>,
         <div className="hybrid-input">
           <input
-            {...input}
-            type="text"
-            placeholder={formatMessage(messages.referrerName)}
-            ref={(input) => { this.referrerInput = input; }}
-            className={inputClassName}
+          {...input}
+          type="text"
+          placeholder={formatMessage(messages.referrerName)}
+          ref={(input) => { this.referrerInput = input; }}
+          className={inputClassName}
           />
           <Icon
             name="checkmark"
@@ -290,16 +294,16 @@ class SignupForm extends Component {
       ]
     );
   };
-
+  
   renderCountryField = ({
     input, meta: {
-      asyncValidating, touched, error, placeholder
-    }
+    asyncValidating, touched, error, placeholder
+  }
   }) => {
     const { formatMessage } = this.props.intl;
     const { country } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
-
+    
     return (
       [
         <div>
@@ -316,16 +320,16 @@ class SignupForm extends Component {
       ]
     );
   };
-
+  
   renderCityField = ({
     input, meta: {
-      asyncValidating, touched, error
-    }
+    asyncValidating, touched, error
+  }
   }) => {
     const { formatMessage } = this.props.intl;
     const { country, city } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
-
+    
     return (
       [
         <div>
@@ -343,12 +347,12 @@ class SignupForm extends Component {
       ]
     );
   };
-
+  
   renderTerms() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(messages.termsAndCond);
-
+    
     if (props.auth.showTermsModal) {
       return (
         <Modal
@@ -377,9 +381,9 @@ class SignupForm extends Component {
       );
     }
   }
-
+  
   toggleTermsModal = () => this.props.authActions.showTermsModal();
-
+  
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
     return (
@@ -387,8 +391,8 @@ class SignupForm extends Component {
         <div className="agreement-terms">
           <Checkbox
             width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onTermAndConditionCheck.bind(this)}
+          height={inputCustomSize}
+          onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
           <span className="link" onClick={this.toggleTermsModal}>
@@ -398,11 +402,11 @@ class SignupForm extends Component {
       ]
     );
   };
-
+  
   renderSearchPriority() {
     const { formatMessage } = this.props.intl;
     const { searchPriority } = this.props.formValues;
-
+    
     return (
       <div>
         <div className="search-priority">
@@ -418,7 +422,7 @@ class SignupForm extends Component {
               />
               <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
             </div>
-
+            
             <div className="radio-wrapper">
               <Radio
                 width={20}
@@ -430,22 +434,22 @@ class SignupForm extends Component {
               <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
             </div>
           </div>
-
+          
           {this.renderSearchPriorityFormFields()}
         </div>
       </div>
     );
   }
-
+  
   renderSearchPriorityFormFields() {
     let { searchPriority } = this.props.formValues;
     const { formatMessage } = this.props.intl;
-
+    
     if (!searchPriority) {
       searchPriority = PriorityTypes.LOCAL_DATA;
       this.props.formActions.change('searchPriority', searchPriority);
     }
-
+    
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
         const { country, city } = this.props.formValues;
@@ -473,7 +477,7 @@ class SignupForm extends Component {
         if (!keywords) keywords = [];
         if (!keywordsStr) keywordsStr = '';
         const error = keywords.length === 0 && keywordsStr === '';
-
+        
         return (
           <div>
             <div>
@@ -500,20 +504,20 @@ class SignupForm extends Component {
         return null;
     }
   }
-
+  
   keywordVal() {
     const { searchPriority } = this.props.formValues;
     let { keywords } = this.props.formValues;
     if (!keywords) keywords = [];
     let disabled = false;
-
+    
     if (searchPriority === PriorityTypes.BY_CATEGORY) {
       disabled = keywords.length === 0;
     }
-
+    
     return disabled;
   }
-
+  
   render() {
     const {
       handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
@@ -539,6 +543,7 @@ class SignupForm extends Component {
           component={this.renderPasswordGeneratorField}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
+        <span className="save-password-text">{formatMessage(messages.savePassword)}</span>
         <Field
           type="password"
           placeholder={formatMessage(messages.confirmPassword)}
@@ -648,4 +653,3 @@ export default connect(
     }, dispatch)
   })
 )(SignupForm);
-
