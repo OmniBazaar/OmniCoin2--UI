@@ -118,9 +118,13 @@ const messages = defineMessages({
     id: 'SignupForm.done',
     defaultMessage: 'Done'
   },
-  savePassword: {
-    id: 'SignupForm.savePassword',
-    defaultMessage: "Please save your password. In case it is lost it can't be recovered."
+  savePassword1: {
+    id: 'SignupForm.savePassword1',
+    defaultMessage: "Please save your password."
+  },
+  savePassword2: {
+    id: 'SignupForm.savePassword2',
+    defaultMessage: "In case it is lost it can't be recovered."
   }
 });
 
@@ -543,7 +547,12 @@ class SignupForm extends Component {
           component={this.renderPasswordGeneratorField}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
         />
-        <span className="save-password-text">{formatMessage(messages.savePassword)}</span>
+        <div className="save-password-text">
+          {formatMessage(messages.savePassword1)}
+        </div>
+        <div className="save-password-text">
+          {formatMessage(messages.savePassword2)}
+        </div>
         <Field
           type="password"
           placeholder={formatMessage(messages.confirmPassword)}
