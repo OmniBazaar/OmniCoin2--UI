@@ -92,10 +92,11 @@ export default class MenuBuilder {
     const subMenuHelp = {
       label: 'Help',
       submenu: [
-        { label: 'Learn More', click() { shell.openExternal('http://electron.atom.io'); } },
-        { label: 'Documentation', click() { shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme'); } },
-        { label: 'Community Discussions', click() { shell.openExternal('https://discuss.atom.io/c/electron'); } },
-        { label: 'Search Issues', click() { shell.openExternal('https://github.com/atom/electron/issues'); } }
+        { label: 'Learn More', click() { shell.openExternal('http://support.omnibazaar.com/'); } },
+        { label: 'Knowledge Base', click() { shell.openExternal('http://support.omnibazaar.com/knowledgebase/'); } },
+        { label: 'Reddit', click() { shell.openExternal('https://www.reddit.com/r/OmniBazaar/'); } },
+        { label: 'Telegram', click() { shell.openExternal('https://t.me/omnibazaar'); } },
+        { label: 'Search Issues', click() { shell.openExternal('https://github.com/OmniBazaar/OmniCoin2--Core/issues'); } }
       ]
     };
 
@@ -157,22 +158,27 @@ export default class MenuBuilder {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('http://electron.atom.io');
+          shell.openExternal('http://support.omnibazaar.com/');
         }
       }, {
-        label: 'Documentation',
+        label: 'Knowledge Base',
         click() {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+          shell.openExternal('http://support.omnibazaar.com/knowledgebase/');
         }
       }, {
-        label: 'Community Discussions',
+        label: 'Reddit',
         click() {
-          shell.openExternal('https://discuss.atom.io/c/electron');
+          shell.openExternal('https://www.reddit.com/r/OmniBazaar/');
+        }
+      }, {
+        label: 'Telegram',
+        click() {
+          shell.openExternal('https://t.me/omnibazaar');
         }
       }, {
         label: 'Search Issues',
         click() {
-          shell.openExternal('https://github.com/atom/electron/issues');
+          shell.openExternal('https://github.com/OmniBazaar/OmniCoin2--Core/issues');
         }
       }]
     }];
