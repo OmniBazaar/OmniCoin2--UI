@@ -138,9 +138,6 @@ class SignupForm extends Component {
     if (!values.agreementTerms) {
       errors.agreementTerms = messages.fieldRequired;
     }
-    if (!values.referrer) {
-      errors.referrer = messages.fieldRequired;
-    }
     if (values.password !== values.passwordConfirmation) {
       errors.passwordConfirmation = messages.passwordDoesntMatch;
     }
@@ -148,7 +145,7 @@ class SignupForm extends Component {
       errors.country = messages.fieldRequired;
     }
     if (!values.city) {
-      errors.referrer = messages.fieldRequired;
+      errors.city = messages.fieldRequired;
     }
     return errors;
   };
