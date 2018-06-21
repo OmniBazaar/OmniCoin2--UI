@@ -181,17 +181,6 @@ class RecentTransactions extends Component {
     }
   }
 
-  getTypeIcon(row) {
-    if (row.type === ChainTypes.operations.referral_bonus_operation
-    || row.type === ChainTypes.operations.welcome_bonus_operation) {
-      return IncomingIcon;
-    }
-    if (row.fromTo !== row.from || !row.fromTo) {
-     return OutgoingIcon;
-    }
-    return IncomingIcon;
-  }
-
   render() {
     const {
       activePage,
@@ -289,7 +278,7 @@ class RecentTransactions extends Component {
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                               <Image
-                                src={this.getTypeIcon(row)}
+                                src={row.isIncoming ? IncomingIcon : OutgoingIcon}
                                 width={iconSize}
                                 height={iconSize}
                                 className="from-icon"
@@ -299,7 +288,7 @@ class RecentTransactions extends Component {
                           </TableCell>
                           <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.fee}</TableCell>
+                          <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
                           <TableCell>
                             <div className={cn('badge-tag', this.getBadgeClass(row.type))}>
                               {formatMessage(messages[row.type])}

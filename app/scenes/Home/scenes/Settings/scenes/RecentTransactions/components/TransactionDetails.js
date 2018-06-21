@@ -77,14 +77,14 @@ class TransactionDetails extends Component {
     const { operations } = detailSelected;
     return operations.map((operation) => {
       const operationClass = classNames({
-        withdraw: operation.type === 'withdraw',
-        deposit: operation.type === 'deposit',
+        withdraw: !operation.isIncoming,
+        deposit: operation.isIncoming,
       });
 
       const { formatMessage } = props.intl;
       const operationTitle = operation.type === 'withdraw' ? formatMessage(messages.withdraw) : formatMessage(messages.deposit);
       const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : ',';
-      const feeDetail = formatMessage(messages.feeDetail, {fee: operation.fee});
+      const feeDetail = formatMessage(messages.feeDetail, {fee: operation.isIncoming ? 0 : operation.fee});
       return (
         <div className={operationClass}>
           {operationTitle} {operation.amount} (XOM) {text} {feeDetail}

@@ -19,12 +19,6 @@ class HistoryStorage extends BaseStorage {
     }
   }
 
-  static OperationTypes = Object.freeze({
-    withdraw: 'withdraw',
-    deposit: 'deposit'
-  });
-
-
   // static updateBalances(transactions) {
   //   if (transactions.length) {
   //     transactions[transactions.length - 1].balance = transactions[transactions.length - 1].amount;
@@ -120,9 +114,9 @@ class HistoryStorage extends BaseStorage {
           ...transactions[trxKey]
         };
       }
-      if (op.type === HistoryStorage.OperationTypes.deposit) {
+      if (op.isIncoming) {
         transactions[trxKey].amount += this.operationAmount(op);
-      } else if (op.type === HistoryStorage.OperationTypes.withdraw) {
+      } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
       transactions[trxKey].fee += op.fee;
@@ -180,7 +174,7 @@ class HistoryStorage extends BaseStorage {
 
   clear() {
     this.cache = {};
-    localStorage.setItem(key + this.accountName, JSON.stringify({}));
+    this.save();
   }
 
   static async getParties(op) {
@@ -246,7 +240,7 @@ class HistoryStorage extends BaseStorage {
             fee: el.op[1].fee.amount / 100000,
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
-            type: HistoryStorage.OperationTypes.deposit
+            isIncoming: true
           });
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
@@ -263,10 +257,10 @@ class HistoryStorage extends BaseStorage {
               fee: el.op[1].fee.amount / 100000,
               operationType: el.op[0],
               amount: el.result[1].amount / 100000,
-              type: HistoryStorage.OperationTypes.deposit,
               from: referrerAcc.get('name'),
               to: referredAcc.get('name'),
-              fromTo: referredAcc.get('name')
+              fromTo: referredAcc.get('name'),
+              isIncoming: true
             });
           }
         } else if ([ChainTypes.operations.listing_create_operation,
@@ -282,6 +276,7 @@ class HistoryStorage extends BaseStorage {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
             operationType: el.op[0],
+            isIncoming: false
           });
         } else {
           const [from, to] = await HistoryStorage.getParties(el.op);
@@ -297,9 +292,6 @@ class HistoryStorage extends BaseStorage {
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
             amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
             fee: el.op[1].fee.amount / 100000,
-            type: from.get('name') === currentUser.username
-              ? HistoryStorage.OperationTypes.withdraw
-              : HistoryStorage.OperationTypes.deposit,
             operationType: el.op[0],
             // will be undefined if operation type is transfer
             escrow: el.op[0] === ChainTypes.operations.escrow_create_operation
@@ -307,6 +299,7 @@ class HistoryStorage extends BaseStorage {
               : el.op[1].escrow,
             listingId: el.op[1].listing,
             listingCount: el.op[1].listing_count,
+            isIncoming: from.get('name') !== currentUser.username
           });
         }
       }
