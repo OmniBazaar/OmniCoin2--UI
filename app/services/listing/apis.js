@@ -125,7 +125,7 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
     listing_id: listingId,
     price: {
       asset_id: '1.3.0',
-      amount: currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000
+      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
     },
     quantity: parseInt(listing.quantity),
     listing_hash: hash.listingSHA256({
