@@ -61,7 +61,6 @@ export function* updateAccount(payload) {
   if (!trObj.is_a_publisher) {
     delete trObj.publisher_ip;
   }
-  console.log(trObj);
   if (trObj.transactionProcessor) {
     tr.add_type_operation('witness_create', {
       witness_account: account.id,

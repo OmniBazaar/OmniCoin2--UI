@@ -12,6 +12,7 @@ import cn from 'classnames';
 import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
+import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
 
 import { getCurrentUser, getAccount } from '../../../../../../services/blockchain/auth/authActions';
 import { getAccountBalance } from '../../../../../../services/blockchain/wallet/walletActions';
@@ -105,6 +106,10 @@ const messages = defineMessages({
   invalidIp: {
     id: 'Settings.invalidIp',
     defaultMessage: 'IP address is invalid'
+  },
+  witnessRegisterFee: {
+    id: 'Settings.witnessRegisterFee',
+    defaultMessage: 'Witness registration fee is 5020 XOM. Are you sure you want to proceed?'
   }
 });
 
@@ -121,7 +126,8 @@ class PublicData extends Component {
     this.onChangeIpAddress = debounce(this.onChangeIpAddress.bind(this), 500);
 
     this.state = {
-      ip: ''
+      ip: '',
+      isModalOpen: false
     };
   }
 
@@ -149,6 +155,7 @@ class PublicData extends Component {
       if (nextProps.account.error) {
         toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
       } else {
+        this.updateAccountInfo();
         toastr.success(formatMessage(messages.update), formatMessage(messages.successUpdate));
         this.props.walletActions.getAccountBalance(this.props.auth.account);
         this.freezeSettings();
@@ -156,7 +163,7 @@ class PublicData extends Component {
     }
   }
 
-  componentWillUnmount() {
+  updateAccountInfo() {
     this.props.authActions.getAccount(this.props.auth.currentUser.username);
   }
 
@@ -192,15 +199,31 @@ class PublicData extends Component {
   }
 
   toggleTransactionProcessor() {
-    if (this.props.auth.account.is_a_processor && !this.props.account.transactionProcessor) {
+    const { is_a_processor } = this.props.auth.account;
+    const { transactionProcessor } = this.props.account;
+    if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor();
-    } else if (!this.props.auth.account.is_a_processor) {
+    } else if (!is_a_processor && !transactionProcessor) {
+      this.toggleConfirmationModal();
+    } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor();
     }
   }
 
+
   toggleEscrow() {
     this.props.accountSettingsActions.setEscrow();
+  }
+
+  toggleConfirmationModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
+  confirmTransactionProcessor() {
+    this.props.accountSettingsActions.setTransactionProcessor();
+    this.toggleConfirmationModal();
   }
 
   getReferrerIcon() {
@@ -305,6 +328,13 @@ class PublicData extends Component {
             <span className="amount">20 XOM</span>
           </div>
         </div>
+        <ConfirmationModal
+          isOpen={this.state.isModalOpen}
+          question={formatMessage(messages.witnessRegisterFee)}
+          onApprove={() => this.confirmTransactionProcessor()}
+          onCancel={() => this.toggleConfirmationModal()}
+        />
+
       </div>
     );
   }
