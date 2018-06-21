@@ -52,7 +52,7 @@ const MAX_IMAGE_SIZE = '10mb';
 class ListingForm extends Component {
   constructor(props) {
     super(props);
-
+    
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
@@ -65,12 +65,12 @@ class ListingForm extends Component {
     this.PublishersDropdown = makeValidatableField(PublishersDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
-
+    
     this.state = {
       keywords: ''
     };
   }
-
+  
   renderLabeledField = ({
     input, placeholder, buttonText
   }) => (
@@ -86,11 +86,11 @@ class ListingForm extends Component {
       </Button>
     </div>
   );
-
+  
   componentWillMount() {
     this.resetForm();
   }
-
+  
   initFormData() {
     const { editingListing } = this.props;
     let data;
@@ -111,10 +111,10 @@ class ListingForm extends Component {
         ...defaultData
       };
     }
-
+    
     this.props.initialize(data);
   }
-
+  
   initImages() {
     const { editingListing } = this.props;
     let images = {};
@@ -131,14 +131,14 @@ class ListingForm extends Component {
     } else if (!editingListing) {
       images = this.props.listingDefaults.images;
     }
-
+    
     this.props.listingActions.setListingImages(images);
   }
-
+  
   imageUrl(publisherIp, path) {
     return `http://${publisherIp}/publisher-images/${path}`;
   }
-
+  
   resetForm() {
     this.initFormData();
     this.initImages();
@@ -147,17 +147,17 @@ class ListingForm extends Component {
       keywords: ''
     });
   }
-
+  
   componentWillReceiveProps(nextProps) {
     if ((
-      nextProps.formValues !== this.props.formValues
-      && !nextProps.formValues
-    )) {
+        nextProps.formValues !== this.props.formValues
+        && !nextProps.formValues
+      )) {
       this.resetForm();
     }
-
+    
     const { error, saving } = nextProps.listing.saveListing;
-
+    
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
@@ -170,7 +170,7 @@ class ListingForm extends Component {
         if (!editingListing) {
           this.resetForm();
         }
-
+        
         this.showSuccessToast(
           formatMessage(messages.success),
           formatMessage(messages.saveListingSuccessMessage)
@@ -178,31 +178,31 @@ class ListingForm extends Component {
       }
     }
   }
-
+  
   onContactTypeChange(e, newValue) {
     let contactInfo = '';
     if (newValue === contactOmniMessage) {
       contactInfo = this.props.auth.currentUser.username;
     }
-
+    
     this.props.formActions.change('contact_info', contactInfo);
   }
-
+  
   onContinuousChange = (event, newValue) => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
     })
   };
-
+  
   onKeywordsBlur(e) {
     this.setState({
       keywords: e.target.value
     });
   }
-
+  
   getImagesData() {
     const { listingImages } = this.props.listing;
-
+    
     const data = [];
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
@@ -212,7 +212,7 @@ class ListingForm extends Component {
       if (uploadError || (!image && !localFilePath)) {
         continue;
       }
-
+      
       if (localFilePath) {
         data.push({
           localFilePath,
@@ -227,19 +227,19 @@ class ListingForm extends Component {
         });
       }
     }
-
+    
     return data;
   }
-
+  
   fixImagePath(path) {
     const segs = path.split('/');
     if (segs.length > 2) {
       return segs[segs.length - 2] + '/' + segs[segs.length - 1];
     }
-
+    
     return path;
   }
-
+  
   fixThumbPath(path) {
     const segs = path.split('/');
     if (segs.length > 3) {
@@ -249,29 +249,29 @@ class ListingForm extends Component {
         + '/' + segs[segs.length - 1]
       );
     }
-
+    
     return path;
   }
-
+  
   showSuccessToast(title, message) {
     toastr.success(title, message);
   }
-
+  
   showErrorToast(title, message) {
     toastr.error(title, message);
   }
-
+  
   submit(values) {
     const { saveListing } = this.props.listingActions;
     const { listing_id, publisher, keywords, ...data } = values;
-
+    
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
       keywords: keywords.split(',').map(el => el.trim())
     }, listing_id);
   }
-
+  
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -286,12 +286,12 @@ class ListingForm extends Component {
       editingListing,
       invalid
     } = this.props;
-
+    
     const formValues = this.props.formValues || {};
     const { error, saving } = this.props.listing.saveListing;
-
+    
     return (
-
+      
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -309,7 +309,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingTitle)}</span>
+              <span>{formatMessage(messages.listingTitle)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
@@ -324,7 +324,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} className="align-top">
-              <span>{formatMessage(messages.keywordsSearch)}</span>
+              <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
             <Grid.Column width={12} className='keywords'>
               <Field
@@ -341,7 +341,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.placing)}</span>
+              <span>{formatMessage(messages.placing)}*</span>
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
               <Field
@@ -367,7 +367,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.pricing)}</span>
+              <span>{formatMessage(messages.pricing)}*</span>
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -413,23 +413,23 @@ class ListingForm extends Component {
             </Grid.Column>
           </Grid.Row>
           {price_using_btc &&
-            <Grid.Row>
-              <Grid.Column width={4}>
-                {formatMessage(messages.bitcoinAddress)}
-              </Grid.Column>
-              <Grid.Column width={8}>
-                <Field
-                  name="bitcoin_address"
-                  component={InputField}
-                  className="textfield"
-                  validate={requiredFieldValidator}
-                />
-              </Grid.Column>
-            </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              {formatMessage(messages.bitcoinAddress)}
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="bitcoin_address"
+                component={InputField}
+                className="textfield"
+                validate={requiredFieldValidator}
+              />
+            </Grid.Column>
+          </Grid.Row>
           }
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.additionalInfo)}</span>
+              <span>{formatMessage(messages.additionalInfo)}*</span>
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -506,7 +506,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.publisher)}</span>
+              <span>{formatMessage(messages.publisher)}*</span>
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -520,7 +520,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.images)}</span>
@@ -534,7 +534,7 @@ class ListingForm extends Component {
               </span>
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
               <span>
@@ -548,7 +548,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.description)}</span>
@@ -569,16 +569,16 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.owner)}</span>
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.ownerDetails)}</span>
+              <span>{formatMessage(messages.ownerDetails)}*</span>
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -612,10 +612,10 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.location)}</span>
+              <span>{formatMessage(messages.location)}*</span>
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -648,7 +648,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-
+          
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4} className="align-top">
