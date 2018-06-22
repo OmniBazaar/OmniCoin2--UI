@@ -71,7 +71,6 @@ class Marketplace extends Component {
 
   componentWillMount() {
     this.props.accountActions.getPublisherData();
-    this.fetchListings(this.props.account.publisherData);
   }
 
   componentWillReceiveProps(nextProps) {
