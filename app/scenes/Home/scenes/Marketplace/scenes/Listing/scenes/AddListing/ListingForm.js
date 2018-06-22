@@ -463,7 +463,7 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingDates)} {formatMessage(messages.optional)}</span>
+              <span>{formatMessage(messages.listingDates)}*</span>
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
               <Field
@@ -681,7 +681,7 @@ class ListingForm extends Component {
                 content={
                   formatMessage(
                     editingListing ?
-                    messages.editListing :
+                    messages.saveListing :
                     messages.createListingCaps
                   )
                 }
