@@ -1,6 +1,7 @@
 import omnibazaarDHT from 'omnibazaar-dht';
 
 let connector;
+let isConnectorLoaded = false;
 
 export default class DHTConnector {
   /**
@@ -23,6 +24,8 @@ export default class DHTConnector {
 
     await connector.connect({ keywords, asPublisher: canPublish })
       .catch(console.log);
+
+    isConnectorLoaded = true;
 
     return connector;
   }
@@ -69,7 +72,7 @@ export default class DHTConnector {
     } catch (e) {
       console.log('DHT ERROR', e);
 
-      if (!connector) {
+      if (!connector || !isConnectorLoaded) {
         return this.findPeersFor(text);
       }
 
@@ -85,5 +88,6 @@ export default class DHTConnector {
     await connector.destroy();
 
     connector = null;
+    isConnectorLoaded = false;
   }
 }

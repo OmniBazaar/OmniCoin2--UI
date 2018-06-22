@@ -5,7 +5,6 @@ import {
   call,
   all,
   select,
-  fork
 } from 'redux-saga/effects';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
