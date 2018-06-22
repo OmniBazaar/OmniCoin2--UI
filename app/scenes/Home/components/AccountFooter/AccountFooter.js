@@ -23,13 +23,10 @@ class AccountFooter extends Component {
   renderTrigger() {
     return (
       <div className="menu-item account">
-        <Image src={UserIcon} width={iconSize} height={iconSize} />
-        <div>
+        <div className="code">
+          <Image src={UserIcon} width={iconSize} height={iconSize} />
           <span>{this.props.auth.currentUser.username}</span>
-          <div className="code">
-            <span className="bold">{this.getPubKey()}</span>
-            <Icon name="caret down" width={iconSize} height={iconSize} />
-          </div>
+          <Icon name="caret down" width={iconSize} height={iconSize} />
         </div>
         <Image src={LockIcon} width={iconLockSize} height={iconLockSize} />
       </div>

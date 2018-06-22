@@ -6,7 +6,7 @@
     color: $primary-white;
     display: flex;
     flex-direction: row;
-    padding: 16px 14px;
+    padding: 16px 5px;
     align-items: center;
     justify-content: space-around;
 
@@ -21,8 +21,12 @@
 
     .code {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+
+      img {
+        margin-right: 3px;
+      }
 
       .bold {
         overflow: hidden;
