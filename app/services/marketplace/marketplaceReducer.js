@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { defineMessages } from 'react-intl';
 import _ from 'lodash';
-
+import { currencyConverter } from '../utils';
 
 import {
   getFeatureList,
@@ -141,7 +141,16 @@ const reducer = handleActions({
     };
   },
   [sortGridTableBy](state, { payload: { gridTableData, sortGridBy, sortGridDirection } }) {
-    let sortedData = _.sortBy(gridTableData, [sortGridBy]);
+    const gridData = gridTableData;
+    let sortBy = sortGridBy;
+    if (sortGridBy === 'price') {
+      sortBy = 'convertedPrice';
+      gridData.forEach(item => {
+        item.convertedPrice = currencyConverter(item.price, item.currency, 'USD');
+      });
+    }
+
+    let sortedData = _.sortBy(gridData, [sortBy]);
     if (sortGridDirection === 'descending') {
       sortedData = sortedData.reverse();
     }
