@@ -502,11 +502,11 @@ class Marketplace extends Component {
                   formatMessage(mainCategories.jobs),
                   this.getListingForCategory(categories.jobs)
                 )}
-                {this.renderListItems(
+                {/*{this.renderListItems(
                   CategoriesTypes.RENTALS,
                   formatMessage(mainCategories.rentals),
                   this.getListingForCategory(categories.rentals)
-                )}
+                )}*/}
                 {this.renderListItems(
                   CategoriesTypes.CRYPTO_BAZAAR,
                   formatMessage(mainCategories.cryptoBazaar),
