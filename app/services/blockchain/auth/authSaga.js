@@ -62,6 +62,7 @@ export function* login(action) {
     });
     if (isAuthorized) {
       yield put(getAccountAction(username));
+      yield put({ type: 'DHT_CONNECT' });
       yield put({
         type: 'LOGIN_SUCCEEDED',
         user: {

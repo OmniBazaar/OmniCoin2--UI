@@ -7,7 +7,6 @@ import { IntlProvider } from 'react-intl';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
-import StartGuide from './scenes/Home/components/StartGuide/StartGuide';
 import Home from './scenes/Home/Home';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
@@ -17,7 +16,6 @@ import {
   requestPcIds,
   requestReferrer
 } from './services/blockchain/auth/authActions';
-import { dhtConnect } from './services/search/dht/dhtActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
 import localeData from './../app/dist/i18n/data.json';
@@ -28,7 +26,6 @@ class Root extends Component {
     this.props.authActions.requestPcIds();
     this.props.authActions.requestReferrer();
     this.props.authActions.getLastLoginUserName();
-    this.props.dhtActions.dhtConnect();
     this.props.listingDefaultsActions.loadListingDefault();
     this.props.preferencesActions.loadPreferences();
     //this.props.authActions.getCurrentUser();
@@ -74,9 +71,6 @@ Root.propTypes = {
     getLastLoginUserName: PropTypes.func,
     getCurrentUser: PropTypes.func
   }).isRequired,
-  dhtActions: PropTypes.shape({
-    dhtConnect: PropTypes.func
-  }).isRequired,
   settings: PropTypes.shape({
     activeNode: PropTypes.object
   }).isRequired,
@@ -104,9 +98,6 @@ export default connect(
     }, dispatch),
     authActions: bindActionCreators({
       requestPcIds, getCurrentUser, getLastLoginUserName, requestReferrer
-    }, dispatch),
-    dhtActions: bindActionCreators({
-      dhtConnect,
     }, dispatch),
     listingDefaultsActions: bindActionCreators({
       loadListingDefault
