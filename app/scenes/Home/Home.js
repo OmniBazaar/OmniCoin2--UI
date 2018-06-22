@@ -46,7 +46,7 @@ import '../../styles/_modal.scss';
 
 import Burger from './images/hamburger-norm-press.svg';
 import BackgroundImage from './images/sidebar-bg@2x.jpg';
-import SidebarLogo from './images/logo-sidebar.svg';
+import SidebarLogo from './images/oc-logo-small.png';
 import EscrowIcon from './images/sdb-escrow.svg';
 import MailIcon from './images/sdb-mail.svg';
 import MarketplaceIcon from './images/sdb-markeplace.svg';
@@ -64,7 +64,7 @@ import { getListingDefault } from '../../services/listing/listingDefaultsActions
 const iconSize = 20;
 
 class Home extends Component {
-  
+
   state = {visible: true};
 
   componentWillReceiveProps(nextProps) {
@@ -108,7 +108,7 @@ class Home extends Component {
       this.props.menuActions.setActiveCategory('Marketplace.home');
     }
   };
-  
+
   handleChange = ({ idle }) => {
     let { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout && idle && this.props.authActions.logout();
