@@ -20,7 +20,11 @@ import fs from 'fs';
 
 let mainWindow = null;
 
-if (process.env.NODE_ENV === 'production') {
+const isProd = () => {
+  return process.env.NODE_ENV === 'production';
+};
+
+if (isProd()) {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
@@ -63,36 +67,114 @@ const handleOb2Connection = (path) => {
   });
 };
 
+const getDevBasePath = () => {
+  return './app/ob2';
+};
+
+const getProdBasePath = (platform) => {
+  switch (platform) {
+    case 'win32':
+      return process.env.LOCALAPPDATA + '/OmniBazaar 2';
+    case 'linux':
+      return process.env.HOME + '/.OmniBazaar';
+    case 'darwin':
+      return process.env.HOME + '/Library/Application Support/OmniBazaar 2';
+  }
+};
+
+const getOb2DevPath = () => {
+  const basePath = getDevBasePath();
+  switch (process.platform) {
+    case 'win32':
+      return basePath + '/windows/ob2.exe';
+    case 'linux':
+      return basePath + '/linux/ob2';
+    case 'darwin':
+      return basePath + '/mac/ob2';
+  }
+};
+
+const getOb2ProdPath = () => {
+  const basePath = getProdBasePath(process.platform);
+  switch (process.platform) {
+    case 'win32':
+      return  basePath + '/ob2.exe';
+    case 'linux':
+      return basePath + '/ob2';
+    case 'darwin':
+      return basePath + '/ob2';
+  }
+};
+
+
+const getNodeDirProdPath = () => {
+  return getProdBasePath(process.platform) + '/witness_node';
+};
+
+const getNodeDirDevPath = () => {
+  return getNodeDirProdPath();
+ // return getDevBasePath() + '/witness_node';
+};
+
+
+const runNode = () => {
+  let path = getNodeDirDevPath();
+  if (isProd()) {
+    path = getNodeDirProdPath();
+  }
+  let nodePath =  path + '/witness_node';
+  if (process.platform === 'win32') {
+    nodePath = path + '/witness_node.exe'
+  }
+  let ls = spawn(nodePath);
+  ls.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+  ls.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  ls.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+  });
+};
+
+
+const restartNodeIfExists = (witnessId, pubKey, privKey) => {
+  let path = getNodeDirDevPath();
+  if (isProd()) {
+    path = getNodeDirProdPath();
+  }
+  console.log('WITNESS ID ', witnessId);
+  fs.readFile(path + '/witness_node_data_dir/config.ini', 'utf8', function (err, data) {
+    if (err) {
+      console.log('ERROR ', err);
+    } else {
+      const wStart = data.indexOf('# witness-id') !== -1 ? data.indexOf('# witness-id') : data.indexOf('witness-id');
+      const wEnd = data.indexOf('\n', wStart);
+      data = data.replace(data.substring(wStart, wEnd), `witness-id = "${witnessId}"`);
+      const pStart = data.indexOf('# private-key') !== -1 ? data.indexOf('# private-key') : data.indexOf('private-key');
+      const pEnd = data.indexOf('\n', pStart);
+      data = data.replace(data.substring(pStart, pEnd), `private-key = ["${pubKey}", "${privKey}"]`);
+      fs.writeFile(path + '/witness_node_data_dir/config.ini', data, function(err) {
+        console.log('ERROR ', err);
+      });
+      runNode();
+    }
+  });
+};
+
 const runOb2 = async () => {
-  const getOb2DevPath = () => {
-    switch (process.platform) {
-      case 'win32':
-        return './app/ob2/windows/ob2.exe';
-      case 'linux':
-        return './app/ob2/linux/ob2';
-      case 'darwin':
-        return './app/ob2/mac/ob2';
-    }
-  };
-  const getOb2ProdPath = () => {
-    switch (process.platform) {
-      case 'win32':
-        return process.env.LOCALAPPDATA + '/OmniBazaar 2/ob2.exe';
-      case 'linux':
-        return process.env.HOME + '/.OmniBazaar/ob2';
-      case 'darwin':
-        return process.env.HOME + '/Library/Application Support/OmniBazaar 2/ob2';
-    }
-  };
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-    const path = getOb2DevPath();
-    handleOb2Connection(path);
-   }
-   else {
+  if (isProd()) {
     const path = getOb2ProdPath();
     handleOb2Connection(path);
    }
+   else {
+    const path = getOb2DevPath();
+    handleOb2Connection(path);
+   }
 };
+
 
 const processReferrer = async () => {
   let path = './';
@@ -167,6 +249,10 @@ app.on('ready', async () => {
   await runOb2();
   await processMacAddress();
   await runBitcoinCli();
+
+  ipcMain.on('restart-node', (event, witnessId, pubKey, privKey) => {
+    restartNodeIfExists(witnessId, pubKey, privKey);
+  });
 
 
   mainWindow = new BrowserWindow({

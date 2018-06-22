@@ -1,5 +1,11 @@
 import { handleActions } from 'redux-actions';
-import { connect } from './connectionActions';
+
+import {
+  connect,
+  restartNode,
+  restartNodeSucceeded,
+  restartNodeFailed
+} from './connectionActions';
 
 const defaultState = {
   node: null,
@@ -7,6 +13,7 @@ const defaultState = {
   dynGlobalObject: null,
   isLoading: false,
   error: null,
+  restartingNode: false
 };
 
 const reducer = handleActions({
@@ -16,6 +23,25 @@ const reducer = handleActions({
       isLoading: true,
       node
     };
+  },
+  [restartNode](state) {
+    return {
+      ...state,
+      restartingNode: true
+    };
+  },
+  [restartNodeSucceeded](state) {
+    return {
+      ...state,
+      restartingNode: false,
+    }
+  },
+  [restartNodeFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      error,
+      restartingNode: false
+    }
   },
   CONNECT_SUCCEEDED: (state, { node, latency }) => ({
     ...state,

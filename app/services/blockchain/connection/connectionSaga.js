@@ -3,23 +3,27 @@ import {
   takeEvery,
   takeLatest,
   call,
+  all,
+  select
 } from 'redux-saga/effects';
+import { Apis } from 'omnibazaarjs-ws';
+import  { FetchChain } from 'omnibazaarjs/es';
+import { ipcRenderer } from 'electron';
 
+import { restartNodeFailed, restartNodeSucceeded } from "./connectionActions";
 import { nodesAddresses as nodes } from '../settings';
 import { getDynGlobalObject as getDynObject, createConnection } from '../utils/miscellaneous';
+import { generateKeyFromPassword } from "../utils/wallet";
 
 export function* subscriber() {
-  yield takeEvery(
-    'CONNECT',
-    connectToNode
-  );
-  yield takeLatest(
-    'GET_DYN_GLOBAL_OBJECT',
-    getDynGlobalObject
-  );
+  yield all([
+    takeEvery('CONNECT', connectToNode),
+    takeLatest('GET_DYN_GLOBAL_OBJECT', getDynGlobalObject),
+    takeLatest('RESTART_NODE', restartNode)
+  ]);
 }
 
-export function* connectToNode({ payload: { node } }) {
+function* connectToNode({ payload: { node } }) {
   try {
     const result = yield call(createConnection, node || nodes[0]);
     yield put({ type: 'CONNECT_SUCCEEDED', ...result });
@@ -28,11 +32,27 @@ export function* connectToNode({ payload: { node } }) {
   }
 }
 
-export function* getDynGlobalObject() {
+function* getDynGlobalObject() {
   try {
     const result = yield call(getDynObject);
     yield put({ type: 'DYN_GLOBAL_OBJECT_SUCCEEDED', dynGlobalObject: result });
   } catch (e) {
     yield put({ type: 'DYN_GLOBAL_OBJECT_FAILED', error: e.message });
+  }
+}
+
+function* restartNode() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    const account = yield call(FetchChain, 'getAccount', currentUser.username);
+    const witness = yield Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
+    if (witness) {
+      ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
+    }
+    yield put(restartNodeSucceeded())
+  } catch (e) {
+    console.log('ERROR ', e);
+    yield put(restartNodeFailed(e));
   }
 }

@@ -59,7 +59,8 @@ import UserIcon from './images/th-user-white.svg';
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
-import { getListingDefault } from '../../services/listing/listingDefaultsActions';
+import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
+import { restartNode } from "../../services/blockchain/connection/connectionActions";
 
 const iconSize = 20;
 
@@ -71,9 +72,11 @@ class Home extends Component {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
-    if (nextProps.auth.currentUser && !this.props.auth.currentUser) {
-      this.props.listingActions.getListingDefault();
-    }
+  }
+
+  componentDidMount() {
+    this.props.listingActions.loadListingDefault();
+    this.props.connectionActions.restartNodeIfExists();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -277,7 +280,8 @@ export default connect(
       setActiveCategory
     }, dispatch),
     authActions: bindActionCreators({ getAccount, logout }, dispatch),
-    listingActions: bindActionCreators({ getListingDefault }, dispatch)
+    listingActions: bindActionCreators({ loadListingDefault }, dispatch),
+    connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch)
   })
 )(Home);
 
