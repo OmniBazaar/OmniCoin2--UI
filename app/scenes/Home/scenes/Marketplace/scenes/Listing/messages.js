@@ -5,9 +5,9 @@ export default defineMessages({
     id: 'Listing.seller',
     defaultMessage: 'Seller'
   },
-  editListing: {
-    id: 'Listing.editListing',
-    defaultMessage: 'EDIT LISTING'
+  saveListing: {
+    id: 'Listing.saveListing',
+    defaultMessage: 'SAVE LISTING'
   },
   delete: {
     id: 'Listing.delete',

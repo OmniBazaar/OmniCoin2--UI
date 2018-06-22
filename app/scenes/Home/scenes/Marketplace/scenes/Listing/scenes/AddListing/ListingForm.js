@@ -681,7 +681,7 @@ class ListingForm extends Component {
                 content={
                   formatMessage(
                     editingListing ?
-                    messages.editListing :
+                    messages.saveListing :
                     messages.createListingCaps
                   )
                 }
