@@ -198,7 +198,7 @@ class Compose extends Component {
     return (
         <div className="form-group address-wrap">
           <label>
-            {formatMessage(mailMessages.to)}
+            {formatMessage(mailMessages.to)}*
             <br/>
             {touched && ((error && <span className="error">{errorMessage}</span>))}
           </label>
