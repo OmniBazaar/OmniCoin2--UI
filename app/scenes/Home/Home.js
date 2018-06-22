@@ -46,7 +46,7 @@ import '../../styles/_modal.scss';
 
 import Burger from './images/hamburger-norm-press.svg';
 import BackgroundImage from './images/sidebar-bg@2x.jpg';
-import SidebarLogo from './images/oc-logo-small.png';
+import SidebarLogo from './images/oc-logo-small@2x.png';
 import EscrowIcon from './images/sdb-escrow.svg';
 import MailIcon from './images/sdb-mail.svg';
 import MarketplaceIcon from './images/sdb-markeplace.svg';
