@@ -58,7 +58,7 @@ class Breadcrumb extends Component {
                 </span>
               </NavLink>
               {category ?
-                <div>
+                <div className="subcategory">
                   <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
                   <span
                     className="link"
@@ -72,7 +72,7 @@ class Breadcrumb extends Component {
                 </div>
               : null}
               {subCategory ?
-                <div>
+                <div className="subcategory">
                   <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
                   <span
                     className="link child"

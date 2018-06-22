@@ -8,4 +8,12 @@
   .child {
     color: $dark-gray;
   }
+
+  .parent {
+    .subcategory {
+      display: flex;
+      align-items: center;
+      line-height: 22px;
+    }
+  }
 }
