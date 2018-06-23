@@ -189,6 +189,7 @@
     "lodash": "^4.17.5",
     "mime-types": "^2.1.18",
     "moment": "^2.22.0",
+    "moneysafe": "^1.1.1",
     "object-hash": "^1.2.0",
     "omnibazaar-dht": "git+ssh://github.com/OmniBazaar/DHT2.git",
     "omnibazaarjs": "^1.22.0",

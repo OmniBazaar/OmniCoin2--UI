@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { FetchChain } from 'omnibazaarjs/es';
+import { $ } from 'moneysafe';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
@@ -203,6 +204,7 @@ const currencyOptions = [
 ];
 
 const FEE_PERCENT = 0.01;
+const FEE_CONVERSION_FACTOR = 10000;
 
 const initialState = {
   bitcoinWallets: [],
@@ -367,7 +369,7 @@ class Transfer extends Component {
     const { amount } = this.props.transferForm;
 
     if (amount) {
-      return amount * FEE_PERCENT;
+      return ($(amount) * $(FEE_PERCENT)) / FEE_CONVERSION_FACTOR;
     }
 
     return 0.00;
