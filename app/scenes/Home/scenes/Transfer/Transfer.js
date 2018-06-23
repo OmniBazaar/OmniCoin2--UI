@@ -211,6 +211,8 @@ const initialState = {
   number: null,
 };
 
+let l = 1;
+
 class Transfer extends Component {
   static asyncValidate = async (values) => {
     try {
@@ -298,15 +300,15 @@ class Transfer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { intl, reset } = this.props;
-    const { formatMessage } = intl;
+    const { formatMessage } = this.props.intl;
 
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), nextProps.transfer.error);
       } else {
-        reset();
+        this.props.reset();
         this.setState(initialState);
+        this.props.history.replace(this.props.history.location.pathname, null);
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
@@ -845,6 +847,10 @@ class Transfer extends Component {
 }
 
 Transfer.propTypes = {
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+    location: PropTypes.shape,
+  }),
   reset: PropTypes.func,
   transferActions: PropTypes.shape({
     submitTransfer: PropTypes.func,
@@ -895,6 +901,7 @@ Transfer.defaultProps = {
   transferForm: {},
   changeFieldValue: () => {},
   reset: () => {},
+  history: {},
   auth: {}
 };
 
