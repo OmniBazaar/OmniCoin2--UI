@@ -1,0 +1,22 @@
+1. Build UI code.
+npm install
+npm run package
+
+2. Download latest build of witness_node and put it in "\omnibazaar-ui\installer\macos\witness_node", so that directory tree would be:
+
+│   build_installer_full.sh
+|   build_installer.sh
+│   scripts
+│   README.txt
+│   scripts_full
+│
+└───witness_node
+    │   genesis.json
+    │   README.txt
+    │   witness_node.exe
+    │
+    └───witness_node_data_dir
+            config.ini
+            config_log.ini
+			
+4. Run “sh build_installer.sh” or “sh build_installer_full.sh” script.
