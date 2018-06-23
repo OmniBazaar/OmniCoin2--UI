@@ -141,7 +141,7 @@ const reducer = handleActions({
     };
   },
   [sortGridTableBy](state, { payload: { gridTableData, sortGridBy, sortGridDirection } }) {
-    const gridData = gridTableData;
+    const gridData = gridTableData || [];
     let sortBy = sortGridBy;
     if (sortGridBy === 'price') {
       sortBy = 'convertedPrice';
