@@ -6,6 +6,9 @@ const categories = Object.freeze({
   jobs: 'jobs',
   cryptoBazaar: 'cryptoBazaar',
   rentals: 'rentals',
+  community: 'community',
+  housing: 'housing',
+  gigs: 'gigs',
 });
 
 const allCategories = defineMessages({
@@ -814,6 +817,12 @@ export const getSubCategoryTitle = (category, subCategory) => {
       return subCategory ? jobsCategories[subCategory] : '';
     case categories.cryptoBazaar:
       return subCategory ? cryptoCategories[subCategory] : '';
+    case categories.community:
+      return subCategory ? communityCategories[subCategory] : '';
+    case categories.housing:
+      return subCategory ? housingCategories[subCategory] : '';
+    case categories.gigs:
+      return subCategory ? gigsCategories[subCategory] : '';
     default:
       return '';
   }
