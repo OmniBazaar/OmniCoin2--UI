@@ -2,7 +2,11 @@
 npm install
 npm run package
 
-2. Download latest build of witness_node and put it in "\omnibazaar-ui\installer\macos\witness_node", so that directory tree would be:
+2. Set correct version in app\package.json.
+run git rev-list --count HEAD and set correct revision number in "version" field.
+e.g.  "version": "1.0.5916"
+
+3. Download latest build of witness_node and put it in "\omnibazaar-ui\installer\macos\witness_node", so that directory tree would be:
 
 │   build_installer_full.sh
 |   build_installer.sh
