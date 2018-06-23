@@ -15,7 +15,7 @@ const defaultState = {
     language: 'en',
     isReferrer: false,
     listingPriority: 'normal',
-    chargeFee: '',
+    chargeFee: 0.25,
     searchListingOption: 'anyKeyword'
   },
   saving: false,
