@@ -50,7 +50,7 @@ const OmnicoinWalletDetail = (props) => {
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">{(props.balance) || 0} OMC</span>
+          <span className="balance">{(props.balance) || 0} XOM</span>
         </div>
       </div>
     </div>
