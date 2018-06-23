@@ -106,9 +106,9 @@ class ListingForm extends Component {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
-        price_using_omnicoin: false,
         continuous: true,
-        ...defaultData
+        ...defaultData,
+        price_using_omnicoin: true,
       };
     }
     
@@ -404,7 +404,6 @@ class ListingForm extends Component {
             <Grid.Column width={4}>
               <Field
                 name="price_using_omnicoin"
-                input={{ value: true }}
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.omnicoinPrice)
