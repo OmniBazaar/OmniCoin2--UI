@@ -204,6 +204,13 @@ const currencyOptions = [
 
 const FEE_PERCENT = 0.01;
 
+const initialState = {
+  bitcoinWallets: [],
+  wallets: [],
+  listingId: null,
+  number: null,
+};
+
 class Transfer extends Component {
   static asyncValidate = async (values) => {
     try {
@@ -264,8 +271,7 @@ class Transfer extends Component {
     this.hideEscrow = this.hideEscrow.bind(this);
 
     this.state = {
-      bitcoinWallets: [],
-      wallets: []
+      ...initialState,
     };
   }
 
@@ -292,11 +298,15 @@ class Transfer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { formatMessage } = this.props.intl;
+    const { intl, reset } = this.props;
+    const { formatMessage } = intl;
+
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), nextProps.transfer.error);
       } else {
+        reset();
+        this.setState(initialState);
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
@@ -835,6 +845,7 @@ class Transfer extends Component {
 }
 
 Transfer.propTypes = {
+  reset: PropTypes.func,
   transferActions: PropTypes.shape({
     submitTransfer: PropTypes.func,
     getCommonEscrows: PropTypes.func,
@@ -883,6 +894,7 @@ Transfer.defaultProps = {
   transfer: {},
   transferForm: {},
   changeFieldValue: () => {},
+  reset: () => {},
   auth: {}
 };
 
