@@ -180,13 +180,16 @@ class PreferencesTab extends Component {
           {
             publisher &&
             <div className="form-group">
-              <span>{formatMessage(messages.chargeFee)}</span>
+              <span>{formatMessage(messages.chargeFee)}(%)</span>
               <Field
                 type="text"
                 name="chargeFee"
-                component="input"
+                component={FormInputWithIconOnRight}
                 className="textfield"
                 placeholder={formatMessage(messages.chargeFee)}
+                props={{
+                rightButtonText: '%'
+              }}
               />
               <div className="col-1" />
             </div>
