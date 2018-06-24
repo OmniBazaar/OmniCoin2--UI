@@ -4,7 +4,6 @@ import {
 } from 'omnibazaarjs-ws';
 import { FetchChain, TransactionHelper, Aes } from 'omnibazaarjs/es';
 
-import { nodesAddresses as nodes } from '../settings';
 
 async function getDynGlobalObject() {
   return (await Apis.instance().db_api().exec('get_objects', [['2.1.0']]))[0];
@@ -19,9 +18,10 @@ async function fetchAccount(username) {
   return (await Apis.instance().db_api().exec('get_objects', [[cachedAccount.get('id')]]))[0];
 }
 
-async function createConnection(node) {
+async function createConnection(nodes) {
+  console.log('CREATING CONNECTION ', nodes);
   const urls = nodes.map(item => item.url);
-  const connectionManager = new Manager({ url: node.url, urls });
+  const connectionManager = new Manager({ url: nodes[0].url, urls });
   const connectionStart = new Date().getTime();
   const {
     node: connectedNode,

@@ -18,17 +18,24 @@ import {
 } from './services/blockchain/auth/authActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
+import { getConfig } from "./services/config/configActions";
 import localeData from './../app/dist/i18n/data.json';
 
 class Root extends Component {
   componentWillMount() {
-    this.props.connectionActions.connectToNode(this.props.settings.activeNode);
+    this.props.configActions.getConfig();
     this.props.authActions.requestPcIds();
     this.props.authActions.requestReferrer();
     this.props.authActions.getLastLoginUserName();
     this.props.listingDefaultsActions.loadListingDefault();
     this.props.preferencesActions.loadPreferences();
-    //this.props.authActions.getCurrentUser();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.config.loading && !nextProps.config.loading) {
+      const { nodes } = nextProps.config;
+      this.props.connectionActions.connectToNode(nodes);
+    }
   }
 
   componentDidMount() {
@@ -88,10 +95,7 @@ Root.propTypes = {
 };
 
 export default connect(
-  (state) => ({
-    settings: state.default.settings,
-    preferences: state.default.preferences
-  }),
+  (state) => ({ ...state.default }),
   (dispatch) => ({
     connectionActions: bindActionCreators({
       connectToNode, getDynGlobalObject
@@ -104,6 +108,9 @@ export default connect(
     }, dispatch),
     preferencesActions: bindActionCreators({
       loadPreferences
+    }, dispatch),
+    configActions: bindActionCreators({
+      getConfig
     }, dispatch)
   })
 )(Root);

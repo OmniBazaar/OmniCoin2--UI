@@ -5,7 +5,6 @@ import {
   call,
 } from 'redux-saga/effects';
 
-import { nodesAddresses as nodes } from '../settings';
 import { getDynGlobalObject as getDynObject, createConnection } from '../utils/miscellaneous';
 
 export function* subscriber() {
@@ -19,9 +18,9 @@ export function* subscriber() {
   );
 }
 
-export function* connectToNode({ payload: { node } }) {
+export function* connectToNode({ payload: { nodes } }) {
   try {
-    const result = yield call(createConnection, node || nodes[0]);
+    const result = yield call(createConnection, nodes);
     yield put({ type: 'CONNECT_SUCCEEDED', ...result });
   } catch (e) {
     yield put({ type: 'CONNECT_FAILED', error: e.message });

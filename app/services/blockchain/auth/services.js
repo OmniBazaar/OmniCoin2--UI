@@ -1,3 +1,5 @@
+import isReachable from 'is-reachable';
+
 const key = 'currentUser';
 
 export const getStoredCurrentUser = () => JSON.parse(localStorage.getItem(key));
@@ -10,4 +12,14 @@ export const storeCurrentUser = (currentUser) => {
 
 export const removeStoredCurrentUser = () => {
   localStorage.removeItem(key);
+};
+
+export const getFirstReachable = async (addresses) => {
+
+  for (let i = 0; i < addresses.length; ++i) {
+    const reachable = await isReachable(addresses[i]);
+    if (reachable) {
+      return addresses[i];
+    }
+  }
 };

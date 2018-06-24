@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import authReducer from './blockchain/auth/authReducer';
 import mailReducer from './mail/mailReducer';
 import connectionReducer from './blockchain/connection/connectionReducer';
-import settingsReducer from './settings/settingsReducer';
 import walletReducer from './wallet/walletReducer';
 import processorsStandbyReducer from './processors/processorsStandbyReducer';
 import processorsTopReducer from './processors/processorsTopReducer';
@@ -20,7 +19,8 @@ import searchReducer from './search/searchReducer';
 import bitcoinReducer from './blockchain/bitcoin/bitcoinReducer';
 import transferReducer from './transfer/transferReducer';
 import dhtReducer from './search/dht/dhtReducer';
-import  myPurchasesReducer from './marketplace/myPurchases/myPurchasesReducer';
+import myPurchasesReducer from './marketplace/myPurchases/myPurchasesReducer';
+import configReducer from './config/configReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -30,7 +30,6 @@ export default combineReducers({
   processorsStandby: processorsStandbyReducer,
   processorsTop: processorsTopReducer,
   connection: connectionReducer,
-  settings: settingsReducer,
   menu: menuReducer,
   account: accountReducer,
   preferences: preferencesReducer,
@@ -44,5 +43,6 @@ export default combineReducers({
   bitcoin: bitcoinReducer,
   dht: dhtReducer,
   transfer: transferReducer,
-  myPurchases: myPurchasesReducer
+  myPurchases: myPurchasesReducer,
+  config: configReducer
 });
