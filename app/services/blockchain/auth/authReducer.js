@@ -77,7 +77,6 @@ const reducer = handleActions({
     return state;
   },
   [requestReferrer](state) {
-    console.log('REQUESTING REFERRER ');
     ipcRenderer.once('receive-referrer', (event, arg) => {
       localStorage.setItem('referrer', arg.referrer);
     });

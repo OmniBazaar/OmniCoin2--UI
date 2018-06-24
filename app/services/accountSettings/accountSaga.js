@@ -6,12 +6,15 @@ import {
   call
 } from 'redux-saga/effects';
 import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
-import { getAllPublishers } from './services';
+import { ipcRenderer } from 'electron';
+import {Apis} from "omnibazaarjs-ws";
 
+import { getAllPublishers } from './services';
 import {
   generateKeyFromPassword,
 } from '../blockchain/utils/wallet';
 import HistoryStorage from './historyStorage';
+import {getStoredCurrentUser} from "../blockchain/auth/services";
 
 
 export function* accountSubscriber() {
@@ -66,7 +69,7 @@ export function* updateAccount(payload) {
       witness_account: account.id,
       url: '',
       block_signing_key:  key.privKey.toPublicKey()
-    })
+    });
   }
   delete trObj.transactionProcessor;
   tr.add_type_operation(
@@ -78,7 +81,15 @@ export function* updateAccount(payload) {
   );
   yield tr.set_required_fees();
   yield tr.add_signer(key.privKey, key.pubKey);
-  yield tr.broadcast();
+  yield tr.broadcast(async () => {
+    const currentUser = getStoredCurrentUser();
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    const account = await FetchChain('getAccount', currentUser.username);
+    const witness = await Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
+    if (witness) {
+      ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
+    }
+  });
 }
 
 
