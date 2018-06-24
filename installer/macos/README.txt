@@ -17,10 +17,12 @@ e.g.  "version": "1.0.5916"
 └───witness_node
     │   genesis.json
     │   README.txt
-    │   witness_node.exe
+    │   witness_node
     │
     └───witness_node_data_dir
             config.ini
             config_log.ini
+
+4. Compress witness_node directory to witness_node.zip archive.
 			
-4. Run “sh build_installer.sh” or “sh build_installer_full.sh” script.
+5. Run “sh build_installer.sh” or “sh build_installer_full.sh” script.
