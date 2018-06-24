@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Image, Popup, Form, Dropdown, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react';
+import { Button, Image, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -23,10 +23,12 @@ import {
   servicesCategories,
   jobsCategories,
   cryptoCategories,
-  moreCategories,
   aboutCategories,
   userMenu,
-  mainCategories
+  mainCategories,
+  communityCategories,
+  housingCategories,
+  gigsCategories
 } from '../../categories';
 
 import './menu.scss';
@@ -127,8 +129,8 @@ class Menu extends Component {
     const menuItem = (
       <div>
         <span
-          onClick={() =>  { if (!isExternal) this.viewCategory(type, parent) }}
-          onKeyDown={() => { if (!isExternal) this.viewCategory(type, parent) }}
+          onClick={() => { if (!isExternal) this.viewCategory(type, parent); }}
+          onKeyDown={() => { if (!isExternal) this.viewCategory(type, parent); }}
           tabIndex={0}
           role="link"
         >
@@ -183,7 +185,8 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(saleCategories).map(key => this.renderOption(saleCategories[key], mainCategories.forSale))}
+            {Object.keys(saleCategories)
+              .map(key => this.renderOption(saleCategories[key], mainCategories.forSale))}
           </div>
         </div>
       </Popup>
@@ -208,7 +211,8 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(servicesCategories).map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
+            {Object.keys(servicesCategories)
+              .map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
           </div>
         </div>
       </Popup>
@@ -233,7 +237,8 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(jobsCategories).map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
+            {Object.keys(jobsCategories)
+              .map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
           </div>
         </div>
       </Popup>
@@ -258,7 +263,8 @@ class Menu extends Component {
         <div className="menu-wrapper">
           <p className="title">{categoryTitle}</p>
           <div className="submenu">
-            {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
+            {Object.keys(cryptoCategories)
+              .map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
           </div>
         </div>
       </Popup>
@@ -281,52 +287,48 @@ class Menu extends Component {
       >
         <div className="menu-wrapper more">
           <div className="submenu">
-            <p className="title">{formatMessage(messages.community)}</p>
+            <span
+              className="title link"
+              onClick={() => this.viewCategory(mainCategories.community.id, null)}
+              onKeyDown={() => this.viewCategory(mainCategories.community.id, null)}
+              tabIndex={0}
+              role="link"
+            >
+              {formatMessage(messages.community)}
+            </span>
             <div className="sub-categories">
-              {this.renderOption(moreCategories.activities, mainCategories.more)}
-              {this.renderOption(moreCategories.arts, mainCategories.more)}
-              {this.renderOption(moreCategories.childCare, mainCategories.more)}
-              {this.renderOption(moreCategories.classes, mainCategories.more)}
-              {this.renderOption(moreCategories.events, mainCategories.more)}
-              {this.renderOption(moreCategories.general, mainCategories.more)}
-              {this.renderOption(moreCategories.groups, mainCategories.more)}
-              {this.renderOption(moreCategories.localNews, mainCategories.more)}
-              {this.renderOption(moreCategories.lostFound, mainCategories.more)}
-              {this.renderOption(moreCategories.music, mainCategories.more)}
-              {this.renderOption(moreCategories.pets, mainCategories.more)}
-              {this.renderOption(moreCategories.politics, mainCategories.more)}
-              {this.renderOption(moreCategories.ridesharing, mainCategories.more)}
-              {this.renderOption(moreCategories.volunteers, mainCategories.more)}
+              {Object.keys(communityCategories)
+                .map(key => this.renderOption(communityCategories[key], mainCategories.community))}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.housing)}</p>
+            <span
+              className="title link"
+              onClick={() => this.viewCategory(mainCategories.housing.id, null)}
+              onKeyDown={() => this.viewCategory(mainCategories.housing.id, null)}
+              tabIndex={0}
+              role="link"
+            >
+              {formatMessage(messages.housing)}
+            </span>
             <div className="sub-categories">
-              {this.renderOption(moreCategories.aptsHousing, mainCategories.more)}
-              {this.renderOption(moreCategories.housingSwap, mainCategories.more)}
-              {this.renderOption(moreCategories.housingWanted, mainCategories.more)}
-              {this.renderOption(moreCategories.officeCommercial, mainCategories.more)}
-              {this.renderOption(moreCategories.realEstateSale, mainCategories.more)}
-              {this.renderOption(moreCategories.roomsToShare, mainCategories.more)}
-              {this.renderOption(moreCategories.roomWanted, mainCategories.more)}
-              {this.renderOption(moreCategories.subletsTemporary, mainCategories.more)}
-              {this.renderOption(moreCategories.vacation, mainCategories.more)}
+              {Object.keys(housingCategories)
+                .map(key => this.renderOption(housingCategories[key], mainCategories.housing))}
             </div>
           </div>
           <div className="submenu">
-            <p className="title">{formatMessage(messages.gigs)}</p>
+            <span
+              className="title link"
+              onClick={() => this.viewCategory(mainCategories.gigs.id, null)}
+              onKeyDown={() => this.viewCategory(mainCategories.gigs.id, null)}
+              tabIndex={0}
+              role="link"
+            >
+              {formatMessage(messages.gigs)}
+            </span>
             <div className="sub-categories">
-              {this.renderOption(moreCategories.babySitting, mainCategories.more)}
-              {this.renderOption(moreCategories.cleaning, mainCategories.more)}
-              {this.renderOption(moreCategories.crew, mainCategories.more)}
-              {this.renderOption(moreCategories.delivery, mainCategories.more)}
-              {this.renderOption(moreCategories.escort, mainCategories.more)}
-              {this.renderOption(moreCategories.houseSitting, mainCategories.more)}
-              {this.renderOption(moreCategories.handyman, mainCategories.more)}
-              {this.renderOption(moreCategories.massage, mainCategories.more)}
-              {this.renderOption(moreCategories.movingHauling, mainCategories.more)}
-              {this.renderOption(moreCategories.petCare, mainCategories.more)}
-              {this.renderOption(moreCategories.techSupport, mainCategories.more)}
+              {Object.keys(gigsCategories)
+                .map(key => this.renderOption(gigsCategories[key], mainCategories.gigs))}
             </div>
           </div>
         </div>
