@@ -188,6 +188,9 @@ class SignupForm extends Component {
   
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
+    if(!country) {
+      this.props.formActions.change('city', '');
+    }
   }
   
   onChangeCity(city) {
