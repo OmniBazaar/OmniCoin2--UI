@@ -150,10 +150,10 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
     if (err) {
       console.log('ERROR ', err);
     } else {
-      const wStart = data.indexOf('# witness-id') !== -1 ? data.indexOf('# witness-id') : data.indexOf('witness-id');
+      const wStart = data.indexOf('#witness-id') !== -1 ? data.indexOf('#witness-id') : data.indexOf('witness-id');
       const wEnd = data.indexOf('\n', wStart);
       data = data.replace(data.substring(wStart, wEnd), `witness-id = "${witnessId}"`);
-      const pStart = data.indexOf('# private-key') !== -1 ? data.indexOf('# private-key') : data.indexOf('private-key');
+      const pStart = data.indexOf('#private-key') !== -1 ? data.indexOf('#private-key') : data.indexOf('private-key');
       const pEnd = data.indexOf('\n', pStart);
       data = data.replace(data.substring(pStart, pEnd), `private-key = ["${pubKey}", "${privKey}"]`);
       fs.writeFile(path + '/witness_node_data_dir/config.ini', data, function(err) {
