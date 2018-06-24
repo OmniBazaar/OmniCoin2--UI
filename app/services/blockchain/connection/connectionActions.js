@@ -4,7 +4,7 @@ const {
   connect,
   getDynGlobalObject
 } = createActions({
-  CONNECT: (node) => ({ node }),
+  CONNECT: (nodes) => ({ nodes }),
   GET_DYN_GLOBAL_OBJECT: () => ({})
 });
 

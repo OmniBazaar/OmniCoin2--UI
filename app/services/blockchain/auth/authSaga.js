@@ -11,7 +11,6 @@ import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
-import { faucetAddresses } from '../settings';
 import { changeSearchPriorityData } from '../../accountSettings/accountActions';
 import {
   getAccount as getAccountAction,
@@ -19,6 +18,7 @@ import {
   welcomeBonusSucceeded,
   welcomeBonusFailed
 } from './authActions';
+import {getFirstReachable} from "./services";
 
 
 const messages = defineMessages({
@@ -85,12 +85,14 @@ export function* signup(action) {
     referrer,
     searchPriorityData
   } = action.payload;
+  const { faucets } = (yield select()).default.config;
+  const faucet = yield call(getFirstReachable, faucets);
   const ownerKey = generateKeyFromPassword(username, 'owner', password);
   const activeKey = generateKeyFromPassword(username, 'active', password);
   const macAddress = localStorage.getItem('macAddress');
   const harddriveId = localStorage.getItem('hardDriveId');
   try {
-    const result = yield call(fetch, `${faucetAddresses[0]}/api/v1/accounts`, {
+    const result = yield call(fetch, `${faucet}/api/v1/accounts`, {
       method: 'post',
       mode: 'cors',
       headers: {

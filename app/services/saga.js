@@ -15,6 +15,7 @@ import { importSubscriber } from './listing/importSaga';
 import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 import { preferencesSubscriber } from './preferences/preferencesSaga';
 import { myPurchasesSubscriber } from "./marketplace/myPurchases/myPurchasesSaga";
+import { configSubscriber } from "./config/configSaga";
 
 export {
   connectionSubscriber,
@@ -33,5 +34,6 @@ export {
   listingDefaultsSubscriber,
   preferencesSubscriber,
   importSubscriber,
-  myPurchasesSubscriber
+  myPurchasesSubscriber,
+  configSubscriber
 };

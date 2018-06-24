@@ -186,6 +186,7 @@
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "ip": "^1.1.5",
+    "is-reachable": "^2.4.0",
     "lodash": "^4.17.5",
     "mime-types": "^2.1.18",
     "moment": "^2.22.0",
