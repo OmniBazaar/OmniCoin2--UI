@@ -137,8 +137,30 @@ const reducer = handleActions({
   [setActivePageStandBy](state, { payload: { activePageStandBy } }) {
     const data = state.standbyProcessors;
     if (activePageStandBy !== state.activePageStandBy) {
-      const { rowsPerPageStandBy } = state;
-      const currentData = sliceData(data, activePageStandBy, rowsPerPageStandBy);
+      const {
+        rowsPerPageStandBy,
+        sortColumnStandBy,
+        sortDirectionStandBy,
+        filterTextStandBy
+      } = state;
+      const sortByFilter = _.sortBy(
+        state.standbyProcessorsFiltered,
+        [`witness_account[${sortColumnStandBy}]`]
+      );
+      const sortByData = _.sortBy(
+        data,
+        [`witness_account[${sortColumnStandBy}]`]
+      );
+      const sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
+      let sortedData = [];
+
+      if (state.sortColumnStandBy !== sortColumnStandBy) {
+        sortedData = sortBy.reverse();
+      } else {
+        sortedData = sortDirectionStandBy === 'ascending' ? sortBy.reverse() : sortBy;
+      }
+
+      const currentData = sliceData(sortedData, activePageStandBy, rowsPerPageStandBy);
 
       return {
         ...state,
@@ -156,11 +178,11 @@ const reducer = handleActions({
     let sortDirectionStandBy = state.sortDirectionStandBy === 'ascending' ? 'descending' : 'ascending';
     const sortByFilter = _.sortBy(
       state.standbyProcessorsFiltered,
-      [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
+      [`witness_account[${sortColumnStandBy}]`]
     );
     const sortByData = _.sortBy(
       state.standbyProcessors,
-      [sortColumnStandBy !== 'name' ? sortColumnStandBy : 'witness_account.name']
+      [`witness_account[${sortColumnStandBy}]`]
     );
     const sortBy = filterTextStandBy !== '' ? sortByFilter : sortByData;
     let sortedData = [];

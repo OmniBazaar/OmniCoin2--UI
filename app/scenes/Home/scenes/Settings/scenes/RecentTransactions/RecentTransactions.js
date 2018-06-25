@@ -32,7 +32,6 @@ import {
   showDetailsModal,
 } from '../../../../../../services/accountSettings/accountActions';
 
-
 import IncomingIcon from './images/ui-arrow-incoming.svg';
 import OutgoingIcon from './images/ui-arrow-aoutgoing.svg';
 import './recent.scss';
@@ -40,7 +39,6 @@ import './recent.scss';
 const iconSize = 15;
 const iconToSize = 12;
 const iconSizeToHeight = 16;
-
 
 const messages = defineMessages({
   date: {
@@ -128,6 +126,7 @@ class RecentTransactions extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.account.loading && !nextProps.account.loading) {
+      this.props.accountSettingsActions.sortData('date');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
   }
