@@ -115,6 +115,20 @@ const deleteListingOnBlockchain = async (listing) => {
   await tr.broadcast();
 };
 
+export const reportListingOnBlockchain = async (listingId) => {
+  const user = getStoredCurrentUser();
+  const tr = new TransactionBuilder();
+  const userAcc = await FetchChain('getAccount', user.username);
+  tr.add_type_operation('listing_report_operation', {
+    reporting_account: userAcc.get('id'),
+    listing_id: listingId
+  });
+  const key = generateKeyFromPassword(user.username, 'active', user.password);
+  await tr.set_required_fees();
+  await tr.add_signer(key.privKey, key.pubKey);
+  await tr.broadcast();
+};
+
 const updateListingOnBlockchain = async (publisher, listingId, listing) => {
   const user = getStoredCurrentUser();
   const seller = await FetchChain('getAccount', user.username);
@@ -145,7 +159,6 @@ export const getListingFromBlockchain = async listingId => {
   if (listing) {
     return listing[0];
   }
-
   return null;
 }
 

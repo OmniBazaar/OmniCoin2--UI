@@ -9,7 +9,7 @@ import { wsWatcher } from '../utils';
 
 const key = 'ob2CommandId';
 
-export const ws = new ReconnectingWebSocket('ws://127.0.0.1:8099');
+export const ws = new ReconnectingWebSocket('ws://127.0.0.1:8091');
 
 export const messageTypes = {
   MARKETPLACE_NULL: '0',

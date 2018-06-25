@@ -53,7 +53,7 @@ class SearchFilters extends Component {
     this.props.initialize({
       searchTerm,
       category,
-      subCategory,
+      subcategory: subCategory,
       currency
     });
   }
@@ -143,7 +143,6 @@ class SearchFilters extends Component {
               />
               <Field
                 name="subcategory"
-                value={subCategory}
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
