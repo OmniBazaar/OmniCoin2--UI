@@ -296,8 +296,10 @@ class Transfer extends Component {
     this.handleInitialize(price * number, to);
     if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
+      this.props.change('currencySelected', 'bitcoin');
     } else {
       this.props.transferActions.setCurrency('omnicoin');
+      this.props.change('currencySelected', 'omnicoin');
     }
   }
 
