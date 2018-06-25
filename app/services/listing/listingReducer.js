@@ -31,6 +31,9 @@ import {
   deleteListing,
   deleteListingSuccess,
   deleteListingError,
+  reportListing,
+  reportListingSuccess,
+  reportListingError,
   addToFavorites,
   removeFromFavorites,
   isFavorite,
@@ -39,8 +42,7 @@ import {
   searchPublishersFinish,
   setNumberToBuy,
   filterMyListings,
-  filterFavorites,
-  filterSearch
+  filterFavorites
 } from './listingActions';
 
 import { marketplaceReturnListings } from '../search/searchActions';
@@ -85,6 +87,11 @@ const defaultState = {
   },
   deleteListing: {
     deleting: false,
+    error: null,
+    listingId: null
+  },
+  reportListing: {
+    reporting: false,
     error: null,
     listingId: null
   },
@@ -495,7 +502,6 @@ const reducer = handleActions({
         myListings: state.myListings.filter(el => el.listing_id !== listingId)
       };
     }
-
     return state;
   },
   [deleteListingError](state, { payload: { listingId, error } }) {
@@ -509,8 +515,33 @@ const reducer = handleActions({
         }
       };
     }
-
     return state;
+  },
+  [reportListing](state, {payload: { listingId } }) {
+    return {
+      ...state,
+      reportListing: {
+        listingId,
+        reporting: true,
+        error: null
+      }
+    }
+  },
+  [reportListingSuccess](state) {
+    return {
+      ...state,
+      reportListing: defaultState.reportListing
+    }
+  },
+  [reportListingError](state, { payload: { error } }) {
+    return {
+      ...state,
+      reportListing: {
+        ...state.reportListing,
+        reporting: false,
+        error
+      }
+    }
   },
   [marketplaceReturnListings](state, { data }) {
     const listingsObj = JSON.parse(data.command.listings);

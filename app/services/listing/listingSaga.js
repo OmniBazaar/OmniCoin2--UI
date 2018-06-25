@@ -25,6 +25,8 @@ import {
   saveListingError,
   deleteListingSuccess,
   deleteListingError,
+  reportListingSuccess,
+  reportListingError,
   getListingDetailSucceeded,
   getListingDetailFailed,
   requestMyListingsSuccess,
@@ -44,9 +46,9 @@ import {
   createListing,
   editListing,
   deleteListing,
-  getListingFromBlockchain
+  getListingFromBlockchain,
+  reportListingOnBlockchain
 } from './apis';
-import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 
 export function* listingSubscriber() {
   yield all([
@@ -57,7 +59,8 @@ export function* listingSubscriber() {
     takeEvery('REQUEST_MY_LISTINGS', requestMyListings),
     takeEvery('DELETE_LISTING', deleteMyListing),
     takeEvery('IS_LISTING_FINE', checkListingHash),
-    takeEvery('SEARCH_PUBLISHERS', searchPublishers)
+    takeEvery('SEARCH_PUBLISHERS', searchPublishers),
+    takeEvery('REPORT_LISTING', reportListing)
   ]);
 }
 
@@ -148,6 +151,8 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
 
 function* getListingDetail({ payload: { listingId }}) {
   try {
+    const { currentUser } = (yield select()).default.auth;
+    const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
     let listings = (yield select()).default.search.searchResults;
     let listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
     if (!listingDetail) {
@@ -164,6 +169,7 @@ function* getListingDetail({ payload: { listingId }}) {
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+    listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
     console.log(error);
@@ -269,5 +275,16 @@ function* searchPublishers({ payload: { keywords } }) {
     }
   } catch (err) {
     yield put(searchPublishersFinish(err));
+  }
+}
+
+
+function* reportListing({ payload: { listingId } }) {
+  try {
+    yield call(reportListingOnBlockchain, listingId);
+    yield put(reportListingSuccess())
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(reportListingError(JSON.stringify(error)));
   }
 }

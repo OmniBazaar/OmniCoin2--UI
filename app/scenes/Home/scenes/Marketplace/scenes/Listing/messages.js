@@ -73,6 +73,10 @@ export default defineMessages({
     id: 'Listing.addToFavorites',
     defaultMessage: 'ADD TO FAVORITES'
   },
+  report: {
+    id: 'Listing.report',
+    defaultMessage: 'REPORT'
+  },
   removeFromFavorites: {
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
@@ -104,5 +108,21 @@ export default defineMessages({
   outOfStock: {
     id: 'Listing.outOfStock',
     defaultMessage: 'Out of stock'
-  }
+  },
+  reportDeleteQuestion: {
+    id: 'Listing.reportDeleteQuestion',
+    defaultMessage: 'Are you sure you want to delete this listing?'
+  },
+  reportConfirmationQuestion: {
+    id: 'Listing.reportConfirmationQuestion',
+    defaultMessage: 'Are you sure you want to report this listing?'
+  },
+  reportListingError: {
+    id: 'Listing.reportListingError',
+    defaultMessage: 'An error occured while reporting the listing'
+  },
+  reportListingSuccess: {
+    id: 'Listing.reportListingSuccess',
+    defaultMessage: 'Listing is reported successfully'
+  },
 });

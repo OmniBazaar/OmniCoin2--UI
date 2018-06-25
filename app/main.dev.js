@@ -51,19 +51,20 @@ const installExtensions = async () => {
 };
 
 const handleOb2Connection = (path) => {
-  let ls = spawn(path);
+  let ls = spawn(path, ["--rpc-endpoint", "127.0.0.1:8091"]);
   ls.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
 
   ls.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
+    setTimeout(() => handleOb2Connection(path), 1500);
   });
 
   ls.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`);
     ls.kill();
-    handleOb2Connection(path);
+    setTimeout(() => handleOb2Connection(path), 1500);
   });
 };
 
