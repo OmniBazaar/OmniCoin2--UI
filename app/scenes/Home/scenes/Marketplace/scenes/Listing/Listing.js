@@ -39,7 +39,8 @@ import {
   isListingFine,
   setNumberToBuy,
   setActiveCurrency,
-  deleteListing
+  deleteListing,
+  reportListing
 } from '../../../../../../services/listing/listingActions';
 
 const iconSizeSmall = 12;
@@ -47,7 +48,8 @@ const iconSizeSmall = 12;
 class Listing extends Component {
 
   state = {
-    confirmDeleteOpen: false
+    confirmDeleteOpen: false,
+    confirmReportOpen: false,
   };
 
   componentWillMount() {
@@ -107,6 +109,13 @@ class Listing extends Component {
         this.props.history.push('/listings');
       }
     }
+    if (this.props.listing.reportListing.reporting && !nextProps.listing.reportListing.reporting) {
+      if (nextProps.listing.reportListing.error) {
+        this.errorToast(messages.reportListingError);
+      } else {
+        this.successToast(messages.reportListingSuccess)
+      }
+    }
   }
 
   errorToast(message) {
@@ -141,15 +150,28 @@ class Listing extends Component {
     });
   };
 
+  reportListing = () => {
+    this.setState({
+      confirmReportOpen: true
+    })
+  };
+
   onOkDelete() {
     this.closeConfirm();
     const { listingDetail } = this.props.listing;
     this.props.listingActions.deleteListing({publisher_ip: listingDetail.ip }, listingDetail);
   }
 
+  onOkReport() {
+    this.closeConfirm();
+    const { listingDetail } = this.props.listing;
+    this.props.listingActions.reportListing(listingDetail['listing_id']);
+  }
+
   closeConfirm() {
     this.setState({
-      confirmDeleteOpen: false
+      confirmDeleteOpen: false,
+      confirmReportOpen: false
     });
   }
 
@@ -240,16 +262,16 @@ class Listing extends Component {
   };
 
   addToFavorites = () => {
-    const { props } = this;
-    const { listingDetail } = props.listing;
-    props.listingActions.addToFavorites(listingDetail);
+    const { listingDetail } = this.props.listing;
+    this.props.listingActions.addToFavorites(listingDetail);
   };
 
   removeFromFavorites = () => {
-    const { props } = this;
-    const { listingDetail } = props.listing;
-    props.listingActions.removeFromFavorites(listingDetail['listing_id']);
+    const { listingDetail } = this.props.listing;
+    this.props.listingActions.removeFromFavorites(listingDetail['listing_id']);
   };
+
+
 
   setItemsAmount = (valueAsNumber, max) => {
     let v = valueAsNumber;
@@ -265,6 +287,7 @@ class Listing extends Component {
   renderUserButtons(maxQuantity) {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
+    const { listingDetail } = this.props.listing;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -297,7 +320,13 @@ class Listing extends Component {
             className="button--transparent"
           />
         }
-
+        <Button
+          onClick={() => this.reportListing()}
+          content={formatMessage(messages.report)}
+          loading={this.props.listing.reportListing.reporting}
+          disabled={listingDetail.isReportedByCurrentUser}
+          className="button--gray-text"
+        />
       </div>
     );
   }
@@ -458,6 +487,13 @@ class Listing extends Component {
             onApprove={() => this.onOkDelete()}
             onCancel={() => this.closeConfirm()}
             isOpen={this.state.confirmDeleteOpen}
+            question={formatMessage(messages.reportDeleteQuestion)}
+          />
+          <ConfirmationModal
+            onApprove={() => this.onOkReport()}
+            onCancel={() => this.closeConfirm()}
+            isOpen={this.state.confirmReportOpen}
+            question={formatMessage(messages.reportConfirmationQuestion)}
           />
         </div>
       </div>
@@ -510,7 +546,8 @@ export default connect(
       isListingFine,
       setNumberToBuy,
       setActiveCurrency,
-      deleteListing
+      deleteListing,
+      reportListing
     }, dispatch),
   }),
 )(injectIntl(Listing));

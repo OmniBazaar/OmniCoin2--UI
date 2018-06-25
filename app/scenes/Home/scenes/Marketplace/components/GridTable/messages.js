@@ -39,10 +39,11 @@ export default defineMessages({
   },
   deleteListingError: {
     id: 'GridTable.deleteListingError',
-    defaultMessage: 'Having error when delete listing'
+    defaultMessage: 'An error occured while deleting the listing'
   },
   deleteListingSuccess: {
     id: 'GridTable.deleteListingSuccess',
     defaultMessage: 'Listing is deleted successfully'
-  }
+  },
+
 });
