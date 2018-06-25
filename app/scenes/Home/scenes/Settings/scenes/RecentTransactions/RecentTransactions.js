@@ -187,7 +187,7 @@ class RecentTransactions extends Component {
       sortDirection,
       totalPages,
       sortColumn,
-      recentTransactionsFiltered,
+      recentTransactionsVisible,
       loading
     } = this.props.account;
     const { formatMessage } = this.props.intl;
@@ -271,7 +271,7 @@ class RecentTransactions extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentTransactionsFiltered && recentTransactionsFiltered.map(row =>
+                {recentTransactionsVisible && recentTransactionsVisible.map(row =>
                       (
                         <TableRow key={hash(row)}>
                           <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
