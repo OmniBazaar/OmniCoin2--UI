@@ -81,8 +81,11 @@ class MyListings extends Component {
     this.props.listingActions.filterMyListings(currency, category, subcategory, searchText);
   }
 
-  onChangeCurrency(currency) {
-    this.props.listingActions.filterMyListings(currency);
+  onChangeCurrency(values, currency) {
+    const searchText = values.searchTerm || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.listingActions.filterMyListings(currency, category, subcategory, searchText);
   }
 
   renderMyListings() {
@@ -94,7 +97,7 @@ class MyListings extends Component {
       myListingsCurrency,
       myListingsCategory,
       myListingsSubCategory,
-      myListingsSearchTerm,
+      myListingsSearchTerm
     } = this.props.listing;
 
     let data = myListings;
@@ -104,13 +107,14 @@ class MyListings extends Component {
         (myListingsSearchTerm && myListingsSearchTerm !== '')) {
       data = myListingsFiltered;
     }
-
+    
     return (
       <div className="list-container my-listings">
         <SearchFilters onSubmit={this.handleSubmit} onChangeCurrency={this.onChangeCurrency} />
         <TabsData
           data={data}
           showTrailingLoader={requestMyListings.ids.length !== 0}
+          currency={myListingsCurrency}
           showActions
           tabs={[
             {

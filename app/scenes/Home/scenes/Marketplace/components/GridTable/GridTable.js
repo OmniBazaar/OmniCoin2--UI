@@ -178,7 +178,7 @@ class GridTable extends Component {
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
     let showConvertedPrice = false;
-    if (currency && currency !== 'ALL') {
+    if (currency && currency !== 'ALL' && currency !== 'all') {
       showConvertedPrice = true
     }
     
