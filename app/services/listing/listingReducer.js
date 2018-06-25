@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { currencyConverter } from '../utils';
 import _ from 'lodash';
 import {
   getListingDetail,
@@ -101,6 +102,24 @@ const defaultState = {
     publishers: [],
     error: null
   }
+};
+
+const changeCurrencies = (selectedCurrency, listing ) => {
+  return listing.map((item) => {
+    if (selectedCurrency === item.currency) {
+      return {
+        ...item,
+        convertedPrice : item.price
+      }
+    }  else {
+      const price = currencyConverter(item.price, item.currency, selectedCurrency);
+      
+      return {
+        ...item,
+        convertedPrice: price
+      }
+    }
+  });
 };
 
 const storageKey = 'favoritesListings';
@@ -580,12 +599,15 @@ const reducer = handleActions({
     };
   },
   [filterMyListings](state, { payload: { currency, category, subCategory, searchTerm } }) {
-    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
     const categoryFilter = (category && category.toLowerCase()) || 'all';
     const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
-    let myListingsFiltered = state.myListings;
-
+    let myListingsFiltered = [...state.myListings];
+  
+    if (currency !== 'all' && currency !== undefined) {
+      myListingsFiltered = changeCurrencies(currency, myListingsFiltered)
+    }
+    
     if (searchTerm) {
       myListingsFiltered = myListingsFiltered.filter(listing => {
         return Object.values(listing).filter(
@@ -595,13 +617,11 @@ const reducer = handleActions({
       myListingsFiltered = _.without(myListingsFiltered, undefined);
     }
 
-    if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+    if (categoryFilter !== 'all' && subCategoryFilter !== 'all') {
       myListingsFiltered = myListingsFiltered
-        .filter(el => el.currency.toLowerCase() === currencyFilter)
         .filter(el => el.category.toLowerCase() === categoryFilter)
         .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     } else {
-      if (currencyFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.currency.toLowerCase() === currencyFilter);
       if (categoryFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.category.toLowerCase() === categoryFilter);
       if (subCategoryFilter !== 'all') myListingsFiltered = myListingsFiltered.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     }
@@ -611,15 +631,18 @@ const reducer = handleActions({
       myListingsCategory: category,
       myListingsSubCategory: subCategory,
       myListingsSearchTerm: searchTerm,
-      myListingsFiltered
+      myListingsFiltered,
     };
   },
   [filterFavorites](state, { payload: { currency, category, subCategory, searchTerm } }) {
-    const currencyFilter = (currency && currency.toLowerCase()) || 'all';
     const categoryFilter = (category && category.toLowerCase()) || 'all';
     const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
-    let favoriteFiltered = state.favoriteListings;
+    let favoriteFiltered = [...state.favoriteListings];
+  
+    if (currency !== 'all' && currency !== undefined) {
+      favoriteFiltered = changeCurrencies(currency, favoriteFiltered)
+    }
 
     if (searchTerm) {
       favoriteFiltered = favoriteFiltered.filter(listing => {
@@ -630,13 +653,11 @@ const reducer = handleActions({
       favoriteFiltered = _.without(favoriteFiltered, undefined);
     }
 
-    if (currencyFilter !== 'all' && categoryFilter !== 'all' && subCategoryFilter !== 'all') {
+    if (categoryFilter !== 'all' && subCategoryFilter !== 'all') {
       favoriteFiltered = favoriteFiltered
-        .filter(el => el.currency.toLowerCase() === currencyFilter)
         .filter(el => el.category.toLowerCase() === categoryFilter)
         .filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     } else {
-      if (currencyFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.currency.toLowerCase() === currencyFilter);
       if (categoryFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.category.toLowerCase() === categoryFilter);
       if (subCategoryFilter !== 'all') favoriteFiltered = favoriteFiltered.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
     }

@@ -67,9 +67,12 @@ class FavoriteListings extends Component {
     const subcategory = (values && values.subcategory) ? values.subcategory : null;
     this.props.listingActions.filterFavorites(currency, category, subcategory, searchText);
   }
-
-  onChangeCurrency(currency) {
-    this.props.listingActions.filterFavorites(currency);
+  
+  onChangeCurrency(values, currency) {
+    const searchText = values.searchTerm || '';
+    const category = (values && values.category) ? values.category : null;
+    const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.listingActions.filterFavorites(currency, category, subcategory, searchText);
   }
 
   renderFavoriteListings() {
@@ -81,7 +84,7 @@ class FavoriteListings extends Component {
       favoriteCurrency,
       favoriteCategory,
       favoriteSubCategory,
-      favoriteSearchTerm,
+      favoriteSearchTerm
     } = this.props.listing;
 
     let data = favoriteListings;
@@ -98,6 +101,7 @@ class FavoriteListings extends Component {
         <TabsData
           data={data}
           showActions={false}
+          currency={favoriteCurrency}
           tabs={[
             {
               title: formatMessage(messages.byDate),
