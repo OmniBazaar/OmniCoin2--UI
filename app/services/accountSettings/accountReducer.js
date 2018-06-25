@@ -50,6 +50,7 @@ const defaultState = {
   escrow: false,
   recentTransactions: [],
   recentTransactionsFiltered: [],
+  recentTransactionsVisible: [],
   sortDirection: 'descending',
   sortColumn: 'date',
   activePage: 1,
@@ -61,6 +62,7 @@ const defaultState = {
   rescanBlockchain: false,
   votes: [],
   votesFiltered: [],
+
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
@@ -340,6 +342,7 @@ const reducer = handleActions({
     loading: false,
     error: null,
     recentTransactions: transactions,
+    recentTransactionsFiltered: transactions,
   }),
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
@@ -360,11 +363,12 @@ const reducer = handleActions({
       filterText,
       activePage,
       totalPages,
-      recentTransactionsFiltered: currentData,
+      recentTransactionsFiltered: filteredData,
+      recentTransactionsVisible: currentData
     };
   },
   [setPagination](state, { payload: { rowsPerPage } }) {
-    const data = state.recentTransactions;
+    const data = state.recentTransactionsFiltered;
     const { activePage } = state;
     const totalPages = getTotalPages(data, rowsPerPage);
     const currentData = sliceData(data, activePage, rowsPerPage);
@@ -373,11 +377,11 @@ const reducer = handleActions({
       ...state,
       totalPages,
       rowsPerPage,
-      recentTransactionsFiltered: currentData,
+      recentTransactionsVisible: currentData,
     };
   },
   [setActivePage](state, { payload: { activePage } }) {
-    const data = state.recentTransactions;
+    const data = state.recentTransactionsFiltered;
     if (activePage !== state.activePage) {
       const { rowsPerPage } = state;
       const currentData = sliceData(data, activePage, rowsPerPage);
@@ -385,7 +389,7 @@ const reducer = handleActions({
       return {
         ...state,
         activePage,
-        recentTransactionsFiltered: currentData,
+        recentTransactionsVisible: currentData,
       };
     }
 
@@ -396,7 +400,7 @@ const reducer = handleActions({
   [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    let data = state.recentTransactions;
+    let data = state.recentTransactionsFiltered;
     if (!!filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
@@ -406,7 +410,8 @@ const reducer = handleActions({
 
     return {
       ...state,
-      recentTransactionsFiltered: currentData,
+      recentTransactionsFiltered: sortedData,
+      recentTransactionsVisible: currentData,
       sortDirection,
       sortColumn,
     };
@@ -435,7 +440,8 @@ const reducer = handleActions({
 
     return {
       ...state,
-      votesFiltered: currentData,
+      votesFiltered: sortedData,
+      votesVisible: currentData,
       sortVoteDirection,
       sortVoteColumn,
     };
