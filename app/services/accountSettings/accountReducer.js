@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
+import dateformat from 'dateformat';
 
 import PriorityTypes from '../../common/SearchPriorityType';
 
@@ -379,8 +380,24 @@ const reducer = handleActions({
   [setActivePage](state, { payload: { activePage } }) {
     const data = state.recentTransactions;
     if (activePage !== state.activePage) {
-      const { rowsPerPage } = state;
-      const currentData = sliceData(data, activePage, rowsPerPage);
+      const { rowsPerPage, sortDirection, sortColumn } = state;
+      let sortedData = [];
+      let currentData = [];
+
+      if (sortColumn === 'date') {
+        sortedData = data.sort((a, b) => {
+          const aDate = dateformat(a[sortColumn], 'yyyy-mm-dd HH:MM:ss');
+          const bDate = dateformat(b[sortColumn], 'yyyy-mm-dd HH:MM:ss');
+          if (aDate > bDate) return -1;
+          if (aDate < bDate) return 1;
+          return 0;
+        });
+        sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
+      } else {
+        const sortBy = _.sortBy(data, [sortColumn]);
+        sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+      }
+      currentData = sliceData(sortedData, activePage, rowsPerPage);
 
       return {
         ...state,
@@ -397,18 +414,42 @@ const reducer = handleActions({
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
     let data = state.recentTransactions;
-    if (!!filterText) {
-      data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+    let sortedData = [];
+    let activePageSort = state.activePage;
+
+    if (sortColumn === 'date') {
+      sortedData = data.sort((a, b) => {
+        const aDate = dateformat(a[sortColumn], 'yyyy-mm-dd HH:MM:ss');
+        const bDate = dateformat(b[sortColumn], 'yyyy-mm-dd HH:MM:ss');
+        if (aDate > bDate) return -1;
+        if (aDate < bDate) return 1;
+        return 0;
+      });
+      sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
+    } else {
+      const sortBy = _.sortBy(data, [sortColumn]);
+      if (state.sortColumn !== sortColumn) {
+        sortedData = sortBy.reverse();
+        sortDirection = 'ascending';
+        activePageSort = 1;
+      } else {
+        sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+      }
     }
-    const sortedData = _.orderBy(data, [sortColumn], [sortDirection === 'ascending' ? 'asc' : 'desc']);
-    const { activePage, rowsPerPage } = state;
-    const currentData = sliceData(sortedData, activePage, rowsPerPage);
+
+    if (!!filterText) {
+      data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
+    }
+
+    const { rowsPerPage } = state;
+    const currentData = sliceData(sortedData, activePageSort, rowsPerPage);
 
     return {
       ...state,
       recentTransactionsFiltered: currentData,
       sortDirection,
       sortColumn,
+      activePage: activePageSort
     };
   },
   [getVotes](state, { payload: { votes } }) {
