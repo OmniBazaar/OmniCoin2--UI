@@ -211,9 +211,8 @@ const initialState = {
   wallets: [],
   listingId: null,
   number: null,
+  price: 0.00,
 };
-
-let l = 1;
 
 class Transfer extends Component {
   static asyncValidate = async (values) => {
@@ -283,6 +282,7 @@ class Transfer extends Component {
     type: CoinTypes.OMNI_COIN,
     listingId: null,
     number: 0,
+    price: 0.00,
   };
 
   componentDidMount() {
@@ -311,8 +311,8 @@ class Transfer extends Component {
         toastr.error(formatMessage(messages.transfer), nextProps.transfer.error);
       } else {
         this.props.reset();
-        this.setState(initialState);
-        this.props.history.replace(this.props.history.location.pathname, null);
+        this.setState({ listingId: null, price: 0, number: 0 });
+        this.handleInitialize(0, '');
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
