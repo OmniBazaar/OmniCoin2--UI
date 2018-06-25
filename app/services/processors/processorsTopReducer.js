@@ -105,8 +105,30 @@ const reducer = handleActions({
   [setActivePageTop](state, { payload: { activePageTop } }) {
     const data = state.topProcessors;
     if (activePageTop !== state.activePageTop) {
-      const { rowsPerPageTop } = state;
-      const currentData = sliceData(data, activePageTop, rowsPerPageTop);
+      const {
+        rowsPerPageTop,
+        filterTextTop,
+        sortColumnTop,
+        sortDirectionTop
+      } = state;
+      const sortByFilter = _.sortBy(
+        state.topProcessorsFiltered,
+        [`witness_account[${sortColumnTop}]`]
+      );
+      const sortByData = _.sortBy(
+        data,
+        [`witness_account[${sortColumnTop}]`]
+      );
+      const sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
+      let sortedData = [];
+
+      if (state.sortColumnTop !== sortColumnTop) {
+        sortedData = sortBy.reverse();
+      } else {
+        sortedData = sortDirectionTop === 'ascending' ? sortBy.reverse() : sortBy;
+      }
+
+      const currentData = sliceData(sortedData, activePageTop, rowsPerPageTop);
 
       return {
         ...state,
@@ -124,11 +146,11 @@ const reducer = handleActions({
     let sortDirectionTop = state.sortDirectionTop === 'ascending' ? 'descending' : 'ascending';
     const sortByFilter = _.sortBy(
       state.topProcessorsFiltered,
-      [sortColumnTop !== 'name' ? sortColumnTop : 'witness_account.name']
+      [`witness_account[${sortColumnTop}]`]
     );
     const sortByData = _.sortBy(
       state.topProcessors,
-      [sortColumnTop !== 'name' ? sortColumnTop : 'witness_account.name']
+      [`witness_account[${sortColumnTop}]`]
     );
     const sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
     let sortedData = [];
