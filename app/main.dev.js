@@ -51,7 +51,7 @@ const installExtensions = async () => {
 };
 
 const handleOb2Connection = (path) => {
-  let ls = spawn(path, ["--rpc-endpoint", "127.0.0.1:8091"]);
+  let ls = spawn(path, ["--rpc-endpoint", "127.0.0.1:8098"]);
   ls.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
