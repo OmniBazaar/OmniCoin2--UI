@@ -109,7 +109,7 @@ const messages = defineMessages({
   },
   witnessRegisterFee: {
     id: 'Settings.witnessRegisterFee',
-    defaultMessage: 'Witness registration fee is 5020 XOM. Are you sure you want to proceed?'
+    defaultMessage: 'Witness registration fee is 5000 XOM. Are you sure you want to proceed?'
   }
 });
 
