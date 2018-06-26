@@ -8,17 +8,6 @@ import LikeBtn from './images/btn-like.svg';
 import DislikeBtn from './images/btn-dislike.svg';
 import './voting-toggle.scss';
 
-const messages = defineMessages({
-  voteUpTooltip: {
-    id: 'VotingToggle.voteUpTooltip',
-    defaultMessage: 'Click here when you satisfied with the seller\'s product or performance. Doing so will release the escrowed funds to the seller.'
-  },
-  voteDownTooltip: {
-    id: 'VotingToggle.voteDownTooltip',
-    defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. Doing so will return the escrowed funds to the buyer'
-  },
-});
-
 class VotingToggle extends Component {
   render() {
     const { formatMessage } = this.props.intl;
@@ -27,17 +16,17 @@ class VotingToggle extends Component {
       onToggle,
       isToggled,
       size,
-      showTooltip
+      showTooltip,
+      tooltip
     } = this.props;
     const img = type === 'up' ? LikeBtn : DislikeBtn;
-    let tooltip = type === 'up' ? formatMessage(messages.voteUpTooltip) : formatMessage(messages.voteDownTooltip);
-    tooltip = showTooltip ? tooltip : '';
+    const title = tooltip ? tooltip : '';
     const voteClass = cn({
       'voting-toggle': true,
       voted: isToggled
     });
     return (
-      <div className={voteClass} title={tooltip}>
+      <div className={voteClass} title={title}>
         <Image
           src={img}
           width={size}
