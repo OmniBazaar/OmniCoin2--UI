@@ -1,4 +1,4 @@
 {
-   "VotingToggle.voteUpTooltip": "Vote for this account to allow him approve the omnicoin transactions.",
+   "VotingToggle.voteUpTooltip": "Click here when you satisfied with the seller's product or performance. Doing so will release the escrowed funds to the seller.",
    "VotingToggle.voteDownTooltip": "Click here if you need or want to reject or terminate this escrow transaction. Doing so will return the escrowed funds to the buyer"
 }

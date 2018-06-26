@@ -26,10 +26,12 @@ class VotingToggle extends Component {
       type,
       onToggle,
       isToggled,
-      size
+      size,
+      title
     } = this.props;
     const img = type === 'up' ? LikeBtn : DislikeBtn;
-    const tooltip = type === 'up' ? formatMessage(messages.voteUpTooltip) : formatMessage(messages.voteDownTooltip);
+    let tooltip = type === 'up' ? formatMessage(messages.voteUpTooltip) : formatMessage(messages.voteDownTooltip);
+    tooltip = !title ? title : tooltip;
     const voteClass = cn({
       'voting-toggle': true,
       voted: isToggled
