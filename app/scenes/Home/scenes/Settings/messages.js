@@ -32,5 +32,9 @@ export default defineMessages({
   recentTransactions: {
     id: 'Settings.recentTransactions',
     defaultMessage: 'Recent Transactions'
+  },
+  vestingBalances: {
+    id: 'Settings.vestingBalances',
+    defaultMessage: 'Vesting Balances'
   }
 });

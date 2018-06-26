@@ -35,7 +35,8 @@ import {
   preferencesSubscriber,
   importSubscriber,
   myPurchasesSubscriber,
-  configSubscriber
+  configSubscriber,
+  vestingBalancesSubscriber
 } from './services/saga';
 
 ChainConfig.address_prefix = 'XOM';
@@ -86,6 +87,7 @@ sagaMiddleware.run(preferencesSubscriber);
 sagaMiddleware.run(importSubscriber);
 sagaMiddleware.run(myPurchasesSubscriber);
 sagaMiddleware.run(configSubscriber);
+sagaMiddleware.run(vestingBalancesSubscriber);
 
 ReactDOM.render(
   (

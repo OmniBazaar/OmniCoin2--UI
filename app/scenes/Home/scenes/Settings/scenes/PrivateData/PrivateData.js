@@ -7,7 +7,6 @@ import { Button, Form, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import cn from 'classnames';
 import SearchPrioritySetting from '../../../Marketplace/scenes/Search/scenes/SearchPriority/components/SearchPrioritySetting';
 
 import { updatePrivateData } from '../../../../../../services/accountSettings/accountActions';
