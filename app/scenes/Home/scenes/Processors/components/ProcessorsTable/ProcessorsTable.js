@@ -113,7 +113,7 @@ class ProcessorsTable extends Component {
                       type="up"
                       onToggle={() => toggle(row.id)}
                       isToggled={!!row.approve}
-                      title=""
+                      showTooltip={false}
                     />
                   </TableCell>
                 </TableRow>
