@@ -90,6 +90,14 @@ const messages = defineMessages({
   seller: {
     id: 'MyEscrowTransactions.seller',
     defaultMessage: 'seller',
+  },
+  voteUpTooltip: {
+    id: 'VotingToggle.voteUpTooltip',
+    defaultMessage: 'Click here when you satisfied with the seller\'s product or performance. Doing so will release the escrowed funds to the seller.'
+  },
+  voteDownTooltip: {
+    id: 'VotingToggle.voteDownTooltip',
+    defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. Doing so will return the escrowed funds to the buyer'
   }
 });
 
@@ -269,6 +277,7 @@ class MyEscrowTransactions extends Component {
 
   renderRows() {
     const { username } = this.props.auth.currentUser;
+    const { formatMessage } = this.props.intl;
     return this.state.transactions.map((escrowObject) => (
       <TableRow key={escrowObject.transactionID}>
         <TableCell>{escrowObject.transactionID}</TableCell>
@@ -281,10 +290,12 @@ class MyEscrowTransactions extends Component {
               <VotingToggle
                 type="up"
                 onToggle={() => this.handleSubmit('release', escrowObject)}
+                tooltip={formatMessage(messages.voteUpTooltip)}
               />
               <VotingToggle
                 type="down"
                 onToggle={() => this.handleSubmit('return', escrowObject)}
+                tooltip={formatMessage(messages.voteDownTooltip)}
               />
             </div>
             :
@@ -293,11 +304,13 @@ class MyEscrowTransactions extends Component {
                 <VotingToggle
                   type="down"
                   onToggle={() => this.handleSubmit('return', escrowObject)}
+                  tooltip={formatMessage(messages.voteDownTooltip)}
                 />
                 :
                 <VotingToggle
                   type="up"
                   onToggle={() => this.handleSubmit('release', escrowObject)}
+                  tooltip={formatMessage(messages.voteUpTooltip)}
                 />
               }
             </div>
