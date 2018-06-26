@@ -3,5 +3,7 @@
   "ExistingWallet.pleaseEnter": "Please Enter",
   "ExistingWallet.walletGuid": "Wallet GUID",
   "ExistingWallet.cancel": "CANCEL",
-  "ExistingWallet.connect": "CONNECT"
+  "ExistingWallet.connect": "CONNECT",
+  "NewWallet.connectErrorTitle": "Connect error",
+  "NewWallet.connectErrorMessage": "Having error when conneting wallet"
 }

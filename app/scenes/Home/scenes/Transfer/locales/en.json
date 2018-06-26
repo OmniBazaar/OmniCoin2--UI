@@ -14,5 +14,6 @@
   "Transfer.useEscrowService":"Use SecureSend (Escrow Service)",
   "Transfer.successTransfer":"Transferred successfully",
   "Transfer.failedTransfer":"Failed to transfer",
-  "Transfer.maxLength":"Memo must be less than 150 characters"
+  "Transfer.maxLength":"Memo must be less than 150 characters",
+  "Transfer.defaultWalletLabel": "Wallet"
 }

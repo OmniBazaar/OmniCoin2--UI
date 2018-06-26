@@ -3,6 +3,7 @@ import { wrapRequest } from '../../utils';
 
 const apiKey = '4ad8f029-035c-4d68-8020-6f2fad9bfb7a';
 const address = 'http://localhost:3000';
+const feePerByte = 10; //satoshi
 
 const createWallet = wrapRequest(async (password, label, email) => {
   const createUrl = new URL(`${address}/api/v2/create`);
@@ -18,7 +19,9 @@ const createWallet = wrapRequest(async (password, label, email) => {
 
 const getWallets = wrapRequest(async (password, guid) => fetch(`${address}/merchant/${guid}/accounts?password=${password}`));
 
-const makePayment = wrapRequest(async (guid, password, to, amount, from, fee) => fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}&from=${from}`));
+const makePayment = wrapRequest(async (guid, password, to, amount, from) => (
+  fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
+));
 
 const getBalance = wrapRequest(async (address, guid, password) => fetch(`${address}/merchant/${guid}/balance?password=${password}`));
 

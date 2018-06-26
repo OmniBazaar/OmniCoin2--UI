@@ -6,7 +6,9 @@ import {
   getBalance,
   addAddress,
   toggleModal,
-  toggleAddAddressModal
+  toggleAddAddressModal,
+  connectWallet,
+  connectWalletFinish
 } from './bitcoinActions';
 
 const defaultState = {
@@ -22,7 +24,9 @@ const defaultState = {
   },
   addAddressModal: {
     isOpen: false
-  }
+  },
+  connectingWallet: false,
+  connectWalletError: null
 };
 
 const reducer = handleActions({
@@ -143,6 +147,20 @@ const reducer = handleActions({
         ...state.addAddressModal,
         isOpen: !state.addAddressModal.isOpen
       }
+    };
+  },
+  [connectWallet](state) {
+    return {
+      ...state,
+      connectingWallet: true,
+      connectWalletError: null
+    };
+  },
+  [connectWalletFinish](state, { payload: { error } }) {
+    return {
+      ...state,
+      connectingWallet: false,
+      connectWalletError: error
     };
   }
 }, defaultState);
