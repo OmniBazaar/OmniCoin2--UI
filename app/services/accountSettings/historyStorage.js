@@ -223,12 +223,14 @@ class HistoryStorage extends BaseStorage {
       ChainTypes.operations.listing_delete_operation,
       ChainTypes.operations.welcome_bonus_operation,
       ChainTypes.operations.referral_bonus_operation,
-      ChainTypes.operations.witness_create
+      ChainTypes.operations.sale_bonus_operation,
+      ChainTypes.operations.witness_create,
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
       if (!this.exists(el.id)) {
-        if (el.op[0] === ChainTypes.operations.welcome_bonus_operation) {
+        if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
+            || el.op[0] === ChainTypes.operations.sale_bonus_operation) {
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
