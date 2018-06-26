@@ -14,10 +14,19 @@ class Calendar extends Component {
   onChange(date) {
     const { onChange } = this.props.input;
     if (onChange) {
-      onChange(date ? date.format('YYYY-MM-DD') : '');
+      const newTime = moment(new Date(), 'HH:mm:ss');
+      let dateTime = moment(date, 'YYYY-MM-DD HH:mm:ss');
+
+      dateTime = dateTime.set({
+        hour: newTime.get('hour'),
+        minute: newTime.get('minute'),
+        second: newTime.get('second')
+      });
+
+      onChange(date ? dateTime.format('YYYY-MM-DD HH:mm:ss') : '');
     }
   }
-  
+
   render() {
     const { value } = this.props.input;
     const minDate = this.props.minDate ? moment(this.props.minDate) : moment();
@@ -31,6 +40,8 @@ class Calendar extends Component {
             onChange={this.onChange.bind(this)}
             minDate={minDate}
             maxDate={maxDate}
+            showTimeSelect={false}
+            timeFormat="HH:mm:ss"
           />
           <Image className='calendar-icon' src={CalendarIcon} width={size} height={size} />
         </label>
