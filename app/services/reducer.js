@@ -21,6 +21,7 @@ import transferReducer from './transfer/transferReducer';
 import dhtReducer from './search/dht/dhtReducer';
 import myPurchasesReducer from './marketplace/myPurchases/myPurchasesReducer';
 import configReducer from './config/configReducer';
+import vestingBalancesReducer from './accountSettings/vestingBalances/vestingBalancesReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -44,5 +45,6 @@ export default combineReducers({
   dht: dhtReducer,
   transfer: transferReducer,
   myPurchases: myPurchasesReducer,
-  config: configReducer
+  config: configReducer,
+  vestingBalances: vestingBalancesReducer
 });

@@ -16,6 +16,7 @@ import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 import { preferencesSubscriber } from './preferences/preferencesSaga';
 import { myPurchasesSubscriber } from "./marketplace/myPurchases/myPurchasesSaga";
 import { configSubscriber } from "./config/configSaga";
+import { vestingBalancesSubscriber } from "./accountSettings/vestingBalances/vestingBalanacesSaga";
 
 export {
   connectionSubscriber,
@@ -35,5 +36,6 @@ export {
   preferencesSubscriber,
   importSubscriber,
   myPurchasesSubscriber,
-  configSubscriber
+  configSubscriber,
+  vestingBalancesSubscriber
 };
