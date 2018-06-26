@@ -87,9 +87,12 @@ class Listing extends Component {
       }
     }
     if (listingDetail !== nextProps.listing.listingDetail) {
-      this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
-      if (nextProps.listing.listingDetail && nextProps.listing.listingDetail.quantity === 0) {
+      if (nextProps.listing.listingDetail && !nextProps.listing.listingDetail.existsInBlockchain) {
+        this.warningToast(messages.notInBlockchain);
+      } else if (nextProps.listing.listingDetail && nextProps.listing.listingDetail.quantity === 0) {
         this.errorToast(messages.outOfStock);
+      } else {
+        this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
       }
     }
     if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
@@ -113,7 +116,8 @@ class Listing extends Component {
       if (nextProps.listing.reportListing.error) {
         this.errorToast(messages.reportListingError);
       } else {
-        this.successToast(messages.reportListingSuccess)
+        this.successToast(messages.reportListingSuccess);
+        this.props.listingActions.getListingDetail(this.props.match.params.id);
       }
     }
   }
@@ -126,6 +130,11 @@ class Listing extends Component {
   successToast(message) {
     const { formatMessage } = this.props.intl;
     toastr.success(formatMessage(messages.success), formatMessage(message));
+  }
+
+  warningToast(message) {
+    const { formatMessage } = this.props.intl;
+    toastr.warning(formatMessage(messages.warning), formatMessage(message));
   }
 
   isOwner() {
@@ -288,6 +297,7 @@ class Listing extends Component {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
     const { listingDetail } = this.props.listing;
+    const disabled = !!error || maxQuantity === 0 || !listingDetail.existsInBlockchain;
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -296,7 +306,7 @@ class Listing extends Component {
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
             loading={loading}
-            disabled={!!error || maxQuantity === 0}
+            disabled={disabled}
           />
           <NumericInput
             mobile
@@ -324,7 +334,7 @@ class Listing extends Component {
           onClick={() => this.reportListing()}
           content={formatMessage(messages.report)}
           loading={this.props.listing.reportListing.reporting}
-          disabled={listingDetail.isReportedByCurrentUser}
+          disabled={listingDetail.isReportedByCurrentUser || !listingDetail.existsInBlockchain}
           className="button--gray-text"
         />
       </div>

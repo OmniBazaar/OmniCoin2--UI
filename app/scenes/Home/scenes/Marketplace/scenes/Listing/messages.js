@@ -93,6 +93,10 @@ export default defineMessages({
     id: 'Listing.success',
     defaultMessage: 'Success'
   },
+  warning: {
+    id: 'Listing.warning',
+    defaultMessage: 'Warning'
+  },
   deleteListingError: {
     id: "Listing.deleteListingError",
     defaultMessage: 'Delete listing error'
@@ -108,6 +112,10 @@ export default defineMessages({
   outOfStock: {
     id: 'Listing.outOfStock',
     defaultMessage: 'Out of stock'
+  },
+  notInBlockchain: {
+    id: 'Listing.notInBlockchain',
+    defaultMessage: 'The listing was deleted from the blockchain'
   },
   reportDeleteQuestion: {
     id: 'Listing.reportDeleteQuestion',

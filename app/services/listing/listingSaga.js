@@ -162,14 +162,17 @@ function* getListingDetail({ payload: { listingId }}) {
 
     const blockchainListingData = yield call(getListingFromBlockchain, listingId);
     if (!blockchainListingData) {
-      throw new Error('Listing not valid on blockchain');
+      listingDetail.existsInBlockchain = false;
+      listingDetail.quantity = 0;
+    } else {
+      listingDetail.existsInBlockchain = true;
+      listingDetail.quantity = blockchainListingData.quantity;
+      listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     }
-    listingDetail.quantity = blockchainListingData.quantity;
 
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
-    listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
     console.log(error);
