@@ -68,7 +68,7 @@ const messages = defineMessages({
   },
   keywords: {
     id: 'SearchPrioritySetting.keywords',
-    defaultMessage: 'Keywords for listing your want to see'
+    defaultMessage: 'Keywords for listing what you want to see'
   },
   addKeyword: {
     id: 'SearchPrioritySetting.addKeyword',
@@ -218,9 +218,14 @@ class SearchPrioritySetting extends Component {
   }
 
   render() {
+    let isDisabled = false;
     const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
+    
+    if(publisherData.priority === 'category' && !publisherData.keywords.length) {
+      isDisabled = true;
+    }
 
     return (
       <div className="search-priority-setting">
@@ -268,7 +273,12 @@ class SearchPrioritySetting extends Component {
           </div>
           <div className="form-group">
             <span />
-            <Button type="submit" content={formatMessage(messages.apply)} className="button--green-bg" />
+            <Button
+              type="submit"
+              content={formatMessage(messages.apply)}
+              className="button--green-bg"
+              disabled={isDisabled}
+            />
             <div className="col-1" />
             <div className="col-1" />
           </div>
