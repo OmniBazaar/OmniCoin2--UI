@@ -6,39 +6,13 @@ import { Field, reduxForm } from 'redux-form';
 import { Form, Button } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
 
 import FormField from '../../../FormField/FormField';
 import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
-import { toggleModal, getWallets } from '../../../../../../../../services/blockchain/bitcoin/bitcoinActions';
+import { toggleModal, getWallets, connectWallet } from '../../../../../../../../services/blockchain/bitcoin/bitcoinActions';
+import messages from './messages';
 import './existing-wallet.scss';
-
-const messages = defineMessages({
-  enterPassword: {
-    id: 'ExistingWallet.enterPassword',
-    defaultMessage: 'Enter Password for Account Access',
-  },
-  pleaseEnter: {
-    id: 'ExistingWallet.pleaseEnter',
-    defaultMessage: 'Please Enter'
-  },
-  walletGuid: {
-    id: 'ExistingWallet.walletGuid',
-    defaultMessage: 'Wallet GUID'
-  },
-  cancel: {
-    id: 'ExistingWallet.cancel',
-    defaultMessage: 'CANCEL'
-  },
-  connect: {
-    id: 'ExistingWallet.connect',
-    defaultMessage: 'CONNECT'
-  },
-  fieldRequired: {
-    id: 'NewWallet.required',
-    defaultMessage: 'This field is required'
-  }
-});
-
 
 class ExistingWallet extends Component {
   constructor(props) {
@@ -48,11 +22,17 @@ class ExistingWallet extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.bitcoin.modal.isOpen
-          && !nextProps.bitcoin.loading
-          && this.props.bitcoin.loading
-    ) {
-      this.toggleModal();
+    if (!nextProps.bitcoin.connectingWallet
+          && this.props.bitcoin.connectingWallet) {
+      if (nextProps.bitcoin.modal.isOpen) {
+        this.toggleModal();
+      }
+      if (nextProps.bitcoin.connectWalletError) {
+        this.showErrorToast(
+          messages.connectErrorTitle,
+          messages.connectErrorMessage
+        );
+      }
     }
   }
 
@@ -61,20 +41,23 @@ class ExistingWallet extends Component {
   };
 
   handleSubmit(values) {
-    this.props.bitcoinActions.getWallets(
-      values.guid,
-      values.password
-    );
+    const { guid, password } = values;
+    this.props.bitcoinActions.connectWallet(guid, password);
   }
 
   handleCancel() {
     this.toggleModal();
   }
 
+  showErrorToast(title, message) {
+    const { formatMessage } = this.props.intl;
+    toastr.error(formatMessage(title), formatMessage(message));
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit, valid } = this.props;
-    const { loading } = this.props.bitcoin;
+    const { connectingWallet } = this.props.bitcoin;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-bitcoin-wallet">
         <Field
@@ -96,7 +79,7 @@ class ExistingWallet extends Component {
           successContent={formatMessage(messages.connect)}
           cancelContent={formatMessage(messages.cancel)}
           handleCancel={this.handleCancel}
-          loading={loading}
+          loading={connectingWallet}
           disabled={!valid}
         />
       </Form>
@@ -109,7 +92,9 @@ ExistingWallet.propTypes = {
     modal: PropTypes.shape({
       isOpen: PropTypes.bool
     }),
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    connectWalletError: PropTypes.object,
+    connectingWallet: PropTypes.bool
   }).isRequired,
   bitcoinActions: PropTypes.shape({
     toggleModal: PropTypes.func,
@@ -124,9 +109,11 @@ ExistingWallet.propTypes = {
 
 export default compose(
   connect(
-    state => ({ ...state.default }),
+    state => ({
+      bitcoin: state.default.bitcoin
+    }),
     dispatch => ({
-      bitcoinActions: bindActionCreators({ toggleModal, getWallets }, dispatch)
+      bitcoinActions: bindActionCreators({ toggleModal, getWallets, connectWallet }, dispatch)
     })
   ),
   reduxForm({

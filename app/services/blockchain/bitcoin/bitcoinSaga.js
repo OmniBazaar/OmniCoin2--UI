@@ -8,6 +8,7 @@ import {
 
 import * as BitcoinApi from './BitcoinApi';
 import { persitBitcoinWalletData, getBitcoinWalletData } from './services';
+import { connectWalletFinish } from './bitcoinActions';
 
 export function* bitcoinSubscriber() {
   yield all([
@@ -15,7 +16,8 @@ export function* bitcoinSubscriber() {
     takeEvery('GET_WALLETS', getWallets),
     takeEvery('MAKE_PAYMENT', makePayment),
     takeEvery('GET_BALANCE', getBalance),
-    takeEvery('ADD_ADDRESS', addAddress)
+    takeEvery('ADD_ADDRESS', addAddress),
+    takeEvery('CONNECT_WALLET', connectWallet)
   ]);
 }
 
@@ -28,6 +30,19 @@ function* createWallet({ payload: { password, label, email } }) {
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'CREATE_WALLET_FAILED', error });
+  }
+}
+
+function* connectWallet({ payload: { guid, password } }) {
+  try {
+    const res = yield call(BitcoinApi.getWallets, password, guid);
+    const { currentUser } = (yield select()).default.auth;
+    yield call(persitBitcoinWalletData, guid, password, currentUser);
+    yield put(connectWalletFinish());
+    yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password });
+  } catch (error) {
+    console.log('Connect bitcoin wallet error', error);
+    yield put(connectWalletFinish(error));
   }
 }
 

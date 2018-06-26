@@ -25,6 +25,10 @@ import { $ } from 'moneysafe';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
+import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
+import {
+  makeValidatableField
+} from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
   setCurrency,
@@ -37,141 +41,7 @@ import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 
-
-const messages = defineMessages({
-  accountDoNotExist: {
-    id: 'Transfer.accountDoNotExist',
-    defaultMessage: 'Account doesn\'t exist'
-  },
-  transfer: {
-    id: 'Transfer.transfer',
-    defaultMessage: 'Transfer'
-  },
-  from: {
-    id: 'Transfer.from',
-    defaultMessage: 'From'
-  },
-  to: {
-    id: 'Transfer.to',
-    defaultMessage: 'To'
-  },
-  TRANSFER: {
-    id: 'Transfer.TRANSFER',
-    defaultMessage: 'TRANSFER'
-  },
-  fieldRequired: {
-    id: 'Transfer.fieldRequired',
-    defaultMessage: 'This field is required'
-  },
-  accountNameOrPublicKey: {
-    id: 'Transfer.accountNameOrPublicKey',
-    defaultMessage: 'Account Name or Public Key'
-  },
-  pleaseEnter: {
-    id: 'Transfer.pleaseEnter',
-    defaultMessage: 'Please enter'
-  },
-  amount: {
-    id: 'Transfer.amount',
-    defaultMessage: 'Amount'
-  },
-  reputation: {
-    id: 'Transfer.reputation',
-    defaultMessage: 'Rate your deal'
-  },
-  memo: {
-    id: 'Transfer.memo',
-    defaultMessage: 'Memo'
-  },
-  transferSecurity: {
-    id: 'Transfer.transferSecurity',
-    defaultMessage: 'Transfer Security'
-  },
-  useEscrowService: {
-    id: 'Transfer.useEscrowService',
-    defaultMessage: 'Use SecureSend (Escrow Service)'
-  },
-  successTransfer: {
-    id: 'Transfer.successUpdate',
-    defaultMessage: 'Transferred successfully'
-  },
-  failedTransfer: {
-    id: 'Transfer.failedUpdate',
-    defaultMessage: 'Failed to transfer'
-  },
-  selectEscrow: {
-    id: 'Transfer.selectEscrow',
-    defaultMessage: 'Select escrow'
-  },
-  transferToEscrow: {
-    id: 'Transfer.transferToEscrow',
-    defaultMessage: 'Transfer to escrow'
-  },
-  expirationTime: {
-    id: 'Transfer.expirationTime',
-    defaultMessage: 'Expiration time'
-  },
-  oneDay: {
-    id: 'Transfer.oneDay',
-    defaultMessage: '1 day'
-  },
-  threeDays: {
-    id: 'Transfer.threeDays',
-    defaultMessage: '3 days'
-  },
-  oneWeek: {
-    id: 'Transfer.oneWeek',
-    defaultMessage: '1 week'
-  },
-  twoWeeks: {
-    id: 'Transfer.twoWeeks',
-    defaultMessage: '2 weeks'
-  },
-  oneMonth: {
-    id: 'Transfer.oneMonth',
-    defaultMessage: '1 month'
-  },
-  threeMonths: {
-    id: 'Transfer.threeMonths',
-    defaultMessage: '3 months'
-  },
-  escrowFee: {
-    id: 'Transfer.escrowFee',
-    defaultMessage: 'Escrow Fee: 1%({xomAmount} XOM)'
-  },
-  transferToEscrowLabel: {
-    id: 'Transfer.transferToEscrowLabel',
-    defaultMessage: 'Funds will be kept on escrow account'
-  },
-  warning: {
-    id: 'Transfer.warning',
-    defaultMessage: 'Warning'
-  },
-  escrowsNotFound: {
-    id: 'Transfer.escrowNotFound',
-    defaultMessage: 'Unfortunately you don\'t any have any common escrows with the specified account',
-  },
-  numberRequired: {
-    id: 'Transfer.numberRequired',
-    defaultMessage: 'Number required'
-  },
-  currency: {
-    id: 'Transfer.currency',
-    defaultMessage: 'Select Currency'
-  },
-  selectWallet: {
-    id: 'Transfer.selectWallet',
-    defaultMessage: 'Select Wallet'
-  },
-  transactionID: {
-    id: 'Transfer.transactionID',
-    defaultMessage: 'Transaction ID'
-  },
-  maxLength: {
-    id: 'Transfer.maxLength',
-    defaultMessage: 'Memo must be less than 150 characters'
-  }
-});
+import messages from './messages';
 
 const walletOptions = [
   {
@@ -274,6 +144,8 @@ class Transfer extends Component {
     this.handleEscrowTransactionChecked = this.handleEscrowTransactionChecked.bind(this);
     this.hideEscrow = this.hideEscrow.bind(this);
 
+    this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
+
     this.state = {
       ...initialState,
     };
@@ -308,7 +180,7 @@ class Transfer extends Component {
 
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
-        toastr.error(formatMessage(messages.transfer), nextProps.transfer.error);
+        toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
       } else {
         this.props.reset();
         this.setState(initialState);
@@ -331,19 +203,6 @@ class Transfer extends Component {
     if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
       this.props.change('password', this.props.bitcoin.password);
       this.props.change('guid', this.props.bitcoin.guid);
-      const wallets = [];
-      nextProps.bitcoin.wallets.forEach((wallet) => {
-        wallets[wallet.index] = {
-          value: wallet.receiveAddress,
-          text: wallet.label,
-          description: `${wallet.balance} BTC`
-        };
-      });
-
-      this.setState({
-        bitcoinWallets: nextProps.bitcoin.wallets,
-        wallets
-      });
     }
   }
 
@@ -702,7 +561,6 @@ class Transfer extends Component {
   renderBitCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
-    const { wallets } = this.state;
 
     return (
       <div>
@@ -712,10 +570,11 @@ class Transfer extends Component {
             <span>{formatMessage(messages.selectWallet)}</span>
             <div className="transfer-input">
               <Field
-                type="text"
                 name="fromName"
-                options={wallets}
-                component={this.renderSelectField}
+                component={this.BitcoinWalletDropdown}
+                validate={[
+                  required({ message: formatMessage(messages.fieldRequired) })
+                ]}
               />
             </div>
             <div className="col-1" />
@@ -820,11 +679,18 @@ class Transfer extends Component {
     );
   }
   submitTransfer(paramValues) {
+    const { transferCurrency } = this.props.transfer;
     const values = {
-      ...paramValues,
-      memo: paramValues.memo ? paramValues.memo : '',
-      amount: parseFloat(paramValues.amount).toFixed(2)
+      ...paramValues
     };
+
+    if (transferCurrency === 'omnicoin') {
+      values.memo = paramValues.memo ? paramValues.memo : '';
+      values.amount = parseFloat(paramValues.amount).toFixed(2);
+    } else {
+      values.amount = parseFloat(paramValues.amount).toFixed(8);
+    }
+
     const { currentUser } = this.props.auth;
     if (this.state.listingId) {
       this.props.transferActions.saleBonus(values.toName, currentUser.username);

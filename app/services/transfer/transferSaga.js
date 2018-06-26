@@ -80,18 +80,22 @@ function* submitBitcoinTransfer(data) {
   const {
     guid,
     password,
-    toBCName,
+    toName,
     amount,
     fromName
   } = data.payload.data;
-  const fee = 0;
 
   try {
-    const res = yield call(BitcoinApi.makePayment, guid, password, toBCName, amount, fromName, fee);
-    yield put({ type: 'MAKE_PAYMENT_SUCCEEDED', res });
+    if (!Number.isInteger(fromName)) {
+      throw new Error('Transaction from value need to be a wallet index');
+    }
+
+    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
+    yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
-    yield put({ type: 'MAKE_PAYMENT_FAILED', error });
     console.log('ERROR', error);
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });    
   }
 }
 
