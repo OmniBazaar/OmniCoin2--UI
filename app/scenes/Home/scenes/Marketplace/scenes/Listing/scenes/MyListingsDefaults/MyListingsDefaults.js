@@ -48,7 +48,7 @@ class MyListingsDefaults extends Component {
     this.props.initialize(listingDefaults);
     this.props.listingDefaultsActions.loadListingDefault();
   }
-  
+
   componentWillReceiveProps(newProps) {
     if(newProps.listingDefaults.name !== this.props.listingDefaults.name) {
       this.props.initialize(newProps.listingDefaults);
@@ -96,7 +96,11 @@ class MyListingsDefaults extends Component {
   defaultsForm() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    const { category, country } = this.props.formValues ? this.props.formValues : {};
+    const {
+      category,
+      country,
+      price_using_btc
+    } = this.props.formValues ? this.props.formValues : {};
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -167,6 +171,20 @@ class MyListingsDefaults extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+          {price_using_btc &&
+          <Grid.Row>
+            <Grid.Column width={4}>
+              {formatMessage(addListingMessages.bitcoinAddress)}
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="bitcoin_address"
+                component={InputField}
+                className="textfield"
+              />
+            </Grid.Column>
+          </Grid.Row>
+          }
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
