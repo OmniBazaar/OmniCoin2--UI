@@ -55,7 +55,7 @@ const defaultState = {
   sortColumn: 'date',
   activePage: 1,
   totalPages: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 20,
   filterText: '',
   showDetails: false,
   detailSelected: {},

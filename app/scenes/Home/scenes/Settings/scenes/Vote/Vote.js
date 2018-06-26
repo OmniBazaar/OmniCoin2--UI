@@ -215,7 +215,7 @@ Vote.defaultProps = {
   account: {},
   tableProps: {},
   intl: {},
-  rowsPerPage: 5,
+  rowsPerPage: 20,
 };
 
 export default connect(

@@ -20,7 +20,7 @@ const defaultState = {
   sortDirectionTop: 'descending',
   sortColumnTop: 'rank',
   totalPagesTop: 1,
-  rowsPerPageTop: 10,
+  rowsPerPageTop: 20,
   filterTextTop: '',
   loading: false,
   voting: false,

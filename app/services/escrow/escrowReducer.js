@@ -36,7 +36,7 @@ const defaultState = {
   updatingSettings: false,
   finalizing: false,
   activePageMyEscrow: 1,
-  rowsPerPageMyEscrow: 10,
+  rowsPerPageMyEscrow: 20,
   totalPagesMyEscrow: 1,
 };
 

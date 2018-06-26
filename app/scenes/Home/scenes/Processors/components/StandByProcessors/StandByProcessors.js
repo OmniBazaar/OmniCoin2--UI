@@ -161,7 +161,7 @@ StandByProcessors.defaultProps = {
     striped: true,
     size: 'small'
   },
-  rowsPerPage: 4,
+  rowsPerPage: 20,
 };
 
 export default connect(

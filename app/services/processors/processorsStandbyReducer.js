@@ -20,7 +20,7 @@ const defaultState = {
   sortDirectionStandBy: 'descending',
   sortColumnStandBy: 'rank',
   totalPagesStandBy: 1,
-  rowsPerPageStandBy: 10,
+  rowsPerPageStandBy: 20,
   filterTextStandBy: '',
   loading: false,
   error: null

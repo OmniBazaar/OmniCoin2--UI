@@ -100,7 +100,7 @@ class Settings extends Component {
                    render: () => (
                      <Tab.Pane>
                        <RecentTransactions
-                         rowsPerPage={5}
+                         rowsPerPage={20}
                          tableProps={{
                            sortable: true,
                            compact: true,

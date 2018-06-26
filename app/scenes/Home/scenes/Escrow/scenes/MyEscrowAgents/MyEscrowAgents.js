@@ -54,7 +54,7 @@ const messages = defineMessages({
 });
 
 
-const limit = 5;
+const limit = 10;
 
 class MyEscrowAgents extends Component {
   constructor(props) {

@@ -365,7 +365,7 @@ RecentTransactions.defaultProps = {
   accountSettingsActions: {},
   account: {},
   tableProps: {},
-  rowsPerPage: 5,
+  rowsPerPage: 20,
   intl: {},
 };
 

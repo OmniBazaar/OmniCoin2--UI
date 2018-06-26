@@ -159,7 +159,7 @@ TopProcessors.defaultProps = {
     striped: true,
     size: 'small'
   },
-  rowsPerPage: 5,
+  rowsPerPage: 20,
 };
 
 export default connect(
