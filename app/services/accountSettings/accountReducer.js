@@ -44,7 +44,7 @@ const defaultPublisherData = {
 };
 
 const defaultState = {
-  referrer: false,
+  referrer: true,
   publisher: false,
   transactionProcessor: false,
   escrow: false,
@@ -136,7 +136,7 @@ const reducer = handleActions({
   [setReferrer](state) {
     return {
       ...state,
-      referrer: !state.referrer,
+      referrer: true,
     };
   },
   [setPublisher](state) {
