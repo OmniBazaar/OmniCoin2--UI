@@ -33,7 +33,6 @@ export function* updatePublicData() {
   try {
     yield updateAccount({
       transactionProcessor: is_a_processor ? false: account.transactionProcessor,
-      referrer: account.referrer,
       is_a_publisher: account.publisher,
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
