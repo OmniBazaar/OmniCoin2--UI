@@ -37,7 +37,7 @@ const messages = defineMessages({
   }
 });
 
-const rowsPerPage = 10;
+const rowsPerPage = 20;
 
 class Escrow extends Component {
   componentDidMount() {

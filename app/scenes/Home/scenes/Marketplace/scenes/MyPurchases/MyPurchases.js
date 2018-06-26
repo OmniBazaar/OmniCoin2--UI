@@ -229,7 +229,7 @@ MyPurchases.propTypes = {
 };
 
 MyPurchases.defaultProps = {
-  rowsPerPage: 10,
+  rowsPerPage: 20,
   tableProps: {
     sortable: true,
     compact: true,

@@ -381,7 +381,7 @@ MyEscrowTransactions.defaultProps = {
   intl: {},
   escrowActions: {},
   auth: {},
-  rowsPerPage: 10,
+  rowsPerPage: 20,
   tableProps: {},
 };
 

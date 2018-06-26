@@ -17,7 +17,7 @@ const defaultState = {
   sortColumn: 'id',
   activePage: 1,
   totalPages: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 20,
   filterText: '',
   loading: false,
   error: null
