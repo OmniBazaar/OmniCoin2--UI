@@ -42,9 +42,9 @@ const mailMessages = defineMessages({
     id: 'Mail.enterSubject',
     defaultMessage: 'Enter subject'
   },
-  startTyping: {
-    id: 'Mail.startTyping',
-    defaultMessage: 'Start typing'
+  enterUsername: {
+    id: 'Mail.enterUsername',
+    defaultMessage: 'Enter Username'
   },
   message: {
     id: 'Mail.message',
@@ -206,7 +206,7 @@ class Compose extends Component {
             {...input}
             type="text"
             className="textfield"
-            placeholder={formatMessage(mailMessages.startTyping)}
+            placeholder={formatMessage(mailMessages.enterUsername)}
           />
           {/*<Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" />*/}
         </div>
