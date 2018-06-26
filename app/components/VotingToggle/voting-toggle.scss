@@ -1,9 +1,10 @@
 .voting-toggle {
   display: flex;
   cursor: pointer;
+  opacity: 0.5;
 
   &.voted {
-    opacity: 0.5;
+    opacity: 1;
   }
   :hover:not(.voted) {
     opacity: 0.7;
