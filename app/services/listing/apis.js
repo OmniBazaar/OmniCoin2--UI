@@ -15,6 +15,16 @@ import {currencyConverter} from "../utils";
 let authUser = null;
 let authHeaders = null;
 
+const listingProps = [
+  'listing_title', 'listing_type', 'listing_id', 'category',
+  'subcategory', 'price', 'currency', 'price_using_btc',
+  'bitcoin_address', 'price_using_omnicoin', 'condition',
+  'quantity', 'units', 'start_date', 'end_date', 'continuous',
+  'images', 'description', 'keywords', 'name', 'contact_type',
+  'contact_info', 'country', 'address', 'city', 'post_code',
+  'state', 'owner'
+];
+
 const getAuthHeaders = () => new Promise((resolve, reject) => {
 	const user = getStoredCurrentUser();
   if (!authHeaders || !authUser || (authUser.username !== user.username)) {
@@ -162,7 +172,19 @@ export const getListingFromBlockchain = async listingId => {
   return null;
 }
 
+const ensureListingData = listing => {
+  const result = {};
+  listingProps.forEach(key => {
+    if (typeof listing[key] !== 'undefinded') {
+      result[key] = listing[key];
+    }
+  });
+
+  return result;
+}
+
 export const createListing = async (publisher, listing) => {
+  listing = ensureListingData(listing);
   const listingId = await createListingOnBlockchain(publisher, listing);
   const options = {
     method: 'POST',
@@ -177,6 +199,7 @@ export const createListing = async (publisher, listing) => {
 };
 
 export const editListing = async (publisher, listingId, listing) => {
+  listing = ensureListingData(listing);
   updateListingOnBlockchain(publisher, listingId, listing);
   const options = {
     method: 'PUT',
@@ -187,11 +210,6 @@ export const editListing = async (publisher, listingId, listing) => {
       listing_id: listingId
     }
   };
-  delete options.body.type;
-  delete options.body.ip;
-  delete options.body.reputationScore;
-  delete options.body.reputationVotesCount;
-  console.log('BODY ', options.body);
   return await makeRequest(publisher, `listings/${listingId}`, options);
 };
 
