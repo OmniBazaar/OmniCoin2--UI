@@ -38,7 +38,7 @@
           display: flex;
 
           span {
-            margin-left: 8px; 
+            margin-left: 8px;
           }
         }
       }
@@ -111,4 +111,9 @@
     top: 1px;
     bottom: 1px;
   }
+}
+
+.error-message {
+  height: 30px;
+  color: #FF0000;
 }

@@ -28,6 +28,9 @@ let lastLanguage = null;
 class PreferencesTab extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      errorMsg: ''
+    };
     if (!lastLanguage) {
       lastLanguage = props.preferences.preferences.language;
     }
@@ -65,7 +68,7 @@ class PreferencesTab extends Component {
       }
     }
   }
-
+  
   componentWillUnmount() {
     lastLanguage = this.props.preferences.preferences.language;
   }
@@ -77,12 +80,26 @@ class PreferencesTab extends Component {
   showSuccessToast(title, message) {
     toastr.success(title, message);
   }
-
+  
+  number = value => (value && !isNaN(Number(value)));
+  
   onSubmit(values) {
     const { publisher } = this.props.account;
+    const { chargeFee, logoutTimeout } = values;
+    if (!this.number(logoutTimeout)) {
+      this.setState({ errorMsg: 'LogOut Timeout must be number' });
+      return
+    }
+  
+    if (publisher && !this.number(chargeFee)) {
+      this.setState({ errorMsg: 'Fee must be number' });
+      return
+    }
+      
     if (!publisher) {
       values.chargeFee = '';
     }
+    this.setState({ errorMsg: '' });
     this.props.preferencesActions.savePreferences(values);
   }
 
@@ -223,6 +240,7 @@ class PreferencesTab extends Component {
           <div className="form-group submit-group">
             <span />
             <div className="field">
+              <div className="error-message">{this.state.errorMsg}</div>
               <Button
                 type="submit"
                 content={formatMessage(messages.update)}
