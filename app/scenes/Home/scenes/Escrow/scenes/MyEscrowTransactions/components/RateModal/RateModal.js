@@ -12,6 +12,10 @@ import FormField, { defaultOption, options } from '../FormField/FormField';
 import './rate-modal.scss';
 
 const messages = defineMessages({
+  confirmation: {
+    id: 'RateModal.confirmation',
+    defaultMessage: 'Confirmation'
+  },
   ok: {
     id: 'RateModal.ok',
     defaultMessage: 'OK'
@@ -51,7 +55,10 @@ class RateModal extends Component {
     const { handleSubmit } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <Modal size="tiny" open={isOpen} closeIcon>
+      <Modal size="tiny" open={isOpen} closeIcon onClose={onCancel}>
+        <Modal.Header>
+          {formatMessage(messages.confirmation)}
+        </Modal.Header>
         <Modal.Content>
           <Form onSubmit={handleSubmit(this.handleSubmit)}>
             <Field
