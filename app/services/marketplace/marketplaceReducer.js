@@ -140,13 +140,23 @@ const reducer = handleActions({
       gridTableDataFiltered: currentData,
     };
   },
-  [sortGridTableBy](state, { payload: { gridTableData, sortGridBy, sortGridDirection } }) {
-    const gridData = gridTableData || [];
+  [sortGridTableBy](state, {
+    payload: {
+      gridTableData,
+      sortGridBy,
+      sortGridDirection,
+      currency
+    }
+  }) {
+    let gridData = gridTableData || [];
     let sortBy = sortGridBy;
+
     if (sortGridBy === 'price') {
       sortBy = 'convertedPrice';
-      gridData.forEach(item => {
-        item.convertedPrice = currencyConverter(item.price, item.currency, 'USD');
+      gridData = gridData.map((item) => {
+        const newItem = { ...item };
+        newItem.convertedPrice = currencyConverter(item.price, item.currency, currency);
+        return newItem;
       });
     }
 
