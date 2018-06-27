@@ -53,7 +53,8 @@ class GridTable extends Component {
     this.props.gridTableActions.sortGridTableBy(
       this.props.data,
       this.props.sortBy,
-      this.props.sortDirection
+      this.props.sortDirection,
+      this.props.currency
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
     this.props.gridTableActions.setActivePageGridTable(1);
@@ -62,11 +63,13 @@ class GridTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data ||
         this.props.sortBy !== nextProps.sortBy ||
-        this.props.sortDirection !== nextProps.sortDirection) {
+        this.props.sortDirection !== nextProps.sortDirection ||
+        this.props.currency !== nextProps.currency) {
       this.props.gridTableActions.sortGridTableBy(
         nextProps.data,
         nextProps.sortBy,
-        nextProps.sortDirection
+        nextProps.sortDirection,
+        nextProps.currency
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
       this.props.gridTableActions.setActivePageGridTable(1);
@@ -140,10 +143,10 @@ class GridTable extends Component {
   showErrorToast(title, message) {
     toastr.error(title, message);
   }
-  
+
   getIcon(showConvertedPrice, itemCurrency, currency){
     const type = showConvertedPrice ? currency : itemCurrency;
-    
+
     if (type === "USD") {
       return <Image src={Dollar} className="currency-icon"/>
     } else if (type === "EUR") {
@@ -181,7 +184,7 @@ class GridTable extends Component {
     if (currency && currency !== 'ALL' && currency !== 'all') {
       showConvertedPrice = true
     }
-    
+
     return (
       <div className="data-table">
         <div className="table-container">
@@ -313,7 +316,8 @@ GridTable.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
-  showTrailingLoader: PropTypes.bool
+  showTrailingLoader: PropTypes.bool,
+  currency: PropTypes.string,
 };
 
 GridTable.defaultProps = {
@@ -327,6 +331,7 @@ GridTable.defaultProps = {
   sortDirection: '',
   gridTableActions: {},
   showTrailingLoader: false,
+  currency: null,
 };
 
 export default connect(
@@ -340,5 +345,5 @@ export default connect(
     listingActions: bindActionCreators({
       deleteListing
     }, dispatch)
-  }),
+  })
 )(injectIntl(withRouter(GridTable)));
