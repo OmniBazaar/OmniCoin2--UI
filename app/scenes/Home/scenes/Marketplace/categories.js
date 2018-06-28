@@ -74,6 +74,10 @@ const mainCategories = defineMessages({
 });
 
 const saleCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   antiques: {
     id: 'Marketplace.antiques',
     defaultMessage: 'Antiques'
@@ -177,6 +181,10 @@ const saleCategories = defineMessages({
 });
 
 const servicesCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   automotive: {
     id: 'Marketplace.automotive',
     defaultMessage: 'Automotive'
@@ -256,6 +264,10 @@ const servicesCategories = defineMessages({
 });
 
 const jobsCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   accounting: {
     id: 'Marketplace.accounting',
     defaultMessage: 'Accounting / Finance'
@@ -323,6 +335,10 @@ const jobsCategories = defineMessages({
 });
 
 const cryptoCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   localOmniCoin: {
     id: 'Marketplace.localOmniCoin',
     defaultMessage: 'Local + OmniCoin'
@@ -493,6 +509,10 @@ const moreCategories = defineMessages({
 });
 
 const communityCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   activities: {
     id: 'Marketplace.activities',
     defaultMessage: 'Activities'
@@ -552,6 +572,10 @@ const communityCategories = defineMessages({
 });
 
 const housingCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   aptsHousing: {
     id: 'Marketplace.aptsHousing',
     defaultMessage: 'Apts / Housing'
@@ -591,6 +615,10 @@ const housingCategories = defineMessages({
 });
 
 const gigsCategories = defineMessages({
+  all: {
+    id: 'Marketplace.all',
+    defaultMessage: 'All'
+  },
   babySitting: {
     id: 'Marketplace.babySitting',
     defaultMessage: 'Baby Sitting'
