@@ -190,26 +190,29 @@ function* requestMyListings() {
 		  myListings.map(
 		    listing => FetchChain('getAccount', listing.publisher)
       )
-    )).map((account, idx) => {
-      return {
-        listing_id: myListings[idx].id,
-        address: account.get('publisher_ip')
-      }
-    }).reduce((arr, curr) => {
-      const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
-      if (!val) {
-        return [
-          ...arr,
-          {
-            address: curr.address,
-            listing_ids: [curr.listing_id]
-          }
-        ]
-      } else {
-        val.listing_ids.push(curr.listing_id);
-        return arr;
-      }
-    }, []);
+    ))
+      .map((account, idx) => {
+        return {
+          listing_id: myListings[idx].id,
+          address: account.get('publisher_ip')
+        }
+      })
+      .filter(el => !!el.address)
+      .reduce((arr, curr) => {
+        const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
+        if (!val) {
+          return [
+            ...arr,
+            {
+              address: curr.address,
+              listing_ids: [curr.listing_id]
+            }
+          ]
+        } else {
+          val.listing_ids.push(curr.listing_id);
+          return arr;
+        }
+      }, []);
 		const ids = [];
 
 		getListingCommands.forEach(command => {
