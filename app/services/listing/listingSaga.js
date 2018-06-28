@@ -245,8 +245,8 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
 function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
-    
-    if (blockchainListing.listing_hash === createListingHash(listing)) {
+
+    if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));
