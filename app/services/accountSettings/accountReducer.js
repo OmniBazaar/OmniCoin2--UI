@@ -400,11 +400,29 @@ const reducer = handleActions({
   [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    let data = state.recentTransactionsFiltered;
+    let data = state.recentTransactionsFiltered.map((item) => {
+      if(!item.isIncoming) {
+        return {
+          ...item,
+          isComing: 0
+        }
+      } else {
+        return {
+          ...item,
+          isComing: 1
+        }
+      }
+    });
     if (!!filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
-    const sortedData = _.orderBy(data, [sortColumn], [sortDirection === 'ascending' ? 'asc' : 'desc']);
+    let sortedData;
+    let sortFields = [sortColumn];
+    if('fromTo' === sortColumn) {
+      sortFields.unshift('isComing')
+    }
+    sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
+
     const { activePage, rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePage, rowsPerPage);
 

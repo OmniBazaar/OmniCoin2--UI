@@ -144,14 +144,18 @@ const reducer = handleActions({
   [sortDataTop](state, { payload: { sortColumnTop } }) {
     const { filterTextTop } = state;
     let sortDirectionTop = state.sortDirectionTop === 'ascending' ? 'descending' : 'ascending';
+    let sortFields = ('approve' !== sortColumnTop) ? [`witness_account[${sortColumnTop}]`] : ['approve'];
+    
     const sortByFilter = _.sortBy(
       state.topProcessorsFiltered,
-      [`witness_account[${sortColumnTop}]`]
+      sortFields
     );
+    
     const sortByData = _.sortBy(
       state.topProcessors,
-      [`witness_account[${sortColumnTop}]`]
+      sortFields
     );
+    
     const sortBy = filterTextTop !== '' ? sortByFilter : sortByData;
     let sortedData = [];
 
