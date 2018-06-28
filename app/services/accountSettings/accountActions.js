@@ -43,7 +43,7 @@ const {
   GET_RECENT_TRANSACTIONS: () => ({ }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
-  SORT_DATA: (sortColumn) => ({ sortColumn }),
+  SORT_DATA: (sortColumn, direction) => ({ sortColumn, direction }),
   FILTER_DATA: (filterText) => ({ filterText }),
   SHOW_DETAILS_MODAL: (detailSelected) => ({ detailSelected }),
   SET_RESCAN: () => ({}),

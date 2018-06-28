@@ -15,6 +15,16 @@ import {currencyConverter} from "../utils";
 let authUser = null;
 let authHeaders = null;
 
+const listingProps = [
+  'listing_title', 'listing_type', 'listing_id', 'category',
+  'subcategory', 'price', 'currency', 'price_using_btc',
+  'bitcoin_address', 'price_using_omnicoin', 'condition',
+  'quantity', 'units', 'start_date', 'end_date', 'continuous',
+  'images', 'description', 'keywords', 'name', 'contact_type',
+  'contact_info', 'country', 'address', 'city', 'post_code',
+  'state', 'owner'
+];
+
 const getAuthHeaders = () => new Promise((resolve, reject) => {
 	const user = getStoredCurrentUser();
   if (!authHeaders || !authUser || (authUser.username !== user.username)) {
@@ -82,6 +92,10 @@ const createListingOnBlockchain = async (publisher, listing) => {
 	const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
+  const listingHash = createListingHash({
+    ...listing,
+    owner: user.username
+  });
   tr.add_type_operation('listing_create_operation', {
     seller: seller.get('id'),
     price: {
@@ -89,10 +103,7 @@ const createListingOnBlockchain = async (publisher, listing) => {
       amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
     },
     quantity: parseInt(listing.quantity),
-    listing_hash: hash.listingSHA256({
-      ...listing,
-      owner: user.username
-    }),
+    listing_hash: listingHash,
     publisher: publisher.id
   });
   await tr.set_required_fees();
@@ -134,6 +145,10 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
   const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
+  const listingHash = createListingHash({
+    ...listing,
+    owner: user.username
+  });
   tr.add_type_operation('listing_update_operation', {
     seller: seller.get('id'),
     listing_id: listingId,
@@ -142,10 +157,7 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
       amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
     },
     quantity: parseInt(listing.quantity),
-    listing_hash: hash.listingSHA256({
-      ...listing,
-      owner: user.username
-    }),
+    listing_hash: listingHash,
     publisher: publisher.id,
     update_expiration_time: true
   });
@@ -162,7 +174,19 @@ export const getListingFromBlockchain = async listingId => {
   return null;
 }
 
+const ensureListingData = listing => {
+  const result = {};
+  listingProps.forEach(key => {
+    if (typeof listing[key] !== 'undefined') {
+      result[key] = listing[key];
+    }
+  });
+
+  return result;
+}
+
 export const createListing = async (publisher, listing) => {
+  listing = ensureListingData(listing);
   const listingId = await createListingOnBlockchain(publisher, listing);
   const options = {
     method: 'POST',
@@ -173,11 +197,13 @@ export const createListing = async (publisher, listing) => {
       listing_id: listingId
     }
   };
+
   return await makeRequest(publisher, 'listings', options);
 };
 
 export const editListing = async (publisher, listingId, listing) => {
-  updateListingOnBlockchain(publisher, listingId, listing);
+  listing = ensureListingData(listing);
+  await updateListingOnBlockchain(publisher, listingId, listing);
   const options = {
     method: 'PUT',
     json: true,
@@ -187,11 +213,6 @@ export const editListing = async (publisher, listingId, listing) => {
       listing_id: listingId
     }
   };
-  delete options.body.type;
-  delete options.body.ip;
-  delete options.body.reputationScore;
-  delete options.body.reputationVotesCount;
-  console.log('BODY ', options.body);
   return await makeRequest(publisher, `listings/${listingId}`, options);
 };
 
@@ -214,3 +235,21 @@ export const deleteListing = async (publisher, listing) => {
 
   return body;
 };
+
+const hashRequiredProps = [
+  "address", "category", "city", "condition", "condition_info",
+  "condition_type", "continuous", "country", "currency",
+  "description", "end_date", "images", "keywords", "listing_title",
+  "name", "post_code", "price", "price_using_btc", "bitcoin_address",
+  "price_using_omnicoin", "start_date", "state", "subcategory", "units"
+];
+
+export const createListingHash = (listing) => {
+  listing = { ...listing };
+  hashRequiredProps.forEach(key => {
+    if (typeof listing[key] === 'undefined') {
+      listing[key] = '';
+    }
+  });
+  return hash.listingSHA256(listing);
+}

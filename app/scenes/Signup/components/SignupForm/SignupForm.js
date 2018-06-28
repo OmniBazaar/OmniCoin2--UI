@@ -129,7 +129,7 @@ const messages = defineMessages({
 });
 
 class SignupForm extends Component {
-  
+
   static validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -149,7 +149,7 @@ class SignupForm extends Component {
     }
     return errors;
   };
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -159,21 +159,21 @@ class SignupForm extends Component {
     this.submit = this.submit.bind(this);
     this.signIn = this.signIn.bind(this);
   }
-  
+
   componentWillMount() {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
       searchPriority: PriorityTypes.LOCAL_DATA,
     });
   }
-  
+
   componentDidMount() {
     if (this.defaultReferrer && this.defaultReferrer !== 'null') {
       this.props.formActions.change('referrer', this.defaultReferrer);
       this.referrerInput.focus();
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
@@ -185,44 +185,44 @@ class SignupForm extends Component {
       toastr.error(formatMessage(messages.error), content);
     }
   }
-  
+
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
     if(!country) {
       this.props.formActions.change('city', '');
     }
   }
-  
+
   onChangeCity(city) {
     this.props.formActions.change('city', city);
   }
-  
+
   onChangeKeywords(keywords) {
     this.props.formActions.change('keywords', keywords);
   }
-  
+
   onChangeKeywordsInput(value) {
     if (!this.state.keywordsTouched) this.setState({ keywordsTouched: true });
     this.props.formActions.change('keywordsStr', value);
   }
-  
+
   onTermAndConditionCheck(isChecked) {
     this.props.formActions.change('agreementTerms', isChecked);
   }
-  
+
   onChangeSearchPriority(priority) {
     this.props.formActions.change('searchPriority', priority);
   }
-  
+
   signIn() {
     this.props.history.push('/login');
   }
-  
+
   submit(values) {
     const {
       username, password, referrer, searchPriority, country, city, keywords
     } = values;
-    
+
     this.props.authActions.signup(
       username,
       password,
@@ -237,13 +237,13 @@ class SignupForm extends Component {
       null,
     );
   }
-  
+
   showSuccessCopy(e) {
     const { formatMessage } = this.props.intl;
     toastr.success(formatMessage(messages.copy), formatMessage(messages.passwordCopied));
     e.preventDefault();
   }
-  
+
   renderPasswordGeneratorField = ({
     input, meta: {
     asyncValidating, touched, error, warning
@@ -265,7 +265,7 @@ class SignupForm extends Component {
       </div>
     );
   };
-  
+
   renderReferrerField = ({
     input, meta: {
     asyncValidating, touched, error, warning, active
@@ -298,7 +298,7 @@ class SignupForm extends Component {
       ]
     );
   };
-  
+
   renderCountryField = ({
     input, meta: {
     asyncValidating, touched, error, placeholder
@@ -307,7 +307,7 @@ class SignupForm extends Component {
     const { formatMessage } = this.props.intl;
     const { country } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
-    
+
     return (
       [
         <div>
@@ -324,7 +324,7 @@ class SignupForm extends Component {
       ]
     );
   };
-  
+
   renderCityField = ({
     input, meta: {
     asyncValidating, touched, error
@@ -333,7 +333,7 @@ class SignupForm extends Component {
     const { formatMessage } = this.props.intl;
     const { country, city } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
-    
+
     return (
       [
         <div>
@@ -351,12 +351,12 @@ class SignupForm extends Component {
       ]
     );
   };
-  
+
   renderTerms() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(messages.termsAndCond);
-    
+
     if (props.auth.showTermsModal) {
       return (
         <Modal
@@ -366,9 +366,11 @@ class SignupForm extends Component {
           closeIcon
           onClose={this.toggleTermsModal}
         >
+          <Modal.Header>
+            {categoryTitle}
+          </Modal.Header>
           <Modal.Content>
             <div className="modal-container terms-container">
-              <p className="title">{categoryTitle}</p>
               <div className="body">
                 <TermsAndConditions />
               </div>
@@ -385,9 +387,9 @@ class SignupForm extends Component {
       );
     }
   }
-  
+
   toggleTermsModal = () => this.props.authActions.showTermsModal();
-  
+
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
     return (
@@ -406,11 +408,11 @@ class SignupForm extends Component {
       ]
     );
   };
-  
+
   renderSearchPriority() {
     const { formatMessage } = this.props.intl;
     const { searchPriority } = this.props.formValues;
-    
+
     return (
       <div>
         <div className="search-priority">
@@ -426,7 +428,7 @@ class SignupForm extends Component {
               />
               <span className="checkbox-inline">{formatMessage(messages.specificLocation)}</span>
             </div>
-            
+
             <div className="radio-wrapper">
               <Radio
                 width={20}
@@ -438,22 +440,22 @@ class SignupForm extends Component {
               <span className="checkbox-inline">{formatMessage(messages.anywhere)}</span>
             </div>
           </div>
-          
+
           {this.renderSearchPriorityFormFields()}
         </div>
       </div>
     );
   }
-  
+
   renderSearchPriorityFormFields() {
     let { searchPriority } = this.props.formValues;
     const { formatMessage } = this.props.intl;
-    
+
     if (!searchPriority) {
       searchPriority = PriorityTypes.LOCAL_DATA;
       this.props.formActions.change('searchPriority', searchPriority);
     }
-    
+
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
         const { country, city } = this.props.formValues;
@@ -481,7 +483,7 @@ class SignupForm extends Component {
         if (!keywords) keywords = [];
         if (!keywordsStr) keywordsStr = '';
         const error = keywords.length === 0 && keywordsStr === '';
-        
+
         return (
           <div>
             <div>
@@ -508,20 +510,20 @@ class SignupForm extends Component {
         return null;
     }
   }
-  
+
   keywordVal() {
     const { searchPriority } = this.props.formValues;
     let { keywords } = this.props.formValues;
     if (!keywords) keywords = [];
     let disabled = false;
-    
+
     if (searchPriority === PriorityTypes.BY_CATEGORY) {
       disabled = keywords.length === 0;
     }
-    
+
     return disabled;
   }
-  
+
   render() {
     const {
       handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues

@@ -130,7 +130,7 @@ class RecentTransactions extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.account.loading && !nextProps.account.loading) {
-      this.props.accountSettingsActions.sortData('date');
+      this.props.accountSettingsActions.sortData('date', 'descending');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
   }

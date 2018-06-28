@@ -48,7 +48,7 @@ $compose-width: 38%;
         }
 
         &.active {
-          background-color: $lighter-gray;
+          background-color: darken($lighter-gray, 5%);
         }
 
         &:hover {

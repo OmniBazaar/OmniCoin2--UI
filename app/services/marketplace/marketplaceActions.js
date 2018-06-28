@@ -26,8 +26,13 @@ const {
   GET_CRYPTO_BAZAAR_LIST: (cryptoBazaarList) => ({ cryptoBazaarList }),
   SET_ACTIVE_CATEGORY: (activeCategory, parentCategory) => ({ activeCategory, parentCategory }),
   SET_PAGINATION_GRID_TABLE: (rowsPerPageGridTable) => ({ rowsPerPageGridTable }),
-  SORT_GRID_TABLE_BY: (gridTableData, sortGridBy, sortGridDirection) =>
-    ({ gridTableData, sortGridBy, sortGridDirection }),
+  SORT_GRID_TABLE_BY: (gridTableData, sortGridBy, sortGridDirection, currency) =>
+    ({
+      gridTableData,
+      sortGridBy,
+      sortGridDirection,
+      currency
+    }),
   SET_ACTIVE_PAGE_GRID_TABLE: (activePageGridTable) => ({ activePageGridTable }),
   SORT_DATA_TABLE_BY: (dataTableData, sortTableBy) => ({ dataTableData, sortTableBy }),
   OB2_SOCKET_OPENED: () => ({}),

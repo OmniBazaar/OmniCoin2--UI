@@ -142,7 +142,7 @@ class PublicData extends Component {
     if (account.publisher_ip) {
       this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
     }
-    if (account.is_a_processor) {
+    if (account.is_a_processor !== this.props.account.transactionProcessor) {
       this.toggleTransactionProcessor();
     }
     // todo referrer

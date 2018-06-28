@@ -7,9 +7,12 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import UserIcon from '../../images/th-user-white.svg';
+
 import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
 import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
+import AccountVesting from './scenes/AccountVesting/AccountVesting';
+
 import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
@@ -111,6 +114,10 @@ class Settings extends Component {
                        />
                      </Tab.Pane>),
                  },
+                  {
+                    menuItem: formatMessage(messages.vestingBalances),
+                    render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
+                  }
                 ]}
               />
               <div

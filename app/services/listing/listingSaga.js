@@ -47,7 +47,8 @@ import {
   editListing,
   deleteListing,
   getListingFromBlockchain,
-  reportListingOnBlockchain
+  reportListingOnBlockchain,
+  createListingHash
 } from './apis';
 
 export function* listingSubscriber() {
@@ -173,6 +174,7 @@ function* getListingDetail({ payload: { listingId }}) {
     const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
     listingDetail.reputationScore = ownerAcc['reputation_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
     console.log(error);
@@ -243,7 +245,8 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
 function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
-    if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
+    
+    if (blockchainListing.listing_hash === createListingHash(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));
