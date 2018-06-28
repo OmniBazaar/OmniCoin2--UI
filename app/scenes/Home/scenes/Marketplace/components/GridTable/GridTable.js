@@ -225,6 +225,7 @@ class GridTable extends Component {
                             </span>
                             {subCategoryTitle}
                           </span>
+                          
                           <span className="description">{description}</span>
                           <span className="price">
                             {this.getIcon(showConvertedPrice, item.currency, currency)}
