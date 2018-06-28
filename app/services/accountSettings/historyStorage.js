@@ -131,17 +131,22 @@ class HistoryStorage extends BaseStorage {
     // return HistoryStorage.updateBalances(sortedTransactions);
   }
 
-  async getBuyHistory() {
-    let buyOperations = Object.keys(this.cache)
+  getBuyOperations() {
+    return Object.keys(this.cache)
       .map(key => this.cache[key])
       .filter(op => !!op.listingId)
-      .map(op => ({
-        key: op.id,
-        id: op.listingId,
-        count: op.listingCount,
-        date: op.date,
-      }));
-    const listingIds = buyOperations.map(op => op.id);
+      .map(op => {
+        console.log('OPERATION ', op);
+        return  {
+          key: op.id,
+          id: op.listingId,
+          count: op.listingCount,
+          date: op.date,
+      }});
+  }
+
+  async getListingObjects(operations) {
+    const listingIds = operations.map(op => op.id);
     let listingObjects = await Apis.instance().db_api().exec('get_objects', [listingIds]);
     listingObjects = await Promise.all(
       listingObjects.map(async el => await Promise.all([
@@ -156,14 +161,18 @@ class HistoryStorage extends BaseStorage {
         }
       }))
     );
-    const mappedOperations = buyOperations.map(op => {
+    return listingObjects;
+  }
+  async getBuyHistory() {
+    let buyOperations = this.getBuyOperations();
+    const listingObjects = await this.getListingObjects(buyOperations);
+    return buyOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
       }
     });
-    return mappedOperations;
   }
 
   save() {
