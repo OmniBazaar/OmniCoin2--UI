@@ -44,7 +44,7 @@ export default combineReducers({
   bitcoin: bitcoinReducer,
   dht: dhtReducer,
   transfer: transferReducer,
-  myPurchases: myPurchasesReducer,
+  data: myPurchasesReducer,
   config: configReducer,
   vestingBalances: vestingBalancesReducer
 });

@@ -4,15 +4,18 @@ import {
   getMyPurchases,
   getMyPurchasesFailed,
   getMyPurchasesSucceeded,
+  getMySellings,
+  getMySellingsFailed,
+  getMySellingsSucceeded,
   filterData,
   sortData,
   setActivePage,
   setPagination
-} from "./myPurchesesActions";
+} from "./myPurchasesActions";
 
 const defaultState = {
-  myPurchases: [],
-  myPurchasesFiltered: [],
+  data: [],
+  dataFiltered: [],
   sortDirection: 'descending',
   sortColumn: 'id',
   activePage: 1,
@@ -32,7 +35,7 @@ const getTotalPages = (data, rowsPerPage) => (
 );
 
 const reducer = handleActions({
-  [getMyPurchases](state, { payload: { from, to } }) {
+  [getMyPurchases](state) {
     return {
       ...state,
       loading: true,
@@ -42,7 +45,7 @@ const reducer = handleActions({
   [getMyPurchasesSucceeded](state, { payload: { myPurchases } }) {
     return {
       ...state,
-      myPurchases,
+      data: myPurchases,
       loading: false,
     }
   },
@@ -53,10 +56,32 @@ const reducer = handleActions({
       error
     }
   },
+  [getMySellings](state) {
+    return {
+      ...state,
+      loading: true,
+      error: null
+    }
+  },
+  [getMySellingsSucceeded](state, { payload: { mySellings } }) {
+    console.log('MY SELLINGS ', mySellings)
+    return {
+      ...state,
+      data: mySellings,
+      loading: false,
+    }
+  },
+  [getMySellingsFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      loading: false,
+      error
+    }
+  },
   [filterData](state, { payload: { filterText } }) {
     const activePage = 1;
     const { rowsPerPage } = state;
-    let filteredData = state.myPurchases;
+    let filteredData = state.data;
     if (filterText) {
       filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
@@ -67,11 +92,11 @@ const reducer = handleActions({
       filterText,
       activePage,
       totalPages,
-      myPurchasesFiltered: currentData,
+      dataFiltered: currentData,
     };
   },
   [setPagination](state, { payload: { rowsPerPage } }) {
-    const data = state.myPurchases;
+    const data = state.data;
     const { activePage } = state;
     const totalPages = getTotalPages(data, rowsPerPage);
     const currentData = sliceData(data, activePage, rowsPerPage);
@@ -79,11 +104,11 @@ const reducer = handleActions({
       ...state,
       totalPages,
       rowsPerPage,
-      myPurchasesFiltered: currentData,
+      dataFiltered: currentData,
     };
   },
   [setActivePage](state, { payload: { activePage } }) {
-    const data = state.myPurchases;
+    const data = state.data;
     if (activePage !== state.activePage) {
       const { rowsPerPage } = state;
       const currentData = sliceData(data, activePage, rowsPerPage);
@@ -91,7 +116,7 @@ const reducer = handleActions({
       return {
         ...state,
         activePage,
-        myPurchasesFiltered: currentData,
+        dataFiltered: currentData,
       };
     }
 
@@ -102,7 +127,7 @@ const reducer = handleActions({
   [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    let data = state.myPurchases;
+    let data = state.data;
     if (!!filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
     }
@@ -112,7 +137,7 @@ const reducer = handleActions({
 
     return {
       ...state,
-      myPurchasesFiltered: currentData,
+      dataFiltered: currentData,
       sortDirection,
       sortColumn,
     };
