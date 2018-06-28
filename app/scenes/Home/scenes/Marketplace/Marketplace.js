@@ -36,7 +36,8 @@ import {
   jobsCategories,
   cryptoCategories,
   mainCategories,
-  categories
+  categories,
+  getSubCategoryTitle
 } from './categories';
 
 import {
@@ -96,13 +97,22 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-
+  
+        const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
         const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-
+  
+        let categoryTitle = '';
+        if (item.category && item.category.toLowerCase() !== 'all') {
+          categoryTitle = mainCategories[item.category] ?
+            formatMessage(mainCategories[item.category]) : item.category;
+        }
+        const subcategory = getSubCategoryTitle(item.category, item.subcategory);
+        const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+        
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
             <Link to={`listing/${item.listing_id}`}>
@@ -114,11 +124,11 @@ class Marketplace extends Component {
               </span>
             </Link>
             <span className="subtitle">
-              {item.category}
+              {categoryTitle}
               <span>
                 <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
               </span>
-              {item.subcategory}
+              {subCategoryTitle}
             </span>
             <span className="description">{description}</span>
           </div>
