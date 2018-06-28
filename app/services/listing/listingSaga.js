@@ -47,7 +47,8 @@ import {
   editListing,
   deleteListing,
   getListingFromBlockchain,
-  reportListingOnBlockchain
+  reportListingOnBlockchain,
+  createListingHash
 } from './apis';
 
 export function* listingSubscriber() {
@@ -245,14 +246,7 @@ function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
     
-    if (typeof listing.end_date === 'undefined') {
-      listing = {
-        ...listing,
-        end_date: ''
-      };
-    }
-
-    if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
+    if (blockchainListing.listing_hash === createListingHash(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));
