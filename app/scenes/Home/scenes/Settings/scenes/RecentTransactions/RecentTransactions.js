@@ -157,35 +157,6 @@ class RecentTransactions extends Component {
     this.props.accountSettingsActions.showDetailsModal();
   }
 
-  getBadgeClass(type) {
-    switch (type) {
-      case ChainTypes.operations.escrow_create_operation:
-        return 'pending';
-      case ChainTypes.operations.transfer:
-        return 'transfer';
-      case ChainTypes.operations.escrow_release_operation:
-        return 'released';
-      case ChainTypes.operations.escrow_return_operation:
-        return 'returned';
-      case ChainTypes.operations.listing_delete_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_update_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_create_operation:
-        return 'listing';
-      case ChainTypes.operations.account_update:
-        return 'account';
-      case ChainTypes.operations.witness_create:
-        return 'account';
-      case ChainTypes.operations.welcome_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.referral_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.sale_bonus_operation:
-        return 'bonus';
-    }
-  }
-
   render() {
     const {
       activePage,
@@ -261,7 +232,7 @@ class RecentTransactions extends Component {
                   <TableHeaderCell
                     key="fee"
                     sorted={sortColumn === 'type' ? sortDirection : null}
-                    onClick={this.sortData('type')}
+                    onClick={this.sortData('statusText')}
                   >
                     {formatMessage(messages.status)}
                   </TableHeaderCell>
@@ -295,7 +266,7 @@ class RecentTransactions extends Component {
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
                           <TableCell>
-                            <div className={cn('badge-tag', this.getBadgeClass(row.type))}>
+                            <div className={cn('badge-tag', row.statusText)}>
                               {formatMessage(messages[row.type])}
                             </div>
                           </TableCell>
