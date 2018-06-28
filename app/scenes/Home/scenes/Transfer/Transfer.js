@@ -678,6 +678,7 @@ class Transfer extends Component {
       </div>
     );
   }
+
   submitTransfer(paramValues) {
     const { transferCurrency } = this.props.transfer;
     const values = {
@@ -810,5 +811,6 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
+    asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));
