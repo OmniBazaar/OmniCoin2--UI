@@ -376,6 +376,9 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.currency)
                 }}
+                input={{
+                  removeAll: true
+                }}
                 validate={requiredFieldValidator}
               />
             </Grid.Column>
