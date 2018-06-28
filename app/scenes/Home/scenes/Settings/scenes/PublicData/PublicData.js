@@ -13,6 +13,7 @@ import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
 import CheckPreNom from '../../../../images/ch-box-1-norm.svg';
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
+import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import { getCurrentUser, getAccount } from '../../../../../../services/blockchain/auth/authActions';
 import { getAccountBalance } from '../../../../../../services/blockchain/wallet/walletActions';
@@ -110,6 +111,14 @@ const messages = defineMessages({
   witnessRegisterFee: {
     id: 'Settings.witnessRegisterFee',
     defaultMessage: 'Witness registration fee is 5000 XOM. Are you sure you want to proceed?'
+  },
+  wantsToVote: {
+    id: 'Settings.wantsToVote',
+    defaultMessage: 'Vote for yourself'
+  },
+  customDownloadAddress: {
+    id: 'Settings.customDownloadAddress',
+    defaultMessage: 'Your custom OmniBazaar download address:'
   }
 });
 
@@ -127,6 +136,7 @@ class PublicData extends Component {
 
     this.state = {
       ip: '',
+      wantsToVote: false,
       isModalOpen: false
     };
   }
@@ -202,11 +212,11 @@ class PublicData extends Component {
     const { is_a_processor } = this.props.auth.account;
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
-      this.props.accountSettingsActions.setTransactionProcessor();
+      this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     } else if (!is_a_processor && !transactionProcessor) {
       this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
-      this.props.accountSettingsActions.setTransactionProcessor();
+      this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
   }
 
@@ -222,8 +232,26 @@ class PublicData extends Component {
   }
 
   confirmTransactionProcessor() {
-    this.props.accountSettingsActions.setTransactionProcessor();
+    this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     this.toggleConfirmationModal();
+  }
+
+  renderWitnessConfirmation() {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div>
+        {formatMessage(messages.witnessRegisterFee)} <br/>
+        <div style={{display: 'flex', flexDirection: 'row', marginTop: '5px'}}>
+          <Checkbox
+            checked={this.state.wantsToVote}
+            onChecked={() => this.setState({wantsToVote: !this.state.wantsToVote})}
+          />
+          <span style={{marginLeft: '3px'}}>
+            {formatMessage(messages.wantsToVote)}
+          </span>
+        </div>
+      </div>
+    )
   }
 
   getReferrerIcon() {
@@ -264,7 +292,7 @@ class PublicData extends Component {
         </div>
         {account.referrer &&
         <div className="ref-link-cont">
-          <div className="ref-link-label">Your custom OmniBazaar download address:</div>
+          <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
           <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
         </div>
         }
@@ -330,10 +358,11 @@ class PublicData extends Component {
         </div>
         <ConfirmationModal
           isOpen={this.state.isModalOpen}
-          question={formatMessage(messages.witnessRegisterFee)}
           onApprove={() => this.confirmTransactionProcessor()}
           onCancel={() => this.toggleConfirmationModal()}
-        />
+        >
+          {this.renderWitnessConfirmation()}
+        </ConfirmationModal>
 
       </div>
     );

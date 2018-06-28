@@ -31,7 +31,7 @@ const {
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
-  SET_TRANSACTION_PROCESSOR: () => ({}),
+  SET_TRANSACTION_PROCESSOR: (wantsToVote) => ({ wantsToVote }),
   SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
   CHANGE_COUNTRY: (country) => ({ country }),

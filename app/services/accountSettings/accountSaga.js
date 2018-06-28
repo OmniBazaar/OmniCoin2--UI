@@ -8,6 +8,7 @@ import {
 import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
 import {Apis} from "omnibazaarjs-ws";
+import _ from 'lodash';
 
 import { getAllPublishers } from './services';
 import {
@@ -15,6 +16,7 @@ import {
 } from '../blockchain/utils/wallet';
 import HistoryStorage from './historyStorage';
 import {getStoredCurrentUser} from "../blockchain/auth/services";
+import {voteForProcessors} from "../processors/utils";
 
 
 export function* accountSubscriber() {
@@ -33,6 +35,7 @@ export function* updatePublicData() {
   try {
     yield updateAccount({
       transactionProcessor: is_a_processor ? false: account.transactionProcessor,
+      wantsToVote: account.wantsToVote,
       is_a_publisher: account.publisher,
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
@@ -70,6 +73,8 @@ export function* updateAccount(payload) {
       block_signing_key:  key.privKey.toPublicKey()
     });
   }
+  const { wantsToVote } = trObj;
+  delete trObj.wantsToVote;
   delete trObj.transactionProcessor;
   tr.add_type_operation(
     'account_update',
@@ -83,10 +88,21 @@ export function* updateAccount(payload) {
   yield tr.broadcast(async () => {
     const currentUser = getStoredCurrentUser();
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-    const account = await FetchChain('getAccount', currentUser.username);
-    const witness = await Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
+    const account = (await FetchChain('getAccount', currentUser.username)).toJS();
+    const witness = await Apis.instance().db_api().exec('get_witness_by_account', [account.id]);
     if (witness) {
       ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
+    }
+    try {
+      if (wantsToVote) {
+        await voteForProcessors(
+          _.union(account.options.votes, [witness.vote_id]),
+          account,
+          currentUser.password
+        );
+      }
+    } catch (error) {
+      console.log("ERROR ", error);
     }
   });
 }
