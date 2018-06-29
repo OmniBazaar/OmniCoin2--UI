@@ -86,13 +86,13 @@ class PreferencesTab extends Component {
   onSubmit(values) {
     const { publisher } = this.props.account;
     const { chargeFee, logoutTimeout } = values;
-    if (!this.number(logoutTimeout)) {
-      this.setState({ errorMsg: 'LogOut Timeout must be number' });
+    if (!this.number(logoutTimeout) || logoutTimeout < 0) {
+      this.setState({ errorMsg: 'LogOut Timeout must be a positive number' });
       return
     }
   
-    if (publisher && !this.number(chargeFee)) {
-      this.setState({ errorMsg: 'Fee must be number' });
+    if (publisher && (!this.number(chargeFee) || chargeFee < 0)) {
+      this.setState({ errorMsg: 'Fee must be positive a number' });
       return
     }
       
