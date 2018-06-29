@@ -253,7 +253,7 @@ class PublicData extends Component {
       <div className="check-form">
         <div className="description">
           <div className="check-container">
-            <Image src={this.getReferrerIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleReferrer} />
+            <Image src={this.getReferrerIcon()} width={iconSize} height={iconSize} className="checkbox disabled" onClick={this.toggleReferrer} />
           </div>
           <div className="description-text">
             <p className="title">{formatMessage(messages.referrerTitle)}</p>
