@@ -505,14 +505,16 @@ class Listing extends Component {
             onApprove={() => this.onOkDelete()}
             onCancel={() => this.closeConfirm()}
             isOpen={this.state.confirmDeleteOpen}
-            question={formatMessage(messages.reportDeleteQuestion)}
-          />
+          >
+            {formatMessage(messages.reportDeleteQuestion)}
+          </ConfirmationModal>
           <ConfirmationModal
             onApprove={() => this.onOkReport()}
             onCancel={() => this.closeConfirm()}
             isOpen={this.state.confirmReportOpen}
-            question={formatMessage(messages.reportConfirmationQuestion)}
-          />
+          >
+            {formatMessage(messages.reportConfirmationQuestion)}
+          </ConfirmationModal>
         </div>
       </div>
     );

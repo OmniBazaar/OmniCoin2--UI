@@ -10,10 +10,10 @@ import {
 import _ from 'lodash';
 
 import { Apis } from 'omnibazaarjs-ws';
-import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
+import { FetchChain } from 'omnibazaarjs/es';
 
 import { getGlobalObject, fetchAccount } from '../blockchain/utils/miscellaneous';
-import { generateKeyFromPassword } from '../blockchain/utils/wallet';
+import { voteForProcessors } from "./utils";
 
 export function* processorsSubscriber() {
   yield all([
@@ -106,22 +106,9 @@ async function commitProcessors(processors, toggledProcessors, account, password
   const voteIds = processors
     .filter(processor => processor.approve)
     .map(processor => processor.vote_id);
-  const tr = new TransactionBuilder();
-  tr.add_type_operation('account_update', {
-    account: account.id,
-    new_options: {
-      votes: voteIds,
-      memo_key: account.options.memo_key,
-      voting_account: '1.2.5',
-      num_witness: voteIds.length,
-      num_committee: 0
-    }
-  });
-  const key = generateKeyFromPassword(account.name, 'active', password);
-  await tr.set_required_fees();
-  await tr.add_signer(key.privKey, key.pubKey);
-  await tr.broadcast();
+  await voteForProcessors(voteIds, account, password);
 }
+
 
 async function processProcessors(processors) {
   const filteredPr = await Promise.all(processors.map(el => FetchChain('getAccount', el.witness_account).then(account => ({
