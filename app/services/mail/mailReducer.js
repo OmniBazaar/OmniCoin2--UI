@@ -31,12 +31,14 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [showComposeModal](state) {
+  [showComposeModal](state, { payload: { showCompose, to }}) {
+    const sendTo = to ? to : '';
     return {
       ...state,
       reply: false,
       mailSent: false,
       error: null,
+      to: sendTo,
       showCompose: !state.showCompose
     };
   },
