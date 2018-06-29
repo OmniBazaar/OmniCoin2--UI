@@ -103,7 +103,14 @@ class Mail extends Component {
       this.props.mailActions.loadFolder(username, MailTypes.INBOX);
     });
   }
-
+  
+  componentWillMount() {
+    const { username } = this.props.history.location;
+    if(username) {
+      this.props.mailActions.showComposeModal( null, username );
+    }
+  }
+  
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
     this.props.mailActions.loadFolder(username, MailTypes.INBOX);

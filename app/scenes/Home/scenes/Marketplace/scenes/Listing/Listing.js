@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -223,6 +223,14 @@ class Listing extends Component {
               <span className="value">{listingDetail.address}</span>
             </div>
           </div>
+          <Link to={{
+            pathname: '/mail',
+            username: listingDetail.owner
+          }}>
+            <div className="contact-seller">
+              <span>{formatMessage(messages.contactSeller)}</span>
+            </div>
+          </Link>
         </div>
       </Popup>
     );

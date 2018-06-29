@@ -118,7 +118,9 @@ class Compose extends Component {
   }
 
   componentWillMount() {
-    if (this.props.mail.reply) {
+    const { reply, to } = this.props.mail;
+    
+    if (reply) {
       const message = this.getActiveMessage();
       const creationTime = new Date(message.creation_time * 1000).toLocaleString();
       const date = dateformat(creationTime, 'dddd, mmmm dS, yyyy "at" h:MM:ss TT');
@@ -126,7 +128,13 @@ class Compose extends Component {
       this.props.initialize({
         recipient: message.sender,
         subject: `RE: ${message.subject}`,
-        body: `\n\nOn ${date} <${message.sender}> wrote:\n\n${message.body}`,
+        body: `\n\nOn ${date} <${message.sender}> wrote:\n\n${message.body}`
+      });
+    }
+    
+    if(!reply && to) {
+      this.props.initialize({
+        recipient: this.props.mail.to,
       });
     }
   }
