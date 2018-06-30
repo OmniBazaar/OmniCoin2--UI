@@ -381,10 +381,8 @@ class ListingForm extends Component {
                 name="currency"
                 component={this.CurrencyDropdown}
                 props={{
-                  placeholder: formatMessage(messages.currency)
-                }}
-                input={{
-                  removeAll: true
+                  placeholder: formatMessage(messages.currency),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
