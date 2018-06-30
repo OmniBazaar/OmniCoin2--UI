@@ -63,6 +63,18 @@ class HistoryStorage extends BaseStorage {
     return '';
   }
 
+  totalObFee(op) {
+    let total = 0;
+    if (op.ob_fee) {
+      op.ob_fee.forEach(fee => {
+        Object.keys(fee).forEach(key => {
+          total += fee[key] / 100000;
+        })
+      })
+    }
+    return total;
+  }
+
   addOperation(op) {
     this.cache[op.id] = op;
   }
@@ -114,12 +126,13 @@ class HistoryStorage extends BaseStorage {
           ...transactions[trxKey]
         };
       }
+      const totalObFee = this.totalObFee(op);
       if (op.isIncoming) {
-        transactions[trxKey].amount += this.operationAmount(op);
+        transactions[trxKey].amount += this.operationAmount(op) - totalObFee;
       } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
-      transactions[trxKey].fee += op.fee;
+      transactions[trxKey].fee += op.fee + totalObFee;
 
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push({
@@ -280,6 +293,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
+            ob_fee: el.op[1].ob_fee,
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
             isIncoming: true
@@ -297,6 +311,7 @@ class HistoryStorage extends BaseStorage {
               trxInBlock: el.trx_in_block,
               date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
               fee: el.op[1].fee.amount / 100000,
+              ob_fee: el.op[1].ob_fee,
               operationType: el.op[0],
               amount: el.result[1].amount / 100000,
               from: referrerAcc.get('name'),
@@ -317,6 +332,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
+            ob_fee: el.op[1].ob_fee,
             operationType: el.op[0],
             isIncoming: false
           });
@@ -334,6 +350,7 @@ class HistoryStorage extends BaseStorage {
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
             amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
             fee: el.op[1].fee.amount / 100000,
+            ob_fee: el.op[1].ob_fee,
             operationType: el.op[0],
             // will be undefined if operation type is transfer
             escrow: el.op[0] === ChainTypes.operations.escrow_create_operation
