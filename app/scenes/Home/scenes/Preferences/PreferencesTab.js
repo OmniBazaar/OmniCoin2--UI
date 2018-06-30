@@ -107,7 +107,7 @@ class PreferencesTab extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { saving } = this.props.preferences;
-    const { publisher } = this.props.account;
+    const publisher = this.props.auth.account.is_a_publisher;
 
     return (
       <div className="preferences-form-container">
@@ -277,7 +277,8 @@ export default compose(
   connect(
     state => ({
       preferences: state.default.preferences,
-      account: state.default.account
+      account: state.default.account,
+      auth: state.default.auth
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({
