@@ -50,6 +50,21 @@ class DealRating extends Component {
     />);
   }
 
+  renderStar(color, isSelected, option, onClick) {
+    const className = cn({
+      doth: true,
+      [color]: true,
+      selected: isSelected
+    });
+    return (
+      <span className={className}
+        onClick={() => {
+          onClick(option);
+          this.setState({ selectedValue: option });
+        }}>★</span>
+    );
+  }
+
   render() {
     const {
       options,
@@ -57,6 +72,7 @@ class DealRating extends Component {
     } = this.props;
     const { formatMessage } = this.props.intl;
     const doths = [];
+    const stars = [];
     for (let i = 0; i < options.length; ++i) {
       let color = 'red';
       if (options[i].text === 0) {
@@ -65,13 +81,14 @@ class DealRating extends Component {
         color = 'green';
       }
       const isSelected = options[i].key === this.state.selectedValue.key;
-      doths.push(this.renderDoth(color, isSelected, options[i], onChange));
+      // doths.push(this.renderDoth(color, isSelected, options[i], onChange));
+      stars.push(this.renderStar(color, isSelected, options[i], onChange));
     }
 
     return (
       <div className="deal-rating">
         <div className="doths">
-          {doths}
+          {stars}
         </div>
         <div className="footer">
           <div>

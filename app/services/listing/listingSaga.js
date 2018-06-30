@@ -171,9 +171,12 @@ function* getListingDetail({ payload: { listingId }}) {
       listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     }
 
-    const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
-    listingDetail.reputationScore = ownerAcc['reputation_score'];
+    const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
+    listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+    if (listingDetail.reputationVotesCount === 0) {
+      listingDetail.reputationScore = 5000;
+    }
 
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
