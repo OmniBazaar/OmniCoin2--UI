@@ -57,5 +57,6 @@
   "AddListing.listingNotFound": "Listing not found",
   "AddListing.saveListing": "Save Listing",
   "AddListing.searchPublishersErrorMessage": "Have error when searching publishers",
-  "AddListing.keywordsNote": "Keywords will be used to find appropriate publishers"
+  "AddListing.keywordsNote": "Keywords will be used to find appropriate publishers",
+  "AddListing.saveListingErrorNoChangeDetectedMessage": "Listing has no changes detected, please change data and submit again"
 }

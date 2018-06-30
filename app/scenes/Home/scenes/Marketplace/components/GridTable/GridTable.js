@@ -177,7 +177,7 @@ class GridTable extends Component {
       showTrailingLoader,
       currency
     } = this.props;
-    let data = gridTableDataFiltered.filter(item => item.listing_id);
+    let data = gridTableDataFiltered.filter(item => item && item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
     let showConvertedPrice = false;
@@ -336,7 +336,10 @@ GridTable.defaultProps = {
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({
+    listing: state.default.listing,
+    marketplace: state.default.marketplace
+  }),
   (dispatch) => ({
     gridTableActions: bindActionCreators({
       setPaginationGridTable,
