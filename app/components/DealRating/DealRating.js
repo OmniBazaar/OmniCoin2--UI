@@ -71,7 +71,6 @@ class DealRating extends Component {
       onChange,
     } = this.props;
     const { formatMessage } = this.props.intl;
-    const doths = [];
     const stars = [];
     for (let i = 0; i < options.length; ++i) {
       let color = 'red';
@@ -81,7 +80,6 @@ class DealRating extends Component {
         color = 'green';
       }
       const isSelected = options[i].key === this.state.selectedValue.key;
-      // doths.push(this.renderDoth(color, isSelected, options[i], onChange));
       stars.push(this.renderStar(color, isSelected, options[i], onChange));
     }
 
