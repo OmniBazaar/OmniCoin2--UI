@@ -24,12 +24,13 @@ class CurrencyDropdown extends Component {
   }
 
   render() {
-    const { value, removeAll } = this.props.input;
+    const { value } = this.props.input;
+    const { removeAll } = this.props;
     let options = this.options;
     if(removeAll){
       options = options.filter((item) => item.text !== 'All');
     }
-    
+
     return (
       <Dropdown
         compact

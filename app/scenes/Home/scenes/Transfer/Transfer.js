@@ -718,10 +718,6 @@ class Transfer extends Component {
 }
 
 Transfer.propTypes = {
-  history: PropTypes.shape({
-    replace: PropTypes.func,
-    location: PropTypes.shape,
-  }),
   reset: PropTypes.func,
   transferActions: PropTypes.shape({
     submitTransfer: PropTypes.func,
