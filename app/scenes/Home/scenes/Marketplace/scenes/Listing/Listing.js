@@ -395,10 +395,11 @@ class Listing extends Component {
                 <ReactStars
                   count={5}
                   size={16}
-                  value={listingDetail.reputationScore * 100 / 5}
-                  color1="#f9d596"
-                  color2="#fbae3c"
+                  value={ listingDetail.reputationScore / 10000 * 5 }
+                  color1="#F6D4A2"
+                  color2="#F6AE4B"
                   edit={false}
+                  half={true}
                 />
             </span>
             <div className="votes">
