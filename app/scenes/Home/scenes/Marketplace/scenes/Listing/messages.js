@@ -133,4 +133,8 @@ export default defineMessages({
     id: 'Listing.reportListingSuccess',
     defaultMessage: 'Listing is reported successfully'
   },
+  contactSeller: {
+    id: 'Listing.contactSeller',
+    defaultMessage: 'Contact Seller'
+  },
 });

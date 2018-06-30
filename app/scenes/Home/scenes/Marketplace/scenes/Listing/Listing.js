@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -223,6 +223,14 @@ class Listing extends Component {
               <span className="value">{listingDetail.address}</span>
             </div>
           </div>
+          <Link to={{
+            pathname: '/mail',
+            username: listingDetail.owner
+          }}>
+            <div className="contact-seller">
+              <span>{formatMessage(messages.contactSeller)}</span>
+            </div>
+          </Link>
         </div>
       </Popup>
     );
@@ -387,10 +395,11 @@ class Listing extends Component {
                 <ReactStars
                   count={5}
                   size={16}
-                  value={listingDetail.reputationScore * 100 / 5}
-                  color1="#f9d596"
-                  color2="#fbae3c"
+                  value={ listingDetail.reputationScore / 10000 * 5 }
+                  color1="#F6D4A2"
+                  color2="#F6AE4B"
                   edit={false}
+                  half={true}
                 />
             </span>
             <div className="votes">
@@ -497,14 +506,16 @@ class Listing extends Component {
             onApprove={() => this.onOkDelete()}
             onCancel={() => this.closeConfirm()}
             isOpen={this.state.confirmDeleteOpen}
-            question={formatMessage(messages.reportDeleteQuestion)}
-          />
+          >
+            {formatMessage(messages.reportDeleteQuestion)}
+          </ConfirmationModal>
           <ConfirmationModal
             onApprove={() => this.onOkReport()}
             onCancel={() => this.closeConfirm()}
             isOpen={this.state.confirmReportOpen}
-            question={formatMessage(messages.reportConfirmationQuestion)}
-          />
+          >
+            {formatMessage(messages.reportConfirmationQuestion)}
+          </ConfirmationModal>
         </div>
       </div>
     );

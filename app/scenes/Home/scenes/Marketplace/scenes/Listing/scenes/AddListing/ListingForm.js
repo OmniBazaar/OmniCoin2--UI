@@ -161,10 +161,17 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
-        this.showErrorToast(
-          formatMessage(messages.error),
-          formatMessage(messages.saveListingErrorMessage)
-        );
+        if (error.message && error.message === 'no_changes') {
+          this.showErrorToast(
+            formatMessage(messages.error),
+            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
+          );
+        } else {
+          this.showErrorToast(
+            formatMessage(messages.error),
+            formatMessage(messages.saveListingErrorMessage)
+          );
+        }
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -374,10 +381,8 @@ class ListingForm extends Component {
                 name="currency"
                 component={this.CurrencyDropdown}
                 props={{
-                  placeholder: formatMessage(messages.currency)
-                }}
-                input={{
-                  removeAll: true
+                  placeholder: formatMessage(messages.currency),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />

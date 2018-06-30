@@ -171,9 +171,12 @@ function* getListingDetail({ payload: { listingId }}) {
       listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     }
 
-    const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
-    listingDetail.reputationScore = ownerAcc['reputation_score'];
+    const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
+    listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+    if (listingDetail.reputationVotesCount === 0) {
+      listingDetail.reputationScore = 5000;
+    }
 
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
@@ -190,26 +193,29 @@ function* requestMyListings() {
 		  myListings.map(
 		    listing => FetchChain('getAccount', listing.publisher)
       )
-    )).map((account, idx) => {
-      return {
-        listing_id: myListings[idx].id,
-        address: account.get('publisher_ip')
-      }
-    }).reduce((arr, curr) => {
-      const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
-      if (!val) {
-        return [
-          ...arr,
-          {
-            address: curr.address,
-            listing_ids: [curr.listing_id]
-          }
-        ]
-      } else {
-        val.listing_ids.push(curr.listing_id);
-        return arr;
-      }
-    }, []);
+    ))
+      .map((account, idx) => {
+        return {
+          listing_id: myListings[idx].id,
+          address: account.get('publisher_ip')
+        }
+      })
+      .filter(el => !!el.address)
+      .reduce((arr, curr) => {
+        const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
+        if (!val) {
+          return [
+            ...arr,
+            {
+              address: curr.address,
+              listing_ids: [curr.listing_id]
+            }
+          ]
+        } else {
+          val.listing_ids.push(curr.listing_id);
+          return arr;
+        }
+      }, []);
 		const ids = [];
 
 		getListingCommands.forEach(command => {

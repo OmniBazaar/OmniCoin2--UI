@@ -61,6 +61,7 @@ import { setActiveCategory } from '../../services/marketplace/marketplaceActions
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from "../../services/blockchain/connection/connectionActions";
+import { loadPreferences } from '../../services/preferences/preferencesActions';
 
 const iconSize = 20;
 
@@ -77,6 +78,7 @@ class Home extends Component {
   componentDidMount() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
+    this.props.preferencesActions.loadPreferences();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -281,7 +283,10 @@ export default connect(
     }, dispatch),
     authActions: bindActionCreators({ getAccount, logout }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
-    connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch)
+    connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
+    preferencesActions: bindActionCreators({
+      loadPreferences
+    }, dispatch),
   })
 )(Home);
 
@@ -306,7 +311,10 @@ Home.propTypes = {
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
     logout: PropTypes.func
-  })
+  }),
+  preferencesActions: PropTypes.shape({
+    loadPreferences: PropTypes.func
+  }).isRequired
 };
 
 Home.defaultProps = {

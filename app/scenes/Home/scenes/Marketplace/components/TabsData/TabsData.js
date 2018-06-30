@@ -65,7 +65,7 @@ TabsData.defaultProps = {
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  null,
   (dispatch) => ({
     tabsDataActions: bindActionCreators({
     }, dispatch),
