@@ -369,7 +369,7 @@ class SignupForm extends Component {
           <Modal.Header>
             {categoryTitle}
           </Modal.Header>
-          <Modal.Content>
+          <Modal.Content scrolling>
             <div className="modal-container terms-container">
               <div className="body">
                 <TermsAndConditions />

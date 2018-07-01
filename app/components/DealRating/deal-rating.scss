@@ -7,39 +7,36 @@
     justify-content: space-between;
     align-items: center;
     .doth {
-      width: 20px;
-      height: 20px;
-      border-radius: 20px;
+      font-size: 22px;
       cursor: pointer;
+      text-align: center;
       &.green {
         &.selected {
-          background-color: $green;
-          border: 2px solid $green;
+          color: #01b540;
         }
         &:not(.selected) {
-          border: 2px solid lighten($green, 20%);
+          color: lighten($green, 26%);
         }
       }
       &.red {
         &.selected {
-          background-color: $red;
-          border: 2px solid $red;
+          color: $red;
         }
         &:not(.selected) {
-          border: 2px solid lighten($red, 20%);
+          color: lighten($red, 40%);
         }
       }
       &.gray {
         &.selected {
-          background-color: $primary-gray;
-          border: 2px solid $primary-gray;
+          color: #888;
         }
         &:not(.selected) {
-          border: 2px solid lighten($primary-gray, 20%);
+          color: lighten($primary-gray, 10%);
         }
       }
     }
   }
+
   .footer {
     display: flex;
     flex-direction: row;

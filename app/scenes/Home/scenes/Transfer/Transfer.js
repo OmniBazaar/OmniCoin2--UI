@@ -354,7 +354,7 @@ class Transfer extends Component {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
-      <div className="transfer-input">
+      <div className="transfer-input deal">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <DealRating
           selectedValue={options[input.value] || options[5]}

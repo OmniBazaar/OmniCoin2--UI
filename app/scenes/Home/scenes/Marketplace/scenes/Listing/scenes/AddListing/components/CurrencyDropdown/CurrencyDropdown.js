@@ -7,9 +7,17 @@ import currencies from '../../../../../../commons/currencies';
 class CurrencyDropdown extends Component {
   componentWillMount() {
     const { formatMessage } = this.props.intl;
-    this.options = Object.keys(currencies).map(id => ({
+    let currenciesData = currencies;
+    if (this.props.disableAllOption) {
+      currenciesData = {
+        ...currencies
+      };
+      delete currenciesData['ALL'];
+    }
+    
+    this.options = Object.keys(currenciesData).map(id => ({
       value: id,
-      text: formatMessage(currencies[id])
+      text: formatMessage(currenciesData[id])
     }));
   }
 

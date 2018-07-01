@@ -1,5 +1,9 @@
 .modal.terms-modal {
-  border-bottom-left-radius: 0 !important;
+  height: initial !important;
+
+  .content {
+    height: initial;
+  }
 
   .modal-container {
     height: 100%;

@@ -23,6 +23,8 @@ const messages = defineMessages({
   }
 });
 
+const defaultQuestion = 'Are you sure?';
+
 class ConfirmationModal extends Component {
   render() {
     const {
@@ -30,6 +32,8 @@ class ConfirmationModal extends Component {
       question,
       onCancel,
       onApprove,
+      cancelText,
+      approveText,
       loading
     } = this.props;
     const { formatMessage } = this.props.intl;
@@ -39,19 +43,21 @@ class ConfirmationModal extends Component {
           {formatMessage(messages.confirmation)}
         </Modal.Header>
         <Modal.Content>
-          <p>{question}</p>
+          <p>
+            {this.props.children || defaultQuestion}
+          </p>
         </Modal.Content>
         <Modal.Actions>
           <Button
             className="button--transparent"
-            content={formatMessage(messages.cancel)}
+            content={cancelText || formatMessage(messages.cancel)}
             loading={loading}
             onClick={onCancel}
           />
           <Button
             className="button--primary"
             loading={loading}
-            content={formatMessage(messages.approve)}
+            content={approveText || formatMessage(messages.approve)}
             onClick={onApprove}
           />
         </Modal.Actions>
@@ -61,19 +67,19 @@ class ConfirmationModal extends Component {
 }
 
 ConfirmationModal.defaultProps = {
-  question: 'Are you sure?',
   isOpen: false,
   loading: false,
   onCancel: () => {},
-  onApprove: () => {}
+  onApprove: () => {},
 };
 
 ConfirmationModal.propTypes = {
-  question: PropTypes.string,
   isOpen: PropTypes.bool,
   loading: PropTypes.bool,
   onCancel: PropTypes.func,
-  onApprove: PropTypes.func
+  onApprove: PropTypes.func,
+  approveText: PropTypes.string,
+  cancelText: PropTypes.string
 };
 
 export default injectIntl(ConfirmationModal);
