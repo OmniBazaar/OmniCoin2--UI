@@ -152,15 +152,33 @@ class HistoryStorage extends BaseStorage {
     // return HistoryStorage.updateBalances(sortedTransactions);
   }
 
-  getListingTransaferOperations() {
+  getListingPurchaseOperations() {
     return Object.keys(this.cache)
       .map(key => this.cache[key])
-      .filter(op => op.operationType === ChainTypes.operations.transfer)
-      .filter(op => !!op.listingId);
+      // looking for operations containing Listing ID
+      .filter(op => op.operationType === ChainTypes.operations.transfer
+        || op.operationType === ChainTypes.operations.escrow_create_operation)
+      .filter(op => !!op.listingId)
+      // Replacing escrow_create with escrow_release if there was a release
+      .map(op => {
+        if (op.operationType === ChainTypes.operations.escrow_create_operation) {
+          const result = this.findEscrowTransactionResult(op);
+          if (result && result.operationType === ChainTypes.operations.escrow_release_operation) {
+            return {
+                ...result,
+                listingId: op.listingId,
+                listingCount: op.listingCount
+              }
+          }
+        }
+        return op;
+      })
+      // throwing away unreleased escrow_create operations
+      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation)
   }
 
   getBuyOperations() {
-    const operations = this.getListingTransaferOperations();
+    const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => !op.isIncoming)
       .map(op => {
@@ -173,7 +191,7 @@ class HistoryStorage extends BaseStorage {
   }
 
   getSellOperations() {
-    const operations = this.getListingTransaferOperations();
+    const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => op.isIncoming)
       .map(op => {
