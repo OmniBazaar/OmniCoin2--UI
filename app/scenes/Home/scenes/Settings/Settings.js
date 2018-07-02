@@ -12,13 +12,11 @@ import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
 import AccountVesting from './scenes/AccountVesting/AccountVesting';
 
-import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
-  showDetailsModal,
   getPrivateData,
   getPublisherData
 } from '../../../../services/accountSettings/accountActions';
@@ -30,8 +28,6 @@ const iconSize = 20;
 class Settings extends Component {
   constructor(props) {
     super(props);
-
-    this.onCloseDetails = this.onCloseDetails.bind(this);
   }
 
   componentWillMount() {
@@ -45,9 +41,6 @@ class Settings extends Component {
     }
   };
 
-  onCloseDetails() {
-    this.props.accountSettingsActions.showDetailsModal();
-  }
 
   sideMenu() {
     const { formatMessage } = this.props.intl;
@@ -110,12 +103,7 @@ class Settings extends Component {
                 role="link"
                 tabIndex={0}
               />
-              {props.account.showDetails &&
-                <TransactionDetails
-                  showCompose={props.account.showDetails}
-                  onClose={this.onCloseDetails}
-                />
-              }
+
             </div>
           </div>
         </Modal.Content>
@@ -126,7 +114,6 @@ class Settings extends Component {
 
 Settings.propTypes = {
   accountSettingsActions: PropTypes.shape({
-    showDetailsModal: PropTypes.func,
     getPrivateData: PropTypes.func,
     getPublisherData: PropTypes.func,
     getCurrentUser: PropTypes.func
@@ -155,7 +142,6 @@ export default connect(
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
-      showDetailsModal,
       getPrivateData,
       getPublisherData
     }, dispatch)

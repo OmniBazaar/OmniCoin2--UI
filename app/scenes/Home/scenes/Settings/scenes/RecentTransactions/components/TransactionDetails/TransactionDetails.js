@@ -7,6 +7,8 @@ import _ from 'lodash';
 import dateformat from 'dateformat';
 import { Button } from 'semantic-ui-react';
 
+import './transaction-details.scss';
+
 const messages = defineMessages({
   close: {
     id: 'Settings.close',
