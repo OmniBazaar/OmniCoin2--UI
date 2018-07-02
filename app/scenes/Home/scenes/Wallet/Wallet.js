@@ -175,7 +175,6 @@ class Wallet extends Component {
                }
              ]}
           />
-          <StartGuide />
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />
