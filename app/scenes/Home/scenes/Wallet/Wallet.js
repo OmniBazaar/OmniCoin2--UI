@@ -15,6 +15,7 @@ import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletD
 import OmnicoinWalletDetail from './components/OmnicoinWalletDetail/OmnicoinWalletDetail';
 import AddBitcoinWallet from './components/AddBitcoinWallet/AddBitcoinWallet';
 import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress';
+import RecentTransactions from '../Settings/scenes/RecentTransactions/RecentTransactions';
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
@@ -29,6 +30,7 @@ import {
 import AddIcon from '../../images/btn-add-image.svg';
 
 import messages from './messages';
+import settingsMessages from '../Settings/messages';
 import './wallet.scss';
 import StartGuide from '../../components/StartGuide/StartGuide';
 
@@ -122,6 +124,22 @@ class Wallet extends Component {
             menu={{ secondary: true, pointing: true }}
             panes={[
               {
+                menuItem: formatMessage(settingsMessages.recentTransactions),
+                render: () => (
+                  <Tab.Pane>
+                    <RecentTransactions
+                      rowsPerPage={20}
+                      tableProps={{
+                        sortable: true,
+                        compact: true,
+                        basic: 'very',
+                        striped: true,
+                        size: 'small'
+                      }}
+                     />
+                   </Tab.Pane>),
+                 },
+              {
                 menuItem: 'OmniCoin',
                 render: () => (
                   <Tab.Pane>
@@ -154,7 +172,7 @@ class Wallet extends Component {
                        </div>
                    }
                    </Tab.Pane>)
-               },
+               }
              ]}
           />
           <StartGuide />

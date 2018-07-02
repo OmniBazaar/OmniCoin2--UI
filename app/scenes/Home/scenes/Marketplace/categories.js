@@ -813,6 +813,10 @@ const userMenu = defineMessages({
     id: 'Marketplace.myPurchases',
     defaultMessage: 'My Purchases'
   },
+  accountSettings: {
+    id: 'Marketplace.accountSettings',
+    defaultMessage: 'Account Settings'
+  },
   favoriteListings: {
     id: 'Marketplace.favoriteListings',
     defaultMessage: 'Favorite Listings'
