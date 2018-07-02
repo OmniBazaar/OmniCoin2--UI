@@ -687,7 +687,7 @@ class Transfer extends Component {
 
     if (transferCurrency === 'omnicoin') {
       values.memo = paramValues.memo ? paramValues.memo : '';
-      values.amount = parseFloat(paramValues.amount).toFixed(2);
+      values.amount = parseFloat(paramValues.amount).toFixed(5);
     } else {
       values.amount = parseFloat(paramValues.amount).toFixed(8);
     }
