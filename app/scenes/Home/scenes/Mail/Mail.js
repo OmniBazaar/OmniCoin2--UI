@@ -94,23 +94,17 @@ class Mail extends Component {
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
 
-    const { username } = this.props.auth.currentUser;
 
-    this.props.mailActions.subscribeForMail(username, (recievedMmailObjects) => {
-      recievedMmailObjects.forEach((mailObject) => {
-        this.props.mailActions.mailReceived(mailObject.uuid);
-      });
-      this.props.mailActions.loadFolder(username, MailTypes.INBOX);
-    });
   }
-  
+
   componentWillMount() {
     const { username } = this.props.history.location;
     if(username) {
       this.props.mailActions.showComposeModal( null, username );
     }
+    this.subscribe();
   }
-  
+
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
     this.props.mailActions.loadFolder(username, MailTypes.INBOX);
@@ -118,6 +112,16 @@ class Mail extends Component {
     this.props.mailActions.loadFolder(username, MailTypes.SENT);
     this.props.mailActions.loadFolder(username, MailTypes.DELETED);
     this.changeFolder(MailTypes.INBOX);
+  }
+
+  subscribe() {
+    const { username } = this.props.auth.currentUser;
+    this.props.mailActions.subscribeForMail(username, (recievedMailObjects) => {
+      recievedMailObjects.forEach((mailObject) => {
+        this.props.mailActions.mailReceived(mailObject.uuid);
+      });
+      this.props.mailActions.loadFolder(username, MailTypes.INBOX);
+    });
   }
 
   changeFolder(activeFolder) {
