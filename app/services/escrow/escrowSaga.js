@@ -219,12 +219,19 @@ function* updateEscrowSettings({ payload: { settings } }) {
 function* getEscrowSettings() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const account = yield call(FetchChain, 'getAccount', currentUser.username);
-    const options = account.get('implicit_escrow_options');
+    const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
+    let options = account.implicit_escrow_options;
+    if (!options) {
+      options = {
+        positive_rating: false,
+        voted_witness: false,
+        active_witness: false
+      }
+    }
     yield put(getEscrowSettingsSucceeded({
-      positiveRating: options.get('positive_rating'),
-      transactionProcessor: options.get('voted_witness'),
-      activeTransactionProcessor: options.get('active_witness')
+      positiveRating: options.positive_rating,
+      transactionProcessor: options.voted_witness,
+      activeTransactionProcessor: options.active_witness
     }))
   } catch (error) {
     console.log('ERROR ', error);
