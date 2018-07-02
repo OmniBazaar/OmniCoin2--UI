@@ -1,9 +1,9 @@
 const VestingTypes = {
-  none: 'no_type',
-  escrowFee: 'escrow_fee_type',
-  publisherFee: 'publisher_fee_type',
-  founderFee: 'founder_sale_fee',
-  referrerFee: 'referrer_sale_fee'
+  none: 0,
+  escrowFee: 1,
+  publisherFee: 2,
+  founderFee: 3,
+  referrerFee: 4
 };
 
 export default VestingTypes;
