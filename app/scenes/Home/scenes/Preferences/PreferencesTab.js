@@ -60,7 +60,7 @@ class PreferencesTab extends Component {
           formatMessage(messages.errorTitle),
           formatMessage(messages.saveErrorMessage)
         );
-      } else {
+      } else if (!nextProps.dht.isConnecting) {
         this.showSuccessToast(
           formatMessage(messages.successTitle),
           formatMessage(messages.saveSuccessMessage)
@@ -68,7 +68,7 @@ class PreferencesTab extends Component {
       }
     }
   }
-  
+
   componentWillUnmount() {
     lastLanguage = this.props.preferences.preferences.language;
   }
@@ -80,9 +80,9 @@ class PreferencesTab extends Component {
   showSuccessToast(title, message) {
     toastr.success(title, message);
   }
-  
+
   number = value => (value && !isNaN(Number(value)));
-  
+
   onSubmit(values) {
     const { publisher } = this.props.account;
     const { chargeFee, logoutTimeout } = values;
@@ -90,12 +90,12 @@ class PreferencesTab extends Component {
       this.setState({ errorMsg: 'LogOut Timeout must be number' });
       return
     }
-  
+
     if (publisher && !this.number(chargeFee)) {
       this.setState({ errorMsg: 'Fee must be number' });
       return
     }
-      
+
     if (!publisher) {
       values.chargeFee = '';
     }
@@ -211,12 +211,12 @@ class PreferencesTab extends Component {
               <div className="col-1" />
             </div>
           }
-          <div className='form-group'>
+          <div className="form-group">
             <span>{formatMessage(messages.searchListingOptions)}</span>
-            <div className='radios field'>
-              <div className='radio-group'>
+            <div className="radios field">
+              <div className="radio-group">
                 <Field
-                  name='searchListingOption'
+                  name="searchListingOption"
                   component={FormRadido}
                   props={{
                     value: 'anyKeyword'
@@ -224,9 +224,9 @@ class PreferencesTab extends Component {
                 />
                 <span>{formatMessage(messages.byAnyKeyword)}</span>
               </div>
-              <div className='radio-group'>
+              <div className="radio-group">
                 <Field
-                  name='searchListingOption'
+                  name="searchListingOption"
                   component={FormRadido}
                   props={{
                     value: 'allKeywords'
@@ -246,7 +246,8 @@ class PreferencesTab extends Component {
                 content={formatMessage(messages.update)}
                 className="button--green-bg"
                 loading={saving}
-                disabled={saving} />
+                disabled={saving}
+              />
             </div>
             <div className="col-1" />
           </div>
@@ -270,7 +271,10 @@ PreferencesTab.propTypes = {
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
-  }).isRequired
+  }).isRequired,
+  dht: PropTypes.shape({
+    isConnecting: PropTypes.bool,
+  }).isRequired,
 };
 
 export default compose(
@@ -278,7 +282,8 @@ export default compose(
     state => ({
       preferences: state.default.preferences,
       account: state.default.account,
-      auth: state.default.auth
+      auth: state.default.auth,
+      dht: state.default.dht,
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({
@@ -289,5 +294,5 @@ export default compose(
   reduxForm({
     form: 'preferencesForm',
     destroyOnUnmount: true,
-  }),
+  })
 )(injectIntl(PreferencesTab));
