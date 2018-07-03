@@ -19,6 +19,7 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
+import { addMyEscrowAgent, getMyEscrowSettings } from '../escrow/escrowSaga';
 
 export function* transferSubscriber() {
   yield all([
@@ -36,6 +37,7 @@ function* submitOmniCoinTransfer(data) {
   const {
     amount, memo, reputation
   } = data.payload.data;
+
   try {
     const [senderName, toName] = yield Promise.all([
       FetchChain('getAccount', senderNameStr),
@@ -64,6 +66,12 @@ function* submitOmniCoinTransfer(data) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
+
+    const myEscrowOptions = yield getMyEscrowSettings();
+    if (myEscrowOptions.positive_rating && parseInt(reputation) > 5) {
+      yield addMyEscrowAgent(toName.get('id'));
+    }
+
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
   } catch (error) {

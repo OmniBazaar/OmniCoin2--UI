@@ -30,7 +30,8 @@ export function* escrowSubscriber() {
     takeEvery('RELEASE_ESCROW_TRANSACTION', releaseEscrowTransaction),
     takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction),
     takeEvery('UPDATE_ESCROW_SETTINGS', updateEscrowSettings),
-    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings)
+    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings),
+    takeEvery('ADD_MY_ESCROW_AGENT', addMyEscrowAgent)
   ]);
 }
 
@@ -75,12 +76,26 @@ function* loadEscrowAgents({
   }
 }
 
+function* getMyEscrowAgents(username) {
+  const account =  yield Apis.instance().db_api().exec('get_account_by_name', [username]);
+  if (!account) {
+    throw new Error('Account not found');
+  }
+
+  if (!account.escrows) {
+    return [];
+  }
+
+  return account.escrows;
+}
+
 function* loadMyEscrowAgents({ payload: { username } }) {
   try {
-    const result = yield call(fetchAccount, username);
+    const escrows = yield getMyEscrowAgents(username);
+    const myAgents = escrows.map(item => ({ id: item }));
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
-      myAgents: result.escrows.map(item => ({ id: item })),
+      myAgents,
     });
   } catch (e) {
     yield put({
@@ -104,6 +119,17 @@ function* setMyEscrowAgents({ payload: { agents } }) {
     yield put({
       type: 'SET_MY_ESCROW_AGENTS_FAILED',
       error: e
+    });
+  }
+}
+
+export function* addMyEscrowAgent(agentId) {
+  const { currentUser } = (yield select()).default.auth;
+  let escrows = yield getMyEscrowAgents(currentUser.username);
+  if (escrows.indexOf(agentId) === -1) {
+    escrows = [...escrows, agentId];
+    yield updateAccount({
+      escrows
     });
   }
 }
@@ -216,18 +242,24 @@ function* updateEscrowSettings({ payload: { settings } }) {
   }
 }
 
+export function* getMyEscrowSettings() {
+  const { currentUser } = (yield select()).default.auth;
+  const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
+  let options = account.implicit_escrow_options;
+  if (!options) {
+    options = {
+      positive_rating: false,
+      voted_witness: false,
+      active_witness: false
+    }
+  }
+
+  return options;
+}
+
 function* getEscrowSettings() {
   try {
-    const { currentUser } = (yield select()).default.auth;
-    const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
-    let options = account.implicit_escrow_options;
-    if (!options) {
-      options = {
-        positive_rating: false,
-        voted_witness: false,
-        active_witness: false
-      }
-    }
+    const options = yield getMyEscrowSettings();
     yield put(getEscrowSettingsSucceeded({
       positiveRating: options.positive_rating,
       transactionProcessor: options.voted_witness,
