@@ -16,8 +16,10 @@ import {
   deleteSearchFailed,
   saveSearchSucceeded,
   saveSearchFailed,
-  searching
+  searching,
+  setSearchListingsParams
 } from './searchActions';
+import { clearMyListings } from '../listing/listingActions';
 import SearchHistory from './searchHistory';
 import { getNewId, messageTypes, ws } from '../marketplace/wsSaga';
 
@@ -38,6 +40,15 @@ function* searchListings({
   }
 }) {
   try {
+    const { saving } = (yield select()).default.listing.saveListing;
+    if (saving) {
+      yield put(setSearchListingsParams(
+        searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+      ));
+      return;
+    }
+
+    yield put(clearMyListings());
     const { currentUser } = (yield select()).default.auth;
     if (historify) {
       const searchHistory = new SearchHistory(currentUser.username);

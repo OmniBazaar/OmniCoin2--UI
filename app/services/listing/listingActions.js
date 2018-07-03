@@ -43,7 +43,8 @@ const {
   searchPublishers,
   searchPublishersFinish,
   filterMyListings,
-  filterFavorites
+  filterFavorites,
+  clearMyListings
 } = createActions({
   GET_LISTING_DETAIL: (listingId) => ({ listingId }),
   GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
@@ -103,6 +104,7 @@ const {
     subCategory,
     searchTerm
   }),
+  CLEAR_MY_LISTINGS: () => ({})
 });
 
 export {
@@ -148,5 +150,6 @@ export {
   searchPublishers,
   searchPublishersFinish,
   filterMyListings,
-  filterFavorites
+  filterFavorites,
+  clearMyListings
 };

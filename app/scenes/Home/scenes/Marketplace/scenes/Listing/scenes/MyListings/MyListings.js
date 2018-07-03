@@ -69,8 +69,16 @@ class MyListings extends Component {
 
   componentDidMount() {
     this.props.listingActions.resetDeleteListing();
-    this.props.listingActions.requestMyListings();
+    if (!this.props.listing.saveListing.saving) {
+      this.props.listingActions.requestMyListings();
+    }
     this.props.listingActions.filterMyListings('all', 'all');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
+      this.props.listingActions.requestMyListings();
+    }
   }
 
   handleSubmit(values, searchTerm) {
@@ -97,7 +105,8 @@ class MyListings extends Component {
       myListingsCurrency,
       myListingsCategory,
       myListingsSubCategory,
-      myListingsSearchTerm
+      myListingsSearchTerm,
+      saveListing
     } = this.props.listing;
 
     let data = myListings;
@@ -114,6 +123,7 @@ class MyListings extends Component {
         <TabsData
           data={data}
           showTrailingLoader={requestMyListings.ids.length !== 0}
+          loading={saveListing.saving}
           currency={myListingsCurrency}
           showActions
           tabs={[
@@ -177,7 +187,10 @@ MyListings.propTypes = {
     myListings: PropTypes.object,
     myListingsFiltered: PropTypes.array,
     myListingsCurrency: PropTypes.string,
-    myListingsCategory: PropTypes.string
+    myListingsCategory: PropTypes.string,
+    saveListing: PropTypes.shape({
+      saving: PropTypes.bool
+    })
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

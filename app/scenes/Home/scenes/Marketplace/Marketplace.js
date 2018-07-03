@@ -83,7 +83,13 @@ class Marketplace extends Component {
 
     // const { country, city } = this.props.account.publisherData;
     if (this.props.account.publisherData !== nextProps.account.publisherData) {
-      this.fetchListings(nextProps.account.publisherData);
+      if (!nextProps.listing.saveListing.saving) {
+        this.fetchListings(nextProps.account.publisherData);
+      }
+    }
+
+    if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
+      this.fetchListings(this.props.account.publisherData);
     }
   }
 
@@ -466,6 +472,7 @@ class Marketplace extends Component {
     const { formatMessage } = this.props.intl;
     const { searchResults } = this.props.search;
     const isSearching = this.props.dht.isLoading || this.props.search.searching;
+    const { saving } = this.props.listing.saveListing;
 
     return (
       <div className="marketplace-container">
@@ -475,7 +482,7 @@ class Marketplace extends Component {
             CategoriesTypes.FEATURED,
             formatMessage(mainCategories.featuredListings),
             searchResults,
-            isSearching
+            saving || isSearching
           )}
           <div className="categories-container">
             <div className="top-detail">
@@ -483,11 +490,11 @@ class Marketplace extends Component {
             </div>
             {this.categoriesItems()}
           </div>
-          {(this.props.dht.isLoading || this.props.search.searching)
+          {(saving || this.props.dht.isLoading || this.props.search.searching)
             ?
               <Loader
                 content={
-                  this.props.dht.isLoading
+                  saving || this.props.dht.isLoading
                     ? formatMessage(messages.searchingForPublishers)
                     : formatMessage(messages.loadingListings)
                 }
@@ -562,6 +569,11 @@ Marketplace.propTypes = {
     recentSearches: PropTypes.array,
     searchResultsFiltered: PropTypes.array
   }),
+  listing: PropTypes.shape({
+    saveListing: PropTypes.shape({
+      saving: PropTypes.bool
+    })
+  })
 };
 
 Marketplace.defaultProps = {

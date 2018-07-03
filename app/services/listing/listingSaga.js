@@ -36,6 +36,7 @@ import {
   isListingFineFailed,
   searchPublishersFinish
 } from './listingActions';
+import { clearSearchResults } from '../search/searchActions';
 import {
   countPeersForKeywords
 } from '../search/dht/dhtSaga';
@@ -187,6 +188,8 @@ function* getListingDetail({ payload: { listingId }}) {
 
 function* requestMyListings() {
 	try {
+    yield put(clearSearchResults());
+    
     const { currentUser } = (yield select()).default.auth;
 		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
 		let getListingCommands = (yield Promise.all(
