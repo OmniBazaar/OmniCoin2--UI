@@ -24,7 +24,9 @@ import {
   marketplaceReturnListings,
   marketplaceReturnBool,
   searchListings,
-  filterSearchByCategory
+  filterSearchByCategory,
+  setSearchListingsParams,
+  clearSearchResults
 } from './searchActions';
 
 const defaultState = {
@@ -52,7 +54,8 @@ const defaultState = {
   searching: false,
   fromSearchMenu: false,
   error: null,
-  currency: null
+  currency: null,
+  searchListingsParams: {}
 };
 
 const rowsPerPageSearchResults = 20;
@@ -363,6 +366,22 @@ const reducer = handleActions({
       ...state,
       searching: false
     };
+  },
+  [setSearchListingsParams](state, { payload }) {
+    return {
+      ...state,
+      searchId: null,
+      searchResults: [],
+      searchResultsFiltered: null,
+      searchListingsParams: payload
+    };
+  },
+  [clearSearchResults](state) {
+    return {
+      ...state,
+      searchResults: [],
+      searchResultsFiltered: null
+    }
   }
 }, defaultState);
 
