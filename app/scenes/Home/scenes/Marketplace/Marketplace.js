@@ -51,7 +51,7 @@ import {
 } from '../../../../services/marketplace/marketplaceActions';
 
 import { getPublisherData } from '../../../../services/accountSettings/accountActions';
-import { searchListings, filterSearchByCategory, setSearchListingsParams } from '../../../../services/search/searchActions';
+import { searchListings, filterSearchByCategory } from '../../../../services/search/searchActions';
 import messages from './messages';
 import './marketplace.scss';
 
