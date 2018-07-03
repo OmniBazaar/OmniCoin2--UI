@@ -49,6 +49,7 @@ const defaultState = {
   referrer: true,
   publisher: false,
   transactionProcessor: false,
+  wantsToVote: false,
   escrow: false,
   recentTransactions: [],
   recentTransactionsFiltered: [],
@@ -64,7 +65,6 @@ const defaultState = {
   rescanBlockchain: false,
   votes: [],
   votesFiltered: [],
-
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
@@ -178,10 +178,11 @@ const reducer = handleActions({
       publisher: !state.publisher,
     };
   },
-  [setTransactionProcessor](state) {
+  [setTransactionProcessor](state, { payload: { wantsToVote } }) {
     return {
       ...state,
       transactionProcessor: !state.transactionProcessor,
+      wantsToVote
     };
   },
   [setEscrow](state) {

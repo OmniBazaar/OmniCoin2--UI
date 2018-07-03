@@ -354,7 +354,7 @@ class Transfer extends Component {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
-      <div className="transfer-input">
+      <div className="transfer-input deal">
         {touched && ((error && <span className="error">{ errorMessage }</span>))}
         <DealRating
           selectedValue={options[input.value] || options[5]}
@@ -687,7 +687,7 @@ class Transfer extends Component {
 
     if (transferCurrency === 'omnicoin') {
       values.memo = paramValues.memo ? paramValues.memo : '';
-      values.amount = parseFloat(paramValues.amount).toFixed(2);
+      values.amount = parseFloat(paramValues.amount).toFixed(5);
     } else {
       values.amount = parseFloat(paramValues.amount).toFixed(8);
     }
@@ -718,10 +718,6 @@ class Transfer extends Component {
 }
 
 Transfer.propTypes = {
-  history: PropTypes.shape({
-    replace: PropTypes.func,
-    location: PropTypes.shape,
-  }),
   reset: PropTypes.func,
   transferActions: PropTypes.shape({
     submitTransfer: PropTypes.func,

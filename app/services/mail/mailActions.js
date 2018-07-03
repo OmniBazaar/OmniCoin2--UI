@@ -13,7 +13,7 @@ const {
   deleteMail,
   mailSetRead
 } = createActions({
-  SHOW_COMPOSE_MODAL: (showCompose) => ({ showCompose }),
+  SHOW_COMPOSE_MODAL: (showCompose, to) => ({ showCompose, to }),
   SUBSCRIBE_FOR_MAIL: (reciever, afterMailStoredCallback) => ({
     reciever, afterMailStoredCallback
   }),

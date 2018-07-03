@@ -21,7 +21,9 @@ const {
   marketplaceReturnListings,
   marketplaceReturnBool,
   searching,
-  filterSearch
+  filterSearch,
+  setSearchListingsParams,
+  clearSearchResults
 } = createActions({
   SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory, fromSearchMenu) => ({
     searchTerm, category, country, city, historify, subCategory, fromSearchMenu
@@ -45,7 +47,11 @@ const {
   MARKETPLACE_RETURN_LISTINGS: (data) => ({ data }),
   MARKETPLACE_RETURN_BOOL: (data) => ({ data }),
   SEARCHING: (searchId, searchTerm, category, subCategory, fromSearchMenu) => ({ searchId, searchTerm, category, subCategory, fromSearchMenu }),
-  FILTER_SEARCH: (currency, category) => ({ currency, category })
+  FILTER_SEARCH: (currency, category) => ({ currency, category }),
+  SET_SEARCH_LISTINGS_PARAMS: (searchTerm, category, country, city, historify, subCategory, fromSearchMenu) => ({
+    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+  }),
+  CLEAR_SEARCH_RESULTS: () => ({})
 });
 
 export {
@@ -69,5 +75,7 @@ export {
   marketplaceReturnBool,
   marketplaceReturnListings,
   searching,
-  filterSearch
+  filterSearch,
+  setSearchListingsParams,
+  clearSearchResults
 };

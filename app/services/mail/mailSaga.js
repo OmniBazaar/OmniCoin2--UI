@@ -12,6 +12,7 @@ import {
 } from './mailStorage';
 
 import MailTypes from './mailTypes';
+import {getStoredCurrentUser} from "../blockchain/auth/services";
 
 
 export function* mailSubscriber() {
@@ -81,23 +82,29 @@ export function* sendMail(action) {
 
 export function* subscribeForMail(action) {
   const { reciever, afterMailStoredCallback } = action.payload;
-
   /* this callback can be triggered by the server multiple times
   for one batch of emails, until the server receives mailReceived signals,
   so before storing the messages, check if they exist */
   const mailReceivedCallback = (recievedMailObjects) => {
+    const currentUser = getStoredCurrentUser();
+    if (!currentUser) return;
+
     // store just the really-new-received mails here
     const mailsToSetRead = [];
 
     console.log('Mail recieved: ', recievedMailObjects);
-    recievedMailObjects.forEach((mailObject) => {
-      if (!getMessage(reciever, MailTypes.INBOX, mailObject.uuid)) {
-        mailObject.read_status = false;
-        storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
-        mailsToSetRead.push(mailObject);
-      }
-    });
-    afterMailStoredCallback(mailsToSetRead);
+    recievedMailObjects
+      .filter(mailObj => mailObj.recipient === currentUser.username)
+      .forEach((mailObject) => {
+        if (!getMessage(reciever, MailTypes.INBOX, mailObject.uuid)) {
+          mailObject.read_status = false;
+          storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
+          mailsToSetRead.push(mailObject);
+        }
+      });
+    if (mailsToSetRead.length !== 0) {
+      afterMailStoredCallback(mailsToSetRead);
+    }
   };
 
   try {

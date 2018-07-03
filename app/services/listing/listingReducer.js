@@ -43,7 +43,8 @@ import {
   searchPublishersFinish,
   setNumberToBuy,
   filterMyListings,
-  filterFavorites
+  filterFavorites,
+  clearMyListings
 } from './listingActions';
 
 import { marketplaceReturnListings } from '../search/searchActions';
@@ -701,6 +702,12 @@ const reducer = handleActions({
       favoriteSearchTerm: searchTerm,
       favoriteFiltered
     };
+  },
+  [clearMyListings](state) {
+    return {
+      ...state,
+      myListings: []
+    }
   }
 }, defaultState);
 

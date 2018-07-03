@@ -63,6 +63,26 @@ class HistoryStorage extends BaseStorage {
     return '';
   }
 
+  totalObFee(op) {
+    let total = 0;
+    if (op.obFee) {
+      Object.keys(op.obFee).forEach(key => {
+          total += op.obFee[key];
+      })
+    }
+    return total;
+  }
+
+  processObFee(fee) {
+    const out  = {};
+    if (fee) {
+      Object.keys(fee).forEach(key => {
+        out[key] = fee[key].amount / 100000;
+      });
+    }
+    return out;
+  }
+
   addOperation(op) {
     this.cache[op.id] = op;
   }
@@ -114,12 +134,13 @@ class HistoryStorage extends BaseStorage {
           ...transactions[trxKey]
         };
       }
+      const totalObFee = this.totalObFee(op);
       if (op.isIncoming) {
-        transactions[trxKey].amount += this.operationAmount(op);
+        transactions[trxKey].amount += this.operationAmount(op) - totalObFee;
       } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
-      transactions[trxKey].fee += op.fee;
+      transactions[trxKey].fee += op.fee + totalObFee;
 
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push({
@@ -131,18 +152,62 @@ class HistoryStorage extends BaseStorage {
     // return HistoryStorage.updateBalances(sortedTransactions);
   }
 
-  async getBuyHistory() {
-    let buyOperations = Object.keys(this.cache)
+  getListingPurchaseOperations() {
+    return Object.keys(this.cache)
       .map(key => this.cache[key])
+      // looking for operations containing Listing ID
+      .filter(op => op.operationType === ChainTypes.operations.transfer
+        || op.operationType === ChainTypes.operations.escrow_create_operation)
       .filter(op => !!op.listingId)
-      .map(op => ({
-        key: op.id,
-        id: op.listingId,
-        count: op.listingCount,
-        date: op.date,
-      }));
-    const listingIds = buyOperations.map(op => op.id);
+      // Replacing escrow_create with escrow_release if there was a release
+      .map(op => {
+        if (op.operationType === ChainTypes.operations.escrow_create_operation) {
+          const result = this.findEscrowTransactionResult(op);
+          if (result && result.operationType === ChainTypes.operations.escrow_release_operation) {
+            return {
+                ...result,
+                listingId: op.listingId,
+                listingCount: op.listingCount
+              }
+          }
+        }
+        return op;
+      })
+      // throwing away unreleased escrow_create operations
+      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation)
+  }
+
+  getBuyOperations() {
+    const operations = this.getListingPurchaseOperations();
+    return operations
+      .filter(op => !op.isIncoming)
+      .map(op => {
+        return {
+          key: op.id,
+          id: op.listingId,
+          count: op.listingCount,
+          date: op.date,
+      }});
+  }
+
+  getSellOperations() {
+    const operations = this.getListingPurchaseOperations();
+    return operations
+      .filter(op => op.isIncoming)
+      .map(op => {
+        return {
+          key: op.id,
+          id: op.listingId,
+          count: op.listingCount,
+          date: op.date,
+        }});
+  }
+
+
+  async getListingObjects(operations) {
+    const listingIds = operations.map(op => op.id);
     let listingObjects = await Apis.instance().db_api().exec('get_objects', [listingIds]);
+    listingObjects = listingObjects.filter(listing => !!listing);
     listingObjects = await Promise.all(
       listingObjects.map(async el => await Promise.all([
         FetchChain('getAccount', el.seller),
@@ -156,14 +221,30 @@ class HistoryStorage extends BaseStorage {
         }
       }))
     );
-    const mappedOperations = buyOperations.map(op => {
+    return listingObjects;
+  }
+  async getBuyHistory() {
+    let buyOperations = this.getBuyOperations();
+    const listingObjects = await this.getListingObjects(buyOperations);
+    return buyOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
       }
     });
-    return mappedOperations;
+  }
+
+  async getSellHistory() {
+    let sellOperations = this.getSellOperations();
+    const listingObjects = await this.getListingObjects(sellOperations);
+    return sellOperations.map(op => {
+      const item = listingObjects.find(item => item.id === op.id);
+      return {
+        ...item,
+        ...op,
+      }
+    })
   }
 
   save() {
@@ -238,6 +319,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
             isIncoming: true
@@ -255,6 +337,7 @@ class HistoryStorage extends BaseStorage {
               trxInBlock: el.trx_in_block,
               date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
               fee: el.op[1].fee.amount / 100000,
+              obFee: this.processObFee(el.op[1].ob_fee),
               operationType: el.op[0],
               amount: el.result[1].amount / 100000,
               from: referrerAcc.get('name'),
@@ -275,6 +358,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             isIncoming: false
           });
@@ -292,6 +376,7 @@ class HistoryStorage extends BaseStorage {
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
             amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
             fee: el.op[1].fee.amount / 100000,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             // will be undefined if operation type is transfer
             escrow: el.op[0] === ChainTypes.operations.escrow_create_operation

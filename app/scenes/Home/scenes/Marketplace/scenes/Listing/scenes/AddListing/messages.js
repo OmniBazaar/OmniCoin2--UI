@@ -256,6 +256,10 @@ const messages = defineMessages({
   imagesSpecification: {
     id: 'AddListing.imagesSpecification',
     defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
+  },
+  saveListingErrorNoChangeDetectedMessage: {
+    'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
+    defaultMessage: 'Listing has no changes detected, please change data and submit again'
   }
 });
 

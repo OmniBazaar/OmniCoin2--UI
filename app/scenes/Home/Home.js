@@ -61,6 +61,7 @@ import { setActiveCategory } from '../../services/marketplace/marketplaceActions
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from "../../services/blockchain/connection/connectionActions";
+import { loadPreferences } from '../../services/preferences/preferencesActions';
 
 const iconSize = 20;
 
@@ -77,6 +78,7 @@ class Home extends Component {
   componentDidMount() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
+    this.props.preferencesActions.loadPreferences();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -208,13 +210,13 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
-                <div className="menu-item" onClick={this.toggleSettingsAccount}>
+                <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id='SettingsMenu.accountSettings'
-                    defaultMessage='Account Settings'
+                    id='SettingsMenu.quickStart'
+                    defaultMessage='Quick Start'
                   />
-                </div>
+                </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -222,7 +224,6 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
-                <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -230,6 +231,7 @@ class Home extends Component {
           </div>
           <div className="bottom">
             <AccountFooter />
+            <AccountBalance />
             <SocialNetworksFooter />
           </div>
         </div>
@@ -281,7 +283,10 @@ export default connect(
     }, dispatch),
     authActions: bindActionCreators({ getAccount, logout }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
-    connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch)
+    connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
+    preferencesActions: bindActionCreators({
+      loadPreferences
+    }, dispatch),
   })
 )(Home);
 
@@ -306,7 +311,10 @@ Home.propTypes = {
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
     logout: PropTypes.func
-  })
+  }),
+  preferencesActions: PropTypes.shape({
+    loadPreferences: PropTypes.func
+  }).isRequired
 };
 
 Home.defaultProps = {

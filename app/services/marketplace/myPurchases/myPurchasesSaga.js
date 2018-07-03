@@ -9,12 +9,15 @@ import HistoryStorage from '../../accountSettings/historyStorage';
 
 import {
   getMyPurchasesSucceeded,
-  getMyPurchasesFailed
-} from "./myPurchesesActions";
+  getMyPurchasesFailed,
+  getMySellingsSucceeded,
+  getMySellingsFailed
+} from "./myPurchasesActions";
 
 export function* myPurchasesSubscriber() {
   yield all([
-    takeEvery('GET_MY_PURCHASES', getPurchases)
+    takeEvery('GET_MY_PURCHASES', getPurchases),
+    takeEvery('GET_MY_SELLINGS', getSellings)
   ])
 }
 
@@ -28,5 +31,18 @@ function* getPurchases() {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(getMyPurchasesFailed(error));
+  }
+}
+
+function* getSellings() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const historyStorage = new HistoryStorage(currentUser.username);
+    yield historyStorage.refresh(currentUser);
+    const sellings = yield historyStorage.getSellHistory();
+    yield put(getMySellingsSucceeded(sellings));
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(getMySellingsFailed(error));
   }
 }

@@ -36,6 +36,7 @@ import {
   isListingFineFailed,
   searchPublishersFinish
 } from './listingActions';
+import { clearSearchResults } from '../search/searchActions';
 import {
   countPeersForKeywords
 } from '../search/dht/dhtSaga';
@@ -171,9 +172,12 @@ function* getListingDetail({ payload: { listingId }}) {
       listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
     }
 
-    const ownerAcc = (yield call(FetchChain, 'getAccount', listingDetail.owner)).toJS();
-    listingDetail.reputationScore = ownerAcc['reputation_score'];
+    const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
+    listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
     listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+    if (listingDetail.reputationVotesCount === 0) {
+      listingDetail.reputationScore = 5000;
+    }
 
     yield put(getListingDetailSucceeded(listingDetail));
   } catch (error) {
@@ -184,32 +188,37 @@ function* getListingDetail({ payload: { listingId }}) {
 
 function* requestMyListings() {
 	try {
+    yield put(clearSearchResults());
+    
     const { currentUser } = (yield select()).default.auth;
 		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
 		let getListingCommands = (yield Promise.all(
 		  myListings.map(
 		    listing => FetchChain('getAccount', listing.publisher)
       )
-    )).map((account, idx) => {
-      return {
-        listing_id: myListings[idx].id,
-        address: account.get('publisher_ip')
-      }
-    }).reduce((arr, curr) => {
-      const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
-      if (!val) {
-        return [
-          ...arr,
-          {
-            address: curr.address,
-            listing_ids: [curr.listing_id]
-          }
-        ]
-      } else {
-        val.listing_ids.push(curr.listing_id);
-        return arr;
-      }
-    }, []);
+    ))
+      .map((account, idx) => {
+        return {
+          listing_id: myListings[idx].id,
+          address: account.get('publisher_ip')
+        }
+      })
+      .filter(el => !!el.address)
+      .reduce((arr, curr) => {
+        const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
+        if (!val) {
+          return [
+            ...arr,
+            {
+              address: curr.address,
+              listing_ids: [curr.listing_id]
+            }
+          ]
+        } else {
+          val.listing_ids.push(curr.listing_id);
+          return arr;
+        }
+      }, []);
 		const ids = [];
 
 		getListingCommands.forEach(command => {
@@ -245,8 +254,8 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
 function* checkListingHash({ payload: { listing } }) {
   try {
     const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
-    
-    if (blockchainListing.listing_hash === createListingHash(listing)) {
+
+    if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
     } else {
       yield put(isListingFineFailed('hash'));

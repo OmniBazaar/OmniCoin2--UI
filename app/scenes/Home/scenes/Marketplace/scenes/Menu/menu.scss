@@ -91,3 +91,12 @@
     }
   }
 }
+
+.account-settings-link {
+  cursor: pointer;
+  line-height: 30px;
+
+  &:hover {
+    color: $primary-blue;
+  }
+}
