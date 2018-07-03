@@ -437,7 +437,7 @@ const reducer = handleActions({
         });
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
-        sortedData = [...data];
+        sortedData = data;
         //const sortBy = _.sortBy(data, [sortColumn]);
         //sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
