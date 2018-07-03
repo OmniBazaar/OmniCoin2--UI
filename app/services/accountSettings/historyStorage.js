@@ -65,12 +65,22 @@ class HistoryStorage extends BaseStorage {
 
   totalObFee(op) {
     let total = 0;
-    if (op.ob_fee) {
-      Object.keys(op.ob_fee).forEach(key => {
-          total += op.ob_fee[key].amount / 100000;
+    if (op.obFee) {
+      Object.keys(op.obFee).forEach(key => {
+          total += op.obFee[key];
       })
     }
     return total;
+  }
+
+  processObFee(fee) {
+    const out  = {};
+    if (fee) {
+      Object.keys(fee).forEach(key => {
+        out[key] = fee[key].amount / 100000;
+      });
+    }
+    return out;
   }
 
   addOperation(op) {
@@ -142,15 +152,33 @@ class HistoryStorage extends BaseStorage {
     // return HistoryStorage.updateBalances(sortedTransactions);
   }
 
-  getListingTransaferOperations() {
+  getListingPurchaseOperations() {
     return Object.keys(this.cache)
       .map(key => this.cache[key])
-      .filter(op => op.operationType === ChainTypes.operations.transfer)
-      .filter(op => !!op.listingId);
+      // looking for operations containing Listing ID
+      .filter(op => op.operationType === ChainTypes.operations.transfer
+        || op.operationType === ChainTypes.operations.escrow_create_operation)
+      .filter(op => !!op.listingId)
+      // Replacing escrow_create with escrow_release if there was a release
+      .map(op => {
+        if (op.operationType === ChainTypes.operations.escrow_create_operation) {
+          const result = this.findEscrowTransactionResult(op);
+          if (result && result.operationType === ChainTypes.operations.escrow_release_operation) {
+            return {
+                ...result,
+                listingId: op.listingId,
+                listingCount: op.listingCount
+              }
+          }
+        }
+        return op;
+      })
+      // throwing away unreleased escrow_create operations
+      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation)
   }
 
   getBuyOperations() {
-    const operations = this.getListingTransaferOperations();
+    const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => !op.isIncoming)
       .map(op => {
@@ -163,7 +191,7 @@ class HistoryStorage extends BaseStorage {
   }
 
   getSellOperations() {
-    const operations = this.getListingTransaferOperations();
+    const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => op.isIncoming)
       .map(op => {
@@ -291,7 +319,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
-            ob_fee: el.op[1].ob_fee,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
             isIncoming: true
@@ -309,7 +337,7 @@ class HistoryStorage extends BaseStorage {
               trxInBlock: el.trx_in_block,
               date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
               fee: el.op[1].fee.amount / 100000,
-              ob_fee: el.op[1].ob_fee,
+              obFee: this.processObFee(el.op[1].ob_fee),
               operationType: el.op[0],
               amount: el.result[1].amount / 100000,
               from: referrerAcc.get('name'),
@@ -330,7 +358,7 @@ class HistoryStorage extends BaseStorage {
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / 100000,
-            ob_fee: el.op[1].ob_fee,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             isIncoming: false
           });
@@ -348,7 +376,7 @@ class HistoryStorage extends BaseStorage {
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
             amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
             fee: el.op[1].fee.amount / 100000,
-            ob_fee: el.op[1].ob_fee,
+            obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             // will be undefined if operation type is transfer
             escrow: el.op[0] === ChainTypes.operations.escrow_create_operation

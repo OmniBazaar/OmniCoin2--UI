@@ -210,13 +210,13 @@ class Home extends Component {
                     defaultMessage="Mail"
                   />
                 </NavLink>
-                <div className="menu-item" onClick={this.toggleSettingsAccount}>
+                <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id='SettingsMenu.accountSettings'
-                    defaultMessage='Account Settings'
+                    id='SettingsMenu.quickStart'
+                    defaultMessage='Quick Start'
                   />
-                </div>
+                </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -224,7 +224,6 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
-                <AccountBalance />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -232,6 +231,7 @@ class Home extends Component {
           </div>
           <div className="bottom">
             <AccountFooter />
+            <AccountBalance />
             <SocialNetworksFooter />
           </div>
         </div>

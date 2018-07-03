@@ -64,7 +64,6 @@ const reducer = handleActions({
     }
   },
   [getMySellingsSucceeded](state, { payload: { mySellings } }) {
-    console.log('MY SELLINGS ', mySellings)
     return {
       ...state,
       data: mySellings,

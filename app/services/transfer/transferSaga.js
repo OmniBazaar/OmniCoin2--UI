@@ -145,7 +145,7 @@ function* createEscrowTransaction({ payload: {
       escrow: escrowAcc.get('id'),
       amount: {
         asset_id: '1.3.0',
-        amount: amount * 100000
+        amount: Math.ceil(amount * 100000)
       },
       transfer_to_escrow: transferToEscrow
     };

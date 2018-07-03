@@ -7,6 +7,8 @@ import _ from 'lodash';
 import dateformat from 'dateformat';
 import { Button } from 'semantic-ui-react';
 
+import './transaction-details.scss';
+
 const messages = defineMessages({
   close: {
     id: 'Settings.close',
@@ -51,6 +53,26 @@ const messages = defineMessages({
   feeDetail: {
     id: 'Settings.feeDetail',
     defaultMessage: 'fee: {fee} XOM'
+  },
+  omnibazaarFeeDetail: {
+    id: 'Settings.omnibazaarFeeDetail',
+    defaultMessage: 'omnibazaar fee: {fee} XOM'
+  },
+  escrowFeeDetail: {
+    id: 'Settings.escrowFeeDetail',
+    defaultMessage: 'escrow fee: {fee} XOM'
+  },
+  referrerBuyerFee: {
+    id: 'Settings.referrerBuyerFee',
+    defaultMessage: 'buyer\'s referrer fee: {fee} XOM'
+  },
+  referrerSellerFee: {
+    id: 'Settings.referrerSellerFee',
+    defaultMessage: 'sellers\'s referrer fee: {fee} XOM'
+  },
+  publisherFee: {
+    id: 'Settings.publisherFee',
+    defaultMessage: 'publisher fee: {fee} XOM'
   }
 });
 
@@ -65,6 +87,30 @@ class TransactionDetails extends Component {
     if (this.props.onClose) {
       this.props.onClose();
     }
+  }
+
+  getFeeDetail(op) {
+    const { formatMessage } = this.props.intl;
+    let feeDetail = formatMessage(messages.feeDetail, {fee: op.isIncoming ? 0 : op.fee});
+    if (op.obFee) {
+      if (op.obFee.omnibazaar_fee) {
+        feeDetail += ", " + formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})
+      }
+      if (op.obFee.escrow_fee) {
+        feeDetail += ", " + formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee});
+      }
+      if (op.obFee.referrer_buyer_fee) {
+        feeDetail += ", " + formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee});
+      }
+      if (op.obFee.referrer_seller_fee) {
+        feeDetail += ", " + formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})
+      }
+      if (op.obFee.publisher_fee) {
+        feeDetail += ", " + formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})
+      }
+      return feeDetail;
+    }
+    return feeDetail
   }
 
   renderOperations(detailSelected) {
@@ -84,10 +130,10 @@ class TransactionDetails extends Component {
       const { formatMessage } = props.intl;
       const operationTitle = operation.type === 'withdraw' ? formatMessage(messages.withdraw) : formatMessage(messages.deposit);
       const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : ',';
-      const feeDetail = formatMessage(messages.feeDetail, {fee: operation.isIncoming ? 0 : operation.fee});
+
       return (
         <div className={operationClass}>
-          {operationTitle} {operation.amount} (XOM) {text} {feeDetail}
+          {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
         </div>
       );
     });

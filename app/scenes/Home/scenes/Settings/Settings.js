@@ -10,16 +10,13 @@ import UserIcon from '../../images/th-user-white.svg';
 
 import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
-import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import AccountVesting from './scenes/AccountVesting/AccountVesting';
 
-import TransactionDetails from './scenes/RecentTransactions/components/TransactionDetails';
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
 import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
-  showDetailsModal,
   getPrivateData,
   getPublisherData
 } from '../../../../services/accountSettings/accountActions';
@@ -31,8 +28,6 @@ const iconSize = 20;
 class Settings extends Component {
   constructor(props) {
     super(props);
-
-    this.onCloseDetails = this.onCloseDetails.bind(this);
   }
 
   componentWillMount() {
@@ -46,9 +41,6 @@ class Settings extends Component {
     }
   };
 
-  onCloseDetails() {
-    this.props.accountSettingsActions.showDetailsModal();
-  }
 
   sideMenu() {
     const { formatMessage } = this.props.intl;
@@ -90,30 +82,14 @@ class Settings extends Component {
                 className="tabs"
                 menu={{ secondary: true, pointing: true }}
                 panes={[
-                 {
-                   menuItem: formatMessage(messages.publicData),
-                   render: () => <Tab.Pane><PublicData /></Tab.Pane>,
-                 },
-                 {
-                   menuItem: formatMessage(messages.privateData),
-                   render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
-                 },
-                 {
-                   menuItem: formatMessage(messages.recentTransactions),
-                   render: () => (
-                     <Tab.Pane>
-                       <RecentTransactions
-                         rowsPerPage={20}
-                         tableProps={{
-                           sortable: true,
-                           compact: true,
-                           basic: 'very',
-                           striped: true,
-                           size: 'small'
-                         }}
-                       />
-                     </Tab.Pane>),
-                 },
+                  {
+                    menuItem: formatMessage(messages.publicData),
+                    render: () => <Tab.Pane><PublicData /></Tab.Pane>,
+                  },
+                  {
+                    menuItem: formatMessage(messages.privateData),
+                    render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
+                  },
                   {
                     menuItem: formatMessage(messages.vestingBalances),
                     render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
@@ -127,12 +103,7 @@ class Settings extends Component {
                 role="link"
                 tabIndex={0}
               />
-              {props.account.showDetails &&
-                <TransactionDetails
-                  showCompose={props.account.showDetails}
-                  onClose={this.onCloseDetails}
-                />
-              }
+
             </div>
           </div>
         </Modal.Content>
@@ -143,7 +114,6 @@ class Settings extends Component {
 
 Settings.propTypes = {
   accountSettingsActions: PropTypes.shape({
-    showDetailsModal: PropTypes.func,
     getPrivateData: PropTypes.func,
     getPublisherData: PropTypes.func,
     getCurrentUser: PropTypes.func
@@ -172,7 +142,6 @@ export default connect(
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
-      showDetailsModal,
       getPrivateData,
       getPublisherData
     }, dispatch)

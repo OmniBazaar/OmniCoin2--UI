@@ -22,6 +22,7 @@ import { ChainTypes } from 'omnibazaarjs/es';
 import cn from 'classnames';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import TransactionDetails from './components/TransactionDetails/TransactionDetails';
 
 import {
   getRecentTransactions,
@@ -193,7 +194,8 @@ class RecentTransactions extends Component {
       totalPages,
       sortColumn,
       recentTransactionsVisible,
-      loading
+      loading,
+      showDetails
     } = this.props.account;
     const { formatMessage } = this.props.intl;
 
@@ -331,10 +333,17 @@ class RecentTransactions extends Component {
             </div>
           </div>
         </div>
+        {showDetails &&
+          <TransactionDetails
+            showCompose={showDetails}
+            onClose={this.onCloseDetails}
+          />
+        }
       </div>
     );
   }
 }
+
 
 RecentTransactions.propTypes = {
   accountSettingsActions: PropTypes.shape({
