@@ -436,8 +436,9 @@ const reducer = handleActions({
         });
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
-        const sortBy = _.sortBy(data, [sortColumn]);
-        sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+        sortedData = [...data];
+        //const sortBy = _.sortBy(data, [sortColumn]);
+        //sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
       currentData = sliceData(sortedData, activePage, rowsPerPage);
 
@@ -459,13 +460,13 @@ const reducer = handleActions({
       if(!item.isIncoming) {
         return {
         ...item,
-            isComing: 0
+          isIncoming: false
           }
       } else {
         return {
         ...item,
-            isComing: 1
-          }
+          isIncoming: true
+        }
       }
     });
     let sortedData = [];
@@ -497,7 +498,7 @@ const reducer = handleActions({
     
     let sortFields = [sortColumn];
     if('fromTo' === sortColumn) {
-      sortFields.unshift('isComing')
+      sortFields.unshift('isIncoming')
     }
     sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
     
