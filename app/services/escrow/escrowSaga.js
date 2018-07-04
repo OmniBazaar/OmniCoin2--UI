@@ -8,6 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
+import _ from 'lodash';
 
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
@@ -19,6 +20,11 @@ import {
   updateEscrowSettingsFailed,
   updateEscrowSettingsSucceeded,
 } from "./escrowActions";
+import {
+  getEscrowSettings as getEscrowSettingsService,
+  getEscrowAgents as getEscrowAgentsService,
+  getImplicitEscrows
+} from './services';
 
 export function* escrowSubscriber() {
   yield all([
@@ -50,7 +56,6 @@ function* loadEscrowTransactions(action) {
   }
 }
 
-
 function* loadEscrowAgents({
   payload: {
     start, limit, searchTerm
@@ -75,23 +80,14 @@ function* loadEscrowAgents({
   }
 }
 
-function* getMyEscrowAgents(username) {
-  const account =  yield Apis.instance().db_api().exec('get_account_by_name', [username]);
-  if (!account) {
-    throw new Error('Account not found');
-  }
-
-  if (!account.escrows) {
-    return [];
-  }
-
-  return account.escrows;
-}
-
-function* loadMyEscrowAgents({ payload: { username } }) {
+function* loadMyEscrowAgents() {
   try {
-    const escrows = yield getMyEscrowAgents(username);
+    const { account } = (yield select()).default.auth;
+    let escrows = yield call(getEscrowAgentsService, account.name);
+    const implicitEscrows = yield call(getImplicitEscrows, account.id);
+    escrows = _.union(escrows, implicitEscrows);
     const myAgents = escrows.map(item => ({ id: item }));
+
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
       myAgents,
@@ -122,17 +118,6 @@ function* setMyEscrowAgents({ payload: { agents } }) {
   }
 }
 
-export function* addMyEscrowAgent(agentId) {
-  const { currentUser } = (yield select()).default.auth;
-  let escrows = yield getMyEscrowAgents(currentUser.username);
-  if (escrows.indexOf(agentId) === -1) {
-    escrows = [...escrows, agentId];
-    yield updateAccount({
-      escrows
-    });
-  }
-}
-
 function* getEscrowAgentsCount() {
   try {
     const result = yield Apis.instance().db_api().exec('get_number_of_escrows', []);
@@ -148,7 +133,6 @@ function* getEscrowAgentsCount() {
     });
   }
 }
-
 
 function* releaseEscrowTransaction({ payload: { escrowObject, votes } }) {
   try {
@@ -233,7 +217,6 @@ function* updateEscrowSettings({ payload: { settings } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    console.log('SETTINGS ', settings);
     yield put(updateEscrowSettingsSucceeded(settings))
   } catch (error) {
     console.log("ERROR ", error);
@@ -241,17 +224,9 @@ function* updateEscrowSettings({ payload: { settings } }) {
   }
 }
 
-export function* getMyEscrowSettings() {
+function* getMyEscrowSettings() {
   const { currentUser } = (yield select()).default.auth;
-  const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
-  let options = account.implicit_escrow_options;
-  if (!options) {
-    options = {
-      positive_rating: false,
-      voted_witness: false,
-      active_witness: false
-    }
-  }
+  const options = yield call(getEscrowSettingsService, currentUser.username);
 
   return options;
 }

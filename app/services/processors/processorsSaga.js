@@ -24,12 +24,18 @@ export function* processorsSubscriber() {
   ]);
 }
 
+export const getActiveWitnesses = async () => {
+  const globalObject = await getGlobalObject();
+  let topProcessors = await Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
+  topProcessors = await processProcessors(topProcessors);
+
+  return topProcessors;
+}
+
 function* getTopProcessors() {
   try {
-    const globalObject = yield call(getGlobalObject);
     const { currentUser } = (yield select()).default.auth;
-    let topProcessors = yield Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
-    topProcessors = yield call(processProcessors, topProcessors);
+    let topProcessors = yield call(getActiveWitnesses);
     topProcessors = yield call(addApproveField, topProcessors, currentUser.username);
     yield put({ type: 'GET_TOP_PROCESSORS_SUCCEEDED', topProcessors });
   } catch (error) {
@@ -49,6 +55,7 @@ function* getStandbyProcessors() {
       .map(el => el[1]);
     let standbyProcessors = yield Apis.instance().db_api().exec('get_objects', [standbyProcessorsIds]);
     standbyProcessors = yield call(processProcessors, standbyProcessors);
+    console.log('STANDARD PROCESSORS', standbyProcessors);
     standbyProcessors = yield call(addApproveField, standbyProcessors, currentUser.username);
     yield put({ type: 'GET_STANDBY_PROCESSORS_SUCCEEDED', standbyProcessors });
   } catch (error) {
@@ -103,10 +110,16 @@ function* commitStandbyProcessors() {
 
 
 async function commitProcessors(processors, toggledProcessors, account, password) {
-  const voteIds = processors
-    .filter(processor => processor.approve)
-    .map(processor => processor.vote_id);
-  await voteForProcessors(voteIds, account, password);
+  const approvedProcessors = processors
+    .filter(processor => processor.approve);
+
+  const voteIds = [];
+  const processorWitnessIds = [];
+  approvedProcessors.forEach(proc => {
+    voteIds.push(proc.vote_id);
+    processorWitnessIds.push(proc.witness_account.id);
+  });
+  await voteForProcessors(voteIds, processorWitnessIds, account, password);
 }
 
 

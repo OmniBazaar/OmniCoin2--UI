@@ -19,7 +19,6 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
-import { addMyEscrowAgent, getMyEscrowSettings } from '../escrow/escrowSaga';
 
 export function* transferSubscriber() {
   yield all([
@@ -66,11 +65,6 @@ function* submitOmniCoinTransfer(data) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-
-    const myEscrowOptions = yield getMyEscrowSettings();
-    if (myEscrowOptions.positive_rating && parseInt(reputation) > 5) {
-      yield addMyEscrowAgent(toName.get('id'));
-    }
 
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
@@ -189,6 +183,7 @@ function* getCommonEscrows({ payload: { from, to } }) {
       Apis.instance().db_api().exec('get_implicit_escrows', [fromAcc.id]),
       Apis.instance().db_api().exec('get_implicit_escrows', [toAcc.id])
     ]);
+    console.log(implicitFromEscrows, implicitToEscrows)
     let fromEscrows = _.union(fromAcc.escrows, implicitFromEscrows);
     let toEscrows = _.union(toAcc.escrows, implicitToEscrows);
     fromEscrows = yield Promise.all(fromEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
