@@ -43,6 +43,7 @@
     }
 
     .ref-link-cont {
+      display: inline-block;
       padding-bottom: 20px;
 
       .ref-link-label {
@@ -52,6 +53,9 @@
         width: 500px;
       }
 
+      .ref-link-input, .ref-btc-input {
+        margin-right: 10px;
+      }
     }
   }
 }

@@ -45,6 +45,10 @@ const messages = defineMessages({
     ' buys or sells something in the OmniBazaar marketplace. In order to serve as a\n' +
     ' Referrer, you must keep the OmniBazaar application running on your computer.'
   },
+  btcAddressTitle: {
+    id: 'Setting.btcAddressTitle',
+    defaultMessage: 'Bitcoin address',
+  },
   publisherTitle: {
     id: 'Setting.publisherTitle',
     defaultMessage: 'I would like to run a "shop" and publish listings for other users.'
@@ -277,6 +281,7 @@ class PublicData extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { account, auth } = this.props;
+
     return (
       <div className="check-form">
         <div className="description">
@@ -291,9 +296,15 @@ class PublicData extends Component {
           </div>
         </div>
         {account.referrer &&
-        <div className="ref-link-cont">
-          <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
+        <div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
+            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
+          </div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
+            <Input className="ref-btc-input" placeholder={formatMessage(messages.btcAddressTitle)} />
+          </div>
         </div>
         }
         <div className="description">
