@@ -36,7 +36,6 @@ function* submitOmniCoinTransfer(data) {
   const {
     amount, memo, reputation
   } = data.payload.data;
-
   try {
     const [senderName, toName] = yield Promise.all([
       FetchChain('getAccount', senderNameStr),
@@ -65,7 +64,6 @@ function* submitOmniCoinTransfer(data) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
   } catch (error) {
