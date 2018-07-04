@@ -29,6 +29,14 @@ const messages = defineMessages({
   noAccount: {
     id: 'AuthService.noAccount',
     defaultMessage: 'Account doesn\'t exist'
+  },
+  accountExists: {
+    id: 'AuthService.accountExist',
+    defaultMessage: 'This account name is already taken. Please choose another one'
+  },
+  invalidUsername: {
+    id: 'AuthService.invalidUsername',
+    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
   }
 });
 
@@ -128,7 +136,7 @@ export function* signup(action) {
       console.log('ERROR', error);
       let e;
       if(error.base && error.base.length && error.base.length > 0) {
-        e = "Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash."
+        e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
       } else if (error.remote_ip && error.remote_ip.length && error.remote_ip.length > 0) {
         e = error.remote_ip[0]
       } else if (error.name && error.name.length && error.name.length > 0) {
