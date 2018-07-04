@@ -145,7 +145,8 @@ class MyListingsDefaults extends Component {
                 name="currency"
                 component={this.CurrencyDropdown}
                 props={{
-                  placeholder: formatMessage(addListingMessages.currency)
+                  placeholder: formatMessage(addListingMessages.currency),
+                  disableAllOption: true
                 }}
               />
             </Grid.Column>

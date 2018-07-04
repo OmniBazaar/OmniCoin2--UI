@@ -90,6 +90,10 @@ class SearchPrioritySetting extends Component {
 
     this.publishers = [];
 
+    this.state = {
+      isSubmitting: false,
+    };
+
     this.onChangePriority = this.onChangePriority.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
@@ -110,6 +114,13 @@ class SearchPrioritySetting extends Component {
         text: publisher.name,
         key: publisher.name,
       }));
+    }
+
+    const { formatMessage } = this.props.intl;
+
+    if (!nextProps.dht.isConnecting && this.props.dht.isConnecting) {
+      this.setState({ isSubmitting: false });
+      toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
     }
   }
 
@@ -134,16 +145,12 @@ class SearchPrioritySetting extends Component {
   }
 
   submitPublisherData() {
-    const { formatMessage } = this.props.intl;
     const { publisherData } = this.props.account;
 
+    this.setState({ isSubmitting: true });
+
     this.props.accountSettingsActions.updatePublisherData(publisherData);
-
-    if (publisherData.publisherName && publisherData.publisherName.publisher_ip) {
-      this.props.dhtActions.dhtReconnect();
-    }
-
-    toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
+    this.props.dhtActions.dhtReconnect();
   }
 
   renderPublisherFormFields() {
@@ -222,8 +229,9 @@ class SearchPrioritySetting extends Component {
     const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-    
-    if(publisherData.priority === 'category' && !publisherData.keywords.length) {
+    const { isConnecting } = this.props.dht;
+
+    if (publisherData.priority === 'category' && !publisherData.keywords.length) {
       isDisabled = true;
     }
 
@@ -268,7 +276,7 @@ class SearchPrioritySetting extends Component {
             </div>
             <div className="col-1" />
           </div>
-          <div style={{marginBottom: '5px'}}>
+          <div style={{ marginBottom: '5px' }}>
             {this.renderPublisherFormFields()}
           </div>
           <div className="form-group">
@@ -277,6 +285,7 @@ class SearchPrioritySetting extends Component {
               type="submit"
               content={formatMessage(messages.apply)}
               className="button--green-bg"
+              loading={isConnecting || this.state.isSubmitting}
               disabled={isDisabled}
             />
             <div className="col-1" />
@@ -309,13 +318,19 @@ SearchPrioritySetting.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  dht: PropTypes.shape({
+    isConnecting: PropTypes.bool,
+  }),
 };
 
 SearchPrioritySetting.defaultProps = {
   dhtActions: {},
   account: {},
   intl: {},
+  dht: {
+    isConnecting: false,
+  }
 };
 
 export default compose(

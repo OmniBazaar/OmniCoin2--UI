@@ -11,7 +11,7 @@ import { withRouter } from 'react-router';
 import { searchListings } from '../../../../../../services/search/searchActions';
 
 import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
-
+import { showSettingsModal, showPreferencesModal } from '../../../../../../services/menu/menuActions';
 import SearchMenu from './components/SearchMenu/SearchMenu';
 
 import AddIcon from '../../images/btn-add-listing.svg';
@@ -119,6 +119,10 @@ class Menu extends Component {
         </span>
       </li>
     );
+  }
+  
+  toggleSettingsAccount = () => {
+    this.props.menuActions.showSettingsModal();
   }
 
   renderOption(category, parentCategory, path, isExternal) {
@@ -416,6 +420,9 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
         </div>
+        <div className="link-item account-settings-link" onClick={this.toggleSettingsAccount}>
+          {formatMessage(userMenu.accountSettings)}
+         </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>
@@ -489,6 +496,7 @@ Menu.defaultProps = {
   marketplace: {},
   searchActions: {},
   marketplaceActions: {},
+  menuActions: {}
 };
 
 Menu = withRouter(Menu);
@@ -501,6 +509,11 @@ export default connect(
     }, dispatch),
     searchActions: bindActionCreators({
       searchListings
+    }, dispatch),
+    menuActions: bindActionCreators({
+      showSettingsModal,
+      showPreferencesModal,
+      setActiveCategory
     }, dispatch)
   })
 )(injectIntl(Menu));

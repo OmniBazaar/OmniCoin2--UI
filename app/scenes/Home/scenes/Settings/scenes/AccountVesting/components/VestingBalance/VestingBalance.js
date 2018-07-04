@@ -57,7 +57,10 @@ class VestingBalance extends Component {
           <Table.Row>
               <Table.HeaderCell colSpan="2">
                 <span className="blue">
-                  {formatMessage(messages[vb.type in VestingTypes ? vb.type : VestingTypes.none])}
+                  {formatMessage(messages[Object.values(VestingTypes).includes(vb.type)
+                    ? vb.type
+                    : VestingTypes.none
+                    ])}
                   {" "}
                   {formatMessage(messages.vestingId, {id: vb.id})}
                 </span>

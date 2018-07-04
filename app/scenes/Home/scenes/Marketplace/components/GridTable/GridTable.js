@@ -53,7 +53,8 @@ class GridTable extends Component {
     this.props.gridTableActions.sortGridTableBy(
       this.props.data,
       this.props.sortBy,
-      this.props.sortDirection
+      this.props.sortDirection,
+      this.props.currency
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
     this.props.gridTableActions.setActivePageGridTable(1);
@@ -62,11 +63,13 @@ class GridTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data ||
         this.props.sortBy !== nextProps.sortBy ||
-        this.props.sortDirection !== nextProps.sortDirection) {
+        this.props.sortDirection !== nextProps.sortDirection ||
+        this.props.currency !== nextProps.currency) {
       this.props.gridTableActions.sortGridTableBy(
         nextProps.data,
         nextProps.sortBy,
-        nextProps.sortDirection
+        nextProps.sortDirection,
+        nextProps.currency
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
       this.props.gridTableActions.setActivePageGridTable(1);
@@ -140,10 +143,10 @@ class GridTable extends Component {
   showErrorToast(title, message) {
     toastr.error(title, message);
   }
-  
+
   getIcon(showConvertedPrice, itemCurrency, currency){
     const type = showConvertedPrice ? currency : itemCurrency;
-    
+
     if (type === "USD") {
       return <Image src={Dollar} className="currency-icon"/>
     } else if (type === "EUR") {
@@ -172,89 +175,93 @@ class GridTable extends Component {
     } = this.props.marketplace;
     const {
       showTrailingLoader,
-      currency
+      currency,
+      loading
     } = this.props;
-    let data = gridTableDataFiltered.filter(item => item.listing_id);
+    let data = gridTableDataFiltered.filter(item => item && item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
     let showConvertedPrice = false;
     if (currency && currency !== 'ALL' && currency !== 'all') {
       showConvertedPrice = true
     }
-    
+
     return (
       <div className="data-table">
         <div className="table-container">
           <Table {...this.props.tableProps}>
             <TableBody>
-              {rows.length > 0 || showTrailingLoader ? rows.map((row, idx) =>
-                (
-                  <TableRow key={hash(row)} className="items">
-                    {row.map(item => {
-                      const image = item.ip ?
-                        `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
-                      const style = image ? { backgroundImage: `url(${image})` } : {};
-                      let { description } = item;
-                      description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
+              {!loading && (
+                (rows.length > 0 || showTrailingLoader) ? rows.map((row, idx) =>
+                  (
+                    <TableRow key={hash(row)} className="items">
+                      {row.map(item => {
+                        const image = item.ip ?
+                          `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                        const style = image ? { backgroundImage: `url(${image})` } : {};
+                        let { description } = item;
+                        description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
 
-                      let categoryTitle = '';
-                      if (item.category && item.category.toLowerCase() !== 'all') {
-                        categoryTitle = mainCategories[item.category] ?
-                          formatMessage(mainCategories[item.category]) : item.category;
-                      }
-                      const subcategory = getSubCategoryTitle(item.category, item.subcategory);
-                      const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+                        let categoryTitle = '';
+                        if (item.category && item.category.toLowerCase() !== 'all') {
+                          categoryTitle = mainCategories[item.category] ?
+                            formatMessage(mainCategories[item.category]) : item.category;
+                        }
+                        const subcategory = getSubCategoryTitle(item.category, item.subcategory);
+                        const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
 
-                      return (
-                        <TableCell className="item" key={hash(item)}>
-                          <Link to={`listing/${item.listing_id}`}>
-                            <div className="img-wrapper" style={style} />
-                          </Link>
+                        return (
+                          <TableCell className="item" key={hash(item)}>
+                            <Link to={`listing/${item.listing_id}`}>
+                              <div className="img-wrapper" style={style} />
+                            </Link>
 
-                          <Link to={`listing/${item.listing_id}`}>
-                            <span className="title">{item.listing_title}</span>
-                          </Link>
+                            <Link to={`listing/${item.listing_id}`}>
+                              <span className="title">{item.listing_title}</span>
+                            </Link>
 
-                          <span className="subtitle">
-                            {categoryTitle}
-                            <span>
-                              <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                            <span className="subtitle">
+                              {categoryTitle}
+                              <span>
+                                <Icon name="long arrow right" width={iconSizeSmall} height={iconSizeSmall} />
+                              </span>
+                              {subCategoryTitle}
                             </span>
-                            {subCategoryTitle}
-                          </span>
-                          <span className="description">{description}</span>
-                          <span className="price">
-                            {this.getIcon(showConvertedPrice, item.currency, currency)}
-                            {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
-                            </span>
-                          {this.props.showActions ?
-                            <div className="actions">
-                              <Button
-                                content={formatMessage(messages.edit)}
-                                className="button--blue"
-                                onClick={this.onEditClick.bind(this, item)}
-                              />
-                              <Button
-                                content={formatMessage(messages.delete)}
-                                className="button--gray-text"
-                                onClick={this.onDeleteClick.bind(this, item)}
-                              />
-                            </div>
-                            : null
-                          }
+                            
+                            <span className="description">{description}</span>
+                            <span className="price">
+                              {this.getIcon(showConvertedPrice, item.currency, currency)}
+                              {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
+                              </span>
+                            {this.props.showActions ?
+                              <div className="actions">
+                                <Button
+                                  content={formatMessage(messages.edit)}
+                                  className="button--blue"
+                                  onClick={this.onEditClick.bind(this, item)}
+                                />
+                                <Button
+                                  content={formatMessage(messages.delete)}
+                                  className="button--gray-text"
+                                  onClick={this.onDeleteClick.bind(this, item)}
+                                />
+                              </div>
+                              : null
+                            }
+                          </TableCell>
+                        );
+                      })}
+                      {showTrailingLoader && idx === rows.length - 1 &&
+                        <TableCell className="item">
+                          <Loader active />
                         </TableCell>
-                      );
-                    })}
-                    {showTrailingLoader && idx === rows.length - 1 &&
-                      <TableCell className="item">
-                        <Loader active />
-                      </TableCell>
-                    }
-                  </TableRow>
-                ))
-                : this.renderEmptyRow()
+                      }
+                    </TableRow>
+                  ))
+                  : this.renderEmptyRow()
+                )
               }
-              {showTrailingLoader && rows.length === 0 &&
+              {(loading || (showTrailingLoader && rows.length === 0)) &&
                 <TableRow>
                   <TableCell className="item">
                     <Loader active />
@@ -313,7 +320,9 @@ GridTable.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
-  showTrailingLoader: PropTypes.bool
+  showTrailingLoader: PropTypes.bool,
+  currency: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 GridTable.defaultProps = {
@@ -327,10 +336,15 @@ GridTable.defaultProps = {
   sortDirection: '',
   gridTableActions: {},
   showTrailingLoader: false,
+  currency: null,
+  loading: false
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({
+    listing: state.default.listing,
+    marketplace: state.default.marketplace
+  }),
   (dispatch) => ({
     gridTableActions: bindActionCreators({
       setPaginationGridTable,
@@ -340,5 +354,5 @@ export default connect(
     listingActions: bindActionCreators({
       deleteListing
     }, dispatch)
-  }),
+  })
 )(injectIntl(withRouter(GridTable)));

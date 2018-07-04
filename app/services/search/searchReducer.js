@@ -24,7 +24,9 @@ import {
   marketplaceReturnListings,
   marketplaceReturnBool,
   searchListings,
-  filterSearchByCategory
+  filterSearchByCategory,
+  setSearchListingsParams,
+  clearSearchResults
 } from './searchActions';
 
 const defaultState = {
@@ -52,7 +54,8 @@ const defaultState = {
   searching: false,
   fromSearchMenu: false,
   error: null,
-  currency: null
+  currency: null,
+  searchListingsParams: {}
 };
 
 const rowsPerPageSearchResults = 20;
@@ -77,7 +80,7 @@ const searchByFilters = (listings, category, subCategory) => {
     if (subCategoryFilter !== 'all') searchesFiltered = listings.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
 
   }
-  
+
   return {
     searchesFiltered
   };
@@ -88,16 +91,16 @@ const changeCurrencies = (selectedCurrency, listing ) => {
     if (selectedCurrency === item.currency) {
       return {
         ...item,
-        convertedPrice : item.price
-      }
-    }  else {
-      const price = currencyConverter(item.price, item.currency, selectedCurrency);
-
-      return {
-        ...item,
-        convertedPrice: price
-      }
+        convertedPrice: item.price,
+      };
     }
+
+    const price = currencyConverter(item.price, item.currency, selectedCurrency);
+
+    return {
+      ...item,
+      convertedPrice: price
+    };
   });
 };
 
@@ -111,7 +114,7 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
   }
   let currentData = [];
   let resultByFilters = [];
-  
+
   if (searchText) {
     let filteredData = data.filter(listing => {
       return Object.values(listing).filter(
@@ -119,7 +122,7 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
         ).length !== 0;
     });
     filteredData = _.without(filteredData, undefined);
-    
+
     resultByFilters = searchByFilters(filteredData, category, subCategory);
 
     totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
@@ -130,7 +133,7 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
     totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
     currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
   }
-  
+
   return {
     searchText,
     activePageSearchResults,
@@ -141,12 +144,12 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
 }
 
 const reducer = handleActions({
-  
+
   [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
     const filterData = filterResultData(state.searchResults, {
       searchText, currency, category, subCategory
     });
-    
+
     return {
       ...state,
       ...filterData
@@ -154,32 +157,32 @@ const reducer = handleActions({
   },
   [filterSearchByCategory](state) {
     const data = state.searchResults;
-    
+
     const forSaleListings = {
       category: categories.forSale,
       listings: []
     };
-    
+
     const jobsListings = {
       category: categories.jobs,
       listings: []
     };
-    
+
     const servicesListings = {
       category: categories.services,
       listings: []
     };
-    
+
     const cryptoBazaarListings = {
       category: categories.cryptoBazaar,
       listings: []
     };
-    
+
     const rentalsListings = {
       category: categories.rentals,
       listings: []
     };
-    
+
     data.forEach((listing) => {
       switch (listing.category) {
         case categories.forSale:
@@ -200,7 +203,7 @@ const reducer = handleActions({
         default:
       }
     });
-    
+
     return {
       ...state,
       searchResultsByCategory: [
@@ -339,7 +342,7 @@ const reducer = handleActions({
         ...listing,
         ip: data.command.address
       })) : [];
-    
+
     if (parseInt(data.id, 10) === state.searchId) {
       const searchResults = [
         ...state.searchResults,
@@ -358,11 +361,27 @@ const reducer = handleActions({
         searching: false,
       };
     }
-    
+
     return {
       ...state,
       searching: false
     };
+  },
+  [setSearchListingsParams](state, { payload }) {
+    return {
+      ...state,
+      searchId: null,
+      searchResults: [],
+      searchResultsFiltered: null,
+      searchListingsParams: payload
+    };
+  },
+  [clearSearchResults](state) {
+    return {
+      ...state,
+      searchResults: [],
+      searchResultsFiltered: null
+    }
   }
 }, defaultState);
 

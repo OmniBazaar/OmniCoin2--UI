@@ -80,7 +80,7 @@ class MyEscrowAgents extends Component {
       limit,
       this.state.searchTerm
     );
-    this.props.escrowActions.loadMyEscrowAgents(this.props.auth.currentUser.username);
+    this.props.escrowActions.loadMyEscrowAgents();
     this.props.escrowActions.getEscrowAgentsCount();
   }
 
@@ -98,8 +98,20 @@ class MyEscrowAgents extends Component {
         toastr.error(formatMessage(messages.error), nextProps.escrow.error);
       }
     }
-    if (!nextProps.escrow.loading && nextProps.escrow.error !== this.props.escrow.error) {
+    if (
+      this.props.escrow.loading &&
+      !nextProps.escrow.loading &&
+      nextProps.escrow.error !== this.props.escrow.error
+    ) {
       toastr.error(formatMessage(messages.error), nextProps.escrow.error);
+    }
+
+    if (
+      this.props.escrow.myEscrowLoading &&
+      !nextProps.escrow.myEscrowLoading &&
+      nextProps.escrow.myEscrowError !== this.props.escrow.myEscrowError
+    ) {
+      toastr.error(formatMessage(messages.error), nextProps.escrow.myEscrowError);
     }
   }
 
@@ -136,6 +148,7 @@ class MyEscrowAgents extends Component {
       searchTerm: value
     });
     this.props.escrowActions.loadEscrowAgents(0, limit, value);
+    this.props.escrowActions.loadMyEscrowAgents();
   }
 
   handleSearchChange(e, data) {
@@ -178,7 +191,8 @@ class MyEscrowAgents extends Component {
     const { formatMessage } = this.props.intl;
     const {
       loading,
-      updating
+      updating,
+      myEscrowLoading
     } = this.props.escrow;
     return (
       <div className="escrow-agents">
@@ -209,7 +223,7 @@ class MyEscrowAgents extends Component {
           <span>{formatMessage(messages.approve)}</span>
         </div>
         <div className="content">
-          {loading ?
+          {loading || myEscrowLoading ?
             <Loader active inline="centered" />
             :
             <ul style={{ listStyleType: 'none' }}>
@@ -249,6 +263,7 @@ MyEscrowAgents.propTypes = {
     agentsCount: PropTypes.number,
     updating: PropTypes.bool,
     loading: PropTypes.bool,
+    myEscrowLoading: PropTypes.bool,
     error: PropTypes.shape({}),
     agents: PropTypes.array,
     settings: PropTypes.shape({})
