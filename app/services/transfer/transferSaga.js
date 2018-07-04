@@ -183,7 +183,6 @@ function* getCommonEscrows({ payload: { from, to } }) {
       Apis.instance().db_api().exec('get_implicit_escrows', [fromAcc.id]),
       Apis.instance().db_api().exec('get_implicit_escrows', [toAcc.id])
     ]);
-    console.log(implicitFromEscrows, implicitToEscrows)
     let fromEscrows = _.union(fromAcc.escrows, implicitFromEscrows);
     let toEscrows = _.union(toAcc.escrows, implicitToEscrows);
     fromEscrows = yield Promise.all(fromEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));

@@ -1,7 +1,7 @@
 import {TransactionBuilder} from "omnibazaarjs";
 import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 
-export async function voteForProcessors(voteIds, processorWitnessIds, account, password) {
+export async function voteForProcessors(voteIds, account, password) {
   const tr = new TransactionBuilder();
   tr.add_type_operation('account_update', {
     account: account.id,
