@@ -30,8 +30,7 @@ export function* escrowSubscriber() {
     takeEvery('RELEASE_ESCROW_TRANSACTION', releaseEscrowTransaction),
     takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction),
     takeEvery('UPDATE_ESCROW_SETTINGS', updateEscrowSettings),
-    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings),
-    takeEvery('ADD_MY_ESCROW_AGENT', addMyEscrowAgent)
+    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings)
   ]);
 }
 
