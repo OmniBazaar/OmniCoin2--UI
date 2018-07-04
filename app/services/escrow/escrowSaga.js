@@ -8,6 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
+import _ from 'lodash';
 
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
@@ -19,6 +20,11 @@ import {
   updateEscrowSettingsFailed,
   updateEscrowSettingsSucceeded,
 } from "./escrowActions";
+import {
+  getEscrowSettings as getEscrowSettingsService,
+  getEscrowAgents as getEscrowAgentsService,
+  getImplicitEscrows
+} from './services';
 
 export function* escrowSubscriber() {
   yield all([
@@ -50,7 +56,6 @@ function* loadEscrowTransactions(action) {
   }
 }
 
-
 function* loadEscrowAgents({
   payload: {
     start, limit, searchTerm
@@ -75,12 +80,17 @@ function* loadEscrowAgents({
   }
 }
 
-function* loadMyEscrowAgents({ payload: { username } }) {
+function* loadMyEscrowAgents() {
   try {
-    const result = yield call(fetchAccount, username);
+    const { account } = (yield select()).default.auth;
+    let escrows = yield call(getEscrowAgentsService, account.name);
+    const implicitEscrows = yield call(getImplicitEscrows, account.id);
+    escrows = _.union(escrows, implicitEscrows);
+    const myAgents = escrows.map(item => ({ id: item }));
+
     yield put({
       type: 'LOAD_MY_ESCROW_AGENTS_SUCCEEDED',
-      myAgents: result.escrows.map(item => ({ id: item })),
+      myAgents,
     });
   } catch (e) {
     yield put({
@@ -123,7 +133,6 @@ function* getEscrowAgentsCount() {
     });
   }
 }
-
 
 function* releaseEscrowTransaction({ payload: { escrowObject, votes } }) {
   try {
@@ -208,7 +217,6 @@ function* updateEscrowSettings({ payload: { settings } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    console.log('SETTINGS ', settings);
     yield put(updateEscrowSettingsSucceeded(settings))
   } catch (error) {
     console.log("ERROR ", error);
@@ -216,15 +224,20 @@ function* updateEscrowSettings({ payload: { settings } }) {
   }
 }
 
+function* getMyEscrowSettings() {
+  const { currentUser } = (yield select()).default.auth;
+  const options = yield call(getEscrowSettingsService, currentUser.username);
+
+  return options;
+}
+
 function* getEscrowSettings() {
   try {
-    const { currentUser } = (yield select()).default.auth;
-    const account = yield call(FetchChain, 'getAccount', currentUser.username);
-    const options = account.get('implicit_escrow_options');
+    const options = yield getMyEscrowSettings();
     yield put(getEscrowSettingsSucceeded({
-      positiveRating: options.get('positive_rating'),
-      transactionProcessor: options.get('voted_witness'),
-      activeTransactionProcessor: options.get('active_witness')
+      positiveRating: options.positive_rating,
+      transactionProcessor: options.voted_witness,
+      activeTransactionProcessor: options.active_witness
     }))
   } catch (error) {
     console.log('ERROR ', error);

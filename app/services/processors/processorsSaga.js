@@ -24,12 +24,18 @@ export function* processorsSubscriber() {
   ]);
 }
 
+export const getActiveWitnesses = async () => {
+  const globalObject = await getGlobalObject();
+  let topProcessors = await Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
+  topProcessors = await processProcessors(topProcessors);
+
+  return topProcessors;
+}
+
 function* getTopProcessors() {
   try {
-    const globalObject = yield call(getGlobalObject);
     const { currentUser } = (yield select()).default.auth;
-    let topProcessors = yield Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
-    topProcessors = yield call(processProcessors, topProcessors);
+    let topProcessors = yield call(getActiveWitnesses);
     topProcessors = yield call(addApproveField, topProcessors, currentUser.username);
     yield put({ type: 'GET_TOP_PROCESSORS_SUCCEEDED', topProcessors });
   } catch (error) {
