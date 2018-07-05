@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 
 import {
   getMyPurchases,
@@ -43,9 +44,10 @@ const reducer = handleActions({
     }
   },
   [getMyPurchasesSucceeded](state, { payload: { myPurchases } }) {
+    const orderedPurchases = _.orderBy(myPurchases, ['date'], ['desc']);
     return {
       ...state,
-      data: myPurchases,
+      data: orderedPurchases,
       loading: false,
     }
   },
@@ -64,9 +66,10 @@ const reducer = handleActions({
     }
   },
   [getMySellingsSucceeded](state, { payload: { mySellings } }) {
+    const orderedSellings = _.orderBy(mySellings, ['date'], ['desc']);
     return {
       ...state,
-      data: mySellings,
+      data: orderedSellings,
       loading: false,
     }
   },
