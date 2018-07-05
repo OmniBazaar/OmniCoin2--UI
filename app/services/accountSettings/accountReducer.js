@@ -12,6 +12,7 @@ import {
   setEscrow,
   changePriority,
   changeCountry,
+  changeState,
   changeCity,
   changeCategory,
   changePublisherName,
@@ -77,6 +78,7 @@ const defaultState = {
   publisherData: {
     priority: 'local',
     country: '',
+    state: '',
     city: '',
     category: '',
     publisherName: '',
@@ -113,6 +115,7 @@ const savePublisherData = data => {
     case PriorityTypes.BY_CATEGORY:
       newData = {
         country: '',
+        state: '',
         city: '',
         publisherName: ''
       };
@@ -120,6 +123,7 @@ const savePublisherData = data => {
     case PriorityTypes.PUBLISHER:
       newData = {
         country: '',
+        state: '',
         city: '',
         keywords: []
       };
@@ -176,6 +180,15 @@ const reducer = handleActions({
       publisherData: {
         ...state.publisherData,
         country
+      }
+    };
+  },
+  [changeState](state, { payload }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        state: payload.state
       }
     };
   },

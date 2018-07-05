@@ -81,10 +81,10 @@ class SearchResults extends Component {
     if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
       const { searchListingsParams } = nextProps.search;
       const {
-        searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
       } = searchListingsParams;
       this.props.searchActions.searchListings(
-        searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
       );
     }
   }
