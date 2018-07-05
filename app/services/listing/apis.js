@@ -61,11 +61,12 @@ const makeRequest = async (publisher, url, options) => {
 };
 
 export const saveImage = async (publisher, file) => {
+  const { localPath, path } = file;
   const options = {
     method: 'POST',
     formData: {
       image: {
-        value: fs.createReadStream(file.path),
+        value: fs.createReadStream(localPath || path),
         options: {
           filename: file.name,
           contentType: file.type
