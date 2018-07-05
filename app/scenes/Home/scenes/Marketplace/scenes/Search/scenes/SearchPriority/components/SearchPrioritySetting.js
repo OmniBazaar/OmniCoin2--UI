@@ -233,6 +233,8 @@ class SearchPrioritySetting extends Component {
 
     if (publisherData.priority === 'category' && !publisherData.keywords.length) {
       isDisabled = true;
+    } else if (publisherData.priority === 'publisher' && !publisherData.publisherName) {
+      isDisabled = true
     }
 
     return (
