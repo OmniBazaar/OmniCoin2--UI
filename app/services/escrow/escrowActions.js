@@ -35,7 +35,7 @@ createActions({
   UPDATE_ESCROW_SETTINGS_SUCCEEDED: (settings) => ({ settings }),
   UPDATE_ESCROW_SETTINGS_FAILED: (error) => ({ error }),
   CLEAR_ESCROW_AGENTS: () => ({}),
-  LOAD_MY_ESCROW_AGENTS: (username) => ({ username }),
+  LOAD_MY_ESCROW_AGENTS: () => ({}),
   GET_ESCROW_AGENTS_COUNT: () => ({}),
   RELEASE_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),
   RETURN_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),

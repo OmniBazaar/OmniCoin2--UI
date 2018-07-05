@@ -109,6 +109,7 @@ class ListingForm extends Component {
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
+        start_date: moment().format('YYYY-MM-DD HH:mm:ss')
       };
     }
 

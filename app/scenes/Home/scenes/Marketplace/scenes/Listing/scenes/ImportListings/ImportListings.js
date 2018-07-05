@@ -238,7 +238,7 @@ class ImportListings extends Component {
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
-
+    
     return (
       <Form className="import-listing-form">
         <Grid>
@@ -249,7 +249,7 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingsVendor)}</span>
+              <span>{formatMessage(messages.listingsVendor)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Dropdown
@@ -262,9 +262,9 @@ class ImportListings extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.selectPublisher)}</span>
+              <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
-            <Grid.Column width={12}>
+            <Grid.Column width={12} className="publishers-dropdown">
               <Input>
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
@@ -276,7 +276,7 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.filesToImport)}</span>
+              <span>{formatMessage(messages.filesToImport)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <div className="buttons-wrapper">
@@ -330,7 +330,13 @@ class ImportListings extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
-
+    const { selectedVendor, selectedPublisher } = this.state;
+    let isDisabled = false;
+    if(!selectedVendor || !selectedPublisher || !importedFiles.length) {
+      isDisabled = true
+    }
+    
+    
     return (
       <div className="marketplace-container category-listing import-listings">
         <div className="header">
@@ -373,6 +379,7 @@ class ImportListings extends Component {
               className="button--green-bg"
               loading={importingFile}
               onClick={() => this.importListings()}
+              disabled={isDisabled}
             />
           </div>
         </div>
