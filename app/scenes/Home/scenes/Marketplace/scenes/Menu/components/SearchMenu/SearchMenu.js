@@ -142,9 +142,9 @@ class SearchMenu extends Component {
 
     this.props.history.push('/search-results');
 
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
 
-    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city, true, null, true);
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, state, city, true, null, true);
   }
 
   render() {
