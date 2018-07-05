@@ -148,8 +148,8 @@ class SignupForm extends Component {
     if (!values.country) {
       errors.country = messages.fieldRequired;
     }
-    if (!values.city) {
-      errors.city = messages.fieldRequired;
+    if (!values.state) {
+      errors.state = messages.fieldRequired;
     }
     return errors;
   };
@@ -489,7 +489,6 @@ class SignupForm extends Component {
               name="city"
               placeholder={formatMessage(messages.city)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
         );
