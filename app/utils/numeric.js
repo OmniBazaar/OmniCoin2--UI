@@ -8,7 +8,7 @@ const numberWithCommas = (number) => {
       .toString();
     const pointSplittedNumber = fixedNumber.split('.');
 
-    return Number.parseFloat(`${pointSplittedNumber[0].replace(FORMATTING_EXP, ',')}.${pointSplittedNumber[1]}`);
+    return `${pointSplittedNumber[0].replace(FORMATTING_EXP, ',')}.${pointSplittedNumber[1]}`;
   }
 
   return '0.00';
