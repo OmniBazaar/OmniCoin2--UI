@@ -145,7 +145,7 @@ class Home extends Component {
     if (this.props.location.pathname === '/') {
       return (<Redirect
         to={{
-          pathname: '/start-guide',
+          pathname: '/marketplace',
         }}
       />);
     }
