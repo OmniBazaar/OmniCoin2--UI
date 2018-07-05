@@ -457,19 +457,7 @@ const reducer = handleActions({
   [sortData](state, { payload: { sortColumn, direction } }) {
     const { filterText } = state;
     let sortDirection = direction || state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    let data = state.recentTransactionsFiltered.map((item) => {
-      if(!item.isIncoming) {
-        return {
-        ...item,
-          isIncoming: false
-          }
-      } else {
-        return {
-        ...item,
-          isIncoming: true
-        }
-      }
-    });
+    let data = state.recentTransactionsFiltered;
     let sortedData = [];
     let activePageSort = state.activePage;
 
