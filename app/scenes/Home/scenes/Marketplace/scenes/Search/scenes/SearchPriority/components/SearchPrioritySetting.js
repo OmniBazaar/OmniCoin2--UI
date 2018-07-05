@@ -15,6 +15,7 @@ import PriorityTypes from '../../../../../../../../../common/SearchPriorityType'
 import {
   changePriority,
   changeCountry,
+  changeState,
   changeCity,
   changePublisherName,
   changeKeywords,
@@ -41,6 +42,10 @@ const messages = defineMessages({
   country: {
     id: 'SearchPrioritySetting.country',
     defaultMessage: 'Country'
+  },
+  state: {
+    id: 'SearchPrioritySetting.state',
+    defaultMessage: 'State'
   },
   city: {
     id: 'SearchPrioritySetting.city',
@@ -95,6 +100,7 @@ class SearchPrioritySetting extends Component {
     };
 
     this.onChangePriority = this.onChangePriority.bind(this);
+    this.onChangeState = this.onChangeState.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
     this.onChangeKeywords = this.onChangeKeywords.bind(this);
@@ -132,8 +138,12 @@ class SearchPrioritySetting extends Component {
     this.props.accountSettingsActions.changeCountry(country);
   }
 
-  onChangeCity(city) {
-    this.props.accountSettingsActions.changeCity(city);
+  onChangeState(state) {
+    this.props.accountSettingsActions.changeState(state);
+  }
+
+  onChangeCity(e) {
+    this.props.accountSettingsActions.changeCity(e.target.value);
   }
 
   onChangeKeywords(keywords) {
@@ -171,15 +181,22 @@ class SearchPrioritySetting extends Component {
               <div className="col-1" />
             </div>
             <div className="form-group">
-              <span>{formatMessage(messages.city)}</span>
+              <span>{formatMessage(messages.state)}</span>
               <RegionDropdown
                 country={publisherData.country}
-                value={publisherData.city}
+                value={publisherData.state}
                 defaultOptionLabel=""
                 blankOptionLabel=""
                 classes="ui dropdown textfield"
-                onChange={this.onChangeCity}
+                onChange={this.onChangeState}
               />
+              <div className="col-1" />
+            </div>
+            <div className="form-group">
+              <span>{formatMessage(messages.city)}</span>
+              <input type='text' className='textfield'
+                value={publisherData.city}
+                onChange={this.onChangeCity} />
               <div className="col-1" />
             </div>
           </div>
@@ -342,6 +359,7 @@ export default compose(
       accountSettingsActions: bindActionCreators({
         changePriority,
         changeCountry,
+        changeState,
         changeCity,
         changeKeywords,
         changePublisherName,

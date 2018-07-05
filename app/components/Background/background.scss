@@ -2,13 +2,14 @@
 
 .background-container {
   height: 100vh;
+  overflow-y: auto;
   .background-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 
-    height: calc(100% - 1.5em);
+    min-height: calc(100% - 1.5em);
     .header {
       display: flex;
       flex-direction: column;
