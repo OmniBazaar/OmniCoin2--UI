@@ -128,6 +128,10 @@ class RecentTransactions extends Component {
   componentWillMount() {
     this.props.accountSettingsActions.getRecentTransactions();
   }
+  
+  componentWillUnmount() {
+    this.onCloseDetails();
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.account.loading && !nextProps.account.loading) {
