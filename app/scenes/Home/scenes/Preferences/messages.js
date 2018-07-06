@@ -15,7 +15,7 @@ export default defineMessages({
   },
   minutes: {
     id: 'Preferences.minutes',
-    defaultMessage: 'MINUTES'
+    defaultMessage: '(minutes)'
   },
   xomUnit: {
     id: 'Preferences.xomUnit',
@@ -145,6 +145,14 @@ export default defineMessages({
     id: 'Preferences.errorTitle',
     defaultMessage: 'Error'
   },
+  errorTimeout: {
+    id: 'Preferences.errorTimeout',
+    defaultMessage: 'LogOut Timeout must be a positive number'
+  },
+  errorFee: {
+    id: 'Preferences.errorFee',
+    defaultMessage: 'Fee must be positive a number'
+  },
   successTitle: {
     id: 'Preferences.successTitle',
     defaultMessage: 'Success'
@@ -156,5 +164,9 @@ export default defineMessages({
   saveSuccessMessage: {
     id: 'Preferences.saveSuccessMessage',
     defaultMessage: 'Preferences data is saved successful'
-  }
+  },
+  fieldRequired: {
+    id: 'Preferences.fieldRequired',
+    defaultMessage: 'This field is required'
+  },
 });

@@ -247,6 +247,7 @@ class SearchPrioritySetting extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { isConnecting } = this.props.dht;
+
   
     if (
       (publisherData.priority === 'category' && !publisherData.keywords.length) ||
@@ -255,7 +256,7 @@ class SearchPrioritySetting extends Component {
     ) {
       isDisabled = true;
     }
-
+    
     return (
       <div className="search-priority-setting">
         <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
