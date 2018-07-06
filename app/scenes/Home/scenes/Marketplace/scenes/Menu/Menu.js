@@ -420,9 +420,6 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
         </div>
-        <div className="link-item account-settings-link" onClick={this.toggleSettingsAccount}>
-          {formatMessage(userMenu.accountSettings)}
-         </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>

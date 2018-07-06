@@ -15,7 +15,6 @@ import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletD
 import OmnicoinWalletDetail from './components/OmnicoinWalletDetail/OmnicoinWalletDetail';
 import AddBitcoinWallet from './components/AddBitcoinWallet/AddBitcoinWallet';
 import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress';
-import RecentTransactions from '../Settings/scenes/RecentTransactions/RecentTransactions';
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
@@ -31,16 +30,19 @@ import AddIcon from '../../images/btn-add-image.svg';
 
 import messages from './messages';
 import settingsMessages from '../Settings/messages';
+import Settings from '../Settings/Settings';
 import './wallet.scss';
-import StartGuide from '../../components/StartGuide/StartGuide';
 
 class Wallet extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      activeTab: 0
+    };
     this.openWalletModal = this.openWalletModal.bind(this);
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
   }
 
   componentWillMount() {
@@ -78,6 +80,12 @@ class Wallet extends Component {
   openWalletModal() {
 
   }
+  
+  onTabChange(e, data) {
+    this.setState({
+      activeTab: data.activeIndex
+    })
+  }
 
   getBitcoinContent() {
     const { wallets, guid } = this.props.bitcoin;
@@ -111,7 +119,7 @@ class Wallet extends Component {
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
-          hasButton
+          hasButton={this.state.activeTab}
           buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
@@ -122,23 +130,8 @@ class Wallet extends Component {
           <Tab
             className="tabs"
             menu={{ secondary: true, pointing: true }}
+            onTabChange={this.onTabChange}
             panes={[
-              {
-                menuItem: formatMessage(settingsMessages.recentTransactions),
-                render: () => (
-                  <Tab.Pane>
-                    <RecentTransactions
-                      rowsPerPage={20}
-                      tableProps={{
-                        sortable: true,
-                        compact: true,
-                        basic: 'very',
-                        striped: true,
-                        size: 'small'
-                      }}
-                     />
-                   </Tab.Pane>),
-                 },
               {
                 menuItem: 'OmniCoin',
                 render: () => (
@@ -166,7 +159,7 @@ class Wallet extends Component {
                           this.getBitcoinContent()
                         }
                        </div>
-                    :
+                     :
                        <div className="no-wallet-yet">
                          <span>{formatMessage(messages.noWalletYet)}</span>
                        </div>
@@ -175,6 +168,11 @@ class Wallet extends Component {
                }
              ]}
           />
+          <div className="content">
+            {!this.state.activeTab &&
+              <Settings />
+            }
+          </div>
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />
