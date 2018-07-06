@@ -110,7 +110,7 @@ class PreferencesTab extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
+    const { handleSubmit, valid } = this.props;
     const { saving } = this.props.preferences;
     const publisher = this.props.auth.account.is_a_publisher;
 
@@ -266,7 +266,7 @@ class PreferencesTab extends Component {
                   content={formatMessage(messages.update)}
                   className="button--green-bg"
                   loading={saving}
-                  disabled={saving}
+                  disabled={!valid || saving}
                 />
               </Grid.Column>
             </Grid.Row>
