@@ -18,6 +18,7 @@ import {
   Icon
 } from 'semantic-ui-react';
 import hash from 'object-hash';
+import dateformat from 'dateformat';
 
 import './search-menu.scss';
 
@@ -119,13 +120,16 @@ class SearchMenu extends Component {
         :
         savedSearches.slice(0, maxSearches).map((search) => (
           <Grid.Row key={hash(search)}>
-            <Grid.Column width={8}>
+            <Grid.Column width={6}>
               <a onClick={() => this.handleSubmit({ search })}>
                 {search.searchTerm}
               </a>
             </Grid.Column>
-            <Grid.Column width={8}>
-              <span className="gray-text">{search.date}</span>
+            <Grid.Column width={4}>
+              <span className="gray-text">{search.category}</span>
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <span className="gray-text">{dateformat(search.date)}</span>
             </Grid.Column>
           </Grid.Row>
         ))
@@ -142,9 +146,9 @@ class SearchMenu extends Component {
 
     this.props.history.push('/search-results');
 
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
 
-    this.props.searchActions.searchListings(searchTerm, category || 'All', country, city, true, null, true);
+    this.props.searchActions.searchListings(searchTerm, category || 'All', country, state, city, true, null, true);
   }
 
   render() {

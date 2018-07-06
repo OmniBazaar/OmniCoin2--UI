@@ -6,9 +6,16 @@ const numberWithCommas = (number) => {
     const fixedNumber = Number.parseFloat(number)
       .toFixed(DECIMAL_AMOUNT)
       .toString();
-    const pointSplittedNumber = fixedNumber.split('.');
+    const pointSplittedNumber = Number.parseFloat(fixedNumber)
+      .toString()
+      .split('.');
+    const firstNumeral = pointSplittedNumber[0].replace(FORMATTING_EXP, ',');
 
-    return Number.parseFloat(`${pointSplittedNumber[0].replace(FORMATTING_EXP, ',')}.${pointSplittedNumber[1]}`);
+    if (!pointSplittedNumber[1]) {
+      return firstNumeral;
+    }
+
+    return `${firstNumeral}.${pointSplittedNumber[1]}`;
   }
 
   return '0.00';

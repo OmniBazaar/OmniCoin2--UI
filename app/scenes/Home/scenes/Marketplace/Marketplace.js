@@ -93,8 +93,8 @@ class Marketplace extends Component {
     }
   }
 
-  fetchListings({ country, city, keywords }) {
-    this.props.searchActions.searchListings(keywords, 'All', country, city, true, null);
+  fetchListings({ country, state, city, keywords }) {
+    this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
   }
 
   listItems(items, size) {
@@ -144,9 +144,9 @@ class Marketplace extends Component {
   }
 
   viewAllSubCategories = (category) => {
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, null);
+    this.props.searchActions.searchListings(null, category || 'All', country, state, city, true, null);
   };
 
   renderOption(category, parentCategory) {
@@ -387,13 +387,13 @@ class Marketplace extends Component {
 
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
     const subCategory = parent ? Marketplace.getValue(categoryId) : null;
     if (categoryId !== 'featuredListings') {
-      this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+      this.props.searchActions.searchListings(null, category, country, state, city, true, subCategory);
     } else {
-      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, city, true, null);
+      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, state, city, true, null);
     }
   };
 

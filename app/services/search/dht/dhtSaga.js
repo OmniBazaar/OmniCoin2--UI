@@ -56,23 +56,25 @@ export function* reconnect() {
   yield put({ type: 'DHT_CONNECT' });
 }
 
-async function doLocalSearch({ country, city }) {
+async function doLocalSearch({ country, state, city }) {
   const countryKey = `country:${country}`;
+  const stateKey = `state:${state}`;
   const cityKey = `city:${city}`;
 
-  const countryRes = country ? await dhtConnector.findPeersFor(countryKey) : noPeersFallback();
-  const cityRes = city ? await dhtConnector.findPeersFor(cityKey) : noPeersFallback();
-
-  return [...countryRes, ...cityRes];
+  return await Promise.all([
+    country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
+    state ? dhtConnector.findPeersFor(stateKey) : noPeersFallback(),
+    city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback()
+  ]);
 }
 
 function isPresentInFilters(
   host,
   {
-    categoryResp, subCategoryResp, countryResp, cityResp
+    categoryResp, subCategoryResp, countryResp, stateResp, cityResp
   },
   {
-    category, subCategory, country, city
+    category, subCategory, country, state, city
   }
 ) {
   const isInCategories = categoryResp && categoryResp.peers ? categoryResp.peers
@@ -81,20 +83,23 @@ function isPresentInFilters(
     .find(({ host: subHost }) => subHost === host) : !subCategory;
   const isInCountry = countryResp && countryResp.peers ? countryResp.peers
     .find(({ host: contryHost }) => contryHost === host) : !country;
+  const isInState = stateResp && stateResp.peers ? stateResp.peers
+    .find(({ host: stateHost }) => stateHost === host) : !state;
   const isInCity = cityResp && cityResp.peers ? cityResp.peers
     .find(({ host: cityHost }) => cityHost === host) : !city;
 
-  return isInCategories && isInSubCategories && isInCountry && isInCity;
+  return isInCategories && isInSubCategories && isInCountry && isInState && isInCity;
 }
 
 export function* getPeersFor({
   payload: {
-    searchTerm, category, country, city, searchListings, subCategory, fromSearchMenu
+    searchTerm, category, country, state, city, searchListings, subCategory, fromSearchMenu
   },
 }) {
   try {
     if (!country) {
       city = '';
+      state = '';
     }
 
     const publisherData = AccountSettingsStorage.getPublisherData();
@@ -108,24 +113,25 @@ export function* getPeersFor({
     ]);
 
     if (publisherData.priority === 'local' && country) {
-      extraKeywordsResponse.push(yield doLocalSearch(publisherData));
+      const localRes = yield doLocalSearch(publisherData);
+      extraKeywordsResponse = [ ...extraKeywordsResponse, ...localRes ];
     }
+
+    const [categoryResp, subCategoryResp, countryResp, stateResp, cityResp] = extraKeywordsResponse;
 
     extraKeywordsResponse = extraKeywordsResponse.reduce((acc, curr) => [...acc, ...curr], []);
 
     let extraKeywordsPeers = extraKeywordsResponse
       .reduce((final, resp) => [...final, ...(resp.peers || [])], []);
 
-    const [categoryResp, subCategoryResp, countryResp, cityResp] = extraKeywordsResponse;
-
     extraKeywordsPeers = uniqBy(extraKeywordsPeers, ({ host }) => host)
       .filter(({ host }) => isPresentInFilters(
         host,
         {
-          categoryResp, subCategoryResp, countryResp, cityResp
+          categoryResp, subCategoryResp, countryResp, stateResp, cityResp
         },
         {
-          category, subCategory, country, city
+          category, subCategory, country, state, city
         }
       ));
 

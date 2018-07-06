@@ -62,6 +62,7 @@ import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from "../../services/blockchain/connection/connectionActions";
 import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { dhtReconnect } from '../../services/search/dht/dhtActions';
 
 const iconSize = 20;
 
@@ -79,6 +80,7 @@ class Home extends Component {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.preferencesActions.loadPreferences();
+    this.props.dhtActions.dhtReconnect();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -143,7 +145,7 @@ class Home extends Component {
     if (this.props.location.pathname === '/') {
       return (<Redirect
         to={{
-          pathname: '/start-guide',
+          pathname: '/marketplace',
         }}
       />);
     }
@@ -287,6 +289,7 @@ export default connect(
     preferencesActions: bindActionCreators({
       loadPreferences
     }, dispatch),
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
   })
 )(Home);
 
@@ -314,7 +317,10 @@ Home.propTypes = {
   }),
   preferencesActions: PropTypes.shape({
     loadPreferences: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  dhtActions: PropTypes.shape({
+    dhtReconnect: PropTypes.func
+  })
 };
 
 Home.defaultProps = {

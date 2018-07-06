@@ -18,8 +18,9 @@
   "SignupForm.specificLocation": "Specific Location",
   "SignupForm.anywhere": "Anywhere",
   "SignupForm.country": "Your Country",
-  "SignupForm.city": "Your State/City",
+  "SignupForm.city": "Your City",
   "SignupForm.keywords": "Keywords for listing your want to see",
   "SignupForm.addKeyword": "Add keyword",
-  "SignupForm.done": "Done"
+  "SignupForm.done": "Done",
+  "SignupForm.state": "Your State"
 }

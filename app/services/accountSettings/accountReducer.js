@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
+import { ChainTypes } from 'omnibazaarjs/es';
 import dateformat from 'dateformat';
 
 import PriorityTypes from '../../common/SearchPriorityType';
@@ -12,6 +13,7 @@ import {
   setEscrow,
   changePriority,
   changeCountry,
+  changeState,
   changeCity,
   changeCategory,
   changePublisherName,
@@ -77,6 +79,7 @@ const defaultState = {
   publisherData: {
     priority: 'local',
     country: '',
+    state: '',
     city: '',
     category: '',
     publisherName: '',
@@ -98,6 +101,35 @@ const getTotalPages = (data, rowsPerPage) => (
   Math.ceil(data.length / rowsPerPage)
 );
 
+const getBadgeClass = (type) => {
+  switch (type) {
+    case ChainTypes.operations.escrow_create_operation:
+      return 'pending';
+    case ChainTypes.operations.transfer:
+      return 'transfer';
+    case ChainTypes.operations.escrow_release_operation:
+      return 'released';
+    case ChainTypes.operations.escrow_return_operation:
+      return 'returned';
+    case ChainTypes.operations.listing_delete_operation:
+      return 'listing';
+    case ChainTypes.operations.listing_update_operation:
+      return 'listing';
+    case ChainTypes.operations.listing_create_operation:
+      return 'listing';
+    case ChainTypes.operations.account_update:
+      return 'account';
+    case ChainTypes.operations.witness_create:
+      return 'account';
+    case ChainTypes.operations.welcome_bonus_operation:
+      return 'wBonus';
+    case ChainTypes.operations.referral_bonus_operation:
+      return 'rBonus';
+    case ChainTypes.operations.sale_bonus_operation:
+      return 'sBonus';
+  }
+}
+
 const savePublisherData = data => {
   let newData = {
     ...data
@@ -113,6 +145,7 @@ const savePublisherData = data => {
     case PriorityTypes.BY_CATEGORY:
       newData = {
         country: '',
+        state: '',
         city: '',
         publisherName: ''
       };
@@ -120,6 +153,7 @@ const savePublisherData = data => {
     case PriorityTypes.PUBLISHER:
       newData = {
         country: '',
+        state: '',
         city: '',
         keywords: []
       };
@@ -176,6 +210,15 @@ const reducer = handleActions({
       publisherData: {
         ...state.publisherData,
         country
+      }
+    };
+  },
+  [changeState](state, { payload }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        state: payload.state
       }
     };
   },
@@ -339,13 +382,21 @@ const reducer = handleActions({
       error: null
     };
   },
-  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => ({
-    ...state,
-    loading: false,
-    error: null,
-    recentTransactions: transactions,
-    recentTransactionsFiltered: transactions,
-  }),
+  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
+    const changedTransactions = transactions.map((item) => {
+      return {
+        ...item,
+        statusText: getBadgeClass(item.type)
+      }
+    });
+    return {
+      ...state,
+      loading: false,
+      error: null,
+      recentTransactions: changedTransactions,
+      recentTransactionsFiltered: changedTransactions,
+    }
+  },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
@@ -399,8 +450,9 @@ const reducer = handleActions({
         });
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
-        const sortBy = _.sortBy(data, [sortColumn]);
-        sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+        sortedData = data;
+        //const sortBy = _.sortBy(data, [sortColumn]);
+        //sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
       currentData = sliceData(sortedData, activePage, rowsPerPage);
 
@@ -441,13 +493,20 @@ const reducer = handleActions({
         sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
     }
-
+    
     if (!!filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
-
+    
+    let sortFields = [sortColumn];
+    if('fromTo' === sortColumn) {
+      sortFields.unshift('isIncoming')
+    }
+    sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
+    
     const { rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePageSort, rowsPerPage);
+
 
     return {
       ...state,

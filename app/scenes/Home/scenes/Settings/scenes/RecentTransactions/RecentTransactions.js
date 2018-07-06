@@ -128,6 +128,10 @@ class RecentTransactions extends Component {
   componentWillMount() {
     this.props.accountSettingsActions.getRecentTransactions();
   }
+  
+  componentWillUnmount() {
+    this.onCloseDetails();
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.account.loading && !nextProps.account.loading) {
@@ -156,35 +160,6 @@ class RecentTransactions extends Component {
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
-  }
-
-  getBadgeClass(type) {
-    switch (type) {
-      case ChainTypes.operations.escrow_create_operation:
-        return 'pending';
-      case ChainTypes.operations.transfer:
-        return 'transfer';
-      case ChainTypes.operations.escrow_release_operation:
-        return 'released';
-      case ChainTypes.operations.escrow_return_operation:
-        return 'returned';
-      case ChainTypes.operations.listing_delete_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_update_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_create_operation:
-        return 'listing';
-      case ChainTypes.operations.account_update:
-        return 'account';
-      case ChainTypes.operations.witness_create:
-        return 'account';
-      case ChainTypes.operations.welcome_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.referral_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.sale_bonus_operation:
-        return 'bonus';
-    }
   }
 
   render() {
@@ -263,7 +238,7 @@ class RecentTransactions extends Component {
                   <TableHeaderCell
                     key="fee"
                     sorted={sortColumn === 'type' ? sortDirection : null}
-                    onClick={this.sortData('type')}
+                    onClick={this.sortData('statusText')}
                   >
                     {formatMessage(messages.status)}
                   </TableHeaderCell>
@@ -297,7 +272,7 @@ class RecentTransactions extends Component {
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
                           <TableCell>
-                            <div className={cn('badge-tag', this.getBadgeClass(row.type))}>
+                            <div className={cn('badge-tag', row.statusText)}>
                               {formatMessage(messages[row.type])}
                             </div>
                           </TableCell>

@@ -29,9 +29,9 @@ const messages = defineMessages({
 
 class Breadcrumb extends Component {
   viewCategory = (category, subCategory) => {
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, subCategory);
+    this.props.searchActions.searchListings(null, category || 'All', country, state, city, true, subCategory);
   };
 
   setActiveCategory = () => {
