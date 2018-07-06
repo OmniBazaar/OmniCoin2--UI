@@ -120,7 +120,7 @@ class Wallet extends Component {
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
           hasButton={this.state.activeTab}
-          buttonContent={formatMessage(meshsages.addWallet)}
+          buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
           loading={this.props.bitcoin.loading}
@@ -143,7 +143,6 @@ class Wallet extends Component {
                         publicKey={account.active.key_auths[0][0]}
                         balance={this.getBalance()}
                       />
-                      <Settings />
                     </div>
                   </Tab.Pane>
                 )
@@ -169,6 +168,9 @@ class Wallet extends Component {
                }
              ]}
           />
+          <div className="content">
+            <Settings />
+          </div>
         </div>
         <AddBitcoinWallet />
         <AddBitcoinAddress />

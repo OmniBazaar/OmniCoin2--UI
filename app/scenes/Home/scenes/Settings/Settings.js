@@ -75,7 +75,7 @@ class Settings extends Component {
     return (
       <div className="modal-container settings-container">
         {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
-        {/*<div className="modal-content side-menu">*/}
+        <div className="modal-content side-menu">
           <Tab
             className="tabs"
             menu={{ secondary: true, pointing: true }}
@@ -118,7 +118,7 @@ class Settings extends Component {
             tabIndex={0}
           />
 
-        {/*</div>*/}
+        </div>
       </div>
     );
   }
