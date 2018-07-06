@@ -28,7 +28,8 @@ const {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -57,7 +58,8 @@ const {
   GET_PUBLISHER_DATA: () => ({}),
   UPDATE_PUBLISHER_DATA: (data) => ({ data }),
   GET_PUBLISHERS: () => ({}),
-  CHANGE_IP_ADDRESS: (ip) => ({ ip })
+  CHANGE_IP_ADDRESS: (ip) => ({ ip }),
+  SET_BTC_ADDRESS: (address) => ({ address }),
 });
 
 export {
@@ -88,5 +90,6 @@ export {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 };

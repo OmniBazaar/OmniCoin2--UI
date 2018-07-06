@@ -34,20 +34,13 @@ import {
   updatePublisherData,
   getPublishers,
   changeIpAddress,
-  changeSearchPriorityData
+  changeSearchPriorityData,
+  setBtcAddress,
 } from './accountActions';
-
-const defaultPublisherData = {
-  priority: 'local',
-  country: '',
-  city: '',
-  category: '',
-  publisherName: '',
-  keywords: []
-};
 
 const defaultState = {
   referrer: true,
+  btcAddress: '',
   publisher: false,
   transactionProcessor: false,
   wantsToVote: false,
@@ -127,8 +120,10 @@ const getBadgeClass = (type) => {
       return 'rBonus';
     case ChainTypes.operations.sale_bonus_operation:
       return 'sBonus';
+    default:
+      break;
   }
-}
+};
 
 const savePublisherData = data => {
   let newData = {
@@ -158,6 +153,8 @@ const savePublisherData = data => {
         keywords: []
       };
       break;
+    default:
+      break;
   }
 
   data = {
@@ -174,6 +171,12 @@ const reducer = handleActions({
     return {
       ...state,
       referrer: true,
+    };
+  },
+  [setBtcAddress](state, { address }) {
+    return {
+      ...state,
+      btcAddress: address,
     };
   },
   [setPublisher](state) {
@@ -493,17 +496,17 @@ const reducer = handleActions({
         sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
     }
-    
+
     if (!!filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
-    
+
     let sortFields = [sortColumn];
     if('fromTo' === sortColumn) {
       sortFields.unshift('isIncoming')
     }
     sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
-    
+
     const { rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePageSort, rowsPerPage);
 

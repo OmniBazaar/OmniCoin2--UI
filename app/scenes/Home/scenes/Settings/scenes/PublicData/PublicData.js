@@ -24,7 +24,8 @@ import {
   setTransactionProcessor,
   setEscrow,
   updatePublicData,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -194,6 +195,10 @@ class PublicData extends Component {
     };
   }
 
+  setBtcAddress({ target: { value } }) {
+    this.props.accountSettingsActions.setBtcAddress(value);
+  }
+
   updatePublicData() {
     const { formatMessage } = this.props.intl;
     const { ipAddress, publisher } = this.props.account;
@@ -299,11 +304,16 @@ class PublicData extends Component {
         <div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
+            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
           </div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
-            <Input className="ref-btc-input" placeholder={formatMessage(messages.btcAddressTitle)} />
+            <Input
+              className="ref-btc-input"
+              value={account.btc_address}
+              placeholder={formatMessage(messages.btcAddressTitle)}
+              onChange={(data) => this.setBtcAddress(data)}
+            />
           </div>
         </div>
         }
@@ -387,7 +397,8 @@ PublicData.propTypes = {
     setTransactionProcessor: PropTypes.func,
     setEscrow: PropTypes.func,
     updatePublicData: PropTypes.func,
-    changeIpAddress: PropTypes.func
+    changeIpAddress: PropTypes.func,
+    setBtcAddress: PropTypes.func,
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
@@ -432,6 +443,7 @@ export default connect(
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
       setReferrer,
+      setBtcAddress,
       setPublisher,
       setTransactionProcessor,
       setEscrow,
@@ -444,5 +456,5 @@ export default connect(
     authActions: bindActionCreators({
       getAccount
     }, dispatch),
-  }),
+  })
 )(injectIntl(PublicData));
