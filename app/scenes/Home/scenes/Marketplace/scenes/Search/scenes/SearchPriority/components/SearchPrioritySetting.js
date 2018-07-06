@@ -181,7 +181,7 @@ class SearchPrioritySetting extends Component {
               <div className="col-1" />
             </div>
             <div className="form-group">
-              <span>{formatMessage(messages.city)}*</span>
+              <span>{formatMessage(messages.state)}*</span>
               <RegionDropdown
                 country={publisherData.country}
                 value={publisherData.state}
@@ -251,7 +251,7 @@ class SearchPrioritySetting extends Component {
     if (
       (publisherData.priority === 'category' && !publisherData.keywords.length) ||
       (publisherData.priority === 'publisher' && !publisherData.publisherName) ||
-      (publisherData.priority === 'local' && (!publisherData.city || !publisherData.country))
+      (publisherData.priority === 'local' && (!publisherData.state || !publisherData.country))
     ) {
       isDisabled = true;
     }
