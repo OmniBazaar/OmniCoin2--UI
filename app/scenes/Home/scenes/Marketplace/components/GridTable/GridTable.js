@@ -285,7 +285,9 @@ class GridTable extends Component {
           onApprove={() => this.onOkDelete()}
           onCancel={() => this.closeConfirm()}
           isOpen={this.state.confirmDeleteOpen}
-        />
+        >
+          {formatMessage(messages.confirmDeleteMessage)}
+        </ConfirmationModal>
         {this.renderLoading()}
       </div>
     );

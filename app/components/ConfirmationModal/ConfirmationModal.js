@@ -23,7 +23,7 @@ const messages = defineMessages({
   }
 });
 
-const defaultQuestion = 'Are you sure you want to delete this listing?';
+const defaultQuestion = 'Are you sure?';
 
 class ConfirmationModal extends Component {
   render() {
