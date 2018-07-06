@@ -25,8 +25,8 @@ const {
   setSearchListingsParams,
   clearSearchResults
 } = createActions({
-  SEARCH_LISTINGS: (searchTerm, category, country, city, historify = true, subCategory, fromSearchMenu) => ({
-    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+  SEARCH_LISTINGS: (searchTerm, category, country, state, city, historify = true, subCategory, fromSearchMenu) => ({
+    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }),
   FILTER_SEARCH_RESULTS: (searchText, currency, category, subCategory) => ({ searchText, currency, category, subCategory }),
   FILTER_SEARCH_BY_CATEGORY: () => ({}),
@@ -48,8 +48,8 @@ const {
   MARKETPLACE_RETURN_BOOL: (data) => ({ data }),
   SEARCHING: (searchId, searchTerm, category, subCategory, fromSearchMenu) => ({ searchId, searchTerm, category, subCategory, fromSearchMenu }),
   FILTER_SEARCH: (currency, category) => ({ currency, category }),
-  SET_SEARCH_LISTINGS_PARAMS: (searchTerm, category, country, city, historify, subCategory, fromSearchMenu) => ({
-    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+  SET_SEARCH_LISTINGS_PARAMS: (searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu) => ({
+    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }),
   CLEAR_SEARCH_RESULTS: () => ({})
 });

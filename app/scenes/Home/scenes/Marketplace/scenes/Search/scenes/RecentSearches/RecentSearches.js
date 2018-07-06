@@ -47,8 +47,8 @@ class RecentSearches extends Component {
 
   handleView(search) {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(search.searchTerm, search.category, country, city);
+    const { country, state, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(search.searchTerm, search.category, country, state, city);
   }
 
   handleSave(search) {
@@ -57,8 +57,8 @@ class RecentSearches extends Component {
 
   handleSearch(searchTerm, category) {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
-    this.props.searchActions.searchListings(searchTerm, category, country, city, false);
+    const { country, state, city } = this.props.account.publisherData;
+    this.props.searchActions.searchListings(searchTerm, category, country, state, city, false);
   }
 
   render() {
