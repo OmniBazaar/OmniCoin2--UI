@@ -100,15 +100,16 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
       const newItems = newFile.items.map(async (item) => {
         const { image, fileName, thumb } = await saveImage(publisher, item.images[0]);
         const itemToSave = { ...item };
+        const { localPath, path } = item.images[0];
 
-        if (item.images[0].path) {
-          fs.unlink(item.images[0].path, console.log);
+        if (localPath || path) {
+          fs.unlink(localPath || path, console.log);
         }
 
         delete itemToSave.productId;
         delete itemToSave.imageURL;
 
-        return createListing(publisher, {
+        const listing = await createListing(publisher, {
           ...itemToSave,
           images: [{
             thumb,
@@ -116,6 +117,14 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
             path: image,
           }],
         });
+
+        return {
+          ...listing,
+          images: [{
+            ...listing.images[0],
+            localPath: item.images[0].path,
+          }]
+        };
       });
 
       newFile.items = await Promise.all(newItems);
@@ -123,10 +132,10 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
       return newFile;
     });
 
-    const importedFiles = yield Promise.all(allFiles);
+    yield Promise.all(allFiles);
 
     yield put({ type: 'DHT_RECONNECT' });
-    yield put({ type: 'IMPORT_FILES_SUCCEEDED', importedFiles });
+    yield put({ type: 'IMPORT_FILES_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
   }

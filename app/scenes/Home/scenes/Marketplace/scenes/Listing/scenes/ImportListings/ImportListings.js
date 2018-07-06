@@ -131,6 +131,8 @@ class ImportListings extends Component {
         );
       }
 
+      this.setState({ selectedPublisher: null, selectedVendor: null });
+
       toastr.success(
         formatMessage(messages.importationSuccessTitle),
         formatMessage(messages.importationSuccess)
@@ -238,7 +240,7 @@ class ImportListings extends Component {
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
-    
+
     return (
       <Form className="import-listing-form">
         <Grid>
@@ -335,8 +337,8 @@ class ImportListings extends Component {
     if(!selectedVendor || !selectedPublisher || !importedFiles.length) {
       isDisabled = true
     }
-    
-    
+
+
     return (
       <div className="marketplace-container category-listing import-listings">
         <div className="header">

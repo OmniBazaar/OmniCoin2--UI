@@ -36,14 +36,14 @@ export function* searchSubscriber() {
 
 function* searchListings({
   payload: {
-    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }
 }) {
   try {
     const { saving } = (yield select()).default.listing.saveListing;
     if (saving) {
       yield put(setSearchListingsParams(
-        searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
       ));
       return;
     }
@@ -61,6 +61,7 @@ function* searchListings({
         searchTerm,
         category,
         country,
+        state,
         city,
         searchListings: true,
         subCategory,
@@ -75,7 +76,7 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
+    peersMap, category, country, state, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
   }
 }) {
   let message;
@@ -103,6 +104,14 @@ export function* searchListingsByPeersMap({
       op: '=',
       name: 'country',
       value: country,
+    });
+  }
+
+  if (state) {
+    filters.push({
+      op: '=',
+      name: 'state',
+      value: state,
     });
   }
 

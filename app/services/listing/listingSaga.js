@@ -68,8 +68,9 @@ export function* listingSubscriber() {
 
 function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
+    const { currentUser } = (yield select()).default.auth;
     yield put(addListingImage(publisher, file, imageId));
-    const resultImage = yield call(saveImage, publisher, file);
+    const resultImage = yield call(saveImage, currentUser, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
       resultImage.image,
@@ -90,7 +91,8 @@ function* removeImage({ payload: { publisher, image } }) {
     	return;
     }
 
-    const result = yield call(deleteImage, publisher, fileName);
+    const { currentUser } = (yield select()).default.auth;
+    const result = yield call(deleteImage, currentUser, publisher, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
     } else {
@@ -113,7 +115,8 @@ function* checkAndUploadImages(publisher, listing) {
 				name: path,
 				type
 			};
-			const result = yield call(saveImage, publisher, file);
+      const { currentUser } = (yield select()).default.auth;
+			const result = yield call(saveImage, currentUser, publisher, file);
 			yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
@@ -132,11 +135,12 @@ function* checkAndUploadImages(publisher, listing) {
 function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
+    const { currentUser } = (yield select()).default.auth;
     if (listingId) {
-      result = yield call(editListing, publisher, listingId, listing);
+      result = yield call(editListing, currentUser, publisher, listingId, listing);
     } else {
       yield checkAndUploadImages(publisher, listing);
-      result = yield call(createListing, publisher, listing);
+      result = yield call(createListing, currentUser, publisher, listing);
     }
 
     if (!listingId) {
@@ -243,7 +247,8 @@ function* requestMyListings() {
 
 function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    yield call(deleteListing, publisher, listing);
+    const { currentUser } = (yield select()).default.auth;
+    yield call(deleteListing, currentUser, publisher, listing);
     yield put(deleteListingSuccess(listing.listing_id));
   } catch (err) {
     console.log(err);

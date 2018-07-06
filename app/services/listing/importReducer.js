@@ -71,9 +71,9 @@ const reducer = handleActions({
     };
   },
 
-  IMPORT_FILES_SUCCEEDED: (state, { importedFiles }) => ({
+  IMPORT_FILES_SUCCEEDED: (state) => ({
     ...state,
-    importedFiles,
+    importedFiles: [],
     importingFile: false,
     error: null,
   }),
