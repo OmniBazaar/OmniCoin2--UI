@@ -169,7 +169,9 @@ class Wallet extends Component {
              ]}
           />
           <div className="content">
-            <Settings />
+            {!this.state.activeTab &&
+              <Settings />
+            }
           </div>
         </div>
         <AddBitcoinWallet />
