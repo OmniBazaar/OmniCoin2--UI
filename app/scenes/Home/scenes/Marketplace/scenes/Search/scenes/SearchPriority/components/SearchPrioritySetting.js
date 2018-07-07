@@ -172,7 +172,7 @@ class SearchPrioritySetting extends Component {
         return (
           <div>
             <div className="form-group">
-              <span>{formatMessage(messages.country)}</span>
+              <span>{formatMessage(messages.country)}*</span>
               <CountryDropdown
                 value={publisherData.country}
                 classes="ui dropdown textfield"
@@ -181,7 +181,7 @@ class SearchPrioritySetting extends Component {
               <div className="col-1" />
             </div>
             <div className="form-group">
-              <span>{formatMessage(messages.state)}</span>
+              <span>{formatMessage(messages.state)}*</span>
               <RegionDropdown
                 country={publisherData.country}
                 value={publisherData.state}
@@ -206,7 +206,7 @@ class SearchPrioritySetting extends Component {
         if (!keywords) keywords = [];
         return (
           <div className="form-group keyword-container" key="category">
-            <span>{formatMessage(messages.keywordLabel)}</span>
+            <span>{formatMessage(messages.keywordLabel)}*</span>
             <TagsInput
               value={keywords}
               inputProps={{
@@ -223,7 +223,7 @@ class SearchPrioritySetting extends Component {
       case PriorityTypes.PUBLISHER:
         return (
           <div className="form-group" key="publisher">
-            <span>{formatMessage(messages.publisherName)}</span>
+            <span>{formatMessage(messages.publisherName)}*</span>
             <Dropdown
               placeholder={formatMessage(messages.publisherPlaceholder)}
               defaultValue={publisherData.publisherName}
@@ -248,9 +248,11 @@ class SearchPrioritySetting extends Component {
     const { handleSubmit } = this.props;
     const { isConnecting } = this.props.dht;
 
+  
     if (
       (publisherData.priority === 'category' && !publisherData.keywords.length) ||
-      (publisherData.priority === 'publisher' && !publisherData.publisherName)
+      (publisherData.priority === 'publisher' && !publisherData.publisherName) ||
+      (publisherData.priority === 'local' && (!publisherData.state || !publisherData.country))
     ) {
       isDisabled = true;
     }

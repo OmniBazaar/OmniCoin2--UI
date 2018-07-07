@@ -173,8 +173,8 @@ class Home extends Component {
                 <NavLink to="/wallet" activeClassName="active" className="menu-item">
                   <Image src={WalletIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id="Home.wallet"
-                    defaultMessage="Wallet"
+                    id="Home.wallets"
+                    defaultMessage="Wallets"
                   />
                 </NavLink>
                 <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>

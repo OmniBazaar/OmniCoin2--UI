@@ -1,7 +1,6 @@
 .content {
   .check-form {
     .description {
-      display: flex;
       margin-bottom: 30px;
 
       img {
@@ -59,3 +58,12 @@
     }
   }
 }
+
+.check-container {
+  float: left;
+}
+
+.bottom-detail{
+  display: flex;
+}
+
