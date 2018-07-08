@@ -80,7 +80,7 @@ class RecentSearches extends Component {
 
     return (
       <div className="marketplace-container category-listing recent-searches">
-        <div className="header">searches
+        <div className="header">
           <Menu />
         </div>
         <div className="body">
