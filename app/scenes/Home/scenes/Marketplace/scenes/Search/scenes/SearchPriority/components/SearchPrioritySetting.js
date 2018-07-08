@@ -135,6 +135,10 @@ class SearchPrioritySetting extends Component {
   }
 
   onChangeCountry(country) {
+    if(!country) {
+      this.props.accountSettingsActions.changeState('');
+      this.props.accountSettingsActions.changeCity('');
+    }
     this.props.accountSettingsActions.changeCountry(country);
   }
 
