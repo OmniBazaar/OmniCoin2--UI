@@ -334,8 +334,8 @@ class ImportListings extends Component {
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
     const { selectedVendor, selectedPublisher } = this.state;
     let isDisabled = false;
-    if(!selectedVendor || !selectedPublisher || !importedFiles.length) {
-      isDisabled = true
+    if (!selectedVendor || !selectedPublisher || !importedFiles.length) {
+      isDisabled = true;
     }
 
 
