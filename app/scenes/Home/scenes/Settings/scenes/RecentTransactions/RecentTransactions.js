@@ -130,7 +130,9 @@ class RecentTransactions extends Component {
   }
   
   componentWillUnmount() {
-    this.onCloseDetails();
+    if(this.props.account.showDetails) {
+      this.props.accountSettingsActions.showDetailsModal();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
