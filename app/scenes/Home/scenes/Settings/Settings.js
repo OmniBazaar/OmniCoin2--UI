@@ -29,19 +29,19 @@ class Settings extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   componentWillMount() {
     this.props.accountSettingsActions.getPrivateData();
     this.props.accountSettingsActions.getPublisherData();
   }
-
+  
   close = () => {
     if (this.props.onClose) {
       this.props.onClose();
     }
   };
-
-
+  
+  
   sideMenu() {
     const { formatMessage } = this.props.intl;
     const { username } = this.props.auth.currentUser;
@@ -63,15 +63,15 @@ class Settings extends Component {
       </div>
     );
   }
-
+  
   render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
-    const containerClass = classNames({
-      overlay: true,
-      'details-visible': props.account.showDetails,
-    });
-
+    /*const containerClass = classNames({
+     overlay: true,
+     'details-visible': props.account.showDetails,
+     });*/
+    
     return (
       <div className="modal-container settings-container">
         {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
@@ -110,14 +110,14 @@ class Settings extends Component {
             }
             ]}
           />
-          <div
-            className={containerClass}
-            onClick={this.onCloseDetails}
-            onKeyDown={this.onCloseDetails}
-            role="link"
-            tabIndex={0}
-          />
-
+          {/*<div
+           className={containerClass}
+           onClick={this.onCloseDetails}
+           onKeyDown={this.onCloseDetails}
+           role="link"
+           tabIndex={0}
+           />*/}
+        
         </div>
       </div>
     );
@@ -159,3 +159,6 @@ export default connect(
     }, dispatch)
   }),
 )(injectIntl(Settings));
+  
+  
+  
