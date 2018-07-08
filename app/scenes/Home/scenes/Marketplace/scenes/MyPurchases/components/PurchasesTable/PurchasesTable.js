@@ -66,25 +66,25 @@ const messages = defineMessages({
 class PurchasesTable extends Component {
   constructor(props) {
     super(props);
-
+    
     this.handleFilterChange = debounce(this.handleFilterChange.bind(this), 200);
   }
-
+  
   componentWillMount() {
     const { type } = this.props;
     this.fetchData(type);
   }
-
+  
   componentWillReceiveProps(nextProps) {
     const { type } = nextProps;
     if (type !== this.props.type) {
-     this.fetchData(type);
+      this.fetchData(type);
     }
     if (this.props.data.loading && !nextProps.data.loading) {
       this.props.myPurchasesActions.setPagination(this.props.rowsPerPage);
     }
   }
-
+  
   fetchData(type) {
     if (type === 'buy') {
       this.props.myPurchasesActions.getMyPurchases();
@@ -92,20 +92,20 @@ class PurchasesTable extends Component {
       this.props.myPurchasesActions.getMySellings();
     }
   }
-
+  
   handleFilterChange(e, data) {
     this.props.myPurchasesActions.filterData(data.value);
   }
-
+  
   sortData = (clickedColumn) => () => {
     this.props.myPurchasesActions.sortData(clickedColumn);
   };
-
+  
   handlePaginationChange = (e, {activePage}) => {
     this.props.myPurchasesActions.setActivePage(activePage);
   };
-
-
+  
+  
   render() {
     const {
       activePage,
@@ -116,112 +116,116 @@ class PurchasesTable extends Component {
       loading
     } = this.props.data;
     const {formatMessage} = this.props.intl;
-
+    
     return (
-        <div className="purchases-table">
-          <div className="data-table">
-            <div className="top-detail">
-              <Input
-                icon={<Icon name="filter"/>}
-                iconPosition="left"
-                placeholder="Filter"
-                className="filter-input"
-                onChange={this.handleFilterChange}
+      <div className="purchases-table">
+        <div className="data-table">
+          <div className="top-detail">
+            <Input
+              icon={<Icon name="filter"/>}
+              iconPosition="left"
+              placeholder="Filter"
+              className="filter-input"
+              onChange={this.handleFilterChange}
+            />
+            <div className="pagination-container">
+              <Pagination
+                activePage={activePage}
+                onPageChange={this.handlePaginationChange}
+                totalPages={totalPages}
               />
-              <div className="pagination-container">
-                <Pagination
-                  activePage={activePage}
-                  onPageChange={this.handlePaginationChange}
-                  totalPages={totalPages}
-                />
-              </div>
             </div>
-            <div className="table-container">
-              {loading ? <Loader active inline="centered"/> :
-                <Table {...this.props.tableProps}>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHeaderCell
-                        key="id"
-                        sorted={sortColumn === 'id' ? sortDirection : null}
-                        onClick={this.sortData('id')}
-                      >
-                        {formatMessage(messages.id)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="id"
-                        sorted={sortColumn === 'date' ? sortDirection : null}
-                        onClick={this.sortData('date')}
-                      >
-                        {formatMessage(messages.date)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="expiration_time"
-                        sorted={sortColumn === 'expiration_time' ? sortDirection : null}
-                        onClick={this.sortData('expiration_time')}
-                      >
-                        {formatMessage(messages.expirationTime)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="count"
-                        sorted={sortColumn === 'count' ? sortDirection : null}
-                        onClick={this.sortData('count')}
-                      >
-                        {formatMessage(messages.count)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="amount"
-                        sorted={sortColumn === 'price' ? sortDirection : null}
-                        onClick={this.sortData('price')}
-                      >
-                        {formatMessage(messages.price)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="publisher"
-                        sorted={sortColumn === 'publisher' ? sortDirection : null}
-                        onClick={this.sortData('publisher')}
-                      >
-                        {formatMessage(messages.publisher)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="seller"
-                        sorted={sortColumn === 'seller' ? sortDirection : null}
-                        onClick={this.sortData('seller')}
-                      >
-                        {formatMessage(messages.seller)}
-                      </TableHeaderCell>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {!!dataFiltered && dataFiltered.map(row =>
-                      (
-                        <TableRow key={hash(row)}>
-                          <TableCell>{row.id}</TableCell>
-                          <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
-                          <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
-                          <TableCell>{row.count}</TableCell>
-                          <TableCell>{row.price} XOM</TableCell>
-                          <TableCell>{row.publisher}</TableCell>
-                          <TableCell>{row.seller}</TableCell>
-                        </TableRow>
-                      ))
+          </div>
+          <div className="table-container">
+            {loading ? <Loader active inline="centered"/> :
+              <Table {...this.props.tableProps}>
+                <TableHeader>
+                  <TableRow>
+                    <TableHeaderCell
+                      key="id"
+                      sorted={sortColumn === 'id' ? sortDirection : null}
+                      onClick={this.sortData('id')}
+                    >
+                      {formatMessage(messages.id)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="id"
+                      sorted={sortColumn === 'date' ? sortDirection : null}
+                      onClick={this.sortData('date')}
+                    >
+                      {formatMessage(messages.date)}
+                    </TableHeaderCell>
+                    {this.props.type === 'buy' &&
+                    <TableHeaderCell
+                      key="expiration_time"
+                      sorted={sortColumn === 'expiration_time' ? sortDirection : null}
+                      onClick={this.sortData('expiration_time')}
+                    >
+                      {formatMessage(messages.expirationTime)}
+                    </TableHeaderCell>
                     }
-                  </TableBody>
-                </Table>
-              }
-            </div>
-
-            <div className="top-detail bottom">
-              <div className="pagination-container">
-                <Pagination
-                  activePage={activePage}
-                  onPageChange={this.handlePaginationChange}
-                  totalPages={totalPages}
-                />
-              </div>
+                    <TableHeaderCell
+                      key="count"
+                      sorted={sortColumn === 'count' ? sortDirection : null}
+                      onClick={this.sortData('count')}
+                    >
+                      {formatMessage(messages.count)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="amount"
+                      sorted={sortColumn === 'price' ? sortDirection : null}
+                      onClick={this.sortData('price')}
+                    >
+                      {formatMessage(messages.price)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="publisher"
+                      sorted={sortColumn === 'publisher' ? sortDirection : null}
+                      onClick={this.sortData('publisher')}
+                    >
+                      {formatMessage(messages.publisher)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="seller"
+                      sorted={sortColumn === 'seller' ? sortDirection : null}
+                      onClick={this.sortData('seller')}
+                    >
+                      {formatMessage(messages.seller)}
+                    </TableHeaderCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {!!dataFiltered && dataFiltered.map(row =>
+                    (
+                      <TableRow key={hash(row)}>
+                        <TableCell>{row.id}</TableCell>
+                        <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
+                        {this.props.type === 'buy' &&
+                        <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
+                        }
+                        <TableCell>{row.count}</TableCell>
+                        <TableCell>{row.price} XOM</TableCell>
+                        <TableCell>{row.publisher}</TableCell>
+                        <TableCell>{row.seller}</TableCell>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            }
+          </div>
+          
+          <div className="top-detail bottom">
+            <div className="pagination-container">
+              <Pagination
+                activePage={activePage}
+                onPageChange={this.handlePaginationChange}
+                totalPages={totalPages}
+              />
             </div>
           </div>
         </div>
+      </div>
     );
   }
 }
