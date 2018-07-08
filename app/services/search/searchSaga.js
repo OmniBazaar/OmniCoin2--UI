@@ -52,7 +52,7 @@ function* searchListings({
     const { currentUser } = (yield select()).default.auth;
     if (historify) {
       const searchHistory = new SearchHistory(currentUser.username);
-      searchHistory.add({ searchTerm, category });
+      searchHistory.add({ searchTerm, category, subCategory });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
     yield put({

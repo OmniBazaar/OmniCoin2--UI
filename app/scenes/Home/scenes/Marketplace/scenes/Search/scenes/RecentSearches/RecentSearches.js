@@ -75,6 +75,7 @@ class RecentSearches extends Component {
       .map(search => ({
         ...search,
         categoryToRead: startCase(search.category),
+        subCategoryToRead: startCase(search.subCategory),
       }));
 
     return (
