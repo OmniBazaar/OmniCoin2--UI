@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
@@ -106,6 +106,7 @@ class ListingForm extends Component {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
+        bitcoin_address: this.props.auth.currentUser.btc_address,
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
@@ -716,7 +717,8 @@ ListingForm.propTypes = {
   }).isRequired,
   auth: PropTypes.shape({
     currentUser: PropTypes.shape({
-      username: PropTypes.string
+      username: PropTypes.string,
+      btc_address: PropTypes.string,
     })
   }).isRequired,
   listing: PropTypes.shape({
