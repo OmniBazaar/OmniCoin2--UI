@@ -106,7 +106,7 @@ class ListingForm extends Component {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
-        bitcoin_address: this.props.auth.currentUser.btc_address,
+        bitcoin_address: this.props.auth.account.btc_address,
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
@@ -716,9 +716,11 @@ ListingForm.propTypes = {
     formatMessage: PropTypes.func,
   }).isRequired,
   auth: PropTypes.shape({
+    account: PropTypes.shape({
+      btc_address: PropTypes.string,
+    }),
     currentUser: PropTypes.shape({
       username: PropTypes.string,
-      btc_address: PropTypes.string,
     })
   }).isRequired,
   listing: PropTypes.shape({

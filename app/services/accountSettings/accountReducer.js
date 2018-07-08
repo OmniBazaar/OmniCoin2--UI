@@ -173,7 +173,7 @@ const reducer = handleActions({
       referrer: true,
     };
   },
-  [setBtcAddress](state, { address }) {
+  [setBtcAddress](state, { payload: { address } }) {
     return {
       ...state,
       btcAddress: address,

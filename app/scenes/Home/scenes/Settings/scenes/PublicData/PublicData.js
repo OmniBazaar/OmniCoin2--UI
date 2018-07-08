@@ -310,7 +310,7 @@ class PublicData extends Component {
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
             <Input
               className="ref-btc-input"
-              value={account.btc_address}
+              value={account.btcAddress || auth.account.btc_address}
               placeholder={formatMessage(messages.btcAddressTitle)}
               onChange={(data) => this.setBtcAddress(data)}
             />
