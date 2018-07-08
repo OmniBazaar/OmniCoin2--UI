@@ -8,6 +8,7 @@ import { IntlProvider } from 'react-intl';
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
+import AirDrop from './scenes/AirDrop/AirDrop';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import {
@@ -59,8 +60,9 @@ class Root extends Component {
         <Router>
           <Switch>
             <Route path="/signup" render={(props) => <Signup {...props} />} />
+            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
             <Route path="/login" render={(props) => <Login {...props} />} />
-            <Route path="/" render={(props) => <Home {...props} />} />
+            <Route path="/" render={(props) => <Home {...props} />} />                       
           </Switch>
         </Router>
       </IntlProvider>
