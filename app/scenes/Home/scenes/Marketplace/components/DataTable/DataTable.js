@@ -165,7 +165,7 @@ class DataTable extends Component {
                     </TableCell>
                     <TableCell>
                       <a onClick={() => onSearch('', row.category)}>
-                        {row.category}
+                        {row.categoryToRead}
                       </a>
                     </TableCell>
                     <TableCell className="actions">
