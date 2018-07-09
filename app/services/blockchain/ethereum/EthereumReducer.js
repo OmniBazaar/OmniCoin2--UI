@@ -9,7 +9,7 @@ import {
   toggleAddAddressModal,
   connectWallet,
   connectWalletFinish
-} from './bitcoinActions';
+} from './EthereumActions';
 
 const defaultState = {
   wallets: [],
