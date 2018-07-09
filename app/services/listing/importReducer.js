@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
-import _ from 'lodash';
+import { map, sortBy } from 'lodash';
+
 import {
   stageFile,
   importFiles,
@@ -53,19 +54,25 @@ const reducer = handleActions({
 
   [sortImportData](state, { payload: { sortColumn } }) {
     let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
-    const sortBy = _.sortBy(state.importedFiles, [sortColumn]);
-    let sortedData = [];
+    const sortedBy = map(state.importedFiles, file => {
+      const sortedFile = ({
+        ...file,
+        items: sortBy(file.items, [sortColumn])
+      });
 
-    if (state.sortColumn !== sortColumn) {
-      sortedData = sortBy.reverse();
-      sortDirection = 'ascending';
-    } else {
-      sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
-    }
+      if (state.sortColumn !== sortColumn) {
+        sortedFile.items = sortedFile.items.reverse();
+        sortDirection = 'ascending';
+      } else {
+        sortedFile.items = sortDirection === 'ascending' ? sortedFile.items.reverse() : sortedFile.items;
+      }
+
+      return sortedFile;
+    });
 
     return {
       ...state,
-      importedFiles: sortedData,
+      importedFiles: sortedBy,
       sortDirection,
       sortColumn,
     };
