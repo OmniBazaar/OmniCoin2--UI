@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { showSettingsModal } from '../../../../services/menu/menuActions';
 import PropTypes from 'prop-types';
-
+import { NavLink } from 'react-router-dom';
 import './start-guide.scss';
 
 const messages = defineMessages({
@@ -174,15 +174,9 @@ class StartGuide extends Component {
         <p>{formatMessage(messages.distributingBillions)}</p>
         <p>
           {formatMessage(messages.goToUserSettings1)}
-          <span
-            className="menu-option"
-            onClick={showSettingsModal}
-            onKeyDown={showSettingsModal}
-            role="link"
-            tabIndex={0}
-          >
+          <NavLink to="/wallet" activeClassName="active" className="menu-item">
             {formatMessage(messages.goToUserSettings2)}
-          </span>
+          </NavLink>
           {formatMessage(messages.goToUserSettings3)}
         </p>
 
