@@ -18,5 +18,6 @@
   "AirDropForm.email": "E-mail Address",
   "AirDropForm.receiveWelcomeBonus": "Receive Welcome Bonus",
   "AirDropForm.skipFreeCoins": "Skip the free coins",
-  "AirDropForm.fieldRequired": "This field is required"
+  "AirDropForm.fieldRequired": "This field is required",
+  "AirDropForm.invalidEmail": "Email is invalid"
 }

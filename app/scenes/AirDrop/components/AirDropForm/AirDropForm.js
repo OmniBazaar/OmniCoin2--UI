@@ -9,7 +9,7 @@ import { Field, reduxForm, change, Form } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
-import { required } from 'redux-form-validators';
+import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
@@ -82,6 +82,10 @@ const messages = defineMessages({
   fieldRequired: {
     id: 'AirDropForm.fieldRequired',
     defaultMessage: 'This field is required'
+  },
+  invalidEmail: {
+    id: 'AirDropForm.invalidEmail',
+    defaultMessage: 'Email is invalid'
   }
 });
 
@@ -96,6 +100,8 @@ class AirDropForm extends Component {
     }
     if (!values.mailingList) {
       errors.mailingList = messages.fieldRequired;
+    } else if (/^.+@.+$/i.test(values.mailingList)) {
+      errors.mailingList = messages.invalidEmail;
     }
     return errors;
   };
@@ -200,7 +206,7 @@ class AirDropForm extends Component {
               name="email"
               placeholder={formatMessage(messages.email)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              validate={[required({ message: formatMessage(messages.fieldRequired) }), email({ message: formatMessage(messages.invalidEmail) })]}
             />
           </div>
         </div>
