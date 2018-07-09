@@ -47,6 +47,7 @@ export function* subscriber() {
     takeEvery('SIGNUP', signup),
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
+    takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
   ]);
 }
 
@@ -201,5 +202,14 @@ function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId 
   } catch (error) {
     console.log('ERROR ', error);
     yield put(welcomeBonusFailed(error));
+  }
+}
+
+export function* getWelcomeBonusAmount() {
+  try {
+    const amount = yield Apis.instance().db_api().exec('get_welcome_bonus_amount', []);
+    yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_SUCCEEDED', amount });
+  } catch (error) {
+    yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
   }
 }

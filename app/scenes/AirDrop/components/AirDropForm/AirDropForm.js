@@ -12,7 +12,9 @@ import { Button } from 'semantic-ui-react';
 import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import { getWelcomeBonusAmount } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
+
 import './air-drop-form.scss';
 
 const inputCustomSize = 15;
@@ -105,6 +107,10 @@ class AirDropForm extends Component {
     }
     return errors;
   };
+
+  componentDidMount() {
+    this.props.authActions.getWelcomeBonusAmount();
+  }
 
   onTelegramChannelCheck = isChecked => {
     this.props.formActions.change('telegramChannel', isChecked);
@@ -218,13 +224,14 @@ class AirDropForm extends Component {
     console.log(values, 'values');
   }
   render() {
+    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ?  this.props.auth.welcomeBonusAmount.toLocaleString() : "";
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div className="airdrop-container">
         <h2>
           {formatMessage(messages.receiveOmnicoinsByFollowingActions, {
-            current_bonus_amount: 20
+            current_bonus_amount: welcomeBonusAmount
           })}
         </h2>
         <Form onSubmit={handleSubmit(this.submit)} className="form">
@@ -263,14 +270,12 @@ AirDropForm = reduxForm({
 AirDropForm = injectIntl(AirDropForm);
 
 export default connect(
-  () => {},
+  state => ({ ...state.default }),
   dispatch => ({
-    formActions: bindActionCreators(
-      {
-        change: (field, value) => change('AirDropForm', field, value)
-      },
-      dispatch
-    )
+    formActions: bindActionCreators({
+      change: (field, value) => change('AirDropForm', field, value)
+    }, dispatch),
+    authActions: bindActionCreators({ getWelcomeBonusAmount }, dispatch),
   })
 )(AirDropForm);
 
