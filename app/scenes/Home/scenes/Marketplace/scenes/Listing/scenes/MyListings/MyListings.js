@@ -12,6 +12,7 @@ import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/Searc
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
+import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 
 import {
   requestMyListings,
@@ -157,17 +158,7 @@ class MyListings extends Component {
           <Menu />
         </div>
         <div className="body">
-          <div className="top-header">
-            <div className="content">
-              <div className="category-title">
-                <div className="parent">
-                  <span>{formatMessage(messages.marketplace)}</span>
-                  <Icon name="long arrow right" width={iconSize} height={iconSize} />
-                </div>
-                <span className="child">{formatMessage(messages.myListings)}</span>
-              </div>
-            </div>
-          </div>
+          <Breadcrumb category={'myListings'}/>
           <div className="listing-body">
             {this.renderMyListings()}
           </div>
