@@ -196,7 +196,7 @@ const processReferrer = async () => {
         console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: null });
       } else {
-        const start = data.lastIndexOf('_') + 1;
+        const start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
         event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
       }
