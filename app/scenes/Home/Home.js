@@ -74,9 +74,13 @@ class Home extends Component {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
+
+    if (!this.props.auth.currentUser && nextProps.auth.currentUser) {
+      this.init();
+    }
   }
 
-  componentDidMount() {
+  init() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.preferencesActions.loadPreferences();
