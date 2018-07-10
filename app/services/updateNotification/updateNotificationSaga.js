@@ -20,7 +20,7 @@ export function* updateNotificationSubscriber() {
   ]);
 }
 
-const checkInterval = 10000;
+const checkInterval = 3600000;
 const updateServerUrl = 'http://35.171.116.3/updates';
 
 const isProd = () => {
