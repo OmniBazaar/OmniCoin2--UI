@@ -100,6 +100,14 @@ export function* signup(action) {
   const macAddress = localStorage.getItem('macAddress');
   const harddriveId = localStorage.getItem('hardDriveId');
   try {
+    const referrerAccount = yield Apis.instance().db_api().exec('get_account_by_name', [referrer]);
+
+    if (referrer) {
+      if (referrerAccount == null || !referrerAccount.is_referrer) {
+        throw new Error('Referrer account not found');
+      }
+    }
+
     const result = yield call(fetch, `${faucet}/api/v1/accounts`, {
       method: 'post',
       mode: 'cors',
@@ -149,7 +157,8 @@ export function* signup(action) {
     }
   } catch (e) {
     console.log('ERROR', e);
-    yield put({ type: 'SIGNUP_FAILED', error: e });
+    const error = (typeof e == 'object') ? e.message : e
+    yield put({ type: 'SIGNUP_FAILED', error });
   }
 }
 
