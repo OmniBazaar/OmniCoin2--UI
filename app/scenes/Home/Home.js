@@ -40,6 +40,7 @@ import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
+import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -230,6 +231,8 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <UpdateNotification />
+                
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>

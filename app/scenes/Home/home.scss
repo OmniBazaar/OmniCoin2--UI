@@ -49,6 +49,17 @@ $closed-side-bar-size: 70px;
         background-color: $secondary-white;
         cursor: pointer;
       }
+
+      .update-notification {
+        box-sizing: border-box;
+        text-align: center;
+        margin-top: 30px;
+        padding: 0 27px;
+
+        button {
+          width: 100%;
+        }
+      }
     }
   }
 
