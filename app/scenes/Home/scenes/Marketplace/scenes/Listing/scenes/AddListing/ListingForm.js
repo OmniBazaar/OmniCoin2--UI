@@ -360,7 +360,8 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(messages.category)
+                  placeholder: formatMessage(messages.category),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -371,7 +372,8 @@ class ListingForm extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
