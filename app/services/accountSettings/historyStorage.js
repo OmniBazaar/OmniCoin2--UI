@@ -137,14 +137,19 @@ class HistoryStorage extends BaseStorage {
       }
       const totalObFee = this.totalObFee(op);
       if (op.isIncoming) {
-        transactions[trxKey].amount += this.operationAmount(op) - totalObFee;
+        transactions[trxKey].amount += this.operationAmount(op);
       } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
+
       if (op.to === currentUser.username) {
+        if (op.operationType === ChainTypes.operations.listing_create_operation
+            || op.operationType === ChainTypes.operations.listing_update_operation) {
+          transactions[trxKey].fee += totalObFee;
+        }
+      } else if (op.from === currentUser.username) {
         transactions[trxKey].fee += op.fee + totalObFee;
       }
-
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push({
         ...op,
@@ -360,7 +365,7 @@ class HistoryStorage extends BaseStorage {
               ChainTypes.operations.listing_delete_operation,
               ChainTypes.operations.witness_create,
               ChainTypes.operations.account_update].includes(el.op[0])) {
-          this.addOperation({
+          const operation = {
             id: el.id,
             blockNum: el.block_num,
             opInTrx: el.op_in_trx,
@@ -370,7 +375,24 @@ class HistoryStorage extends BaseStorage {
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             isIncoming: false
-          });
+          };
+          if ([ChainTypes.operations.listing_create_operation,
+               ChainTypes.operations.listing_update_operation,
+               ChainTypes.operations.listing_delete_operation].includes(el.op[0])) {
+            const [publisher, seller] = await Promise.all([
+              FetchChain('getAccount', el.op[1].publisher),
+              FetchChain('getAccount', el.op[1].seller)
+            ]);
+            operation.from = seller.get('name');
+            operation.to = publisher.get('name');
+            operation.fromTo = currentUser.username === seller.get('name')
+                                                    ? publisher.get('name')
+                                                    : seller.get('name');
+            if (el.op[1].publisher === account.get('id')) {
+              operation.isIncoming = true;
+            }
+          }
+          this.addOperation(operation);
         } else {
           const [from, to] = await HistoryStorage.getParties(el.op);
           this.addOperation({

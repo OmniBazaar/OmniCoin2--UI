@@ -162,10 +162,8 @@ export function* searchListingsByPeersMap({
 function* getRecentSearches() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const searches = yield call(async () => {
-      const history = new SearchHistory(currentUser.username);
-      return history.getHistory();
-    });
+    const history = new SearchHistory(currentUser.username);
+    const searches = history.getHistory();
     yield put(getRecentSearchesSucceeded(searches));
   } catch (error) {
     console.log('ERROR ', error);
