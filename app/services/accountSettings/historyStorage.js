@@ -5,6 +5,7 @@ import { Apis } from 'omnibazaarjs-ws';
 import BaseStorage from '../../utils/baseStorage';
 import {decodeMemo, generateKeyFromPassword} from "../blockchain/utils/wallet";
 import {calcBlockTime, getDynGlobalObject, getGlobalObject} from "../blockchain/utils/miscellaneous";
+import {getStoredCurrentUser} from "../blockchain/auth/services";
 
 
 const key = 'historyStorage';
@@ -19,18 +20,6 @@ class HistoryStorage extends BaseStorage {
     }
   }
 
-  // static updateBalances(transactions) {
-  //   if (transactions.length) {
-  //     transactions[transactions.length - 1].balance = transactions[transactions.length - 1].amount;
-  //     for (let i = transactions.length - 2; i >= 0; --i) {
-  //       transactions[i].balance = transactions[i + 1].balance
-  //                                 + transactions[i].balance
-  //                                 + transactions[i].amount;
-  //       transactions[i].amount = Math.abs(transactions[i].amount);
-  //     }
-  //   }
-  //   return transactions;
-  // }
 
   getOperation(id) {
     return this.cache[id];
@@ -40,12 +29,16 @@ class HistoryStorage extends BaseStorage {
     return !!this.cache[id];
   }
 
+  isEscrowResult(op) {
+    return op.operationType === ChainTypes.operations.escrow_release_operation
+        || op.operationType === ChainTypes.operations.escrow_return_operation;
+  }
+
   operationAmount(op) {
     if (op.amount) {
       return op.amount;
     }
-    if (op.operationType === ChainTypes.operations.escrow_release_operation
-      || op.operationType === ChainTypes.operations.escrow_return_operation) {
+    if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       return escrowTr.amount;
     }
@@ -55,19 +48,26 @@ class HistoryStorage extends BaseStorage {
   operationMemo(op) {
     if (op.memo) {
       return op.memo;
-    } else if (op.operationType === ChainTypes.operations.escrow_release_operation
-      || op.operationType === ChainTypes.operations.escrow_return_operation) {
+    } else if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       return escrowTr.memo;
     }
     return '';
   }
 
+  getObFee(op) {
+    if (this.isEscrowResult(op)) {
+      return this.findEscrowTransactionByResult(op).obFee;
+    }
+    return op.obFee;
+  }
+
   totalObFee(op) {
     let total = 0;
-    if (op.obFee) {
-      Object.keys(op.obFee).forEach(key => {
-          total += op.obFee[key];
+    const obFee = this.getObFee(op);
+    if (obFee){
+      Object.keys(obFee).forEach(key => {
+          total += obFee[key];
       })
     }
     return total;
@@ -113,6 +113,7 @@ class HistoryStorage extends BaseStorage {
 
   getHistory() {
     const transactions = {};
+    const currentUser = getStoredCurrentUser();
     Object.keys(this.cache).forEach(i => {
       if (!this.includeOperation(this.cache[i])) {
         return;
@@ -140,11 +141,14 @@ class HistoryStorage extends BaseStorage {
       } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
-      transactions[trxKey].fee += op.fee + totalObFee;
+      if (op.to === currentUser.username) {
+        transactions[trxKey].fee += op.fee + totalObFee;
+      }
 
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push({
         ...op,
+        obFee: op.to === currentUser.username ? this.getObFee(op) : undefined,
         amount: this.operationAmount(op)
       });
     });
@@ -312,7 +316,7 @@ class HistoryStorage extends BaseStorage {
       if (!this.exists(el.id)) {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
             || el.op[0] === ChainTypes.operations.sale_bonus_operation) {
-          this.addOperation({
+          const operation = {
             id: el.id,
             blockNum: el.block_num,
             opInTrx: el.op_in_trx,
@@ -323,7 +327,12 @@ class HistoryStorage extends BaseStorage {
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
             isIncoming: true
-          });
+          };
+          if ((operation.operationType === ChainTypes.operations.sale_bonus_operation
+                && el.op[1].seller === account.get('id'))
+              || operation.operationType === ChainTypes.operations.welcome_bonus_operation) {
+             this.addOperation(operation);
+          }
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
             const [referredAcc, referrerAcc] = await Promise.all([

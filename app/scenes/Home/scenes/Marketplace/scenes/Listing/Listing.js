@@ -257,13 +257,29 @@ class Listing extends Component {
     );
   }
 
+  getOmnicoinPrice(listingDetail) {
+    let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN');
+    amount = Math.ceil(amount * Math.pow(10, 5));
+    amount = (amount / Math.pow(10, 5)).toFixed(5);
+
+    return amount;
+  }
+
+  getBitcoinPrice(listingDetail) {
+    let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN');
+    amount = Math.ceil(amount * Math.pow(10, 8));
+    amount = (amount / Math.pow(10, 8)).toFixed(8);
+
+    return amount;
+  }
+
   buyItem = () => {
     const { listingDetail } = this.props.listing;
     const { activeCurrency } = this.props.listing.buyListing;
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(5);
+      const price = this.getOmnicoinPrice(listingDetail);
       const number =  this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
@@ -271,7 +287,7 @@ class Listing extends Component {
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(8);
+      const price = this.getBitcoinPrice(listingDetail);
       const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail['bitcoin_address'];
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
@@ -376,6 +392,26 @@ class Listing extends Component {
     return locations.join(', ');
   }
 
+  renderOmncoinPrice(listingDetail) {
+    const amount = this.getOmnicoinPrice(listingDetail);
+    return (
+      <PriceItem amount={amount}
+       coinLabel={CoinTypes.OMNI_COIN}
+       currency={CoinTypes.OMNI_CURRENCY}
+       isUserOwner={this.isOwner()}/>
+    );
+  }
+
+  renderBitcoinPrice(listingDetail) {
+    const amount = this.getBitcoinPrice(listingDetail);
+    return (
+      <PriceItem amount={amount}
+       coinLabel={CoinTypes.BIT_COIN}
+       currency={CoinTypes.BIT_CURRENCY}
+       isUserOwner={this.isOwner()}/>
+    );
+  }
+
   renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
@@ -430,17 +466,13 @@ class Listing extends Component {
               formatMessage(messages.selectCurrency)
             }
           </span>
-          {listingDetail['price_using_omnicoin'] &&
-              <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(5)}
-                         coinLabel={CoinTypes.OMNI_COIN}
-                         currency={CoinTypes.OMNI_CURRENCY}
-                         isUserOwner={this.isOwner()}/>
+          {
+            listingDetail['price_using_omnicoin'] &&
+            this.renderOmncoinPrice(listingDetail)
           }
-          {listingDetail['price_using_btc'] &&
-            <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(8)}
-                       coinLabel={CoinTypes.BIT_COIN}
-                       currency={CoinTypes.BIT_CURRENCY}
-                       isUserOwner={this.isOwner()}/>
+          {
+            listingDetail['price_using_btc'] &&
+            this.renderBitcoinPrice(listingDetail)
           }
           {!(listingDetail['currency'] === 'OMNICOIN' && listingDetail['price_using_omnicoin']) &&
             <PriceItem

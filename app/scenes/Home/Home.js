@@ -40,6 +40,7 @@ import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
+import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -74,9 +75,13 @@ class Home extends Component {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
+
+    if (!this.props.auth.currentUser && nextProps.auth.currentUser) {
+      this.init();
+    }
   }
 
-  componentDidMount() {
+  init() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.preferencesActions.loadPreferences();
@@ -226,6 +231,8 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <UpdateNotification />
+                
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
