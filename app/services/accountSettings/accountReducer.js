@@ -170,7 +170,7 @@ const reducer = handleActions({
   [setReferrer](state) {
     return {
       ...state,
-      referrer: true,
+      referrer: !state.referrer,
     };
   },
   [setBtcAddress](state, { payload: { address } }) {
