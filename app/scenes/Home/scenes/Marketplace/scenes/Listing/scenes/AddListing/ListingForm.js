@@ -102,16 +102,20 @@ class ListingForm extends Component {
       };
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
+      const { btc_address } = this.props.auth.account;
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         price_using_btc: false,
-        bitcoin_address: this.props.auth.account.btc_address,
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss')
       };
+
+      if (btc_address) {
+        data.bitcoin_address = btc_address;
+      }
     }
 
     this.props.initialize(data);

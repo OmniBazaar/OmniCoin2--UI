@@ -90,7 +90,7 @@ function* submitBitcoinTransfer(data) {
       throw new Error('Transaction from value need to be a wallet index');
     }
 
-    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
