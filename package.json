@@ -195,6 +195,7 @@
     "omnibazaar-dht": "git+ssh://github.com/OmniBazaar/DHT2.git",
     "omnibazaarjs": "^1.30.0",
     "omnibazaarjs-ws": "^1.0.1",
+    "open": "0.0.5",
     "public-ip": "^2.4.0",
     "react": "^16.2.0",
     "react-copy-to-clipboard": "^5.0.1",
