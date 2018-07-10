@@ -122,7 +122,7 @@ class SearchMenu extends Component {
         :
         savedSearches.slice(0, maxSearches).map((search) => (
           <Grid.Row key={hash(search)}>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <a onClick={() => this.handleSubmit({ search })}>
                 {search.searchTerm}
               </a>
@@ -130,7 +130,10 @@ class SearchMenu extends Component {
             <Grid.Column width={4}>
               <span className="gray-text">{startCase(search.category)}</span>
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
+              <span className="gray-text">{startCase(search.subCategory)}</span>
+            </Grid.Column>
+            <Grid.Column width={4}>
               <span className="gray-text">{dateformat(search.date)}</span>
             </Grid.Column>
           </Grid.Row>

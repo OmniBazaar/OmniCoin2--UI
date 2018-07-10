@@ -19,6 +19,7 @@ import {
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
 import { getConfig } from "./services/config/configActions";
+import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
 
 class Root extends Component {
@@ -29,6 +30,7 @@ class Root extends Component {
     this.props.authActions.getLastLoginUserName();
     this.props.listingDefaultsActions.loadListingDefault();
     this.props.preferencesActions.loadPreferences();
+    this.props.updateNotificationActions.checkUpdate();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,6 +113,9 @@ export default connect(
     }, dispatch),
     configActions: bindActionCreators({
       getConfig
+    }, dispatch),
+    updateNotificationActions: bindActionCreators({
+      checkUpdate
     }, dispatch)
   })
 )(Root);
