@@ -7,6 +7,7 @@ import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semant
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 import { pick } from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
@@ -350,7 +351,11 @@ class ImportListings extends Component {
               <div className="content">
                 <div className="category-title">
                   <div className="parent">
-                    <span>{formatMessage(messages.myListings)}</span>
+                    <NavLink to="/listings" activeClassName="active" className="menu-item">
+                      <span className="link">
+                        <span>{formatMessage(messages.myListings)}</span>
+                      </span>
+                    </NavLink>
                     <Icon name="long arrow right" width={iconSize} height={iconSize} />
                   </div>
                   <span className="child">{formatMessage(messages.importListings)}</span>
