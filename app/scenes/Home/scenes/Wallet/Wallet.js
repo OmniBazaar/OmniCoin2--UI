@@ -32,6 +32,7 @@ import messages from './messages';
 import settingsMessages from '../Settings/messages';
 import Settings from '../Settings/Settings';
 import './wallet.scss';
+import {CoinTypes} from "./constants";
 
 class Wallet extends Component {
   constructor(props) {
@@ -69,6 +70,15 @@ class Wallet extends Component {
     return 0.00;
   }
 
+  getCoinType(activeTab) {
+    switch(activeTab) {
+      case 0:
+        return CoinTypes.OMNI_COIN;
+      case 1:
+        return CoinTypes.BIT_COIN;
+    }
+  }
+
   onClickAddWallet() {
     this.props.bitcoinActions.toggleModal();
   }
@@ -80,7 +90,7 @@ class Wallet extends Component {
   openWalletModal() {
 
   }
-  
+
   onTabChange(e, data) {
     this.setState({
       activeTab: data.activeIndex
@@ -169,9 +179,9 @@ class Wallet extends Component {
              ]}
           />
           <div className="content">
-            {!this.state.activeTab &&
-              <Settings />
-            }
+              <Settings
+                coinType={this.getCoinType(this.state.activeTab)}
+              />
           </div>
         </div>
         <AddBitcoinWallet />

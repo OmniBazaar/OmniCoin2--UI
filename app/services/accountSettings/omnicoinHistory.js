@@ -10,7 +10,7 @@ import {getStoredCurrentUser} from "../blockchain/auth/services";
 
 const key = 'historyStorage';
 
-class HistoryStorage extends BaseStorage {
+class OmnicoinHistory extends BaseStorage {
   constructor(accountName) {
     super(key, accountName);
     this.cache = this.getData();
@@ -19,8 +19,7 @@ class HistoryStorage extends BaseStorage {
       this.cache = {};
     }
   }
-
-
+  
   getOperation(id) {
     return this.cache[id];
   }
@@ -372,7 +371,7 @@ class HistoryStorage extends BaseStorage {
             isIncoming: false
           });
         } else {
-          const [from, to] = await HistoryStorage.getParties(el.op);
+          const [from, to] = await OmnicoinHistory.getParties(el.op);
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
@@ -402,4 +401,4 @@ class HistoryStorage extends BaseStorage {
   }
 }
 
-export default HistoryStorage;
+export default OmnicoinHistory;

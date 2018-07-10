@@ -85,14 +85,14 @@ const initialState = {
 };
 
 class Transfer extends Component {
-  static asyncValidate = async (values) => {
-    try {
-      await FetchChain('getAccount', values.toName);
-    } catch (e) {
-      console.log('ERR', e);
-      throw { toName: messages.accountDoNotExist };
-    }
-  };
+  // static asyncValidate = async (values) => {
+  //   try {
+  //     await FetchChain('getAccount', values.toName);
+  //   } catch (e) {
+  //     console.log('ERR', e);
+  //     throw { toName: messages.accountDoNotExist };
+  //   }
+  // };
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -807,6 +807,6 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
-    asyncValidate: Transfer.asyncValidate,
+  //  asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

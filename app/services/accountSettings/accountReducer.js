@@ -381,6 +381,9 @@ const reducer = handleActions({
   [getRecentTransactions](state) {
     return {
       ...state,
+      recentTransactions: [],
+      recentTransactionsFiltered: [],
+      recentTransactionsVisible: [],
       loading: true,
       error: null
     };
@@ -393,6 +396,7 @@ const reducer = handleActions({
         fee: item.isIncoming ? 0 : item.fee
       }
     });
+    console.log("CHANGED TRANSACTIONS ", changedTransactions);
     return {
       ...state,
       loading: false,
