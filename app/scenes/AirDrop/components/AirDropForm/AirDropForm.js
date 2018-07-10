@@ -88,7 +88,11 @@ const messages = defineMessages({
   invalidEmail: {
     id: 'AirDropForm.invalidEmail',
     defaultMessage: 'Email is invalid'
-  }
+  },
+  signup: {
+    id: 'LoginForm.signup',
+    defaultMessage: 'Sign up'
+  },
 });
 
 class AirDropForm extends Component {
@@ -110,6 +114,10 @@ class AirDropForm extends Component {
 
   componentDidMount() {
     this.props.authActions.getWelcomeBonusAmount();
+  }
+
+  signUp = () => {
+    this.props.history.push('/');
   }
 
   onTelegramChannelCheck = isChecked => {
@@ -250,6 +258,7 @@ class AirDropForm extends Component {
               className="skipFreeCoins"
               content={formatMessage(messages.skipFreeCoins)}
               color="white"
+              onClick={this.signUp}
             />
           </div>
         </Form>
