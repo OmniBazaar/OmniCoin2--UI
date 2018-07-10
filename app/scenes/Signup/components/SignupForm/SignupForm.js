@@ -541,7 +541,7 @@ class SignupForm extends Component {
 
   render() {
     const {
-      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
+      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues, dht
     } = this.props;
     const agreementTerms = { formValues };
     const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
@@ -595,6 +595,7 @@ class SignupForm extends Component {
           disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating || this.keywordVal()}
           color="green"
           className={btnClass}
+          loading={auth.loading || dht.isConnecting}
           type="submit"
         />
         <Divider fitted />

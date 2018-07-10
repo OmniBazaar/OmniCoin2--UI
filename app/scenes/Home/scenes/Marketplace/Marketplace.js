@@ -81,7 +81,6 @@ class Marketplace extends Component {
       this.props.searchActions.filterSearchByCategory();
     }
 
-    // const { country, city } = this.props.account.publisherData;
     if (this.props.account.publisherData !== nextProps.account.publisherData) {
       if (!nextProps.listing.saveListing.saving) {
         this.fetchListings(nextProps.account.publisherData);
@@ -94,7 +93,14 @@ class Marketplace extends Component {
   }
 
   fetchListings({ country, state, city, keywords }) {
-    this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+    const searchListings = () => {
+      if (!this.props.dht.isConnecting && this.props.dht.connector) {
+        this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+      } else {
+        setTimeout(searchListings, 500);
+      }
+    };
+    searchListings();
   }
 
   listItems(items, size) {
@@ -103,14 +109,14 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-  
+
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
         const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-  
+
         let categoryTitle = '';
         if (item.category && item.category.toLowerCase() !== 'all') {
           categoryTitle = mainCategories[item.category] ?
@@ -118,7 +124,7 @@ class Marketplace extends Component {
         }
         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
         const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
-        
+
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
             <Link to={`listing/${item.listing_id}`}>

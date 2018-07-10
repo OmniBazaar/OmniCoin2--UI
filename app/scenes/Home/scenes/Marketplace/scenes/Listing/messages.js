@@ -127,7 +127,7 @@ export default defineMessages({
   },
   reportListingError: {
     id: 'Listing.reportListingError',
-    defaultMessage: 'An error occured while reporting the listing'
+    defaultMessage: 'Your PoP score is too low to report the listing'
   },
   reportListingSuccess: {
     id: 'Listing.reportListingSuccess',

@@ -28,14 +28,14 @@ const listingProps = [
 
 const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
 	let user = getStoredCurrentUser();
-  
+
   if (!authHeaders || !authUser || !user || (authUser.username !== user.username)) {
     if (user) {
       authUser = user;
     } else {
       user = currentUser;
     }
-    
+
     const key = generateKeyFromPassword(user.username, 'active', user.password);
     setTimeout(() => {
       // heavy operation
@@ -112,7 +112,8 @@ const createListingOnBlockchain = async (publisher, listing) => {
     },
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,
-    publisher: publisher.id
+    publisher: publisher.id,
+    priority_fee: 50 // default
   });
   await tr.set_required_fees();
   await tr.add_signer(key.privKey, key.pubKey);

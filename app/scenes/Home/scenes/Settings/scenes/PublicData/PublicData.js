@@ -24,7 +24,8 @@ import {
   setTransactionProcessor,
   setEscrow,
   updatePublicData,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -44,6 +45,10 @@ const messages = defineMessages({
     ' In exchange, you receive a commission (some OmniCoins) each time a user you referred\n' +
     ' buys or sells something in the OmniBazaar marketplace. In order to serve as a\n' +
     ' Referrer, you must keep the OmniBazaar application running on your computer.'
+  },
+  btcAddressTitle: {
+    id: 'Setting.btcAddressTitle',
+    defaultMessage: 'Bitcoin address',
   },
   publisherTitle: {
     id: 'Setting.publisherTitle',
@@ -190,6 +195,10 @@ class PublicData extends Component {
     };
   }
 
+  setBtcAddress({ target: { value } }) {
+    this.props.accountSettingsActions.setBtcAddress(value);
+  }
+
   updatePublicData() {
     const { formatMessage } = this.props.intl;
     const { ipAddress, publisher } = this.props.account;
@@ -277,6 +286,7 @@ class PublicData extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { account, auth } = this.props;
+
     return (
       <div className="check-form">
         <div className="description">
@@ -291,9 +301,20 @@ class PublicData extends Component {
           </div>
         </div>
         {account.referrer &&
-        <div className="ref-link-cont">
-          <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
+        <div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
+            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
+          </div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
+            <Input
+              className="ref-btc-input"
+              value={account.btcAddress || auth.account.btc_address}
+              placeholder={formatMessage(messages.btcAddressTitle)}
+              onChange={(data) => this.setBtcAddress(data)}
+            />
+          </div>
         </div>
         }
         <div className="description">
@@ -376,7 +397,8 @@ PublicData.propTypes = {
     setTransactionProcessor: PropTypes.func,
     setEscrow: PropTypes.func,
     updatePublicData: PropTypes.func,
-    changeIpAddress: PropTypes.func
+    changeIpAddress: PropTypes.func,
+    setBtcAddress: PropTypes.func,
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
@@ -421,6 +443,7 @@ export default connect(
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
       setReferrer,
+      setBtcAddress,
       setPublisher,
       setTransactionProcessor,
       setEscrow,
@@ -433,5 +456,5 @@ export default connect(
     authActions: bindActionCreators({
       getAccount
     }, dispatch),
-  }),
+  })
 )(injectIntl(PublicData));

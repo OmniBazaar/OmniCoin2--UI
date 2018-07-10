@@ -34,11 +34,12 @@ export function* updatePublicData() {
   const { is_a_processor } = (yield select()).default.auth.account;
   try {
     yield updateAccount({
-      transactionProcessor: is_a_processor ? false: account.transactionProcessor,
+      transactionProcessor: is_a_processor ? false : account.transactionProcessor,
       wantsToVote: account.wantsToVote,
       is_a_publisher: account.publisher,
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
+      btc_address: account.btcAddress,
     });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
@@ -62,20 +63,25 @@ export function* updateAccount(payload) {
   const { currentUser, account } = (yield select()).default.auth;
   const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   const tr = new TransactionBuilder();
-  let trObj = {...payload};
+  const trObj = { ...payload };
+
   if (!trObj.is_a_publisher) {
     delete trObj.publisher_ip;
   }
+
   if (trObj.transactionProcessor) {
     tr.add_type_operation('witness_create', {
       witness_account: account.id,
       url: '',
-      block_signing_key:  key.privKey.toPublicKey()
+      block_signing_key: key.privKey.toPublicKey(),
     });
   }
+
   const { wantsToVote } = trObj;
+
   delete trObj.wantsToVote;
   delete trObj.transactionProcessor;
+
   tr.add_type_operation(
     'account_update',
     {
