@@ -316,7 +316,7 @@ class HistoryStorage extends BaseStorage {
       if (!this.exists(el.id)) {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
             || el.op[0] === ChainTypes.operations.sale_bonus_operation) {
-          this.addOperation({
+          const operation = {
             id: el.id,
             blockNum: el.block_num,
             opInTrx: el.op_in_trx,
@@ -327,7 +327,12 @@ class HistoryStorage extends BaseStorage {
             operationType: el.op[0],
             amount: el.result[1].amount / 100000,
             isIncoming: true
-          });
+          };
+          if ((operation.operationType === ChainTypes.operations.sale_bonus_operation
+                && el.op[1].seller === account.get('id'))
+              || operation.operationType === ChainTypes.operations.welcome_bonus_operation) {
+             this.addOperation(operation);
+          }
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
             const [referredAcc, referrerAcc] = await Promise.all([
