@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Icon } from 'semantic-ui-react';
-
+import { NavLink } from 'react-router-dom';
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ListingForm from './ListingForm';
 import messages from './messages';
@@ -25,7 +25,11 @@ class AddListing extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.myListings)}</span>
+                  <NavLink to="/listings" activeClassName="active" className="menu-item">
+                    <span className="link">
+                      <span>{formatMessage(messages.myListings)}</span>
+                    </span>
+                  </NavLink>
                   <Icon name="long arrow right" width={iconSize} height={iconSize} />
                 </div>
                 <span className="child">{formatMessage(messages.createListing)}</span>
