@@ -389,7 +389,8 @@ const reducer = handleActions({
     const changedTransactions = transactions.map((item) => {
       return {
         ...item,
-        statusText: getBadgeClass(item.type)
+        statusText: getBadgeClass(item.type),
+        fee: item.isIncoming ? 0 : item.fee
       }
     });
     return {
