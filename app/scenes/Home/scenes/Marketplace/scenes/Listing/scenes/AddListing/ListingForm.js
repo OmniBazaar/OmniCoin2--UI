@@ -27,12 +27,15 @@ import {
   InputField,
   makeValidatableField
 } from '../../../../../../../../components/ValidatableField/ValidatableField';
-
 import {
   setListingImages,
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import {
+  updatePublicData,
+  setBtcAddress,
+} from '../../../../../../../../services/accountSettings/accountActions';
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
@@ -178,13 +181,20 @@ constructor(props) {
       const { formatMessage } = this.props.intl;
       if (error) {
         let msg = null;
-        if (error.message && error.message === 'no_changes') {
-          msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
-        } else if (error.message && error.message === 'publisher_not_alive') {
-          msg = formatMessage(messages.publisherNotReachable);
+        if (error.message) {
+          if (error.message === 'no_changes') {
+            msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+          } else if (error.message === 'publisher_not_alive') {
+            msg = formatMessage(messages.publisherNotReachable);
+          } else if (error.message.includes(messages.saveListingNotEnoughFunds.defaultMessage)) {
+            msg = formatMessage(messages.saveListingNotEnoughFunds);
+          } else {
+            msg = error.message;
+          }
         } else {
-          msg = formatMessage(messages.saveListingErrorMessage);
+          msg = msg = formatMessage(messages.saveListingErrorMessage);
         }
+
         this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
@@ -286,6 +296,8 @@ constructor(props) {
     const { saveListing } = this.props.listingActions;
     const { listing_id, publisher, keywords, ...data } = values;
 
+    this.props.accountActions.updatePublicData();
+
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
@@ -298,20 +310,25 @@ constructor(props) {
     const {
       category,
       country,
+      currency,
       publisher,
       price_using_btc,
       continuous
     } = this.props.formValues ? this.props.formValues : {};
     const {
+      account,
+      auth,
+      bitcoin: { wallets },
       handleSubmit,
       editingListing,
       invalid
     } = this.props;
 
     const formValues = this.props.formValues || {};
-    const { error, saving } = this.props.listing.saveListing;
-    return (
+    const { saving } = this.props.listing.saveListing;
+    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
 
+    return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -356,7 +373,7 @@ constructor(props) {
                 placeholder={formatMessage(messages.keywordCommas)}
                 validate={requiredFieldValidator}
               />
-              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
+              <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -395,7 +412,7 @@ constructor(props) {
               <Field
                 name="currency"
                 component={this.CurrencyDropdown}
-                removeAll={true}
+                removeAll
                 props={{
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
@@ -435,7 +452,7 @@ constructor(props) {
               />
             </Grid.Column>
           </Grid.Row>
-          {price_using_btc &&
+          {(price_using_btc || currency === 'BITCOIN') &&
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.bitcoinAddress)}
@@ -446,6 +463,8 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 validate={requiredFieldValidator}
+                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -726,8 +745,15 @@ ListingForm.propTypes = {
     resetSaveListing: PropTypes.func,
     saveListing: PropTypes.func
   }).isRequired,
+  accountActions: PropTypes.shape({
+    updatePublicData: PropTypes.func,
+    setBtcAddress: PropTypes.func,
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
+  }).isRequired,
+  account: PropTypes.shape({
+    btcAddress: PropTypes.string,
   }).isRequired,
   auth: PropTypes.shape({
     account: PropTypes.shape({
@@ -736,6 +762,9 @@ ListingForm.propTypes = {
     currentUser: PropTypes.shape({
       username: PropTypes.string,
     })
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array,bitcoin
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
@@ -759,6 +788,7 @@ export default compose(
   connect(
     state => ({
       auth: state.default.auth,
+      account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults
@@ -768,6 +798,10 @@ export default compose(
         setListingImages,
         saveListing,
         resetSaveListing
+      }, dispatch),
+      accountActions: bindActionCreators({
+        setBtcAddress,
+        updatePublicData,
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)

@@ -213,6 +213,10 @@ const messages = defineMessages({
     id: 'AddListing.saveListingSuccessMessage',
     defaultMessage: 'Listing is saved successful'
   },
+  saveListingNotEnoughFunds: {
+    id: 'AddListing.saveListingNotEnoughFunds',
+    defaultMessage: 'Insufficient funds to pay fee to publisher.'
+  },
   error: {
     id: 'AddListing.error',
     defaultMessage: 'Error'
