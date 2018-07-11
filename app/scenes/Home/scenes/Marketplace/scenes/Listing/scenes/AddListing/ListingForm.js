@@ -27,12 +27,15 @@ import {
   InputField,
   makeValidatableField
 } from '../../../../../../../../components/ValidatableField/ValidatableField';
-
 import {
   setListingImages,
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import {
+  updatePublicData,
+  setBtcAddress,
+} from '../../../../../../../../services/accountSettings/accountActions';
 
 import './add-listing.scss';
 
@@ -291,6 +294,8 @@ class ListingForm extends Component {
     const { saveListing } = this.props.listingActions;
     const { listing_id, publisher, keywords, ...data } = values;
 
+    this.props.accountActions.updatePublicData();
+
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
@@ -309,13 +314,15 @@ class ListingForm extends Component {
       continuous
     } = this.props.formValues ? this.props.formValues : {};
     const {
+      account,
+      auth,
       handleSubmit,
       editingListing,
       invalid
     } = this.props;
 
     const formValues = this.props.formValues || {};
-    const { error, saving } = this.props.listing.saveListing;
+    const { saving } = this.props.listing.saveListing;
     return (
 
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -452,6 +459,8 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 validate={requiredFieldValidator}
+                value={account.btcAddress || auth.account.btc_address}
+                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -732,8 +741,15 @@ ListingForm.propTypes = {
     resetSaveListing: PropTypes.func,
     saveListing: PropTypes.func
   }).isRequired,
+  accountActions: PropTypes.shape({
+    updatePublicData: PropTypes.func,
+    setBtcAddress: PropTypes.func,
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
+  }).isRequired,
+  account: PropTypes.shape({
+    btcAddress: PropTypes.string,
   }).isRequired,
   auth: PropTypes.shape({
     account: PropTypes.shape({
@@ -763,6 +779,7 @@ export default compose(
   connect(
     state => ({
       auth: state.default.auth,
+      account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults
@@ -772,6 +789,10 @@ export default compose(
         setListingImages,
         saveListing,
         resetSaveListing
+      }, dispatch),
+      accountActions: bindActionCreators({
+        setBtcAddress,
+        updatePublicData,
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)
