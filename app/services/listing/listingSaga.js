@@ -104,7 +104,7 @@ function* removeImage({ payload: { publisher, image } }) {
   }
 }
 
-function* checkAndUploadImages(publisher, listing) {
+function* checkAndUploadImages(user, publisher, listing) {
 	for (let i=0; i<listing.images.length; i++) {
 		const imageItem = listing.images[i];
 		const { localFilePath, path, id } = imageItem;
@@ -115,8 +115,7 @@ function* checkAndUploadImages(publisher, listing) {
 				name: path,
 				type
 			};
-      const { currentUser } = (yield select()).default.auth;
-			const result = yield call(saveImage, currentUser, publisher, file);
+			const result = yield call(saveImage, user, publisher, file);
 			yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
@@ -136,11 +135,15 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
     const { currentUser } = (yield select()).default.auth;
+
+    //saving take long time and user might logout in the middle of saving,
+    //so we need to clone current user object
+    const user = { ...currentUser };
     if (listingId) {
-      result = yield call(editListing, currentUser, publisher, listingId, listing);
+      result = yield call(editListing, user, publisher, listingId, listing);
     } else {
-      yield checkAndUploadImages(publisher, listing);
-      result = yield call(createListing, currentUser, publisher, listing);
+      yield checkAndUploadImages(user, publisher, listing);
+      result = yield call(createListing, user, publisher, listing);
     }
 
     if (!listingId) {
@@ -248,7 +251,8 @@ function* requestMyListings() {
 function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    yield call(deleteListing, currentUser, publisher, listing);
+    const user = { ...currentUser };
+    yield call(deleteListing, user, publisher, listing);
     yield put(deleteListingSuccess(listing.listing_id));
   } catch (err) {
     console.log(err);
