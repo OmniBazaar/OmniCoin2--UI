@@ -49,7 +49,7 @@ export default defineMessages({
   },
   [VestingTypes.none]: {
     id: 'VestingBalance.none',
-    defaultMessage: 'UNKNOWN'
+    defaultMessage: ''
   },
   [VestingTypes.escrowFee]: {
     id: 'VestingBalance.escrowFee',
