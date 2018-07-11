@@ -20,6 +20,7 @@ import {
 import { debounce } from 'lodash';
 import { ChainTypes } from 'omnibazaarjs/es';
 import cn from 'classnames';
+import { CoinTypes } from "../../../Wallet/constants";
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import TransactionDetails from './components/TransactionDetails/TransactionDetails';
@@ -126,7 +127,7 @@ class RecentTransactions extends Component {
   }
 
   componentWillMount() {
-    this.props.accountSettingsActions.getRecentTransactions();
+    this.fetchTransactions(this.props.coinType);
   }
 
   componentWillUnmount() {
@@ -140,6 +141,13 @@ class RecentTransactions extends Component {
       this.props.accountSettingsActions.sortData('date', 'descending');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
+    if (this.props.coinType !== nextProps.coinType) {
+      this.fetchTransactions(nextProps.coinType);
+    }
+  }
+
+  fetchTransactions(coinType) {
+    this.props.accountSettingsActions.getRecentTransactions(coinType);
   }
 
   handleFilterChange(e, data) {
@@ -323,6 +331,7 @@ class RecentTransactions extends Component {
 
 
 RecentTransactions.propTypes = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: PropTypes.shape({
     sortData: PropTypes.func,
     filterData: PropTypes.func,
@@ -354,6 +363,7 @@ RecentTransactions.propTypes = {
 };
 
 RecentTransactions.defaultProps = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
   account: {},
   tableProps: {},

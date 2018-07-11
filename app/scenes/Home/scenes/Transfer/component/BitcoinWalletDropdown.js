@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import {
   getWallets
 } from '../../../../../services/blockchain/bitcoin/bitcoinActions';
+import { SATOSHI_IN_BTC } from "../../../../../utils/constants";
 import messages from '../messages';
 
 class BitcoinWalletDropdown extends Component {
@@ -36,7 +37,7 @@ class BitcoinWalletDropdown extends Component {
         value: wallet.index,
         text: wallet.label || formatMessage(messages.defaultWalletLabel),
         key: wallet.index,
-        description: `${wallet.balance} BTC`
+        description: `${wallet.balance / SATOSHI_IN_BTC} BTC`
     }));
 
     return (

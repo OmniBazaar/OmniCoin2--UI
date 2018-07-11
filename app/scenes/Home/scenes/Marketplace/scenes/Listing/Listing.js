@@ -474,7 +474,8 @@ class Listing extends Component {
             listingDetail['price_using_btc'] &&
             this.renderBitcoinPrice(listingDetail)
           }
-          {!(listingDetail['currency'] === 'OMNICOIN' && listingDetail['price_using_omnicoin']) &&
+          {(!(listingDetail['currency'] === 'OMNICOIN' && listingDetail['price_using_omnicoin']) &&
+           !(listingDetail['currency'] === 'BITCOIN' && listingDetail['price_using_btc'])) &&
             <PriceItem
               amount={listingDetail.price}
               coinLabel={CoinTypes.LOCAL}

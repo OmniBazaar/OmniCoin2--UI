@@ -8,6 +8,7 @@ import BitCoinIcon from '../../images/th-bitcoin.svg';
 import BitCoinIconLg from '../../images/bg-bitcoin.svg';
 
 import '../../wallet.scss';
+import {SATOSHI_IN_BTC} from "../../../../../../utils/constants";
 
 const iconSize = 20;
 const iconSizeLg = 100;
@@ -56,7 +57,7 @@ const BitcoinWalletDetail = (props) => {
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">{(props.balance / 100000000) || 0} BTC</span>
+          <span className="balance">{(props.balance / SATOSHI_IN_BTC) || 0} BTC</span>
         </div>
       </div>
     </div>

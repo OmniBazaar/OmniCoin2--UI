@@ -381,6 +381,9 @@ const reducer = handleActions({
   [getRecentTransactions](state) {
     return {
       ...state,
+      recentTransactions: [],
+      recentTransactionsFiltered: [],
+      recentTransactionsVisible: [],
       loading: true,
       error: null
     };
@@ -392,6 +395,7 @@ const reducer = handleActions({
         statusText: getBadgeClass(item.type),
       }
     });
+    console.log("CHANGED TRANSACTIONS ", changedTransactions);
     return {
       ...state,
       loading: false,

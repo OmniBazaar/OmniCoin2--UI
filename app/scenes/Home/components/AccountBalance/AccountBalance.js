@@ -9,6 +9,7 @@ import { getAccountBalance } from '../../../../services/blockchain/wallet/wallet
 import OmniIcon from '../../images/th-omnicoin.svg';
 import messages from '../../scenes/Settings/messages';
 import './style.scss';
+import {TOKENS_IN_XOM} from "../../../../utils/constants";
 
 const iconSize = 20;
 
@@ -33,7 +34,7 @@ class AccountBalance extends Component {
   getBalance() {
     const { balance } = this.props.blockchainWallet;
     if (balance && balance.balance) {
-      return balance.balance / 100000;
+      return balance.balance / TOKENS_IN_XOM;
     }
     return 0.00;
   }

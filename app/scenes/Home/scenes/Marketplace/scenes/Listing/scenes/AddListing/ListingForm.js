@@ -36,8 +36,10 @@ import {
   updatePublicData,
   setBtcAddress,
 } from '../../../../../../../../services/accountSettings/accountActions';
+import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
+import {FetchChain} from "omnibazaarjs";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -53,7 +55,15 @@ const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '10mb';
 
 class ListingForm extends Component {
-  constructor(props) {
+  static asyncValidate = async (values) => {
+    try {
+      const result = await BitcoinApi.validateAddress(values.bitcoin_address);
+    } catch (e) {
+      throw { bitcoin_address: messages.invalidAddress };
+    }
+  };
+
+constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -170,30 +180,22 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
+        let msg = null;
         if (error.message) {
           if (error.message === 'no_changes') {
-            this.showErrorToast(
-              formatMessage(messages.error),
-              formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-            );
+            msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+          } else if (error.message === 'publisher_not_alive') {
+            msg = formatMessage(messages.publisherNotReachable);
           } else if (error.message.includes(messages.saveListingNotEnoughFunds.defaultMessage)) {
-            this.showErrorToast(
-              formatMessage(messages.error),
-              formatMessage(messages.saveListingNotEnoughFunds)
-            );
+            msg = formatMessage(messages.saveListingNotEnoughFunds);
           } else {
-            console.log(error.message);
-            this.showErrorToast(
-              formatMessage(messages.error),
-              error.message
-            );
+            msg = error.message;
           }
         } else {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorMessage)
-          );
+          msg = msg = formatMessage(messages.saveListingErrorMessage);
         }
+
+        this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -780,6 +782,8 @@ export default compose(
   reduxForm({
     form: 'listingForm',
     destroyOnUnmount: true,
+    asyncValidate: ListingForm.asyncValidate,
+    asyncBlurFields: ['bitcoin_address'],
   }),
   connect(
     state => ({

@@ -5,18 +5,20 @@ import {
   all,
   call
 } from 'redux-saga/effects';
-import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
+import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
 import {Apis} from "omnibazaarjs-ws";
 import _ from 'lodash';
 
+import { CoinTypes } from "../../scenes/Home/scenes/Wallet/constants";
 import { getAllPublishers } from './services';
 import {
   generateKeyFromPassword,
 } from '../blockchain/utils/wallet';
-import HistoryStorage from './historyStorage';
+import OmnicoinHistory from './omnicoinHistory';
 import {getStoredCurrentUser} from "../blockchain/auth/services";
 import {voteForProcessors} from "../processors/utils";
+import BitcoinHistory from "./bitcoinHistory";
 
 
 export function* accountSubscriber() {
@@ -115,11 +117,17 @@ export function* updateAccount(payload) {
 }
 
 
-export function* getRecentTransactions() {
+export function* getRecentTransactions({ payload: { coinType } }) {
   const {  currentUser } = (yield select()).default.auth;
   try {
-    const historyStorage = new HistoryStorage(currentUser.username);
-    yield historyStorage.refresh(currentUser);
+    let historyStorage;
+    if (coinType === CoinTypes.OMNI_COIN) {
+      historyStorage = new OmnicoinHistory(currentUser.username);
+      yield historyStorage.refresh(currentUser);
+    } else if (coinType === CoinTypes.BIT_COIN) {
+      historyStorage = new BitcoinHistory(currentUser.username);
+    }
+    console.log('COIN TYPE IN SAGA ', coinType);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
   } catch (e) {
     console.log('ERROR', e);

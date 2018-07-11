@@ -37,9 +37,6 @@ const messages = defineMessages({
 class AddBitcoinAddress extends Component {
   constructor(props) {
     super(props);
-    this.state={
-      value: ''
-    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
@@ -67,16 +64,8 @@ class AddBitcoinAddress extends Component {
 
   toggleModal = () => {
     this.props.bitcoinActions.toggleAddAddressModal();
-    this.setState({
-      value: ''
-    })
   };
-  
-  onChange = (e) => {
-    this.setState({
-      value: e.target.value
-    })
-  };
+
 
   render() {
     const { isOpen } = this.props.bitcoin.addAddressModal;
@@ -92,10 +81,6 @@ class AddBitcoinAddress extends Component {
               placeholder={formatMessage(messages.pleaseEnter)}
               message={formatMessage(messages.label)}
               component={FormField}
-              input={{
-                value: this.state.value,
-                onChange: this.onChange
-              }}
             />
             <ModalFooter
               cancelContent={formatMessage(messages.cancel)}

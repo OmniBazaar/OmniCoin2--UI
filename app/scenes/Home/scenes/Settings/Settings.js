@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Modal, Tab, Image } from 'semantic-ui-react';
-import { defineMessages, injectIntl } from 'react-intl';
-import classNames from 'classnames';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+
+import { CoinTypes } from "../Wallet/constants";
 
 import UserIcon from '../../images/th-user-white.svg';
 
@@ -29,19 +30,19 @@ class Settings extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   componentWillMount() {
     this.props.accountSettingsActions.getPrivateData();
     this.props.accountSettingsActions.getPublisherData();
   }
-  
+
   close = () => {
     if (this.props.onClose) {
       this.props.onClose();
     }
   };
-  
-  
+
+
   sideMenu() {
     const { formatMessage } = this.props.intl;
     const { username } = this.props.auth.currentUser;
@@ -63,7 +64,7 @@ class Settings extends Component {
       </div>
     );
   }
-  
+
   render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
@@ -71,7 +72,7 @@ class Settings extends Component {
      overlay: true,
      'details-visible': props.account.showDetails,
      });*/
-    
+
     return (
       <div className="modal-container settings-container">
         {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
@@ -93,6 +94,7 @@ class Settings extends Component {
                render: () => (
                  <Tab.Pane>
                    <RecentTransactions
+                     coinType={this.props.coinType}
                      rowsPerPage={20}
                      tableProps={{
                        sortable: true,
@@ -117,7 +119,7 @@ class Settings extends Component {
            role="link"
            tabIndex={0}
            />*/}
-        
+
         </div>
       </div>
     );
@@ -125,6 +127,7 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
+  coinType: PropTypes.string,
   accountSettingsActions: PropTypes.shape({
     getPrivateData: PropTypes.func,
     getPublisherData: PropTypes.func,
@@ -143,6 +146,7 @@ Settings.propTypes = {
 };
 
 Settings.defaultProps = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
   onClose: () => {},
   auth: {},
@@ -159,6 +163,6 @@ export default connect(
     }, dispatch)
   }),
 )(injectIntl(Settings));
-  
-  
-  
+
+
+

@@ -43,7 +43,7 @@ const {
   CHANGE_PUBLISHER_NAME: (publisher) => ({ publisher }),
   CHANGE_KEYWORDS: (keywords) => ({ keywords }),
   CHANGE_SEARCH_PRIORITY_DATA: (data) => ({ data }),
-  GET_RECENT_TRANSACTIONS: () => ({ }),
+  GET_RECENT_TRANSACTIONS: (coinType) => ({ coinType }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SORT_DATA: (sortColumn, direction) => ({ sortColumn, direction }),
