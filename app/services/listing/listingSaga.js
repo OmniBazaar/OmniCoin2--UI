@@ -49,7 +49,8 @@ import {
   deleteListing,
   getListingFromBlockchain,
   reportListingOnBlockchain,
-  createListingHash
+  createListingHash,
+  checkPublisherAliveStatus
 } from './apis';
 
 export function* listingSubscriber() {
@@ -139,6 +140,11 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     //saving take long time and user might logout in the middle of saving,
     //so we need to clone current user object
     const user = { ...currentUser };
+    const isPublisherAlive = yield call(checkPublisherAliveStatus, user, publisher);
+    if (!isPublisherAlive) {
+      throw new Error('publisher_not_alive');
+    }
+    
     if (listingId) {
       result = yield call(editListing, user, publisher, listingId, listing);
     } else {
