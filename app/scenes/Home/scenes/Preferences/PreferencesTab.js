@@ -155,18 +155,22 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div>
-          <div className="form-group">
-            <span>{formatMessage(messages.interfaceLanguage)}</span>
-            <Field
-              name="language"
-              component={Dropdown}
-              props={{
-                options: languages
-              }}
-            />
-            <div className="col-1" />
           </div>*/}
+            <Grid.Row>
+              <Grid.Column width={4}>
+                <span>{formatMessage(messages.interfaceLanguage)}</span>
+              </Grid.Column>
+              <Grid.Column width={10}>
+                <Field
+                  name="language"
+                  component={Dropdown}
+                  props={{
+                    options: languages,
+                    className: "priority-listings"
+                  }}
+                />
+              </Grid.Column>
+            </Grid.Row>
           {/*<div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
