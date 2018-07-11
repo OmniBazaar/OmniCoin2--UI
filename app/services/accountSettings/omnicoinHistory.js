@@ -6,6 +6,7 @@ import BaseStorage from '../../utils/baseStorage';
 import {decodeMemo, generateKeyFromPassword} from "../blockchain/utils/wallet";
 import {calcBlockTime, getDynGlobalObject, getGlobalObject} from "../blockchain/utils/miscellaneous";
 import {getStoredCurrentUser} from "../blockchain/auth/services";
+import {TOKENS_IN_XOM} from "../../utils/constants";
 
 
 const key = 'historyStorage';
@@ -19,7 +20,7 @@ class OmnicoinHistory extends BaseStorage {
       this.cache = {};
     }
   }
-  
+
   getOperation(id) {
     return this.cache[id];
   }
@@ -76,7 +77,7 @@ class OmnicoinHistory extends BaseStorage {
     const out  = {};
     if (fee) {
       Object.keys(fee).forEach(key => {
-        out[key] = fee[key].amount / 100000;
+        out[key] = fee[key].amount / TOKENS_IN_XOM;
       });
     }
     return out;
@@ -223,7 +224,7 @@ class OmnicoinHistory extends BaseStorage {
       ]).then(res => {
         return {
           ...el,
-          price: el.price.amount / 100000,
+          price: el.price.amount / TOKENS_IN_XOM,
           seller: res[0].get('name'),
           publisher: res[1].get('name')
         }
@@ -326,10 +327,10 @@ class OmnicoinHistory extends BaseStorage {
             opInTrx: el.op_in_trx,
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-            fee: el.op[1].fee.amount / 100000,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
-            amount: el.result[1].amount / 100000,
+            amount: el.result[1].amount / TOKENS_IN_XOM,
             isIncoming: true
           };
           if ((operation.operationType === ChainTypes.operations.sale_bonus_operation
@@ -349,10 +350,10 @@ class OmnicoinHistory extends BaseStorage {
               opInTrx: el.op_in_trx,
               trxInBlock: el.trx_in_block,
               date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-              fee: el.op[1].fee.amount / 100000,
+              fee: el.op[1].fee.amount / TOKENS_IN_XOM,
               obFee: this.processObFee(el.op[1].ob_fee),
               operationType: el.op[0],
-              amount: el.result[1].amount / 100000,
+              amount: el.result[1].amount / TOKENS_IN_XOM,
               from: referrerAcc.get('name'),
               to: referredAcc.get('name'),
               fromTo: referredAcc.get('name'),
@@ -370,7 +371,7 @@ class OmnicoinHistory extends BaseStorage {
             opInTrx: el.op_in_trx,
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-            fee: el.op[1].fee.amount / 100000,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             isIncoming: false
@@ -404,8 +405,8 @@ class OmnicoinHistory extends BaseStorage {
             from: from.get('name'),
             to: to.get('name'),
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
-            amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
-            fee: el.op[1].fee.amount / 100000,
+            amount: el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             // will be undefined if operation type is transfer

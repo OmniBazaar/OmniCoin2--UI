@@ -11,6 +11,7 @@ import {
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import {currencyConverter} from "../utils";
+import {TOKENS_IN_XOM} from "../../utils/constants";
 
 let authUser = null;
 let authHeaders = null;
@@ -106,7 +107,7 @@ const createListingOnBlockchain = async (user, publisher, listing) => {
     seller: seller.get('id'),
     price: {
       asset_id: '1.3.0',
-      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
+      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * TOKENS_IN_XOM)
     },
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,
@@ -159,7 +160,7 @@ const updateListingOnBlockchain = async (user, publisher, listingId, listing) =>
     listing_id: listingId,
     price: {
       asset_id: '1.3.0',
-      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
+      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * TOKENS_IN_XOM)
     },
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,

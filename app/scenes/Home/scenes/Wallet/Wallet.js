@@ -33,6 +33,7 @@ import settingsMessages from '../Settings/messages';
 import Settings from '../Settings/Settings';
 import './wallet.scss';
 import {CoinTypes} from "./constants";
+import {TOKENS_IN_XOM} from "../../../../utils/constants";
 
 class Wallet extends Component {
   constructor(props) {
@@ -65,7 +66,7 @@ class Wallet extends Component {
   getBalance() {
     const { balance } = this.props.blockchainWallet;
     if (balance && balance.balance) {
-      return balance.balance / 100000;
+      return balance.balance / TOKENS_IN_XOM;
     }
     return 0.00;
   }
