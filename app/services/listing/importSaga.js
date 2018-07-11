@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { generate } from 'shortid';
 import fs from 'fs';
 
@@ -94,11 +94,13 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
 
 export function* saveFiles({ payload: { publisher, filesToImport } }) {
   try {
+    const { currentUser } = (yield select()).default.auth;
+
     const allFiles = filesToImport.map(async (file) => {
       const newFile = { ...file };
 
       const newItems = newFile.items.map(async (item) => {
-        const { image, fileName, thumb } = await saveImage(publisher, item.images[0]);
+        const { image, fileName, thumb } = await saveImage(currentUser, publisher, item.images[0]);
         const itemToSave = { ...item };
         const { localPath, path } = item.images[0];
 
@@ -109,14 +111,18 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
         delete itemToSave.productId;
         delete itemToSave.imageURL;
 
-        const listing = await createListing(publisher, {
-          ...itemToSave,
-          images: [{
-            thumb,
-            image_name: fileName,
-            path: image,
-          }],
-        });
+        const listing = await createListing(
+          currentUser,
+          publisher,
+          {
+            ...itemToSave,
+            images: [{
+              thumb,
+              image_name: fileName,
+              path: image,
+            }],
+          },
+        );
 
         return {
           ...listing,
