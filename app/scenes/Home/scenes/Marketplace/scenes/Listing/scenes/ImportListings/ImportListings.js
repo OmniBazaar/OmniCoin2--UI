@@ -268,7 +268,7 @@ class ImportListings extends Component {
               <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
             <Grid.Column width={12} className="publishers-dropdown">
-              <Input>
+              <Input className='publishers-input'>
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}

@@ -14,6 +14,7 @@ import './vesting-balance.scss';
 import messages from './messages';
 import { claim } from "../../../../../../../../services/accountSettings/vestingBalances/vestingBalancesActions";
 import VestingTypes from "../../types";
+import {TOKENS_IN_XOM} from "../../../../../../../../utils/constants";
 
 class VestingBalance extends Component {
 
@@ -72,14 +73,14 @@ class VestingBalance extends Component {
           <Table.Row>
             <Table.Cell>{formatMessage(messages.vbAmount)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {vb.balance.amount / 100000} XOM
+              {vb.balance.amount / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdEarned)}</Table.Cell>
             <Table.Cell textAlign="right">
               {formatMessage(messages.coinDays, {
-                  number: Math.ceil(earned / secondsPerDay / 100000)
+                  number: Math.ceil(earned / secondsPerDay / TOKENS_IN_XOM)
               })}
             </Table.Cell>
           </Table.Row>
@@ -90,14 +91,20 @@ class VestingBalance extends Component {
                   vb.balance.amount
                   * vestingPeriod
                   / secondsPerDay
-                  / 100000)
+                  / TOKENS_IN_XOM)
               })}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {availablePercent * 100}% / {availablePercent * vb.balance.amount / 100000}
+              {(availablePercent * 100).toFixed(2)}% / {(availablePercent * vb.balance.amount / TOKENS_IN_XOM).toFixed(2)}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>{formatMessage(messages.availableToClaim)}</Table.Cell>
+            <Table.Cell textAlign="right">
+              {vb.amountAvailable / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -109,6 +116,7 @@ class VestingBalance extends Component {
                 onClick={this.handleClaim}
                 className="button--primary"
                 loading={loading}
+                disabled={vb.amountAvailable === 0}
               />
             </Table.Cell>
           </Table.Row>

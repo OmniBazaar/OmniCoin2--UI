@@ -33,8 +33,10 @@ import {
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
+import {FetchChain} from "omnibazaarjs";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -50,7 +52,15 @@ const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '10mb';
 
 class ListingForm extends Component {
-  constructor(props) {
+  static asyncValidate = async (values) => {
+    try {
+      const result = await BitcoinApi.validateAddress(values.bitcoin_address);
+    } catch (e) {
+      throw { bitcoin_address: messages.invalidAddress };
+    }
+  };
+
+constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -167,17 +177,15 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
+        let msg = null;
         if (error.message && error.message === 'no_changes') {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-          );
+          msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+        } else if (error.message && error.message === 'publisher_not_alive') {
+          msg = formatMessage(messages.publisherNotReachable);
         } else {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorMessage)
-          );
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
+        this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -360,7 +368,8 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(messages.category)
+                  placeholder: formatMessage(messages.category),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -371,7 +380,8 @@ class ListingForm extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -743,6 +753,8 @@ export default compose(
   reduxForm({
     form: 'listingForm',
     destroyOnUnmount: true,
+    asyncValidate: ListingForm.asyncValidate,
+    asyncBlurFields: ['bitcoin_address'],
   }),
   connect(
     state => ({

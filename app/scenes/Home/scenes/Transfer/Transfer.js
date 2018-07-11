@@ -17,9 +17,8 @@ import {
   initialize,
 } from 'redux-form';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
-import { FetchChain } from 'omnibazaarjs/es';
 import { $ } from 'moneysafe';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
@@ -85,14 +84,14 @@ const initialState = {
 };
 
 class Transfer extends Component {
-  static asyncValidate = async (values) => {
-    try {
-      await FetchChain('getAccount', values.toName);
-    } catch (e) {
-      console.log('ERR', e);
-      throw { toName: messages.accountDoNotExist };
-    }
-  };
+  // static asyncValidate = async (values) => {
+  //   try {
+  //     await FetchChain('getAccount', values.toName);
+  //   } catch (e) {
+  //     console.log('ERR', e);
+  //     throw { toName: messages.accountDoNotExist };
+  //   }
+  // };
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -413,7 +412,7 @@ class Transfer extends Component {
     const { transfer } = this.props;
     const {
       gettingCommonEscrows,
-      commonEscrows
+      commonEscrows,
     } = this.props.transfer;
 
     return (
@@ -421,7 +420,9 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>
+              {formatMessage(messages.accountName)}*
+            </span>
             <Field
               type="text"
               name="toName"
@@ -583,7 +584,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>{formatMessage(messages.bitcoinAddress)}*</span>
             <Field
               type="text"
               name="toName"
@@ -807,6 +808,6 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
-    asyncValidate: Transfer.asyncValidate,
+  //  asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

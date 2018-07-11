@@ -52,7 +52,7 @@ const messages = defineMessages({
   },
   feeDetail: {
     id: 'Settings.feeDetail',
-    defaultMessage: 'fee: {fee} XOM'
+    defaultMessage: 'operation fee: {fee} XOM'
   },
   omnibazaarFeeDetail: {
     id: 'Settings.omnibazaarFeeDetail',

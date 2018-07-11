@@ -1,8 +1,8 @@
-#define APP_NAME "OmniBazaar 2" 
+#define APP_NAME "OmniBazaar"
 #define APP_VERSION GetFileVersion("..\..\release\win-unpacked\Omnibazaar.exe")
 #define APP_PUBLISHER "OmniBazaar, Inc."
 #define APP_URL "http://omnibazaar.com"
-#define APPDATA_DIR "OmniBazaar 2"
+#define APPDATA_DIR "OmniBazaar"
 
 [Setup]
 AppId={{D82F064D-17E9-4203-8018-90C0DBDED675}

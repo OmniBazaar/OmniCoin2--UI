@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs/es';
 
+
 import { getGlobalObject, fetchAccount } from '../blockchain/utils/miscellaneous';
 import { voteForProcessors } from "./utils";
 
@@ -117,9 +118,9 @@ async function commitProcessors(processors, toggledProcessors, account, password
 
 
 async function processProcessors(processors) {
-  const filteredPr = await Promise.all(processors.map(el => FetchChain('getAccount', el.witness_account).then(account => ({
+  const filteredPr = await Promise.all(processors.map(el => fetchAccount(el.witness_account).then(account => ({
     ...el,
-    witness_account: account.toJS()
+    witness_account: account
   }))));
   return _.sortBy(filteredPr, ['pop_score'], ['desc']).map((el, index) => ({
     ...el,

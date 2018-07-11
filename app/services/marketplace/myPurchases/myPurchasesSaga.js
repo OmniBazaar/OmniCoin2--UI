@@ -5,7 +5,7 @@ import {
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
-import HistoryStorage from '../../accountSettings/historyStorage';
+import OmnicoinHistory from '../../accountSettings/omnicoinHistory';
 
 import {
   getMyPurchasesSucceeded,
@@ -24,7 +24,7 @@ export function* myPurchasesSubscriber() {
 function* getPurchases() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const historyStorage = new HistoryStorage(currentUser.username);
+    const historyStorage = new OmnicoinHistory(currentUser.username);
     yield historyStorage.refresh(currentUser);
     const purchases = yield historyStorage.getBuyHistory();
     yield put(getMyPurchasesSucceeded(purchases));
@@ -37,7 +37,7 @@ function* getPurchases() {
 function* getSellings() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const historyStorage = new HistoryStorage(currentUser.username);
+    const historyStorage = new OmnicoinHistory(currentUser.username);
     yield historyStorage.refresh(currentUser);
     const sellings = yield historyStorage.getSellHistory();
     yield put(getMySellingsSucceeded(sellings));

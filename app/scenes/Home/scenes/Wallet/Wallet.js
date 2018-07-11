@@ -32,6 +32,8 @@ import messages from './messages';
 import settingsMessages from '../Settings/messages';
 import Settings from '../Settings/Settings';
 import './wallet.scss';
+import {CoinTypes} from "./constants";
+import {TOKENS_IN_XOM} from "../../../../utils/constants";
 
 class Wallet extends Component {
   constructor(props) {
@@ -64,9 +66,18 @@ class Wallet extends Component {
   getBalance() {
     const { balance } = this.props.blockchainWallet;
     if (balance && balance.balance) {
-      return balance.balance / 100000;
+      return balance.balance / TOKENS_IN_XOM;
     }
     return 0.00;
+  }
+
+  getCoinType(activeTab) {
+    switch(activeTab) {
+      case 0:
+        return CoinTypes.OMNI_COIN;
+      case 1:
+        return CoinTypes.BIT_COIN;
+    }
   }
 
   onClickAddWallet() {
@@ -80,7 +91,7 @@ class Wallet extends Component {
   openWalletModal() {
 
   }
-  
+
   onTabChange(e, data) {
     this.setState({
       activeTab: data.activeIndex
@@ -116,6 +127,10 @@ class Wallet extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { account } = this.props.auth;
+    const {
+      addAddressModal,
+      modal
+    } =  this.props.bitcoin;
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
@@ -169,13 +184,13 @@ class Wallet extends Component {
              ]}
           />
           <div className="content">
-            {!this.state.activeTab &&
-              <Settings />
-            }
+              <Settings
+                coinType={this.getCoinType(this.state.activeTab)}
+              />
           </div>
         </div>
-        <AddBitcoinWallet />
-        <AddBitcoinAddress />
+        { modal.isOpen && <AddBitcoinWallet/> }
+        { addAddressModal.isOpen && <AddBitcoinAddress /> }
       </div>
     );
   }

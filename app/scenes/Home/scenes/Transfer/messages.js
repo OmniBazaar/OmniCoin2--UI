@@ -25,9 +25,13 @@ export default defineMessages({
     id: 'Transfer.fieldRequired',
     defaultMessage: 'This field is required'
   },
-  accountNameOrPublicKey: {
-    id: 'Transfer.accountNameOrPublicKey',
-    defaultMessage: 'Account Name or Public Key'
+  accountName: {
+    id: 'Transfer.accountName',
+    defaultMessage: 'Account Name'
+  },
+  bitcoinAddress: {
+    id: 'Transfer.bitcoinAddress',
+    defaultMessage: 'Bitcoin address'
   },
   pleaseEnter: {
     id: 'Transfer.pleaseEnter',
