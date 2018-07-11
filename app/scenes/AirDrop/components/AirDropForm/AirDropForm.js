@@ -202,7 +202,7 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinNewsletterChannelSuggestion)}&nbsp;
-            <a className="link" href="#" target="_blank">
+            <a className="link" href="http://eepurl.com/dAJyfv" target="_blank">
               {formatMessage(messages.mailchimpLink)}
             </a>
           </p>
@@ -232,7 +232,7 @@ class AirDropForm extends Component {
     console.log(values, 'values');
   }
   render() {
-    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ?  this.props.auth.welcomeBonusAmount.toLocaleString() : "";
+    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : "";
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
     return (
