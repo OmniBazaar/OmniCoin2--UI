@@ -167,11 +167,24 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
-        if (error.message && error.message === 'no_changes') {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-          );
+        if (error.message) {
+          if (error.message === 'no_changes') {
+            this.showErrorToast(
+              formatMessage(messages.error),
+              formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
+            );
+          } else if (error.message.includes(messages.saveListingNotEnoughFunds.defaultMessage)) {
+            this.showErrorToast(
+              formatMessage(messages.error),
+              formatMessage(messages.saveListingNotEnoughFunds)
+            );
+          } else {
+            console.log(error.message);
+            this.showErrorToast(
+              formatMessage(messages.error),
+              error.message
+            );
+          }
         } else {
           this.showErrorToast(
             formatMessage(messages.error),
