@@ -288,7 +288,8 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth } = this.props;
+    const { account, auth, bitcoin: { wallets } } = this.props;
+    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
 
     return (
       <div className="check-form">
@@ -313,7 +314,7 @@ class PublicData extends Component {
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
             <Input
               className="ref-btc-input"
-              value={account.btcAddress || auth.account.btc_address}
+              value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
               placeholder={formatMessage(messages.btcAddressTitle)}
               onChange={(data) => this.setBtcAddress(data)}
             />
@@ -347,8 +348,9 @@ class PublicData extends Component {
               src={this.getTransactionIcon()}
               width={iconSize}
               height={iconSize}
-              className={cn("checkbox", this.props.auth.account.is_a_processor ? "disabled" : "")}
-              onClick={this.toggleTransactionProcessor} />
+              className={cn('checkbox', this.props.auth.account.is_a_processor ? 'disabled' : '')}
+              onClick={this.toggleTransactionProcessor}
+            />
           </div>
           <div className="description-text">
             <p className="title">{formatMessage(messages.processorTitle)}</p>
@@ -429,10 +431,14 @@ PublicData.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     })
-  }).isRequired
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array,
+  }),
 };
 
 PublicData.defaultProps = {
+  bitcoin: {},
   accountSettingsActions: {},
   account: {},
   intl: {},

@@ -316,6 +316,7 @@ class ListingForm extends Component {
     const {
       account,
       auth,
+      bitcoin: { wallets },
       handleSubmit,
       editingListing,
       invalid
@@ -323,8 +324,9 @@ class ListingForm extends Component {
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
-    return (
+    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
 
+    return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -459,7 +461,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 validate={requiredFieldValidator}
-                value={account.btcAddress || auth.account.btc_address}
+                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
@@ -758,6 +760,9 @@ ListingForm.propTypes = {
     currentUser: PropTypes.shape({
       username: PropTypes.string,
     })
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array,bitcoin
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
