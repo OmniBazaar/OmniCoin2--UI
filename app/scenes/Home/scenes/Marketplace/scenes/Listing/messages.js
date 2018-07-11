@@ -125,9 +125,13 @@ export default defineMessages({
     id: 'Listing.reportConfirmationQuestion',
     defaultMessage: 'Are you sure you want to report this listing?'
   },
+  reportListingErrorPopScore: {
+    id: 'Listing.reportListingErrorPopScore',
+    defaultMessage: 'Your PoP score is too low to report the listing'
+  },
   reportListingError: {
     id: 'Listing.reportListingError',
-    defaultMessage: 'Your PoP score is too low to report the listing'
+    defaultMessage: 'Can\'t report the listing due to insufficient funds to pay the fee or connection error'
   },
   reportListingSuccess: {
     id: 'Listing.reportListingSuccess',

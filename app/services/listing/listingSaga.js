@@ -314,7 +314,6 @@ function* reportListing({ payload: { listingId } }) {
     yield call(reportListingOnBlockchain, listingId);
     yield put(reportListingSuccess())
   } catch (error) {
-    console.log('ERROR ', error);
-    yield put(reportListingError(JSON.stringify(error)));
+    yield put(reportListingError(error.toString()));
   }
 }
