@@ -17,9 +17,8 @@ import {
   initialize,
 } from 'redux-form';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
-import { FetchChain } from 'omnibazaarjs/es';
 import { $ } from 'moneysafe';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
@@ -413,7 +412,7 @@ class Transfer extends Component {
     const { transfer } = this.props;
     const {
       gettingCommonEscrows,
-      commonEscrows
+      commonEscrows,
     } = this.props.transfer;
 
     return (
@@ -421,7 +420,9 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>
+              {formatMessage(messages.accountName)}*
+            </span>
             <Field
               type="text"
               name="toName"
@@ -583,7 +584,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>{formatMessage(messages.bitcoinAddress)}*</span>
             <Field
               type="text"
               name="toName"
