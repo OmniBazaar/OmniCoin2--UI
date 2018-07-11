@@ -12,7 +12,7 @@ import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/Searc
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
-import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
+import { NavLink } from 'react-router-dom';
 
 import {
   requestMyListings,
@@ -158,7 +158,21 @@ class MyListings extends Component {
           <Menu />
         </div>
         <div className="body">
-          <Breadcrumb category={'myListings'}/>
+          <div className="top-header">
+            <div className="content">
+              <div className="category-title">
+                <div className="parent">
+                  <NavLink to="/marketplace" activeClassName="active" className="menu-item">
+                    <span className="link">
+                      <span>{formatMessage(messages.marketplace)}</span>
+                    </span>
+                  </NavLink>
+                  <Icon name="long arrow right" width={iconSize} height={iconSize} />
+                </div>
+                <span className="child">{formatMessage(messages.myListings)}</span>
+              </div>
+            </div>
+          </div>
           <div className="listing-body">
             {this.renderMyListings()}
           </div>
