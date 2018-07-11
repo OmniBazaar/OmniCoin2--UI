@@ -261,10 +261,14 @@ const messages = defineMessages({
     'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
     defaultMessage: 'Listing has no changes detected, please change data and submit again'
   },
-  'publisherNotReachable': {
+  publisherNotReachable: {
     'id': 'AddListing.publisherNotReachable',
     defaultMessage: 'Publisher is not reachable'
-  }
+  },
+  invalidAddress: {
+    id: 'AddListing.invalidAddress',
+    defaultMessage: 'Invalid address'
+  },
 });
 
 export default messages;

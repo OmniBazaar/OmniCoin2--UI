@@ -6,7 +6,7 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
-import { FetchChain, TransactionBuilder, hash } from 'omnibazaarjs/es';
+import { FetchChain,  hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 import {
   ws,
@@ -144,7 +144,7 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     if (!isPublisherAlive) {
       throw new Error('publisher_not_alive');
     }
-    
+
     if (listingId) {
       result = yield call(editListing, user, publisher, listingId, listing);
     } else {
@@ -202,7 +202,7 @@ function* getListingDetail({ payload: { listingId }}) {
 function* requestMyListings() {
 	try {
     yield put(clearSearchResults());
-    
+
     const { currentUser } = (yield select()).default.auth;
 		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
 		let getListingCommands = (yield Promise.all(
