@@ -39,6 +39,7 @@ export function* updatePublicData() {
       transactionProcessor: is_a_processor ? false : account.transactionProcessor,
       wantsToVote: account.wantsToVote,
       is_a_publisher: account.publisher,
+      is_referrer: account.referrer,
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
       btc_address: account.btcAddress,

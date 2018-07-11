@@ -170,7 +170,7 @@ const reducer = handleActions({
   [setReferrer](state) {
     return {
       ...state,
-      referrer: true,
+      referrer: !state.referrer,
     };
   },
   [setBtcAddress](state, { payload: { address } }) {
@@ -393,7 +393,6 @@ const reducer = handleActions({
       return {
         ...item,
         statusText: getBadgeClass(item.type),
-        fee: item.isIncoming ? 0 : item.fee
       }
     });
     console.log("CHANGED TRANSACTIONS ", changedTransactions);

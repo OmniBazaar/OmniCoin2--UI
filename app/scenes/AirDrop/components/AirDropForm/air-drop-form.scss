@@ -1,0 +1,46 @@
+/**
+ * created by alaverdyanrafayel on 08/07/18
+ */
+
+@import "../../../../styles/index";
+
+.airdrop-container {
+  width: 600px;
+  margin: 0 auto;
+  color: $primary-white;
+  h2 {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 30px;
+  }
+  .form {
+    .channel-link {
+      p {
+        font-size: 1em;
+        margin-bottom: 0;
+      }
+    }
+    .joined-channel {
+      display: flex;
+      align-items: center;
+      height: 70px;
+      input[type="text"] {
+        flex: 4;
+        margin-top: -4px;
+        height: 28px;
+        margin-top: 3px;
+      }
+      p {
+        flex: 10;
+        font-size: 1em;
+        margin-left: 6px;
+        margin-bottom: 0;
+      }
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+    }
+  }
+}

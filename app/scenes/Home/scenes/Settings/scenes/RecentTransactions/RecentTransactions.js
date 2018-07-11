@@ -280,7 +280,7 @@ class RecentTransactions extends Component {
                           </TableCell>
                           <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
+                          <TableCell>{row.fee}</TableCell>
                           <TableCell>
                             <div className={cn('badge-tag', row.statusText)}>
                               {formatMessage(messages[row.type])}

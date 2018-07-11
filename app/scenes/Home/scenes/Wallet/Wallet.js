@@ -126,6 +126,10 @@ class Wallet extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { account } = this.props.auth;
+    const {
+      addAddressModal,
+      modal
+    } =  this.props.bitcoin;
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
@@ -184,8 +188,8 @@ class Wallet extends Component {
               />
           </div>
         </div>
-        <AddBitcoinWallet />
-        <AddBitcoinAddress />
+        { modal.isOpen && <AddBitcoinWallet/> }
+        { addAddressModal.isOpen && <AddBitcoinAddress /> }
       </div>
     );
   }

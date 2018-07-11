@@ -167,17 +167,15 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
+        let msg = null;
         if (error.message && error.message === 'no_changes') {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-          );
+          msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+        } else if (error.message && error.message === 'publisher_not_alive') {
+          msg = formatMessage(messages.publisherNotReachable);
         } else {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorMessage)
-          );
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
+        this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -360,7 +358,8 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(messages.category)
+                  placeholder: formatMessage(messages.category),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -371,7 +370,8 @@ class ListingForm extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />

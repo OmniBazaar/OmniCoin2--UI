@@ -97,7 +97,13 @@ class VestingBalance extends Component {
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {availablePercent * 100}% / {availablePercent * vb.balance.amount / 100000}
+              {(availablePercent * 100).toFixed(2)}% / {(availablePercent * vb.balance.amount / 100000).toFixed(2)}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>{formatMessage(messages.availableToClaim)}</Table.Cell>
+            <Table.Cell textAlign="right">
+              {vb.amountAvailable / 100000} XOM
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -109,6 +115,7 @@ class VestingBalance extends Component {
                 onClick={this.handleClaim}
                 className="button--primary"
                 loading={loading}
+                disabled={vb.amountAvailable === 0}
               />
             </Table.Cell>
           </Table.Row>

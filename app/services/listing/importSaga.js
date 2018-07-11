@@ -18,9 +18,9 @@ const imagesDevPath = {
 };
 
 const imagesProdPath = {
-  win32: `${process.env.LOCALAPPDATA}/OmniBazaar 2/`,
+  win32: `${process.env.LOCALAPPDATA}/OmniBazaar/`,
   linux: `${process.env.HOME}/.OmniBazaar/`,
-  darwin: `${process.env.HOME}/Library/Application Support/OmniBazaar 2/`,
+  darwin: `${process.env.HOME}/Library/Application Support/OmniBazaar/`,
 };
 
 const imageStoragePath = {

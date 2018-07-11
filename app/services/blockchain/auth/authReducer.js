@@ -10,7 +10,8 @@ import {
   requestReferrer,
   getAccount,
   getLastLoginUserName,
-  showTermsModal
+  showTermsModal,
+  getWelcomeBonusAmountSucceeded,
 } from './authActions';
 
 import {
@@ -27,7 +28,8 @@ const defaultState = {
   loading: false,
   isAccountLoading: false,
   lastLoginUserName: null,
-  showTermsModal: false
+  showTermsModal: false,
+  welcomeBonusAmount: null,
 };
 
 const reducer = handleActions({
@@ -138,6 +140,12 @@ const reducer = handleActions({
       ...state,
       showTermsModal: !state.showTermsModal
     };
+  },
+  [getWelcomeBonusAmountSucceeded](state, { amount }) {
+    return ({
+      ...state,
+      welcomeBonusAmount: amount
+    });
   },
 }, defaultState);
 
