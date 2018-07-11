@@ -12,7 +12,6 @@ import _ from 'lodash';
 
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
-import { fetchAccount } from '../blockchain/utils/miscellaneous';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import {
   getEscrowSettingsFailed,
