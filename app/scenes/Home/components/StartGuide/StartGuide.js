@@ -151,15 +151,9 @@ class StartGuide extends Component {
         <h3>{formatMessage(messages.getMoreOC)}</h3>
         <p>
           {formatMessage(messages.getMoreOCText1)}
-          <span
-            className="menu-option"
-            onClick={showSettingsModal}
-            onKeyDown={showSettingsModal}
-            role="link"
-            tabIndex={0}
-          >
+          <NavLink to="/wallet" activeClassName="active" className="menu-item">
             {formatMessage(messages.getMoreOCText2)}
-          </span>
+          </NavLink>
           {formatMessage(messages.getMoreOCText3)}
         </p>
 
