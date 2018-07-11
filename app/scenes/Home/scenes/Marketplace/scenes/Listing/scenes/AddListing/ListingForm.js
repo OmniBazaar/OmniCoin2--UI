@@ -52,7 +52,7 @@ const numericFieldValidator = [
 ];
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
-const MAX_IMAGE_SIZE = '10mb';
+const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
@@ -318,7 +318,7 @@ constructor(props) {
     const {
       account,
       auth,
-      bitcoin: { wallets },
+      bitcoin,
       handleSubmit,
       editingListing,
       invalid
@@ -326,7 +326,7 @@ constructor(props) {
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
-    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
+    const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -764,7 +764,7 @@ ListingForm.propTypes = {
     })
   }).isRequired,
   bitcoin: PropTypes.shape({
-    wallets: PropTypes.array,bitcoin
+    wallets: PropTypes.array
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
@@ -791,7 +791,8 @@ export default compose(
       account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults
+      listingDefaults: state.default.listingDefaults,
+      bitcoin: state.default.bitcoin
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
