@@ -290,6 +290,7 @@ class ListingForm extends Component {
     const {
       category,
       country,
+      currency,
       publisher,
       price_using_btc,
       continuous
@@ -348,7 +349,7 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.keywordCommas)}
                 validate={requiredFieldValidator}
               />
-              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
+              <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -387,7 +388,7 @@ class ListingForm extends Component {
               <Field
                 name="currency"
                 component={this.CurrencyDropdown}
-                removeAll={true}
+                removeAll
                 props={{
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
@@ -427,7 +428,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-          {price_using_btc &&
+          {(price_using_btc || currency === 'BITCOIN') &&
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.bitcoinAddress)}
