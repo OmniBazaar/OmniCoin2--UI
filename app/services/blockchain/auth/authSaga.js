@@ -19,6 +19,7 @@ import {
   welcomeBonusFailed
 } from './authActions';
 import {getFirstReachable} from "./services";
+import * as AuthApi from "./AuthApi";
 
 
 const messages = defineMessages({
@@ -48,6 +49,7 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
+    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus)    
   ]);
 }
 
@@ -212,4 +214,13 @@ export function* getWelcomeBonusAmount() {
   } catch (error) {
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
   }
+}
+
+export function* receiveWelcomeBonus({ payload: { data } }) {
+  try {
+    const res = yield call(AuthApi.getTelegramUserId, data.telegramPhoneNumber);
+    if (res && res.result.contact.user_id) {
+      yield call(AuthApi.getTelegramChatMember, res.result.contact.user_id);
+    }
+  } catch (error) { }
 }

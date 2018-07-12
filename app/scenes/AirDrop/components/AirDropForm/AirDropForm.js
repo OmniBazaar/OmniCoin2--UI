@@ -12,7 +12,7 @@ import { Button } from 'semantic-ui-react';
 import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
-import { getWelcomeBonusAmount } from '../../../../services/blockchain/auth/authActions';
+import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 
 import './air-drop-form.scss';
@@ -35,11 +35,19 @@ const messages = defineMessages({
   },
   joinTelegramChannelConfirmation: {
     id: 'AirDropForm.joinTelegramChannelConfirmation',
-    defaultMessage: 'I joined the OmniBazaar channel. My Telegram user name is'
+    defaultMessage: 'I joined the OmniBazaar channel. My Telegram phone number is'
   },
-  telegramUserName: {
-    id: 'AirDropForm.telegramUserName',
-    defaultMessage: 'User name'
+  joinTelegramBotSuggestion: {
+    id: 'AirDropForm.joinTelegramBotSuggestion',
+    defaultMessage: 'Search omnicoin_verification_bot and start the Bot:'
+  },
+  joinTelegramBotConfirmation: {
+    id: 'AirDropForm.joinTelegramBotConfirmation',
+    defaultMessage: 'I joined the omnicoin_verification_bot.'
+  },
+  telegramPhoneNumber: {
+    id: 'AirDropForm.telegramPhoneNumber',
+    defaultMessage: 'Phone Number'
   },
   joinTwitterChannelSuggestion: {
     id: 'AirDropForm.joinTwitterChannelSuggestion',
@@ -101,6 +109,9 @@ class AirDropForm extends Component {
     if (!values.telegramChannel) {
       errors.telegramChannel = messages.fieldRequired;
     }
+    if (!values.telegramBot) {
+      errors.telegramBot = messages.fieldRequired;
+    }
     if (!values.twitterChannel) {
       errors.twitterChannel = messages.fieldRequired;
     }
@@ -122,6 +133,10 @@ class AirDropForm extends Component {
 
   onTelegramChannelCheck = isChecked => {
     this.props.formActions.change('telegramChannel', isChecked);
+  };
+
+  onTelegramBotCheck = isChecked => {
+    this.props.formActions.change('telegramBot', isChecked);
   };
 
   onTwitterChannelCheck = isChecked => {
@@ -153,12 +168,34 @@ class AirDropForm extends Component {
           <div className="ui form">
             <Field
               type="text"
-              name="telegramUsername"
-              placeholder={formatMessage(messages.telegramUserName)}
+              name="telegramPhoneNumber"
+              placeholder={formatMessage(messages.telegramPhoneNumber)}
               component={ValidatableField}
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
+        </div>
+      </React.Fragment>
+    );
+  };
+  renderTelegramBotField = () => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <React.Fragment>
+        <div className="channel-link">
+          <p>
+            {formatMessage(messages.joinTelegramBotSuggestion)}&nbsp;
+            <a className="link" href="https://web.telegram.org/#/im?p=@omnicoin_verification_bot" target="_blank">
+            </a>
+          </p>
+        </div>
+        <div className="joined-channel">
+          <Checkbox
+            width={inputCustomSize}
+            height={inputCustomSize}
+            onChecked={this.onTelegramBotCheck}
+          />
+          <p>{formatMessage(messages.joinTelegramBotConfirmation)} </p>
         </div>
       </React.Fragment>
     );
@@ -228,8 +265,9 @@ class AirDropForm extends Component {
     );
   };
 
-  submit(values) {
-    console.log(values, 'values');
+  submit = values => {
+    this.props.authActions.receiveWelcomeBonus(values);
+    console.log(values.telegramPhoneNumber, 'values');
   }
   render() {
     const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : "";
@@ -244,6 +282,7 @@ class AirDropForm extends Component {
         </h2>
         <Form onSubmit={handleSubmit(this.submit)} className="form">
           <Field name="telegramChannel" component={this.renderTelegramChannelField} />
+          <Field name="telegramBot" component={this.renderTelegramBotField} />          
           <Field name="twitterChannel" component={this.renderTwitterChannelField} />
           <Field name="mailingList" component={this.renderMailingListField} />
           <div className="buttons">
@@ -284,7 +323,7 @@ export default connect(
     formActions: bindActionCreators({
       change: (field, value) => change('AirDropForm', field, value)
     }, dispatch),
-    authActions: bindActionCreators({ getWelcomeBonusAmount }, dispatch),
+    authActions: bindActionCreators({ getWelcomeBonusAmount, receiveWelcomeBonus }, dispatch),
   })
 )(AirDropForm);
 
