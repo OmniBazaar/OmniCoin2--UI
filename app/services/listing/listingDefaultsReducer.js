@@ -29,7 +29,8 @@ const defaultState = {
   post_code: '',
   country: '',
   state: '',
-  name: ''
+  name: '',
+  bitcoin_address: ''
 };
 
 const fixImagesData = (data) => {
@@ -45,6 +46,9 @@ const fixImagesData = (data) => {
 const reducer = handleActions({
   [loadListingDefault](state) {
     const data = getStoredListingDefautls();
+    if (!data.price_using_btc) {
+      data.bitcoin_address = '';
+    }
 
     if (Object.keys(data).length) {
       return {
@@ -63,6 +67,9 @@ const reducer = handleActions({
       ...state,
       ...listingDefault
     };
+    if (!data.price_using_btc) {
+      data.bitcoin_address = '';
+    }
     storeListingDefaults(data);
     return fixImagesData(data);
   },
