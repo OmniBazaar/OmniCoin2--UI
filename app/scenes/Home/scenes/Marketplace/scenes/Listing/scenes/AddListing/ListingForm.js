@@ -56,7 +56,6 @@ const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
-    console.log('async validate')
     try {
       const { price_using_btc, bitcoin_address } = values;
       if (price_using_btc && bitcoin_address) {
