@@ -1,7 +1,6 @@
-const getFileExtension = (event) => {
-  const fileName = event.target.files[0].name;
-  const idxDot = fileName.lastIndexOf('.') + 1;
-  return fileName.substr(idxDot, fileName.length).toLowerCase();
+const getFileExtension = ({ name }) => {
+  const idxDot = name.lastIndexOf('.') + 1;
+  return name.substr(idxDot, name.length).toLowerCase();
 };
 
 export { getFileExtension };
