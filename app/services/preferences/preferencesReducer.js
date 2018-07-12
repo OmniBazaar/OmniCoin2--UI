@@ -9,7 +9,7 @@ import {
 
 const defaultState = {
   preferences: {
-    logoutTimeout: 0,
+    logoutTimeout: 30,
     transactionFee: 20,
     vote: 'all',
     language: 'en',
