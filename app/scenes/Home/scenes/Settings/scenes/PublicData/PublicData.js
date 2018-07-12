@@ -109,6 +109,10 @@ const messages = defineMessages({
     id: 'Settings.failedUpdate',
     defaultMessage: 'Failed to update account'
   },
+  publisherExists: {
+    id: 'Settings.publisherExists',
+    defaultMessage: 'There is an existing publisher for this PC'
+  },
   invalidIp: {
     id: 'Settings.invalidIp',
     defaultMessage: 'IP address is invalid'
@@ -171,6 +175,10 @@ class PublicData extends Component {
     const { formatMessage } = this.props.intl;
     if (this.props.account.loading && !nextProps.account.loading) {
       if (nextProps.account.error) {
+        if (nextProps.account.error.message.indexOf('is already registered') !== -1) {
+          toastr.error(formatMessage(messages.update), formatMessage(messages.publisherExists));
+          return
+        }
         toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
       } else {
         this.updateAccountInfo();
