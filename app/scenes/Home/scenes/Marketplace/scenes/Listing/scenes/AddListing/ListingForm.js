@@ -56,8 +56,12 @@ const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
+    console.log('async validate')
     try {
-      const result = await BitcoinApi.validateAddress(values.bitcoin_address);
+      const { price_using_btc, bitcoin_address } = values;
+      if (price_using_btc && bitcoin_address) {
+        await BitcoinApi.validateAddress(bitcoin_address);
+      }
     } catch (e) {
       throw { bitcoin_address: messages.invalidAddress };
     }
@@ -321,7 +325,9 @@ constructor(props) {
       bitcoin,
       handleSubmit,
       editingListing,
-      invalid
+      invalid,
+      submitting,
+      asyncValidating
     } = this.props;
 
     const formValues = this.props.formValues || {};
@@ -728,8 +734,8 @@ constructor(props) {
                   )
                 }
                 className="button--green-bg uppercase"
-                loading={saving}
-                disabled={saving || invalid}
+                loading={saving || submitting || asyncValidating}
+                disabled={saving || invalid || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
