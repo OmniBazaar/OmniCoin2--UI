@@ -145,7 +145,7 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
       throw new Error('publisher_not_alive');
     }
 
-    if (!listing.price_using_btc) {
+    if (!listing.price_using_btc && listing.currency !== 'BITCOIN') {
       listing = { ...listing };
       delete listing.bitcoin_address;
     }

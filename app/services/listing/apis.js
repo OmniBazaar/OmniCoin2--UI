@@ -176,33 +176,33 @@ export const getListingFromBlockchain = async listingId => {
     return listing[0];
   }
   return null;
-}
+};
 
 const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (typeof listing[key] !== 'undefined') {
+    if (listing[key]) {
       result[key] = listing[key];
     }
   });
 
   return result;
-}
+};
 
 export const createListing = async (user, publisher, listing) => {
-  listing = ensureListingData(listing);
-  const listingId = await createListingOnBlockchain(user, publisher, listing);
+  const newListing = { ...ensureListingData(listing) };
+  const listingId = await createListingOnBlockchain(user, publisher, newListing);
   const options = {
     method: 'POST',
     json: true,
     body: {
-      ...listing,
+      ...newListing,
       listing_type: 'Listing',
       listing_id: listingId
     }
   };
 
-  return await makeRequest(user, publisher, 'listings', options);
+  return makeRequest(user, publisher, 'listings', options);
 };
 
 export const editListing = async (user, publisher, listingId, listing) => {
