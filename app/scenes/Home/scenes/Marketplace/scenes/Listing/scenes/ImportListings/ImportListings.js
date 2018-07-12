@@ -138,6 +138,7 @@ class ImportListings extends Component {
         );
       }
 
+      this.removeAllFiles();
       this.setState({ selectedPublisher: null, selectedVendor: null });
 
       toastr.success(
@@ -196,6 +197,8 @@ class ImportListings extends Component {
     this.setState({ validatingPublisher: false });
 
     if (!isPublisherAlive) {
+      this.removeAllFiles();
+
       return toastr.error(
         formatMessage(messages.importationErrorTitle),
         formatMessage(messages.importationPublisherNotAvailable)
@@ -238,6 +241,7 @@ class ImportListings extends Component {
   }
 
   onClickRemoveAll() {
+    this.removeAllFiles();
     this.props.listingActions.removeAllFiles();
   }
 
@@ -259,6 +263,10 @@ class ImportListings extends Component {
       publisher: this.state.selectedPublisher,
       filesToImport: this.props.listingImport.importedFiles,
     });
+  }
+
+  removeAllFiles() {
+    this.inputElement.value = '';
   }
 
   importForm() {
