@@ -59,7 +59,7 @@ const messages = defineMessages({
     defaultMessage: 'PUBLISHER: As a Publisher you receive OmniCoins for each new user listing published\n' +
     ' on your server but you must keep your server continuously running and available on the Internet.' +
     ' Check this box only if you have installed and configured Couchbase Server (database) on this computer.' +
-    ' You must also have either a static IP address or a DNS redirect service, such as '
+    ' You must also have either a static IP address or a DNS redirect service, such as'
   },
   or: {
     id: 'Settings.or',
@@ -328,8 +328,8 @@ class PublicData extends Component {
           <div className="description-text">
             <p className="title">{formatMessage(messages.publisherTitle)}</p>
             <div>
-              {formatMessage(messages.publisherBody)}
-              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {formatMessage(messages.or)} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
+              {formatMessage(messages.publisherBody) + ' '}
+              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {' ' + formatMessage(messages.or) + ' '} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
           </div>
         </div>
