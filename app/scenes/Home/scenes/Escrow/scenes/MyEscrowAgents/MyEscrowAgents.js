@@ -50,6 +50,10 @@ const messages = defineMessages({
   error: {
     id: 'MyEscrowAgents.error',
     defaultMessage: 'Error'
+  },
+  insufficientBalance: {
+    id: 'MyEscrowAgents.insufficientBalance',
+    defaultMessage: "There isn't enough money on your balance"
   }
 });
 
@@ -95,7 +99,15 @@ class MyEscrowAgents extends Component {
       if (!nextProps.escrow.error) {
         toastr.success(formatMessage(messages.approve), formatMessage(messages.agentsApproved));
       } else {
-        toastr.error(formatMessage(messages.error), nextProps.escrow.error);
+        let msg = nextProps.escrow.error;
+        if (msg.message) {
+          msg = msg.message;
+        }
+        const reg = /Insufficient Balance/i;
+        if (msg.match(reg)) {
+          msg = formatMessage(messages.insufficientBalance);
+        }
+        toastr.error(formatMessage(messages.error), msg);
       }
     }
     if (

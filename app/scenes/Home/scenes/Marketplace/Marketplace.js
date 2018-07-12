@@ -409,7 +409,8 @@ class Marketplace extends Component {
     if (type === CategoriesTypes.FEATURED) {
       maxDisplay = 12;
     }
-
+    let content = this.listItems(itemsList, maxDisplay);
+    content = content.length !== 0 ? content : formatMessage(messages.noListingsFound);
     return (
       <div className="list-container">
         <div className="top-detail">
@@ -422,9 +423,8 @@ class Marketplace extends Component {
         </div>
         <div className="items">
           {
-            loading ?
-            <div className='loading-container'><Loader inline active /></div> :
-            this.listItems(itemsList, maxDisplay)
+            loading ? <div className='loading-container'><Loader inline active /></div>
+                    : content
           }
         </div>
       </div>

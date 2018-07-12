@@ -52,12 +52,15 @@ const numericFieldValidator = [
 ];
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
-const MAX_IMAGE_SIZE = '10mb';
+const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
     try {
-      const result = await BitcoinApi.validateAddress(values.bitcoin_address);
+      const { price_using_btc, bitcoin_address } = values;
+      if (price_using_btc && bitcoin_address) {
+        await BitcoinApi.validateAddress(bitcoin_address);
+      }
     } catch (e) {
       throw { bitcoin_address: messages.invalidAddress };
     }
@@ -318,15 +321,17 @@ constructor(props) {
     const {
       account,
       auth,
-      bitcoin: { wallets },
+      bitcoin,
       handleSubmit,
       editingListing,
-      invalid
+      invalid,
+      submitting,
+      asyncValidating
     } = this.props;
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
-    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
+    const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -728,8 +733,8 @@ constructor(props) {
                   )
                 }
                 className="button--green-bg uppercase"
-                loading={saving}
-                disabled={saving || invalid}
+                loading={saving || submitting || asyncValidating}
+                disabled={saving || invalid || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
@@ -764,7 +769,7 @@ ListingForm.propTypes = {
     })
   }).isRequired,
   bitcoin: PropTypes.shape({
-    wallets: PropTypes.array,bitcoin
+    wallets: PropTypes.array
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
@@ -791,7 +796,8 @@ export default compose(
       account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults
+      listingDefaults: state.default.listingDefaults,
+      bitcoin: state.default.bitcoin
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({

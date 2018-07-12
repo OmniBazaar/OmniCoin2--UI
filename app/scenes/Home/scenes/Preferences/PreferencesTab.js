@@ -120,7 +120,7 @@ class PreferencesTab extends Component {
           <Grid>
             <Grid.Row>
               <Grid.Column width={4}>
-                <span>{formatMessage(messages.logoutTimeout)}{formatMessage(messages.minutes)}</span>
+                <span>{formatMessage(messages.logoutTimeout)}{' ' + formatMessage(messages.minutes)}</span>
               </Grid.Column>
               <Grid.Column width={10}>
                 <Field

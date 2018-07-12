@@ -144,11 +144,17 @@ class OmnicoinHistory extends BaseStorage {
 
       if (op.to === currentUser.username) {
         if (op.operationType === ChainTypes.operations.listing_create_operation
-            || op.operationType === ChainTypes.operations.listing_update_operation) {
+            || op.operationType === ChainTypes.operations.listing_update_operation
+            || op.operationType === ChainTypes.operations.transfer) {
           transactions[trxKey].fee += totalObFee;
         }
       } else if (op.from === currentUser.username) {
-        transactions[trxKey].fee += op.fee + totalObFee;
+        transactions[trxKey].fee += op.fee;
+        if (op.operationType !== ChainTypes.operations.transfer
+            && op.operationType !== ChainTypes.operations.listing_create_operation
+            && op.operationType !== ChainTypes.operations.listing_update_operation) {
+          transactions[trxKey].fee += totalObFee;
+        }
       }
       transactions[trxKey].memo = this.operationMemo(op);
       transactions[trxKey].operations.push({

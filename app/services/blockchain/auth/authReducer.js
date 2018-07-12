@@ -48,8 +48,10 @@ const reducer = handleActions({
   },
   [logout](state) {
     removeStoredCurrentUser();
+
     return {
       ...state,
+      account: null,
       currentUser: null
     };
   },
@@ -89,7 +91,7 @@ const reducer = handleActions({
     const username = getLastStoredUserName();
     return {
       ...state,
-      lastLoginUserName: username ? username : null
+      lastLoginUserName: username || null,
     };
   },
   LOGIN_FAILED: (state, action) => ({
