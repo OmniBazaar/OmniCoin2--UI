@@ -39,7 +39,7 @@ class Images extends Component {
     this.inputElement.value = '';
   }
 
-  uploadImage(file) {
+   uploadImage(file) {
   	const imageId = getImageId();
   	const { isListingDefaults, publisher } = this.props;
   	if (isListingDefaults) {

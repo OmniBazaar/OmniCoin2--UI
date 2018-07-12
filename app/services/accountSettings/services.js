@@ -10,4 +10,9 @@ export const getAllPublishers = async () => {
   );
 
   return publishers;
-}
+};
+
+export const getPublisherByIp = async (publisherIp) => {
+  const publishers = await getAllPublishers();
+  return publishers.find(publisher => publisher.publisher_ip === publisherIp);
+};

@@ -195,7 +195,7 @@ constructor(props) {
             msg = error.message;
           }
         } else {
-          msg = msg = formatMessage(messages.saveListingErrorMessage);
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
 
         this.showErrorToast(formatMessage(messages.error), msg);

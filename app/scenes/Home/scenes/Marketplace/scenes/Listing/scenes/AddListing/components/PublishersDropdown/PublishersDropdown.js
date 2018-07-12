@@ -17,7 +17,6 @@ class PublishersDropdown extends Component {
 
   state = {
     options: [],
-    disabled: false
   };
 
   componentWillMount() {
@@ -48,7 +47,6 @@ class PublishersDropdown extends Component {
         if (value && typeof value === 'string') {
           const publisher = options.find(el => el.value.publisher_ip === value);
           this.props.input.onChange(publisher.value);
-          this.setState({disabled: true});
         }
       } else {
         const { formatMessage } = this.props.intl;
@@ -84,7 +82,6 @@ class PublishersDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
         loading={searching}
-        disabled={this.state.disabled}
       />
     );
   }

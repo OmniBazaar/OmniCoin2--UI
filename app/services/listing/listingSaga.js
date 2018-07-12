@@ -40,18 +40,23 @@ import { clearSearchResults } from '../search/searchActions';
 import {
   countPeersForKeywords
 } from '../search/dht/dhtSaga';
-import { getAllPublishers } from '../accountSettings/services';
+import {getAllPublishers, getPublisherByIp} from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
   createListing,
   editListing,
   deleteListing,
+  deleteListingOnPublisher,
   getListingFromBlockchain,
   reportListingOnBlockchain,
   createListingHash,
-  checkPublisherAliveStatus
+  checkPublisherAliveStatus,
+  createListingOnPublisher,
+  updateListingOnBlockchain,
+  ensureListingData
 } from './apis';
+
 
 export function* listingSubscriber() {
   yield all([
@@ -129,8 +134,37 @@ function* checkAndUploadImages(user, publisher, listing) {
 	    	image_name: result.fileName
 	    };
 		}
-	};
+	}
 }
+
+function* uploadImagesFromAnotherPublisher(user, publisher, listing) {
+  for (let i = 0; i < listing.images.length; ++i) {
+    const url = `http://${publisher.publisher_ip}/publisher-images/${listing.images[i].path}`;
+    const result = yield call(saveImage, user, publisher, {
+      name: listing.images[i].path,
+      type: mime.lookup(listing.images[i].path),
+      url
+    });
+    console.log('RESULT ', result);
+    listing.images[i] = {
+      path: result.image,
+      thumb: result.thumb,
+      image_name: result.fileName
+    };
+  }
+}
+
+function* moveToAnotherPublisher(user, publisher, listing, listingId) {
+  const oldPublisher = yield call(getPublisherByIp, listing.ip);
+  yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, listing);
+  console.log('DONE UPLOADING');
+  yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
+  listing = ensureListingData(listing);
+  console.log("LISTING TO SHOW ", publisher);
+  yield call(updateListingOnBlockchain, user, publisher, listingId, listing);
+  yield call(createListingOnPublisher, user, listing, publisher, listingId);
+}
+
 
 function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
@@ -151,9 +185,13 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     }
 
     if (listingId) {
-      result = yield call(editListing, user, publisher, listingId, listing);
+      if (publisher.publisher_ip !== listing.ip) {
+        yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
+      } else {
+        result = yield call(editListing, user, publisher, listingId, listing);
+      }
     } else {
-      yield checkAndUploadImages(user, publisher, listing);
+      yield call(checkAndUploadImages, user, publisher, listing);
       result = yield call(createListing, user, publisher, listing);
     }
 
