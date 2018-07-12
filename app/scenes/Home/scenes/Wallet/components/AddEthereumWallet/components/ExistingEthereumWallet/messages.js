@@ -2,35 +2,35 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   enterPassword: {
-    id: 'ExistingWallet.enterPassword',
+    id: 'ExistingEthereumWallet.enterPassword',
     defaultMessage: 'Enter Password for Account Access',
   },
   pleaseEnter: {
-    id: 'ExistingWallet.pleaseEnter',
+    id: 'ExistingEthereumWallet.pleaseEnter',
     defaultMessage: 'Please Enter'
   },
   walletGuid: {
-    id: 'ExistingWallet.walletGuid',
+    id: 'ExistingEthereumWallet.walletGuid',
     defaultMessage: 'Wallet GUID'
   },
   cancel: {
-    id: 'ExistingWallet.cancel',
+    id: 'ExistingEthereumWallet.cancel',
     defaultMessage: 'CANCEL'
   },
   connect: {
-    id: 'ExistingWallet.connect',
+    id: 'ExistingEthereumWallet.connect',
     defaultMessage: 'CONNECT'
   },
   fieldRequired: {
-    id: 'NewWallet.required',
+    id: 'NewEthereumWallet.required',
     defaultMessage: 'This field is required'
   },
   connectErrorTitle: {
-    id: 'NewWallet.connectErrorTitle',
+    id: 'NewEthereumWallet.connectErrorTitle',
     defaultMessage: 'Connect error'
   },
   connectErrorMessage: {
-    id: 'NewWallet.connectErrorMessage',
+    id: 'NewEthereumWallet.connectErrorMessage',
     defaultMessage: 'Having error when conneting wallet'
   }
 });

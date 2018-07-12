@@ -20,64 +20,64 @@ import './new-wallet.scss';
 
 const messages = defineMessages({
   createPassword: {
-    id: 'NewWallet.createPassword',
+    id: 'NewEthereumWallet.createPassword',
     defaultMessage: 'Create Password for Wallet Access'
   },
   repeatPassword: {
-    id: 'NewWallet.repeatPassword',
+    id: 'NewEthereumWallet.repeatPassword',
     defaultMessage: 'Repeat Password for Wallet Access'
   },
   email: {
-    id: 'NewWallet.email',
+    id: 'NewEthereumWallet.email',
     defaultMessage: 'Email for Restore Access'
   },
   message: {
-    id: 'NewWallet.message',
+    id: 'NewEthereumWallet.message',
     defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.'
   },
   createWallet: {
-    id: 'NewWallet.createWallet',
+    id: 'NewEthereumWallet.createWallet',
     defaultMessage: 'CREATE WALLET'
   },
   cancel: {
-    id: 'NewWallet.cancel',
+    id: 'NewEthereumWallet.cancel',
     defaultMessage: 'CANCEL'
   },
   pleaseEnter: {
-    id: 'NewWallet.enter',
+    id: 'NewEthereumWallet.enter',
     defaultMessage: 'Please enter'
   },
   error: {
-    id: 'NewWallet.error',
+    id: 'NewEthereumWallet.error',
     defaultMessage: 'Error'
   },
   noMatch: {
-    id: 'NewWallet.noMatch',
+    id: 'NewEthereumWallet.noMatch',
     defaultMessage: 'Passwords do not match'
   },
   fieldRequired: {
-    id: 'NewWallet.required',
+    id: 'NewEthereumWallet.required',
     defaultMessage: 'This field is required'
   },
   label: {
-    id: 'NewWallet.label',
+    id: 'NewEthereumWallet.label',
     defaultMessage: 'Label'
   },
   success: {
-    id: 'NewWallet.success',
+    id: 'NewEthereumWallet.success',
     defaultMessage: 'Success'
   },
   rememberGuid: {
-    id: 'NewWallet.rememberGuid',
+    id: 'NewEthereumWallet.rememberGuid',
     defaultMessage: 'Please do not forget to write down or remember your guid'
   },
   minLength: {
-    id: 'NewWallet.minLength',
+    id: 'NewEthereumWallet.minLength',
     defaultMessage: 'This field must be at least 10 characters in length'
   }
 });
 
-class NewWallet extends Component {
+class NewEthereumWallet extends Component {
   static validate = (values) => {
     const errors = {};
     if (values.password !== values.repeatPassword) {
@@ -171,7 +171,7 @@ class NewWallet extends Component {
   }
 }
 
-NewWallet.propTypes = {
+NewEthereumWallet.propTypes = {
   ethereum: PropTypes.shape({
     loading: PropTypes.bool,
     error: PropTypes.string,
@@ -202,8 +202,8 @@ export default compose(
     })
   ),
   reduxForm({
-    form: 'newWalletForm',
-    validate: NewWallet.validate,
+    form: 'newEthereumWalletForm',
+    validate: NewEthereumWallet.validate,
     destroyOnUnmount: true,
   })
-)(injectIntl(NewWallet));
+)(injectIntl(NewEthereumWallet));

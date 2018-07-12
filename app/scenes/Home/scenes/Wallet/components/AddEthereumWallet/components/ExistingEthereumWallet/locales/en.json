@@ -1,0 +1,9 @@
+{
+  "ExistingEthereumWallet.enterPassword": "Enter Password for Wallet Access",
+  "ExistingEthereumWallet.pleaseEnter": "Please Enter",
+  "ExistingEthereumWallet.walletGuid": "Wallet GUID",
+  "ExistingEthereumWallet.cancel": "CANCEL",
+  "ExistingEthereumWallet.connect": "CONNECT",
+  "NewEthereumWallet.connectErrorTitle": "Connect error",
+  "NewEthereumWallet.connectErrorMessage": "Having error when conneting wallet"
+}

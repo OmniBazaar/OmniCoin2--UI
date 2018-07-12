@@ -14,7 +14,7 @@ import { toggleModal, getWallets, connectWallet } from '../../../../../../../../
 import messages from './messages';
 import './existing-wallet.scss';
 
-class ExistingWallet extends Component {
+class ExistingEthereumWallet extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -87,7 +87,7 @@ class ExistingWallet extends Component {
   }
 }
 
-ExistingWallet.propTypes = {
+ExistingEthereumWallet.propTypes = {
   ethereum: PropTypes.shape({
     modal: PropTypes.shape({
       isOpen: PropTypes.bool
@@ -117,7 +117,7 @@ export default compose(
     })
   ),
   reduxForm({
-    form: 'existingWalletForm',
+    form: 'existingEthereumWalletForm',
     destroyOnUnmount: true,
   })
-)(injectIntl(ExistingWallet));
+)(injectIntl(ExistingEthereumWallet));
