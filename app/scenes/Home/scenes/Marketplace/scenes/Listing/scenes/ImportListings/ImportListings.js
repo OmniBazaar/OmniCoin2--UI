@@ -20,6 +20,7 @@ import {
 import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
+import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
 
 const iconSize = 42;
 
@@ -101,6 +102,10 @@ const messages = defineMessages({
     id: 'ImportListings.publisherRequired',
     defaultMessage: 'A publisher must be selected'
   },
+  importationPublisherNotAvailable: {
+    id: 'ImportListings.importationPublisherNotAvailable',
+    defaultMessage: 'Selected publisher is not available'
+  },
   importationMissingDefaults: {
     id: 'ImportListings.missingDefaults',
     defaultMessage: 'You should fill you Listing Default values to proceed...'
@@ -117,6 +122,7 @@ class ImportListings extends Component {
       open: false,
       selectedPublisher: null,
       selectedVendor: null,
+      validatingPublisher: false,
     };
   }
 
@@ -169,13 +175,30 @@ class ImportListings extends Component {
     );
   }
 
-  importFile(event) {
+  async importFile(file) {
     const { formatMessage } = this.props.intl;
+    const { auth } = this.props;
 
     if (!this.state.selectedPublisher) {
       return toastr.error(
         formatMessage(messages.importationErrorTitle),
         formatMessage(messages.importationPublisherRequired)
+      );
+    }
+
+    this.setState({ validatingPublisher: true });
+
+    const isPublisherAlive = await checkPublisherAliveStatus(
+      auth.currentUser,
+      this.state.selectedPublisher
+    );
+
+    this.setState({ validatingPublisher: false });
+
+    if (!isPublisherAlive) {
+      return toastr.error(
+        formatMessage(messages.importationErrorTitle),
+        formatMessage(messages.importationPublisherNotAvailable)
       );
     }
 
@@ -194,19 +217,19 @@ class ImportListings extends Component {
     }
 
 
-    if (event.target.files && event.target.files[0]) {
-      const extFile = getFileExtension(event);
+    if (file && file) {
+      const extFile = getFileExtension(file);
 
       if (extFile !== 'txt') {
         return this.setState({ open: true });
       }
 
-      const file = this.inputElement.files[0];
+      const content = this.inputElement.files[0];
 
       this.props.listingActions.stageFile(
         {
-          content: file,
-          name: file.name,
+          content,
+          name: content.name,
         },
         this.props.listingDefaults,
         this.state.selectedVendor
@@ -241,6 +264,7 @@ class ImportListings extends Component {
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
+    const { validatingPublisher } = this.state;
 
     return (
       <Form className="import-listing-form">
@@ -268,7 +292,7 @@ class ImportListings extends Component {
               <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
             <Grid.Column width={12} className="publishers-dropdown">
-              <Input className='publishers-input'>
+              <Input className="publishers-input">
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}
@@ -286,11 +310,17 @@ class ImportListings extends Component {
                 <input
                   ref={(ref) => { this.inputElement = ref; }}
                   type="file"
-                  onChange={this.importFile.bind(this)}
+                  onChange={({ target: { files } }) =>
+                    files && files[0] && this.importFile(files[0])}
                   className="filetype"
                   accept=".txt"
                 />
-                <Button content={formatMessage(messages.addFiles)} className="button--primary" onClick={() => this.onClickImportFile()} />
+                <Button
+                  className="button--primary"
+                  loading={validatingPublisher}
+                  content={formatMessage(messages.addFiles)}
+                  onClick={() => this.onClickImportFile()}
+                />
                 <Button content={formatMessage(messages.removeAll)} className="button--blue removeAll" onClick={() => this.onClickRemoveAll()} />
               </div>
             </Grid.Column>
@@ -397,6 +427,9 @@ class ImportListings extends Component {
 }
 
 ImportListings.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.object,
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -428,6 +461,7 @@ ImportListings.propTypes = {
 
 ImportListings.defaultProps = {
   account: {},
+  auth: {},
   listingImport: {},
   listingActions: {},
   listingDefaults: {},
