@@ -559,7 +559,11 @@ const reducer = handleActions({
       ...state,
       ipAddress: ip
     };
-  }
+  },
+  LOGOUT: (state) => ({
+    ...state,
+    ...defaultState,
+  }),
 }, defaultState);
 
 export default reducer;
