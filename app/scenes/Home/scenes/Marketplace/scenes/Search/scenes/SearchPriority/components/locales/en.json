@@ -12,5 +12,6 @@
   "SearchPrioritySetting.publisher": "Publisher",
   "SearchPrioritySetting.keywords": "Keywords for listing your want to see",
   "SearchPrioritySetting.addKeyword": "Add keyword",
-  "SearchPrioritySetting.keywordLabel": "Keywords"
+  "SearchPrioritySetting.keywordLabel": "Keywords",
+  "SearchPrioritySetting.state": "State"
 }

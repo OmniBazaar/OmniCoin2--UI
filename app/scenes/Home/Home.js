@@ -40,6 +40,7 @@ import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
+import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -62,6 +63,7 @@ import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from "../../services/blockchain/connection/connectionActions";
 import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { dhtReconnect } from '../../services/search/dht/dhtActions';
 
 const iconSize = 20;
 
@@ -73,12 +75,17 @@ class Home extends Component {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
+
+    if (!this.props.auth.currentUser && nextProps.auth.currentUser) {
+      this.init();
+    }
   }
 
-  componentDidMount() {
+  init() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.preferencesActions.loadPreferences();
+    this.props.dhtActions.dhtReconnect();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -143,7 +150,7 @@ class Home extends Component {
     if (this.props.location.pathname === '/') {
       return (<Redirect
         to={{
-          pathname: '/start-guide',
+          pathname: '/marketplace',
         }}
       />);
     }
@@ -171,8 +178,8 @@ class Home extends Component {
                 <NavLink to="/wallet" activeClassName="active" className="menu-item">
                   <Image src={WalletIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id="Home.wallet"
-                    defaultMessage="Wallet"
+                    id="Home.wallets"
+                    defaultMessage="Wallets"
                   />
                 </NavLink>
                 <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
@@ -224,6 +231,8 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <UpdateNotification />
+                
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -287,6 +296,7 @@ export default connect(
     preferencesActions: bindActionCreators({
       loadPreferences
     }, dispatch),
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
   })
 )(Home);
 
@@ -314,7 +324,10 @@ Home.propTypes = {
   }),
   preferencesActions: PropTypes.shape({
     loadPreferences: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  dhtActions: PropTypes.shape({
+    dhtReconnect: PropTypes.func
+  })
 };
 
 Home.defaultProps = {

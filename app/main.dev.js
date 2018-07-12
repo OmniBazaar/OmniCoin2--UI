@@ -75,11 +75,11 @@ const getDevBasePath = () => {
 const getProdBasePath = (platform) => {
   switch (platform) {
     case 'win32':
-      return process.env.LOCALAPPDATA + '/OmniBazaar 2';
+      return process.env.LOCALAPPDATA + '/OmniBazaar';
     case 'linux':
       return process.env.HOME + '/.OmniBazaar';
     case 'darwin':
-      return process.env.HOME + '/Library/Application Support/OmniBazaar 2';
+      return process.env.HOME + '/Library/Application Support/OmniBazaar';
   }
 };
 
@@ -181,13 +181,13 @@ const processReferrer = async () => {
   let path = './';
   switch (process.platform) {
     case 'win32':
-      path = process.env.LOCALAPPDATA + '/OmniBazaar 2/omnibazaar.set';
+      path = process.env.LOCALAPPDATA + '/OmniBazaar/omnibazaar.set';
       break;
     case 'linux':
       path = process.env.HOME + '/.OmniBazaar/omnibazaar.set';
       break;
     case 'darwin':
-      path = '/Library/Preferences/OmniBazaar 2/omnibazaar.set';
+      path = '/Library/Preferences/OmniBazaar/omnibazaar.set';
       break;
   }
   ipcMain.on('get-referrer', (event) => {
@@ -196,7 +196,7 @@ const processReferrer = async () => {
         console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: null });
       } else {
-        const start = data.lastIndexOf('_') + 1;
+        const start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
         event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
       }

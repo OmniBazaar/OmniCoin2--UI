@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { generate } from 'shortid';
 import fs from 'fs';
 
@@ -18,9 +18,9 @@ const imagesDevPath = {
 };
 
 const imagesProdPath = {
-  win32: `${process.env.LOCALAPPDATA}/OmniBazaar 2/`,
+  win32: `${process.env.LOCALAPPDATA}/OmniBazaar/`,
   linux: `${process.env.HOME}/.OmniBazaar/`,
-  darwin: `${process.env.HOME}/Library/Application Support/OmniBazaar 2/`,
+  darwin: `${process.env.HOME}/Library/Application Support/OmniBazaar/`,
 };
 
 const imageStoragePath = {
@@ -94,28 +94,43 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
 
 export function* saveFiles({ payload: { publisher, filesToImport } }) {
   try {
+    const { currentUser } = (yield select()).default.auth;
+
     const allFiles = filesToImport.map(async (file) => {
       const newFile = { ...file };
 
       const newItems = newFile.items.map(async (item) => {
-        const { image, fileName, thumb } = await saveImage(publisher, item.images[0]);
+        const { image, fileName, thumb } = await saveImage(currentUser, publisher, item.images[0]);
         const itemToSave = { ...item };
+        const { localPath, path } = item.images[0];
 
-        if (item.images[0].path) {
-          fs.unlink(item.images[0].path, console.log);
+        if (localPath || path) {
+          fs.unlink(localPath || path, console.log);
         }
 
         delete itemToSave.productId;
         delete itemToSave.imageURL;
 
-        return createListing(publisher, {
-          ...itemToSave,
+        const listing = await createListing(
+          currentUser,
+          publisher,
+          {
+            ...itemToSave,
+            images: [{
+              thumb,
+              image_name: fileName,
+              path: image,
+            }],
+          },
+        );
+
+        return {
+          ...listing,
           images: [{
-            thumb,
-            image_name: fileName,
-            path: image,
-          }],
-        });
+            ...listing.images[0],
+            localPath: item.images[0].path,
+          }]
+        };
       });
 
       newFile.items = await Promise.all(newItems);
@@ -123,10 +138,10 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
       return newFile;
     });
 
-    const importedFiles = yield Promise.all(allFiles);
+    yield Promise.all(allFiles);
 
     yield put({ type: 'DHT_RECONNECT' });
-    yield put({ type: 'IMPORT_FILES_SUCCEEDED', importedFiles });
+    yield put({ type: 'IMPORT_FILES_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
   }

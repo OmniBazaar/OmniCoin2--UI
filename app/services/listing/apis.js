@@ -11,6 +11,7 @@ import {
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import {currencyConverter} from "../utils";
+import {TOKENS_IN_XOM} from "../../utils/constants";
 
 let authUser = null;
 let authHeaders = null;
@@ -26,10 +27,13 @@ const listingProps = [
 ];
 
 
-const getAuthHeaders = () => new Promise((resolve, reject) => {
-	const user = getStoredCurrentUser();
+const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
+	// let user = getStoredCurrentUser();
+  let user = currentUser;
+
   if (!authHeaders || !authUser || (authUser.username !== user.username)) {
     authUser = user;
+
     const key = generateKeyFromPassword(user.username, 'active', user.password);
     setTimeout(() => {
       // heavy operation
@@ -47,8 +51,8 @@ const getAuthHeaders = () => new Promise((resolve, reject) => {
 
 
 
-const makeRequest = async (publisher, url, options) => {
-  const authHeaders = await getAuthHeaders();
+const makeRequest = async (user, publisher, url, options) => {
+  const authHeaders = await getAuthHeaders(user);
   const opts = {
     uri: `http://${publisher['publisher_ip']}/pub-api/${url}`,
     ...options,
@@ -60,12 +64,13 @@ const makeRequest = async (publisher, url, options) => {
   return await request(opts);
 };
 
-export const saveImage = async (publisher, file) => {
+export const saveImage = async (user, publisher, file) => {
+  const { localPath, path } = file;
   const options = {
     method: 'POST',
     formData: {
       image: {
-        value: fs.createReadStream(file.path),
+        value: fs.createReadStream(localPath || path),
         options: {
           filename: file.name,
           contentType: file.type
@@ -73,23 +78,22 @@ export const saveImage = async (publisher, file) => {
       }
     }
   };
-  const body = await makeRequest(publisher, 'images', options);
+  const body = await makeRequest(user, publisher, 'images', options);
   return JSON.parse(body);
 };
 
-export const deleteImage = async (publisher, fileName) => {
+export const deleteImage = async (user, publisher, fileName) => {
   const options = {
     method: 'DELETE',
     json: true
   };
 
-  const body = await makeRequest(publisher, `images/${fileName}`, options);
+  const body = await makeRequest(user, publisher, `images/${fileName}`, options);
 
   return body;
 };
 
-const createListingOnBlockchain = async (publisher, listing) => {
-	const user = getStoredCurrentUser();
+const createListingOnBlockchain = async (user, publisher, listing) => {
 	const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
@@ -101,11 +105,12 @@ const createListingOnBlockchain = async (publisher, listing) => {
     seller: seller.get('id'),
     price: {
       asset_id: '1.3.0',
-      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
+      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * TOKENS_IN_XOM)
     },
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,
-    publisher: publisher.id
+    publisher: publisher.id,
+    priority_fee: 50 // default
   });
   await tr.set_required_fees();
   await tr.add_signer(key.privKey, key.pubKey);
@@ -113,8 +118,7 @@ const createListingOnBlockchain = async (publisher, listing) => {
   return result[0].trx.operation_results[0][1]; // listing id
 };
 
-const deleteListingOnBlockchain = async (listing) => {
-  const user = getStoredCurrentUser();
+const deleteListingOnBlockchain = async (user, listing) => {
   const tr = new TransactionBuilder();
   const ownerAcc = await FetchChain('getAccount', listing.owner);
   tr.add_type_operation('listing_delete_operation', {
@@ -141,13 +145,7 @@ export const reportListingOnBlockchain = async (listingId) => {
   await tr.broadcast();
 };
 
-const updateListingOnBlockchain = async (publisher, listingId, listing) => {
-  console.log({
-    publisher,
-    listingId,
-    listing
-  })
-  const user = getStoredCurrentUser();
+const updateListingOnBlockchain = async (user, publisher, listingId, listing) => {
   const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
@@ -160,7 +158,7 @@ const updateListingOnBlockchain = async (publisher, listingId, listing) => {
     listing_id: listingId,
     price: {
       asset_id: '1.3.0',
-      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * 100000)
+      amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * TOKENS_IN_XOM)
     },
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,
@@ -191,9 +189,9 @@ const ensureListingData = listing => {
   return result;
 }
 
-export const createListing = async (publisher, listing) => {
+export const createListing = async (user, publisher, listing) => {
   listing = ensureListingData(listing);
-  const listingId = await createListingOnBlockchain(publisher, listing);
+  const listingId = await createListingOnBlockchain(user, publisher, listing);
   const options = {
     method: 'POST',
     json: true,
@@ -204,10 +202,10 @@ export const createListing = async (publisher, listing) => {
     }
   };
 
-  return await makeRequest(publisher, 'listings', options);
+  return await makeRequest(user, publisher, 'listings', options);
 };
 
-export const editListing = async (publisher, listingId, listing) => {
+export const editListing = async (user, publisher, listingId, listing) => {
   listing = ensureListingData(listing);
   const blockchainListing = await getListingFromBlockchain(listingId);
   if (!blockchainListing) {
@@ -217,7 +215,7 @@ export const editListing = async (publisher, listingId, listing) => {
     throw new Error('no_changes');
   }
 
-  await updateListingOnBlockchain(publisher, listingId, listing);
+  await updateListingOnBlockchain(user, publisher, listingId, listing);
   const options = {
     method: 'PUT',
     json: true,
@@ -227,22 +225,22 @@ export const editListing = async (publisher, listingId, listing) => {
       listing_id: listingId
     }
   };
-  return await makeRequest(publisher, `listings/${listingId}`, options);
+  return await makeRequest(user, publisher, `listings/${listingId}`, options);
 };
 
-export const deleteListing = async (publisher, listing) => {
+export const deleteListing = async (user, publisher, listing) => {
   const options = {
     method: 'DELETE',
     json: true
   };
-  await deleteListingOnBlockchain(listing);
+  await deleteListingOnBlockchain(user, listing);
   const { listing_id, images } = listing;
-  const body = await makeRequest(publisher, `listings/${listing_id}`, options);
+  const body = await makeRequest(user, publisher, `listings/${listing_id}`, options);
   if (body.success) {
     for (let i=0; i<images.length; i++) {
       const imageItem = images[i];
       if (imageItem.image_name) {
-        await deleteImage(publisher, imageItem.image_name);
+        await deleteImage(user, publisher, imageItem.image_name);
       }
     }
   }
@@ -250,3 +248,16 @@ export const deleteListing = async (publisher, listing) => {
   return body;
 };
 
+export const checkPublisherAliveStatus = async (user, publisher) => {
+  try {
+    const options = {
+      method: 'GET',
+      json: true
+    };
+    const alive = await makeRequest(user, publisher, 'alive/status', options);
+    return alive.ok;
+  } catch (err) {
+    console.log('Check publisher alive error', err);
+    return false;
+  }
+}

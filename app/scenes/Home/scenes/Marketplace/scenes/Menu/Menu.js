@@ -164,11 +164,11 @@ class Menu extends Component {
 
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);
     const subCategory = parent ? Menu.getValue(categoryId) : null;
 
-    this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+    this.props.searchActions.searchListings(null, category, country, state, city, true, subCategory);
     this.props.marketplaceActions.setActiveCategory(categoryId);
   };
 
@@ -420,9 +420,6 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
         </div>
-        <div className="link-item account-settings-link" onClick={this.toggleSettingsAccount}>
-          {formatMessage(userMenu.accountSettings)}
-         </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>

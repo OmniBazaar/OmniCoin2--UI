@@ -19,6 +19,7 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
+import {TOKENS_IN_XOM} from "../../utils/constants";
 
 export function* transferSubscriber() {
   yield all([
@@ -50,7 +51,7 @@ function* submitOmniCoinTransfer(data) {
       reputation_vote: parseInt(reputation),
       amount: {
         asset_id: '1.3.0',
-        amount: Math.ceil(amount * 100000)
+        amount: Math.ceil(amount * TOKENS_IN_XOM)
       },
     };
     if (memo.trim()) {
@@ -90,7 +91,7 @@ function* submitBitcoinTransfer(data) {
       throw new Error('Transaction from value need to be a wallet index');
     }
 
-    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
@@ -145,7 +146,7 @@ function* createEscrowTransaction({ payload: {
       escrow: escrowAcc.get('id'),
       amount: {
         asset_id: '1.3.0',
-        amount: Math.ceil(amount * 100000)
+        amount: Math.ceil(amount * TOKENS_IN_XOM)
       },
       transfer_to_escrow: transferToEscrow
     };

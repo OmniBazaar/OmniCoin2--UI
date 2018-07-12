@@ -24,7 +24,8 @@ import {
   setTransactionProcessor,
   setEscrow,
   updatePublicData,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -44,6 +45,10 @@ const messages = defineMessages({
     ' In exchange, you receive a commission (some OmniCoins) each time a user you referred\n' +
     ' buys or sells something in the OmniBazaar marketplace. In order to serve as a\n' +
     ' Referrer, you must keep the OmniBazaar application running on your computer.'
+  },
+  btcAddressTitle: {
+    id: 'Setting.btcAddressTitle',
+    defaultMessage: 'Bitcoin address',
   },
   publisherTitle: {
     id: 'Setting.publisherTitle',
@@ -143,6 +148,9 @@ class PublicData extends Component {
 
   componentWillMount() {
     const { account } = this.props.auth;
+    if (account.is_referrer !== this.props.account.referrer) {
+      this.toggleReferrer();
+    }
     if (account.is_a_publisher !== this.props.account.publisher) {
       this.togglePublisher();
     }
@@ -188,6 +196,10 @@ class PublicData extends Component {
     this.settings = {
       referrer, publisher, transactionProcessor, escrow
     };
+  }
+
+  setBtcAddress({ target: { value } }) {
+    this.props.accountSettingsActions.setBtcAddress(value);
   }
 
   updatePublicData() {
@@ -276,12 +288,14 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth } = this.props;
+    const { account, auth, bitcoin: { wallets } } = this.props;
+    const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
+
     return (
       <div className="check-form">
         <div className="description">
           <div className="check-container">
-            <Image src={this.getReferrerIcon()} width={iconSize} height={iconSize} className="checkbox disabled" onClick={this.toggleReferrer} />
+            <Image src={this.getReferrerIcon()} width={iconSize} height={iconSize} className="checkbox" onClick={this.toggleReferrer} />
           </div>
           <div className="description-text">
             <p className="title">{formatMessage(messages.referrerTitle)}</p>
@@ -291,9 +305,20 @@ class PublicData extends Component {
           </div>
         </div>
         {account.referrer &&
-        <div className="ref-link-cont">
-          <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-          <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`}/>
+        <div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
+            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
+          </div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
+            <Input
+              className="ref-btc-input"
+              value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+              placeholder={formatMessage(messages.btcAddressTitle)}
+              onChange={(data) => this.setBtcAddress(data)}
+            />
+          </div>
         </div>
         }
         <div className="description">
@@ -323,8 +348,9 @@ class PublicData extends Component {
               src={this.getTransactionIcon()}
               width={iconSize}
               height={iconSize}
-              className={cn("checkbox", this.props.auth.account.is_a_processor ? "disabled" : "")}
-              onClick={this.toggleTransactionProcessor} />
+              className={cn('checkbox', this.props.auth.account.is_a_processor ? 'disabled' : '')}
+              onClick={this.toggleTransactionProcessor}
+            />
           </div>
           <div className="description-text">
             <p className="title">{formatMessage(messages.processorTitle)}</p>
@@ -376,7 +402,8 @@ PublicData.propTypes = {
     setTransactionProcessor: PropTypes.func,
     setEscrow: PropTypes.func,
     updatePublicData: PropTypes.func,
-    changeIpAddress: PropTypes.func
+    changeIpAddress: PropTypes.func,
+    setBtcAddress: PropTypes.func,
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
@@ -404,10 +431,14 @@ PublicData.propTypes = {
       username: PropTypes.string,
       password: PropTypes.string
     })
-  }).isRequired
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array,
+  }),
 };
 
 PublicData.defaultProps = {
+  bitcoin: {},
   accountSettingsActions: {},
   account: {},
   intl: {},
@@ -421,6 +452,7 @@ export default connect(
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
       setReferrer,
+      setBtcAddress,
       setPublisher,
       setTransactionProcessor,
       setEscrow,
@@ -433,5 +465,5 @@ export default connect(
     authActions: bindActionCreators({
       getAccount
     }, dispatch),
-  }),
+  })
 )(injectIntl(PublicData));

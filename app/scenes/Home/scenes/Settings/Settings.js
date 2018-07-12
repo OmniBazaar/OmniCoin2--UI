@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Modal, Tab, Image } from 'semantic-ui-react';
-import { defineMessages, injectIntl } from 'react-intl';
-import classNames from 'classnames';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+
+import { CoinTypes } from "../Wallet/constants";
 
 import UserIcon from '../../images/th-user-white.svg';
 
 import PublicData from './scenes/PublicData/PublicData';
 import PrivateData from './scenes/PrivateData/PrivateData';
+import RecentTransactions from './scenes/RecentTransactions/RecentTransactions';
 import AccountVesting from './scenes/AccountVesting/AccountVesting';
-
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
@@ -67,52 +68,66 @@ class Settings extends Component {
   render() {
     const { props } = this;
     const { formatMessage } = this.props.intl;
-    const containerClass = classNames({
-      overlay: true,
-      'details-visible': props.account.showDetails,
-    });
+    /*const containerClass = classNames({
+     overlay: true,
+     'details-visible': props.account.showDetails,
+     });*/
 
     return (
-      <Modal size="fullscreen" open={props.menu.showSettings} onClose={this.close} closeIcon>
-        <Modal.Content>
-          <div className="modal-container settings-container">
-            <div className="sidebar settings visible">{this.sideMenu()}</div>
-            <div className="modal-content side-menu">
-              <Tab
-                className="tabs"
-                menu={{ secondary: true, pointing: true }}
-                panes={[
-                  {
-                    menuItem: formatMessage(messages.publicData),
-                    render: () => <Tab.Pane><PublicData /></Tab.Pane>,
-                  },
-                  {
-                    menuItem: formatMessage(messages.privateData),
-                    render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
-                  },
-                  {
-                    menuItem: formatMessage(messages.vestingBalances),
-                    render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
-                  }
-                ]}
-              />
-              <div
-                className={containerClass}
-                onClick={this.onCloseDetails}
-                onKeyDown={this.onCloseDetails}
-                role="link"
-                tabIndex={0}
-              />
+      <div className="modal-container settings-container">
+        {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
+        <div className="modal-content side-menu">
+          <Tab
+            className="tabs"
+            menu={{ secondary: true, pointing: true }}
+            panes={[
+              {
+                menuItem: formatMessage(messages.publicData),
+                render: () => <Tab.Pane><PublicData /></Tab.Pane>,
+              },
+              {
+                menuItem: formatMessage(messages.privateData),
+                render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
+              },
+              {
+               menuItem: formatMessage(messages.recentTransactions),
+               render: () => (
+                 <Tab.Pane>
+                   <RecentTransactions
+                     coinType={this.props.coinType}
+                     rowsPerPage={20}
+                     tableProps={{
+                       sortable: true,
+                       compact: true,
+                       basic: 'very',
+                       striped: true,
+                       size: 'small'
+                     }}
+                   />
+                 </Tab.Pane>),
+             },
+            {
+              menuItem: formatMessage(messages.vestingBalances),
+              render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
+            }
+            ]}
+          />
+          {/*<div
+           className={containerClass}
+           onClick={this.onCloseDetails}
+           onKeyDown={this.onCloseDetails}
+           role="link"
+           tabIndex={0}
+           />*/}
 
-            </div>
-          </div>
-        </Modal.Content>
-      </Modal>
+        </div>
+      </div>
     );
   }
 }
 
 Settings.propTypes = {
+  coinType: PropTypes.string,
   accountSettingsActions: PropTypes.shape({
     getPrivateData: PropTypes.func,
     getPublisherData: PropTypes.func,
@@ -131,6 +146,7 @@ Settings.propTypes = {
 };
 
 Settings.defaultProps = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
   onClose: () => {},
   auth: {},
@@ -147,3 +163,6 @@ export default connect(
     }, dispatch)
   }),
 )(injectIntl(Settings));
+
+
+

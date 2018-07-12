@@ -7,6 +7,7 @@ import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semant
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 import { pick } from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
@@ -131,6 +132,8 @@ class ImportListings extends Component {
         );
       }
 
+      this.setState({ selectedPublisher: null, selectedVendor: null });
+
       toastr.success(
         formatMessage(messages.importationSuccessTitle),
         formatMessage(messages.importationSuccess)
@@ -249,7 +252,7 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingsVendor)}</span>
+              <span>{formatMessage(messages.listingsVendor)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Dropdown
@@ -262,10 +265,10 @@ class ImportListings extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.selectPublisher)}</span>
+              <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
-            <Grid.Column width={12}>
-              <Input>
+            <Grid.Column width={12} className="publishers-dropdown">
+              <Input className='publishers-input'>
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}
@@ -276,7 +279,7 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.filesToImport)}</span>
+              <span>{formatMessage(messages.filesToImport)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <div className="buttons-wrapper">
@@ -330,6 +333,12 @@ class ImportListings extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
+    const { selectedVendor, selectedPublisher } = this.state;
+    let isDisabled = false;
+    if (!selectedVendor || !selectedPublisher || !importedFiles.length) {
+      isDisabled = true;
+    }
+
 
     return (
       <div className="marketplace-container category-listing import-listings">
@@ -342,7 +351,11 @@ class ImportListings extends Component {
               <div className="content">
                 <div className="category-title">
                   <div className="parent">
-                    <span>{formatMessage(messages.myListings)}</span>
+                    <NavLink to="/listings" activeClassName="active" className="menu-item">
+                      <span className="link">
+                        <span>{formatMessage(messages.myListings)}</span>
+                      </span>
+                    </NavLink>
                     <Icon name="long arrow right" width={iconSize} height={iconSize} />
                   </div>
                   <span className="child">{formatMessage(messages.importListings)}</span>
@@ -373,6 +386,7 @@ class ImportListings extends Component {
               className="button--green-bg"
               loading={importingFile}
               onClick={() => this.importListings()}
+              disabled={isDisabled}
             />
           </div>
         </div>

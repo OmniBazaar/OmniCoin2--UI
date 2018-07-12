@@ -70,7 +70,11 @@ const mainCategories = defineMessages({
   all: {
     id: 'Marketplace.all',
     defaultMessage: 'All'
-  }
+  },
+  myListings: {
+    id: 'Marketplace.myListings',
+    defaultMessage: 'My Listings'
+  },
 });
 
 const saleCategories = defineMessages({

@@ -81,7 +81,6 @@ class Marketplace extends Component {
       this.props.searchActions.filterSearchByCategory();
     }
 
-    // const { country, city } = this.props.account.publisherData;
     if (this.props.account.publisherData !== nextProps.account.publisherData) {
       if (!nextProps.listing.saveListing.saving) {
         this.fetchListings(nextProps.account.publisherData);
@@ -93,8 +92,15 @@ class Marketplace extends Component {
     }
   }
 
-  fetchListings({ country, city, keywords }) {
-    this.props.searchActions.searchListings(keywords, 'All', country, city, true, null);
+  fetchListings({ country, state, city, keywords }) {
+    const searchListings = () => {
+      if (!this.props.dht.isConnecting && this.props.dht.connector) {
+        this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+      } else {
+        setTimeout(searchListings, 500);
+      }
+    };
+    searchListings();
   }
 
   listItems(items, size) {
@@ -103,14 +109,14 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-  
+
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
         const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-  
+
         let categoryTitle = '';
         if (item.category && item.category.toLowerCase() !== 'all') {
           categoryTitle = mainCategories[item.category] ?
@@ -118,7 +124,7 @@ class Marketplace extends Component {
         }
         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
         const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
-        
+
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
             <Link to={`listing/${item.listing_id}`}>
@@ -144,9 +150,9 @@ class Marketplace extends Component {
   }
 
   viewAllSubCategories = (category) => {
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, null);
+    this.props.searchActions.searchListings(null, category || 'All', country, state, city, true, null);
   };
 
   renderOption(category, parentCategory) {
@@ -387,13 +393,13 @@ class Marketplace extends Component {
 
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
     const subCategory = parent ? Marketplace.getValue(categoryId) : null;
     if (categoryId !== 'featuredListings') {
-      this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+      this.props.searchActions.searchListings(null, category, country, state, city, true, subCategory);
     } else {
-      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, city, true, null);
+      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, state, city, true, null);
     }
   };
 
@@ -403,7 +409,8 @@ class Marketplace extends Component {
     if (type === CategoriesTypes.FEATURED) {
       maxDisplay = 12;
     }
-
+    let content = this.listItems(itemsList, maxDisplay);
+    content = content.length !== 0 ? content : formatMessage(messages.noListingsFound);
     return (
       <div className="list-container">
         <div className="top-detail">
@@ -416,9 +423,8 @@ class Marketplace extends Component {
         </div>
         <div className="items">
           {
-            loading ?
-            <div className='loading-container'><Loader inline active /></div> :
-            this.listItems(itemsList, maxDisplay)
+            loading ? <div className='loading-container'><Loader inline active /></div>
+                    : content
           }
         </div>
       </div>

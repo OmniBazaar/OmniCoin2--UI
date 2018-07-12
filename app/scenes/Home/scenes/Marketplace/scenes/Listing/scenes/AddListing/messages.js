@@ -213,6 +213,10 @@ const messages = defineMessages({
     id: 'AddListing.saveListingSuccessMessage',
     defaultMessage: 'Listing is saved successful'
   },
+  saveListingNotEnoughFunds: {
+    id: 'AddListing.saveListingNotEnoughFunds',
+    defaultMessage: 'Insufficient funds to pay fee to publisher.'
+  },
   error: {
     id: 'AddListing.error',
     defaultMessage: 'Error'
@@ -260,7 +264,15 @@ const messages = defineMessages({
   saveListingErrorNoChangeDetectedMessage: {
     'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
     defaultMessage: 'Listing has no changes detected, please change data and submit again'
-  }
+  },
+  publisherNotReachable: {
+    'id': 'AddListing.publisherNotReachable',
+    defaultMessage: 'Publisher is not reachable'
+  },
+  invalidAddress: {
+    id: 'AddListing.invalidAddress',
+    defaultMessage: 'Invalid address'
+  },
 });
 
 export default messages;

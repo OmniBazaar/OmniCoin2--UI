@@ -66,6 +66,7 @@ class AddBitcoinAddress extends Component {
     this.props.bitcoinActions.toggleAddAddressModal();
   };
 
+
   render() {
     const { isOpen } = this.props.bitcoin.addAddressModal;
     const { loading } = this.props.bitcoin;

@@ -15,6 +15,7 @@ import PriorityTypes from '../../../../../../../../../common/SearchPriorityType'
 import {
   changePriority,
   changeCountry,
+  changeState,
   changeCity,
   changePublisherName,
   changeKeywords,
@@ -41,6 +42,10 @@ const messages = defineMessages({
   country: {
     id: 'SearchPrioritySetting.country',
     defaultMessage: 'Country'
+  },
+  state: {
+    id: 'SearchPrioritySetting.state',
+    defaultMessage: 'State'
   },
   city: {
     id: 'SearchPrioritySetting.city',
@@ -95,6 +100,7 @@ class SearchPrioritySetting extends Component {
     };
 
     this.onChangePriority = this.onChangePriority.bind(this);
+    this.onChangeState = this.onChangeState.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
     this.onChangeKeywords = this.onChangeKeywords.bind(this);
@@ -129,11 +135,19 @@ class SearchPrioritySetting extends Component {
   }
 
   onChangeCountry(country) {
+    if(!country) {
+      this.props.accountSettingsActions.changeState('');
+      this.props.accountSettingsActions.changeCity('');
+    }
     this.props.accountSettingsActions.changeCountry(country);
   }
 
-  onChangeCity(city) {
-    this.props.accountSettingsActions.changeCity(city);
+  onChangeState(state) {
+    this.props.accountSettingsActions.changeState(state);
+  }
+
+  onChangeCity(e) {
+    this.props.accountSettingsActions.changeCity(e.target.value);
   }
 
   onChangeKeywords(keywords) {
@@ -162,7 +176,7 @@ class SearchPrioritySetting extends Component {
         return (
           <div>
             <div className="form-group">
-              <span>{formatMessage(messages.country)}</span>
+              <span>{formatMessage(messages.country)}*</span>
               <CountryDropdown
                 value={publisherData.country}
                 classes="ui dropdown textfield"
@@ -171,15 +185,22 @@ class SearchPrioritySetting extends Component {
               <div className="col-1" />
             </div>
             <div className="form-group">
-              <span>{formatMessage(messages.city)}</span>
+              <span>{formatMessage(messages.state)}*</span>
               <RegionDropdown
                 country={publisherData.country}
-                value={publisherData.city}
+                value={publisherData.state}
                 defaultOptionLabel=""
                 blankOptionLabel=""
                 classes="ui dropdown textfield"
-                onChange={this.onChangeCity}
+                onChange={this.onChangeState}
               />
+              <div className="col-1" />
+            </div>
+            <div className="form-group">
+              <span>{formatMessage(messages.city)}</span>
+              <input type='text' className='textfield'
+                value={publisherData.city}
+                onChange={this.onChangeCity} />
               <div className="col-1" />
             </div>
           </div>
@@ -189,7 +210,7 @@ class SearchPrioritySetting extends Component {
         if (!keywords) keywords = [];
         return (
           <div className="form-group keyword-container" key="category">
-            <span>{formatMessage(messages.keywordLabel)}</span>
+            <span>{formatMessage(messages.keywordLabel)}*</span>
             <TagsInput
               value={keywords}
               inputProps={{
@@ -206,7 +227,7 @@ class SearchPrioritySetting extends Component {
       case PriorityTypes.PUBLISHER:
         return (
           <div className="form-group" key="publisher">
-            <span>{formatMessage(messages.publisherName)}</span>
+            <span>{formatMessage(messages.publisherName)}*</span>
             <Dropdown
               placeholder={formatMessage(messages.publisherPlaceholder)}
               defaultValue={publisherData.publisherName}
@@ -231,10 +252,15 @@ class SearchPrioritySetting extends Component {
     const { handleSubmit } = this.props;
     const { isConnecting } = this.props.dht;
 
-    if (publisherData.priority === 'category' && !publisherData.keywords.length) {
+  
+    if (
+      (publisherData.priority === 'category' && !publisherData.keywords.length) ||
+      (publisherData.priority === 'publisher' && !publisherData.publisherName) ||
+      (publisherData.priority === 'local' && (!publisherData.state || !publisherData.country))
+    ) {
       isDisabled = true;
     }
-
+    
     return (
       <div className="search-priority-setting">
         <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">
@@ -342,6 +368,7 @@ export default compose(
       accountSettingsActions: bindActionCreators({
         changePriority,
         changeCountry,
+        changeState,
         changeCity,
         changeKeywords,
         changePublisherName,

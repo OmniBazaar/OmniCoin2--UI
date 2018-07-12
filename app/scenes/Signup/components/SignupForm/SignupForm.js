@@ -102,9 +102,13 @@ const messages = defineMessages({
     id: 'SignupForm.country',
     defaultMessage: 'Your Country'
   },
+  state: {
+    id: 'SignupForm.state',
+    defaultMessage: 'Your State'
+  },
   city: {
     id: 'SignupForm.city',
-    defaultMessage: 'Your State/City'
+    defaultMessage: 'Your City'
   },
   keywords: {
     id: 'SignupForm.keywords',
@@ -144,8 +148,8 @@ class SignupForm extends Component {
     if (!values.country) {
       errors.country = messages.fieldRequired;
     }
-    if (!values.city) {
-      errors.city = messages.fieldRequired;
+    if (!values.state) {
+      errors.state = messages.fieldRequired;
     }
     return errors;
   };
@@ -189,8 +193,12 @@ class SignupForm extends Component {
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
     if(!country) {
-      this.props.formActions.change('city', '');
+      this.props.formActions.change('state', '');
     }
+  }
+
+  onChangeState(state) {
+    this.props.formActions.change('state', state);
   }
 
   onChangeCity(city) {
@@ -220,7 +228,7 @@ class SignupForm extends Component {
 
   submit(values) {
     const {
-      username, password, referrer, searchPriority, country, city, keywords
+      username, password, referrer, searchPriority, country, state, city, keywords
     } = values;
 
     this.props.authActions.signup(
@@ -230,6 +238,7 @@ class SignupForm extends Component {
       {
         priority: searchPriority,
         country,
+        state,
         city,
         keywords
       },
@@ -325,13 +334,13 @@ class SignupForm extends Component {
     );
   };
 
-  renderCityField = ({
+  renderStateField = ({
     input, meta: {
     asyncValidating, touched, error
   }
   }) => {
     const { formatMessage } = this.props.intl;
-    const { country, city } = this.props.formValues;
+    const { country, state } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
 
     return (
@@ -342,11 +351,11 @@ class SignupForm extends Component {
         <RegionDropdown
           {...input}
           country={country}
-          value={city}
-          defaultOptionLabel={formatMessage(messages.city)}
-          blankOptionLabel={formatMessage(messages.city)}
+          value={state}
+          defaultOptionLabel={formatMessage(messages.state)}
+          blankOptionLabel={formatMessage(messages.state)}
           classes="ui dropdown textfield"
-          onChange={this.onChangeCity.bind(this)}
+          onChange={this.onChangeState.bind(this)}
         />
       ]
     );
@@ -458,7 +467,7 @@ class SignupForm extends Component {
 
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
-        const { country, city } = this.props.formValues;
+        const { country, state } = this.props.formValues;
         return (
           <div className="location-container">
             <Field
@@ -469,11 +478,17 @@ class SignupForm extends Component {
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <Field
-              name="city"
+              name="state"
               country={country}
-              city={city}
-              component={this.renderCityField}
+              state={state}
+              component={this.renderStateField}
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+            />
+            <Field
+              type='text'
+              name="city"
+              placeholder={formatMessage(messages.city)}
+              component={ValidatableField}
             />
           </div>
         );
@@ -526,7 +541,7 @@ class SignupForm extends Component {
 
   render() {
     const {
-      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
+      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues, dht
     } = this.props;
     const agreementTerms = { formValues };
     const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
@@ -580,6 +595,7 @@ class SignupForm extends Component {
           disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating || this.keywordVal()}
           color="green"
           className={btnClass}
+          loading={auth.loading || dht.isConnecting}
           type="submit"
         />
         <Divider fitted />

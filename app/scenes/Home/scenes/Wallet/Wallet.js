@@ -19,9 +19,8 @@ import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress'
 import EthereumWalletDetail from './components/EthereumWalletDetail/EthereumWalletDetail';
 import AddEthereumWallet from './components/AddEthereumWallet/AddEthereumWallet';
 import AddEthereumAddress from './components/AddEthereumAddress/AddEthereumAddress';
-import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/ethereum/ethereumActions';
+import { toggleModalEthereum, toggleAddAddressEthereumModal } from '../../../../services/blockchain/ethereum/ethereumActions';
 
-import RecentTransactions from '../Settings/scenes/RecentTransactions/RecentTransactions';
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
@@ -38,16 +37,21 @@ import AddIcon from '../../images/btn-add-image.svg';
 
 import messages from './messages';
 import settingsMessages from '../Settings/messages';
+import Settings from '../Settings/Settings';
 import './wallet.scss';
-import StartGuide from '../../components/StartGuide/StartGuide';
+import {CoinTypes} from "./constants";
+import {TOKENS_IN_XOM} from "../../../../utils/constants";
 
 class Wallet extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      activeTab: 0
+    };
     this.openWalletModal = this.openWalletModal.bind(this);
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
   }
 
   componentWillMount() {
@@ -69,9 +73,18 @@ class Wallet extends Component {
   getBalance() {
     const { balance } = this.props.blockchainWallet;
     if (balance && balance.balance) {
-      return balance.balance / 100000;
+      return balance.balance / TOKENS_IN_XOM;
     }
     return 0.00;
+  }
+
+  getCoinType(activeTab) {
+    switch(activeTab) {
+      case 0:
+        return CoinTypes.OMNI_COIN;
+      case 1:
+        return CoinTypes.BIT_COIN;
+    }
   }
 
   onClickAddWallet() {
@@ -84,6 +97,12 @@ class Wallet extends Component {
 
   openWalletModal() {
 
+  }
+
+  onTabChange(e, data) {
+    this.setState({
+      activeTab: data.activeIndex
+    })
   }
 
   getBitcoinContent() {
@@ -115,10 +134,14 @@ class Wallet extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { account } = this.props.auth;
+    const {
+      addAddressModal,
+      modal
+    } =  this.props.bitcoin;
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
-          hasButton
+          hasButton={this.state.activeTab}
           buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
@@ -129,23 +152,8 @@ class Wallet extends Component {
           <Tab
             className="tabs"
             menu={{ secondary: true, pointing: true }}
+            onTabChange={this.onTabChange}
             panes={[
-              {
-                menuItem: formatMessage(settingsMessages.recentTransactions),
-                render: () => (
-                  <Tab.Pane>
-                    <RecentTransactions
-                      rowsPerPage={20}
-                      tableProps={{
-                        sortable: true,
-                        compact: true,
-                        basic: 'very',
-                        striped: true,
-                        size: 'small'
-                      }}
-                     />
-                   </Tab.Pane>),
-                 },
               {
                 menuItem: 'OmniCoin',
                 render: () => (
@@ -173,7 +181,7 @@ class Wallet extends Component {
                           this.getBitcoinContent()
                         }
                        </div>
-                    :
+                     :
                        <div className="no-wallet-yet">
                          <span>{formatMessage(messages.noWalletYet)}</span>
                        </div>
@@ -182,9 +190,14 @@ class Wallet extends Component {
                }
              ]}
           />
+          <div className="content">
+              <Settings
+                coinType={this.getCoinType(this.state.activeTab)}
+              />
+          </div>
         </div>
-        <AddBitcoinWallet />
-        <AddBitcoinAddress />
+        { modal.isOpen && <AddBitcoinWallet/> }
+        { addAddressModal.isOpen && <AddBitcoinAddress /> }
       </div>
     );
   }

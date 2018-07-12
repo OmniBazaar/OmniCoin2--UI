@@ -29,6 +29,14 @@ const messages = defineMessages({
   noAccount: {
     id: 'AuthService.noAccount',
     defaultMessage: 'Account doesn\'t exist'
+  },
+  accountExists: {
+    id: 'AuthService.accountExist',
+    defaultMessage: 'This account name is already taken. Please choose another one'
+  },
+  invalidUsername: {
+    id: 'AuthService.invalidUsername',
+    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
   }
 });
 
@@ -39,6 +47,7 @@ export function* subscriber() {
     takeEvery('SIGNUP', signup),
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
+    takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
   ]);
 }
 
@@ -92,6 +101,14 @@ export function* signup(action) {
   const macAddress = localStorage.getItem('macAddress');
   const harddriveId = localStorage.getItem('hardDriveId');
   try {
+    const referrerAccount = yield Apis.instance().db_api().exec('get_account_by_name', [referrer]);
+
+    if (referrer) {
+      if (referrerAccount == null || !referrerAccount.is_referrer) {
+        throw new Error('Referrer account not found');
+      }
+    }
+
     const result = yield call(fetch, `${faucet}/api/v1/accounts`, {
       method: 'post',
       mode: 'cors',
@@ -128,7 +145,7 @@ export function* signup(action) {
       console.log('ERROR', error);
       let e;
       if(error.base && error.base.length && error.base.length > 0) {
-        e = "Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash."
+        e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
       } else if (error.remote_ip && error.remote_ip.length && error.remote_ip.length > 0) {
         e = error.remote_ip[0]
       } else if (error.name && error.name.length && error.name.length > 0) {
@@ -141,7 +158,8 @@ export function* signup(action) {
     }
   } catch (e) {
     console.log('ERROR', e);
-    yield put({ type: 'SIGNUP_FAILED', error: e });
+    const error = (typeof e == 'object') ? e.message : e
+    yield put({ type: 'SIGNUP_FAILED', error });
   }
 }
 
@@ -193,5 +211,14 @@ function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId 
   } catch (error) {
     console.log('ERROR ', error);
     yield put(welcomeBonusFailed(error));
+  }
+}
+
+export function* getWelcomeBonusAmount() {
+  try {
+    const amount = yield Apis.instance().db_api().exec('get_welcome_bonus_amount', []);
+    yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_SUCCEEDED', amount });
+  } catch (error) {
+    yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
   }
 }

@@ -12,6 +12,7 @@ import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/Searc
 import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import TabsData from '../../../../components/TabsData/TabsData';
 import CategoryDropdown from '../../../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
+import { NavLink } from 'react-router-dom';
 
 import {
   requestMyListings,
@@ -161,7 +162,11 @@ class MyListings extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.marketplace)}</span>
+                  <NavLink to="/marketplace" activeClassName="active" className="menu-item">
+                    <span className="link">
+                      <span>{formatMessage(messages.marketplace)}</span>
+                    </span>
+                  </NavLink>
                   <Icon name="long arrow right" width={iconSize} height={iconSize} />
                 </div>
                 <span className="child">{formatMessage(messages.myListings)}</span>

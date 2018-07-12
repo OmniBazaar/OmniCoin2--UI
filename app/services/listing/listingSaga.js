@@ -6,7 +6,7 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
-import { FetchChain, TransactionBuilder, hash } from 'omnibazaarjs/es';
+import { FetchChain,  hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 import {
   ws,
@@ -49,7 +49,8 @@ import {
   deleteListing,
   getListingFromBlockchain,
   reportListingOnBlockchain,
-  createListingHash
+  createListingHash,
+  checkPublisherAliveStatus
 } from './apis';
 
 export function* listingSubscriber() {
@@ -68,8 +69,9 @@ export function* listingSubscriber() {
 
 function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
+    const { currentUser } = (yield select()).default.auth;
     yield put(addListingImage(publisher, file, imageId));
-    const resultImage = yield call(saveImage, publisher, file);
+    const resultImage = yield call(saveImage, currentUser, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
       resultImage.image,
@@ -90,7 +92,8 @@ function* removeImage({ payload: { publisher, image } }) {
     	return;
     }
 
-    const result = yield call(deleteImage, publisher, fileName);
+    const { currentUser } = (yield select()).default.auth;
+    const result = yield call(deleteImage, currentUser, publisher, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
     } else {
@@ -102,7 +105,7 @@ function* removeImage({ payload: { publisher, image } }) {
   }
 }
 
-function* checkAndUploadImages(publisher, listing) {
+function* checkAndUploadImages(user, publisher, listing) {
 	for (let i=0; i<listing.images.length; i++) {
 		const imageItem = listing.images[i];
 		const { localFilePath, path, id } = imageItem;
@@ -113,7 +116,7 @@ function* checkAndUploadImages(publisher, listing) {
 				name: path,
 				type
 			};
-			const result = yield call(saveImage, publisher, file);
+			const result = yield call(saveImage, user, publisher, file);
 			yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
@@ -132,11 +135,26 @@ function* checkAndUploadImages(publisher, listing) {
 function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
+    const { currentUser } = (yield select()).default.auth;
+
+    //saving take long time and user might logout in the middle of saving,
+    //so we need to clone current user object
+    const user = { ...currentUser };
+    const isPublisherAlive = yield call(checkPublisherAliveStatus, user, publisher);
+    if (!isPublisherAlive) {
+      throw new Error('publisher_not_alive');
+    }
+
+    if (!listing.price_using_btc) {
+      listing = { ...listing };
+      delete listing.bitcoin_address;
+    }
+
     if (listingId) {
-      result = yield call(editListing, publisher, listingId, listing);
+      result = yield call(editListing, user, publisher, listingId, listing);
     } else {
-      yield checkAndUploadImages(publisher, listing);
-      result = yield call(createListing, publisher, listing);
+      yield checkAndUploadImages(user, publisher, listing);
+      result = yield call(createListing, user, publisher, listing);
     }
 
     if (!listingId) {
@@ -189,7 +207,7 @@ function* getListingDetail({ payload: { listingId }}) {
 function* requestMyListings() {
 	try {
     yield put(clearSearchResults());
-    
+
     const { currentUser } = (yield select()).default.auth;
 		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
 		let getListingCommands = (yield Promise.all(
@@ -243,7 +261,9 @@ function* requestMyListings() {
 
 function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    yield call(deleteListing, publisher, listing);
+    const { currentUser } = (yield select()).default.auth;
+    const user = { ...currentUser };
+    yield call(deleteListing, user, publisher, listing);
     yield put(deleteListingSuccess(listing.listing_id));
   } catch (err) {
     console.log(err);
@@ -299,7 +319,6 @@ function* reportListing({ payload: { listingId } }) {
     yield call(reportListingOnBlockchain, listingId);
     yield put(reportListingSuccess())
   } catch (error) {
-    console.log('ERROR ', error);
-    yield put(reportListingError(JSON.stringify(error)));
+    yield put(reportListingError(error.toString()));
   }
 }

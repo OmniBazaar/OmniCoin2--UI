@@ -8,6 +8,7 @@ import { IntlProvider } from 'react-intl';
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
+import AirDrop from './scenes/AirDrop/AirDrop';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import {
@@ -19,6 +20,7 @@ import {
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
 import { getConfig } from "./services/config/configActions";
+import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
 
 class Root extends Component {
@@ -29,6 +31,7 @@ class Root extends Component {
     this.props.authActions.getLastLoginUserName();
     this.props.listingDefaultsActions.loadListingDefault();
     this.props.preferencesActions.loadPreferences();
+    this.props.updateNotificationActions.checkUpdate();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,8 +62,9 @@ class Root extends Component {
         <Router>
           <Switch>
             <Route path="/signup" render={(props) => <Signup {...props} />} />
+            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
             <Route path="/login" render={(props) => <Login {...props} />} />
-            <Route path="/" render={(props) => <Home {...props} />} />
+            <Route path="/" render={(props) => <Home {...props} />} />                       
           </Switch>
         </Router>
       </IntlProvider>
@@ -111,6 +115,9 @@ export default connect(
     }, dispatch),
     configActions: bindActionCreators({
       getConfig
+    }, dispatch),
+    updateNotificationActions: bindActionCreators({
+      checkUpdate
     }, dispatch)
   })
 )(Root);

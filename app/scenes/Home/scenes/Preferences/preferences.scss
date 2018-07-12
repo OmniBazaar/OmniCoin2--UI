@@ -9,7 +9,7 @@
       }
 
       .dropdown, .textfield {
-        flex: 2.81;
+        flex: 2.81!important;
         padding: 0.67857143em 1em;
       }
 
@@ -116,4 +116,12 @@
 .error-message {
   height: 30px;
   color: #FF0000;
+}
+
+.priority-listings {
+  width: 100%!important;
+}
+
+.radio-group {
+  display: flex;
 }

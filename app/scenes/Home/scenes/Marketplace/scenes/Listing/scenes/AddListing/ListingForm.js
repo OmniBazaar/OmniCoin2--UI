@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
@@ -27,14 +27,19 @@ import {
   InputField,
   makeValidatableField
 } from '../../../../../../../../components/ValidatableField/ValidatableField';
-
 import {
   setListingImages,
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import {
+  updatePublicData,
+  setBtcAddress,
+} from '../../../../../../../../services/accountSettings/accountActions';
+import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
+import {FetchChain} from "omnibazaarjs";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -47,10 +52,22 @@ const numericFieldValidator = [
 ];
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
-const MAX_IMAGE_SIZE = '10mb';
+const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
-  constructor(props) {
+  static asyncValidate = async (values) => {
+    console.log('async validate')
+    try {
+      const { price_using_btc, bitcoin_address } = values;
+      if (price_using_btc && bitcoin_address) {
+        await BitcoinApi.validateAddress(bitcoin_address);
+      }
+    } catch (e) {
+      throw { bitcoin_address: messages.invalidAddress };
+    }
+  };
+
+constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -102,6 +119,7 @@ class ListingForm extends Component {
       };
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
+      const { btc_address } = this.props.auth.account;
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
@@ -109,7 +127,12 @@ class ListingForm extends Component {
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
+        start_date: moment().format('YYYY-MM-DD HH:mm:ss')
       };
+
+      if (btc_address) {
+        data.bitcoin_address = btc_address;
+      }
     }
 
     this.props.initialize(data);
@@ -161,17 +184,22 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
-        if (error.message && error.message === 'no_changes') {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-          );
+        let msg = null;
+        if (error.message) {
+          if (error.message === 'no_changes') {
+            msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+          } else if (error.message === 'publisher_not_alive') {
+            msg = formatMessage(messages.publisherNotReachable);
+          } else if (error.message.includes(messages.saveListingNotEnoughFunds.defaultMessage)) {
+            msg = formatMessage(messages.saveListingNotEnoughFunds);
+          } else {
+            msg = error.message;
+          }
         } else {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorMessage)
-          );
+          msg = msg = formatMessage(messages.saveListingErrorMessage);
         }
+
+        this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -272,6 +300,8 @@ class ListingForm extends Component {
     const { saveListing } = this.props.listingActions;
     const { listing_id, publisher, keywords, ...data } = values;
 
+    this.props.accountActions.updatePublicData();
+
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
@@ -284,20 +314,27 @@ class ListingForm extends Component {
     const {
       category,
       country,
+      currency,
       publisher,
       price_using_btc,
       continuous
     } = this.props.formValues ? this.props.formValues : {};
     const {
+      account,
+      auth,
+      bitcoin,
       handleSubmit,
       editingListing,
-      invalid
+      invalid,
+      submitting,
+      asyncValidating
     } = this.props;
 
     const formValues = this.props.formValues || {};
-    const { error, saving } = this.props.listing.saveListing;
-    return (
+    const { saving } = this.props.listing.saveListing;
+    const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
 
+    return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -342,7 +379,7 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.keywordCommas)}
                 validate={requiredFieldValidator}
               />
-              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
+              <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -354,7 +391,8 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(messages.category)
+                  placeholder: formatMessage(messages.category),
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -365,7 +403,8 @@ class ListingForm extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
                 validate={requiredFieldValidator}
               />
@@ -379,7 +418,7 @@ class ListingForm extends Component {
               <Field
                 name="currency"
                 component={this.CurrencyDropdown}
-                removeAll={true}
+                removeAll
                 props={{
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
@@ -419,7 +458,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-          {price_using_btc &&
+          {(price_using_btc || currency === 'BITCOIN') &&
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.bitcoinAddress)}
@@ -430,6 +469,8 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 validate={requiredFieldValidator}
+                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -693,8 +734,8 @@ class ListingForm extends Component {
                   )
                 }
                 className="button--green-bg uppercase"
-                loading={saving}
-                disabled={saving || invalid}
+                loading={saving || submitting || asyncValidating}
+                disabled={saving || invalid || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
@@ -710,13 +751,26 @@ ListingForm.propTypes = {
     resetSaveListing: PropTypes.func,
     saveListing: PropTypes.func
   }).isRequired,
+  accountActions: PropTypes.shape({
+    updatePublicData: PropTypes.func,
+    setBtcAddress: PropTypes.func,
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  account: PropTypes.shape({
+    btcAddress: PropTypes.string,
+  }).isRequired,
   auth: PropTypes.shape({
+    account: PropTypes.shape({
+      btc_address: PropTypes.string,
+    }),
     currentUser: PropTypes.shape({
-      username: PropTypes.string
+      username: PropTypes.string,
     })
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
@@ -734,19 +788,27 @@ export default compose(
   reduxForm({
     form: 'listingForm',
     destroyOnUnmount: true,
+    asyncValidate: ListingForm.asyncValidate,
+    asyncBlurFields: ['bitcoin_address'],
   }),
   connect(
     state => ({
       auth: state.default.auth,
+      account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults
+      listingDefaults: state.default.listingDefaults,
+      bitcoin: state.default.bitcoin
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
         setListingImages,
         saveListing,
         resetSaveListing
+      }, dispatch),
+      accountActions: bindActionCreators({
+        setBtcAddress,
+        updatePublicData,
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)
