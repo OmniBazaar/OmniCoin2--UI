@@ -15,10 +15,17 @@ import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletD
 import OmnicoinWalletDetail from './components/OmnicoinWalletDetail/OmnicoinWalletDetail';
 import AddBitcoinWallet from './components/AddBitcoinWallet/AddBitcoinWallet';
 import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress';
+
+import EthereumWalletDetail from './components/EthereumWalletDetail/EthereumWalletDetail';
+import AddEthereumWallet from './components/AddEthereumWallet/AddEthereumWallet';
+import AddEthereumAddress from './components/AddEthereumAddress/AddEthereumAddress';
+import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/ethereum/ethereumActions';
+
 import RecentTransactions from '../Settings/scenes/RecentTransactions/RecentTransactions';
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
+  getEthereumWallets,
   getOmniCoinWallets
 } from '../../../../services/wallet/walletActions';
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
