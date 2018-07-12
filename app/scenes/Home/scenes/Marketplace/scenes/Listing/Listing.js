@@ -115,7 +115,7 @@ class Listing extends Component {
     if (this.props.listing.reportListing.reporting && !nextProps.listing.reportListing.reporting) {
       if (nextProps.listing.reportListing.error) {
         let { error } = nextProps.listing.reportListing;
-        if (error.indexOf('Proof of Participation score is too low.' !== -1)) {
+        if (error.indexOf('Proof of Participation score is too low.') !== -1) {
           this.errorToast(messages.reportListingErrorPopScore);
         } else {
           this.errorToast(messages.reportListingError);
