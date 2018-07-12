@@ -32,7 +32,7 @@ import {
   setActivePageGridTable,
   sortGridTableBy
 } from '../../../../../../services/marketplace/marketplaceActions';
-import { deleteListing } from '../../../../../../services/listing/listingActions';
+import { deleteListing, removeFromFavorites } from '../../../../../../services/listing/listingActions';
 
 import {
   mainCategories,
@@ -97,6 +97,10 @@ class GridTable extends Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.props.gridTableActions.setActivePageGridTable(activePage);
+  };
+  
+  removeFromFavorites = (listing_id) => {
+    this.props.listingActions.removeFromFavorites(listing_id);
   };
 
   renderEmptyRow() {
@@ -229,10 +233,23 @@ class GridTable extends Component {
                             </span>
                             
                             <span className="description">{description}</span>
-                            <span className="price">
-                              {this.getIcon(showConvertedPrice, item.currency, currency)}
-                              {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
-                              </span>
+                            <div className="listing-info">
+                              <div className="price">
+                                {this.getIcon(showConvertedPrice, item.currency, currency)}
+                              </div>
+                              <div>
+                                {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
+                              </div>
+                              {(this.props.location.pathname === '/favorite-listings') &&
+                                <div>
+                                  <Button
+                                    onClick={() => this.removeFromFavorites(item.listing_id)}
+                                    content={formatMessage(messages.removeFromFavorites)}
+                                    className="button--transparent"
+                                  />
+                                </div>
+                              }
+                            </div>
                             {this.props.showActions ?
                               <div className="actions">
                                 <Button
@@ -354,7 +371,8 @@ export default connect(
       sortGridTableBy
     }, dispatch),
     listingActions: bindActionCreators({
-      deleteListing
+      deleteListing,
+      removeFromFavorites
     }, dispatch)
   })
 )(injectIntl(withRouter(GridTable)));
