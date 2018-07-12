@@ -145,6 +145,11 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
       throw new Error('publisher_not_alive');
     }
 
+    if (!listing.price_using_btc) {
+      listing = { ...listing };
+      delete listing.bitcoin_address;
+    }
+
     if (listingId) {
       result = yield call(editListing, user, publisher, listingId, listing);
     } else {

@@ -66,7 +66,6 @@ const makeRequest = async (user, publisher, url, options) => {
 
 export const saveImage = async (user, publisher, file) => {
   const { localPath, path } = file;
-  console.log('SAVING IMAGE');
   const options = {
     method: 'POST',
     formData: {
@@ -80,7 +79,6 @@ export const saveImage = async (user, publisher, file) => {
     }
   };
   const body = await makeRequest(user, publisher, 'images', options);
-  console.log("BODY ", JSON.parse(body));
   return JSON.parse(body);
 };
 
