@@ -9,8 +9,8 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import { toggleModal } from '../../../../../../services/blockchain/ethereum/EthereumActions';
-import NewWallet from './components/NewWallet/NewWallet';
-import ExistingWallet from './components/ExistingWallet/ExistingWallet';
+import NewEthereumWallet from './components/NewEthereumWallet/NewEthereumWallet';
+import ExistingEthereumWallet from './components/ExistingEthereumWallet/ExistingEthereumWallet';
 
 const messages = defineMessages({
   existingWallet: {
@@ -40,11 +40,11 @@ class AddEthereumWallet extends Component {
             panes={[
                   {
                     menuItem: formatMessage(messages.newWallet),
-                    render: () => <Tab.Pane><NewWallet /></Tab.Pane>,
+                    render: () => <Tab.Pane><NewEthereumWallet /></Tab.Pane>,
                   },
                   {
                     menuItem: formatMessage(messages.existingWallet),
-                    render: () => <Tab.Pane><ExistingWallet /></Tab.Pane>,
+                    render: () => <Tab.Pane><ExistingEthereumWallet /></Tab.Pane>,
                   },
                 ]}
           />
