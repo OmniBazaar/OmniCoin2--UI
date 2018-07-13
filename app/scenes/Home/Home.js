@@ -71,6 +71,10 @@ class Home extends Component {
 
   state = {visible: true};
 
+  componentWillMount() {
+    this.props.preferencesActions.loadPreferences();
+  }
+  
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
@@ -84,7 +88,6 @@ class Home extends Component {
   init() {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
-    this.props.preferencesActions.loadPreferences();
     this.props.dhtActions.dhtReconnect();
   }
 
@@ -93,8 +96,7 @@ class Home extends Component {
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
-
-
+  
   renderAccountSettings() {
     const { props } = this;
 
