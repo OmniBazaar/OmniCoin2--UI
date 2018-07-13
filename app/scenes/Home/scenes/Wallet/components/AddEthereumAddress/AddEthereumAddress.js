@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 import FormField from '../FormField/FormField';
 import ModalFooter from '../../../../../../components/ModalFooter/ModalFooter';
-import { toggleAddAddressModal, addAddress } from '../../../../../../services/blockchain/ethereum/EthereumActions';
+import { toggleAddAddressEthereumModal, addEthereumAddress } from '../../../../../../services/blockchain/ethereum/EthereumActions';
 import './add-ethereum-address.scss';
 
 const messages = defineMessages({
@@ -104,8 +104,8 @@ AddEthereumAddress.propTypes = {
     password: PropTypes.string,
   }).isRequired,
   EthereumActions: PropTypes.shape({
-    addAddress: PropTypes.func,
-    toggleAddAddressModal: PropTypes.func
+    addEthereumAddress: PropTypes.func,
+    toggleAddAddressEthereumModal: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -117,7 +117,7 @@ export default compose(
   connect(
     state => ({ ...state.default }),
     (dispatch) => ({
-      EthereumActions: bindActionCreators({ toggleAddAddressModal, addAddress }, dispatch),
+      EthereumActions: bindActionCreators({ toggleAddAddressEthereumModal, addEthereumAddress }, dispatch),
     })
   ),
   reduxForm({

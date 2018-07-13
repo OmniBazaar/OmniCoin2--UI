@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 
 import FormField from '../../../FormField/FormField';
 import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
-import { toggleModal, getWallets, connectWallet } from '../../../../../../../../services/blockchain/ethereum/EthereumActions';
+import { toggleEthereumModal, getWallets, connectWallet } from '../../../../../../../../services/blockchain/ethereum/EthereumActions';
 import messages from './messages';
 import './existing-wallet.scss';
 

@@ -1,14 +1,14 @@
 import { handleActions } from 'redux-actions';
 import {
-  createWallet,
-  getWallets,
-  makePayment,
-  getBalance,
-  addAddress,
-  toggleModal,
-  toggleAddAddressModal,
-  connectWallet,
-  connectWalletFinish
+  createEthereumWallet,
+  getEthereumWallets,
+  makeEthereumPayment,
+  getEthereumBalance,
+  addEthereumAddress,
+  toggleEthereumModal,
+  toggleAddAddressEthereumModal,
+  connectEthereumWallet,
+  connectEthereumWalletFinish
 } from './EthereumActions';
 
 const defaultState = {
@@ -30,7 +30,7 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [createWallet](state, { payload: { password } }) {
+  [createEthereumWallet](state, { payload: { password } }) {
     return {
       ...state,
       password,
@@ -39,19 +39,19 @@ const reducer = handleActions({
       message: null
     };
   },
-  CREATE_WALLET_SUCCEEDED: (state, { guid }) => ({
+  CREATE_ETHEREUM_WALLET_SUCCEEDED: (state, { guid }) => ({
     ...state,
     guid,
     loading: false,
     error: null
   }),
-  CREATE_WALLET_FAILED: (state, { error }) => ({
+  CREATE_ETHEREUM_WALLET_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
     password: null,
     error
   }),
-  [getWallets](state) {
+  [getEthereumWallets](state) {
     return {
       ...state,
       isGettingWallets: true,
@@ -60,7 +60,7 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
+  GET_ETHEREUM_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
     ...state,
     wallets,
     guid,
@@ -69,13 +69,13 @@ const reducer = handleActions({
     loading: false,
     error: null
   }),
-  GET_WALLETS_FAILED: (state, { error }) => ({
+  GET_ETHEREUM_WALLETS_FAILED: (state, { error }) => ({
     ...state,
     isGettingWallets: false,
     loading: false,
     error
   }),
-  [makePayment](state) {
+  [makeEthereumPayment](state) {
     return {
       ...state,
       loading: true,
@@ -83,18 +83,18 @@ const reducer = handleActions({
       message: null
     };
   },
-  MAKE_PAYMENT_SUCCEEDED: (state, { response }) => ({
+  MAKE_ETHEREUM_PAYMENT_SUCCEEDED: (state, { response }) => ({
     ...state,
     loading: false,
     error: null,
     message: response
   }),
-  MAKE_PAYMENT_FAILED: (state, { error }) => ({
+  MAKE_ETHEREUM_PAYMENT_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
     error
   }),
-  [getBalance](state) {
+  [getEthereumBalance](state) {
     return {
       ...state,
       loading: true,
@@ -102,36 +102,36 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_BALANCE_SUCCEEDED: (state, { response }) => ({
+  GET_ETHEREUM_BALANCE_SUCCEEDED: (state, { response }) => ({
     ...state,
     loading: false,
     message: response
   }),
-  GET_BALANCE_FAILED: (state, { error }) => ({
+  GET_ETHEREUM_BALANCE_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
     error,
     message: null
   }),
-  [addAddress](state) {
+  [addEthereumAddress](state) {
     return {
       ...state,
       loading: true,
       error: null
     };
   },
-  ADD_ADDRESS_SUCCEEDED: (state, { address }) => ({
+  ADD_ETHEREUM_ADDRESS_SUCCEEDED: (state, { address }) => ({
     ...state,
     wallets: [...state.wallets, address],
     loading: false,
     error: null
   }),
-  ADD_ADDRESS_FAILED: (state, { error }) => ({
+  ADD_ETHEREUM_ADDRESS_FAILED: (state, { error }) => ({
     ...state,
     loading: true,
     error
   }),
-  [toggleModal](state) {
+  [toggleEthereumModal](state) {
     return {
       ...state,
       modal: {
@@ -140,7 +140,7 @@ const reducer = handleActions({
       }
     };
   },
-  [toggleAddAddressModal](state) {
+  [toggleAddAddressEthereumModal](state) {
     return {
       ...state,
       addAddressModal: {
@@ -149,14 +149,14 @@ const reducer = handleActions({
       }
     };
   },
-  [connectWallet](state) {
+  [connectEthereumWallet](state) {
     return {
       ...state,
       connectingWallet: true,
       connectWalletError: null
     };
   },
-  [connectWalletFinish](state, { payload: { error } }) {
+  [connectEthereumWalletFinish](state, { payload: { error } }) {
     return {
       ...state,
       connectingWallet: false,

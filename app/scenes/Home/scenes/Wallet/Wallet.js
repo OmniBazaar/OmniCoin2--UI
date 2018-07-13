@@ -258,6 +258,7 @@ class Wallet extends Component {
 Wallet.propTypes = {
   walletActions: PropTypes.shape({
     getBitcoinWallets: PropTypes.func,
+    getEthereumWallets: PropTypes.func,
     getOmniCoinWallets: PropTypes.func
   }),
   bitcoin: PropTypes.shape({
@@ -290,7 +291,7 @@ Wallet.propTypes = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
+    walletActions: bindActionCreators({ getBitcoinWallets, getEthereumWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
     bitcoinActions: bindActionCreators({
       toggleModal,
       toggleAddAddressModal,
