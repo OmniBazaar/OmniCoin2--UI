@@ -157,6 +157,8 @@ class OmnicoinHistory extends BaseStorage {
             && op.operationType !== ChainTypes.operations.listing_create_operation
             && op.operationType !== ChainTypes.operations.listing_update_operation) {
           transactions[trxKey].fee += totalObFee;
+        } else {
+          transactions[trxKey].fee +=  op.obFee.publisher_fee || 0;
         }
       }
       transactions[trxKey].memo = this.operationMemo(op);
