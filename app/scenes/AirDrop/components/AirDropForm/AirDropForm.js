@@ -239,7 +239,7 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinNewsletterChannelSuggestion)}&nbsp;
-            <a className="link" href="http://eepurl.com/dAJyfv" target="_blank">
+            <a className="link" href="http://eepurl.com/M708n" target="_blank">
               {formatMessage(messages.mailchimpLink)}
             </a>
           </p>
