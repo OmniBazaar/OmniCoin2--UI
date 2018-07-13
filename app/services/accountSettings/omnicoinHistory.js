@@ -142,7 +142,10 @@ class OmnicoinHistory extends BaseStorage {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
 
-      if (op.to === currentUser.username) {
+      // when user is publishing listings on his own publisher node
+      if (op.from === op.to) {
+        transactions[trxKey].fee += op.fee + totalObFee;
+      } else if (op.to === currentUser.username) {
         if (op.operationType === ChainTypes.operations.listing_create_operation
             || op.operationType === ChainTypes.operations.listing_update_operation
             || op.operationType === ChainTypes.operations.transfer) {
@@ -395,7 +398,7 @@ class OmnicoinHistory extends BaseStorage {
                                                     ? publisher.get('name')
                                                     : seller.get('name');
             if (el.op[1].publisher === account.get('id')) {
-              operation.isIncoming = true;
+              operation.isIncoming = false;
             }
           }
           this.addOperation(operation);
