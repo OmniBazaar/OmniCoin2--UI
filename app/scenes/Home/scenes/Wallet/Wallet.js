@@ -19,14 +19,15 @@ import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress'
 import EthereumWalletDetail from './components/EthereumWalletDetail/EthereumWalletDetail';
 import AddEthereumWallet from './components/AddEthereumWallet/AddEthereumWallet';
 import AddEthereumAddress from './components/AddEthereumAddress/AddEthereumAddress';
-import { toggleModalEthereum, toggleAddAddressEthereumModal } from '../../../../services/blockchain/ethereum/ethereumActions';
+import { toggleEthereumModal, toggleAddAddressEthereumModal, getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 
 import { toggleModal, toggleAddAddressModal, getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
-  getEthereumWallets,
+  getEtherWallets,
   getOmniCoinWallets
 } from '../../../../services/wallet/walletActions';
+
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
 import AddIcon from '../../images/btn-add-image.svg';
@@ -47,11 +48,16 @@ class Wallet extends Component {
     this.openWalletModal = this.openWalletModal.bind(this);
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
+
+    this.onClickAddEthereumWallet = this.onClickAddEthereumWallet.bind(this);
+    this.onClickAddEthereumAddress = this.onClickAddEthereumAddress.bind(this);
+
     this.onTabChange = this.onTabChange.bind(this);
   }
 
   componentWillMount() {
     this.props.bitcoinActions.getWallets();
+    this.props.ethereumActions.getEthereumWallets();
     this.requestBalance();
   }
 
@@ -91,6 +97,14 @@ class Wallet extends Component {
 
   onClickAddAddress() {
     this.props.bitcoinActions.toggleAddAddressModal();
+  }
+
+  onClickAddEthereumWallet() {
+    this.props.ethereumActions.toggleEthereumModal();
+  }
+
+  onClickAddEthereumAddress() {
+    this.props.bitcoinActions.toggleAddAddressEthereumModal();
   }
 
   openWalletModal() {
@@ -250,6 +264,11 @@ class Wallet extends Component {
         </div>
         {modal.isOpen && <AddBitcoinWallet />}
         {addAddressModal.isOpen && <AddBitcoinAddress />}
+
+        
+        {modalEthereum.isOpen && <AddEthereumWallet />}
+        {addAddressEthereumModal.isOpen && <AddEthereumAddress />}
+      
       </div>
     );
   }
@@ -258,7 +277,7 @@ class Wallet extends Component {
 Wallet.propTypes = {
   walletActions: PropTypes.shape({
     getBitcoinWallets: PropTypes.func,
-    getEthereumWallets: PropTypes.func,
+    getEtherWallets: PropTypes.func,
     getOmniCoinWallets: PropTypes.func
   }),
   bitcoin: PropTypes.shape({
@@ -279,9 +298,9 @@ Wallet.propTypes = {
     isGettingWallets: PropTypes.bool
   }).isRequired,
   ethereumActions: PropTypes.shape({
-    toggleModal: PropTypes.func,
-    toggleAddAddressModal: PropTypes.func,
-    getWallets: PropTypes.func
+    toggleEthereumModal: PropTypes.func,
+    toggleAddAddressEthereumModal: PropTypes.func,
+    getEthereumWallets: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
@@ -291,7 +310,7 @@ Wallet.propTypes = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    walletActions: bindActionCreators({ getBitcoinWallets, getEthereumWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
+    walletActions: bindActionCreators({ getBitcoinWallets, getEtherWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
     bitcoinActions: bindActionCreators({
       toggleModal,
       toggleAddAddressModal,
@@ -300,7 +319,7 @@ export default connect(
     ethereumActions: bindActionCreators({
       toggleEthereumModal,
       toggleAddAddressEthereumModal,
-      getWallets
+      getEthereumWallets
     }, dispatch),
   }),
 )(injectIntl(Wallet));

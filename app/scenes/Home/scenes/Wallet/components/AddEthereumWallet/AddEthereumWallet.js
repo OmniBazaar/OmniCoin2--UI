@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { toggleModal } from '../../../../../../services/blockchain/ethereum/EthereumActions';
+import { toggleEthereumModal } from '../../../../../../services/blockchain/ethereum/EthereumActions';
 import NewEthereumWallet from './components/NewEthereumWallet/NewEthereumWallet';
 import ExistingEthereumWallet from './components/ExistingEthereumWallet/ExistingEthereumWallet';
 
@@ -24,15 +24,15 @@ const messages = defineMessages({
 });
 
 class AddEthereumWallet extends Component {
-  toggleModal = () => {
-    this.props.addEthereumWalletActions.toggleModal();
+  toggleEthereumModal = () => {
+    this.props.addEthereumWalletActions.toggleEthereumModal();
   };
 
   render() {
     const { isOpen } = this.props.ethereum.modal;
     const { formatMessage } = this.props.intl;
     return (
-      <Modal size="small" open={isOpen} onClose={this.toggleModal} closeIcon>
+      <Modal size="small" open={isOpen} onClose={this.toggleEthereumModal} closeIcon>
         <Modal.Content>
           <Tab
             className="tabs"
@@ -56,7 +56,7 @@ class AddEthereumWallet extends Component {
 
 AddEthereumWallet.propTypes = {
   addEthereumWalletActions: PropTypes.shape({
-    toggleModal: PropTypes.func
+    toggleEthereumModal: PropTypes.func
   }).isRequired,
   ethereum: PropTypes.shape({
     modal: PropTypes.shape({
@@ -71,7 +71,7 @@ AddEthereumWallet.propTypes = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    addEthereumWalletActions: bindActionCreators({ toggleModal }, dispatch),
+    addEthereumWalletActions: bindActionCreators({ toggleEthereumModal }, dispatch),
   }),
 )(injectIntl(AddEthereumWallet));
 

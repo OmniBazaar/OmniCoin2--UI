@@ -19,10 +19,10 @@ const defaultState = {
   loading: false,
   error: null,
   message: null,
-  modal: {
+  modalEthereum: {
     isOpen: false
   },
-  addAddressModal: {
+  addAddressEthereumModal: {
     isOpen: false
   },
   connectingWallet: false,
@@ -134,18 +134,18 @@ const reducer = handleActions({
   [toggleEthereumModal](state) {
     return {
       ...state,
-      modal: {
+      modalEthereum: {
         ...state.modal,
-        isOpen: !state.modal.isOpen
+        isOpen: !state.modalEthereum.isOpen
       }
     };
   },
   [toggleAddAddressEthereumModal](state) {
     return {
       ...state,
-      addAddressModal: {
-        ...state.addAddressModal,
-        isOpen: !state.addAddressModal.isOpen
+      addAddressEthereumModal: {
+        ...state.addAddressEthereumModal,
+        isOpen: !state.addAddressEthereumModal.isOpen
       }
     };
   },

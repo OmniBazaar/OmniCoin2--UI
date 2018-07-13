@@ -11,9 +11,9 @@ import PropTypes from 'prop-types';
 import FormField from '../../../FormField/FormField';
 import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
 import {
-  toggleModal,
-  createWallet,
-  getWallets
+  toggleEthereumModal,
+  createEthereumWallet,
+  getEthereumWallets
 } from '../../../../../../../../services/blockchain/ethereum/EthereumActions';
 
 import './new-wallet.scss';
@@ -99,8 +99,8 @@ class NewEthereumWallet extends Component {
         toastr.error(formatMessage(messages.error, nextProps.ethereum.error));
       } else {
         toastr.success(formatMessage(messages.success), formatMessage(messages.rememberGuid));
-        this.props.EthereumActions.getWallets();
-        this.props.EthereumActions.toggleModal();
+        this.props.EthereumActions.getEthereumWallets();
+        this.props.EthereumActions.toggleEthereumModal();
       }
     }
   }
@@ -114,7 +114,7 @@ class NewEthereumWallet extends Component {
   }
 
   handleCancel() {
-    this.props.EthereumActions.toggleModal();
+    this.props.EthereumActions.toggleEthereumModal();
   }
 
   render() {
@@ -180,7 +180,7 @@ NewEthereumWallet.propTypes = {
   }).isRequired,
   EthereumActions: PropTypes.shape({
     getWallets: PropTypes.func,
-    toggleModal: PropTypes.func,
+    toggleEthereumModal: PropTypes.func,
     createWallet: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
@@ -195,9 +195,9 @@ export default compose(
     state => ({ ...state.default }),
     dispatch => ({
       EthereumActions: bindActionCreators({
-        toggleModal,
-        createWallet,
-        getWallets
+        toggleEthereumModal,
+        createEthereumWallet,
+        getEthereumWallets
       }, dispatch)
     })
   ),

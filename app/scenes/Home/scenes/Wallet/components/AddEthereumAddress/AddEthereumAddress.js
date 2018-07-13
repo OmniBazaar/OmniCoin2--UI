@@ -46,7 +46,7 @@ class AddEthereumAddress extends Component {
           && !nextProps.ethereum.loading
           && this.props.ethereum.loading
     ) {
-      this.toggleModal();
+      this.toggleEthereumModal();
     }
   }
 
@@ -59,10 +59,10 @@ class AddEthereumAddress extends Component {
   }
 
   handleCancel() {
-    this.toggleModal();
+    this.toggleEthereumModal();
   }
 
-  toggleModal = () => {
+  toggleEthereumModal = () => {
     this.props.EthereumActions.toggleAddAddressModal();
   };
 
@@ -72,7 +72,7 @@ class AddEthereumAddress extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     return (
-      <Modal size="tiny" open={isOpen} onClose={this.toggleModal} closeIcon>
+      <Modal size="tiny" open={isOpen} onClose={this.toggleEthereumModal} closeIcon>
         <Modal.Content>
           <Form className="add-ethereum-address" onSubmit={handleSubmit(this.handleSubmit)}>
             <Field

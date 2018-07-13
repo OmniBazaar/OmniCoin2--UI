@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 
 import FormField from '../../../FormField/FormField';
 import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
-import { toggleEthereumModal, getWallets, connectWallet } from '../../../../../../../../services/blockchain/ethereum/EthereumActions';
+import { toggleEthereumModal, getEthereumWallets, connectEthereumWallet } from '../../../../../../../../services/blockchain/ethereum/EthereumActions';
 import messages from './messages';
 import './existing-wallet.scss';
 
@@ -25,7 +25,7 @@ class ExistingEthereumWallet extends Component {
     if (!nextProps.ethereum.connectingWallet
           && this.props.ethereum.connectingWallet) {
       if (nextProps.ethereum.modal.isOpen) {
-        this.toggleModal();
+        this.toggleEthereumModal();
       }
       if (nextProps.ethereum.connectWalletError) {
         this.showErrorToast(
@@ -36,8 +36,8 @@ class ExistingEthereumWallet extends Component {
     }
   }
 
-  toggleModal = () => {
-    this.props.EthereumActions.toggleModal();
+  toggleEthereumModal = () => {
+    this.props.EthereumActions.toggleEthereumModal();
   };
 
   handleSubmit(values) {
@@ -46,7 +46,7 @@ class ExistingEthereumWallet extends Component {
   }
 
   handleCancel() {
-    this.toggleModal();
+    this.toggleEthereumModal();
   }
 
   showErrorToast(title, message) {
@@ -97,8 +97,8 @@ ExistingEthereumWallet.propTypes = {
     connectingWallet: PropTypes.bool
   }).isRequired,
   EthereumActions: PropTypes.shape({
-    toggleModal: PropTypes.func,
-    getWallets: PropTypes.func
+    toggleEthereumModal: PropTypes.func,
+    getEthereumWallets: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
@@ -113,7 +113,7 @@ export default compose(
       ethereum: state.default.ethereum
     }),
     dispatch => ({
-      EthereumActions: bindActionCreators({ toggleModal, getWallets, connectWallet }, dispatch)
+      EthereumActions: bindActionCreators({ toggleEthereumModal, getEthereumWallets, connectEthereumWallet }, dispatch)
     })
   ),
   reduxForm({
