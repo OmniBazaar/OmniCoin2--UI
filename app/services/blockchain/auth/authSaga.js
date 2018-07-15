@@ -218,9 +218,11 @@ export function* getWelcomeBonusAmount() {
 
 export function* receiveWelcomeBonus({ payload: { data } }) {
   try {
-    const res = yield call(AuthApi.getTelegramUserId, data.telegramPhoneNumber);
-    if (res && res.result.contact.user_id) {
-      yield call(AuthApi.getTelegramChatMember, res.result.contact.user_id);
+    const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, data.telegramPhoneNumber);
+    if (telegramUserIdRes && telegramUserIdRes.result.contact.user_id) {
+      yield call(AuthApi.getTelegramChatMember, telegramUserIdRes.result.contact.user_id);
     }
+    const twitterTokenRes = yield call(AuthApi.getTwitterBearerToken);
+    const check = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: data.twitterUsername });
   } catch (error) { }
 }
