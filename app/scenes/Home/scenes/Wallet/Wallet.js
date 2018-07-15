@@ -143,7 +143,7 @@ class Wallet extends Component {
     return elements;
   }
 
-  
+
   getBitcoinContent() {
     const { wallets, guid } = this.props.ethereum;
     const elements = wallets.map((wallet, index) => (
@@ -179,7 +179,7 @@ class Wallet extends Component {
       modal
     } = this.props.bitcoin;
 
-    
+
     const {
       addAddressEthereumModal,
       modalEthereum
@@ -189,11 +189,11 @@ class Wallet extends Component {
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
           hasButton={this.state.activeTab}
-          buttonContent={formatMessage(messages.addWallet)}
+          buttonContent={this.state.activeTab == 1 ? formatMessage(messages.addWallet) : formatMessage(messages.addEthereumWallet)}
           className="button--green-bg"
           title="Wallets"
-          loading={this.props.bitcoin.loading || this.props.ethereum.loading}
-          onClick={this.onClickAddWallet}
+          loading={this.state.activeTab == 1 ? this.props.bitcoin.loading : this.props.ethereum.loading}
+          onClick={this.state.activeTab == 1 ? this.onClickAddWallet : this.onClickAddEthereumWallet}
         />
         <div className="body">
           <Tab
@@ -265,10 +265,10 @@ class Wallet extends Component {
         {modal.isOpen && <AddBitcoinWallet />}
         {addAddressModal.isOpen && <AddBitcoinAddress />}
 
-        
+
         {modalEthereum.isOpen && <AddEthereumWallet />}
         {addAddressEthereumModal.isOpen && <AddEthereumAddress />}
-      
+
       </div>
     );
   }

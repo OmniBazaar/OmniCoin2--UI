@@ -42,7 +42,7 @@ class ExistingEthereumWallet extends Component {
 
   handleSubmit(values) {
     const { guid, password } = values;
-    this.props.EthereumActions.connectWallet(guid, password);
+    this.props.EthereumActions.connectEthereumWallet(guid, password);
   }
 
   handleCancel() {

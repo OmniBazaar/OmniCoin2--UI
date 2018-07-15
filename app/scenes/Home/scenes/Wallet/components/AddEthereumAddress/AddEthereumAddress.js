@@ -55,7 +55,7 @@ class AddEthereumAddress extends Component {
       guid,
       password
     } = this.props.ethereum;
-    this.props.EthereumActions.addAddress(guid, password, values.label ? values.label : '');
+    this.props.EthereumActions.addEthereumAddress(guid, password, values.label ? values.label : '');
   }
 
   handleCancel() {
@@ -63,7 +63,7 @@ class AddEthereumAddress extends Component {
   }
 
   toggleEthereumModal = () => {
-    this.props.EthereumActions.toggleAddAddressModal();
+    this.props.EthereumActions.toggleAddAddressEthereumModal();
   };
 
   render() {

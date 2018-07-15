@@ -29,7 +29,7 @@ class AddEthereumWallet extends Component {
   };
 
   render() {
-    const { isOpen } = this.props.ethereum.modal;
+    const { isOpen } = this.props.ethereum.modalEthereum;
     const { formatMessage } = this.props.intl;
     return (
       <Modal size="small" open={isOpen} onClose={this.toggleEthereumModal} closeIcon>
@@ -59,7 +59,7 @@ AddEthereumWallet.propTypes = {
     toggleEthereumModal: PropTypes.func
   }).isRequired,
   ethereum: PropTypes.shape({
-    modal: PropTypes.shape({
+    modalEthereum: PropTypes.shape({
       isOpen: PropTypes.bool
     })
   }).isRequired,

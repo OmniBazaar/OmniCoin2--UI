@@ -106,7 +106,7 @@ class NewEthereumWallet extends Component {
   }
 
   handleSubmit(values) {
-    this.props.EthereumActions.createWallet(
+    this.props.EthereumActions.createEthereumWallet(
       values.password ? values.password : '',
       values.label ? values.label : '',
       values.email ? values.email : ''
@@ -179,9 +179,9 @@ NewEthereumWallet.propTypes = {
     password: PropTypes.string
   }).isRequired,
   EthereumActions: PropTypes.shape({
-    getWallets: PropTypes.func,
+    getEthereumWallets: PropTypes.func,
     toggleEthereumModal: PropTypes.func,
-    createWallet: PropTypes.func
+    createEthereumWallet: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func

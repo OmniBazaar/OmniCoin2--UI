@@ -35,7 +35,11 @@ export default defineMessages({
   },
   addWallet: {
     id: 'Wallet.addWallet',
-    defaultMessage: 'ADD WALLET'
+    defaultMessage: 'ADD BITCOIN WALLET'
+  },
+  addEthereumWallet: {
+    id: 'Wallet.addEthereumWallet',
+    defaultMessage: 'ADD ETHEREUM WALLET'
   },
   noWalletYet: {
     id: 'Wallet.noWalletYet',
