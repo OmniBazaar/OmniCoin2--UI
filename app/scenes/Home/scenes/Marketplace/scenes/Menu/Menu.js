@@ -386,7 +386,7 @@ class Menu extends Component {
             <p className="title">{formatMessage(aboutCategories.connections)}</p>
             <div className="sub-categories">
               {this.renderOption(aboutCategories.downloadOmniBazaar, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
-              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, '', true)}
+              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, 'http://18.204.40.151:8080', true)}
               {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
               {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
               {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
