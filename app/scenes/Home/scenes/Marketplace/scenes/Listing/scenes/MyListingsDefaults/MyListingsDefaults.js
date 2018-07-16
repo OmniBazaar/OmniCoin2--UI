@@ -121,7 +121,8 @@ class MyListingsDefaults extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(addListingMessages.category)
+                  placeholder: formatMessage(addListingMessages.category),
+                  disableAllOption: true
                 }}
               />
             </Grid.Column>
@@ -131,7 +132,8 @@ class MyListingsDefaults extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(addListingMessages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
               />
             </Grid.Column>
