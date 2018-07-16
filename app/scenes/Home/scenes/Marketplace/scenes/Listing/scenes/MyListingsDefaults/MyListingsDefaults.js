@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
+import { injectIntl } from 'react-intl';
+import { Icon, Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 
@@ -14,7 +14,7 @@ import CurrencyDropdown from '../AddListing/components/CurrencyDropdown/Currency
 import StateDropdown from '../AddListing/components/StateDropdown/StateDropdown';
 import CountryDropdown from '../AddListing/components/CountryDropdown/CountryDropdown';
 import Checkbox from '../AddListing/components/Checkbox/Checkbox';
-import Images, { getImageId } from '../AddListing/components/Images/Images';
+import Images from '../AddListing/components/Images/Images';
 import addListingMessages from '../AddListing/messages';
 import listingDefaultMessages from './messages';
 
@@ -27,20 +27,41 @@ import {
   saveListingDefault,
   loadListingDefault
 } from '../../../../../../../../services/listing/listingDefaultsActions';
+import {
+  updatePublicData,
+  setBtcAddress,
+} from '../../../../../../../../services/accountSettings/accountActions';
+import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import '../AddListing/add-listing.scss';
 
 const iconSize = 42;
 
 class MyListingsDefaults extends Component {
+  static asyncValidate = async (values) => {
+    try {
+      const { price_using_btc, bitcoin_address } = values;
+      if (price_using_btc && bitcoin_address) {
+        await BitcoinApi.validateAddress(bitcoin_address);
+      }
+    } catch (e) {
+      throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
+    }
+  };
+
+  static showSuccessToast = (title, message) => {
+    toastr.success(title, message);
+  };
+
   constructor(props) {
     super(props);
+
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
     this.CountryDropdown = makeValidatableField(CountryDropdown);
     this.StateDropdown = makeValidatableField(StateDropdown);
-    this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
+    this.DescriptionInput = makeValidatableField(allProps => (<textarea {...allProps} />));
   }
 
   componentWillMount() {
@@ -50,57 +71,65 @@ class MyListingsDefaults extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.listingDefaults.name !== this.props.listingDefaults.name) {
+    if (newProps.listingDefaults.name !== this.props.listingDefaults.name) {
       this.props.initialize(newProps.listingDefaults);
+    }
+  }
+
+  getImagesData() {
+    const { images } = this.props.listingDefaults;
+    const data = {};
+
+    Object.keys(images).forEach((imageId) => {
+      const imageItem = images[imageId];
+      const {
+        uploadError, path
+      } = imageItem;
+
+      if (!uploadError && path) {
+        data[imageId] = { path };
       }
+    });
+
+    return data;
   }
 
   submit(values) {
     const { saveListingDefault } = this.props.listingDefaultsActions;
     const { formatMessage } = this.props.intl;
 
-    saveListingDefault({
-      ...values,
-      images: this.getImagesData()
-    });
+    this.props.accountActions.updatePublicData();
 
-    this.showSuccessToast(
-      formatMessage(listingDefaultMessages.success),
-      formatMessage(listingDefaultMessages.saveListingSuccessMessage)
-    );
-  }
+    try {
+      saveListingDefault({
+        ...values,
+        images: this.getImagesData(),
+      });
 
-  getImagesData() {
-    const { images } = this.props.listingDefaults;
-
-    const data = {};
-    for (const imageId in images) {
-      const imageItem = images[imageId];
-      const {
-        uploadError, path
-      } = imageItem;
-      if (uploadError || !path) {
-        continue;
-      }
-
-      data[imageId] = { path };
+      MyListingsDefaults.showSuccessToast(
+        formatMessage(listingDefaultMessages.success),
+        formatMessage(listingDefaultMessages.saveListingSuccessMessage)
+      );
+    } catch (e) {
+      toastr.error(
+        formatMessage(listingDefaultMessages.error),
+        e.message
+      );
     }
-
-    return data;
-  }
-
-  showSuccessToast(title, message) {
-    toastr.success(title, message);
   }
 
   defaultsForm() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
+    const {
+      account, auth, bitcoin, handleSubmit,
+    } = this.props;
     const {
       category,
       country,
-      price_using_btc
+      currency,
+      price_using_btc,
     } = this.props.formValues ? this.props.formValues : {};
+    const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -174,7 +203,7 @@ class MyListingsDefaults extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-          {price_using_btc &&
+          {(price_using_btc || currency === 'BITCOIN') &&
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(addListingMessages.bitcoinAddress)}
@@ -184,6 +213,8 @@ class MyListingsDefaults extends Component {
                 name="bitcoin_address"
                 component={InputField}
                 className="textfield"
+                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -210,7 +241,7 @@ class MyListingsDefaults extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Images isListingDefaults={true} />
+              <Images isListingDefaults />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -286,7 +317,7 @@ class MyListingsDefaults extends Component {
             <Grid.Column width={6}>
               <Button
                 type="submit"
-                content={ formatMessage(listingDefaultMessages.saveDefaults) }
+                content={formatMessage(listingDefaultMessages.saveDefaults)}
                 className="button--green-bg uppercase"
               />
             </Grid.Column>
@@ -326,11 +357,28 @@ class MyListingsDefaults extends Component {
 }
 
 MyListingsDefaults.propTypes = {
+  account: PropTypes.shape({
+    btcAddress: PropTypes.string,
+  }),
+  accountActions: PropTypes.shape({
+    updatePublicData: PropTypes.func,
+    setBtcAddress: PropTypes.func,
+  }),
+  auth: PropTypes.shape({
+    btc_address: PropTypes.string,
+  }),
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array,
+  }),
+  handleSubmit: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
   listingDefaults: PropTypes.shape({
-    images: PropTypes.object
+    images: PropTypes.object,
+    name: PropTypes.string,
   }).isRequired,
   listingDefaultsActions: PropTypes.shape({
-    saveListingDefault: PropTypes.func
+    saveListingDefault: PropTypes.func,
+    loadListingDefault: PropTypes.func,
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -341,24 +389,37 @@ MyListingsDefaults.propTypes = {
 };
 
 MyListingsDefaults.defaultProps = {
-  formValues: {}
+  formValues: {},
+  bitcoin: {},
+  auth: {},
+  account: {},
+  accountActions: {},
 };
 
 export default compose(
   connect(
     state => ({
       listingDefaults: state.default.listingDefaults,
+      account: state.default.account,
+      auth: state.default.auth,
+      bitcoin: state.default.bitcoin,
       formValues: getFormValues('listingDefaultsForm')(state)
     }),
     (dispatch) => ({
       listingDefaultsActions: bindActionCreators({
         saveListingDefault,
-        loadListingDefault
+        loadListingDefault,
       }, dispatch),
-    }),
+      accountActions: bindActionCreators({
+        updatePublicData,
+        setBtcAddress,
+      }, dispatch)
+    })
   ),
   reduxForm({
     form: 'listingDefaultsForm',
     destroyOnUnmount: true,
-  }),
+    asyncValidate: MyListingsDefaults.asyncValidate,
+    asyncBlurFields: ['bitcoin_address']
+  })
 )(injectIntl(MyListingsDefaults));
