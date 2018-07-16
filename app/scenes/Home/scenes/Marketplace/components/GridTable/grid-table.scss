@@ -10,3 +10,14 @@
   float: left;
   margin-right: 5px;
 }
+
+.listing-info {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.description {
+  margin-bottom: 0px;
+  min-height: 0px;
+}
