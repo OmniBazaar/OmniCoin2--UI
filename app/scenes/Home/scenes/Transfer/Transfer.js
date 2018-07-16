@@ -409,11 +409,15 @@ class Transfer extends Component {
 
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { transfer } = this.props;
-    const {
+    const { transfer, transferForm } = this.props;
+    let {
       gettingCommonEscrows,
       commonEscrows,
     } = this.props.transfer;
+    
+    commonEscrows = commonEscrows.filter((item) => {
+      return item.name !== transferForm.toName
+    });
 
     return (
       <div>
