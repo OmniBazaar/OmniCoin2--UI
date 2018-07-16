@@ -325,13 +325,15 @@ class OmnicoinHistory extends BaseStorage {
       ChainTypes.operations.welcome_bonus_operation,
       ChainTypes.operations.referral_bonus_operation,
       ChainTypes.operations.sale_bonus_operation,
+      ChainTypes.operations.witness_bonus_operation,
       ChainTypes.operations.witness_create,
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
       if (!this.exists(el.id)) {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
-            || el.op[0] === ChainTypes.operations.sale_bonus_operation) {
+            || el.op[0] === ChainTypes.operations.sale_bonus_operation
+            || el.op[0] === ChainTypes.operations.witness_bonus_operation) {
           const operation = {
             id: el.id,
             blockNum: el.block_num,
@@ -346,7 +348,8 @@ class OmnicoinHistory extends BaseStorage {
           };
           if ((operation.operationType === ChainTypes.operations.sale_bonus_operation
                 && el.op[1].seller === account.get('id'))
-              || operation.operationType === ChainTypes.operations.welcome_bonus_operation) {
+              || operation.operationType === ChainTypes.operations.welcome_bonus_operation
+              || operation.operationType === ChainTypes.operations.witness_bonus_operation) {
              this.addOperation(operation);
           }
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
