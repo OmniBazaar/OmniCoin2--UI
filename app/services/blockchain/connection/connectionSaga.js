@@ -44,10 +44,11 @@ function* getDynGlobalObject() {
 function* restartNode() {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const { preferences } = (yield select()).default.preferences;
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const account = yield call(FetchChain, 'getAccount', currentUser.username);
     const witness = yield Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
-    if (witness) {
+    if (witness && !preferences.autorun) {
       ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
     }
     yield put(restartNodeSucceeded())

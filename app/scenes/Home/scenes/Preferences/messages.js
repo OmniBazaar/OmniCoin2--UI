@@ -169,4 +169,8 @@ export default defineMessages({
     id: 'Preferences.fieldRequired',
     defaultMessage: 'This field is required'
   },
+  autoRun: {
+    id: 'Preferences.autoRun',
+    defaultMessage: 'Autorun witness node'
+  }
 });
