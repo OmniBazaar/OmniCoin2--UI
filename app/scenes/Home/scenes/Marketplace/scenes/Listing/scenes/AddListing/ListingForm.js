@@ -184,7 +184,9 @@ constructor(props) {
       const { formatMessage } = this.props.intl;
       if (error) {
         let msg = null;
-        if (error.message) {
+        if (error.statusCode === 413) {
+          msg = formatMessage(messages.imageSizeTooLarge);
+        } else if (error.message) {
           if (error.message === 'no_changes') {
             msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
           } else if (error.message === 'publisher_not_alive') {

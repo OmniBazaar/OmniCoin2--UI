@@ -27,11 +27,12 @@ set -e
 mkdir -p ~/.OmniBazaar
 cp /usr/share/OmniBazaar/ob2 ~/.OmniBazaar/ob2
 cp -r /usr/share/OmniBazaar/witness_node ~/.OmniBazaar/witness_node
-chmod -R u=rwx,g=r,o=r ~/.OmniBazaar/witness_node
+chmod -R u=rwx,g=r,o=r ~/.OmniBazaar
 chmod u=rwx,g=rx,o=r ~/.OmniBazaar/witness_node/witness_node
-chown -R $SUDO_USER:$SUDO_USER ~/.OmniBazaar/witness_node
 cp service/omnibazaar-witness-node.service /etc/systemd/system/
 <</POSTINST>
+chown -R $SUDO_USER:$SUDO_USER ~/.OmniBazaar
+<</POSTINST>>
 <<PRERM>>
 0
 <</PRERM>>
