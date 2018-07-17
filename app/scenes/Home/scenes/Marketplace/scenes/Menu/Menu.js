@@ -7,6 +7,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
+const {shell} = require('electron')
 
 import { searchListings } from '../../../../../../services/search/searchActions';
 
@@ -124,12 +125,17 @@ class Menu extends Component {
   toggleSettingsAccount = () => {
     this.props.menuActions.showSettingsModal();
   }
-
+  
+  openLink(e, path) {
+    e.preventDefault();
+    shell.openExternal(path)
+  }
+  
   renderOption(category, parentCategory, path, isExternal) {
     const { formatMessage } = this.props.intl;
     const type = category.id;
     const parent = parentCategory ? parentCategory.id : null;
-
+    
     const menuItem = (
       <div>
         <span
@@ -142,20 +148,19 @@ class Menu extends Component {
         </span>
       </div>
     );
-
+    
     if (!isExternal) {
       return (
         <div>{menuItem}</div>
       );
     }
-
+    
     return (
-      <a href={path} target="_blank">
+      <a href={path} onClick={(e) => this.openLink(e, path)}>
         {menuItem}
       </a>
     );
   }
-
   setActiveCategory = () => {
     if (this.props.marketplaceActions.setActiveCategory) {
       this.props.marketplaceActions.setActiveCategory('Marketplace.home');
