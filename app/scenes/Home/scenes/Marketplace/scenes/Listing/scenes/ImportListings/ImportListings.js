@@ -104,7 +104,7 @@ const messages = defineMessages({
   },
   importationPublisherNotAvailable: {
     id: 'ImportListings.importationPublisherNotAvailable',
-    defaultMessage: 'Selected publisher is not available'
+    defaultMessage: 'This publisher is not active. Please choose another one.'
   },
   importationMissingDefaults: {
     id: 'ImportListings.missingDefaults',
