@@ -12,6 +12,7 @@ import {
   getLastLoginUserName,
   showTermsModal,
   getWelcomeBonusAmountSucceeded,
+  receiveWelcomeBonusFailed,
 } from './authActions';
 
 import {

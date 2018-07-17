@@ -18,8 +18,10 @@ import {
   welcomeBonusSucceeded,
   welcomeBonusFailed
 } from './authActions';
-import {getFirstReachable} from "./services";
-import * as AuthApi from "./AuthApi";
+import { getFirstReachable } from './services';
+import * as AuthApi from './AuthApi';
+import { email } from 'redux-form-validators';
+import { SubmissionError } from 'redux-form';
 
 
 const messages = defineMessages({
@@ -38,6 +40,18 @@ const messages = defineMessages({
   invalidUsername: {
     id: 'AuthService.invalidUsername',
     defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
+  },
+  invalidTelegramPhoneNumber: {
+    id: 'AuthService.invalidTelegramPhoneNumber',
+    defaultMessage: 'Not joined to channel or not started the bot'
+  },
+  invalidTwitterUsername: {
+    id: 'AuthService.invalidTwitterUsername',
+    defaultMessage: 'Not following'
+  },
+  invalidMailChimpEmail: {
+    id: 'AuthService.invalidMailChimpEmail',
+    defaultMessage: 'Not subscribed'
   }
 });
 
@@ -49,7 +63,7 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
-    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus)    
+    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus)
   ]);
 }
 
@@ -133,19 +147,19 @@ export function* signup(action) {
         }
       });
       yield put(changeSearchPriorityData(searchPriorityData));
-      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId))
+      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
       const { error } = resJson;
       console.log('ERROR', error);
       let e;
-      if(error.base && error.base.length && error.base.length > 0) {
+      if (error.base && error.base.length && error.base.length > 0) {
         e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
       } else if (error.remote_ip && error.remote_ip.length && error.remote_ip.length > 0) {
-        e = error.remote_ip[0]
+        e = error.remote_ip[0];
       } else if (error.name && error.name.length && error.name.length > 0) {
-        e = error.name[0]
+        e = error.name[0];
       } else {
-        e = JSON.stringify(error)
+        e = JSON.stringify(error);
       }
 
       yield put({ type: 'SIGNUP_FAILED', error: e });
@@ -169,7 +183,11 @@ export function* getAccount({ payload: { username } }) {
   }
 }
 
-function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId }}) {
+function* welcomeBonus({
+  payload: {
+    username, referrer, macAddress, harddriveId
+  }
+}) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
@@ -184,7 +202,7 @@ function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId 
       const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
       yield tr.set_required_fees();
       yield tr.add_signer(key.privKey, key.pubKey);
-      yield tr.broadcast(async () =>  {
+      yield tr.broadcast(async () => {
         try {
           const referrerAcc = await FetchChain('getAccount', referrer);
           const tr = new TransactionBuilder();
@@ -216,13 +234,76 @@ export function* getWelcomeBonusAmount() {
   }
 }
 
-export function* receiveWelcomeBonus({ payload: { data } }) {
+export function* receiveWelcomeBonus({ payload: { data: { values, reject, formatMessage } } }) {
+  const errors = {};
   try {
-    const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, data.telegramPhoneNumber);
+    const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, values.telegramPhoneNumber);
     if (telegramUserIdRes && telegramUserIdRes.result.contact.user_id) {
       yield call(AuthApi.getTelegramChatMember, telegramUserIdRes.result.contact.user_id);
+    } else {
+      errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
     }
+  } catch (error) {
+    if (!error.ok) {
+      errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
+    }
+  }
+
+  try {
     const twitterTokenRes = yield call(AuthApi.getTwitterBearerToken);
-    const check = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: data.twitterUsername });
-  } catch (error) { }
+    const twitterRes = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: values.twitterUsername });
+    if (!twitterRes.relationship.source.following) {
+      errors.twitterUsername = formatMessage(messages.invalidTwitterUsername);
+    }
+    yield call(AuthApi.checkMailChimpSubscribed, { email: values.email });
+  } catch (error) {
+    if (error.status === 404) {
+      errors.email = formatMessage(messages.invalidMailChimpEmail);
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    yield call(reject, new SubmissionError(errors));
+  } else {
+    try {
+      const macAddress = localStorage.getItem('macAddress');
+      const harddriveId = localStorage.getItem('hardDriveId');
+      const referrer = localStorage.getItem('referrer');
+      const { currentUser } = (yield select()).default.auth;
+      console.log(currentUser, "currentUser")
+      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
+      const acc = yield FetchChain('getAccount', currentUser.username);
+      console.log("isAvailable", isAvailable)
+      if (isAvailable) {
+        const tr = new TransactionBuilder();
+        tr.add_type_operation('welcome_bonus_operation', {
+          receiver: acc.get('id'),
+          drive_id: harddriveId,
+          mac_address: macAddress
+        });
+        const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+        yield tr.set_required_fees();
+        yield tr.add_signer(key.privKey, key.pubKey);
+        yield tr.broadcast(async () => {
+          try {
+            const referrerAcc = await FetchChain('getAccount', referrer);
+            const tr = new TransactionBuilder();
+            tr.add_type_operation('referral_bonus_operation', {
+              referred_account: acc.get('id'),
+              referrer_account: referrerAcc.get('id')
+            });
+            await tr.set_required_fees();
+            await tr.add_signer(key.privKey, key.pubKey);
+            await tr.broadcast();
+          } catch (error) {
+            console.log('ERROR', error);
+          }
+        });
+        yield put(welcomeBonusSucceeded());
+      }
+    } catch (error) {
+      console.log('ERROR ', error);
+      yield put(welcomeBonusFailed(error));
+    }
+  }
 }

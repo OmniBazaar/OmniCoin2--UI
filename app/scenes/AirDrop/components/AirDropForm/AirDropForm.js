@@ -185,8 +185,7 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinTelegramBotSuggestion)}&nbsp;
-            <a className="link" href="https://web.telegram.org/#/im?p=@omnicoin_verification_bot" target="_blank">
-            </a>
+            <a className="link" href="https://web.telegram.org/#/im?p=@omnicoin_verification_bot" target="_blank" />
           </p>
         </div>
         <div className="joined-channel">
@@ -265,12 +264,16 @@ class AirDropForm extends Component {
     );
   };
 
-  submit = values => {
-    this.props.authActions.receiveWelcomeBonus(values);
-    console.log(values.telegramPhoneNumber, 'values');
-  }
+  submit = values => new Promise((resolve, reject) => {
+    this.props.authActions.receiveWelcomeBonus({
+      values,
+      resolve,
+      reject,
+      formatMessage: this.props.intl.formatMessage
+    });
+  })
   render() {
-    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : "";
+    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : '';
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
     return (
@@ -282,7 +285,7 @@ class AirDropForm extends Component {
         </h2>
         <Form onSubmit={handleSubmit(this.submit)} className="form">
           <Field name="telegramChannel" component={this.renderTelegramChannelField} />
-          <Field name="telegramBot" component={this.renderTelegramBotField} />          
+          <Field name="telegramBot" component={this.renderTelegramBotField} />
           <Field name="twitterChannel" component={this.renderTwitterChannelField} />
           <Field name="mailingList" component={this.renderMailingListField} />
           <div className="buttons">
