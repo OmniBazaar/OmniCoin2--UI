@@ -60,5 +60,13 @@
   "AddListing.keywordsNote": "Keywords will be used to find appropriate publishers",
   "AddListing.saveListingErrorNoChangeDetectedMessage": "Listing has no changes detected, please change data and submit again",
   "AddListing.publisherNotReachable": "Publisher is not reachable",
-  "AddListing.imageSizeTooLarge": "Image size is too large"
+  "AddListing.imageSizeTooLarge": "Image size is too large",
+  "AddListing.selectPriorityFee": "Select Priority Fee",
+  "AddListing.priorityFee": "Priority For Listings You Create",
+  "AddListing.priorityHighest": "Highest (2.00% Fee)",
+  "AddListing.priorityHigher": "Higher (1.50% Fee)",
+  "AddListing.priorityHigh": "High (1.00% Fee)",
+  "AddListing.priorityNormal": "Normal (0.50% Fee)",
+  "AddListing.priorityLow": "Low (0.00% Fee)",
+  "AddListing.loadListing": "Load listing"
 }

@@ -189,6 +189,7 @@ export function* getListingDetail({ payload: { listingId } }) {
     const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
     listingDetail.reputationScore = ownerAcc.reputation_unweighted_score;
     listingDetail.reputationVotesCount = ownerAcc.reputation_votes_count;
+    listingDetail.priority_fee = blockchainListingData.priority_fee;
     if (listingDetail.reputationVotesCount === 0) {
       listingDetail.reputationScore = 5000;
     }

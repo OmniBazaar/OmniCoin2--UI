@@ -31,11 +31,16 @@ class PublishersDropdown extends Component {
     } = this.props.input || this.props;
     if (!nextProps.publishers.searching && this.props.publishers.searching) {
       if (!nextProps.publishers.error) {
-        const options = nextProps.publishers.publishers.map(publisher => ({
-          value: publisher,
-          text: publisher.name + (publisher.listingCount ? ` (${publisher.listingCount})` : ''),
-          key: publisher.name
-        }));
+        const options = nextProps.publishers.publishers.map(publisher => {
+          const publisherFee = publisher.publisher_fee ? `(${parseInt(publisher.publisher_fee) / 100}% Fee)` : '';
+          const listingCount = publisher.listingCount ? `(${publisher.listingCount})` : '';
+
+          return {
+            value: publisher,
+            text: publisher.name + ` ${publisherFee} ${listingCount}`,
+            key: publisher.name
+          }
+        });
         this.setState({
           options
         });
