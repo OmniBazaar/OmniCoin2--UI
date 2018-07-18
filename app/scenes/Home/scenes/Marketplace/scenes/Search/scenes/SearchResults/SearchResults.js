@@ -83,9 +83,7 @@ class SearchResults extends Component {
       const {
         searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
       } = searchListingsParams;
-      this.props.searchActions.searchListings(
-        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
-      );
+      this.props.searchActions.searchListings(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu);
     }
   }
 

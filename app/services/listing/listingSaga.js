@@ -102,18 +102,18 @@ export function* removeImage({ payload: { publisher, image } }) {
 }
 
 function* checkAndUploadImages(user, publisher, listing) {
-	for (let i=0; i<listing.images.length; i++) {
-		const imageItem = listing.images[i];
-		const { localFilePath, path, id } = imageItem;
-		if (localFilePath) {
-			const type = mime.lookup(path);
-			const file = {
-				path: localFilePath,
-				name: path,
-				type
-			};
-			const result = yield call(saveImage, user, publisher, file);
-			yield put(uploadListingImageSuccess(
+  for (let i = 0; i < listing.images.length; i++) {
+    const imageItem = listing.images[i];
+    const { localFilePath, path, id } = imageItem;
+    if (localFilePath) {
+      const type = mime.lookup(path);
+      const file = {
+        path: localFilePath,
+        name: path,
+        type
+      };
+      const result = yield call(saveImage, user, publisher, file);
+      yield put(uploadListingImageSuccess(
 	      id,
 	      result.image,
 	      result.thumb,
@@ -124,8 +124,8 @@ function* checkAndUploadImages(user, publisher, listing) {
 	    	thumb: result.thumb,
 	    	image_name: result.fileName
 	    };
-		}
-	};
+    }
+  }
 }
 
 export function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
@@ -165,15 +165,15 @@ export function* saveListingHandler({ payload: { publisher, listing, listingId }
   }
 }
 
-export function* getListingDetail({ payload: { listingId }}) {
+export function* getListingDetail({ payload: { listingId } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
     let listings = (yield select()).default.search.searchResults;
-    let listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+    let listingDetail = yield call(async () => listings.find(listing => listing.listing_id === listingId));
     if (!listingDetail) {
       listings = (yield select()).default.listing.myListings;
-      listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
+      listingDetail = yield call(async () => listings.find(listing => listing.listing_id === listingId));
     }
 
     const blockchainListingData = yield call(getListingFromBlockchain, listingId);
@@ -187,8 +187,8 @@ export function* getListingDetail({ payload: { listingId }}) {
     }
 
     const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
-    listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
-    listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+    listingDetail.reputationScore = ownerAcc.reputation_unweighted_score;
+    listingDetail.reputationVotesCount = ownerAcc.reputation_votes_count;
     if (listingDetail.reputationVotesCount === 0) {
       listingDetail.reputationScore = 5000;
     }
@@ -201,22 +201,16 @@ export function* getListingDetail({ payload: { listingId }}) {
 }
 
 export function* requestMyListings() {
-	try {
+  try {
     yield put(clearSearchResults());
 
     const { currentUser } = (yield select()).default.auth;
-		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
-		let getListingCommands = (yield Promise.all(
-		  myListings.map(
-		    listing => FetchChain('getAccount', listing.publisher)
-      )
-    ))
-      .map((account, idx) => {
-        return {
-          listing_id: myListings[idx].id,
-          address: account.get('publisher_ip')
-        }
-      })
+    const myListings = yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
+    const getListingCommands = (yield Promise.all(myListings.map(listing => FetchChain('getAccount', listing.publisher))))
+      .map((account, idx) => ({
+        listing_id: myListings[idx].id,
+        address: account.get('publisher_ip')
+      }))
       .filter(el => !!el.address)
       .reduce((arr, curr) => {
         const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
@@ -227,15 +221,14 @@ export function* requestMyListings() {
               address: curr.address,
               listing_ids: [curr.listing_id]
             }
-          ]
-        } else {
-          val.listing_ids.push(curr.listing_id);
-          return arr;
+          ];
         }
+        val.listing_ids.push(curr.listing_id);
+        return arr;
       }, []);
-		const ids = [];
+    const ids = [];
 
-		getListingCommands.forEach(command => {
+    getListingCommands.forEach(command => {
 		  const id = getNewId();
 		  ids.push(id);
 		  const message = {
@@ -249,10 +242,10 @@ export function* requestMyListings() {
 		  ws.send(JSON.stringify(message));
     });
     yield put(requestMyListingsSuccess(ids));
-	} catch (err) {
+  } catch (err) {
     console.log(err);
-		yield put(requestMyListingsError(err));
-	}
+    yield put(requestMyListingsError(err));
+  }
 }
 
 export function* deleteMyListing({ payload: { publisher, listing } }) {

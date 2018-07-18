@@ -10,8 +10,8 @@ import electron from 'electron';
 import request from 'request-promise-native';
 
 import {
-	checkUpdate,
-	checkUpdateFinish
+  checkUpdate,
+  checkUpdateFinish
 } from './updateNotificationActions';
 
 export function* updateNotificationSubscriber() {
@@ -23,12 +23,10 @@ export function* updateNotificationSubscriber() {
 const checkInterval = 3600000;
 const updateServerUrl = 'http://35.171.116.3/updates';
 
-const isProd = () => {
-  return process.env.NODE_ENV === 'production';
-};
+const isProd = () => process.env.NODE_ENV === 'production';
 
 const checkNewVersion = async (version, platform) => {
-	const opts = {
+  const opts = {
     uri: `${updateServerUrl}/update/check`,
     qs: {
     	version,
@@ -38,24 +36,24 @@ const checkNewVersion = async (version, platform) => {
   };
   const body = await request(opts);
   return JSON.parse(body);
-}
+};
 
 function* checkUpdateHandler() {
-	if (!isProd()) {
-		return;
-	}
+  if (!isProd()) {
+    return;
+  }
 
-	try {
-		const currentVersion = (electron.app || electron.remote.app).getVersion();
-		const platform = process.platform;
-		const { hasUpdate, version, link } = yield checkNewVersion(currentVersion, platform);
-		const updateLink = link ? `${updateServerUrl}/${link}` : '';
-		yield put(checkUpdateFinish(null, hasUpdate, version, updateLink));
-	} catch(err) {
-		console.log('Check update error', err);
-		yield put(checkUpdateFinish(err));
-	} finally {
-		yield delay(checkInterval);
-		yield put(checkUpdate());
-	}
+  try {
+    const currentVersion = (electron.app || electron.remote.app).getVersion();
+    const platform = process.platform;
+    const { hasUpdate, version, link } = yield checkNewVersion(currentVersion, platform);
+    const updateLink = link ? `${updateServerUrl}/${link}` : '';
+    yield put(checkUpdateFinish(null, hasUpdate, version, updateLink));
+  } catch (err) {
+    console.log('Check update error', err);
+    yield put(checkUpdateFinish(err));
+  } finally {
+    yield delay(checkInterval);
+    yield put(checkUpdate());
+  }
 }

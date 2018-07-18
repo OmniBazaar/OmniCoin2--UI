@@ -49,7 +49,9 @@ class SearchFilters extends Component {
   }
 
   componentDidMount() {
-    const { searchTerm, category, subCategory, currency } = this.props.search;
+    const {
+      searchTerm, category, subCategory, currency
+    } = this.props.search;
     this.props.initialize({
       searchTerm,
       category,
@@ -176,10 +178,8 @@ export default compose(
     form: 'searchForm',
     destroyOnUnmount: true,
   }),
-  connect(
-    (state) => ({
-      ...state.default,
-      formValues: getFormValues('searchForm')(state)
-    })
-  )
+  connect((state) => ({
+    ...state.default,
+    formValues: getFormValues('searchForm')(state)
+  }))
 )(injectIntl(SearchFilters));

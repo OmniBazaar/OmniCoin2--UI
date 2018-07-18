@@ -14,7 +14,6 @@ import './add-listing.scss';
 const iconSize = 42;
 
 class EditListing extends Component {
-
   componentDidMount() {
     const { id } = this.props.match.params;
     const { myListings } = this.props;
@@ -46,7 +45,7 @@ class EditListing extends Component {
           <div className="listing-body">
             { this.listing && <ListingForm editingListing={this.listing} /> }
             { !this.listing &&
-              <div className='not-found'>
+              <div className="not-found">
                 {formatMessage(messages.listingNotFound)}
               </div>
             }
@@ -65,11 +64,9 @@ EditListing.propTypes = {
   listingDetail: PropTypes.object
 };
 
-const mapState = state => {
-  return {
-    myListings: state.default.listing.myListings,
-    listingDetail: state.default.listing.listingDetail
-  };
-}
+const mapState = state => ({
+  myListings: state.default.listing.myListings,
+  listingDetail: state.default.listing.listingDetail
+});
 
 export default connect(mapState)(injectIntl(EditListing));

@@ -39,7 +39,7 @@ import {
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
-import {FetchChain} from "omnibazaarjs";
+import { FetchChain } from 'omnibazaarjs';
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -66,7 +66,7 @@ class ListingForm extends Component {
     }
   };
 
-constructor(props) {
+  constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -97,7 +97,7 @@ constructor(props) {
         className="textfield"
         placeholder={placeholder}
       />
-      <Button type='button' className="copy-btn button--gray-text">
+      <Button type="button" className="copy-btn button--gray-text">
         {buttonText}
       </Button>
     </div>
@@ -172,9 +172,9 @@ constructor(props) {
 
   componentWillReceiveProps(nextProps) {
     if ((
-        nextProps.formValues !== this.props.formValues
+      nextProps.formValues !== this.props.formValues
         && !nextProps.formValues
-      )) {
+    )) {
       this.resetForm();
     }
 
@@ -227,7 +227,7 @@ constructor(props) {
   onContinuousChange = (event, newValue) => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
-    })
+    });
   };
 
   onKeywordsBlur(e) {
@@ -270,7 +270,7 @@ constructor(props) {
   fixImagePath(path) {
     const segs = path.split('/');
     if (segs.length > 2) {
-      return segs[segs.length - 2] + '/' + segs[segs.length - 1];
+      return `${segs[segs.length - 2]}/${segs[segs.length - 1]}`;
     }
 
     return path;
@@ -280,9 +280,9 @@ constructor(props) {
     const segs = path.split('/');
     if (segs.length > 3) {
       return (
-        segs[segs.length - 3]
-        + '/' + segs[segs.length - 2]
-        + '/' + segs[segs.length - 1]
+        `${segs[segs.length - 3]
+        }/${segs[segs.length - 2]
+        }/${segs[segs.length - 1]}`
       );
     }
 
@@ -299,7 +299,9 @@ constructor(props) {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
-    const { listing_id, publisher, keywords, ...data } = values;
+    const {
+      listing_id, publisher, keywords, ...data
+    } = values;
 
     this.props.accountActions.updatePublicData();
 
@@ -370,7 +372,7 @@ constructor(props) {
             <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
-            <Grid.Column width={12} className='keywords'>
+            <Grid.Column width={12} className="keywords">
               <Field
                 type="text"
                 name="keywords"
@@ -728,11 +730,9 @@ constructor(props) {
               <Button
                 type="submit"
                 content={
-                  formatMessage(
-                    editingListing ?
+                  formatMessage(editingListing ?
                     messages.saveListing :
-                    messages.createListingCaps
-                  )
+                    messages.createListingCaps)
                 }
                 className="button--green-bg uppercase"
                 loading={saving || submitting || asyncValidating}

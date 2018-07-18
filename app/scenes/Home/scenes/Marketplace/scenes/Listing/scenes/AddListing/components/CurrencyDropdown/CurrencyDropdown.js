@@ -12,9 +12,9 @@ class CurrencyDropdown extends Component {
       currenciesData = {
         ...currencies
       };
-      delete currenciesData['ALL'];
+      delete currenciesData.ALL;
     }
-    
+
     this.options = Object.keys(currenciesData).map(id => ({
       value: id,
       text: formatMessage(currenciesData[id])
@@ -33,7 +33,7 @@ class CurrencyDropdown extends Component {
 
   render() {
     const { value } = this.props.input;
-    
+
     return (
       <Dropdown
         compact

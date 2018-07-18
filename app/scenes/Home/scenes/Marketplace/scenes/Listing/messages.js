@@ -98,7 +98,7 @@ export default defineMessages({
     defaultMessage: 'Warning'
   },
   deleteListingError: {
-    id: "Listing.deleteListingError",
+    id: 'Listing.deleteListingError',
     defaultMessage: 'Delete listing error'
   },
   loadListingError: {

@@ -177,7 +177,7 @@ class PublicData extends Component {
       if (nextProps.account.error) {
         if (nextProps.account.error.message.indexOf('is already registered') !== -1) {
           toastr.error(formatMessage(messages.update), formatMessage(messages.publisherExists));
-          return
+          return;
         }
         toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
       } else {
@@ -248,7 +248,7 @@ class PublicData extends Component {
   toggleConfirmationModal() {
     this.setState({
       isModalOpen: !this.state.isModalOpen
-    })
+    });
   }
 
   confirmTransactionProcessor() {
@@ -260,18 +260,18 @@ class PublicData extends Component {
     const { formatMessage } = this.props.intl;
     return (
       <div>
-        {formatMessage(messages.witnessRegisterFee)} <br/>
-        <div style={{display: 'flex', flexDirection: 'row', marginTop: '5px'}}>
+        {formatMessage(messages.witnessRegisterFee)} <br />
+        <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
           <Checkbox
             checked={this.state.wantsToVote}
-            onChecked={() => this.setState({wantsToVote: !this.state.wantsToVote})}
+            onChecked={() => this.setState({ wantsToVote: !this.state.wantsToVote })}
           />
-          <span style={{marginLeft: '3px'}}>
+          <span style={{ marginLeft: '3px' }}>
             {formatMessage(messages.wantsToVote)}
           </span>
         </div>
       </div>
-    )
+    );
   }
 
   getReferrerIcon() {
@@ -336,8 +336,8 @@ class PublicData extends Component {
           <div className="description-text">
             <p className="title">{formatMessage(messages.publisherTitle)}</p>
             <div>
-              {formatMessage(messages.publisherBody) + ' '}
-              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {' ' + formatMessage(messages.or) + ' '} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
+              {`${formatMessage(messages.publisherBody)} `}
+              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
           </div>
         </div>

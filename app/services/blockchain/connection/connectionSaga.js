@@ -7,13 +7,13 @@ import {
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
-import  { FetchChain } from 'omnibazaarjs/es';
+import { FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
 
 
-import { restartNodeFailed, restartNodeSucceeded } from "./connectionActions";
+import { restartNodeFailed, restartNodeSucceeded } from './connectionActions';
 import { getDynGlobalObject as getDynObject, createConnection } from '../utils/miscellaneous';
-import { generateKeyFromPassword } from "../utils/wallet";
+import { generateKeyFromPassword } from '../utils/wallet';
 
 export function* subscriber() {
   yield all([
@@ -51,7 +51,7 @@ function* restartNode() {
     if (witness && !preferences.autorun) {
       ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
     }
-    yield put(restartNodeSucceeded())
+    yield put(restartNodeSucceeded());
   } catch (e) {
     console.log('ERROR ', e);
     yield put(restartNodeFailed(e));

@@ -38,13 +38,11 @@ const reducer = handleActions({
     };
   },
 
-  DHT_FETCH_PEERS_SUCCEEDED: (state, { peersMap }) => {
-    return {
-      ...state,
-      isLoading: false,
-      peersMap
-    };
-  },
+  DHT_FETCH_PEERS_SUCCEEDED: (state, { peersMap }) => ({
+    ...state,
+    isLoading: false,
+    peersMap
+  }),
 
   DHT_FETCH_PEERS_FAILED: (state, { error }) => ({
     ...state,

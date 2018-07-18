@@ -19,7 +19,7 @@ import {
 } from './services/blockchain/auth/authActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
 import { loadPreferences } from './services/preferences/preferencesActions';
-import { getConfig } from "./services/config/configActions";
+import { getConfig } from './services/config/configActions';
 import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
 
@@ -64,7 +64,7 @@ class Root extends Component {
             <Route path="/signup" render={(props) => <Signup {...props} />} />
             <Route path="/air-drop" render={props => <AirDrop {...props} />} />
             <Route path="/login" render={(props) => <Login {...props} />} />
-            <Route path="/" render={(props) => <Home {...props} />} />                       
+            <Route path="/" render={(props) => <Home {...props} />} />
           </Switch>
         </Router>
       </IntlProvider>

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import Idled from "react-idled";
+import Idled from 'react-idled';
 
 import {
   Route,
@@ -61,20 +61,19 @@ import { showSettingsModal, showPreferencesModal } from '../../services/menu/men
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
-import { restartNode } from "../../services/blockchain/connection/connectionActions";
+import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 
 const iconSize = 20;
 
 class Home extends Component {
-
-  state = {visible: true};
+  state = { visible: true };
 
   componentWillMount() {
     this.props.preferencesActions.loadPreferences();
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
@@ -96,7 +95,7 @@ class Home extends Component {
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
-  
+
   renderAccountSettings() {
     const { props } = this;
 
@@ -124,14 +123,14 @@ class Home extends Component {
   };
 
   handleChange = ({ idle }) => {
-    let { logoutTimeout } = this.props.preferences.preferences;
+    const { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout && idle && this.props.authActions.logout();
   };
 
   render() {
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
-    logoutTimeout = logoutTimeout * 60000;
+    logoutTimeout *= 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -222,8 +221,8 @@ class Home extends Component {
                 <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id='SettingsMenu.quickStart'
-                    defaultMessage='Quick Start'
+                    id="SettingsMenu.quickStart"
+                    defaultMessage="Quick Start"
                   />
                 </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
@@ -234,7 +233,7 @@ class Home extends Component {
                   />
                 </NavLink>
                 <UpdateNotification />
-                
+
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>

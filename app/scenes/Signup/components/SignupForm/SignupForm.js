@@ -124,7 +124,7 @@ const messages = defineMessages({
   },
   savePassword1: {
     id: 'SignupForm.savePassword1',
-    defaultMessage: "Please save your password."
+    defaultMessage: 'Please save your password.'
   },
   savePassword2: {
     id: 'SignupForm.savePassword2',
@@ -133,7 +133,6 @@ const messages = defineMessages({
 });
 
 class SignupForm extends Component {
-
   static validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -192,7 +191,7 @@ class SignupForm extends Component {
 
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
-    if(!country) {
+    if (!country) {
       this.props.formActions.change('state', '');
     }
   }
@@ -255,8 +254,8 @@ class SignupForm extends Component {
 
   renderPasswordGeneratorField = ({
     input, meta: {
-    asyncValidating, touched, error, warning
-  }
+      asyncValidating, touched, error, warning
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     return (
@@ -277,8 +276,8 @@ class SignupForm extends Component {
 
   renderReferrerField = ({
     input, meta: {
-    asyncValidating, touched, error, warning, active
-  }
+      asyncValidating, touched, error, warning, active
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
@@ -292,11 +291,11 @@ class SignupForm extends Component {
         </div>,
         <div className="hybrid-input">
           <input
-          {...input}
-          type="text"
-          placeholder={formatMessage(messages.referrerName)}
-          ref={(input) => { this.referrerInput = input; }}
-          className={inputClassName}
+            {...input}
+            type="text"
+            placeholder={formatMessage(messages.referrerName)}
+            ref={(input) => { this.referrerInput = input; }}
+            className={inputClassName}
           />
           <Icon
             name="checkmark"
@@ -310,8 +309,8 @@ class SignupForm extends Component {
 
   renderCountryField = ({
     input, meta: {
-    asyncValidating, touched, error, placeholder
-  }
+      asyncValidating, touched, error, placeholder
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     const { country } = this.props.formValues;
@@ -336,8 +335,8 @@ class SignupForm extends Component {
 
   renderStateField = ({
     input, meta: {
-    asyncValidating, touched, error
-  }
+      asyncValidating, touched, error
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     const { country, state } = this.props.formValues;
@@ -406,8 +405,8 @@ class SignupForm extends Component {
         <div className="agreement-terms">
           <Checkbox
             width={inputCustomSize}
-          height={inputCustomSize}
-          onChecked={this.onTermAndConditionCheck.bind(this)}
+            height={inputCustomSize}
+            onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
           <span className="link" onClick={this.toggleTermsModal}>
@@ -485,7 +484,7 @@ class SignupForm extends Component {
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <Field
-              type='text'
+              type="text"
               name="city"
               placeholder={formatMessage(messages.city)}
               component={ValidatableField}

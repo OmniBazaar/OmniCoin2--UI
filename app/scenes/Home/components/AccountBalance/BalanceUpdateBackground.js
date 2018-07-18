@@ -31,9 +31,9 @@ class BalanceUpdateBackground extends Component {
     }, updateInterval);
   }
 
-	render() {
+  render() {
     return null;
-	}
+  }
 }
 
 BalanceUpdateBackground.propTypes = {
@@ -46,7 +46,7 @@ BalanceUpdateBackground.propTypes = {
   walletActions: PropTypes.shape({
     getAccountBalance: PropTypes.func
   }).isRequired
-}
+};
 
 export default connect(
   state => ({

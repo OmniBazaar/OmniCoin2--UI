@@ -16,7 +16,7 @@ class CategoryDropdown extends Component {
     if (this.props.disableAllOption) {
       categoryIdsData = categoryIds.filter((item) => item !== 'all');
     }
-    
+
     this.options = categoryIdsData.map(id => ({
       value: id,
       text: formatMessage(mainCategories[id])

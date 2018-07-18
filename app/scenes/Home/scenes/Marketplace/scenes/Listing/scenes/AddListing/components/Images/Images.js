@@ -7,12 +7,8 @@ import { injectIntl } from 'react-intl';
 import shortid from 'shortid';
 import AddIcon from '../../../../../../../../images/btn-add-image.svg';
 import { getFileExtension } from '../../../../../../../../../../utils/file';
-import {
-	uploadListingImage
-} from '../../../../../../../../../../services/listing/listingActions';
-import {
-	uploadListingDefaultImage
-} from '../../../../../../../../../../services/listing/listingDefaultsActions';
+import { uploadListingImage } from '../../../../../../../../../../services/listing/listingActions';
+import { uploadListingDefaultImage } from '../../../../../../../../../../services/listing/listingDefaultsActions';
 import ImageItem from './ImageItem';
 import messages from '../../messages';
 
@@ -46,7 +42,7 @@ class Images extends Component {
   		const { uploadListingDefaultImage } = this.props.listingDefaultsActions;
   		uploadListingDefaultImage(file, imageId);
   	} else {
-			const { uploadListingImage } = this.props.listingActions;
+      const { uploadListingImage } = this.props.listingActions;
   		uploadListingImage(publisher, file, imageId);
   	}
   }
@@ -55,9 +51,8 @@ class Images extends Component {
   	const { isListingDefaults } = this.props;
   	if (isListingDefaults) {
   		return this.props.listingDefaultsImages;
-  	} else {
-  		return this.props.listingImages;
   	}
+  		return this.props.listingImages;
   }
 
   renderImages() {
@@ -94,10 +89,11 @@ class Images extends Component {
           {
 	        	(Object.keys(images).length < imageLimit) &&
 	        	<Button
-              className="add-img-button"
-	        		onClick={this.onClickAddImage.bind(this)}
-              disabled={disabled}
-	        		type='button'>
+  className="add-img-button"
+  onClick={this.onClickAddImage.bind(this)}
+  disabled={disabled}
+  type="button"
+	        	>
   						<Image src={AddIcon} width={iconSize} height={iconSize} />
 		        </Button>
 	        }
@@ -122,7 +118,7 @@ Images.propTypes = {
 
 
 Images.defaultProps = {
-	isListingDefaults: false,
+  isListingDefaults: false,
   publisher: null,
   disabled: false
 };

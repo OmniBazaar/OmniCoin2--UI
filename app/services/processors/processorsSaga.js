@@ -14,7 +14,7 @@ import { FetchChain } from 'omnibazaarjs/es';
 
 
 import { getGlobalObject, fetchAccount } from '../blockchain/utils/miscellaneous';
-import { voteForProcessors } from "./utils";
+import { voteForProcessors } from './utils';
 
 export function* processorsSubscriber() {
   yield all([
@@ -31,7 +31,7 @@ export const getActiveWitnesses = async () => {
   topProcessors = await processProcessors(topProcessors);
 
   return topProcessors;
-}
+};
 
 function* getTopProcessors() {
   try {

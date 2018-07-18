@@ -34,14 +34,14 @@ const reducer = handleActions({
     return {
       ...state,
       restartingNode: false,
-    }
+    };
   },
   [restartNodeFailed](state, { payload: { error } }) {
     return {
       ...state,
       error,
       restartingNode: false
-    }
+    };
   },
   CONNECT_SUCCEEDED: (state, { node, latency }) => ({
     ...state,

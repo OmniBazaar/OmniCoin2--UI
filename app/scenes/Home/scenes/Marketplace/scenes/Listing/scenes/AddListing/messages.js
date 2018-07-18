@@ -262,11 +262,11 @@ const messages = defineMessages({
     defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
   },
   saveListingErrorNoChangeDetectedMessage: {
-    'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
+    id: 'AddListing.saveListingErrorNoChangeDetectedMessage',
     defaultMessage: 'Listing has no changes detected, please change data and submit again'
   },
   publisherNotReachable: {
-    'id': 'AddListing.publisherNotReachable',
+    id: 'AddListing.publisherNotReachable',
     defaultMessage: 'Publisher is not reachable'
   },
   invalidAddress: {

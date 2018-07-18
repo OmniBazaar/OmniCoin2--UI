@@ -25,9 +25,7 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
-import {
-  makeValidatableField
-} from '../../../../components/ValidatableField/ValidatableField';
+import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
   setCurrency,
@@ -414,10 +412,8 @@ class Transfer extends Component {
       gettingCommonEscrows,
       commonEscrows,
     } = this.props.transfer;
-    
-    commonEscrows = commonEscrows.filter((item) => {
-      return item.name !== transferForm.toName
-    });
+
+    commonEscrows = commonEscrows.filter((item) => item.name !== transferForm.toName);
 
     return (
       <div>

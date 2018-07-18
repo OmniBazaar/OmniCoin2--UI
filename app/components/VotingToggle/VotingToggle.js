@@ -20,7 +20,7 @@ class VotingToggle extends Component {
       tooltip
     } = this.props;
     const img = type === 'up' ? LikeBtn : DislikeBtn;
-    const title = tooltip ? tooltip : '';
+    const title = tooltip || '';
     const voteClass = cn({
       'voting-toggle': true,
       voted: isToggled

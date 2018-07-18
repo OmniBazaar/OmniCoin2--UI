@@ -112,23 +112,20 @@ const defaultState = {
   }
 };
 
-const changeCurrencies = (selectedCurrency, listing ) => {
-  return listing.map((item) => {
-    if (selectedCurrency === item.currency) {
-      return {
-        ...item,
-        convertedPrice : item.price
-      }
-    }  else {
-      const price = currencyConverter(item.price, item.currency, selectedCurrency);
-      
-      return {
-        ...item,
-        convertedPrice: price
-      }
-    }
-  });
-};
+const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
+  if (selectedCurrency === item.currency) {
+    return {
+      ...item,
+      convertedPrice: item.price
+    };
+  }
+  const price = currencyConverter(item.price, item.currency, selectedCurrency);
+
+  return {
+    ...item,
+    convertedPrice: price
+  };
+});
 
 const storageKey = 'favoritesListings';
 
@@ -136,8 +133,10 @@ const reducer = handleActions({
   [getFavorites](state) {
     // localStorage.removeItem('favoritesListings');
     const user = getStoredCurrentUser();
-    let key, favorites, favoriteListings;
-    if(user) {
+    let key,
+      favorites,
+      favoriteListings;
+    if (user) {
       key = `${storageKey}_${user.username}`;
       favorites = localStorage.getItem(key);
       favoriteListings = favorites ? JSON.parse(favorites) : [];
@@ -157,8 +156,9 @@ const reducer = handleActions({
   },
   [addToFavorites](state, { payload: { listingDetail } }) {
     const user = getStoredCurrentUser();
-    let key, favoriteListings;
-    if(user) {
+    let key,
+      favoriteListings;
+    if (user) {
       key = `${storageKey}_${user.username}`;
       favoriteListings = [...state.favoriteListings, listingDetail];
       localStorage.setItem(key, JSON.stringify(favoriteListings));
@@ -169,12 +169,12 @@ const reducer = handleActions({
     }
     return {
       ...state
-    }
+    };
   },
   [removeFromFavorites](state, { payload: { listingDetailId } }) {
     const user = getStoredCurrentUser();
     const index = state.favoriteListings.length > 0 ?
-      state.favoriteListings.findIndex(x => x['listing_id'] === listingDetailId) : -1;
+      state.favoriteListings.findIndex(x => x.listing_id === listingDetailId) : -1;
     const favoriteListings = [
       ...state.favoriteListings.slice(0, index),
       ...state.favoriteListings.slice(index + 1)
@@ -196,9 +196,9 @@ const reducer = handleActions({
         loading: true,
         error: null
       }
-    }
+    };
   },
-  [getListingDetailSucceeded](state, { payload: { listingDetail }}) {
+  [getListingDetailSucceeded](state, { payload: { listingDetail } }) {
     return {
       ...state,
       listingDetail,
@@ -206,9 +206,9 @@ const reducer = handleActions({
         ...state.listingDetailRequest,
         loading: false
       }
-    }
+    };
   },
-  [getListingDetailFailed](state, { payload: { error }}) {
+  [getListingDetailFailed](state, { payload: { error } }) {
     return {
       ...state,
       listingDetailRequest: {
@@ -216,7 +216,7 @@ const reducer = handleActions({
         loading: false,
         error: true
       }
-    }
+    };
   },
   [isListingFine](state, { payload: { listing } }) {
     return {
@@ -229,7 +229,7 @@ const reducer = handleActions({
         error: null,
         numberToBuy: 1
       }
-    }
+    };
   },
   [isListingFineSucceeded](state, { payload: { blockchainListing } }) {
     return {
@@ -239,7 +239,7 @@ const reducer = handleActions({
         blockchainListing,
         loading: false,
       }
-    }
+    };
   },
   [isListingFineFailed](state, { payload: { error } }) {
     return {
@@ -249,7 +249,7 @@ const reducer = handleActions({
         error,
         loading: false
       }
-    }
+    };
   },
   [setActiveCurrency](state, { payload: { activeCurrency } }) {
     return {
@@ -280,7 +280,7 @@ const reducer = handleActions({
         ids,
         error: null
       }
-    }
+    };
   },
   [requestMyListingsError](state, { payload: { error } }) {
     return {
@@ -290,7 +290,7 @@ const reducer = handleActions({
         isRequest: false,
         error
       }
-    }
+    };
   },
   [setBitcoinPrice](state) {
     return {
@@ -537,7 +537,7 @@ const reducer = handleActions({
     }
     return state;
   },
-  [reportListing](state, {payload: { listingId } }) {
+  [reportListing](state, { payload: { listingId } }) {
     return {
       ...state,
       reportListing: {
@@ -545,13 +545,13 @@ const reducer = handleActions({
         reporting: true,
         error: null
       }
-    }
+    };
   },
   [reportListingSuccess](state) {
     return {
       ...state,
       reportListing: defaultState.reportListing
-    }
+    };
   },
   [reportListingError](state, { payload: { error } }) {
     return {
@@ -561,7 +561,7 @@ const reducer = handleActions({
         reporting: false,
         error
       }
-    }
+    };
   },
   [marketplaceReturnListings](state, { data }) {
     const listingsObj = JSON.parse(data.command.listings);
@@ -573,7 +573,7 @@ const reducer = handleActions({
           ids: state.requestMyListings.ids.filter(el => el !== parseInt(data.id)),
           isRequest: state.requestMyListings.ids.length === 1
         }
-      }
+      };
     }
     const listings = listingsObj.listings.map(listing => ({
       ...listing,
@@ -588,8 +588,8 @@ const reducer = handleActions({
           ids: state.requestMyListings.ids.filter(el => el !== parseInt(data.id)),
           isRequest: state.requestMyListings.ids.length === 1
         }
-      }
-    } else return  {
+      };
+    } return {
       ...state
     };
   },
@@ -602,9 +602,9 @@ const reducer = handleActions({
         publishers: [],
         error: null
       }
-    }
+    };
   },
-  [searchPublishersFinish](state, { payload: { error, publishers }}) {
+  [searchPublishersFinish](state, { payload: { error, publishers } }) {
     const pubs = {
       ...state.publishers,
       searching: false
@@ -630,22 +630,22 @@ const reducer = handleActions({
       }
     };
   },
-  [filterMyListings](state, { payload: { currency, category, subCategory, searchTerm } }) {
+  [filterMyListings](state, {
+    payload: {
+      currency, category, subCategory, searchTerm
+    }
+  }) {
     const categoryFilter = (category && category.toLowerCase()) || 'all';
     const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
     let myListingsFiltered = [...state.myListings];
-  
+
     if (currency !== 'all' && currency !== undefined) {
-      myListingsFiltered = changeCurrencies(currency, myListingsFiltered)
+      myListingsFiltered = changeCurrencies(currency, myListingsFiltered);
     }
-    
+
     if (searchTerm) {
-      myListingsFiltered = myListingsFiltered.filter(listing => {
-        return Object.values(listing).filter(
-          value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-        ).length !== 0;
-      });
+      myListingsFiltered = myListingsFiltered.filter(listing => Object.values(listing).filter(value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1).length !== 0);
       myListingsFiltered = _.without(myListingsFiltered, undefined);
     }
 
@@ -666,22 +666,22 @@ const reducer = handleActions({
       myListingsFiltered,
     };
   },
-  [filterFavorites](state, { payload: { currency, category, subCategory, searchTerm } }) {
+  [filterFavorites](state, {
+    payload: {
+      currency, category, subCategory, searchTerm
+    }
+  }) {
     const categoryFilter = (category && category.toLowerCase()) || 'all';
     const subCategoryFilter = (subCategory && subCategory.toLowerCase()) || 'all';
 
     let favoriteFiltered = [...state.favoriteListings];
-  
+
     if (currency !== 'all' && currency !== undefined) {
-      favoriteFiltered = changeCurrencies(currency, favoriteFiltered)
+      favoriteFiltered = changeCurrencies(currency, favoriteFiltered);
     }
 
     if (searchTerm) {
-      favoriteFiltered = favoriteFiltered.filter(listing => {
-        return Object.values(listing).filter(
-          value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-        ).length !== 0;
-      });
+      favoriteFiltered = favoriteFiltered.filter(listing => Object.values(listing).filter(value => value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1).length !== 0);
       favoriteFiltered = _.without(favoriteFiltered, undefined);
     }
 
@@ -707,7 +707,7 @@ const reducer = handleActions({
     return {
       ...state,
       myListings: []
-    }
+    };
   }
 }, defaultState);
 

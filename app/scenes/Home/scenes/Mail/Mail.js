@@ -93,14 +93,12 @@ class Mail extends Component {
     this.onCloseCompose = this.onCloseCompose.bind(this);
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
-
-
   }
 
   componentWillMount() {
     const { username } = this.props.history.location;
-    if(username) {
-      this.props.mailActions.showComposeModal( null, username );
+    if (username) {
+      this.props.mailActions.showComposeModal(null, username);
     }
     this.subscribe();
   }

@@ -152,7 +152,7 @@ class StartGuide extends Component {
         <p>
           {formatMessage(messages.getMoreOCText1)}
           <NavLink to="/wallet" activeClassName="active" className="menu-item">
-            {' ' + formatMessage(messages.getMoreOCText2) + ' '}
+            {` ${formatMessage(messages.getMoreOCText2)} `}
           </NavLink>
           {formatMessage(messages.getMoreOCText3)}
         </p>
@@ -169,7 +169,7 @@ class StartGuide extends Component {
         <p>
           {formatMessage(messages.goToUserSettings1)}
           <NavLink to="/wallet" activeClassName="active" className="menu-item">
-            {' ' + formatMessage(messages.goToUserSettings2) + ' '}
+            {` ${formatMessage(messages.goToUserSettings2)} `}
           </NavLink>
           {formatMessage(messages.goToUserSettings3)}
         </p>

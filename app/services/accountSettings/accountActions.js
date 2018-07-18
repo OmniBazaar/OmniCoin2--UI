@@ -37,7 +37,7 @@ const {
   SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
   CHANGE_COUNTRY: (country) => ({ country }),
-  CHANGE_STATE: (state) => ({state}),
+  CHANGE_STATE: (state) => ({ state }),
   CHANGE_CITY: (city) => ({ city }),
   CHANGE_CATEGORY: (category) => ({ category }),
   CHANGE_PUBLISHER_NAME: (publisher) => ({ publisher }),

@@ -391,20 +391,18 @@ const reducer = handleActions({
     };
   },
   GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
-    const changedTransactions = transactions.map((item) => {
-      return {
-        ...item,
-        statusText: getBadgeClass(item.type),
-      }
-    });
-    console.log("CHANGED TRANSACTIONS ", changedTransactions);
+    const changedTransactions = transactions.map((item) => ({
+      ...item,
+      statusText: getBadgeClass(item.type),
+    }));
+    console.log('CHANGED TRANSACTIONS ', changedTransactions);
     return {
       ...state,
       loading: false,
       error: null,
       recentTransactions: changedTransactions,
       recentTransactionsFiltered: changedTransactions,
-    }
+    };
   },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
@@ -416,7 +414,7 @@ const reducer = handleActions({
     const { rowsPerPage } = state;
     let filteredData = state.recentTransactions;
     if (filterText) {
-      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
     const totalPages = getTotalPages(filteredData, rowsPerPage);
     const currentData = sliceData(filteredData, activePage, rowsPerPage);
@@ -460,8 +458,8 @@ const reducer = handleActions({
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
         sortedData = data;
-        //const sortBy = _.sortBy(data, [sortColumn]);
-        //sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+        // const sortBy = _.sortBy(data, [sortColumn]);
+        // sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
       currentData = sliceData(sortedData, activePage, rowsPerPage);
 
@@ -503,13 +501,13 @@ const reducer = handleActions({
       }
     }
 
-    if (!!filterText) {
+    if (filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
 
-    let sortFields = [sortColumn];
-    if('fromTo' === sortColumn) {
-      sortFields.unshift('isIncoming')
+    const sortFields = [sortColumn];
+    if (sortColumn === 'fromTo') {
+      sortFields.unshift('isIncoming');
     }
     sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
 

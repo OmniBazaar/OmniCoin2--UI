@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {Modal, Tab, Image} from 'semantic-ui-react';
-import {injectIntl} from 'react-intl';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Modal, Tab, Image } from 'semantic-ui-react';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import {CoinTypes} from "../Wallet/constants";
+import { CoinTypes } from '../Wallet/constants';
 
 import UserIcon from '../../images/th-user-white.svg';
 
@@ -16,7 +16,7 @@ import AccountVesting from './scenes/AccountVesting/AccountVesting';
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
-import {getCurrentUser} from '../../../../services/blockchain/auth/authActions';
+import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
 import {
   getPrivateData,
   getPublisherData
@@ -44,13 +44,13 @@ class Settings extends Component {
 
 
   sideMenu() {
-    const {formatMessage} = this.props.intl;
-    const {username} = this.props.auth.currentUser;
-    const {account} = this.props.auth;
+    const { formatMessage } = this.props.intl;
+    const { username } = this.props.auth.currentUser;
+    const { account } = this.props.auth;
     return (
       <div>
         <div className="info">
-          <Image src={UserIcon} width={iconSize} height={iconSize}/>
+          <Image src={UserIcon} width={iconSize} height={iconSize} />
           <div className="top-detail">
             <div className="title">
               <span>{formatMessage(messages.account)}</span>
@@ -60,21 +60,21 @@ class Settings extends Component {
             <span className="accountId">{formatMessage(messages.accountId)}: {account.id}</span>
           </div>
         </div>
-        <AccountBalance/>
+        <AccountBalance />
       </div>
     );
   }
 
   renderTab() {
-    const {coinType} = this.props;
-    const {formatMessage} = this.props.intl;
+    const { coinType } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (coinType === CoinTypes.BIT_COIN) {
-      return <Tab
-            className="tabs"
-            key={0}
-            menu={{secondary: true, pointing: true}}
-            panes={[
+      return (<Tab
+        className="tabs"
+        key={0}
+        menu={{ secondary: true, pointing: true }}
+        panes={[
               {
                 menuItem: formatMessage(messages.recentTransactions),
                 render: () => (
@@ -93,20 +93,20 @@ class Settings extends Component {
                   </Tab.Pane>),
               }
             ]}
-            />;
-    } else {
-      return <Tab
-        className="tabs"
-        key={1}
-        menu={{secondary: true, pointing: true}}
-        panes={[
+      />);
+    }
+    return (<Tab
+      className="tabs"
+      key={1}
+      menu={{ secondary: true, pointing: true }}
+      panes={[
           {
             menuItem: formatMessage(messages.publicData),
-            render: () => <Tab.Pane><PublicData/></Tab.Pane>,
+            render: () => <Tab.Pane><PublicData /></Tab.Pane>,
           },
           {
             menuItem: formatMessage(messages.privateData),
-            render: () => <Tab.Pane><PrivateData/></Tab.Pane>,
+            render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
           },
           {
             menuItem: formatMessage(messages.recentTransactions),
@@ -127,31 +127,30 @@ class Settings extends Component {
           },
           {
             menuItem: formatMessage(messages.vestingBalances),
-            render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
+            render: () => <Tab.Pane><AccountVesting /></Tab.Pane>
           }
         ]}
-      />;
-    }
+    />);
   }
 
   render() {
-    /*const containerClass = classNames({
+    /* const containerClass = classNames({
      overlay: true,
      'details-visible': props.account.showDetails,
-     });*/
+     }); */
 
     return (
       <div className="modal-container settings-container">
-        {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
+        {/* <div className="sidebar settings visible">{this.sideMenu()}</div> */}
         <div className="modal-content side-menu">
           {this.renderTab()}
-          {/*<div
+          {/* <div
            className={containerClass}
            onClick={this.onCloseDetails}
            onKeyDown={this.onCloseDetails}
            role="link"
            tabIndex={0}
-           />*/}
+           /> */}
 
         </div>
       </div>
@@ -188,7 +187,7 @@ Settings.defaultProps = {
 };
 
 export default connect(
-  state => ({...state.default}),
+  state => ({ ...state.default }),
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
       getCurrentUser,
@@ -197,6 +196,4 @@ export default connect(
     }, dispatch)
   }),
 )(injectIntl(Settings));
-
-
 

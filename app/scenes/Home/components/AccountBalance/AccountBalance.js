@@ -9,7 +9,7 @@ import { getAccountBalance } from '../../../../services/blockchain/wallet/wallet
 import OmniIcon from '../../images/th-omnicoin.svg';
 import messages from '../../scenes/Settings/messages';
 import './style.scss';
-import {TOKENS_IN_XOM} from "../../../../utils/constants";
+import { TOKENS_IN_XOM } from '../../../../utils/constants';
 
 const iconSize = 20;
 
@@ -39,10 +39,10 @@ class AccountBalance extends Component {
     return 0.00;
   }
 
-	render() {
+  render() {
     const { formatMessage } = this.props.intl;
-		return (
-			<div className="account-balance">
+    return (
+      <div className="account-balance">
         <Image src={OmniIcon} width={iconSize} height={iconSize} />
         <div className="balance-info">
           <div className="title">
@@ -53,8 +53,8 @@ class AccountBalance extends Component {
           </span>
         </div>
       </div>
-		);
-	}
+    );
+  }
 }
 
 AccountBalance.propTypes = {
@@ -67,7 +67,7 @@ AccountBalance.propTypes = {
   walletActions: PropTypes.shape({
     getAccountBalance: PropTypes.func
   }).isRequired
-}
+};
 
 export default connect(
   state => ({

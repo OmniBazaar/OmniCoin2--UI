@@ -8,7 +8,7 @@ class UpdateNotification extends Component {
 }
 
 UpdateNotification.propTypes = {
-  
+
 };
 
 export default connect(state => ({ ...state.default }))(UpdateNotification);
