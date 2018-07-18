@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   amountOfAsset: {
     id: 'Settings.amountOfAsset',
-    defaultMessage: 'amount of asset,'
+    defaultMessage: 'Amount of asset,'
   },
   next: {
     id: 'Settings.next',
@@ -52,27 +52,27 @@ const messages = defineMessages({
   },
   feeDetail: {
     id: 'Settings.feeDetail',
-    defaultMessage: 'operation fee: {fee} XOM'
+    defaultMessage: 'Fee: {fee} XOM'
   },
   omnibazaarFeeDetail: {
     id: 'Settings.omnibazaarFeeDetail',
-    defaultMessage: 'omnibazaar fee: {fee} XOM'
+    defaultMessage: 'OmniBazaar fee: {fee} XOM'
   },
   escrowFeeDetail: {
     id: 'Settings.escrowFeeDetail',
-    defaultMessage: 'escrow fee: {fee} XOM'
+    defaultMessage: 'Escrow fee: {fee} XOM'
   },
   referrerBuyerFee: {
     id: 'Settings.referrerBuyerFee',
-    defaultMessage: 'buyer\'s referrer fee: {fee} XOM'
+    defaultMessage: 'Buyer\'s Referrer fee: {fee} XOM'
   },
   referrerSellerFee: {
     id: 'Settings.referrerSellerFee',
-    defaultMessage: 'sellers\'s referrer fee: {fee} XOM'
+    defaultMessage: 'Sellers\'s Referrer fee: {fee} XOM'
   },
   publisherFee: {
     id: 'Settings.publisherFee',
-    defaultMessage: 'publisher fee: {fee} XOM'
+    defaultMessage: 'Publisher fee: {fee} XOM'
   }
 });
 

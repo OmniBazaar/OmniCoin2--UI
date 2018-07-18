@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   publisherName: {
     id: 'SearchPrioritySetting.publisherName',
-    defaultMessage: 'Specific Publisher'
+    defaultMessage: 'Publisher'
   },
   country: {
     id: 'SearchPrioritySetting.country',
@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
   updateSuccess: {
     id: 'SearchPrioritySetting.updateSuccess',
-    defaultMessage: 'Successfully updated'
+    defaultMessage: 'Update'
   },
   update: {
     id: 'SearchPrioritySetting.update',
@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
   keywords: {
     id: 'SearchPrioritySetting.keywords',
-    defaultMessage: 'Keywords for listing what you want to see'
+    defaultMessage: 'Keywords for listings that you want to see'
   },
   addKeyword: {
     id: 'SearchPrioritySetting.addKeyword',

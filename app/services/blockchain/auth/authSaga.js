@@ -24,7 +24,7 @@ import { getFirstReachable } from './services';
 const messages = defineMessages({
   invalidPassword: {
     id: 'AuthService.invalidPassword',
-    defaultMessage: 'Invalid password',
+    defaultMessage: 'Invalid password'
   },
   noAccount: {
     id: 'AuthService.noAccount',
@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   invalidUsername: {
     id: 'AuthService.invalidUsername',
-    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
+    defaultMessage: 'Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.'
   }
 });
 

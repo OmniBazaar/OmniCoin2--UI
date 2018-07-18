@@ -17,7 +17,7 @@ const messages = defineMessages({
   },
   firstCategory: {
     id: 'MyEscrowSettings.firstCategory',
-    defaultMessage: 'Any user I give a positive rating'
+    defaultMessage: 'Any user I give a positive reputation rating'
   },
   secondCategory: {
     id: 'MyEscrowSettings.secondCategory',

@@ -29,11 +29,11 @@ const messages = defineMessages({
   },
   email: {
     id: 'NewWallet.email',
-    defaultMessage: 'Email for Restore Access'
+    defaultMessage: 'Email address for Restoring Access'
   },
   message: {
     id: 'NewWallet.message',
-    defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.'
+    defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case your password is lost.'
   },
   createWallet: {
     id: 'NewWallet.createWallet',
@@ -53,11 +53,11 @@ const messages = defineMessages({
   },
   noMatch: {
     id: 'NewWallet.noMatch',
-    defaultMessage: 'Passwords do not match'
+    defaultMessage: 'Passwords do not match.'
   },
   fieldRequired: {
     id: 'NewWallet.required',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   label: {
     id: 'NewWallet.label',
@@ -69,11 +69,11 @@ const messages = defineMessages({
   },
   rememberGuid: {
     id: 'NewWallet.rememberGuid',
-    defaultMessage: 'Please do not forget to write down or remember your guid'
+    defaultMessage: 'Please write down protect your guid.'
   },
   minLength: {
     id: 'NewWallet.minLength',
-    defaultMessage: 'This field must be at least 10 characters in length'
+    defaultMessage: 'This field must be at least 10 characters in length.'
   }
 });
 

@@ -11,7 +11,7 @@ import './confirmation-modal.scss';
 const messages = defineMessages({
   confirmation: {
     id: 'ConfirmationModal.confirmation',
-    defaultMessage: 'Confirmation',
+    defaultMessage: 'Confirmation'
   },
   approve: {
     id: 'ConfirmationModal.approve',

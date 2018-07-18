@@ -76,11 +76,11 @@ const messages = defineMessages({
   },
   ok: {
     id: 'ImportListings.ok',
-    defaultMessage: 'Ok'
+    defaultMessage: 'Okay'
   },
   onlyTextFileMsg: {
     id: 'ImportListings.onlyTextFileMsg',
-    defaultMessage: 'Only txt files are allowed.'
+    defaultMessage: 'Only TXT files are allowed.'
   },
   selectPublisher: {
     id: 'AddListing.selectPublisher',
@@ -92,7 +92,7 @@ const messages = defineMessages({
   },
   importationSuccessTitle: {
     id: 'ImportListings.successTitle',
-    defaultMessage: 'Success'
+    defaultMessage: 'The file has been imported successfully.'
   },
   importationSuccess: {
     id: 'ImportListings.success',
@@ -100,7 +100,7 @@ const messages = defineMessages({
   },
   importationPublisherRequired: {
     id: 'ImportListings.publisherRequired',
-    defaultMessage: 'A publisher must be selected'
+    defaultMessage: 'A publisher must be selected.'
   },
   importationPublisherNotAvailable: {
     id: 'ImportListings.importationPublisherNotAvailable',
@@ -108,7 +108,7 @@ const messages = defineMessages({
   },
   importationMissingDefaults: {
     id: 'ImportListings.missingDefaults',
-    defaultMessage: 'You should fill you Listing Default values to proceed...'
+    defaultMessage: 'Please enter your Listing Default values to proceed...'
   },
 });
 

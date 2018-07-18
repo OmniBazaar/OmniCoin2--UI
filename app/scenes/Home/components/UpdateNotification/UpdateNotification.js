@@ -9,7 +9,7 @@ import open from 'open';
 const messages = defineMessages({
   newVersionAvailable: {
     id: 'Home.newVersionAvailable',
-    defaultMessage: "Update's available"
+    defaultMessage: 'A new version is available'
   }
 });
 
