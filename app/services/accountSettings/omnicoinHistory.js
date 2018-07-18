@@ -162,9 +162,16 @@ class OmnicoinHistory extends BaseStorage {
         }
       }
       transactions[trxKey].memo = this.operationMemo(op);
+      let obFee;
+      if (op.to === currentUser.username
+        || op.operationType === ChainTypes.operations.listing_create_operation
+        || op.operationType === ChainTypes.operations.listing_update_operation
+        || op.operationType === ChainTypes.operations.transfer) {
+        obFee = this.getObFee(op);
+      }
       transactions[trxKey].operations.push({
         ...op,
-        obFee: op.to === currentUser.username ? this.getObFee(op) : undefined,
+        obFee,
         amount: this.operationAmount(op)
       });
     });

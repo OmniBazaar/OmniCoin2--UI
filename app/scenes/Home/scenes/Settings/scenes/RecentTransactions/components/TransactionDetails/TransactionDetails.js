@@ -92,18 +92,21 @@ class TransactionDetails extends Component {
   getFeeDetail(op) {
     const { formatMessage } = this.props.intl;
     let feeDetail = formatMessage(messages.feeDetail, { fee: op.isIncoming ? 0 : op.fee });
+    console.log('OP OBFEE ', op);
     if (op.obFee) {
-      if (op.obFee.omnibazaar_fee) {
-        feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, { fee: op.obFee.omnibazaar_fee })}`;
-      }
-      if (op.obFee.escrow_fee) {
-        feeDetail += `, ${formatMessage(messages.escrowFeeDetail, { fee: op.obFee.escrow_fee })}`;
-      }
-      if (op.obFee.referrer_buyer_fee) {
-        feeDetail += `, ${formatMessage(messages.referrerBuyerFee, { fee: op.obFee.referrer_buyer_fee })}`;
-      }
-      if (op.obFee.referrer_seller_fee) {
-        feeDetail += `, ${formatMessage(messages.referrerSellerFee, { fee: op.obFee.referrer_seller_fee })}`;
+      if (op.isIncoming) {
+        if (op.obFee.omnibazaar_fee) {
+          feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})}`;
+        }
+        if (op.obFee.escrow_fee) {
+          feeDetail += `, ${formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee})}`;
+        }
+        if (op.obFee.referrer_buyer_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee})}`;
+        }
+        if (op.obFee.referrer_seller_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})}`;
+        }
       }
       if (op.obFee.publisher_fee) {
         feeDetail += `, ${formatMessage(messages.publisherFee, { fee: op.obFee.publisher_fee })}`;
