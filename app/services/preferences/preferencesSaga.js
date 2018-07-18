@@ -8,15 +8,23 @@ import {
 import { ipcRenderer } from 'electron';
 
 import {
+  loadServerPreferencesSuccess,
   savePreferencesSuccess,
   savePreferencesError
 } from './preferencesActions';
-import { storePreferences } from './services';
-import { restartNode } from '../blockchain/connection/connectionActions';
+
+import {
+  storePreferences,
+  getuserPrefereneces
+} from './services';
+import {
+  restartNode
+} from "../blockchain/connection/connectionActions";
 
 export function* preferencesSubscriber() {
   yield all([
-    takeEvery('SAVE_PREFERENCES', savePreferences)
+    takeEvery('SAVE_PREFERENCES', savePreferences),
+    takeEvery('LOAD_SERVER_PREFERENCES', loadServerPreferences)
   ]);
 }
 
@@ -30,7 +38,13 @@ function* savePreferences({ payload: { preferences } }) {
     }
     yield put(savePreferencesSuccess(preferences));
     yield put(restartNode()); // bcs the app is still running
-  } catch (err) {
+  } catch(err) {
+    console.log("ERROR", err)
     yield put(savePreferencesError(err));
   }
+}
+
+function* loadServerPreferences() {
+  const userPrefereneces = yield call(getuserPrefereneces)
+  yield put(loadServerPreferencesSuccess(userPrefereneces));
 }

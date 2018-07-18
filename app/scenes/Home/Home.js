@@ -62,7 +62,7 @@ import { setActiveCategory } from '../../services/marketplace/marketplaceActions
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
-import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 
 const iconSize = 20;
@@ -71,7 +71,7 @@ class Home extends Component {
   state = { visible: true };
 
   componentWillMount() {
-    this.props.preferencesActions.loadPreferences();
+    this.props.preferencesActions.loadLocalPreferences();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -295,7 +295,7 @@ export default connect(
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
   })
@@ -324,7 +324,7 @@ Home.propTypes = {
     logout: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func

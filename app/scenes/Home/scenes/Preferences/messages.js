@@ -57,6 +57,10 @@ export default defineMessages({
     id: 'Preferences.publisherFee',
     defaultMessage: 'Publisher Fee You Receive'
   },
+  escrowFee: {
+    id: 'Preferences.escrowFee',
+    defaultMessage: 'Escrow Fee You Receive'
+  },
   chargeFee: {
     id: 'Preferences.chargeFee',
     defaultMessage: 'Fee You Charge to Publish Listings'

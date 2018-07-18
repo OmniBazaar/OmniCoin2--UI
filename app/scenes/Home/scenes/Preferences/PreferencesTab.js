@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Modal, Tab, Form, Button, Select, Image, Icon, Grid } from 'semantic-ui-react';
+import { Modal, Tab, Form, Button, Select, Image, Icon, Grid, Loader } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 import { required } from 'redux-form-validators';
 
-import { savePreferences } from '../../../../services/preferences/preferencesActions';
+import {
+  savePreferences,
+  loadServerPreferences
+} from '../../../../services/preferences/preferencesActions';
 import FormInputWithIconOnRight
   from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
 import Dropdown from './components/Dropdown';
@@ -27,7 +30,7 @@ let lastLanguage = null;
 
 class PreferencesTab extends Component {
   static validate = (values) => {
-    const { logoutTimeout, chargeFee } = values;
+    const { logoutTimeout, publisherFee, escrowFee } = values;
     const errors = {};
     const number = value => (value && !isNaN(Number(value)));
 
@@ -35,8 +38,12 @@ class PreferencesTab extends Component {
       errors.logoutTimeout = messages.errorTimeout;
     }
 
-    if ((!number(chargeFee) || chargeFee < 0)) {
-      errors.chargeFee = messages.errorFee;
+    if ((!number(publisherFee) || publisherFee < 0)) {
+      errors.publisherFee = messages.errorFee;
+    }
+
+    if ((!number(escrowFee) || escrowFee < 0)) {
+      errors.escrowFee = messages.errorFee;
     }
 
     return errors;
@@ -54,6 +61,7 @@ class PreferencesTab extends Component {
 
   componentWillMount() {
     const { preferences } = this.props.preferences;
+    this.props.preferencesActions.loadServerPreferences()
     this.props.initialize(preferences);
   }
 
@@ -69,6 +77,10 @@ class PreferencesTab extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (!nextProps.preferences.loading && this.props.preferences.loading) {
+      this.props.initialize(nextProps.preferences.preferences);
+    }
+
     if (!nextProps.preferences.saving && this.props.preferences.saving) {
       const { formatMessage } = this.props.intl;
       if (nextProps.preferences.error) {
@@ -99,21 +111,31 @@ class PreferencesTab extends Component {
 
   onSubmit(values) {
     const publisher = this.props.auth.account.is_a_publisher;
+    const escrow = this.props.auth.account.is_an_escrow;
 
     if (!publisher) {
-      values.chargeFee = '';
+      values.publisherFee = '';
     }
+
+    if (!escrow) {
+      values.escrowFee = '';
+    }
+
     this.props.preferencesActions.savePreferences(values);
   }
 
   render() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit, valid } = this.props;
-    const { saving } = this.props.preferences;
+    const { saving, loading } = this.props.preferences;
     const publisher = this.props.auth.account.is_a_publisher;
+    const escrow = this.props.auth.account.is_an_escrow;
 
     return (
       <div className="preferences-form-container">
+        { loading ?
+          <Loader></Loader>
+          :
         <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="preferences-form">
           <Grid>
             <Grid.Row>
@@ -130,7 +152,7 @@ class PreferencesTab extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-            {/* <div className="form-group">
+          {/*<div className="form-group">
             <span>{formatMessage(messages.transactionFee)}</span>
             <Field
               name='transactionFee'
@@ -142,8 +164,8 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div> */}
-            {/* <div className="form-group">
+          </div>*/}
+          {/*<div className="form-group">
             <span>{formatMessage(messages.byDefaultVote)}</span>
             <Field
               name="vote"
@@ -153,7 +175,7 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div> */}
+          </div>*/}
             <Grid.Row>
               <Grid.Column width={4}>
                 <span>{formatMessage(messages.interfaceLanguage)}</span>
@@ -164,12 +186,12 @@ class PreferencesTab extends Component {
                   component={Dropdown}
                   props={{
                     options: languages,
-                    className: 'priority-listings'
+                    className: "priority-listings"
                   }}
                 />
               </Grid.Column>
             </Grid.Row>
-            {/* <div className="form-group top referrer">
+          {/*<div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
               <div className="description">
@@ -191,7 +213,7 @@ class PreferencesTab extends Component {
               </div>
             </div>
             <div className="col-1" />
-          </div> */}
+          </div>*/}
             <Grid.Row>
               <Grid.Column width={4}>
                 <span>{formatMessage(messages.priorityForListing)}</span>
@@ -202,7 +224,7 @@ class PreferencesTab extends Component {
                   component={Dropdown}
                   props={{
                     options: listingPriorities,
-                    className: 'priority-listings'
+                    className: "priority-listings"
                   }}
                 />
               </Grid.Column>
@@ -211,14 +233,31 @@ class PreferencesTab extends Component {
             {publisher &&
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <span>{formatMessage(messages.chargeFee)}(%)</span>
+                  <span>{formatMessage(messages.publisherFee)}(%)</span>
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Field
                     type="text"
-                    name="chargeFee"
+                    name="publisherFee"
                     component={ValidatableField}
-                    placeholder={formatMessage(messages.chargeFee)}
+                    placeholder={formatMessage(messages.publisherFee)}
+                    validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            }
+
+            {escrow &&
+              <Grid.Row>
+                <Grid.Column width={4}>
+                  <span>{formatMessage(messages.escrowFee)}(%)</span>
+                </Grid.Column>
+                <Grid.Column width={10}>
+                  <Field
+                    type="text"
+                    name="escrowFee"
+                    component={ValidatableField}
+                    placeholder={formatMessage(messages.escrowFee)}
                     validate={[required({ message: formatMessage(messages.fieldRequired) })]}
                   />
                 </Grid.Column>
@@ -272,19 +311,21 @@ class PreferencesTab extends Component {
               </Grid.Row>
             }
             <Grid.Row>
-              <Grid.Column width={4} />
+              <Grid.Column width={4}>
+              </Grid.Column>
               <Grid.Column width={10}>
-                <Button
-                  type="submit"
-                  content={formatMessage(messages.update)}
-                  className="button--green-bg"
-                  loading={saving}
-                  disabled={!valid || saving}
-                />
+                  <Button
+                    type="submit"
+                    content={formatMessage(messages.update)}
+                    className="button--green-bg"
+                    loading={saving}
+                    disabled={!valid || saving}
+                  />
               </Grid.Column>
             </Grid.Row>
           </Grid>
         </Form>
+        }
       </div>
     );
   }
@@ -300,7 +341,8 @@ PreferencesTab.propTypes = {
     error: PropTypes.object
   }).isRequired,
   preferencesActions: PropTypes.shape({
-    savePreferences: PropTypes.func
+    savePreferences: PropTypes.func,
+    loadServerPreferences: PropTypes.func
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -320,7 +362,8 @@ export default compose(
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({
-        savePreferences
+        savePreferences,
+        loadServerPreferences
       }, dispatch)
     })
   ),
