@@ -139,8 +139,6 @@ export function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
-      const macAddress = localStorage.getItem('macAddress');
-      const harddriveId = localStorage.getItem('hardDriveId');
       const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);    
       yield put({
         type: 'SIGNUP_SUCCEEDED',
@@ -235,8 +233,11 @@ export function* getWelcomeBonusAmount() {
   }
 }
 
+// Check if the user is connected to all 3 OmnibaZaar social media channels
+
 export function* receiveWelcomeBonus({ payload: { data: { values, reject, formatMessage } } }) {
   const errors = {};
+  // Check if the user's telephone number is connected to the OmniBazaar's Telegram channel and Bot      
   try {
     const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, values.telegramPhoneNumber);
     if (telegramUserIdRes && telegramUserIdRes.result.contact.user_id) {
@@ -249,31 +250,28 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject, format
       errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
     }
   }
-
+  // Check if the user's twitter name is following the OmniBazaar's Twitter account    
   try {
     const twitterTokenRes = yield call(AuthApi.getTwitterBearerToken);
     const twitterRes = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: values.twitterUsername });
     if (!twitterRes.relationship.source.following) {
       errors.twitterUsername = formatMessage(messages.invalidTwitterUsername);
     }
+// Check if the user's email is in the OmniBazaar's MailChimp list        
     yield call(AuthApi.checkMailChimpSubscribed, { email: values.email });
   } catch (error) {
     if (error.status === 404) {
       errors.email = formatMessage(messages.invalidMailChimpEmail);
     }
   }
-
+// in case user doesn't follow OmniBazaar's one of the 3 social channels throw error
   if (Object.keys(errors).length > 0) {
     yield call(reject, new SubmissionError(errors));
   } else {
-    try {
-      const macAddress = localStorage.getItem('macAddress');
-      const harddriveId = localStorage.getItem('hardDriveId');
-      const referrer = localStorage.getItem('referrer');
-      const { currentUser } = (yield select()).default.auth;
-      yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
-    } catch (e) {
-      console.log(e);
-    }
+    const macAddress = localStorage.getItem('macAddress');
+    const harddriveId = localStorage.getItem('hardDriveId');
+    const referrer = localStorage.getItem('referrer');
+    const { currentUser } = (yield select()).default.auth;
+    yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
   }
 }

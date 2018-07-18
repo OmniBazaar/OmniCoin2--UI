@@ -12,7 +12,7 @@ import {
   getLastLoginUserName,
   showTermsModal,
   getWelcomeBonusAmountSucceeded,
-  receiveWelcomeBonusFailed,
+  welcomeBonusSucceeded,
 } from './authActions';
 
 import {
@@ -148,6 +148,12 @@ const reducer = handleActions({
     return ({
       ...state,
       welcomeBonusAmount: amount
+    });
+  },
+  [welcomeBonusSucceeded](state) {
+    return ({
+      ...state,
+      isWelcomeBonusAvailable: false
     });
   },
 }, defaultState);
