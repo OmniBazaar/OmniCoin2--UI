@@ -37,6 +37,7 @@ import {
 import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
+import { currencyConverter } from "../../../../services/utils";
 
 import messages from './messages';
 
@@ -174,7 +175,7 @@ class Transfer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
-
+    const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
@@ -196,10 +197,17 @@ class Transfer extends Component {
                 && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
-
     if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
       this.props.change('password', this.props.bitcoin.password);
       this.props.change('guid', this.props.bitcoin.guid);
+    }
+    if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
+      const { amount } = this.props.transferForm;
+      if (nextProps.transfer.transferCurrency === 'omnicoin') {
+        this.props.change('amount', currencyConverter(amount, 'BITCOIN', 'OMNICOIN'));
+      } else {
+        this.props.change('amount', currencyConverter(amount, 'OMNICOIN', 'BITCOIN'))
+      }
     }
   }
 
