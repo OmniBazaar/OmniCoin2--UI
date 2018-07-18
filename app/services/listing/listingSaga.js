@@ -6,7 +6,7 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
-import { FetchChain,  hash } from 'omnibazaarjs/es';
+import { FetchChain, hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 import {
   ws,
@@ -31,15 +31,12 @@ import {
   getListingDetailFailed,
   requestMyListingsSuccess,
   requestMyListingsError,
-  isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
   searchPublishersFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
-import {
-  countPeersForKeywords
-} from '../search/dht/dhtSaga';
+import { countPeersForKeywords } from '../search/dht/dhtSaga';
 import { getAllPublishers } from '../accountSettings/services';
 import {
   saveImage,
@@ -49,7 +46,6 @@ import {
   deleteListing,
   getListingFromBlockchain,
   reportListingOnBlockchain,
-  createListingHash,
   checkPublisherAliveStatus
 } from './apis';
 
@@ -67,7 +63,7 @@ export function* listingSubscriber() {
   ]);
 }
 
-function* uploadImage({ payload: { publisher, file, imageId } }) {
+export function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     yield put(addListingImage(publisher, file, imageId));
@@ -83,13 +79,13 @@ function* uploadImage({ payload: { publisher, file, imageId } }) {
   }
 }
 
-function* removeImage({ payload: { publisher, image } }) {
+export function* removeImage({ payload: { publisher, image } }) {
   const { id, fileName, localFilePath } = image;
   try {
     yield put(startDeleteListingImage(id));
     if (localFilePath && !fileName) {
-    	yield put(deleteListingImageSuccess(id));
-    	return;
+      yield put(deleteListingImageSuccess(id));
+      return;
     }
 
     const { currentUser } = (yield select()).default.auth;
@@ -132,13 +128,13 @@ function* checkAndUploadImages(user, publisher, listing) {
 	};
 }
 
-function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
+export function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
     const { currentUser } = (yield select()).default.auth;
 
-    //saving take long time and user might logout in the middle of saving,
-    //so we need to clone current user object
+    // saving take long time and user might logout in the middle of saving,
+    // so we need to clone current user object
     const user = { ...currentUser };
     const isPublisherAlive = yield call(checkPublisherAliveStatus, user, publisher);
     if (!isPublisherAlive) {
@@ -169,7 +165,7 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   }
 }
 
-function* getListingDetail({ payload: { listingId }}) {
+export function* getListingDetail({ payload: { listingId }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
@@ -204,7 +200,7 @@ function* getListingDetail({ payload: { listingId }}) {
   }
 }
 
-function* requestMyListings() {
+export function* requestMyListings() {
 	try {
     yield put(clearSearchResults());
 
@@ -259,7 +255,7 @@ function* requestMyListings() {
 	}
 }
 
-function* deleteMyListing({ payload: { publisher, listing } }) {
+export function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const user = { ...currentUser };
@@ -271,9 +267,9 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
   }
 }
 
-function* checkListingHash({ payload: { listing } }) {
+export function* checkListingHash({ payload: { listing } }) {
   try {
-    const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
+    const blockchainListing = (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
 
     if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
@@ -285,7 +281,7 @@ function* checkListingHash({ payload: { listing } }) {
   }
 }
 
-function* searchPublishers({ payload: { keywords } }) {
+export function* searchPublishers({ payload: { keywords } }) {
   try {
     const publishers = yield call(getAllPublishers);
     if (!keywords || !keywords.length) {
@@ -294,12 +290,25 @@ function* searchPublishers({ payload: { keywords } }) {
     }
 
     const peers = yield call(countPeersForKeywords, keywords);
-
     const results = [];
-    publishers.forEach(pub => {
+    const {
+      default: {
+        account: { ipAddress, publisher },
+        auth: { account: { publisher_ip } },
+      },
+    } = (yield select());
+
+    publishers.forEach((pub) => {
+      const result = { ...pub };
+      const isAPublisherOnMemory = publisher && ipAddress === pub.publisher_ip;
+      const isAPublisherOnAuth = publisher_ip && pub.publisher_ip === publisher_ip;
+
       if (peers[pub.publisher_ip]) {
-        pub.listingCount = peers[pub.publisher_ip];
-        results.push(pub);
+        result.listingCount = peers[pub.publisher_ip];
+        results.push(result);
+      } else if (isAPublisherOnMemory || isAPublisherOnAuth) {
+        result.listingCount = 0;
+        results.push(result);
       }
     });
 
@@ -317,7 +326,7 @@ function* searchPublishers({ payload: { keywords } }) {
 function* reportListing({ payload: { listingId } }) {
   try {
     yield call(reportListingOnBlockchain, listingId);
-    yield put(reportListingSuccess())
+    yield put(reportListingSuccess());
   } catch (error) {
     yield put(reportListingError(error.toString()));
   }
