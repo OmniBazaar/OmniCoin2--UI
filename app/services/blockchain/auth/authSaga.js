@@ -139,18 +139,20 @@ export function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
+      const macAddress = localStorage.getItem('macAddress');
+      const harddriveId = localStorage.getItem('hardDriveId');
+      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);    
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
           username,
           password
-        }
+        },
+        isWelcomeBonusAvailable: isAvailable
       });
       yield put(changeSearchPriorityData(searchPriorityData));
-      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
       const { error } = resJson;
-      console.log('ERROR', error);
       let e;
       if (error.base && error.base.length && error.base.length > 0) {
         e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
@@ -161,7 +163,6 @@ export function* signup(action) {
       } else {
         e = JSON.stringify(error);
       }
-
       yield put({ type: 'SIGNUP_FAILED', error: e });
     }
   } catch (e) {
@@ -270,40 +271,9 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject, format
       const harddriveId = localStorage.getItem('hardDriveId');
       const referrer = localStorage.getItem('referrer');
       const { currentUser } = (yield select()).default.auth;
-      console.log(currentUser, "currentUser")
-      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
-      const acc = yield FetchChain('getAccount', currentUser.username);
-      console.log("isAvailable", isAvailable)
-      if (isAvailable) {
-        const tr = new TransactionBuilder();
-        tr.add_type_operation('welcome_bonus_operation', {
-          receiver: acc.get('id'),
-          drive_id: harddriveId,
-          mac_address: macAddress
-        });
-        const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-        yield tr.set_required_fees();
-        yield tr.add_signer(key.privKey, key.pubKey);
-        yield tr.broadcast(async () => {
-          try {
-            const referrerAcc = await FetchChain('getAccount', referrer);
-            const tr = new TransactionBuilder();
-            tr.add_type_operation('referral_bonus_operation', {
-              referred_account: acc.get('id'),
-              referrer_account: referrerAcc.get('id')
-            });
-            await tr.set_required_fees();
-            await tr.add_signer(key.privKey, key.pubKey);
-            await tr.broadcast();
-          } catch (error) {
-            console.log('ERROR', error);
-          }
-        });
-        yield put(welcomeBonusSucceeded());
-      }
-    } catch (error) {
-      console.log('ERROR ', error);
-      yield put(welcomeBonusFailed(error));
+      yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
+    } catch (e) {
+      console.log(e);
     }
   }
 }

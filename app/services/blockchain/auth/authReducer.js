@@ -31,6 +31,7 @@ const defaultState = {
   lastLoginUserName: null,
   showTermsModal: false,
   welcomeBonusAmount: null,
+  isWelcomeBonusAvailable: null
 };
 
 const reducer = handleActions({
@@ -114,6 +115,7 @@ const reducer = handleActions({
     return {
       ...state,
       currentUser: action.user,
+      isWelcomeBonusAvailable: action.isWelcomeBonusAvailable,
       error: null,
       loading: false
     };
