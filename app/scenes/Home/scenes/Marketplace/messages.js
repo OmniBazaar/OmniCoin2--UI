@@ -271,7 +271,7 @@ export default defineMessages({
   },
   omniBazaarFeatures: {
     id: 'Marketplace.omniBazaarFeatures',
-    defaultMessage: 'OmniBazaar Features and Benefits'
+    defaultMessage: 'OmniBazaar Feature'
   },
   omniBazaarFeature: {
     id: 'Marketplace.omniBazaarFeature',
