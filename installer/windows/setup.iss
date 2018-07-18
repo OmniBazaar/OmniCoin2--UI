@@ -40,6 +40,9 @@ Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node;
 Source: ".\vc_redist.x64.exe"; DestDir: {app}; Flags: ignoreversion 
 #endif
 
+[UninstallRun]
+Filename: "{cmd}"; Parameters: "/C taskkill /im Omnibazaar.exe /f /t 1> NUL 2> NUL && timeout 5 > NUL"
+
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 Type: filesandordirs; Name: "{localappdata}\{#APPDATA_DIR}"
