@@ -114,6 +114,10 @@ const messages = defineMessages({
   [ChainTypes.operations.sale_bonus_operation]: {
     id: 'Settings.saleBonus',
     defaultMessage: 'SALE BONUS'
+  },
+  [ChainTypes.operations.witness_bonus_operation]: {
+    id: 'Settings.witnessBonus',
+    defaultMessage: 'WITNESS BONUS'
   }
 });
 

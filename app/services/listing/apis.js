@@ -193,7 +193,7 @@ export const getListingFromBlockchain = async listingId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (typeof listing[key] !== 'undefined') {
+    if (listing[key]) {
       result[key] = listing[key];
     }
   });
@@ -202,11 +202,12 @@ export const ensureListingData = listing => {
 };
 
 export const createListingOnPublisher = async (user, listing, publisher, listingId) => {
+  const newListing = { ...ensureListingData(listing) };
   const options = {
     method: 'POST',
     json: true,
     body: {
-      ...listing,
+      ...newListing,
       listing_type: 'Listing',
       listing_id: listingId
     }

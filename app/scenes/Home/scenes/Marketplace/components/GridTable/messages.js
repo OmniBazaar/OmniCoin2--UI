@@ -45,5 +45,8 @@ export default defineMessages({
     id: 'GridTable.deleteListingSuccess',
     defaultMessage: 'Listing is deleted successfully'
   },
-
+  removeFromFavorites: {
+    id: 'Listing.removeFromFavorites',
+    defaultMessage: 'REMOVE FROM FAVORITES'
+  },
 });

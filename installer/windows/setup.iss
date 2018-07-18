@@ -37,7 +37,11 @@ Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion rec
 Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR}; Flags: ignoreversion
 #ifdef INCLUDE_WITNESS_NODE
 Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion recursesubdirs
+Source: ".\vc_redist.x64.exe"; DestDir: {app}; Flags: ignoreversion 
 #endif
+
+[UninstallRun]
+Filename: "{cmd}"; Parameters: "/C taskkill /im Omnibazaar.exe /f /t 1> NUL 2> NUL && timeout 5 > NUL"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
@@ -47,6 +51,11 @@ Type: filesandordirs; Name: "{userappdata}\{#APPDATA_DIR}"
 [Icons]
 Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
 Name: {group}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
+
+#ifdef INCLUDE_WITNESS_NODE
+[Run]
+Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";
+#endif
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);

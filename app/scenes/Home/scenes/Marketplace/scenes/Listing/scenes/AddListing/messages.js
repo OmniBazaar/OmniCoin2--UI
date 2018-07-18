@@ -273,6 +273,10 @@ const messages = defineMessages({
     id: 'AddListing.invalidAddress',
     defaultMessage: 'Invalid address'
   },
+  imageSizeTooLarge: {
+    id: 'AddListing.imageSizeTooLarge',
+    defaultMessage: 'Image size is too large'
+  }
 });
 
 export default messages;

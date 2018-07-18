@@ -120,6 +120,8 @@ const getBadgeClass = (type) => {
       return 'rBonus';
     case ChainTypes.operations.sale_bonus_operation:
       return 'sBonus';
+    case ChainTypes.operations.witness_bonus_operation:
+      return 'witBonus';
     default:
       break;
   }

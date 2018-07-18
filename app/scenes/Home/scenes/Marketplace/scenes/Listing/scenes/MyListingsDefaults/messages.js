@@ -21,8 +21,16 @@ export default defineMessages({
     id: 'ListingsDefaults.success',
     defaultMessage: 'Success'
   },
+  error: {
+    id: 'ListingsDefaults.error',
+    defaultMessage: 'Error'
+  },
   saveDefaults: {
     id: 'ListingsDefaults.saveDefaults',
     defaultMessage: 'SAVE DEFAULTS'
-  }
+  },
+  invalidAddress: {
+    id: 'ListingsDefaults.invalidAddress',
+    defaultMessage: 'Invalid address'
+  },
 });

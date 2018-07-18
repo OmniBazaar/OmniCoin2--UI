@@ -15,8 +15,9 @@ import { machineId } from 'node-machine-id';
 import getmac from 'getmac';
 import MenuBuilder from './menu';
 import bitcoincli from 'blockchain-wallet-service';
-import { spawn } from 'child_process';
+import { spawn, exec } from 'child_process';
 import fs from 'fs';
+import path from "path";
 
 let mainWindow = null;
 
@@ -165,6 +166,47 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   });
 };
 
+const launchNodeDaemon = () => {
+  switch(process.platform) {
+    case 'win32':
+      const userName = process.env['USERPROFILE'].split(path.sep)[2];
+      const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
+      return exec(
+        "reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v \"OmniBazaar Witness Node\" /d " + nodePath
+      );
+    case 'linux':
+      return exec(
+        "systemctl daemon-reload" +
+        "systemctl enable omnibazaar-publisher.service" +
+        "systemctl start omnibazaar-publisher.service"
+      );
+    case 'darwin':
+      return exec(
+        "launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && " +
+        "launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist"
+      );
+  }
+};
+
+const stopNodeDaemon = () => {
+  switch(process.platform) {
+    case 'win32':
+      const userName = process.env['USERPROFILE'].split(path.sep)[2];
+      const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
+      return exec(
+        "reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v \"OmniBazaar Witness Node\" /f "
+      );
+    case 'linux':
+      return exec(
+        "systemctl stop omnibazaar-publisher.service"
+      );
+    case 'darwin':
+      return exec(
+        "launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist"
+      );
+  }
+};
+
 const runOb2 = async () => {
   if (isProd()) {
     const path = getOb2ProdPath();
@@ -254,6 +296,8 @@ app.on('ready', async () => {
   ipcMain.on('restart-node', (event, witnessId, pubKey, privKey) => {
     restartNodeIfExists(witnessId, pubKey, privKey);
   });
+  ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
+  ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
 
 
   mainWindow = new BrowserWindow({
