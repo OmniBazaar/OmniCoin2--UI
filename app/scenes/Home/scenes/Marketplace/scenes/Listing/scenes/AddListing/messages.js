@@ -245,6 +245,14 @@ const messages = defineMessages({
     id: 'AddListing.fieldNumeric',
     defaultMessage: 'Should be a number'
   },
+  omnicoinFieldValidator: {
+    id: 'AddListing.omnicoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00001'
+  },
+  bitcoinFieldValidator: {
+    id: 'AddListing.bitcoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00000001'
+  },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
