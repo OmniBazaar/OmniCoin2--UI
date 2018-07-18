@@ -92,7 +92,6 @@ class TransactionDetails extends Component {
   getFeeDetail(op) {
     const { formatMessage } = this.props.intl;
     let feeDetail = formatMessage(messages.feeDetail, { fee: op.isIncoming ? 0 : op.fee });
-    console.log('OP OBFEE ', op);
     if (op.obFee) {
       if (op.isIncoming) {
         if (op.obFee.omnibazaar_fee) {
