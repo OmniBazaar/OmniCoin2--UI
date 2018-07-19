@@ -26,6 +26,7 @@ import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from '../../../../../../services/utils';
+import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
 import './listing.scss';
@@ -370,13 +371,23 @@ class Listing extends Component {
   }
 
   renderGallery(listingDetail) {
+    
+    let items = listingDetail.images.map(image => ({
+      original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
+      thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
+    }));
+    
+    if(!listingDetail.images.length) {
+      items = [{
+        original: ObNet,
+        thumbnail: ObNet
+      }]
+    }
+    
     return (
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery
-          items={listingDetail.images.map(image => ({
-            original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
-            thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
-            }))}
+          items={items}
           showPlayButton={false}
           showFullscreenButton={false}
         />
