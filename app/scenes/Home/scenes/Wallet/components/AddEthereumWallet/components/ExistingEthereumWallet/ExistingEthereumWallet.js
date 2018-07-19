@@ -41,8 +41,8 @@ class ExistingEthereumWallet extends Component {
   };
 
   handleSubmit(values) {
-    const { guid, password } = values;
-    this.props.EthereumActions.connectEthereumWallet(guid, password);
+    const { privateKey } = values;
+    this.props.EthereumActions.connectEthereumWallet(privateKey);
   }
 
   handleCancel() {
@@ -61,17 +61,10 @@ class ExistingEthereumWallet extends Component {
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-ethereum-wallet">
         <Field
-          name="password"
+          name="privateKey"
           placeholder={formatMessage(messages.pleaseEnter)}
-          type="password"
+          type="privateKey"
           message={formatMessage(messages.enterPassword) + '*'}
-          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
-          component={FormField}
-        />
-        <Field
-          name="guid"
-          placeholder={formatMessage(messages.pleaseEnter)}
-          message={formatMessage(messages.walletGuid) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />

@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   enterPassword: {
     id: 'ExistingEthereumWallet.enterPassword',
-    defaultMessage: 'Enter Password for Account Access',
+    defaultMessage: 'Enter Private Key for Account Access',
   },
   pleaseEnter: {
     id: 'ExistingEthereumWallet.pleaseEnter',

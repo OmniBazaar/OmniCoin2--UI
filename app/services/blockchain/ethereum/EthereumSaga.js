@@ -21,9 +21,9 @@ export function* ethereumSubscriber() {
   ]);
 }
 
-function* createEthereumWallet({ payload: { privateKey, label, email } }) {
+function* createEthereumWallet() {
   try {
-    const res = EthereumApi.createEthereumWallet(privateKey, label, email);
+    const res = EthereumApi.createEthereumWallet();
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, res.address, res.privateKey, currentUser);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address });
@@ -33,9 +33,9 @@ function* createEthereumWallet({ payload: { privateKey, label, email } }) {
   }
 }
 
-function* connectEthereumWallet({ payload: { address, privateKey } }) {
+function* connectEthereumWallet({ payload: { privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
+    const res = yield call(EthereumApi.getEthereumWallets, privateKey);
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, address, privateKey, currentUser);
     yield put(connectWalletFinish());
