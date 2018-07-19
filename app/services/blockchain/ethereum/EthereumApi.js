@@ -2,13 +2,8 @@ import { URL, URLSearchParams } from 'url';
 import { wrapRequest } from '../../utils';
 import ethers from 'ethers';
 
-// var ethers = require('ethers');
-// var Wallet = ethers.Wallet;
-
-const apiKey = '4ad8f029-035c-4d68-8020-6f2fad9bfb7a';
-const address = 'http://localhost:3001';
-const feePerByte = 10; //satoshi
 var Wallet = ethers.Wallet;
+// remove this on production.
 Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
 
 const createEthereumWallet = function (privateKey, label, email) {
@@ -28,16 +23,39 @@ const getEthereumBalance = function (privateKey) {
   balancePromise.then(function (balance) {
     return balance;
   });
-  
 };
 
-const makeEthereumPayment = wrapRequest(async (address, privateKey, to, amount, from) => (
-  fetch(`${address}/merchant/${address}/payment?password=${privateKey}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
-));
+const makeEthereumPayment = function (privateKey, to, amount) {
+  var wallet = new Wallet(privateKey);
+  var amount = ethers.utils.parseEther(amount);
+  var sendPromise = wallet.send(to, amount);
 
-const addEthereumAddress = wrapRequest(async (privateKey, address, label) => fetch(`${address}/merchant/${address}/accounts/create?password=${privateKey}&label=${label}`));
+  sendPromise.then(function (transactionHash) {
+    console.log(transactionHash);
+    return transactionHash;
+  });
+};
 
-const getEthereumAddress = wrapRequest(async (xpub, address, privateKey) => fetch(`${address}/merchant/${address}/accounts/${xpub}?password=${privateKey}`));
+const addEthereumAddress = function (privateKey, address, label) {
+  //todo
+  var wallet = new Wallet(privateKey);
+  var balancePromise = wallet.getBalance();
+
+  balancePromise.then(function (balance) {
+    return balance;
+  });
+
+};
+
+const getEthereumAddress = function (xpub, address, privateKey) {
+  //todo
+  var wallet = new Wallet(privateKey);
+  var balancePromise = wallet.getBalance();
+
+  balancePromise.then(function (balance) {
+    return balance;
+  });
+};
 
 export {
   createEthereumWallet,
