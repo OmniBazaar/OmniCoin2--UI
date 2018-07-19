@@ -15,8 +15,12 @@ const messages = defineMessages({
 
 class UpdateNotification extends Component {
   onClickUpdate() {
+    let appName=null;
+    if (process.platform === 'linux') {
+      appName = 'xdg-open';
+    }
     const { updateLink } = this.props.updateNotification;
-    open(updateLink);
+    open(updateLink, appName);
   }
 
   render() {
