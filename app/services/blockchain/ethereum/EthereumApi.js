@@ -6,14 +6,9 @@ var Wallet = ethers.Wallet;
 // remove this on production.
 Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
 
-const createEthereumWallet = function (privateKey) {
-  if (privateKey) {
-    var wallet = new Wallet(privateKey);
-    return wallet;
-  } else {
-    var wallet = Wallet.createRandom();
-    return wallet;
-  }
+const createEthereumWallet = function () {
+  var wallet = Wallet.createRandom();
+  return wallet;
 };
 
 const getEthereumWallets = function (privateKey) {
@@ -43,12 +38,12 @@ const makeEthereumPayment = function (privateKey, to, amount) {
 
 const addEthereumAddress = function (privateKey, address, label) {
   //todo
-  var wallet = new Wallet(privateKey);
-  var balancePromise = wallet.getBalance();
+  // var wallet = new Wallet(privateKey);
+  // var balancePromise = wallet.getBalance();
 
-  balancePromise.then(function (balance) {
-    return balance;
-  });
+  // balancePromise.then(function (balance) {
+  //   return balance;
+  // });
 
 };
 

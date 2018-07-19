@@ -91,12 +91,13 @@ function* getEthereumBalance({ payload: { address, privateKey } }) {
 }
 
 function* addEthereumAddress({ payload: { address, privateKey, label } }) {
+  // Ethereum doesn't support Add more Address to current wallet.
   console.log('ADDING ETHEREUM ADDRESS', address, privateKey, label);
-  try {
-    const res = yield call(EthereumApi.addEthereumAddress, privateKey, address, label);
-    const address = yield call(EthereumApi.getEthereumAddress, res.xpub, address, privateKey);
-    yield put({ type: 'ADD_ETHEREUM_ADDRESS_SUCCEEDED', address });
-  } catch (error) {
-    yield put({ type: 'ADD_ETHEREUM_ADDRESS_FAILED', error });
-  }
+  // try {
+  //   const res = yield call(EthereumApi.addEthereumAddress, privateKey, address, label);
+  //   const address = yield call(EthereumApi.getEthereumAddress, res.xpub, address, privateKey);
+  //   yield put({ type: 'ADD_ETHEREUM_ADDRESS_SUCCEEDED', address });
+  // } catch (error) {
+     yield put({ type: 'ADD_ETHEREUM_ADDRESS_FAILED', error });
+  // }
 }
