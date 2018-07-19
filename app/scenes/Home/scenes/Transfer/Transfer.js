@@ -95,7 +95,7 @@ class Transfer extends Component {
     return escrows.map(escrow => ({
       key: escrow.id,
       value: escrow.id,
-      text: escrow.name
+      text: `${escrow.name} (${escrow.escrow_fee / 100}% Fee)`
     }));
   }
 
