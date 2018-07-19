@@ -273,6 +273,7 @@ class AirDropForm extends Component {
     });
   })
   render() {
+    const btnClass = (this.props.auth.loading || !!this.props.asyncValidating) ? 'ui loading' : '';
     const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : '';
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
@@ -291,7 +292,7 @@ class AirDropForm extends Component {
           <div className="buttons">
             <Button
               disabled={!valid}
-              className="receiveWelcomeBonus"
+              className={btnClass}
               content={formatMessage(messages.receiveWelcomeBonus)}
               color="green"
               type="submit"

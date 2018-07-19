@@ -138,6 +138,11 @@ const reducer = handleActions({
     error,
     isAccountLoading: false
   }),
+  RECEIVE_WELCOME_BONUS: (state) => ({
+    ...state,
+    error: null,
+    loading: true
+  }),
   [showTermsModal](state) {
     return {
       ...state,
