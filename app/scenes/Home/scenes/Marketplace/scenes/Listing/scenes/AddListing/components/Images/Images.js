@@ -89,10 +89,10 @@ class Images extends Component {
           {
 	        	(Object.keys(images).length < imageLimit) &&
 	        	<Button
-  className="add-img-button"
-  onClick={this.onClickAddImage.bind(this)}
-  disabled={disabled}
-  type="button"
+              className="add-img-button"
+              onClick={this.onClickAddImage.bind(this)}
+              disabled={disabled}
+              type="button"
 	        	>
   						<Image src={AddIcon} width={iconSize} height={iconSize} />
 		        </Button>

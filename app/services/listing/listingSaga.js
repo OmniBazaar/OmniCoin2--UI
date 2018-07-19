@@ -132,10 +132,10 @@ function* checkAndUploadImages(user, publisher, listing) {
 	}
 }
 
-function* uploadImagesFromAnotherPublisher(user, publisher, listing) {
+function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, listing) {
   for (let i = 0; i < listing.images.length; ++i) {
-    const url = `http://${publisher.publisher_ip}/publisher-images/${listing.images[i].path}`;
-    const result = yield call(saveImage, user, publisher, {
+    const url = `http://${oldPublisher.publisher_ip}/publisher-images/${listing.images[i].path}`;
+    const result = yield call(saveImage, user, newPublisher, {
       name: listing.images[i].path,
       type: mime.lookup(listing.images[i].path),
       url
@@ -151,7 +151,7 @@ function* uploadImagesFromAnotherPublisher(user, publisher, listing) {
 
 function* moveToAnotherPublisher(user, publisher, listing, listingId) {
   const oldPublisher = yield call(getPublisherByIp, listing.ip);
-  yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, listing);
+  yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, publisher, listing);
   console.log('DONE UPLOADING');
   yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
   listing = ensureListingData(listing);
