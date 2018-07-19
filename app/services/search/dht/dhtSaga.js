@@ -3,6 +3,7 @@ import {
   call,
   put,
   takeEvery,
+  takeLatest,
   fork
 } from 'redux-saga/effects';
 import { includes, uniqBy } from 'lodash';
@@ -20,7 +21,7 @@ const dhtConnector = new DHTConnector();
 export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
-    takeEvery('DHT_RECONNECT', reconnect),
+    takeLatest('DHT_RECONNECT', reconnect),
     takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
   ]);
 }

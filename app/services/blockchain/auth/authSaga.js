@@ -138,6 +138,7 @@ export function* signup(action) {
           password
         }
       });
+      yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
       yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
