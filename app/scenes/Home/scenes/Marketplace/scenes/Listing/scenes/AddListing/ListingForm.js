@@ -300,9 +300,7 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
-
-    this.props.accountActions.updatePublicData();
-
+    
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
