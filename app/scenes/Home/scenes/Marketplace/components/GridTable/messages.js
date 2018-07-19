@@ -19,7 +19,7 @@ export default defineMessages({
   },
   confirmDeleteMessage: {
     id: 'GridTable.confirmDeleteMessage',
-    defaultMessage: 'Are you sure you want to delete this listing ?'
+    defaultMessage: 'Are you sure you want to delete this listing?'
   },
   cancel: {
     id: 'GridTable.cancel',
@@ -39,11 +39,11 @@ export default defineMessages({
   },
   deleteListingError: {
     id: 'GridTable.deleteListingError',
-    defaultMessage: 'An error occured while deleting the listing'
+    defaultMessage: 'An error occured while deleting the listing.'
   },
   deleteListingSuccess: {
     id: 'GridTable.deleteListingSuccess',
-    defaultMessage: 'Listing is deleted successfully'
+    defaultMessage: 'Listing was deleted successfully.'
   },
   removeFromFavorites: {
     id: 'Listing.removeFromFavorites',

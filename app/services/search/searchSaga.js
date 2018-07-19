@@ -42,9 +42,7 @@ function* searchListings({
   try {
     const { saving } = (yield select()).default.listing.saveListing;
     if (saving) {
-      yield put(setSearchListingsParams(
-        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
-      ));
+      yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
       return;
     }
 

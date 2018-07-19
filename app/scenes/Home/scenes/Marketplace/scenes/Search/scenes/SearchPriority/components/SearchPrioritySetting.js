@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   publisherName: {
     id: 'SearchPrioritySetting.publisherName',
-    defaultMessage: 'Specific Publisher'
+    defaultMessage: 'Publisher'
   },
   country: {
     id: 'SearchPrioritySetting.country',
@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
   updateSuccess: {
     id: 'SearchPrioritySetting.updateSuccess',
-    defaultMessage: 'Successfully updated'
+    defaultMessage: 'Update'
   },
   update: {
     id: 'SearchPrioritySetting.update',
@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
   keywords: {
     id: 'SearchPrioritySetting.keywords',
-    defaultMessage: 'Keywords for listing what you want to see'
+    defaultMessage: 'Keywords for listings that you want to see'
   },
   addKeyword: {
     id: 'SearchPrioritySetting.addKeyword',
@@ -135,7 +135,7 @@ class SearchPrioritySetting extends Component {
   }
 
   onChangeCountry(country) {
-    if(!country) {
+    if (!country) {
       this.props.accountSettingsActions.changeState('');
       this.props.accountSettingsActions.changeCity('');
     }
@@ -198,9 +198,12 @@ class SearchPrioritySetting extends Component {
             </div>
             <div className="form-group">
               <span>{formatMessage(messages.city)}</span>
-              <input type='text' className='textfield'
+              <input
+                type="text"
+                className="textfield"
                 value={publisherData.city}
-                onChange={this.onChangeCity} />
+                onChange={this.onChangeCity}
+              />
               <div className="col-1" />
             </div>
           </div>
@@ -252,7 +255,7 @@ class SearchPrioritySetting extends Component {
     const { handleSubmit } = this.props;
     const { isConnecting } = this.props.dht;
 
-  
+
     if (
       (publisherData.priority === 'category' && !publisherData.keywords.length) ||
       (publisherData.priority === 'publisher' && !publisherData.publisherName) ||
@@ -260,7 +263,7 @@ class SearchPrioritySetting extends Component {
     ) {
       isDisabled = true;
     }
-    
+
     return (
       <div className="search-priority-setting">
         <Form onSubmit={handleSubmit(this.submitPublisherData)} className="mail-form-container">

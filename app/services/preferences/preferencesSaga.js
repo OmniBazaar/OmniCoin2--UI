@@ -11,12 +11,8 @@ import {
   savePreferencesSuccess,
   savePreferencesError
 } from './preferencesActions';
-import {
-  storePreferences
-} from './services';
-import {
-  restartNode
-} from "../blockchain/connection/connectionActions";
+import { storePreferences } from './services';
+import { restartNode } from '../blockchain/connection/connectionActions';
 
 export function* preferencesSubscriber() {
   yield all([
@@ -28,13 +24,13 @@ function* savePreferences({ payload: { preferences } }) {
   try {
     yield call(storePreferences, preferences);
     if (preferences.autorun) {
-      ipcRenderer.send('launch-node-daemon')
+      ipcRenderer.send('launch-node-daemon');
     } else {
       ipcRenderer.send('stop-node-daemon');
     }
     yield put(savePreferencesSuccess(preferences));
     yield put(restartNode()); // bcs the app is still running
-  } catch(err) {
+  } catch (err) {
     yield put(savePreferencesError(err));
   }
 }

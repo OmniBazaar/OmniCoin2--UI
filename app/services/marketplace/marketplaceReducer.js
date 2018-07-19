@@ -150,7 +150,7 @@ const reducer = handleActions({
   }) {
     let gridData = gridTableData || [];
     let sortBy = sortGridBy;
-    
+
     if (sortGridBy === 'price') {
       sortBy = 'convertedPrice';
       const convertTo = (currency && currency === 'ALL') ? 'USD' : currency;

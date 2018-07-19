@@ -17,13 +17,11 @@ import MenuBuilder from './menu';
 import bitcoincli from 'blockchain-wallet-service';
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
-import path from "path";
+import path from 'path';
 
 let mainWindow = null;
 
-const isProd = () => {
-  return process.env.NODE_ENV === 'production';
-};
+const isProd = () => process.env.NODE_ENV === 'production';
 
 if (isProd()) {
   const sourceMapSupport = require('source-map-support');
@@ -52,7 +50,7 @@ const installExtensions = async () => {
 };
 
 const handleOb2Connection = (path) => {
-  let ls = spawn(path, ["--rpc-endpoint", "127.0.0.1:8098"]);
+  const ls = spawn(path, ['--rpc-endpoint', '127.0.0.1:8098']);
   ls.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
@@ -69,18 +67,16 @@ const handleOb2Connection = (path) => {
   });
 };
 
-const getDevBasePath = () => {
-  return './app/ob2';
-};
+const getDevBasePath = () => './app/ob2';
 
 const getProdBasePath = (platform) => {
   switch (platform) {
     case 'win32':
-      return process.env.LOCALAPPDATA + '/OmniBazaar';
+      return `${process.env.LOCALAPPDATA}/OmniBazaar`;
     case 'linux':
-      return process.env.HOME + '/.OmniBazaar';
+      return `${process.env.HOME}/.OmniBazaar`;
     case 'darwin':
-      return process.env.HOME + '/Library/Application Support/OmniBazaar';
+      return `${process.env.HOME}/Library/Application Support/OmniBazaar`;
   }
 };
 
@@ -88,11 +84,11 @@ const getOb2DevPath = () => {
   const basePath = getDevBasePath();
   switch (process.platform) {
     case 'win32':
-      return basePath + '/windows/ob2.exe';
+      return `${basePath}/windows/ob2.exe`;
     case 'linux':
-      return basePath + '/linux/ob2';
+      return `${basePath}/linux/ob2`;
     case 'darwin':
-      return basePath + '/mac/ob2';
+      return `${basePath}/mac/ob2`;
   }
 };
 
@@ -100,23 +96,21 @@ const getOb2ProdPath = () => {
   const basePath = getProdBasePath(process.platform);
   switch (process.platform) {
     case 'win32':
-      return  basePath + '/ob2.exe';
+      return `${basePath}/ob2.exe`;
     case 'linux':
-      return basePath + '/ob2';
+      return `${basePath}/ob2`;
     case 'darwin':
-      return basePath + '/ob2';
+      return `${basePath}/ob2`;
   }
 };
 
 
-const getNodeDirProdPath = () => {
-  return getProdBasePath(process.platform) + '/witness_node';
-};
+const getNodeDirProdPath = () => `${getProdBasePath(process.platform)}/witness_node`;
 
-const getNodeDirDevPath = () => {
-  return getNodeDirProdPath();
- // return getDevBasePath() + '/witness_node';
-};
+const getNodeDirDevPath = () =>
+  getNodeDirProdPath()
+  // return getDevBasePath() + '/witness_node';
+;
 
 
 const runNode = () => {
@@ -124,11 +118,11 @@ const runNode = () => {
   if (isProd()) {
     path = getNodeDirProdPath();
   }
-  let nodePath =  path + '/witness_node';
+  let nodePath = `${path}/witness_node`;
   if (process.platform === 'win32') {
-    nodePath = path + '/witness_node.exe'
+    nodePath = `${path}/witness_node.exe`;
   }
-  let ls = spawn(nodePath);
+  const ls = spawn(nodePath);
   ls.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
@@ -148,7 +142,7 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
     path = getNodeDirProdPath();
   }
   console.log('WITNESS ID ', witnessId);
-  fs.readFile(path + '/witness_node_data_dir/config.ini', 'utf8', function (err, data) {
+  fs.readFile(`${path}/witness_node_data_dir/config.ini`, 'utf8', (err, data) => {
     if (err) {
       console.log('ERROR ', err);
     } else {
@@ -158,7 +152,7 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
       const pStart = data.indexOf('#private-key') !== -1 ? data.indexOf('#private-key') : data.indexOf('private-key');
       const pEnd = data.indexOf('\n', pStart);
       data = data.replace(data.substring(pStart, pEnd), `private-key = ["${pubKey}", "${privKey}"]`);
-      fs.writeFile(path + '/witness_node_data_dir/config.ini', data, function(err) {
+      fs.writeFile(`${path}/witness_node_data_dir/config.ini`, data, (err) => {
         console.log('ERROR ', err);
       });
       runNode();
@@ -167,43 +161,31 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
 };
 
 const launchNodeDaemon = () => {
-  switch(process.platform) {
+  switch (process.platform) {
     case 'win32':
-      const userName = process.env['USERPROFILE'].split(path.sep)[2];
+      const userName = process.env.USERPROFILE.split(path.sep)[2];
       const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-      return exec(
-        "reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v \"OmniBazaar Witness Node\" /d " + nodePath
-      );
+      return exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath}`);
     case 'linux':
-      return exec(
-        "systemctl daemon-reload" +
-        "systemctl enable omnibazaar-publisher.service" +
-        "systemctl start omnibazaar-publisher.service"
-      );
+      return exec('systemctl daemon-reload' +
+        'systemctl enable omnibazaar-publisher.service' +
+        'systemctl start omnibazaar-publisher.service');
     case 'darwin':
-      return exec(
-        "launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && " +
-        "launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist"
-      );
+      return exec('launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && ' +
+        'launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist');
   }
 };
 
 const stopNodeDaemon = () => {
-  switch(process.platform) {
+  switch (process.platform) {
     case 'win32':
-      const userName = process.env['USERPROFILE'].split(path.sep)[2];
+      const userName = process.env.USERPROFILE.split(path.sep)[2];
       const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-      return exec(
-        "reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v \"OmniBazaar Witness Node\" /f "
-      );
+      return exec('reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /f ');
     case 'linux':
-      return exec(
-        "systemctl stop omnibazaar-publisher.service"
-      );
+      return exec('systemctl stop omnibazaar-publisher.service');
     case 'darwin':
-      return exec(
-        "launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist"
-      );
+      return exec('launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist');
   }
 };
 
@@ -211,11 +193,10 @@ const runOb2 = async () => {
   if (isProd()) {
     const path = getOb2ProdPath();
     handleOb2Connection(path);
-   }
-   else {
+  } else {
     const path = getOb2DevPath();
     handleOb2Connection(path);
-   }
+  }
 };
 
 
@@ -223,17 +204,17 @@ const processReferrer = async () => {
   let path = './';
   switch (process.platform) {
     case 'win32':
-      path = process.env.LOCALAPPDATA + '/OmniBazaar/omnibazaar.set';
+      path = `${process.env.LOCALAPPDATA}/OmniBazaar/omnibazaar.set`;
       break;
     case 'linux':
-      path = process.env.HOME + '/.OmniBazaar/omnibazaar.set';
+      path = `${process.env.HOME}/.OmniBazaar/omnibazaar.set`;
       break;
     case 'darwin':
       path = '/Library/Preferences/OmniBazaar/omnibazaar.set';
       break;
   }
   ipcMain.on('get-referrer', (event) => {
-    fs.readFile(path, 'utf8', function (err, data) {
+    fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
         console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: null });
@@ -243,7 +224,6 @@ const processReferrer = async () => {
         event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
       }
     });
-
   });
 };
 
@@ -262,7 +242,7 @@ const processMacAddress = async () => {
   });
 };
 
-const runBitcoinCli =  async () => {
+const runBitcoinCli = async () => {
   bitcoincli.start({
     port: 3000,
     bind: 'localhost',
@@ -281,7 +261,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
 
 
 app.on('ready', async () => {

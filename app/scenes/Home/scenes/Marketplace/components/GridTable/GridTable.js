@@ -98,7 +98,7 @@ class GridTable extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.props.gridTableActions.setActivePageGridTable(activePage);
   };
-  
+
   removeFromFavorites = (listing_id) => {
     this.props.listingActions.removeFromFavorites(listing_id);
   };
@@ -130,7 +130,7 @@ class GridTable extends Component {
   onOkDelete() {
     this.closeConfirm();
     if (this.item) {
-      this.props.listingActions.deleteListing({publisher_ip: this.item.ip }, this.item);
+      this.props.listingActions.deleteListing({ publisher_ip: this.item.ip }, this.item);
     }
   }
 
@@ -148,25 +148,24 @@ class GridTable extends Component {
     toastr.error(title, message);
   }
 
-  getIcon(showConvertedPrice, itemCurrency, currency){
+  getIcon(showConvertedPrice, itemCurrency, currency) {
     const type = showConvertedPrice ? currency : itemCurrency;
 
-    if (type === "USD") {
-      return <Image src={Dollar} className="currency-icon"/>
-    } else if (type === "EUR") {
-      return <Image src={Euro} className="currency-icon"/>
-    } else if (type === "BITCOIN") {
-      return <Image src={Btc} className="currency-icon"/>
-    } else {
-      return <Image src={Omni} className="currency-icon"/>
+    if (type === 'USD') {
+      return <Image src={Dollar} className="currency-icon" />;
+    } else if (type === 'EUR') {
+      return <Image src={Euro} className="currency-icon" />;
+    } else if (type === 'BITCOIN') {
+      return <Image src={Btc} className="currency-icon" />;
     }
+    return <Image src={Omni} className="currency-icon" />;
   }
 
   renderLoading() {
     const { deleting } = this.props.listing.deleteListing;
     return (
       <Dimmer active={deleting} inverted>
-        <Loader size='medium'></Loader>
+        <Loader size="medium" />
       </Dimmer>
     );
   }
@@ -182,12 +181,12 @@ class GridTable extends Component {
       currency,
       loading
     } = this.props;
-    let data = gridTableDataFiltered.filter(item => item && item.listing_id);
+    const data = gridTableDataFiltered.filter(item => item && item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
     let showConvertedPrice = false;
     if (currency && currency !== 'ALL' && currency !== 'all') {
-      showConvertedPrice = true
+      showConvertedPrice = true;
     }
 
     return (
@@ -231,7 +230,7 @@ class GridTable extends Component {
                               </span>
                               {subCategoryTitle}
                             </span>
-                            
+
                             <span className="description">{description}</span>
                             <div className="listing-info">
                               <div className="price">

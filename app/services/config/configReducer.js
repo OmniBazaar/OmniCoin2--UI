@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { getConfig, getConfigSucceeded, getConfigFailed } from "./configActions";
+import { getConfig, getConfigSucceeded, getConfigFailed } from './configActions';
 import { nodesAddresses, faucetAddresses } from './defaultConfig';
 
 const defaultState = {
@@ -15,14 +15,14 @@ const reducer = handleActions({
       ...state,
       loading: true,
       error: null
-    }
+    };
   },
   [getConfigSucceeded](state, { payload: { config } }) {
     return {
       ...state,
       ...config,
       loading: false
-    }
+    };
   },
   [getConfigFailed](state, { payload: { error } }) {
     return {
@@ -31,7 +31,7 @@ const reducer = handleActions({
       nodes: nodesAddresses,
       error,
       loading: false
-    }
+    };
   }
 }, defaultState);
 

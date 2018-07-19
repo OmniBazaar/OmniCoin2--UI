@@ -1,5 +1,5 @@
 import { FetchChain } from 'omnibazaarjs/es';
-import {TOKENS_IN_XOM} from "../../utils/constants";
+import { TOKENS_IN_XOM } from '../../utils/constants';
 
 async function parseEscrowTransactions(escrowObjects, username) {
   return await Promise.all(escrowObjects.map(el => Promise.all([

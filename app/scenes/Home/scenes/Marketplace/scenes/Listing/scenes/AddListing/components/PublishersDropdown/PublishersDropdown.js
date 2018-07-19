@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
 import { Dropdown, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {
-  getPublishers
-} from "../../../../../../../../../../services/accountSettings/accountActions";
-import {
-  searchPublishers
-} from '../../../../../../../../../../services/listing/listingActions';
+import { getPublishers } from '../../../../../../../../../../services/accountSettings/accountActions';
+import { searchPublishers } from '../../../../../../../../../../services/listing/listingActions';
 import messages from '../../messages';
 
 class PublishersDropdown extends Component {
-
   state = {
     options: [],
   };

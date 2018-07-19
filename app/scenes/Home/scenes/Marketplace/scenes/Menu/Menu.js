@@ -7,7 +7,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
-const {shell} = require('electron')
+
+const { shell } = require('electron');
 
 import { searchListings } from '../../../../../../services/search/searchActions';
 
@@ -121,21 +122,21 @@ class Menu extends Component {
       </li>
     );
   }
-  
+
   toggleSettingsAccount = () => {
     this.props.menuActions.showSettingsModal();
   }
-  
+
   openLink(e, path) {
     e.preventDefault();
-    shell.openExternal(path)
+    shell.openExternal(path);
   }
-  
+
   renderOption(category, parentCategory, path, isExternal) {
     const { formatMessage } = this.props.intl;
     const type = category.id;
     const parent = parentCategory ? parentCategory.id : null;
-    
+
     const menuItem = (
       <div>
         <span
@@ -148,13 +149,13 @@ class Menu extends Component {
         </span>
       </div>
     );
-    
+
     if (!isExternal) {
       return (
         <div>{menuItem}</div>
       );
     }
-    
+
     return (
       <a href={path} onClick={(e) => this.openLink(e, path)}>
         {menuItem}
@@ -434,7 +435,7 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/search-priority">{formatMessage(userMenu.searchPriority)}</NavLink>
         </div>
-        {/*<div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>*/}
+        {/* <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div> */}
       </Popup>
     );
   }

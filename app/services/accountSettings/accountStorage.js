@@ -4,7 +4,6 @@ const privateDataKey = 'privateDataSettings';
 const publisherDataKey = 'publisherKeySettings';
 
 class AccountSettingsStorage {
-
   static update(key, data) {
     const user = getStoredCurrentUser();
     localStorage.setItem(`${key}_${user.username}`, JSON.stringify(data));

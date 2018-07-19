@@ -14,9 +14,7 @@ import {
   deleteSearch
 } from '../../../../../../../../services/search/searchActions';
 
-import {
-  getPublisherData
-} from "../../../../../../../../services/accountSettings/accountActions";
+import { getPublisherData } from '../../../../../../../../services/accountSettings/accountActions';
 
 import './saved-searches.scss';
 

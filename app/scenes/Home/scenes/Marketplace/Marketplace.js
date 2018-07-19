@@ -92,7 +92,9 @@ class Marketplace extends Component {
     }
   }
 
-  fetchListings({ country, state, city, keywords }) {
+  fetchListings({
+    country, state, city, keywords
+  }) {
     const searchListings = () => {
       if (!this.props.dht.isConnecting && this.props.dht.connector) {
         this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
@@ -302,7 +304,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper overview">
-        <Image src={Overview} width={490} height={380}/>
+        <Image src={Overview} width={490} height={380} />
       </div>
     );
   }
@@ -312,7 +314,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper versatility">
-        <Image src={Versatility} width={456} height={300}/>
+        <Image src={Versatility} width={456} height={300} />
       </div>
     );
   }
@@ -332,7 +334,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper benefits">
-        <Image src={Benefits} width={760} height={500}/>
+        <Image src={Benefits} width={760} height={500} />
       </div>
     );
   }
@@ -342,7 +344,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper fees">
-        <Image src={Fees} width={456} height={300}/>
+        <Image src={Fees} width={456} height={300} />
       </div>
     );
   }
@@ -423,7 +425,7 @@ class Marketplace extends Component {
         </div>
         <div className="items">
           {
-            loading ? <div className='loading-container'><Loader inline active /></div>
+            loading ? <div className="loading-container"><Loader inline active /></div>
                     : content
           }
         </div>
@@ -524,11 +526,11 @@ class Marketplace extends Component {
                   formatMessage(mainCategories.jobs),
                   this.getListingForCategory(categories.jobs)
                 )}
-                {/*{this.renderListItems(
+                {/* {this.renderListItems(
                   CategoriesTypes.RENTALS,
                   formatMessage(mainCategories.rentals),
                   this.getListingForCategory(categories.rentals)
-                )}*/}
+                )} */}
                 {this.renderListItems(
                   CategoriesTypes.CRYPTO_BAZAAR,
                   formatMessage(mainCategories.cryptoBazaar),

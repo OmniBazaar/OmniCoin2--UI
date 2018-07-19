@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Tab } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import './my-purchases.scss'
+import './my-purchases.scss';
 
 import PurchasesTable from './components/PurchasesTable/PurchasesTable';
 import Menu from '../../scenes/Menu/Menu';
@@ -24,7 +24,7 @@ class MyPurchases extends Component {
     return (
       <div className="marketplace-container category-listing recent-searches">
         <div className="header">
-          <Menu/>
+          <Menu />
         </div>
         <Tab
           className="tabs"
@@ -32,11 +32,11 @@ class MyPurchases extends Component {
           panes={[
               {
                 menuItem: formatMessage(messages.bought),
-                render: () => <Tab.Pane><PurchasesTable type="buy"/></Tab.Pane>
+                render: () => <Tab.Pane><PurchasesTable type="buy" /></Tab.Pane>
               },
               {
                 menuItem: formatMessage(messages.sold),
-                render: () => <Tab.Pane><PurchasesTable type="sell"/></Tab.Pane>
+                render: () => <Tab.Pane><PurchasesTable type="sell" /></Tab.Pane>
               }
             ]}
         />

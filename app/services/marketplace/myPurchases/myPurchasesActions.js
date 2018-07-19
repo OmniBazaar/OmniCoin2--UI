@@ -12,7 +12,7 @@ const {
   setActivePage,
   sortData
 } = createActions({
-  GET_MY_PURCHASES: () => ({  }),
+  GET_MY_PURCHASES: () => ({ }),
   GET_MY_PURCHASES_SUCCEEDED: (myPurchases) => ({ myPurchases }),
   GET_MY_PURCHASES_FAILED: (error) => ({ error }),
   GET_MY_SELLINGS: () => ({ }),

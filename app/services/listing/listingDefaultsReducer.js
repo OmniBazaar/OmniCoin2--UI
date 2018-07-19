@@ -41,7 +41,7 @@ const fixImagesData = (data) => {
   }
 
   return data;
-}
+};
 
 const reducer = handleActions({
   [loadListingDefault](state) {

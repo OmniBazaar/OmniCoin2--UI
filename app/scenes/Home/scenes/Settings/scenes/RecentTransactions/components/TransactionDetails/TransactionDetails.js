@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   amountOfAsset: {
     id: 'Settings.amountOfAsset',
-    defaultMessage: 'amount of asset,'
+    defaultMessage: 'Amount of asset,'
   },
   next: {
     id: 'Settings.next',
@@ -52,27 +52,27 @@ const messages = defineMessages({
   },
   feeDetail: {
     id: 'Settings.feeDetail',
-    defaultMessage: 'operation fee: {fee} XOM'
+    defaultMessage: 'Fee: {fee} XOM'
   },
   omnibazaarFeeDetail: {
     id: 'Settings.omnibazaarFeeDetail',
-    defaultMessage: 'omnibazaar fee: {fee} XOM'
+    defaultMessage: 'OmniBazaar fee: {fee} XOM'
   },
   escrowFeeDetail: {
     id: 'Settings.escrowFeeDetail',
-    defaultMessage: 'escrow fee: {fee} XOM'
+    defaultMessage: 'Escrow fee: {fee} XOM'
   },
   referrerBuyerFee: {
     id: 'Settings.referrerBuyerFee',
-    defaultMessage: 'buyer\'s referrer fee: {fee} XOM'
+    defaultMessage: 'Buyer\'s Referrer fee: {fee} XOM'
   },
   referrerSellerFee: {
     id: 'Settings.referrerSellerFee',
-    defaultMessage: 'sellers\'s referrer fee: {fee} XOM'
+    defaultMessage: 'Sellers\'s Referrer fee: {fee} XOM'
   },
   publisherFee: {
     id: 'Settings.publisherFee',
-    defaultMessage: 'publisher fee: {fee} XOM'
+    defaultMessage: 'Publisher fee: {fee} XOM'
   }
 });
 
@@ -91,26 +91,28 @@ class TransactionDetails extends Component {
 
   getFeeDetail(op) {
     const { formatMessage } = this.props.intl;
-    let feeDetail = formatMessage(messages.feeDetail, {fee: op.isIncoming ? 0 : op.fee});
+    let feeDetail = formatMessage(messages.feeDetail, { fee: op.isIncoming ? 0 : op.fee });
     if (op.obFee) {
-      if (op.obFee.omnibazaar_fee) {
-        feeDetail += ", " + formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})
-      }
-      if (op.obFee.escrow_fee) {
-        feeDetail += ", " + formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee});
-      }
-      if (op.obFee.referrer_buyer_fee) {
-        feeDetail += ", " + formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee});
-      }
-      if (op.obFee.referrer_seller_fee) {
-        feeDetail += ", " + formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})
+      if (op.isIncoming) {
+        if (op.obFee.omnibazaar_fee) {
+          feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})}`;
+        }
+        if (op.obFee.escrow_fee) {
+          feeDetail += `, ${formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee})}`;
+        }
+        if (op.obFee.referrer_buyer_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee})}`;
+        }
+        if (op.obFee.referrer_seller_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})}`;
+        }
       }
       if (op.obFee.publisher_fee) {
-        feeDetail += ", " + formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})
+        feeDetail += `, ${formatMessage(messages.publisherFee, { fee: op.obFee.publisher_fee })}`;
       }
       return feeDetail;
     }
-    return feeDetail
+    return feeDetail;
   }
 
   renderOperations(detailSelected) {

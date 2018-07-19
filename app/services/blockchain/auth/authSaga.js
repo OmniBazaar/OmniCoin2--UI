@@ -18,13 +18,13 @@ import {
   welcomeBonusSucceeded,
   welcomeBonusFailed
 } from './authActions';
-import {getFirstReachable} from "./services";
+import { getFirstReachable } from './services';
 
 
 const messages = defineMessages({
   invalidPassword: {
     id: 'AuthService.invalidPassword',
-    defaultMessage: 'Invalid password',
+    defaultMessage: 'Invalid password'
   },
   noAccount: {
     id: 'AuthService.noAccount',
@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   invalidUsername: {
     id: 'AuthService.invalidUsername',
-    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
+    defaultMessage: 'Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.'
   }
 });
 
@@ -139,26 +139,26 @@ export function* signup(action) {
         }
       });
       yield put(changeSearchPriorityData(searchPriorityData));
-      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId))
+      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
       const { error } = resJson;
       console.log('ERROR', error);
       let e;
-      if(error.base && error.base.length && error.base.length > 0) {
+      if (error.base && error.base.length && error.base.length > 0) {
         e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
       } else if (error.remote_ip && error.remote_ip.length && error.remote_ip.length > 0) {
-        e = error.remote_ip[0]
+        e = error.remote_ip[0];
       } else if (error.name && error.name.length && error.name.length > 0) {
-        e = error.name[0]
+        e = error.name[0];
       } else {
-        e = JSON.stringify(error)
+        e = JSON.stringify(error);
       }
 
       yield put({ type: 'SIGNUP_FAILED', error: e });
     }
   } catch (e) {
     console.log('ERROR', e);
-    const error = (typeof e == 'object') ? e.message : e
+    const error = (typeof e === 'object') ? e.message : e;
     yield put({ type: 'SIGNUP_FAILED', error });
   }
 }
@@ -176,7 +176,11 @@ export function* getAccount({ payload: { username } }) {
   }
 }
 
-function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId }}) {
+function* welcomeBonus({
+  payload: {
+    username, referrer, macAddress, harddriveId
+  }
+}) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
@@ -191,7 +195,7 @@ function* welcomeBonus({ payload: { username, referrer, macAddress, harddriveId 
       const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
       yield tr.set_required_fees();
       yield tr.add_signer(key.privKey, key.pubKey);
-      yield tr.broadcast(async () =>  {
+      yield tr.broadcast(async () => {
         try {
           const referrerAcc = await FetchChain('getAccount', referrer);
           const tr = new TransactionBuilder();

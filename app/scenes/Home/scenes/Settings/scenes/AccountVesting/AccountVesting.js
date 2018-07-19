@@ -4,19 +4,16 @@ import { connect } from 'react-redux';
 import cn from 'classnames';
 import { toastr } from 'react-redux-toastr';
 import { injectIntl } from 'react-intl';
-import {
-  Loader
-} from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 
 import './account-vesting.scss';
 import messages from './messages';
 
-import VestingBalance  from './components/VestingBalance/VestingBalance';
+import VestingBalance from './components/VestingBalance/VestingBalance';
 
-import { getVestingBalances } from "../../../../../../services/accountSettings/vestingBalances/vestingBalancesActions";
+import { getVestingBalances } from '../../../../../../services/accountSettings/vestingBalances/vestingBalancesActions';
 
 class AccountVesting extends Component {
-
   componentWillMount() {
     this.props.vestingBalancesActions.getVestingBalances();
   }
@@ -52,22 +49,20 @@ class AccountVesting extends Component {
     if (loading || vestingBalances.length === 0) {
       return (
         <div className="account-vesting center">
-          {loading && <Loader active inline/>}
+          {loading && <Loader active inline />}
           {vestingBalances.length === 0 && !loading && formatMessage(messages.noVestings)}
         </div>
-      )
-    } else {
-      return (
-        <div className="account-vesting">
-          {vestingBalances.map(vb =>
-              <VestingBalance
-                vb={vb}
-              />
-          )
-          }
-        </div>
-      )
+      );
     }
+    return (
+      <div className="account-vesting">
+        {vestingBalances.map(vb =>
+            (<VestingBalance
+              vb={vb}
+            />))
+          }
+      </div>
+    );
   }
 }
 

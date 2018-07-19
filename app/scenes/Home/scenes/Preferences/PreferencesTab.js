@@ -8,11 +8,9 @@ import { Field, reduxForm } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 import { required } from 'redux-form-validators';
 
-import {
-  savePreferences
-} from '../../../../services/preferences/preferencesActions';
+import { savePreferences } from '../../../../services/preferences/preferencesActions';
 import FormInputWithIconOnRight
-from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
+  from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
 import Dropdown from './components/Dropdown';
 import Checkbox from '../Marketplace/scenes/Listing/scenes/AddListing/components/Checkbox/Checkbox';
 import FormRadio from '../../../../components/Radio/FormRadio';
@@ -23,8 +21,8 @@ import votes from './votes';
 import listingPriorities from './priorities';
 import './preferences.scss';
 
-//need this variable to check saving success when language is changed,
-//in that case we force all components to be recreated.
+// need this variable to check saving success when language is changed,
+// in that case we force all components to be recreated.
 let lastLanguage = null;
 
 class PreferencesTab extends Component {
@@ -34,11 +32,11 @@ class PreferencesTab extends Component {
     const number = value => (value && !isNaN(Number(value)));
 
     if (!number(logoutTimeout) || logoutTimeout < 0) {
-      errors.logoutTimeout = messages.errorTimeout
+      errors.logoutTimeout = messages.errorTimeout;
     }
 
     if ((!number(chargeFee) || chargeFee < 0)) {
-      errors.chargeFee = messages.errorFee
+      errors.chargeFee = messages.errorFee;
     }
 
     return errors;
@@ -120,7 +118,7 @@ class PreferencesTab extends Component {
           <Grid>
             <Grid.Row>
               <Grid.Column width={4}>
-                <span>{formatMessage(messages.logoutTimeout)}{' ' + formatMessage(messages.minutes)}</span>
+                <span>{formatMessage(messages.logoutTimeout)}{` ${formatMessage(messages.minutes)}`}</span>
               </Grid.Column>
               <Grid.Column width={10}>
                 <Field
@@ -132,7 +130,7 @@ class PreferencesTab extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-          {/*<div className="form-group">
+            {/* <div className="form-group">
             <span>{formatMessage(messages.transactionFee)}</span>
             <Field
               name='transactionFee'
@@ -144,8 +142,8 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div>*/}
-          {/*<div className="form-group">
+          </div> */}
+            {/* <div className="form-group">
             <span>{formatMessage(messages.byDefaultVote)}</span>
             <Field
               name="vote"
@@ -155,7 +153,7 @@ class PreferencesTab extends Component {
               }}
             />
             <div className="col-1" />
-          </div>*/}
+          </div> */}
             <Grid.Row>
               <Grid.Column width={4}>
                 <span>{formatMessage(messages.interfaceLanguage)}</span>
@@ -166,12 +164,12 @@ class PreferencesTab extends Component {
                   component={Dropdown}
                   props={{
                     options: languages,
-                    className: "priority-listings"
+                    className: 'priority-listings'
                   }}
                 />
               </Grid.Column>
             </Grid.Row>
-          {/*<div className="form-group top referrer">
+            {/* <div className="form-group top referrer">
             <span>{formatMessage(messages.referralProgram)}</span>
             <div className="check-form field">
               <div className="description">
@@ -193,7 +191,7 @@ class PreferencesTab extends Component {
               </div>
             </div>
             <div className="col-1" />
-          </div>*/}
+          </div> */}
             <Grid.Row>
               <Grid.Column width={4}>
                 <span>{formatMessage(messages.priorityForListing)}</span>
@@ -204,7 +202,7 @@ class PreferencesTab extends Component {
                   component={Dropdown}
                   props={{
                     options: listingPriorities,
-                    className: "priority-listings"
+                    className: 'priority-listings'
                   }}
                 />
               </Grid.Column>
@@ -274,16 +272,15 @@ class PreferencesTab extends Component {
               </Grid.Row>
             }
             <Grid.Row>
-              <Grid.Column width={4}>
-              </Grid.Column>
+              <Grid.Column width={4} />
               <Grid.Column width={10}>
-                  <Button
-                    type="submit"
-                    content={formatMessage(messages.update)}
-                    className="button--green-bg"
-                    loading={saving}
-                    disabled={!valid || saving}
-                  />
+                <Button
+                  type="submit"
+                  content={formatMessage(messages.update)}
+                  className="button--green-bg"
+                  loading={saving}
+                  disabled={!valid || saving}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

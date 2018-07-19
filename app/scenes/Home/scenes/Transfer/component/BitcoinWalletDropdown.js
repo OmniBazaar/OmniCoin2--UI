@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import { Dropdown, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {
-  getWallets
-} from '../../../../../services/blockchain/bitcoin/bitcoinActions';
-import { SATOSHI_IN_BTC } from "../../../../../utils/constants";
+import { getWallets } from '../../../../../services/blockchain/bitcoin/bitcoinActions';
+import { SATOSHI_IN_BTC } from '../../../../../utils/constants';
 import messages from '../messages';
 
 class BitcoinWalletDropdown extends Component {
-
   state = {
     options: [],
     disabled: false
@@ -34,10 +31,10 @@ class BitcoinWalletDropdown extends Component {
     const { value } = this.props.input || this.props;
     const { isGettingWallets, wallets } = this.props.bitcoin;
     const options = wallets.map(wallet => ({
-        value: wallet.index,
-        text: wallet.label || formatMessage(messages.defaultWalletLabel),
-        key: wallet.index,
-        description: `${wallet.balance / SATOSHI_IN_BTC} BTC`
+      value: wallet.index,
+      text: wallet.label || formatMessage(messages.defaultWalletLabel),
+      key: wallet.index,
+      description: `${wallet.balance / SATOSHI_IN_BTC} BTC`
     }));
 
     return (

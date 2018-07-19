@@ -67,7 +67,7 @@ class FavoriteListings extends Component {
     const subcategory = (values && values.subcategory) ? values.subcategory : null;
     this.props.listingActions.filterFavorites(currency, category, subcategory, searchText);
   }
-  
+
   onChangeCurrency(values, currency) {
     const searchText = values.searchTerm || '';
     const category = (values && values.category) ? values.category : null;

@@ -22,9 +22,7 @@ import {
 } from '../../../../services/wallet/walletActions';
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
-import {
-  getWallets
-} from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 
 import AddIcon from '../../images/btn-add-image.svg';
 
@@ -32,8 +30,8 @@ import messages from './messages';
 import settingsMessages from '../Settings/messages';
 import Settings from '../Settings/Settings';
 import './wallet.scss';
-import {CoinTypes} from "./constants";
-import {TOKENS_IN_XOM} from "../../../../utils/constants";
+import { CoinTypes } from './constants';
+import { TOKENS_IN_XOM } from '../../../../utils/constants';
 
 class Wallet extends Component {
   constructor(props) {
@@ -72,7 +70,7 @@ class Wallet extends Component {
   }
 
   getCoinType(activeTab) {
-    switch(activeTab) {
+    switch (activeTab) {
       case 0:
         return CoinTypes.OMNI_COIN;
       case 1:
@@ -95,7 +93,7 @@ class Wallet extends Component {
   onTabChange(e, data) {
     this.setState({
       activeTab: data.activeIndex
-    })
+    });
   }
 
   getBitcoinContent() {
@@ -130,7 +128,7 @@ class Wallet extends Component {
     const {
       addAddressModal,
       modal
-    } =  this.props.bitcoin;
+    } = this.props.bitcoin;
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
@@ -168,9 +166,9 @@ class Wallet extends Component {
                    (<Tab.Pane>
                      {this.props.bitcoin.wallets.length ?
                        <div className="content">
-                        {
+                         {
                           this.props.bitcoin.isGettingWallets ?
-                          <div className='load-container'><Loader inline active /></div> :
+                            <div className="load-container"><Loader inline active /></div> :
                           this.getBitcoinContent()
                         }
                        </div>
@@ -184,12 +182,12 @@ class Wallet extends Component {
              ]}
           />
           <div className="content">
-              <Settings
-                coinType={this.getCoinType(this.state.activeTab)}
-              />
+            <Settings
+              coinType={this.getCoinType(this.state.activeTab)}
+            />
           </div>
         </div>
-        { modal.isOpen && <AddBitcoinWallet/> }
+        { modal.isOpen && <AddBitcoinWallet /> }
         { addAddressModal.isOpen && <AddBitcoinAddress /> }
       </div>
     );

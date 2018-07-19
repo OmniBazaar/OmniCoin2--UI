@@ -10,7 +10,6 @@ import './login.scss';
 import { getAccount } from '../../services/blockchain/auth/authActions';
 
 
-
 class Login extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.currentUser) {

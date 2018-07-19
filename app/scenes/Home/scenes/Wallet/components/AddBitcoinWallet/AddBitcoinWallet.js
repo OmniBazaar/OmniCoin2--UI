@@ -15,7 +15,7 @@ import ExistingWallet from './components/ExistingWallet/ExistingWallet';
 const messages = defineMessages({
   existingWallet: {
     id: 'AddBitcoinWallet.existingWallet',
-    defaultMessage: 'Existing Wallet'
+    defaultMessage: 'Open an Existing Blockchain.com Wallet'
   },
   newWallet: {
     id: 'AddBitcoinWallet.newWallet',

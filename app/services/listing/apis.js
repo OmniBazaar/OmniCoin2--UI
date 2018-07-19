@@ -14,6 +14,7 @@ import {currencyConverter} from "../utils";
 import {TOKENS_IN_XOM} from "../../utils/constants";
 import tmp from 'tmp';
 
+
 let authUser = null;
 let authHeaders = null;
 
@@ -29,8 +30,8 @@ const listingProps = [
 
 
 const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
-	// let user = getStoredCurrentUser();
-  let user = currentUser;
+  // let user = getStoredCurrentUser();
+  const user = currentUser;
 
   if (!authHeaders || !authUser || (authUser.username !== user.username)) {
     authUser = user;
@@ -51,11 +52,10 @@ const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
 });
 
 
-
 const makeRequest = async (user, publisher, url, options) => {
   const authHeaders = await getAuthHeaders(user);
   const opts = {
-    uri: `http://${publisher['publisher_ip']}/pub-api/${url}`,
+    uri: `http://${publisher.publisher_ip}/pub-api/${url}`,
     ...options,
     headers: {
       ...options.headers,
@@ -106,7 +106,7 @@ export const deleteImage = async (user, publisher, fileName) => {
 };
 
 const createListingOnBlockchain = async (user, publisher, listing) => {
-	const seller = await FetchChain('getAccount', user.username);
+  const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
   const listingHash = hash.listingSHA256({
@@ -252,7 +252,7 @@ export const deleteListingOnPublisher = async (user, publisher, listing) => {
   const { listing_id, images } = listing;
   const body = await makeRequest(user, publisher, `listings/${listing_id}`, options);
   if (body.success) {
-    for (let i=0; i<images.length; i++) {
+    for (let i = 0; i < images.length; i++) {
       const imageItem = images[i];
       if (imageItem.image_name) {
         await deleteImage(user, publisher, imageItem.image_name);

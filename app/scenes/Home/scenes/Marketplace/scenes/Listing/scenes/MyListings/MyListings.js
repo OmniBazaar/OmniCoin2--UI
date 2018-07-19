@@ -117,7 +117,7 @@ class MyListings extends Component {
         (myListingsSearchTerm && myListingsSearchTerm !== '')) {
       data = myListingsFiltered;
     }
-    
+
     return (
       <div className="list-container my-listings">
         <SearchFilters onSubmit={this.handleSubmit} onChangeCurrency={this.onChangeCurrency} />

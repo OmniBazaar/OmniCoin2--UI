@@ -1,5 +1,5 @@
-import {TransactionBuilder} from "omnibazaarjs";
-import {generateKeyFromPassword} from "../blockchain/utils/wallet";
+import { TransactionBuilder } from 'omnibazaarjs';
+import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 
 export async function voteForProcessors(voteIds, account, password) {
   const tr = new TransactionBuilder();

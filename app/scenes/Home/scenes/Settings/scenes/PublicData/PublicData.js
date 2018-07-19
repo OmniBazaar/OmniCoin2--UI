@@ -38,17 +38,11 @@ const messages = defineMessages({
   },
   referrerBody: {
     id: 'Setting.referrerBody',
-    defaultMessage: 'REFERRER: During the initial phase of the OmniBazaar marketplace\n' +
-    ' you will receive a Referral Bonus of OmniCoins each time you refer a new user.\n' +
-    ' a small number of OmniCoins from your account to the new users you refer, to\n' +
-    ' enable those new users to register their user names and get started in OmniBazaar.\n' +
-    ' In exchange, you receive a commission (some OmniCoins) each time a user you referred\n' +
-    ' buys or sells something in the OmniBazaar marketplace. In order to serve as a\n' +
-    ' Referrer, you must keep the OmniBazaar application running on your computer.'
+    defaultMessage: 'REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. You will also receive a referral fee (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. Please provide the Bitcoin and Ether addresses where you wish to receive these referral fees.'
   },
   btcAddressTitle: {
     id: 'Setting.btcAddressTitle',
-    defaultMessage: 'Bitcoin address',
+    defaultMessage: 'Bitcoin address'
   },
   publisherTitle: {
     id: 'Setting.publisherTitle',
@@ -56,10 +50,7 @@ const messages = defineMessages({
   },
   publisherBody: {
     id: 'Setting.publisherBody',
-    defaultMessage: 'PUBLISHER: As a Publisher you receive OmniCoins for each new user listing published\n' +
-    ' on your server but you must keep your server continuously running and available on the Internet.' +
-    ' Check this box only if you have installed and configured Couchbase Server (database) on this computer.' +
-    ' You must also have either a static IP address or a DNS redirect service, such as'
+    defaultMessage: 'PUBLISHER: As a Publisher you receive OmniCoins for each new user listing published on your server but you must keep your server continuously running and available on the Internet. Check this box only if you have installed and configured the OmniBazaar Publisher Module (database) on this computer. You must also have either a static IP address or a DNS redirect service, such as'
   },
   or: {
     id: 'Settings.or',
@@ -71,13 +62,7 @@ const messages = defineMessages({
   },
   processorBody: {
     id: 'Settings.processorBody',
-    defaultMessage: 'TRANSACTION PROCESSOR: Transaction Processors are paid OmniCoins for processing the\n' +
-    ' transactions of the other user in the marketplace. Because this is a well-paid and\n' +
-    ' highly-responsible position, Transaction Processor are selected only from the most\n' +
-    ' active participants in the marketplace. Referring new users, publishing listings for\n' +
-    ' others, being known and trusted by other users, and having a good reputation in the\n' +
-    ' marketplace all count toward being recognized as an "active participant" and\n' +
-    ' qualifying to be a Transaction Processor.'
+    defaultMessage: 'TRANSACTION PROCESSOR: Transaction Processors are paid OmniCoins for processing the transactions of the other user in the marketplace. Because this is a well-paid and highly-responsible position, Transaction Processor are selected only from the most active participants in the marketplace. Referring new users, publishing listings for others, being known and trusted by other users, and having a good reputation in the marketplace all count toward being recognized as an "active participant" and qualifying to be a Transaction Processor.'
   },
   escrowTitle: {
     id: 'Settings.escrowTitle',
@@ -85,17 +70,11 @@ const messages = defineMessages({
   },
   escrowBody: {
     id: 'Settings.escrowBody',
-    defaultMessage: 'ESCROW: Escrow Agents help ensure that marketplace transactions are carried out\n' +
-    ' honestly and fairly. When you choose to become an Escrow Agent, you agree to settle\n' +
-    ' disputes that may arise between buyers and sellers. If you are called upon to settle a\n' +
-    ' dispute, you must review the evidence provided by both sides and make an impartial\n' +
-    ' decision about whether to return funds to the buyer or release them to the seller. You\n' +
-    ' receive a fee (in OmniCoins) from every transaction for which you are chosen as the\n' +
-    ' escrow agent, regardless of whether or not you are called upon to settle a dispute.'
+    defaultMessage: 'ESCROW: Escrow Agents help ensure that marketplace transactions are carried out honestly and fairly. When you choose to become an Escrow Agent, you agree to settle disputes that may arise between buyers and sellers. If you are called upon to settle a dispute, you must review the evidence provided by both sides and make an impartial decision about whether to return funds to the buyer or release them to the seller. You receive a fee (in OmniCoins) from every transaction for which you are chosen as the escrow agent, regardless of whether or not you are called upon to settle a dispute.'
   },
   updateTransactionFee: {
     id: 'Settings.updateTransactionFee',
-    defaultMessage: 'Update data transaction fee: '
+    defaultMessage: 'Update'
   },
   update: {
     id: 'Settings.update',
@@ -177,7 +156,7 @@ class PublicData extends Component {
       if (nextProps.account.error) {
         if (nextProps.account.error.message.indexOf('is already registered') !== -1) {
           toastr.error(formatMessage(messages.update), formatMessage(messages.publisherExists));
-          return
+          return;
         }
         toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
       } else {
@@ -248,7 +227,7 @@ class PublicData extends Component {
   toggleConfirmationModal() {
     this.setState({
       isModalOpen: !this.state.isModalOpen
-    })
+    });
   }
 
   confirmTransactionProcessor() {
@@ -260,18 +239,18 @@ class PublicData extends Component {
     const { formatMessage } = this.props.intl;
     return (
       <div>
-        {formatMessage(messages.witnessRegisterFee)} <br/>
-        <div style={{display: 'flex', flexDirection: 'row', marginTop: '5px'}}>
+        {formatMessage(messages.witnessRegisterFee)} <br />
+        <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
           <Checkbox
             checked={this.state.wantsToVote}
-            onChecked={() => this.setState({wantsToVote: !this.state.wantsToVote})}
+            onChecked={() => this.setState({ wantsToVote: !this.state.wantsToVote })}
           />
-          <span style={{marginLeft: '3px'}}>
+          <span style={{ marginLeft: '3px' }}>
             {formatMessage(messages.wantsToVote)}
           </span>
         </div>
       </div>
-    )
+    );
   }
 
   getReferrerIcon() {
@@ -336,8 +315,8 @@ class PublicData extends Component {
           <div className="description-text">
             <p className="title">{formatMessage(messages.publisherTitle)}</p>
             <div>
-              {formatMessage(messages.publisherBody) + ' '}
-              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {' ' + formatMessage(messages.or) + ' '} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
+              {`${formatMessage(messages.publisherBody)} `}
+              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
           </div>
         </div>

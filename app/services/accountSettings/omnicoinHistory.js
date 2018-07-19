@@ -1,12 +1,12 @@
 import { orderBy, zip, uniqBy } from 'lodash';
-import {FetchChain, ChainStore, ChainTypes} from 'omnibazaarjs/es';
+import { FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 
 import BaseStorage from '../../utils/baseStorage';
-import {decodeMemo, generateKeyFromPassword} from "../blockchain/utils/wallet";
-import {calcBlockTime, getDynGlobalObject, getGlobalObject} from "../blockchain/utils/miscellaneous";
-import {getStoredCurrentUser} from "../blockchain/auth/services";
-import {TOKENS_IN_XOM} from "../../utils/constants";
+import { decodeMemo, generateKeyFromPassword } from '../blockchain/utils/wallet';
+import { calcBlockTime, getDynGlobalObject, getGlobalObject } from '../blockchain/utils/miscellaneous';
+import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { TOKENS_IN_XOM } from '../../utils/constants';
 
 
 const key = 'historyStorage';
@@ -65,16 +65,16 @@ class OmnicoinHistory extends BaseStorage {
   totalObFee(op) {
     let total = 0;
     const obFee = this.getObFee(op);
-    if (obFee){
+    if (obFee) {
       Object.keys(obFee).forEach(key => {
-          total += obFee[key];
-      })
+        total += obFee[key];
+      });
     }
     return total;
   }
 
   processObFee(fee) {
-    const out  = {};
+    const out = {};
     if (fee) {
       Object.keys(fee).forEach(key => {
         out[key] = fee[key].amount / TOKENS_IN_XOM;
@@ -158,13 +158,20 @@ class OmnicoinHistory extends BaseStorage {
             && op.operationType !== ChainTypes.operations.listing_update_operation) {
           transactions[trxKey].fee += totalObFee;
         } else {
-          transactions[trxKey].fee +=  op.obFee.publisher_fee || 0;
+          transactions[trxKey].fee += op.obFee.publisher_fee || 0;
         }
       }
       transactions[trxKey].memo = this.operationMemo(op);
+      let obFee;
+      if (op.to === currentUser.username
+        || op.operationType === ChainTypes.operations.listing_create_operation
+        || op.operationType === ChainTypes.operations.listing_update_operation
+        || op.operationType === ChainTypes.operations.transfer) {
+        obFee = this.getObFee(op);
+      }
       transactions[trxKey].operations.push({
         ...op,
-        obFee: op.to === currentUser.username ? this.getObFee(op) : undefined,
+        obFee,
         amount: this.operationAmount(op)
       });
     });
@@ -185,42 +192,40 @@ class OmnicoinHistory extends BaseStorage {
           const result = this.findEscrowTransactionResult(op);
           if (result && result.operationType === ChainTypes.operations.escrow_release_operation) {
             return {
-                ...result,
-                listingId: op.listingId,
-                listingCount: op.listingCount
-              }
+              ...result,
+              listingId: op.listingId,
+              listingCount: op.listingCount
+            };
           }
         }
         return op;
       })
       // throwing away unreleased escrow_create operations
-      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation)
+      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation);
   }
 
   getBuyOperations() {
     const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => !op.isIncoming)
-      .map(op => {
-        return {
-          key: op.id,
-          id: op.listingId,
-          count: op.listingCount,
-          date: op.date,
-      }});
+      .map(op => ({
+        key: op.id,
+        id: op.listingId,
+        count: op.listingCount,
+        date: op.date,
+      }));
   }
 
   getSellOperations() {
     const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => op.isIncoming)
-      .map(op => {
-        return {
-          key: op.id,
-          id: op.listingId,
-          count: op.listingCount,
-          date: op.date,
-        }});
+      .map(op => ({
+        key: op.id,
+        id: op.listingId,
+        count: op.listingCount,
+        date: op.date,
+      }));
   }
 
 
@@ -228,43 +233,39 @@ class OmnicoinHistory extends BaseStorage {
     const listingIds = operations.map(op => op.id);
     let listingObjects = await Apis.instance().db_api().exec('get_objects', [listingIds]);
     listingObjects = listingObjects.filter(listing => !!listing);
-    listingObjects = await Promise.all(
-      listingObjects.map(async el => await Promise.all([
-        FetchChain('getAccount', el.seller),
-        FetchChain('getAccount', el.publisher)
-      ]).then(res => {
-        return {
-          ...el,
-          price: el.price.amount / TOKENS_IN_XOM,
-          seller: res[0].get('name'),
-          publisher: res[1].get('name')
-        }
-      }))
-    );
+    listingObjects = await Promise.all(listingObjects.map(async el => await Promise.all([
+      FetchChain('getAccount', el.seller),
+      FetchChain('getAccount', el.publisher)
+    ]).then(res => ({
+      ...el,
+      price: el.price.amount / TOKENS_IN_XOM,
+      seller: res[0].get('name'),
+      publisher: res[1].get('name')
+    }))));
     return listingObjects;
   }
   async getBuyHistory() {
-    let buyOperations = this.getBuyOperations();
+    const buyOperations = this.getBuyOperations();
     const listingObjects = await this.getListingObjects(buyOperations);
     return buyOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
-      }
+      };
     });
   }
 
   async getSellHistory() {
-    let sellOperations = this.getSellOperations();
+    const sellOperations = this.getSellOperations();
     const listingObjects = await this.getListingObjects(sellOperations);
     return sellOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
-      }
-    })
+      };
+    });
   }
 
   save() {
@@ -350,7 +351,7 @@ class OmnicoinHistory extends BaseStorage {
                 && el.op[1].seller === account.get('id'))
               || operation.operationType === ChainTypes.operations.welcome_bonus_operation
               || operation.operationType === ChainTypes.operations.witness_bonus_operation) {
-             this.addOperation(operation);
+            this.addOperation(operation);
           }
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
@@ -375,10 +376,10 @@ class OmnicoinHistory extends BaseStorage {
             });
           }
         } else if ([ChainTypes.operations.listing_create_operation,
-              ChainTypes.operations.listing_update_operation,
-              ChainTypes.operations.listing_delete_operation,
-              ChainTypes.operations.witness_create,
-              ChainTypes.operations.account_update].includes(el.op[0])) {
+          ChainTypes.operations.listing_update_operation,
+          ChainTypes.operations.listing_delete_operation,
+          ChainTypes.operations.witness_create,
+          ChainTypes.operations.account_update].includes(el.op[0])) {
           const operation = {
             id: el.id,
             blockNum: el.block_num,
@@ -391,8 +392,8 @@ class OmnicoinHistory extends BaseStorage {
             isIncoming: false
           };
           if ([ChainTypes.operations.listing_create_operation,
-               ChainTypes.operations.listing_update_operation,
-               ChainTypes.operations.listing_delete_operation].includes(el.op[0])) {
+            ChainTypes.operations.listing_update_operation,
+            ChainTypes.operations.listing_delete_operation].includes(el.op[0])) {
             const [publisher, seller] = await Promise.all([
               FetchChain('getAccount', el.op[1].publisher),
               FetchChain('getAccount', el.op[1].seller)
@@ -400,8 +401,8 @@ class OmnicoinHistory extends BaseStorage {
             operation.from = seller.get('name');
             operation.to = publisher.get('name');
             operation.fromTo = currentUser.username === seller.get('name')
-                                                    ? publisher.get('name')
-                                                    : seller.get('name');
+              ? publisher.get('name')
+              : seller.get('name');
             if (el.op[1].publisher === account.get('id')) {
               operation.isIncoming = false;
             }

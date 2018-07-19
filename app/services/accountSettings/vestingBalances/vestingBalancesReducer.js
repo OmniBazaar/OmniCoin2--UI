@@ -7,7 +7,7 @@ import {
   claim,
   claimSucceeded,
   claimFailed
-} from "./vestingBalancesActions";
+} from './vestingBalancesActions';
 
 const defaultState = {
   vestingBalances: [],
@@ -27,21 +27,21 @@ const reducer = handleActions({
       ...state,
       error: null,
       loading: true
-    }
+    };
   },
   [getVestingBalancesSucceeded](state, { payload: { vestingBalances } }) {
     return {
       ...state,
       vestingBalances,
       loading: false
-    }
+    };
   },
   [getVestingBalancesFailed](state, { payload: { error } }) {
-    return  {
+    return {
       ...state,
       error,
       loading: false
-    }
+    };
   },
   [claim](state, { payload: { vestingBalance, forceAll } }) {
     return {
@@ -52,15 +52,15 @@ const reducer = handleActions({
         error: null,
         loading: true
       }
-    }
+    };
   },
   [claimSucceeded](state) {
     return {
       ...state,
-      claim:  {
+      claim: {
         ...defaultState.claim
       }
-    }
+    };
   },
   [claimFailed](state, { payload: { error } }) {
     return {
@@ -70,7 +70,7 @@ const reducer = handleActions({
         error,
         loading: false
       }
-    }
+    };
   }
 }, defaultState);
 

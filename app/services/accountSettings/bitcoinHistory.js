@@ -1,4 +1,4 @@
-import BaseStorage from "../../utils/baseStorage";
+import BaseStorage from '../../utils/baseStorage';
 
 const key = 'bitcoinHistory';
 
