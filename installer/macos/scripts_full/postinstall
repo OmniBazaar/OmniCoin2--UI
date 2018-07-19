@@ -11,7 +11,13 @@ fi
 echo "$2/Contents/MacOS/ob2"
 
 cp -f "$2/Contents/MacOS/ob2" "$HOME/Library/Application Support/OmniBazaar/."
-unzip -o "$2/Contents/MacOS/witness_node.zip" -d "$HOME/Library/Application Support/OmniBazaar"
+if [ ! -f "$HOME/Library/Application Support/OmniBazaar/witness_node/genesis.json" ]; then
+  unzip -o "$2/Contents/MacOS/witness_node.zip" -d "$HOME/Library/Application Support/OmniBazaar"
+else
+  unzip -o "$2/Contents/MacOS/witness_node.zip" -d "$2/Contents/MacOS"
+  cp -f "$2/Contents/MacOS/witness_node/witness_node" "$HOME/Library/Application Support/OmniBazaar/witness_node"
+  rm -rf "$2/Contents/MacOS/witness_node"
+fi
 
 chown -R $USER "$HOME/Library/Application Support/OmniBazaar"
 
