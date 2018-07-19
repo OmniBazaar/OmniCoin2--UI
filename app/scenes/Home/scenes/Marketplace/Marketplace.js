@@ -114,7 +114,11 @@ class Marketplace extends Component {
 
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
-        const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        let imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        if(!image){
+          imageUrl = ObNet
+        }
+        
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
