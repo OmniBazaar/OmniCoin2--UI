@@ -267,6 +267,7 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject, format
 // in case user doesn't follow OmniBazaar's one of the 3 social channels throw error
   if (Object.keys(errors).length > 0) {
     yield call(reject, new SubmissionError(errors));
+    yield put(welcomeBonusFailed());
   } else {
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');

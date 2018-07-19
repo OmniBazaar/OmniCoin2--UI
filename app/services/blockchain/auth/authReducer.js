@@ -100,6 +100,10 @@ const reducer = handleActions({
     error: action.error,
     loading: false
   }),
+  WELCOME_BONUS_FAILED: state => ({
+    ...state,
+    loading: false
+  }),
   LOGIN_SUCCEEDED: (state, action) => {
     storeCurrentUser(action.user);
     return {
