@@ -36,7 +36,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion recursesubdirs
 Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR}; Flags: ignoreversion
 #ifdef INCLUDE_WITNESS_NODE
-Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion recursesubdirs
+Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion
+Source: ".\witness_node\witness_node_data_dir\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node\witness_node_data_dir; Flags: ignoreversion onlyifdoesntexist
 Source: ".\vc_redist.x64.exe"; DestDir: {app}; Flags: ignoreversion 
 #endif
 
