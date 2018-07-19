@@ -21,43 +21,43 @@ export function* ethereumSubscriber() {
   ]);
 }
 
-function* createEthereumWallet({ payload: { password, label, email } }) {
+function* createEthereumWallet({ payload: { privateKey, label, email } }) {
   try {
-    const res = yield call(EthereumApi.createEthereumWallet, password, label, email);
+    const res = EthereumApi.createEthereumWallet(privateKey, label, email);
     const { currentUser } = (yield select()).default.auth;
-    yield call(persitEthereumWalletData, res.guid, password, currentUser);
-    yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', guid: res.guid });
+    yield call(persitEthereumWalletData, res.address, res.privateKey, currentUser);
+    yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address });
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_FAILED', error });
   }
 }
 
-function* connectEthereumWallet({ payload: { guid, password } }) {
+function* connectEthereumWallet({ payload: { address, privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumWallets, password, guid);
+    const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
     const { currentUser } = (yield select()).default.auth;
-    yield call(persitEthereumWalletData, guid, password, currentUser);
+    yield call(persitEthereumWalletData, address, privateKey, currentUser);
     yield put(connectWalletFinish());
-    yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, guid, password });
+    yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
   } catch (error) {
     console.log('Connect Ethereum wallet error', error);
     yield put(connectEthereumWalletFinish(error));
   }
 }
 
-function* getEthereumWallets({ payload: { guid, password }}) {
+function* getEthereumWallets({ payload: { address, privateKey }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    if (guid && password) {
-      const res = yield call(EthereumApi.getEthereumWallets, password, guid);
-      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, guid, password });
+    if (address && privateKey) {
+      const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
+      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [res], address, privateKey });
     } else {
       const walletData = yield call(getEthereumWalletData, currentUser);
       if (walletData) {
-        const {guid, password} = walletData;
-        const res = yield call(EthereumApi.getEthereumWallets, password, guid);
-        yield put({type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, guid, password});
+        const {address, privateKey} = walletData;
+        const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
+        yield put({type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [res], address, privateKey});
       } else {
         yield put({type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: []});
       }
@@ -70,31 +70,31 @@ function* getEthereumWallets({ payload: { guid, password }}) {
 
 function* makeEthereumPayment({
   payload: {
-    guid, password, to, amount, from, fee
+    address, privateKey, to, amount, from, fee
   }
 }) {
   try {
-    const res = yield call(EthereumApi.makeEthereumPayment, guid, password, to, amount, from, fee);
+    const res = yield call(EthereumApi.makeEthereumPayment, address, privateKey, to, amount, from, fee);
     yield put({ type: 'MAKE_ETHEREUM_PAYMENT_SUCCEEDED', res });
   } catch (error) {
     yield put({ type: 'MAKE_ETHEREUM_PAYMENT_FAILED', error });
   }
 }
 
-function* getEthereumBalance({ payload: { guid, password, address } }) {
+function* getEthereumBalance({ payload: { address, privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumBalance, guid, password, address);
+    const res = yield call(EthereumApi.getEthereumBalance, privateKey);
     yield put({ type: 'GET_ETHEREUM_BALANCE_SUCCEEDED', balance: res.balance });
   } catch (error) {
     yield put({ type: 'GET_ETHEREUM_BALANCE_FAILED', error });
   }
 }
 
-function* addEthereumAddress({ payload: { guid, password, label } }) {
-  console.log('ADDING ETHEREUM ADDRESS', guid, password, label);
+function* addEthereumAddress({ payload: { address, privateKey, label } }) {
+  console.log('ADDING ETHEREUM ADDRESS', address, privateKey, label);
   try {
-    const res = yield call(EthereumApi.addEthereumAddress, password, guid, label);
-    const address = yield call(EthereumApi.getEthereumAddress, res.xpub, guid, password);
+    const res = yield call(EthereumApi.addEthereumAddress, privateKey, address, label);
+    const address = yield call(EthereumApi.getEthereumAddress, res.xpub, address, privateKey);
     yield put({ type: 'ADD_ETHEREUM_ADDRESS_SUCCEEDED', address });
   } catch (error) {
     yield put({ type: 'ADD_ETHEREUM_ADDRESS_FAILED', error });

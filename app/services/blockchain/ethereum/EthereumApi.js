@@ -1,33 +1,43 @@
 import { URL, URLSearchParams } from 'url';
 import { wrapRequest } from '../../utils';
+import ethers from 'ethers';
+
+// var ethers = require('ethers');
+// var Wallet = ethers.Wallet;
 
 const apiKey = '4ad8f029-035c-4d68-8020-6f2fad9bfb7a';
 const address = 'http://localhost:3001';
 const feePerByte = 10; //satoshi
+var Wallet = ethers.Wallet;
+Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
 
-const createEthereumWallet = wrapRequest(async (password, label, email) => {
-  const createUrl = new URL(`${address}/api/v2/create`);
-  createUrl.search = new URLSearchParams({
-    api_code: apiKey,
-    password,
-    label,
-    email,
-    hd: true
+const createEthereumWallet = function (privateKey, label, email) {
+  var wallet = Wallet.createRandom();
+  return wallet;
+};
+
+const getEthereumWallets = function (privateKey) {
+  var wallet = new Wallet(privateKey);
+  return wallet;
+};
+
+const getEthereumBalance = function (privateKey) {
+  var wallet = new Wallet(privateKey);
+  var balancePromise = wallet.getBalance();
+
+  balancePromise.then(function (balance) {
+    return balance;
   });
-  return fetch(createUrl);
-});
+  
+};
 
-const getEthereumWallets = wrapRequest(async (password, guid) => fetch(`${address}/merchant/${guid}/accounts?password=${password}`));
-
-const makeEthereumPayment = wrapRequest(async (guid, password, to, amount, from) => (
-  fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
+const makeEthereumPayment = wrapRequest(async (address, privateKey, to, amount, from) => (
+  fetch(`${address}/merchant/${address}/payment?password=${privateKey}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
 ));
 
-const getEthereumBalance = wrapRequest(async (address, guid, password) => fetch(`${address}/merchant/${guid}/balance?password=${password}`));
+const addEthereumAddress = wrapRequest(async (privateKey, address, label) => fetch(`${address}/merchant/${address}/accounts/create?password=${privateKey}&label=${label}`));
 
-const addEthereumAddress = wrapRequest(async (password, guid, label) => fetch(`${address}/merchant/${guid}/accounts/create?password=${password}&label=${label}`));
-
-const getEthereumAddress = wrapRequest(async (xpub, guid, password) => fetch(`${address}/merchant/${guid}/accounts/${xpub}?password=${password}`));
+const getEthereumAddress = wrapRequest(async (xpub, address, privateKey) => fetch(`${address}/merchant/${address}/accounts/${xpub}?password=${privateKey}`));
 
 export {
   createEthereumWallet,

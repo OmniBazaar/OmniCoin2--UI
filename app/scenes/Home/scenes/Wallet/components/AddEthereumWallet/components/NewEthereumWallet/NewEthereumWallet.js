@@ -123,7 +123,7 @@ class NewEthereumWallet extends Component {
     const { loading } = this.props.ethereum;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-ethereum-wallet">
-        <Field
+        {/* <Field
           name="password"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
@@ -141,20 +141,20 @@ class NewEthereumWallet extends Component {
           message={formatMessage(messages.repeatPassword) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
-        />
+        /> */}
         <Field
           name="label"
           placeholder={formatMessage(messages.pleaseEnter)}
           message={formatMessage(messages.label)}
           component={FormField}
         />
-        <Field
+        {/* <Field
           name="email"
           placeholder={formatMessage(messages.email)}
           type="email"
           message={formatMessage(messages.email)}
           component={FormField}
-        />
+        /> */}
         <div className="form-field">
           <div />
           <span className="email-tooltip">{formatMessage(messages.message)}</span>

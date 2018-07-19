@@ -323,6 +323,7 @@ constructor(props) {
       account,
       auth,
       bitcoin,
+      ethereum,
       handleSubmit,
       editingListing,
       invalid,
@@ -772,6 +773,9 @@ ListingForm.propTypes = {
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array
   }).isRequired,
+  ethereum: PropTypes.shape({
+    wallets: PropTypes.array
+  }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
       error: PropTypes.object,
@@ -798,7 +802,8 @@ export default compose(
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults,
-      bitcoin: state.default.bitcoin
+      bitcoin: state.default.bitcoin,
+      ethereum: state.default.ethereum
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({

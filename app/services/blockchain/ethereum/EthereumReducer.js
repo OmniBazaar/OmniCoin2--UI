@@ -13,8 +13,8 @@ import {
 
 const defaultState = {
   wallets: [],
-  password: null,
-  guid: null,
+  privateKey: null,
+  address: null,
   isGettingWallets: false,
   loading: false,
   error: null,
@@ -30,25 +30,25 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [createEthereumWallet](state, { payload: { password } }) {
+  [createEthereumWallet](state, { payload: { privateKey } }) {
     return {
       ...state,
-      password,
+      privateKey,
       loading: true,
       error: null,
       message: null
     };
   },
-  CREATE_ETHEREUM_WALLET_SUCCEEDED: (state, { guid }) => ({
+  CREATE_ETHEREUM_WALLET_SUCCEEDED: (state, { address }) => ({
     ...state,
-    guid,
+    address,
     loading: false,
     error: null
   }),
   CREATE_ETHEREUM_WALLET_FAILED: (state, { error }) => ({
     ...state,
     loading: false,
-    password: null,
+    privateKey: null,
     error
   }),
   [getEthereumWallets](state) {
@@ -60,11 +60,11 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_ETHEREUM_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
+  GET_ETHEREUM_WALLETS_SUCCEEDED: (state, { wallets, address, privateKey }) => ({
     ...state,
     wallets,
-    guid,
-    password,
+    address,
+    privateKey,
     isGettingWallets: false,
     loading: false,
     error: null

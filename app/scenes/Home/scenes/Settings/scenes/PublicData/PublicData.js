@@ -435,10 +435,14 @@ PublicData.propTypes = {
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
   }),
+  ethereum: PropTypes.shape({
+    wallets: PropTypes.array,
+  }),
 };
 
 PublicData.defaultProps = {
   bitcoin: {},
+  ethereum: {},
   accountSettingsActions: {},
   account: {},
   intl: {},

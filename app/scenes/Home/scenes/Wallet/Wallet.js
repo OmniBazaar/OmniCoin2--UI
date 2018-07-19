@@ -144,7 +144,7 @@ class Wallet extends Component {
   }
 
 
-  getBitcoinContent() {
+  getEthereumContent() {
     const { wallets, guid } = this.props.ethereum;
     const elements = wallets.map((wallet, index) => (
       <EthereumWalletDetail
@@ -244,7 +244,7 @@ class Wallet extends Component {
                         {
                           this.props.ethereum.isGettingWallets ?
                             <div className='load-container'><Loader inline active /></div> :
-                            this.getBitcoinContent()
+                            this.getEthereumContent()
                         }
                       </div>
                       :

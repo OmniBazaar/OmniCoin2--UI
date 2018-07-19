@@ -19,14 +19,14 @@ export const decrypt = (text, key) => {
   return dec;
 }
 
-export const persitEthereumWalletData = async (guid, password, account) => {
+export const persitEthereumWalletData = async (address, privateKey, account) => {
 	const userDataPath = getUserDataFolder();
 	const dataFileDir = path.resolve(userDataPath, 'ethereum');
 	await checkDir(dataFileDir);
 
 	const data = {
-		guid,
-		password
+		address,
+		privateKey
 	};
 	const dataString = encrypt(JSON.stringify(data), account.password);
 	const dataFilePath = path.resolve(dataFileDir, account.username);
