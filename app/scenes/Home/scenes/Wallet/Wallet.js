@@ -21,7 +21,7 @@ import AddEthereumWallet from './components/AddEthereumWallet/AddEthereumWallet'
 import AddEthereumAddress from './components/AddEthereumAddress/AddEthereumAddress';
 import { toggleEthereumModal, toggleAddAddressEthereumModal, getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 
-import { toggleModal, toggleAddAddressModal, getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
   getEtherWallets,
