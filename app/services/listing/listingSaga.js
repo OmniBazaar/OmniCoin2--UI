@@ -49,6 +49,7 @@ import {
   ensureListingData,
   checkPublisherAliveStatus,
   createListing,
+  editListing,
   getListingFromBlockchain
 } from './apis';
 
