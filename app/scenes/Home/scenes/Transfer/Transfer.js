@@ -204,11 +204,17 @@ class Transfer extends Component {
     if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
       const { amount } = this.props.transferForm;
       if (nextProps.transfer.transferCurrency === 'omnicoin') {
-        this.props.change('amount', currencyConverter(amount, 'BITCOIN', 'OMNICOIN'));
+        const convertedAmount = currencyConverter(amount, 'BITCOIN', 'OMNICOIN');
+        this.props.change('amount', convertedAmount);
       } else {
-        this.props.change('amount', currencyConverter(amount, 'OMNICOIN', 'BITCOIN'))
+        const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
+        this.props.change('amount', convertedAmount)
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.props.transferActions.setCurrency(undefined);
   }
 
   handleInitialize(price, to) {
