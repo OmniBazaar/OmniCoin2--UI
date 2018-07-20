@@ -19,7 +19,14 @@ Description: OmniBazaar Wallet and blockchain node
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>
-0
+1
+#!/bin/sh
+if [ -f ~/.OmniBazaar/witness_node/witness_node_data_dir/config.ini ]; then
+  mv -f ~/.OmniBazaar/witness_node/witness_node_data_dir/config.ini ~/.witness_node_config.ini.backup
+fi
+if [ -f ~/.OmniBazaar/witness_node/witness_node_data_dir/config_log.ini ]; then
+  mv -f ~/.OmniBazaar/witness_node/witness_node_data_dir/config_log.ini ~/.witness_node_config_log.ini.backup
+fi
 <</PREINST>>
 <<POSTINST>>
 1
@@ -28,6 +35,12 @@ set -e
 mkdir -p ~/.OmniBazaar
 cp /usr/share/OmniBazaar/ob2 ~/.OmniBazaar/ob2
 cp -r /usr/share/OmniBazaar/witness_node ~/.OmniBazaar/witness_node
+if [ -f ~/.witness_node_config.ini.backup ]; then
+  mv -f ~/.witness_node_config.ini.backup ~/.OmniBazaar/witness_node/witness_node_data_dir/config.ini
+fi
+if [ -f ~/.witness_node_config_log.ini.backup ]; then
+  mv -f ~/.witness_node_config_log.ini.backup ~/.OmniBazaar/witness_node/witness_node_data_dir/config_log.ini
+fi
 chmod -R u=rwx,g=r,o=r ~/.OmniBazaar
 chmod u=rwx,g=rx,o=r ~/.OmniBazaar/witness_node/witness_node
 cp /usr/share/OmniBazaar/service/witness-node.service /etc/systemd/system/
