@@ -25,9 +25,7 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
-import {
-  makeValidatableField
-} from '../../../../components/ValidatableField/ValidatableField';
+import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
   setCurrency,
@@ -39,6 +37,7 @@ import {
 import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
+import { currencyConverter } from "../../../../services/utils";
 
 import messages from './messages';
 
@@ -176,7 +175,7 @@ class Transfer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
-
+    const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
@@ -198,10 +197,17 @@ class Transfer extends Component {
                 && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
-
     if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
       this.props.change('password', this.props.bitcoin.password);
       this.props.change('guid', this.props.bitcoin.guid);
+    }
+    if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
+      const { amount } = this.props.transferForm;
+      if (nextProps.transfer.transferCurrency === 'omnicoin') {
+        this.props.change('amount', currencyConverter(amount, 'BITCOIN', 'OMNICOIN'));
+      } else {
+        this.props.change('amount', currencyConverter(amount, 'OMNICOIN', 'BITCOIN'))
+      }
     }
   }
 
@@ -409,11 +415,13 @@ class Transfer extends Component {
 
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { transfer } = this.props;
-    const {
+    const { transfer, transferForm } = this.props;
+    let {
       gettingCommonEscrows,
       commonEscrows,
     } = this.props.transfer;
+
+    commonEscrows = commonEscrows.filter((item) => item.name !== transferForm.toName);
 
     return (
       <div>

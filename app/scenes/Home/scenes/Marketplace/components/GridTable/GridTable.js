@@ -32,7 +32,7 @@ import {
   setActivePageGridTable,
   sortGridTableBy
 } from '../../../../../../services/marketplace/marketplaceActions';
-import { deleteListing } from '../../../../../../services/listing/listingActions';
+import { deleteListing, removeFromFavorites } from '../../../../../../services/listing/listingActions';
 
 import {
   mainCategories,
@@ -99,6 +99,10 @@ class GridTable extends Component {
     this.props.gridTableActions.setActivePageGridTable(activePage);
   };
 
+  removeFromFavorites = (listing_id) => {
+    this.props.listingActions.removeFromFavorites(listing_id);
+  };
+
   renderEmptyRow() {
     const { formatMessage } = this.props.intl;
 
@@ -126,7 +130,7 @@ class GridTable extends Component {
   onOkDelete() {
     this.closeConfirm();
     if (this.item) {
-      this.props.listingActions.deleteListing({publisher_ip: this.item.ip }, this.item);
+      this.props.listingActions.deleteListing({ publisher_ip: this.item.ip }, this.item);
     }
   }
 
@@ -144,25 +148,24 @@ class GridTable extends Component {
     toastr.error(title, message);
   }
 
-  getIcon(showConvertedPrice, itemCurrency, currency){
+  getIcon(showConvertedPrice, itemCurrency, currency) {
     const type = showConvertedPrice ? currency : itemCurrency;
 
-    if (type === "USD") {
-      return <Image src={Dollar} className="currency-icon"/>
-    } else if (type === "EUR") {
-      return <Image src={Euro} className="currency-icon"/>
-    } else if (type === "BITCOIN") {
-      return <Image src={Btc} className="currency-icon"/>
-    } else {
-      return <Image src={Omni} className="currency-icon"/>
+    if (type === 'USD') {
+      return <Image src={Dollar} className="currency-icon" />;
+    } else if (type === 'EUR') {
+      return <Image src={Euro} className="currency-icon" />;
+    } else if (type === 'BITCOIN') {
+      return <Image src={Btc} className="currency-icon" />;
     }
+    return <Image src={Omni} className="currency-icon" />;
   }
 
   renderLoading() {
     const { deleting } = this.props.listing.deleteListing;
     return (
       <Dimmer active={deleting} inverted>
-        <Loader size='medium'></Loader>
+        <Loader size="medium" />
       </Dimmer>
     );
   }
@@ -178,12 +181,12 @@ class GridTable extends Component {
       currency,
       loading
     } = this.props;
-    let data = gridTableDataFiltered.filter(item => item && item.listing_id);
+    const data = gridTableDataFiltered.filter(item => item && item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
     let showConvertedPrice = false;
     if (currency && currency !== 'ALL' && currency !== 'all') {
-      showConvertedPrice = true
+      showConvertedPrice = true;
     }
 
     return (
@@ -227,12 +230,25 @@ class GridTable extends Component {
                               </span>
                               {subCategoryTitle}
                             </span>
-                            
+
                             <span className="description">{description}</span>
-                            <span className="price">
-                              {this.getIcon(showConvertedPrice, item.currency, currency)}
-                              {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
-                              </span>
+                            <div className="listing-info">
+                              <div className="price">
+                                {this.getIcon(showConvertedPrice, item.currency, currency)}
+                              </div>
+                              <div>
+                                {!showConvertedPrice ? numberWithCommas(parseFloat(item.price)) : numberWithCommas(parseFloat(item.convertedPrice))}
+                              </div>
+                              {(this.props.location.pathname === '/favorite-listings') &&
+                                <div>
+                                  <Button
+                                    onClick={() => this.removeFromFavorites(item.listing_id)}
+                                    content={formatMessage(messages.removeFromFavorites)}
+                                    className="button--transparent"
+                                  />
+                                </div>
+                              }
+                            </div>
                             {this.props.showActions ?
                               <div className="actions">
                                 <Button
@@ -354,7 +370,8 @@ export default connect(
       sortGridTableBy
     }, dispatch),
     listingActions: bindActionCreators({
-      deleteListing
+      deleteListing,
+      removeFromFavorites
     }, dispatch)
   })
 )(injectIntl(withRouter(GridTable)));

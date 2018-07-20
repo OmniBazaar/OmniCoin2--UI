@@ -8,14 +8,14 @@ export const getEscrowSettings = async (username) => {
       positive_rating: false,
       voted_witness: false,
       active_witness: false
-    }
+    };
   }
 
   return options;
-}
+};
 
 export const getEscrowAgents = async (username) => {
-  const account =  await Apis.instance().db_api().exec('get_account_by_name', [username]);
+  const account = await Apis.instance().db_api().exec('get_account_by_name', [username]);
   if (!account) {
     throw new Error('Account not found');
   }
@@ -25,8 +25,6 @@ export const getEscrowAgents = async (username) => {
   }
 
   return account.escrows;
-}
+};
 
-export const getImplicitEscrows = async (userdId) => {
-  return await Apis.instance().db_api().exec('get_implicit_escrows', [userdId]);
-}
+export const getImplicitEscrows = async (userdId) => await Apis.instance().db_api().exec('get_implicit_escrows', [userdId]);

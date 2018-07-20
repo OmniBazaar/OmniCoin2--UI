@@ -41,13 +41,13 @@ const fixImagesData = (data) => {
   }
 
   return data;
-}
+};
 
 const reducer = handleActions({
   [loadListingDefault](state) {
     const data = getStoredListingDefautls();
-    if (!data.price_using_btc) {
-      data.bitcoin_address = '';
+    if (!data.price_using_btc && data.currency !== 'BITCOIN') {
+      delete data.bitcoin_address;
     }
 
     if (Object.keys(data).length) {
@@ -67,9 +67,11 @@ const reducer = handleActions({
       ...state,
       ...listingDefault
     };
-    if (!data.price_using_btc) {
-      data.bitcoin_address = '';
+
+    if (!data.price_using_btc && data.currency !== 'BITCOIN') {
+      delete data.bitcoin_address;
     }
+
     storeListingDefaults(data);
     return fixImagesData(data);
   },
@@ -151,7 +153,7 @@ const reducer = handleActions({
         images
       };
     }
-    
+
     return state;
   },
   [deleteListingDefaultImageError](state, { payload: { imageId, error } }) {

@@ -7,18 +7,16 @@ import {
 } from 'redux-saga/effects';
 import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
-import {Apis} from "omnibazaarjs-ws";
+import { Apis } from 'omnibazaarjs-ws';
 import _ from 'lodash';
 
-import { CoinTypes } from "../../scenes/Home/scenes/Wallet/constants";
+import { CoinTypes } from '../../scenes/Home/scenes/Wallet/constants';
 import { getAllPublishers } from './services';
-import {
-  generateKeyFromPassword,
-} from '../blockchain/utils/wallet';
+import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
 import OmnicoinHistory from './omnicoinHistory';
-import {getStoredCurrentUser} from "../blockchain/auth/services";
-import {voteForProcessors} from "../processors/utils";
-import BitcoinHistory from "./bitcoinHistory";
+import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { voteForProcessors } from '../processors/utils';
+import BitcoinHistory from './bitcoinHistory';
 
 
 export function* accountSubscriber() {
@@ -111,14 +109,14 @@ export function* updateAccount(payload) {
         );
       }
     } catch (error) {
-      console.log("ERROR ", error);
+      console.log('ERROR ', error);
     }
   });
 }
 
 
 export function* getRecentTransactions({ payload: { coinType } }) {
-  const {  currentUser } = (yield select()).default.auth;
+  const { currentUser } = (yield select()).default.auth;
   try {
     let historyStorage;
     if (coinType === CoinTypes.OMNI_COIN) {

@@ -7,46 +7,48 @@ import { bindActionCreators } from 'redux';
 import open from 'open';
 
 const messages = defineMessages({
-	"newVersionAvailable": {
-		id: "Home.newVersionAvailable",
-		defaultMessage: "Update's available"
-	}
-})
+  newVersionAvailable: {
+    id: 'Home.newVersionAvailable',
+    defaultMessage: 'A new version is available'
+  }
+});
 
 class UpdateNotification extends Component {
-	onClickUpdate() {
-		const { updateLink } = this.props.updateNotification;
-		open(updateLink);
-	}
+  onClickUpdate() {
+    let appName=null;
+    if (process.platform === 'linux') {
+      appName = 'xdg-open';
+    }
+    const { updateLink } = this.props.updateNotification;
+    open(updateLink, appName);
+  }
 
-	render() {
-		const { formatMessage } = this.props.intl;
-		const { hasUpdate, updateLink } = this.props.updateNotification;
+  render() {
+    const { formatMessage } = this.props.intl;
+    const { hasUpdate, updateLink } = this.props.updateNotification;
 
-		if (hasUpdate && updateLink) {
-			return (
-				<div className='update-notification'>
-					<Button className="button--green-bg" onClick={this.onClickUpdate.bind(this)}>
-		        {formatMessage(messages.newVersionAvailable)}
-		      </Button>
-	      </div>
-			);
-		}
+    if (hasUpdate && updateLink) {
+      return (
+        <div className="update-notification">
+          <Button className="button--green-bg" onClick={this.onClickUpdate.bind(this)}>
+            {formatMessage(messages.newVersionAvailable)}
+          </Button>
+        </div>
+      );
+    }
 
-		return null;
-	}
+    return null;
+  }
 }
 
 UpdateNotification.propTypes = {
-	updateNotification: PropTypes.shape({
-		updateLink: PropTypes.string,
-		checking: PropTypes.bool,
-		hasUpdate: PropTypes.bool
-	})
+  updateNotification: PropTypes.shape({
+    updateLink: PropTypes.string,
+    checking: PropTypes.bool,
+    hasUpdate: PropTypes.bool
+  })
 };
 
-export default connect(
-	state => ({
-		updateNotification: state.default.updateNotification
-	})
-)(injectIntl(UpdateNotification));
+export default connect(state => ({
+  updateNotification: state.default.updateNotification
+}))(injectIntl(UpdateNotification));

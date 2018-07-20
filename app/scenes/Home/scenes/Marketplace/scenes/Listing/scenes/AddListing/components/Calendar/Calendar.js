@@ -43,7 +43,7 @@ class Calendar extends Component {
             showTimeSelect={false}
             timeFormat="HH:mm:ss"
           />
-          <Image className='calendar-icon' src={CalendarIcon} width={size} height={size} />
+          <Image className="calendar-icon" src={CalendarIcon} width={size} height={size} />
         </label>
       </div>
     );

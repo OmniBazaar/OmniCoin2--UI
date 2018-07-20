@@ -18,8 +18,8 @@ class Signup extends Component {
         nextProps.auth.currentUser !== this.props.auth.currentUser
       )
     ) {
-       this.props.history.push('/login');
-      //this.props.history.push('/air-drop');
+      this.props.history.push('/login');
+      // this.props.history.push('/air-drop');
     }
   }
 

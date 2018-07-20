@@ -20,7 +20,7 @@ import {
 import { debounce } from 'lodash';
 import { ChainTypes } from 'omnibazaarjs/es';
 import cn from 'classnames';
-import { CoinTypes } from "../../../Wallet/constants";
+import { CoinTypes } from '../../../Wallet/constants';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import TransactionDetails from './components/TransactionDetails/TransactionDetails';
@@ -114,6 +114,10 @@ const messages = defineMessages({
   [ChainTypes.operations.sale_bonus_operation]: {
     id: 'Settings.saleBonus',
     defaultMessage: 'SALE BONUS'
+  },
+  [ChainTypes.operations.witness_bonus_operation]: {
+    id: 'Settings.witnessBonus',
+    defaultMessage: 'WITNESS BONUS'
   }
 });
 
@@ -131,7 +135,7 @@ class RecentTransactions extends Component {
   }
 
   componentWillUnmount() {
-    if(this.props.account.showDetails) {
+    if (this.props.account.showDetails) {
       this.props.accountSettingsActions.showDetailsModal();
     }
   }

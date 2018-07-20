@@ -48,6 +48,6 @@ Dropdown.propTypes = {
 
 Dropdown.defaultProps = {
   placeholder: ''
-}
+};
 
 export default injectIntl(Dropdown);

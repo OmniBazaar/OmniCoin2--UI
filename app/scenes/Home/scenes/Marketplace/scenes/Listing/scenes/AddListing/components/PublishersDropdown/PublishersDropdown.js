@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
 import { Dropdown, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {
-  getPublishers
-} from "../../../../../../../../../../services/accountSettings/accountActions";
-import {
-  searchPublishers
-} from '../../../../../../../../../../services/listing/listingActions';
+import { getPublishers } from '../../../../../../../../../../services/accountSettings/accountActions';
+import { searchPublishers } from '../../../../../../../../../../services/listing/listingActions';
 import messages from '../../messages';
 
 class PublishersDropdown extends Component {
-
   state = {
     options: [],
     disabled: false
@@ -48,7 +43,7 @@ class PublishersDropdown extends Component {
         if (value && typeof value === 'string') {
           const publisher = options.find(el => el.value.publisher_ip === value);
           this.props.input.onChange(publisher.value);
-          this.setState({disabled: true});
+          this.setState({ disabled: true });
         }
       } else {
         const { formatMessage } = this.props.intl;

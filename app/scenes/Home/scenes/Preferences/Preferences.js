@@ -33,10 +33,10 @@ class Preferences extends Component {
                     menuItem: formatMessage(messages.preferencesTab),
                     render: () => <Tab.Pane><PreferencesTab /></Tab.Pane>,
                   },
-                  {/*{
+                  {/* {
                     menuItem: formatMessage(messages.consoleTab),
                     render: () => <Tab.Pane className="console-tab"><ConsoleTab /></Tab.Pane>,
-                  },*/}
+                  }, */}
                 ]}
               />
             </div>
@@ -57,10 +57,6 @@ Preferences.propTypes = {
   }).isRequired,
 };
 
-export default compose(
-  connect(
-    state => ({
-      menu: state.default.menu
-    })
-  )
-)(injectIntl(Preferences));
+export default compose(connect(state => ({
+  menu: state.default.menu
+})))(injectIntl(Preferences));

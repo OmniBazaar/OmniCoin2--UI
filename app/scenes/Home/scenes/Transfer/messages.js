@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   accountDoNotExist: {
     id: 'Transfer.accountDoNotExist',
-    defaultMessage: 'Account doesn\'t exist'
+    defaultMessage: 'Account doesn\'t exist.'
   },
   transfer: {
     id: 'Transfer.transfer',
@@ -23,7 +23,7 @@ export default defineMessages({
   },
   fieldRequired: {
     id: 'Transfer.fieldRequired',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   accountName: {
     id: 'Transfer.accountName',
@@ -43,7 +43,7 @@ export default defineMessages({
   },
   reputation: {
     id: 'Transfer.reputation',
-    defaultMessage: 'Rate your deal'
+    defaultMessage: 'Rate your transaction.'
   },
   memo: {
     id: 'Transfer.memo',
@@ -55,15 +55,15 @@ export default defineMessages({
   },
   useEscrowService: {
     id: 'Transfer.useEscrowService',
-    defaultMessage: 'Use SecureSend (Escrow Service)'
+    defaultMessage: 'Use SecureSend (Escrow Service).'
   },
   successTransfer: {
     id: 'Transfer.successUpdate',
-    defaultMessage: 'Transferred successfully'
+    defaultMessage: 'Transfer successful.'
   },
   failedTransfer: {
     id: 'Transfer.failedUpdate',
-    defaultMessage: 'Failed to transfer'
+    defaultMessage: 'Transfer failed.'
   },
   selectEscrow: {
     id: 'Transfer.selectEscrow',
@@ -107,7 +107,7 @@ export default defineMessages({
   },
   transferToEscrowLabel: {
     id: 'Transfer.transferToEscrowLabel',
-    defaultMessage: 'Funds will be kept on escrow account'
+    defaultMessage: 'Funds will be kept in an escrow account.'
   },
   warning: {
     id: 'Transfer.warning',
@@ -115,7 +115,7 @@ export default defineMessages({
   },
   escrowsNotFound: {
     id: 'Transfer.escrowNotFound',
-    defaultMessage: 'Unfortunately you don\'t any have any common escrows with the specified account',
+    defaultMessage: 'You don\'t any have any approved escrow agents in common with the specified account. Go to the "Escrow" tab and approve some additional escrow agents.'
   },
   numberRequired: {
     id: 'Transfer.numberRequired',
@@ -135,7 +135,7 @@ export default defineMessages({
   },
   maxLength: {
     id: 'Transfer.maxLength',
-    defaultMessage: 'Memo must be less than 150 characters'
+    defaultMessage: 'Memo must be less than 150 characters.'
   },
   defaultWalletLabel: {
     id: 'Transfer.defaultWalletLabel',

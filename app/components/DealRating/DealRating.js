@@ -57,11 +57,14 @@ class DealRating extends Component {
       selected: isSelected
     });
     return (
-      <span className={className}
+      <span
+        className={className}
         onClick={() => {
           onClick(option);
           this.setState({ selectedValue: option });
-        }}>★</span>
+        }}
+      >★
+      </span>
     );
   }
 

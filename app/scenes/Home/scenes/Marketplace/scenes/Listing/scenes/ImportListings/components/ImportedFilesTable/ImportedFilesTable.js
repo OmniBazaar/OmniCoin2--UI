@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   subCategory: {
     id: 'ImportedFilesTable.subCategory',
-    defaultMessage: 'Sub Category'
+    defaultMessage: 'Sub-Category'
   },
   contactType: {
     id: 'ImportedFilesTable.contactType',

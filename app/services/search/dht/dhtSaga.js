@@ -114,7 +114,7 @@ export function* getPeersFor({
 
     if (publisherData.priority === 'local' && country) {
       const localRes = yield doLocalSearch(publisherData);
-      extraKeywordsResponse = [ ...extraKeywordsResponse, ...localRes ];
+      extraKeywordsResponse = [...extraKeywordsResponse, ...localRes];
     }
 
     const [categoryResp, subCategoryResp, countryResp, stateResp, cityResp] = extraKeywordsResponse;

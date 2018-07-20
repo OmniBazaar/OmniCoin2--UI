@@ -28,7 +28,9 @@ const {
       username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
-  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({ username, referrer, macAddress, harddriveId }),
+  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({
+    username, referrer, macAddress, harddriveId
+  }),
   WELCOME_BONUS_SUCCEEDED: () => ({ }),
   WELCOME_BONUS_FAILED: (error) => ({ error }),
   GET_WELCOME_BONUS_AMOUNT: () => {},

@@ -29,6 +29,7 @@ import {
 } from '../../../../services/wallet/walletActions';
 
 import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
+import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 
 import AddIcon from '../../images/btn-add-image.svg';
 
@@ -36,8 +37,8 @@ import messages from './messages';
 import settingsMessages from '../Settings/messages';
 import Settings from '../Settings/Settings';
 import './wallet.scss';
-import { CoinTypes } from "./constants";
-import { TOKENS_IN_XOM } from "../../../../utils/constants";
+import { CoinTypes } from './constants';
+import { TOKENS_IN_XOM } from '../../../../utils/constants';
 
 class Wallet extends Component {
   constructor(props) {
@@ -114,7 +115,7 @@ class Wallet extends Component {
   onTabChange(e, data) {
     this.setState({
       activeTab: data.activeIndex
-    })
+    });
   }
 
   getBitcoinContent() {
@@ -179,7 +180,6 @@ class Wallet extends Component {
       modal
     } = this.props.bitcoin;
 
-
     const {
       addAddressEthereumModal,
       modalEthereum
@@ -216,16 +216,16 @@ class Wallet extends Component {
                   </Tab.Pane>
                 )
               },
-              {
-                menuItem: 'BitCoin',
-                render: () =>
-                  (<Tab.Pane>
-                    {this.props.bitcoin.wallets.length ?
-                      <div className="content">
-                        {
+               {
+                 menuItem: 'BitCoin',
+                 render: () =>
+                   (<Tab.Pane>
+                     {this.props.bitcoin.wallets.length ?
+                       <div className="content">
+                         {
                           this.props.bitcoin.isGettingWallets ?
-                            <div className='load-container'><Loader inline active /></div> :
-                            this.getBitcoinContent()
+                            <div className="load-container"><Loader inline active /></div> :
+                          this.getBitcoinContent()
                         }
                       </div>
                       :

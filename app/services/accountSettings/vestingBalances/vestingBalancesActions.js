@@ -7,7 +7,7 @@ const {
   claim,
   claimSucceeded,
   claimFailed
-}  = createActions({
+} = createActions({
   GET_VESTING_BALANCES: () => ({ }),
   GET_VESTING_BALANCES_SUCCEEDED: (vestingBalances) => ({ vestingBalances }),
   GET_VESTING_BALANCES_FAILED: (error) => ({ error }),

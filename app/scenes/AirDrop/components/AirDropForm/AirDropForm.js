@@ -232,7 +232,7 @@ class AirDropForm extends Component {
     console.log(values, 'values');
   }
   render() {
-    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ?  this.props.auth.welcomeBonusAmount.toLocaleString() : "";
+    const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? this.props.auth.welcomeBonusAmount.toLocaleString() : '';
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
     return (

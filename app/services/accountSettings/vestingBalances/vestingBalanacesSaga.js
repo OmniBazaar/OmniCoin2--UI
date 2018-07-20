@@ -4,7 +4,7 @@ import {
   takeEvery,
   all,
   select
-} from "redux-saga/effects";
+} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 
@@ -13,9 +13,9 @@ import {
   getVestingBalancesFailed,
   claimSucceeded,
   claimFailed
-} from "./vestingBalancesActions";
-import { generateKeyFromPassword } from "../../blockchain/utils/wallet";
-import {getAmountAvailable} from "./utils";
+} from './vestingBalancesActions';
+import { generateKeyFromPassword } from '../../blockchain/utils/wallet';
+import { getAmountAvailable } from './utils';
 
 export function* vestingBalancesSubscriber() {
   yield all([
@@ -29,8 +29,8 @@ function* getVestingBalances() {
     const { currentUser } = (yield select()).default.auth;
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
     let vbs = yield Apis.instance()
-                          .db_api()
-                          .exec("get_vesting_balances", [userAcc.get('id')]);
+      .db_api()
+      .exec('get_vesting_balances', [userAcc.get('id')]);
     vbs = vbs.map(vb => ({
       ...vb,
       amountAvailable: getAmountAvailable(vb, true)
@@ -48,7 +48,7 @@ function* claim({ payload: { vestingBalance, forceAll } }) {
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
     const tr = new TransactionBuilder();
 
-    tr.add_type_operation("vesting_balance_withdraw", {
+    tr.add_type_operation('vesting_balance_withdraw', {
       owner: userAcc.get('id'),
       vesting_balance: vestingBalance.id,
       amount: {
@@ -60,8 +60,8 @@ function* claim({ payload: { vestingBalance, forceAll } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    yield put(claimSucceeded())
-  } catch(error) {
+    yield put(claimSucceeded());
+  } catch (error) {
     console.log('ERROR ', error);
     yield put(claimFailed(JSON.stringify(error)));
   }

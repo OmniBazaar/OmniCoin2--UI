@@ -39,24 +39,21 @@ import {
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 
 import './add-listing.scss';
-import {FetchChain} from "omnibazaarjs";
+import { FetchChain } from 'omnibazaarjs';
+import {SATOSHI_IN_BTC, TOKENS_IN_XOM} from "../../../../../../../../utils/constants";
 
 const contactOmniMessage = 'OmniMessage';
 
-const requiredFieldValidator = [
-  required({ message: messages.fieldRequired })
-];
-
-const numericFieldValidator = [
-  numericality({ message: messages.fieldNumeric })
-];
+const requiredFieldValidator = required({ message: messages.fieldRequired });
+const numericFieldValidator = numericality({ message: messages.fieldNumeric });
+const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
+const bitcoinFieldValidator = numericality({ '>=': 1 / SATOSHI_IN_BTC, msg: messages.bitcoinFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
-    console.log('async validate')
     try {
       const { price_using_btc, bitcoin_address } = values;
       if (price_using_btc && bitcoin_address) {
@@ -67,7 +64,7 @@ class ListingForm extends Component {
     }
   };
 
-constructor(props) {
+  constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
@@ -98,7 +95,7 @@ constructor(props) {
         className="textfield"
         placeholder={placeholder}
       />
-      <Button type='button' className="copy-btn button--gray-text">
+      <Button type="button" className="copy-btn button--gray-text">
         {buttonText}
       </Button>
     </div>
@@ -173,9 +170,9 @@ constructor(props) {
 
   componentWillReceiveProps(nextProps) {
     if ((
-        nextProps.formValues !== this.props.formValues
+      nextProps.formValues !== this.props.formValues
         && !nextProps.formValues
-      )) {
+    )) {
       this.resetForm();
     }
 
@@ -185,7 +182,9 @@ constructor(props) {
       const { formatMessage } = this.props.intl;
       if (error) {
         let msg = null;
-        if (error.message) {
+        if (error.statusCode === 413) {
+          msg = formatMessage(messages.imageSizeTooLarge);
+        } else if (error.message) {
           if (error.message === 'no_changes') {
             msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
           } else if (error.message === 'publisher_not_alive') {
@@ -226,7 +225,7 @@ constructor(props) {
   onContinuousChange = (event, newValue) => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
-    })
+    });
   };
 
   onKeywordsBlur(e) {
@@ -269,7 +268,7 @@ constructor(props) {
   fixImagePath(path) {
     const segs = path.split('/');
     if (segs.length > 2) {
-      return segs[segs.length - 2] + '/' + segs[segs.length - 1];
+      return `${segs[segs.length - 2]}/${segs[segs.length - 1]}`;
     }
 
     return path;
@@ -279,9 +278,9 @@ constructor(props) {
     const segs = path.split('/');
     if (segs.length > 3) {
       return (
-        segs[segs.length - 3]
-        + '/' + segs[segs.length - 2]
-        + '/' + segs[segs.length - 1]
+        `${segs[segs.length - 3]
+        }/${segs[segs.length - 2]
+        }/${segs[segs.length - 1]}`
       );
     }
 
@@ -298,7 +297,9 @@ constructor(props) {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
-    const { listing_id, publisher, keywords, ...data } = values;
+    const {
+      listing_id, publisher, keywords, ...data
+    } = values;
 
     this.props.accountActions.updatePublicData();
 
@@ -362,7 +363,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -370,7 +371,7 @@ constructor(props) {
             <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
-            <Grid.Column width={12} className='keywords'>
+            <Grid.Column width={12} className="keywords">
               <Field
                 type="text"
                 name="keywords"
@@ -378,7 +379,7 @@ constructor(props) {
                 onBlur={this.onKeywordsBlur.bind(this)}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
               <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
@@ -395,7 +396,7 @@ constructor(props) {
                   placeholder: formatMessage(messages.category),
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
@@ -407,7 +408,7 @@ constructor(props) {
                   parentCategory: category,
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -424,7 +425,7 @@ constructor(props) {
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -434,7 +435,12 @@ constructor(props) {
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  // we don't want other currencies including bitcoin be less then 10^-8
+                  currency === 'OMNICOIN' ? omnicoinFieldValidator : bitcoinFieldValidator
+                ]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -469,7 +475,7 @@ constructor(props) {
                 name="bitcoin_address"
                 component={InputField}
                 className="textfield"
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
                 value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
@@ -496,7 +502,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[requiredFieldValidator, numericFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -506,7 +512,7 @@ constructor(props) {
                 props={{
                   placeholder: formatMessage(messages.unitsOfMeasure)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -524,7 +530,7 @@ constructor(props) {
                 props={{
                   placeholder: formatMessage(messages.from)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             {
@@ -539,7 +545,7 @@ constructor(props) {
                   props={{
                     placeholder: formatMessage(messages.to)
                   }}
-                  validate={requiredFieldValidator}
+                  validate={[requiredFieldValidator]}
                 />
               </Grid.Column>
             }
@@ -565,7 +571,7 @@ constructor(props) {
                   placeholder: formatMessage(messages.selectPublisher),
                   keywords: this.state.keywords
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -614,7 +620,7 @@ constructor(props) {
                 component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -636,7 +642,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -647,7 +653,7 @@ constructor(props) {
                 props={{
                   placeholder: formatMessage(messages.preferredContact)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -657,7 +663,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -673,7 +679,7 @@ constructor(props) {
                 props={{
                   placeholder: formatMessage(messages.country)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -683,7 +689,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -693,7 +699,7 @@ constructor(props) {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -708,7 +714,7 @@ constructor(props) {
                   placeholder: formatMessage(messages.state),
                   country
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -718,7 +724,7 @@ constructor(props) {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -728,11 +734,9 @@ constructor(props) {
               <Button
                 type="submit"
                 content={
-                  formatMessage(
-                    editingListing ?
+                  formatMessage(editingListing ?
                     messages.saveListing :
-                    messages.createListingCaps
-                  )
+                    messages.createListingCaps)
                 }
                 className="button--green-bg uppercase"
                 loading={saving || submitting || asyncValidating}

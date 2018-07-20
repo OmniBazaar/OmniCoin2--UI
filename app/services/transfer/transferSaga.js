@@ -19,7 +19,7 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
-import {TOKENS_IN_XOM} from "../../utils/constants";
+import { TOKENS_IN_XOM } from '../../utils/constants';
 
 export function* transferSubscriber() {
   yield all([
@@ -71,7 +71,7 @@ function* submitOmniCoinTransfer(data) {
     let e = JSON.stringify(error);
     console.log('ERROR', error);
     if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
-      e = 'Not enough funds'
+      e = 'Not enough funds';
     }
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error: e });
   }
@@ -115,8 +115,9 @@ export function* submitTransfer(data) {
 }
 
 
-function* createEscrowTransaction({ payload: {
-    data : {
+function* createEscrowTransaction({
+  payload: {
+    data: {
       expirationTime,
       buyer,
       toName: seller,
@@ -163,7 +164,7 @@ function* createEscrowTransaction({ payload: {
     yield tr.broadcast();
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
-    const errorMsg = error.message.indexOf("Insufficient Balance") !== -1 ? "Not enough funds" : error.message;
+    const errorMsg = error.message.indexOf('Insufficient Balance') !== -1 ? 'Not enough funds' : error.message;
     console.log('ERROR', error);
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
@@ -193,7 +194,7 @@ function* getCommonEscrows({ payload: { from, to } }) {
   }
 }
 
-function* saleBonus({ payload: { seller, buyer }}) {
+function* saleBonus({ payload: { seller, buyer } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const [currUserAcc, sellerAcc, buyerAcc] = yield Promise.all([
@@ -201,7 +202,8 @@ function* saleBonus({ payload: { seller, buyer }}) {
       FetchChain('getAccount', seller),
       FetchChain('getAccount', buyer)
     ]);
-    const isAvailable = yield Apis.instance().db_api().exec('is_sale_bonus_available',
+    const isAvailable = yield Apis.instance().db_api().exec(
+      'is_sale_bonus_available',
       [sellerAcc.get('id'), buyerAcc.get('id')]
     );
     if (isAvailable) {

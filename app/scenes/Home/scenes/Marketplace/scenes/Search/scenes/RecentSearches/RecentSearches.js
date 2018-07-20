@@ -17,9 +17,7 @@ import {
   searchListings
 } from '../../../../../../../../services/search/searchActions';
 
-import {
-  getPublisherData
-} from "../../../../../../../../services/accountSettings/accountActions";
+import { getPublisherData } from '../../../../../../../../services/accountSettings/accountActions';
 
 
 import './recent-searches.scss';

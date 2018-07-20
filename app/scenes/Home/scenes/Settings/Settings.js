@@ -5,7 +5,7 @@ import { Modal, Tab, Image } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { CoinTypes } from "../Wallet/constants";
+import { CoinTypes } from '../Wallet/constants';
 
 import UserIcon from '../../images/th-user-white.svg';
 
@@ -65,60 +65,92 @@ class Settings extends Component {
     );
   }
 
-  render() {
-    const { props } = this;
+  renderTab() {
+    const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
-    /*const containerClass = classNames({
+
+    if (coinType === CoinTypes.BIT_COIN) {
+      return (<Tab
+        className="tabs"
+        key={0}
+        menu={{ secondary: true, pointing: true }}
+        panes={[
+              {
+                menuItem: formatMessage(messages.recentTransactions),
+                render: () => (
+                  <Tab.Pane>
+                    <RecentTransactions
+                      coinType={coinType}
+                      rowsPerPage={20}
+                      tableProps={{
+                        sortable: true,
+                        compact: true,
+                        basic: 'very',
+                        striped: true,
+                        size: 'small'
+                      }}
+                    />
+                  </Tab.Pane>),
+              }
+            ]}
+      />);
+    }
+    return (<Tab
+      className="tabs"
+      key={1}
+      menu={{ secondary: true, pointing: true }}
+      panes={[
+          {
+            menuItem: formatMessage(messages.publicData),
+            render: () => <Tab.Pane><PublicData /></Tab.Pane>,
+          },
+          {
+            menuItem: formatMessage(messages.privateData),
+            render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
+          },
+          {
+            menuItem: formatMessage(messages.recentTransactions),
+            render: () => (
+              <Tab.Pane>
+                <RecentTransactions
+                  coinType={coinType}
+                  rowsPerPage={20}
+                  tableProps={{
+                    sortable: true,
+                    compact: true,
+                    basic: 'very',
+                    striped: true,
+                    size: 'small'
+                  }}
+                />
+              </Tab.Pane>),
+          },
+          {
+            menuItem: formatMessage(messages.vestingBalances),
+            render: () => <Tab.Pane><AccountVesting /></Tab.Pane>
+          }
+        ]}
+    />);
+  }
+
+  render() {
+    /* const containerClass = classNames({
      overlay: true,
      'details-visible': props.account.showDetails,
-     });*/
+     }); */
 
     return (
       <div className="modal-container settings-container">
-        {/*<div className="sidebar settings visible">{this.sideMenu()}</div>*/}
+        {/* <div className="sidebar settings visible">{this.sideMenu()}</div> */}
         <div className="modal-content side-menu">
-          <Tab
-            className="tabs"
-            menu={{ secondary: true, pointing: true }}
-            panes={[
-              {
-                menuItem: formatMessage(messages.publicData),
-                render: () => <Tab.Pane><PublicData /></Tab.Pane>,
-              },
-              {
-                menuItem: formatMessage(messages.privateData),
-                render: () => <Tab.Pane><PrivateData /></Tab.Pane>,
-              },
-              {
-               menuItem: formatMessage(messages.recentTransactions),
-               render: () => (
-                 <Tab.Pane>
-                   <RecentTransactions
-                     coinType={this.props.coinType}
-                     rowsPerPage={20}
-                     tableProps={{
-                       sortable: true,
-                       compact: true,
-                       basic: 'very',
-                       striped: true,
-                       size: 'small'
-                     }}
-                   />
-                 </Tab.Pane>),
-             },
-            {
-              menuItem: formatMessage(messages.vestingBalances),
-              render: () => <Tab.Pane><AccountVesting/></Tab.Pane>
-            }
-            ]}
-          />
-          {/*<div
+          {this.renderTab()}
+          {/* <div
            className={containerClass}
            onClick={this.onCloseDetails}
            onKeyDown={this.onCloseDetails}
            role="link"
            tabIndex={0}
-           />*/}
+           /> */}
 
         </div>
       </div>
@@ -148,7 +180,8 @@ Settings.propTypes = {
 Settings.defaultProps = {
   coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
-  onClose: () => {},
+  onClose: () => {
+  },
   auth: {},
   intl: {}
 };
@@ -163,6 +196,4 @@ export default connect(
     }, dispatch)
   }),
 )(injectIntl(Settings));
-
-
 

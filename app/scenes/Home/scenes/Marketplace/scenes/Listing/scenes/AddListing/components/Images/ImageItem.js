@@ -86,17 +86,17 @@ class ImageItem extends Component {
 	  );
 
 	  return (
-		  <div className="loading-overlay">
-		    <div className="content">
-		      <span className="error">{msg}</span>
-		      <Button
-		        type="submit"
-		        content={formatMessage(messages.close)}
-		        className="button--green-bg btn-close"
-		        onClick={this.clearError.bind(this)}
-		      />
-		    </div>
-		  </div>
+  <div className="loading-overlay">
+    <div className="content">
+      <span className="error">{msg}</span>
+      <Button
+        type="submit"
+        content={formatMessage(messages.close)}
+        className="button--green-bg btn-close"
+        onClick={this.clearError.bind(this)}
+      />
+    </div>
+  </div>
 	  );
 	}
 
@@ -104,8 +104,8 @@ class ImageItem extends Component {
 	  const { uploading, deleting } = this.props.image;
 
 	  return (
-		  <div className="img-container">
-		    {
+  <div className="img-container">
+    {
         	this.state.url && !uploading &&
         	<Image
           src={RemoveIcon}
@@ -115,20 +115,20 @@ class ImageItem extends Component {
           onClick={this.remove.bind(this)}
         	/>
       	}
-		    {
+    {
         	this.state.url &&
         	<img alt="" src={this.state.url} width={132} height={100} className="added-img" />
         }
-		    {
+    {
 	      	(uploading || deleting) &&
 	      	<div className="loading-overlay">
-		        <Dimmer active inverted>
-		          <Loader size="small" />
-		        </Dimmer>
+  <Dimmer active inverted>
+    <Loader size="small" />
+  </Dimmer>
 	      	</div>
         }
-		    { this.renderError() }
-		  </div>
+    { this.renderError() }
+  </div>
 	  );
 	}
 }
@@ -155,7 +155,7 @@ ImageItem.propTypes = {
 };
 
 ImageItem.defaultProps = {
-	isListingDefaults: false
+  isListingDefaults: false
 };
 
 const mapDispatch = dispatch => ({

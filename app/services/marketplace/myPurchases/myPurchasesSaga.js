@@ -12,13 +12,13 @@ import {
   getMyPurchasesFailed,
   getMySellingsSucceeded,
   getMySellingsFailed
-} from "./myPurchasesActions";
+} from './myPurchasesActions';
 
 export function* myPurchasesSubscriber() {
   yield all([
     takeEvery('GET_MY_PURCHASES', getPurchases),
     takeEvery('GET_MY_SELLINGS', getSellings)
-  ])
+  ]);
 }
 
 function* getPurchases() {

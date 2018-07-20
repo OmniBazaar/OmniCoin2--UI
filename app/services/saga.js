@@ -15,9 +15,9 @@ import { listingSubscriber } from './listing/listingSaga';
 import { importSubscriber } from './listing/importSaga';
 import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 import { preferencesSubscriber } from './preferences/preferencesSaga';
-import { myPurchasesSubscriber } from "./marketplace/myPurchases/myPurchasesSaga";
-import { configSubscriber } from "./config/configSaga";
-import { vestingBalancesSubscriber } from "./accountSettings/vestingBalances/vestingBalanacesSaga";
+import { myPurchasesSubscriber } from './marketplace/myPurchases/myPurchasesSaga';
+import { configSubscriber } from './config/configSaga';
+import { vestingBalancesSubscriber } from './accountSettings/vestingBalances/vestingBalanacesSaga';
 import { updateNotificationSubscriber } from './updateNotification/updateNotificationSaga';
 
 export {

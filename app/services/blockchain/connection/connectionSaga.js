@@ -7,13 +7,13 @@ import {
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
-import  { FetchChain } from 'omnibazaarjs/es';
+import { FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
 
 
-import { restartNodeFailed, restartNodeSucceeded } from "./connectionActions";
+import { restartNodeFailed, restartNodeSucceeded } from './connectionActions';
 import { getDynGlobalObject as getDynObject, createConnection } from '../utils/miscellaneous';
-import { generateKeyFromPassword } from "../utils/wallet";
+import { generateKeyFromPassword } from '../utils/wallet';
 
 export function* subscriber() {
   yield all([
@@ -44,13 +44,14 @@ function* getDynGlobalObject() {
 function* restartNode() {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const { preferences } = (yield select()).default.preferences;
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const account = yield call(FetchChain, 'getAccount', currentUser.username);
     const witness = yield Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
-    if (witness) {
+    if (witness && !preferences.autorun) {
       ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif());
     }
-    yield put(restartNodeSucceeded())
+    yield put(restartNodeSucceeded());
   } catch (e) {
     console.log('ERROR ', e);
     yield put(restartNodeFailed(e));

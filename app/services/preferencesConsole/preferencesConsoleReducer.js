@@ -1,7 +1,5 @@
 import { handleActions } from 'redux-actions';
-import {
-  sendCommand
-} from './preferencesConsoleActions';
+import { sendCommand } from './preferencesConsoleActions';
 
 const defaultState = {
   commands: []

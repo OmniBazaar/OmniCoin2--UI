@@ -207,7 +207,7 @@ const messages = defineMessages({
   },
   saveListingErrorMessage: {
     id: 'AddListing.saveListingErrorMessage',
-    defaultMessage: 'Have error when saving listing'
+    defaultMessage: 'Save Listing'
   },
   saveListingSuccessMessage: {
     id: 'AddListing.saveListingSuccessMessage',
@@ -245,6 +245,14 @@ const messages = defineMessages({
     id: 'AddListing.fieldNumeric',
     defaultMessage: 'Should be a number'
   },
+  omnicoinFieldValidator: {
+    id: 'AddListing.omnicoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00001'
+  },
+  bitcoinFieldValidator: {
+    id: 'AddListing.bitcoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00000001'
+  },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
@@ -262,17 +270,21 @@ const messages = defineMessages({
     defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
   },
   saveListingErrorNoChangeDetectedMessage: {
-    'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
+    id: 'AddListing.saveListingErrorNoChangeDetectedMessage',
     defaultMessage: 'Listing has no changes detected, please change data and submit again'
   },
   publisherNotReachable: {
-    'id': 'AddListing.publisherNotReachable',
+    id: 'AddListing.publisherNotReachable',
     defaultMessage: 'Publisher is not reachable'
   },
   invalidAddress: {
     id: 'AddListing.invalidAddress',
     defaultMessage: 'Invalid address'
   },
+  imageSizeTooLarge: {
+    id: 'AddListing.imageSizeTooLarge',
+    defaultMessage: 'Image size is too large'
+  }
 });
 
 export default messages;

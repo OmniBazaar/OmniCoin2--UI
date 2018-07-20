@@ -8,7 +8,9 @@ import GridTable from '../GridTable/GridTable';
 
 class TabsData extends Component {
   renderPanes() {
-    const { data, tabs, showActions, showTrailingLoader, currency, loading } = this.props;
+    const {
+      data, tabs, showActions, showTrailingLoader, currency, loading
+    } = this.props;
     const rowsPerPage = 3 * 6;
 
     return (

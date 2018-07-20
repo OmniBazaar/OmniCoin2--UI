@@ -85,13 +85,11 @@ ConsoleTab.propTypes = {
   }).isRequired,
 };
 
-export default compose(
-  connect(
-    state => ({
-      preferencesConsole: state.default.preferencesConsole
-    }),
-    (dispatch) => ({
-      preferencesActions: bindActionCreators({ sendCommand }, dispatch),
-    }),
-  )
-)(injectIntl(ConsoleTab));
+export default compose(connect(
+  state => ({
+    preferencesConsole: state.default.preferencesConsole
+  }),
+  (dispatch) => ({
+    preferencesActions: bindActionCreators({ sendCommand }, dispatch),
+  }),
+))(injectIntl(ConsoleTab));

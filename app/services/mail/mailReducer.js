@@ -31,8 +31,8 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [showComposeModal](state, { payload: { showCompose, to }}) {
-    const sendTo = to ? to : '';
+  [showComposeModal](state, { payload: { showCompose, to } }) {
+    const sendTo = to || '';
     return {
       ...state,
       reply: false,

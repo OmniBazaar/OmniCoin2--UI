@@ -22,23 +22,23 @@ const messages = defineMessages({
   },
   welcomeBonusText1: {
     id: 'StartGuide.welcomeBonusText1',
-    defaultMessage: 'The first time you launch OmniBazaar on this device, you will receive a Welcome Bonus. This Welcome Bonus is our way of saying "thank you" for installing and usingOmniBazaar. '
+    defaultMessage: 'The first time you launch OmniBazaar on this device, you will receive a Welcome Bonus. This Welcome Bonus is our way of saying "thank you" for installing and usingOmniBazaar.'
   },
   welcomeBonusText2: {
     id: 'StartGuide.welcomeBonusText2',
-    defaultMessage: ' What we ask in return is that you take some time to explore OmniBazaar, that you create at least one listing in the marketplace for some item or service that you are willing to sell or provide, and that you tell at least one other person about OmniBazaar. '
+    defaultMessage: 'What we ask in return is that you take some time to explore OmniBazaar, that you create at least one listing in the marketplace for some item or service that you are willing to sell or provide, and that you tell at least one other person about OmniBazaar.'
   },
   welcomeBonusText3: {
     id: 'StartGuide.welcomeBonusText3',
-    defaultMessage: ' The listing you create could be for promoting your brick-and-mortar business, selling a used bicycle, finding a roommate, or offering some service you provide. We are using the "honor system" and asking for your cooperation. Please do your part to help us get the marketplace started by creating one or more listings.'
+    defaultMessage: 'The listing you create could be for promoting your brick-and-mortar business, selling a used bicycle, finding a roommate, or offering some service you provide. We are using the "honor system" and asking for your cooperation. Please do your part to help us get the marketplace started by creating one or more listings.'
   },
   note: {
     id: 'StartGuide.note',
-    defaultMessage: 'Note: You will only receive free registration and the Welcome Bonus from OmniBazaar, once on this computer.'
+    defaultMessage: 'Note: You can only receive free registration and the Welcome Bonus from OmniBazaar once on this computer.'
   },
   launch: {
     id: 'StartGuide.launch',
-    defaultMessage: 'If this is the first time you have reached this screen, the OmniBazaar marketplace is currently being launched, configured and populated in the background. This process will take a few minutes ~ about the same amount of time it will take you to read this orientation page.'
+    defaultMessage: 'The OmniBazaar marketplace is ready for you to use. When you click on the {Marketplace} tab, you will see listings that match the interests you mentioned during the sign-up process.'
   },
   getMoreOC: {
     id: 'StartGuide.getMoreOC',
@@ -46,15 +46,15 @@ const messages = defineMessages({
   },
   getMoreOCText1: {
     id: 'StartGuide.getMoreOCText',
-    defaultMessage: 'When you refer some of your friends to OmniBazaar, they will receive a Welcome Bonus for joining and you will receive a Referral Bonus for referring them. Register as a Referrer on the '
+    defaultMessage: 'When you refer some of your friends to OmniBazaar, they will receive a Welcome Bonus for joining and you will receive a Referral Bonus for referring them. Register as a Referrer on the'
   },
   getMoreOCText2: {
     id: 'StartGuide.getMoreOCText2',
-    defaultMessage: ' User Settings tab '
+    defaultMessage: 'User Settings tab'
   },
   getMoreOCText3: {
     id: 'StartGuide.getMoreOCText3',
-    defaultMessage: ' of your account page. You will receive a customized URL, identifying you as the referrer, that your friends can use to download and install OmniBazaar.'
+    defaultMessage: 'of your account page. You will receive a customized URL, identifying you as the referrer, that your friends can use to download and install OmniBazaar.'
   },
   earnAdditional: {
     id: 'StartGuide.earnAdditional',
@@ -82,19 +82,19 @@ const messages = defineMessages({
   },
   distributingBillions: {
     id: 'StartGuide.distributingBillions',
-    defaultMessage: 'We are distributing billions of coins to the people who join, refer their friends, and do transactions in the marketplace. Instead of selling OmniCoins in an \'Initial Coin Offering\' (ICO), we are using them as rewards to help us acquire more users.'
+    defaultMessage: 'We are distributing billions of coins to the people who join, refer their friends, and do transactions in the marketplace. In addition to selling OmniCoins in our \'Token Sale Event\', we are using them as rewards to help us acquire more users.'
   },
   goToUserSettings1: {
     id: 'StartGuide.goToUserSettings1',
-    defaultMessage: 'Go to the '
+    defaultMessage: 'Go to the'
   },
   goToUserSettings2: {
     id: 'StartGuide.goToUserSettings2',
-    defaultMessage: ' User Settings tab '
+    defaultMessage: 'User Settings tab'
   },
   goToUserSettings3: {
     id: 'StartGuide.goToUserSettings3',
-    defaultMessage: ' on your Account page to select the services you are willing and able to provide.'
+    defaultMessage: 'on your Account page to select the services you are willing and able to provide.'
   },
   earnBySelling: {
     id: 'StartGuide.earnBySelling',
@@ -122,11 +122,11 @@ const messages = defineMessages({
   },
   aboutOmniCoinText1: {
     id: 'StartGuide.aboutOmniCoinText1',
-    defaultMessage: 'When you buy or sell using OmniCoins, you can use the "SecureSend" escrow service. SecureSend helps protect both buyers and sellers in long-distance transactions. OmniCoin also allows buyers and sellers to register reputation votes about each other, and helps ensure the validity of listings. OmniCoin transactions "clear" approximately 60 times faster than Bitcoin transactions, and you can send payments to a user\'s name instead of of long string of numbers and letters.'
+    defaultMessage: 'When you buy or sell using OmniCoins, you can use the "SecureSend" escrow service. SecureSend helps protect both buyers and sellers in long-distance transactions. OmniCoin also allows buyers and sellers to register reputation votes about each other. OmniCoin transactions "clear" approximately 120 times faster than Bitcoin transactions, and you can send payments to a user\'s name instead of of long string of numbers and letters.'
   },
   aboutOmniCoinText2: {
     id: 'StartGuide.aboutOmniCoinText2',
-    defaultMessage: 'OmniCoin is the official "currency" of the OmniBazaar marketplace. When you use OmniCoin or bitcoins to buy or sell in the marketplace, there is a one percent (1%) fee that is paid by the seller. This fee is divided among service providers in the OmniBazaar marketplace.'
+    defaultMessage: 'OmniCoin is the official "currency" of the OmniBazaar marketplace. By default, when you use OmniCoin or bitcoins to buy or sell in the marketplace, there is a one percent (1%) fee that is paid by the seller. This fee is divided among service providers in the OmniBazaar marketplace. It is possible to "opt-out" of all OmniBazaar fees. But, you will find that the benefits of paying some small fees outweigh the costs in almost every case.'
   }
 });
 
@@ -152,7 +152,7 @@ class StartGuide extends Component {
         <p>
           {formatMessage(messages.getMoreOCText1)}
           <NavLink to="/wallet" activeClassName="active" className="menu-item">
-            {formatMessage(messages.getMoreOCText2)}
+            {` ${formatMessage(messages.getMoreOCText2)} `}
           </NavLink>
           {formatMessage(messages.getMoreOCText3)}
         </p>
@@ -169,7 +169,7 @@ class StartGuide extends Component {
         <p>
           {formatMessage(messages.goToUserSettings1)}
           <NavLink to="/wallet" activeClassName="active" className="menu-item">
-            {formatMessage(messages.goToUserSettings2)}
+            {` ${formatMessage(messages.goToUserSettings2)} `}
           </NavLink>
           {formatMessage(messages.goToUserSettings3)}
         </p>

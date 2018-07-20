@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import {
-	checkUpdate,
-	checkUpdateFinish
+  checkUpdate,
+  checkUpdateFinish
 } from './updateNotificationActions';
 
 const defaultState = {
@@ -13,30 +13,33 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-	[checkUpdate](state) {
-		return {
-			...state,
-			checking: true,
-			error: null
-		};
-	},
-	[checkUpdateFinish](state, { payload: { hasUpdate, version, error, updateLink } }) {
-		if (error) {
-			return {
-				...state,
-				checking: false,
-				error
-			};
-		} else {
-			return {
-				...state,
-				hasUpdate,
-				updateLink,
-				version,
-				checking: false
-			};
-		}
-	}
+  [checkUpdate](state) {
+    return {
+      ...state,
+      checking: true,
+      error: null
+    };
+  },
+  [checkUpdateFinish](state, {
+    payload: {
+      hasUpdate, version, error, updateLink
+    }
+  }) {
+    if (error) {
+      return {
+        ...state,
+        checking: false,
+        error
+      };
+    }
+    return {
+      ...state,
+      hasUpdate,
+      updateLink,
+      version,
+      checking: false
+    };
+  }
 }, defaultState);
 
 export default reducer;

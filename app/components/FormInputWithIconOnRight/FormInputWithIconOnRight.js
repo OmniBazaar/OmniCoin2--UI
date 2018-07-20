@@ -15,7 +15,7 @@ export default class FormInputWithIconOnRight extends Component {
           type="text"
           className="textfield"
         />
-        <Button type='button' className="button--gray-text">
+        <Button type="button" className="button--gray-text">
           {rightButtonText}
         </Button>
       </div>

@@ -5,7 +5,7 @@ const apiKey = '4ad8f029-035c-4d68-8020-6f2fad9bfb7a';
 const address = 'http://localhost:3000';
 const blockInfoAddress = 'https://blockchain.info';
 
-const feePerByte = 10; //satoshi
+const feePerByte = 10; // satoshi
 
 const createWallet = wrapRequest(async (password, label, email) => {
   const createUrl = new URL(`${address}/api/v2/create`);

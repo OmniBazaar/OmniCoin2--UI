@@ -1,4 +1,9 @@
 #!/bin/sh
+# expand template variables + preserve formatting
+render_template() {
+  eval "echo \"$(cat $1)\""
+}
+
 if ! [ -d "$HOME/Library/Application Support/OmniBazaar" ]; then
 mkdir "$HOME/Library/Application Support/OmniBazaar";
 fi
@@ -15,5 +20,7 @@ name=$(basename "$1")
 mkdir "$HOME/Library/Preferences/OmniBazaar"
 chown -R $USER "$HOME/Library/Preferences/OmniBazaar"
 echo "referrer=$name" >> "$HOME/Library/Preferences/OmniBazaar/omnibazaar.set"
+
+render_template service/omnibazaar.witness_node.plist >/Library/LaunchAgents/omnibazaar.witness_node.plist
 
 exit 0
