@@ -38,13 +38,6 @@ const makeEthereumPayment = function (privateKey, to, amount) {
 
 const addEthereumAddress = function (privateKey, address, label) {
   //todo
-  // var wallet = new Wallet(privateKey);
-  // var balancePromise = wallet.getBalance();
-
-  // balancePromise.then(function (balance) {
-  //   return balance;
-  // });
-
 };
 
 const getEthereumAddress = function (xpub, address, privateKey) {
@@ -57,11 +50,28 @@ const getEthereumAddress = function (xpub, address, privateKey) {
   });
 };
 
+
+const getEthereumTransactions = function (address) {
+  var networks = ethers.networks;
+  var providers = ethers.providers;
+  var provider = providers.getDefaultProvider('ropsten', "TFJCBHDJ5U51N2RDKVZU5BMMJ4YEXYESNQ");
+  
+  // Connect to Etherscan
+  // var network = providers.networks.ropsten;
+  // var etherscanProvider = new providers.EtherscanProvider(network);
+   
+  provider.getHistory(address).then(function (result) {
+    console.log("result: " + result);
+    return result;
+  });
+};
+
 export {
   createEthereumWallet,
   getEthereumWallets,
   makeEthereumPayment,
   getEthereumBalance,
   addEthereumAddress,
-  getEthereumAddress
+  getEthereumAddress,
+  getEthereumTransactions
 };
