@@ -8,6 +8,7 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import cn from 'classnames';
 import { Button, Form, Dropdown } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
+import _ from 'lodash';
 
 import Radio from '../../../../../../../../../components/Radio/Radio';
 import TagsInput from '../../../../../../../../../components/TagsInput';
@@ -228,6 +229,10 @@ class SearchPrioritySetting extends Component {
           </div>
         );
       case PriorityTypes.PUBLISHER:
+        let publisher = '';
+        if(this.publishers.length) {
+          publisher = _.find(this.publishers, {text: publisherData.publisherName.name});
+        }
         return (
           <div className="form-group" key="publisher">
             <span>{formatMessage(messages.publisherName)}*</span>
