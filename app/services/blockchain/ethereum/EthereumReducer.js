@@ -107,11 +107,10 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_ETHEREUM_BALANCE_SUCCEEDED: (state, { response }) => ({
+  GET_ETHEREUM_BALANCE_SUCCEEDED: (state, { balance }) => ({
     ...state,
-    balance: response,
-    loading: false,
-    message: response
+    balance: balance,
+    loading: false
   }),
   GET_ETHEREUM_BALANCE_FAILED: (state, { error }) => ({
     ...state,

@@ -141,24 +141,24 @@ class NewEthereumWallet extends Component {
           message={formatMessage(messages.repeatPassword) + '*'}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
-        /> */}
+        /> 
         <Field
           name="label"
           placeholder={formatMessage(messages.pleaseEnter)}
           message={formatMessage(messages.label)}
           component={FormField}
         />
-        {/* <Field
+         <Field
           name="email"
           placeholder={formatMessage(messages.email)}
           type="email"
           message={formatMessage(messages.email)}
           component={FormField}
-        /> */}
+        />
         <div className="form-field">
           <div />
           <span className="email-tooltip">{formatMessage(messages.message)}</span>
-        </div>
+        </div>*/}
         <ModalFooter
           successContent={formatMessage(messages.createWallet)}
           cancelContent={formatMessage(messages.cancel)}

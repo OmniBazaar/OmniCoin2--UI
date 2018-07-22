@@ -59,6 +59,7 @@ function* getEthereumWallets({ payload: { privateKey, brainKey } }) {
       if (walletData) {
         const { address, privateKey } = walletData;
         const res = yield call(EthereumApi.getEthereumWallets, privateKey, null);
+        yield put({ type: 'GET_ETHEREUM_BALANCE', payload: { address, privateKey }});
         yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
       } else {
         yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [] });
@@ -83,10 +84,10 @@ function* makeEthereumPayment({
   }
 }
 
-function* getEthereumBalance({ payload: { address, privateKey } }) {
+function* getEthereumBalance({ payload: { privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumBalance, privateKey);;
-    yield put({ type: 'GET_ETHEREUM_BALANCE_SUCCEEDED', balance: res.balance });
+    const balance = yield call(EthereumApi.getEthereumBalance, privateKey);;
+    yield put({ type: 'GET_ETHEREUM_BALANCE_SUCCEEDED', balance });
   } catch (error) {
     yield put({ type: 'GET_ETHEREUM_BALANCE_FAILED', error });
   }

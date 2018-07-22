@@ -423,7 +423,7 @@ PublicData.propTypes = {
     wallets: PropTypes.array,
   }),
   ethereum: PropTypes.shape({
-    wallets: PropTypes.array,
+    wallet: PropTypes.object,
   }),
 };
 

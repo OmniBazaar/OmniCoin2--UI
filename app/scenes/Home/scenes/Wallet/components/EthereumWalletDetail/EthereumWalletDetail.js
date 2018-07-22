@@ -17,10 +17,6 @@ const messages = defineMessages({
     id: 'EthereumWalletDetail.wallet',
     defaultMessage: 'Wallet'
   },
-  guid: {
-    id: 'EthereumWalletDetail.guid',
-    defaultMessage: 'Wallet GUID: '
-  },
   currentBalance: {
     id: 'EthereumWalletDetail.currentBalance',
     defaultMessage: 'Current Balance'
@@ -32,7 +28,6 @@ const EthereumWalletDetail = (props) => {
 
   return (
     <div
-      key={props.walletKey}
       className="wallet-detail"
       onClick={props.openWalletModal}
       onKeyDown={props.openWalletModal}
@@ -47,7 +42,6 @@ const EthereumWalletDetail = (props) => {
             <span>{props.label || formatMessage(messages.wallet)}</span>
           </div>
           <span className="code">{props.address}</span>
-          <span className="accountId">{formatMessage(messages.guid)} {props.guid}</span>
         </div>
       </div>
       <div className="info">
@@ -56,7 +50,7 @@ const EthereumWalletDetail = (props) => {
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">{(props.balance / 100000000) || 0} BTC</span>
+          <span className="balance">{parseFloat(props.balance) || 0} ETH</span>
         </div>
       </div>
     </div>
@@ -72,11 +66,8 @@ EthereumWalletDetail.defaultProps = {
 };
 
 EthereumWalletDetail.propTypes = {
-  walletKey: PropTypes.string.isRequired,
   openWalletModal: PropTypes.func,
-  label: PropTypes.string,
   address: PropTypes.string.isRequired,
-  guid: PropTypes.string.isRequired,
   balance: PropTypes.number.isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func

@@ -146,29 +146,12 @@ class Wallet extends Component {
 
 
   getEthereumContent() {
-    const { wallets, guid } = this.props.ethereum;
-    const elements = wallets.map((wallet, index) => (
-      <EthereumWalletDetail
-        key={hash(wallet)}
-        walletKey={`wallet-${index}`}
-        openWalletModal={this.openWalletModal}
-        address={wallet.receiveAddress}
-        label={wallet.label}
-        guid={guid}
-        balance={wallet.balance}
-      />
-    ));
-    if (guid) {
-      elements.push(<div className="add-icon">
-        <Image
-          src={AddIcon}
-          width={100}
-          height={100}
-          onClick={this.onClickAddAddress}
-        />
-      </div>);
-    }
-    return elements;
+    const { address, balance } = this.props.ethereum;
+    return <EthereumWalletDetail
+      openWalletModal={this.openWalletModal}
+      address={address}
+      balance={balance}
+    />
   }
 
 
@@ -239,7 +222,7 @@ class Wallet extends Component {
                 menuItem: 'Ethereum',
                 render: () =>
                   (<Tab.Pane>
-                    {this.props.ethereum.wallets.length ?
+                    {this.props.ethereum.address ?
                       <div className="content">
                         {
                           this.props.ethereum.isGettingWallets ?
@@ -292,9 +275,9 @@ Wallet.propTypes = {
     getWallets: PropTypes.func
   }).isRequired,
   ethereum: PropTypes.shape({
-    wallets: PropTypes.array,
-    guid: PropTypes.string,
+    address: PropTypes.string,
     loading: PropTypes.bool,
+    balance: PropTypes.number,
     isGettingWallets: PropTypes.bool
   }).isRequired,
   ethereumActions: PropTypes.shape({
