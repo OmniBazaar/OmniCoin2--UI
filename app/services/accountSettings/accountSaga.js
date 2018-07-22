@@ -17,6 +17,7 @@ import OmnicoinHistory from './omnicoinHistory';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { voteForProcessors } from '../processors/utils';
 import BitcoinHistory from './bitcoinHistory';
+import EthereumHistory from './ethereumHistory';
 
 
 export function* accountSubscriber() {
@@ -122,6 +123,8 @@ export function* getRecentTransactions({ payload: { coinType } }) {
     if (coinType === CoinTypes.OMNI_COIN) {
       historyStorage = new OmnicoinHistory(currentUser.username);
       yield historyStorage.refresh(currentUser);
+    } else if (coinType === CoinTypes.ETHEREUM) {
+      historyStorage = new EthereumHistory(currentUser.username);
     } else if (coinType === CoinTypes.BIT_COIN) {
       historyStorage = new BitcoinHistory(currentUser.username);
     }

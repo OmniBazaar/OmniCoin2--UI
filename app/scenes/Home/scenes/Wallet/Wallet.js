@@ -88,7 +88,7 @@ class Wallet extends Component {
       case 1:
         return CoinTypes.BIT_COIN;
       case 2:
-        return CoinTypes.ETHERERUM;
+        return CoinTypes.ETHEREUM;
     }
   }
 
