@@ -16,6 +16,7 @@ const defaultState = {
   wallets: [],
   balance: 0,
   trasactions: [],
+  brainKey: null,
   privateKey: null,
   address: null,
   isGettingWallets: false,
@@ -42,9 +43,10 @@ const reducer = handleActions({
       message: null
     };
   },
-  CREATE_ETHEREUM_WALLET_SUCCEEDED: (state, { address }) => ({
+  CREATE_ETHEREUM_WALLET_SUCCEEDED: (state, { address, brainKey }) => ({
     ...state,
     address,
+    brainKey,
     loading: false,
     error: null
   }),

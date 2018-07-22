@@ -28,7 +28,7 @@ function* createEthereumWallet() {
 
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, res.address, res.privateKey, currentUser);
-    yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address });
+    yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address, brainKey: res.mnemonic });
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_FAILED', error });
@@ -37,7 +37,7 @@ function* createEthereumWallet() {
 
 function* connectEthereumWallet({ payload: { privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumWallets, privateKey);
+    const res = yield call(EthereumApi.getEthereumWallets, privateKey, null);
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, address, privateKey, currentUser);
     yield put(connectWalletFinish());
@@ -48,18 +48,17 @@ function* connectEthereumWallet({ payload: { privateKey } }) {
   }
 }
 
-function* getEthereumWallets({ payload: { address, privateKey } }) {
+function* getEthereumWallets({ payload: { privateKey, brainKey } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    if (address && privateKey) {
-      const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
-      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
+    if (privateKey || brainKey) {
+      const res = yield call(EthereumApi.getEthereumWallets, privateKey, brainKey);
+      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, privateKey });
     } else {
       const walletData = yield call(getEthereumWalletData, currentUser);
       if (walletData) {
         const { address, privateKey } = walletData;
-        const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
-
+        const res = yield call(EthereumApi.getEthereumWallets, privateKey, null);
         yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
       } else {
         yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [] });
@@ -86,7 +85,7 @@ function* makeEthereumPayment({
 
 function* getEthereumBalance({ payload: { address, privateKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumBalance, privateKey);
+    const res = yield call(EthereumApi.getEthereumBalance, privateKey);;
     yield put({ type: 'GET_ETHEREUM_BALANCE_SUCCEEDED', balance: res.balance });
   } catch (error) {
     yield put({ type: 'GET_ETHEREUM_BALANCE_FAILED', error });

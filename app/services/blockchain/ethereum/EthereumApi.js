@@ -12,17 +12,30 @@ const createEthereumWallet = function () {
   return wallet;
 };
 
-const getEthereumWallets = function (privateKey) {
-  var wallet = new Wallet(privateKey);
-  return wallet;
+const getEthereumWallets = function (privateKey, brainKey) {
+  if (brainKey) {
+    var wallet = new Wallet.fromMnemonic(brainKey);
+    return wallet;
+  } else {
+    var wallet = new Wallet(privateKey);
+    return wallet;
+  }
 };
 
 const getEthereumBalance = function (privateKey) {
-  var wallet = new Wallet(privateKey);
+  // var networks = ethers.networks;
+  // var providers = ethers.providers;
+  // wallet.provider = ethers.providers.getDefaultProvider();
+  // wallet.provider = ethers.providers.networks.ropsten;
+
+  var provider = ethers.providers.getDefaultProvider('ropsten');
+  var wallet = new ethers.Wallet(privateKey, provider);
+
   var balancePromise = wallet.getBalance();
 
-  balancePromise.then(function (balance) {
-    return balance;
+  return balancePromise.then(function (balance) {
+    console.log(balance);
+    return ethers.utils.formatEther(balance);
   });
 };
 
@@ -53,20 +66,6 @@ const getEthereumAddress = function (xpub, address, privateKey) {
 
 
 const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddress}?module=account&action=txlist&startblock=0&endblock=latest&sort=asc&address=${address}`));
-// function (address) {
-//   var networks = ethers.networks;
-//   var providers = ethers.providers;
-//   var provider = providers.getDefaultProvider('ropsten', "TFJCBHDJ5U51N2RDKVZU5BMMJ4YEXYESNQ");
-  
-//   // Connect to Etherscan
-//   // var network = providers.networks.ropsten;
-//   // var etherscanProvider = new providers.EtherscanProvider(network);
-   
-//   provider.getHistory(address).then(function (result) {
-//     console.log("result: " + result);
-//     return result;
-//   });
-// };
 
 export {
   createEthereumWallet,
