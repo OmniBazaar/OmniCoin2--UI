@@ -5,6 +5,7 @@ import ethers from 'ethers';
 var Wallet = ethers.Wallet;
 // remove this on production.
 Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+const ApiAddress = 'http://api-ropsten.etherscan.io/api';
 
 const createEthereumWallet = function () {
   var wallet = Wallet.createRandom();
@@ -51,20 +52,21 @@ const getEthereumAddress = function (xpub, address, privateKey) {
 };
 
 
-const getEthereumTransactions = function (address) {
-  var networks = ethers.networks;
-  var providers = ethers.providers;
-  var provider = providers.getDefaultProvider('ropsten', "TFJCBHDJ5U51N2RDKVZU5BMMJ4YEXYESNQ");
+const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddress}?module=account&action=txlist&startblock=0&endblock=latest&sort=asc&address=${address}`));
+// function (address) {
+//   var networks = ethers.networks;
+//   var providers = ethers.providers;
+//   var provider = providers.getDefaultProvider('ropsten', "TFJCBHDJ5U51N2RDKVZU5BMMJ4YEXYESNQ");
   
-  // Connect to Etherscan
-  // var network = providers.networks.ropsten;
-  // var etherscanProvider = new providers.EtherscanProvider(network);
+//   // Connect to Etherscan
+//   // var network = providers.networks.ropsten;
+//   // var etherscanProvider = new providers.EtherscanProvider(network);
    
-  provider.getHistory(address).then(function (result) {
-    console.log("result: " + result);
-    return result;
-  });
-};
+//   provider.getHistory(address).then(function (result) {
+//     console.log("result: " + result);
+//     return result;
+//   });
+// };
 
 export {
   createEthereumWallet,

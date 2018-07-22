@@ -28,7 +28,7 @@ export const persitEthereumWalletData = async (address, privateKey, account) => 
 		address,
 		privateKey
 	};
-	
+
 	const dataString = encrypt(JSON.stringify(data), account.password);
 	const dataFilePath = path.resolve(dataFileDir, account.username);
 	await writeFile(dataFilePath, dataString);

@@ -17,13 +17,15 @@ export function* ethereumSubscriber() {
     takeEvery('MAKE_ETHEREUM_PAYMENT', makeEthereumPayment),
     takeEvery('GET_ETHEREUM_BALANCE', getEthereumBalance),
     takeEvery('ADD_ETHEREUM_ADDRESS', addEthereumAddress),
-    takeEvery('CONNECT_ETHEREUM_WALLET', connectEthereumWallet)
+    takeEvery('CONNECT_ETHEREUM_WALLET', connectEthereumWallet),
+    takeEvery('GET_ETHEREUM_TRANSACTIONS', getEthereumTransactions)
   ]);
 }
 
 function* createEthereumWallet() {
   try {
     const res = EthereumApi.createEthereumWallet();
+
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, res.address, res.privateKey, currentUser);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address });
@@ -46,7 +48,7 @@ function* connectEthereumWallet({ payload: { privateKey } }) {
   }
 }
 
-function* getEthereumWallets({ payload: { address, privateKey }}) {
+function* getEthereumWallets({ payload: { address, privateKey } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     if (address && privateKey) {
@@ -55,11 +57,12 @@ function* getEthereumWallets({ payload: { address, privateKey }}) {
     } else {
       const walletData = yield call(getEthereumWalletData, currentUser);
       if (walletData) {
-        const {address, privateKey} = walletData;
+        const { address, privateKey } = walletData;
         const res = yield call(EthereumApi.getEthereumWallets, privateKey, address);
-        yield put({type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey});
+
+        yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
       } else {
-        yield put({type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: []});
+        yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [] });
       }
     }
   } catch (error) {
@@ -90,6 +93,17 @@ function* getEthereumBalance({ payload: { address, privateKey } }) {
   }
 }
 
+
+function* getEthereumTransactions({ payload: { address } }) {
+  try {
+    const res = yield call(EthereumApi.getEthereumTransactions, address);
+    const { currentUser } = (yield select()).default.auth;
+    yield put({ type: 'GET_ETHEREUM_TRANSACTIONS_SUCCEEDED', transactions: res.results });
+  } catch (error) {
+    yield put({ type: 'GET_ETHEREUM_TRANSACTIONS_FAILED', error });
+  }
+}
+
 function* addEthereumAddress({ payload: { address, privateKey, label } }) {
   // Ethereum doesn't support Add more Address to current wallet.
   console.log('ADDING ETHEREUM ADDRESS', address, privateKey, label);
@@ -98,6 +112,6 @@ function* addEthereumAddress({ payload: { address, privateKey, label } }) {
   //   const address = yield call(EthereumApi.getEthereumAddress, res.xpub, address, privateKey);
   //   yield put({ type: 'ADD_ETHEREUM_ADDRESS_SUCCEEDED', address });
   // } catch (error) {
-     yield put({ type: 'ADD_ETHEREUM_ADDRESS_FAILED', error });
+  yield put({ type: 'ADD_ETHEREUM_ADDRESS_FAILED', error });
   // }
 }

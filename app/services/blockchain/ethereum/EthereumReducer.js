@@ -8,11 +8,14 @@ import {
   toggleEthereumModal,
   toggleAddAddressEthereumModal,
   connectEthereumWallet,
-  connectEthereumWalletFinish
+  connectEthereumWalletFinish,
+  getEthereumTransactions
 } from './EthereumActions';
 
 const defaultState = {
   wallets: [],
+  balance: 0,
+  trasactions: [],
   privateKey: null,
   address: null,
   isGettingWallets: false,
@@ -104,6 +107,7 @@ const reducer = handleActions({
   },
   GET_ETHEREUM_BALANCE_SUCCEEDED: (state, { response }) => ({
     ...state,
+    balance: response,
     loading: false,
     message: response
   }),
@@ -162,7 +166,29 @@ const reducer = handleActions({
       connectingWallet: false,
       connectWalletError: error
     };
-  }
+  },
+  [getEthereumTransactions](state) {
+    return {
+      ...state,
+      isGettingTransactions: true,
+      loading: true,
+      error: null,
+      message: null
+    };
+  },
+  GET_ETHEREUM_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => ({
+    ...state,
+    transactions,
+    isGettingTransactions: false,
+    loading: false,
+    error: null
+  }),
+  GET_ETHEREUM_TRANSACTIONS_FAILED: (state, { error }) => ({
+    ...state,
+    isGettingTransactions: false,
+    loading: false,
+    error
+  })
 }, defaultState);
 
 export default reducer;

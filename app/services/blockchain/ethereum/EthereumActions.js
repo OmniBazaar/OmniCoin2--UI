@@ -9,7 +9,8 @@ const {
   toggleEthereumModal,
   toggleAddAddressEthereumModal,
   connectEthereumWallet,
-  connectEthereumWalletFinish
+  connectEthereumWalletFinish,
+  getEthereumTransactions
 } = createActions({
   CREATE_ETHEREUM_WALLET: (privateKey, label, email) => ({ privateKey, label, email }),
   GET_ETHEREUM_WALLETS: (address, privateKey) => ({ address, privateKey }),
@@ -21,7 +22,8 @@ const {
   TOGGLE_ETHEREUM_MODAL: () => ({ }),
   TOGGLE_ADD_ADDRESS_ETHEREUM_MODAL: () => ({ }),
   CONNECT_ETHEREUM_WALLET: (address, privateKey) => ({ address, privateKey }),
-  CONNECT_ETHEREUM_WALLET_FINISH: (error) => ({ error })
+  CONNECT_ETHEREUM_WALLET_FINISH: (error) => ({ error }),
+  GET_ETHEREUM_TRANSACTIONS: (address) => ({ address })
 });
 
 export {
@@ -33,5 +35,6 @@ export {
   toggleEthereumModal,
   toggleAddAddressEthereumModal,
   connectEthereumWallet,
-  connectEthereumWalletFinish
+  connectEthereumWalletFinish,
+  getEthereumTransactions
 };
