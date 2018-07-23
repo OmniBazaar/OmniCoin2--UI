@@ -344,7 +344,6 @@ const reducer = handleActions({
         image,
         thumb,
         fileName,
-        file: null
       };
 
       return {
@@ -364,7 +363,6 @@ const reducer = handleActions({
         ...state.listingImages[imageId],
         uploading: false,
         uploadError: error,
-        file: null
       };
 
       return {
