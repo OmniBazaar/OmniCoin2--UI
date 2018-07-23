@@ -172,5 +172,9 @@ export default defineMessages({
   autoRun: {
     id: 'Preferences.autoRun',
     defaultMessage: 'Autorun witness node'
+  },
+  autoRunNote: {
+    id: 'Preferences.autoRunNote',
+    defaultMessage: 'This action requires admin rights'
   }
 });

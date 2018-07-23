@@ -268,8 +268,12 @@ class PreferencesTab extends Component {
                       component={Checkbox}
                     />
                   </div>
+                  <div className="autorun-note">
+                    {formatMessage(messages.autoRunNote)}
+                  </div>
                 </Grid.Column>
               </Grid.Row>
+              
             }
             <Grid.Row>
               <Grid.Column width={4} />

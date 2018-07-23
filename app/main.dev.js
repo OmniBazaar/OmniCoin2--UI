@@ -18,6 +18,7 @@ import bitcoincli from 'blockchain-wallet-service';
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+const sudo = require('sudo-prompt');
 
 let mainWindow = null;
 
@@ -160,33 +161,50 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   });
 };
 
+const options = {
+  name: 'Omninazaar',
+  //icns: '/Applications/Omninazaar.app/Contents/Resources/Electron.icns', // (optional)
+};
+
 const launchNodeDaemon = () => {
-  switch (process.platform) {
-    case 'win32':
-      const userName = process.env.USERPROFILE.split(path.sep)[2];
-      const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-      return exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath}`);
-    case 'linux':
-      return exec('systemctl daemon-reload' +
-        'systemctl enable omnibazaar-publisher.service' +
-        'systemctl start omnibazaar-publisher.service');
-    case 'darwin':
-      return exec('launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && ' +
-        'launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist');
-  }
+  sudo.exec('echo hello', options,
+    function(error, stdout, stderr) {
+      if (error) throw error;
+      switch (process.platform) {
+        case 'win32':
+          const userName = process.env.USERPROFILE.split(path.sep)[2];
+          const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
+          return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath}`);
+        case 'linux':
+          return sudo.exec('systemctl daemon-reload' +
+            'systemctl enable omnibazaar-publisher.service' +
+            'systemctl start omnibazaar-publisher.service');
+        case 'darwin':
+          return exec('launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && ' +
+            'launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist');
+      }
+      console.log('stdout: ' + stdout);
+    }
+  );
 };
 
 const stopNodeDaemon = () => {
-  switch (process.platform) {
-    case 'win32':
-      const userName = process.env.USERPROFILE.split(path.sep)[2];
-      const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-      return exec('reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /f ');
-    case 'linux':
-      return exec('systemctl stop omnibazaar-publisher.service');
-    case 'darwin':
-      return exec('launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist');
-  }
+  sudo.exec('echo hello', options,
+    function(error, stdout, stderr) {
+      if (error) throw error;
+      switch (process.platform) {
+        case 'win32':
+          const userName = process.env.USERPROFILE.split(path.sep)[2];
+          const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
+          return sudo.exec('reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /f ');
+        case 'linux':
+          return sudo.exec('systemctl stop omnibazaar-publisher.service');
+        case 'darwin':
+          return exec('launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist');
+      }
+      console.log('stdout: ' + stdout);
+    }
+  );
 };
 
 const runOb2 = async () => {
@@ -216,7 +234,7 @@ const processReferrer = async () => {
   ipcMain.on('get-referrer', (event) => {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
-        console.log('ERR ', err);
+        //console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: '' });
       } else {
         const start = data.lastIndexOf('-') + 1;
