@@ -217,7 +217,7 @@ const processReferrer = async () => {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
         console.log('ERR ', err);
-        event.sender.send('receive-referrer', { referrer: null });
+        event.sender.send('receive-referrer', { referrer: '' });
       } else {
         const start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');

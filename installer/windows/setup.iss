@@ -72,6 +72,6 @@ begin
         filename := ExtractFileName(ExpandConstant('{srcexe}'));    
         appDataPath := ExpandConstant('{userappdata}');
 
-        SaveStringToFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', filename, True);
+        SaveStringToFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', 'referrer='+filename, False);
     end;
 end;
