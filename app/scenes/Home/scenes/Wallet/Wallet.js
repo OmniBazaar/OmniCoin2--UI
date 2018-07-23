@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tab, Image, Loader } from 'semantic-ui-react';
+import { Tab, Image, Loader, Button } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 
@@ -146,12 +146,31 @@ class Wallet extends Component {
 
 
   getEthereumContent() {
-    const { address, balance } = this.props.ethereum;
-    return <EthereumWalletDetail
+    const { address, balance, brainKey } = this.props.ethereum;
+    const wallet = [
+      <EthereumWalletDetail
       openWalletModal={this.openWalletModal}
       address={address}
       balance={balance}
-    />
+      brainKey={brainKey}
+      />
+    ];
+    if (brainKey) {
+      wallet.push(<Button
+          content="Export key"
+          className="button--primary"
+          onClick={() => this.downloadBrainKeyFile(brainKey)}
+        />)
+    }
+    return wallet
+  }
+
+  downloadBrainKeyFile(brainKey) {
+    var element = document.createElement("a");
+    var file = new Blob([brainKey], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "wallet-brain-key.txt";
+    element.click();
   }
 
 

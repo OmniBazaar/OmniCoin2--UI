@@ -33,7 +33,7 @@ const EthereumWalletDetail = (props) => {
       onKeyDown={props.openWalletModal}
       role="link"
       tabIndex={0}
-      style={{ backgroundImage: `url("${EthereumIconLg}")`, backgroundSize: iconSizeLg, width: '300px' }}
+      style={{ backgroundImage: `url("${EthereumIconLg}")`, backgroundSize: iconSizeLg, marginBottom: '20px' }}
     >
       <div className="info">
         <Image src={UserIcon} width={iconSize} height={iconSize} />
@@ -60,7 +60,6 @@ const EthereumWalletDetail = (props) => {
 export default injectIntl(EthereumWalletDetail);
 
 EthereumWalletDetail.defaultProps = {
-  walletKey: '',
   openWalletModal: null,
   label: '',
 };
@@ -68,7 +67,8 @@ EthereumWalletDetail.defaultProps = {
 EthereumWalletDetail.propTypes = {
   openWalletModal: PropTypes.func,
   address: PropTypes.string.isRequired,
-  balance: PropTypes.number.isRequired,
+  brainKey: PropTypes.string.isRequired,
+  balance: PropTypes.string.isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }).isRequired

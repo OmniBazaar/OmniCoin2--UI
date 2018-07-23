@@ -1,9 +1,8 @@
 {
-  "NewEthereumWallet.createPassword": "Create Password for Wallet Access",
-  "NewEthereumWallet.repeatPassword": "Repeat Password for Wallet Access",
-  "NewEthereumWallet.email": "Email for Restore Access",
-  "NewEthereumWallet.message": "Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.",
   "NewEthereumWallet.createWallet": "CREATE WALLET",
   "NewEthereumWallet.cancel": "CANCEL",
-  "NewEthereumWallet.enter": "Please enter"
+  "NewEthereumWallet.successMessage": "Wallet added successfully",
+  "NewEthereumWallet.success":"Success",
+  "NewEthereumWallet.error":"Error",
+  "NewEthereumWallet.info":"Create New ETHEREUM Wallet"
 }

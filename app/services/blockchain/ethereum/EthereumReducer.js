@@ -162,7 +162,7 @@ const reducer = handleActions({
       connectWalletError: null
     };
   },
-  [connectEthereumWalletFinish](state, { payload: { error } }) {
+  [connectEthereumWalletFinish](state, { error }) {
     return {
       ...state,
       connectingWallet: false,

@@ -1,17 +1,13 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  enterPassword: {
+  enterPrivateKey: {
     id: 'ExistingEthereumWallet.enterPassword',
-    defaultMessage: 'Enter Private Key for Account Access',
+    defaultMessage: 'Enter wallet Private Key',
   },
   pleaseEnter: {
     id: 'ExistingEthereumWallet.pleaseEnter',
     defaultMessage: 'Please Enter'
-  },
-  walletGuid: {
-    id: 'ExistingEthereumWallet.walletGuid',
-    defaultMessage: 'Wallet GUID'
   },
   cancel: {
     id: 'ExistingEthereumWallet.cancel',
@@ -32,5 +28,21 @@ export default defineMessages({
   connectErrorMessage: {
     id: 'NewEthereumWallet.connectErrorMessage',
     defaultMessage: 'Having error when conneting wallet'
-  }
+  },
+  chooseOption: {
+    id: 'NewEthereumWallet.chooseOption',
+    defaultMessage: 'Choose option to add wallet'
+  },
+  usingBrainKey: {
+    id: 'NewEthereumWallet.usingBrainKey',
+    defaultMessage: 'Using Brain Key'
+  },
+  usingPrivateKey: {
+    id: 'NewEthereumWallet.usingPrivateKey',
+    defaultMessage: 'Using Private Key'
+  },
+  enterBrainKey: {
+    id: 'ExistingEthereumWallet.enterBrainKey',
+    defaultMessage: 'Enter wallet Brain Key',
+  },
 });

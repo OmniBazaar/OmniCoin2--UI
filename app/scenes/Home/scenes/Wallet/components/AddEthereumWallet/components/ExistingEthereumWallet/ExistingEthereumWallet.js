@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { Form, Button } from 'semantic-ui-react';
+import { Form, Button, Checkbox } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
@@ -19,12 +19,16 @@ class ExistingEthereumWallet extends Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+
+    this.state = {
+      addingOption: 'privateKey'
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.ethereum.connectingWallet
           && this.props.ethereum.connectingWallet) {
-      if (nextProps.ethereum.modal.isOpen) {
+      if (nextProps.ethereum.modalEthereum.isOpen) {
         this.toggleEthereumModal();
       }
       if (nextProps.ethereum.connectWalletError) {
@@ -40,9 +44,12 @@ class ExistingEthereumWallet extends Component {
     this.props.EthereumActions.toggleEthereumModal();
   };
 
-  handleSubmit(values) {
-    const { privateKey } = values;
-    this.props.EthereumActions.connectEthereumWallet(privateKey);
+  handleSubmit({ privateKey, brainKey }) {
+    if (this.state.addingOption === 'privateKey') {
+      this.props.EthereumActions.connectEthereumWallet(privateKey, null);
+    } else {
+      this.props.EthereumActions.connectEthereumWallet(null, brainKey);
+    }
   }
 
   handleCancel() {
@@ -60,14 +67,42 @@ class ExistingEthereumWallet extends Component {
     const { connectingWallet } = this.props.ethereum;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-ethereum-wallet">
-        <Field
-          name="privateKey"
-          placeholder={formatMessage(messages.pleaseEnter)}
-          type="privateKey"
-          message={formatMessage(messages.enterPassword) + '*'}
-          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
-          component={FormField}
-        />
+        <Form.Field>
+          {formatMessage(messages.chooseOption) + ":"}
+        </Form.Field>
+        <Form.Field>
+          <Checkbox
+            radio
+            label={formatMessage(messages.usingPrivateKey)}
+            value='privateKey'
+            checked={this.state.addingOption === 'privateKey'}
+            onChange={() => this.setState({addingOption: 'privateKey'})}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Checkbox
+            radio
+            label={formatMessage(messages.usingBrainKey)}
+            value='brainKey'
+            checked={this.state.addingOption === 'brainKey'}
+            onChange={() => this.setState({addingOption: 'brainKey'})}
+          />
+        </Form.Field>
+        { this.state.addingOption === 'privateKey' ?
+          <Field
+            name="privateKey"
+            placeholder={formatMessage(messages.pleaseEnter)}
+            message={formatMessage(messages.enterPrivateKey) + '*'}
+            validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+            component={FormField}
+          />
+        : <Field
+            name="brainKey"
+            placeholder={formatMessage(messages.pleaseEnter)}
+            message={formatMessage(messages.enterBrainKey) + '*'}
+            validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+            component={FormField}
+          />}
         <ModalFooter
           successContent={formatMessage(messages.connect)}
           cancelContent={formatMessage(messages.cancel)}
@@ -86,7 +121,7 @@ ExistingEthereumWallet.propTypes = {
       isOpen: PropTypes.bool
     }),
     loading: PropTypes.bool,
-    connectWalletError: PropTypes.object,
+    connectWalletError: PropTypes.boolean,
     connectingWallet: PropTypes.bool
   }).isRequired,
   EthereumActions: PropTypes.shape({

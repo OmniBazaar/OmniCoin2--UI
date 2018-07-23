@@ -6,6 +6,10 @@ import {
   select
 } from 'redux-saga/effects';
 
+import {
+  delay
+} from 'redux-saga'
+
 import * as EthereumApi from './EthereumApi';
 import { persitEthereumWalletData, getEthereumWalletData } from './EthereumServices';
 import { connectEthereumWalletFinish } from './EthereumActions';
@@ -35,15 +39,20 @@ function* createEthereumWallet() {
   }
 }
 
-function* connectEthereumWallet({ payload: { privateKey } }) {
+function* connectEthereumWallet({ payload: { walletPrivateKey, walletBrainKey } }) {
   try {
-    const res = yield call(EthereumApi.getEthereumWallets, privateKey, null);
+    const res = yield call(EthereumApi.getEthereumWallets, walletPrivateKey, walletBrainKey);
+    const { address, privateKey, mnemonic: brainKey } = res;
     const { currentUser } = (yield select()).default.auth;
-    yield call(persitEthereumWalletData, address, privateKey, currentUser);
-    yield put(connectWalletFinish());
-    yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
+
+    yield call(persitEthereumWalletData, address, privateKey, brainKey, currentUser);
+    yield put(connectEthereumWalletFinish());
+    yield put({ type: 'GET_ETHEREUM_BALANCE', payload: { address, privateKey }});
+    yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey, brainKey });
   } catch (error) {
     console.log('Connect Ethereum wallet error', error);
+    // delay for 1 ms because of not showing toastr error
+    yield delay(1)
     yield put(connectEthereumWalletFinish(error));
   }
 }

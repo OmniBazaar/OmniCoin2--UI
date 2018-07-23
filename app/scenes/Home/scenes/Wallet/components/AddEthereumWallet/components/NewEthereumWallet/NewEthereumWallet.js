@@ -19,22 +19,6 @@ import {
 import './new-wallet.scss';
 
 const messages = defineMessages({
-  createPassword: {
-    id: 'NewEthereumWallet.createPassword',
-    defaultMessage: 'Create Password for Wallet Access'
-  },
-  repeatPassword: {
-    id: 'NewEthereumWallet.repeatPassword',
-    defaultMessage: 'Repeat Password for Wallet Access'
-  },
-  email: {
-    id: 'NewEthereumWallet.email',
-    defaultMessage: 'Email for Restore Access'
-  },
-  message: {
-    id: 'NewEthereumWallet.message',
-    defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.'
-  },
   createWallet: {
     id: 'NewEthereumWallet.createWallet',
     defaultMessage: 'CREATE WALLET'
@@ -43,37 +27,21 @@ const messages = defineMessages({
     id: 'NewEthereumWallet.cancel',
     defaultMessage: 'CANCEL'
   },
-  pleaseEnter: {
-    id: 'NewEthereumWallet.enter',
-    defaultMessage: 'Please enter'
-  },
   error: {
     id: 'NewEthereumWallet.error',
     defaultMessage: 'Error'
-  },
-  noMatch: {
-    id: 'NewEthereumWallet.noMatch',
-    defaultMessage: 'Passwords do not match'
-  },
-  fieldRequired: {
-    id: 'NewEthereumWallet.required',
-    defaultMessage: 'This field is required'
-  },
-  label: {
-    id: 'NewEthereumWallet.label',
-    defaultMessage: 'Label'
   },
   success: {
     id: 'NewEthereumWallet.success',
     defaultMessage: 'Success'
   },
-  rememberGuid: {
-    id: 'NewEthereumWallet.rememberGuid',
-    defaultMessage: 'Please do not forget to write down or remember your guid'
+  successMessage: {
+    id: 'NewEthereumWallet.successMessage',
+    defaultMessage: 'Wallet added successfully'
   },
-  minLength: {
-    id: 'NewEthereumWallet.minLength',
-    defaultMessage: 'This field must be at least 10 characters in length'
+  info: {
+    id: 'NewEthereumWallet.info',
+    defaultMessage: 'Create New ETHEREUM Wallet'
   }
 });
 
@@ -98,7 +66,7 @@ class NewEthereumWallet extends Component {
       if (nextProps.ethereum.error) {
         toastr.error(formatMessage(messages.error, nextProps.ethereum.error));
       } else {
-        toastr.success(formatMessage(messages.success), formatMessage(messages.rememberGuid));
+        toastr.success(formatMessage(messages.success), formatMessage(messages.successMessage));
         this.props.EthereumActions.getEthereumWallets();
         this.props.EthereumActions.toggleEthereumModal();
       }
@@ -106,11 +74,7 @@ class NewEthereumWallet extends Component {
   }
 
   handleSubmit(values) {
-    this.props.EthereumActions.createEthereumWallet(
-      values.password ? values.password : '',
-      values.label ? values.label : '',
-      values.email ? values.email : ''
-    );
+    this.props.EthereumActions.createEthereumWallet();
   }
 
   handleCancel() {
@@ -123,42 +87,9 @@ class NewEthereumWallet extends Component {
     const { loading } = this.props.ethereum;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-ethereum-wallet">
-        {/* <Field
-          name="password"
-          placeholder={formatMessage(messages.pleaseEnter)}
-          type="password"
-          message={formatMessage(messages.createPassword) + '*'}
-          validate={[
-            required({ message: formatMessage(messages.fieldRequired) }),
-            length({ min: 10, message: formatMessage(messages.minLength) })
-          ]}
-          component={FormField}
-        />
-        <Field
-          name="repeatPassword"
-          placeholder={formatMessage(messages.pleaseEnter)}
-          type="password"
-          message={formatMessage(messages.repeatPassword) + '*'}
-          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
-          component={FormField}
-        /> 
-        <Field
-          name="label"
-          placeholder={formatMessage(messages.pleaseEnter)}
-          message={formatMessage(messages.label)}
-          component={FormField}
-        />
-         <Field
-          name="email"
-          placeholder={formatMessage(messages.email)}
-          type="email"
-          message={formatMessage(messages.email)}
-          component={FormField}
-        />
-        <div className="form-field">
-          <div />
-          <span className="email-tooltip">{formatMessage(messages.message)}</span>
-        </div>*/}
+        <p>
+          {formatMessage(messages.info)}
+        </p><br/>
         <ModalFooter
           successContent={formatMessage(messages.createWallet)}
           cancelContent={formatMessage(messages.cancel)}

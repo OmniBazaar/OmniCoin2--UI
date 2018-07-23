@@ -250,7 +250,7 @@ class RecentTransactions extends Component {
                     {formatMessage(messages.fee)}
                   </TableHeaderCell>
                   <TableHeaderCell
-                    key="fee"
+                    key="status"
                     sorted={sortColumn === 'type' ? sortDirection : null}
                     onClick={this.sortData('statusText')}
                   >
