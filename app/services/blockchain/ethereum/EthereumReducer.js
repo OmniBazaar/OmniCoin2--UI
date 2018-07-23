@@ -65,11 +65,12 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_ETHEREUM_WALLETS_SUCCEEDED: (state, { wallets, address, privateKey }) => ({
+  GET_ETHEREUM_WALLETS_SUCCEEDED: (state, { wallets, address, privateKey, brainKey }) => ({
     ...state,
     wallets,
     address,
     privateKey,
+    brainKey,
     isGettingWallets: false,
     loading: false,
     error: null

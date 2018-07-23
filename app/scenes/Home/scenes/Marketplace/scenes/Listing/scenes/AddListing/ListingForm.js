@@ -195,7 +195,7 @@ class ListingForm extends Component {
             msg = error.message;
           }
         } else {
-          msg = msg = formatMessage(messages.saveListingErrorMessage);
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
 
         this.showErrorToast(formatMessage(messages.error), msg);
@@ -300,9 +300,7 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
-
-    this.props.accountActions.updatePublicData();
-
+    
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),

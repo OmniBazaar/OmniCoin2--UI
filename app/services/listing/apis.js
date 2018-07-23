@@ -10,8 +10,10 @@ import {
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
-import { currencyConverter } from '../utils';
-import { TOKENS_IN_XOM } from '../../utils/constants';
+import {currencyConverter} from "../utils";
+import {TOKENS_IN_XOM} from "../../utils/constants";
+import tmp from 'tmp';
+
 
 let authUser = null;
 let authHeaders = null;
@@ -64,12 +66,22 @@ const makeRequest = async (user, publisher, url, options) => {
 };
 
 export const saveImage = async (user, publisher, file) => {
-  const { localPath, path } = file;
+  let value;
+  const tmpObj = tmp.fileSync();
+  if (file.url) {
+    await new Promise(resolve =>
+      request(file.url)
+        .pipe(fs.createWriteStream(tmpObj.name))
+        .on('finish', resolve));
+    value = fs.createReadStream(tmpObj.name);
+  } else {
+    value = fs.createReadStream(file.localPath || file.path);
+  }
   const options = {
     method: 'POST',
     formData: {
       image: {
-        value: fs.createReadStream(localPath || path),
+        value: value,
         options: {
           filename: file.name,
           contentType: file.type
@@ -78,6 +90,7 @@ export const saveImage = async (user, publisher, file) => {
     }
   };
   const body = await makeRequest(user, publisher, 'images', options);
+  tmpObj.removeCallback();
   return JSON.parse(body);
 };
 
@@ -144,7 +157,7 @@ export const reportListingOnBlockchain = async (listingId) => {
   await tr.broadcast();
 };
 
-const updateListingOnBlockchain = async (user, publisher, listingId, listing) => {
+export const updateListingOnBlockchain = async (user, publisher, listingId, listing) => {
   const seller = await FetchChain('getAccount', user.username);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
@@ -177,7 +190,7 @@ export const getListingFromBlockchain = async listingId => {
   return null;
 };
 
-const ensureListingData = listing => {
+export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
     if (listing[key]) {
@@ -188,9 +201,8 @@ const ensureListingData = listing => {
   return result;
 };
 
-export const createListing = async (user, publisher, listing) => {
+export const createListingOnPublisher = async (user, listing, publisher, listingId) => {
   const newListing = { ...ensureListingData(listing) };
-  const listingId = await createListingOnBlockchain(user, publisher, newListing);
   const options = {
     method: 'POST',
     json: true,
@@ -200,8 +212,13 @@ export const createListing = async (user, publisher, listing) => {
       listing_id: listingId
     }
   };
+  return await makeRequest(user, publisher, 'listings', options);
+};
 
-  return makeRequest(user, publisher, 'listings', options);
+export const createListing = async (user, publisher, listing) => {
+  listing = ensureListingData(listing);
+  const listingId = await createListingOnBlockchain(user, publisher, listing);
+  return await createListingOnPublisher(user, listing, publisher, listingId)
 };
 
 export const editListing = async (user, publisher, listingId, listing) => {
@@ -227,12 +244,11 @@ export const editListing = async (user, publisher, listingId, listing) => {
   return await makeRequest(user, publisher, `listings/${listingId}`, options);
 };
 
-export const deleteListing = async (user, publisher, listing) => {
+export const deleteListingOnPublisher = async (user, publisher, listing) => {
   const options = {
     method: 'DELETE',
     json: true
   };
-  await deleteListingOnBlockchain(user, listing);
   const { listing_id, images } = listing;
   const body = await makeRequest(user, publisher, `listings/${listing_id}`, options);
   if (body.success) {
@@ -243,8 +259,12 @@ export const deleteListing = async (user, publisher, listing) => {
       }
     }
   }
-
   return body;
+};
+
+export const deleteListing = async (user, publisher, listing) => {
+  await deleteListingOnBlockchain(user, listing);
+  return await deleteListingOnPublisher(user, publisher, listing);
 };
 
 export const checkPublisherAliveStatus = async (user, publisher) => {
@@ -260,3 +280,4 @@ export const checkPublisherAliveStatus = async (user, publisher) => {
     return false;
   }
 };
+

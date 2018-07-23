@@ -27,7 +27,7 @@ function* createEthereumWallet() {
     const res = EthereumApi.createEthereumWallet();
 
     const { currentUser } = (yield select()).default.auth;
-    yield call(persitEthereumWalletData, res.address, res.privateKey, currentUser);
+    yield call(persitEthereumWalletData, res.address, res.privateKey, res.mnemonic, currentUser);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address, brainKey: res.mnemonic });
   } catch (error) {
     console.log('ERROR ', error);
@@ -53,14 +53,14 @@ function* getEthereumWallets({ payload: { privateKey, brainKey } }) {
     const { currentUser } = (yield select()).default.auth;
     if (privateKey || brainKey) {
       const res = yield call(EthereumApi.getEthereumWallets, privateKey, brainKey);
-      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, privateKey });
+      yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, privateKey, brainKey });
     } else {
       const walletData = yield call(getEthereumWalletData, currentUser);
       if (walletData) {
-        const { address, privateKey } = walletData;
-        const res = yield call(EthereumApi.getEthereumWallets, privateKey, null);
+        const { address, privateKey, brainKey } = walletData;
+        const res = yield call(EthereumApi.getEthereumWallets, privateKey, brainKey);
         yield put({ type: 'GET_ETHEREUM_BALANCE', payload: { address, privateKey }});
-        yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey });
+        yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey, brainKey });
       } else {
         yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: [] });
       }

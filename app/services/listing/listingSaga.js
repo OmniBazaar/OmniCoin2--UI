@@ -36,18 +36,22 @@ import {
   searchPublishersFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
-import { countPeersForKeywords } from '../search/dht/dhtSaga';
-import { getAllPublishers } from '../accountSettings/services';
+import {
+  countPeersForKeywords
+} from '../search/dht/dhtSaga';
+import {getAllPublishers, getPublisherByIp} from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
+  deleteListingOnPublisher,
+  createListingOnPublisher,
+  updateListingOnBlockchain,
+  ensureListingData,
+  checkPublisherAliveStatus,
   createListing,
-  editListing,
-  deleteListing,
-  getListingFromBlockchain,
-  reportListingOnBlockchain,
-  checkPublisherAliveStatus
+  getListingFromBlockchain
 } from './apis';
+
 
 export function* listingSubscriber() {
   yield all([
@@ -124,11 +128,39 @@ function* checkAndUploadImages(user, publisher, listing) {
 	    	thumb: result.thumb,
 	    	image_name: result.fileName
 	    };
-    }
+		}
+	}
+}
+
+function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, listing) {
+  for (let i = 0; i < listing.images.length; ++i) {
+    const url = `http://${oldPublisher.publisher_ip}/publisher-images/${listing.images[i].path}`;
+    const result = yield call(saveImage, user, newPublisher, {
+      name: listing.images[i].path,
+      type: mime.lookup(listing.images[i].path),
+      url
+    });
+    console.log('RESULT ', result);
+    listing.images[i] = {
+      path: result.image,
+      thumb: result.thumb,
+      image_name: result.fileName
+    };
   }
 }
 
-export function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
+function* moveToAnotherPublisher(user, publisher, listing, listingId) {
+  const oldPublisher = yield call(getPublisherByIp, listing.ip);
+  yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, publisher, listing);
+  console.log('DONE UPLOADING');
+  yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
+  listing = ensureListingData(listing);
+  console.log("LISTING TO SHOW ", publisher);
+  yield call(updateListingOnBlockchain, user, publisher, listingId, listing);
+  yield call(createListingOnPublisher, user, listing, publisher, listingId);
+}
+
+function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
     const { currentUser } = (yield select()).default.auth;
@@ -147,9 +179,13 @@ export function* saveListingHandler({ payload: { publisher, listing, listingId }
     }
 
     if (listingId) {
-      result = yield call(editListing, user, publisher, listingId, listing);
+      if (publisher.publisher_ip !== listing.ip) {
+        yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
+      } else {
+        result = yield call(editListing, user, publisher, listingId, listing);
+      }
     } else {
-      yield checkAndUploadImages(user, publisher, listing);
+      yield call(checkAndUploadImages, user, publisher, listing);
       result = yield call(createListing, user, publisher, listing);
     }
 
