@@ -167,18 +167,24 @@ class SignupForm extends Component {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
       searchPriority: PriorityTypes.LOCAL_DATA,
+      referrer: this.props.auth.defaultReferrer
     });
   }
 
   componentDidMount() {
-    if (this.defaultReferrer && this.defaultReferrer !== 'null') {
-      this.props.formActions.change('referrer', this.defaultReferrer);
+    if(this.props.auth.defaultReferrer){
+      this.props.formActions.change('referrer', this.props.auth.defaultReferrer);
       this.referrerInput.focus();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
+
+    if(nextProps.auth.defaultReferrer !== this.props.auth.defaultReferrer){
+      this.props.formActions.change('referrer', nextProps.auth.defaultReferrer);
+    }
+
     if (nextProps.auth.error && !this.props.auth.error) {
       const content = (
         nextProps.auth.error.id
