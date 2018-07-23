@@ -18,6 +18,7 @@ e.g.  "version": "1.0.5916"
     │   genesis.json
     │   README.txt
     │   witness_node
+    │   cli_wallet
     │
     └───witness_node_data_dir
             config.ini

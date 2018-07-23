@@ -25,6 +25,7 @@ name=$(basename "$1")
 
 mkdir "$HOME/Library/Preferences/OmniBazaar"
 chown -R $USER "$HOME/Library/Preferences/OmniBazaar"
+rm "$HOME/Library/Preferences/OmniBazaar/omnibazaar.set"
 echo "referrer=$name" >> "$HOME/Library/Preferences/OmniBazaar/omnibazaar.set"
 
 render_template service/omnibazaar.witness_node.plist >/Library/LaunchAgents/omnibazaar.witness_node.plist
