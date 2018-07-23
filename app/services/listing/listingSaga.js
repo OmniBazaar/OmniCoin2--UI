@@ -48,6 +48,7 @@ import {
   checkPublisherAliveStatus,
   createListing,
   deleteListing,
+  editListing,
   getListingFromBlockchain,
   reportListingOnBlockchain,
 } from './apis';
