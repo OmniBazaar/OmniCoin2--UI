@@ -32,6 +32,9 @@ SetupLogging=yes
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Dirs]
+Name: "{userappdata}\{#APPDATA_DIR}"
+
 [Files]
 Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion recursesubdirs
 Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR}; Flags: ignoreversion
@@ -61,23 +64,14 @@ Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
 var
-    appDataPath, filepath : string;
-    tmpstring : AnsiString;
-    oldreferrpos : integer;
+    appDataPath, filename : string;
 begin
     if CurStep = ssPostInstall then
-        begin    
+    begin    
         // Get value of {srcexe} constant (path to installer file)
-        filepath := ExpandConstant('{srcexe}');    
-        appDataPath := ExpandConstant('{userappdata}');    
-        // Load string from omnibazaar.set
-        LoadStringFromFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', tmpstring);    
-        // Double check if referrer exists
-        oldreferrpos := Pos('referrer', tmpstring);    
-        // If referrer not found then    
-        if oldreferrpos = 0 then
-            begin
-                SaveStringToFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', #13#10 + 'referrer='+ filepath + #13#10, True);
-            end;    
+        filename := ExtractFileName(ExpandConstant('{srcexe}'));    
+        appDataPath := ExpandConstant('{userappdata}');
+
+        SaveStringToFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', filename, True);
     end;
 end;

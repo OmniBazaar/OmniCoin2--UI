@@ -204,13 +204,13 @@ const processReferrer = async () => {
   let path = './';
   switch (process.platform) {
     case 'win32':
-      path = `${process.env.LOCALAPPDATA}/OmniBazaar/omnibazaar.set`;
+      path = `${process.env.APPDATA}/OmniBazaar/omnibazaar.set`;
       break;
     case 'linux':
       path = `${process.env.HOME}/.OmniBazaar/omnibazaar.set`;
       break;
     case 'darwin':
-      path = '/Library/Preferences/OmniBazaar/omnibazaar.set';
+      path = `${process.env.HOME}/Library/Preferences/OmniBazaar/omnibazaar.set`;
       break;
   }
   ipcMain.on('get-referrer', (event) => {
