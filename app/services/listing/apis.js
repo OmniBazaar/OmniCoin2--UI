@@ -159,13 +159,14 @@ export const reportListingOnBlockchain = async (listingId) => {
 
 export const updateListingOnBlockchain = async (user, publisher, listingId, listing) => {
   const seller = await FetchChain('getAccount', user.username);
+  const blockchainListing = await getListingFromBlockchain(listingId);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
   const listingHash = hash.listingSHA256({
     ...listing,
     owner: user.username
   });
-  tr.add_type_operation('listing_update_operation', {
+  const operation = {
     seller: seller.get('id'),
     listing_id: listingId,
     price: {
@@ -173,10 +174,13 @@ export const updateListingOnBlockchain = async (user, publisher, listingId, list
       amount: Math.ceil(currencyConverter(parseFloat(listing.price), listing.currency, 'OMNICOIN') * TOKENS_IN_XOM)
     },
     quantity: parseInt(listing.quantity),
-    listing_hash: listingHash,
     publisher: publisher.id,
     update_expiration_time: true
-  });
+  };
+  if (listingHash !== blockchainListing.listing_hash) {
+    operation.listing_hash = listingHash;
+  }
+  tr.add_type_operation('listing_update_operation', operation);
   await tr.set_required_fees();
   await tr.add_signer(key.privKey, key.pubKey);
   await tr.broadcast();
