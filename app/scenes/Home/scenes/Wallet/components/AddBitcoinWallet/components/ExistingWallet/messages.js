@@ -32,5 +32,9 @@ export default defineMessages({
   connectErrorMessage: {
     id: 'NewWallet.connectErrorMessage',
     defaultMessage: 'Having error when conneting wallet'
+  },
+  ipError: {
+    id: 'Bitcoin.ipError',
+    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info console'
   }
 });

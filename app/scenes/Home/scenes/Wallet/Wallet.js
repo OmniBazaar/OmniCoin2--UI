@@ -5,10 +5,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
+import ip from 'ip';
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
@@ -98,6 +99,7 @@ class Wallet extends Component {
 
   getBitcoinContent() {
     const { wallets, guid } = this.props.bitcoin;
+    const { formatMessage } = this.props.intl;
     const elements = wallets.map((wallet, index) => (
       <BitcoinWalletDetail
         key={hash(wallet)}
@@ -119,7 +121,23 @@ class Wallet extends Component {
         />
                     </div>);
     }
-    return elements;
+    if (this.props.bitcoin.isGettingWallets) {
+      return (
+        <div className="content">
+          <div className="load-container"><Loader inline active/></div>
+        </div>
+      );
+    }
+    return (
+      <div className="bitcoin-addresses">
+        <div className="content">
+          {elements}
+        </div>
+        <div className="note">
+          <span>{formatMessage(messages.bitcoinNote)}</span>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -165,13 +183,7 @@ class Wallet extends Component {
                  render: () =>
                    (<Tab.Pane>
                      {this.props.bitcoin.wallets.length ?
-                       <div className="content">
-                         {
-                          this.props.bitcoin.isGettingWallets ?
-                            <div className="load-container"><Loader inline active /></div> :
-                          this.getBitcoinContent()
-                        }
-                       </div>
+                       this.getBitcoinContent()
                      :
                        <div className="no-wallet-yet">
                          <span>{formatMessage(messages.noWalletYet)}</span>

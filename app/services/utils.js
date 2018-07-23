@@ -8,7 +8,7 @@ function wrapRequest(func) {
   return async (...args) => {
     const res = await func(...args);
     if (res.status !== 200) {
-      throw res;
+      throw await res.json();
     } else {
       return res.json();
     }
