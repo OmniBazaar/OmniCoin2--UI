@@ -106,9 +106,10 @@ class TransactionDetails extends Component {
         if (op.obFee.referrer_seller_fee) {
           feeDetail += `, ${formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})}`;
         }
-      }
-      if (op.obFee.publisher_fee) {
-        feeDetail += `, ${formatMessage(messages.publisherFee, { fee: op.obFee.publisher_fee })}`;
+      } else {
+        if (op.obFee.publisher_fee) {
+          feeDetail += `, ${formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})}`;
+        }
       }
       return feeDetail;
     }
