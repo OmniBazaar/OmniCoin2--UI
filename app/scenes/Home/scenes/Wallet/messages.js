@@ -44,5 +44,10 @@ export default defineMessages({
   error: {
     id: 'Wallet.error',
     defaultMessage: 'Error'
+  },
+  bitcoinNote: {
+    id: 'Bitcoin.note',
+    defaultMessage: 'NOTE: if you want to use your bitcoin wallet from another ip address ' +
+    'you should whitelist another ip in blockchain.info console - login.blockchain.com.'
   }
 });
