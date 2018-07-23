@@ -326,7 +326,10 @@ class Listing extends Component {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
     const { listingDetail } = this.props.listing;
+    const { existsInBlockchain, isReportedByCurrentUser } = listingDetail;
     const disabled = !!error || maxQuantity === 0 || !listingDetail.existsInBlockchain;
+    const disableReportBtn = isReportedByCurrentUser || !existsInBlockchain;
+
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -361,9 +364,11 @@ class Listing extends Component {
         }
         <Button
           onClick={() => this.reportListing()}
-          content={formatMessage(messages.report)}
+          content={disableReportBtn ?
+            formatMessage(messages.reported) :
+              formatMessage(messages.report)}
           loading={this.props.listing.reportListing.reporting}
-          disabled={listingDetail.isReportedByCurrentUser || !listingDetail.existsInBlockchain}
+          disabled={disableReportBtn}
           className="button--gray-text"
         />
       </div>
@@ -371,19 +376,19 @@ class Listing extends Component {
   }
 
   renderGallery(listingDetail) {
-    
+
     let items = listingDetail.images.map(image => ({
       original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
       thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
     }));
-    
-    if(!listingDetail.images.length) {
+
+    if (!listingDetail.images.length) {
       items = [{
         original: ObNet,
         thumbnail: ObNet
-      }]
+      }];
     }
-    
+
     return (
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery

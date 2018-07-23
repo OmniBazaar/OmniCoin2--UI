@@ -36,10 +36,8 @@ import {
   searchPublishersFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
-import {
-  countPeersForKeywords
-} from '../search/dht/dhtSaga';
-import {getAllPublishers, getPublisherByIp} from '../accountSettings/services';
+import { countPeersForKeywords } from '../search/dht/dhtSaga';
+import { getAllPublishers, getPublisherByIp } from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
@@ -49,7 +47,8 @@ import {
   ensureListingData,
   checkPublisherAliveStatus,
   createListing,
-  getListingFromBlockchain
+  getListingFromBlockchain,
+  reportListingOnBlockchain,
 } from './apis';
 
 

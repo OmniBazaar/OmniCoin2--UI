@@ -77,6 +77,10 @@ export default defineMessages({
     id: 'Listing.report',
     defaultMessage: 'REPORT'
   },
+  reported: {
+    id: 'Listing.reported',
+    defaultMessage: 'REPORTED'
+  },
   removeFromFavorites: {
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
