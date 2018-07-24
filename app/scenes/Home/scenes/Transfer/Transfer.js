@@ -8,7 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, numericality, length } from 'redux-form-validators';
+import { required, numericality, length, addValidator } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
@@ -73,6 +73,7 @@ const currencyOptions = [
 
 const FEE_PERCENT = 0.01;
 const FEE_CONVERSION_FACTOR = 10000;
+const XOM_DECIMALS_LIMIT = 5;
 
 const initialState = {
   bitcoinWallets: [],
@@ -81,6 +82,17 @@ const initialState = {
   number: null,
   price: 0.00,
 };
+
+const amountDecimalsValidator = addValidator({
+  validator(options, value) {
+    if (!(/^\d+(\.\d{1,5})*$/).test(value)) {
+      return {
+        id: 'form.errors.custom',
+        defaultMessage: options.message,
+      };
+    }
+  },
+});
 
 class Transfer extends Component {
   // static asyncValidate = async (values) => {
@@ -221,7 +233,7 @@ class Transfer extends Component {
     this.props.initialize({
       reputation: 5,
       toName: to,
-      amount: price
+      amount: price || 0.00
     });
   }
 
@@ -463,7 +475,12 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) })
+                numericality({ message: formatMessage(messages.numberRequired) }),
+                amountDecimalsValidator({
+                  message: formatMessage(messages.numberExceedsDecimalsLimit, {
+                    limit: XOM_DECIMALS_LIMIT
+                  }),
+                })
               ]}
               disabled={!!this.state.listingId}
             />
