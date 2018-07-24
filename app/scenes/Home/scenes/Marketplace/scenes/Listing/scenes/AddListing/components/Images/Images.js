@@ -23,29 +23,6 @@ const iconSize = 42;
 export const getImageId = () => shortid.generate();
 
 class Images extends Component {
-  componentWillReceiveProps(nextProps) {
-    /*
-    const { publisher } = this.props;
-
-    if (publisher && nextProps.publisher && nextProps.publisher.id !== this.props.publisher.id) {
-      const { isListingDefaults, listingDefaultsImages, listingImages } = this.props;
-      const images = { ...(isListingDefaults ? listingDefaultsImages : listingImages) };
-      const deleteImage = isListingDefaults ? deleteListingDefaultImage : deleteListingImage;
-      const uploadImage = isListingDefaults ? uploadListingDefaultImage : uploadListingImage;
-
-
-      Object.keys(images)
-        .forEach((imageId) => {
-          const image = images[imageId];
-          const { id, file } = image;
-          const deleteParams = isListingDefaults ? [image] : [publisher, image];
-          const uploadParams = isListingDefaults ? [file, id] : [nextProps.publisher, file, id];
-
-          deleteImage(...deleteParams);
-          uploadImage(...uploadParams);
-        });
-    }*/
-  }
 
   onClickAddImage() {
     this.inputElement.click();
