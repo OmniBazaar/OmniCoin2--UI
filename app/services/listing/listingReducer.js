@@ -17,10 +17,12 @@ import {
   setContinuous,
   setOmnicoinPrice,
   addListingImage,
+  removeListingImage,
   startDeleteListingImage,
   deleteListingImageSuccess,
   deleteListingImageError,
   setListingImages,
+  startUploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
   clearListingImageError,
@@ -317,7 +319,6 @@ const reducer = handleActions({
         ...state.listingImages,
         [imageId]: {
           file,
-          uploading: true,
           id: imageId
         }
       }
@@ -327,6 +328,18 @@ const reducer = handleActions({
     return {
       ...state,
       listingImages: images || {}
+    };
+  },
+  [startUploadListingImage](state, { payload: { imageId } }) {
+    return {
+      ...state,
+      listingImages: {
+        ...state.listingImages,
+        [imageId]: {
+          ...state.listingImages[imageId],
+          uploading: true
+        }
+      }
     };
   },
   [uploadListingImageSuccess](state, {
@@ -375,6 +388,15 @@ const reducer = handleActions({
     }
 
     return state;
+  },
+  [removeListingImage](state, { payload: { imageId } }) {
+    const listingImages = { ...state.listingImages };
+    delete listingImages[imageId];
+
+    return {
+      ...state,
+      listingImages
+    };
   },
   [startDeleteListingImage](state, { payload: { imageId } }) {
     if (state.listingImages[imageId]) {

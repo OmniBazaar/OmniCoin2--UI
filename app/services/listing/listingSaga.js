@@ -16,6 +16,7 @@ import {
 
 import {
   addListingImage,
+  startUploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
   startDeleteListingImage,
@@ -71,7 +72,7 @@ export function* listingSubscriber() {
 export function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    yield put(addListingImage(publisher, file, imageId));
+    yield put(addListingImage(file, imageId));
     const resultImage = yield call(saveImage, currentUser, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
@@ -106,31 +107,59 @@ export function* removeImage({ payload: { publisher, image } }) {
   }
 }
 
+function* uploadLocalFile(imageId, user, publisher, localFilePath, path) {
+  const type = mime.lookup(path);
+  const file = {
+    path: localFilePath,
+    name: path,
+    type
+  };
+  return yield call(uploadFile, imageId, user, publisher, file);
+}
+
+function* uploadFile(imageId, user, publisher, file) {
+  try{
+    yield put(startUploadListingImage(imageId));
+    const result = yield call(saveImage, user, publisher, file);
+    yield put(uploadListingImageSuccess(
+      imageId,
+      result.image,
+      result.thumb,
+      result.fileName
+    ));
+    return {
+      path: result.image,
+      thumb: result.thumb,
+      image_name: result.fileName
+    };
+  } catch (err) {
+    console.log(err);
+    yield put(uploadListingImageError(imageId, err));
+    return {
+      error: err
+    };
+  }
+}
+
 function* checkAndUploadImages(user, publisher, listing) {
-  for (let i = 0; i < listing.images.length; i++) {
-    const imageItem = listing.images[i];
-    const { localFilePath, path, id } = imageItem;
+  const results = yield all(listing.images.map((imageItem) => {
+    const { localFilePath, path, file, id } = imageItem;
     if (localFilePath) {
-      const type = mime.lookup(path);
-      const file = {
-        path: localFilePath,
-        name: path,
-        type
-      };
-      const result = yield call(saveImage, user, publisher, file);
-      yield put(uploadListingImageSuccess(
-	      id,
-	      result.image,
-	      result.thumb,
-	      result.fileName
-	    ));
-	    listing.images[i] = {
-	    	path: result.image,
-	    	thumb: result.thumb,
-	    	image_name: result.fileName
-	    };
-		}
-	}
+      return call(uploadLocalFile, id, user, publisher, localFilePath, path);
+    } else if (file) {
+      return call(uploadFile, id, user, publisher, file);
+    } else {
+      return imageItem;
+    }
+  }));
+
+  for (let i = 0; i < results.length; i++) {
+    if (results[i].error) {
+      throw new Error('Upload image error: ' + results[i].error);
+    }
+  }
+
+  return results;
 }
 
 function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, listing) {
@@ -183,7 +212,8 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
         result = yield call(editListing, user, publisher, listingId, listing);
       }
     } else {
-      yield call(checkAndUploadImages, user, publisher, listing);
+      const images = yield call(checkAndUploadImages, user, publisher, listing);
+      listing.images = images;
       result = yield call(createListing, user, publisher, listing);
     }
 

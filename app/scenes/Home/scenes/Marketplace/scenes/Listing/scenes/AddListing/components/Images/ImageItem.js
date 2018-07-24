@@ -9,7 +9,8 @@ import RemoveIcon from '../../../../../../../../images/btn-remove-image-norm+pre
 import LoadingIcon from '../../../../../../../../images/loading.gif';
 import {
   deleteListingImage,
-  clearListingImageError
+  clearListingImageError,
+  removeListingImage
 } from '../../../../../../../../../../services/listing/listingActions';
 import {
   deleteListingDefaultImage,
@@ -57,7 +58,8 @@ class ImageItem extends Component {
 	  if (isListingDefaults) {
 	  	this.props.listingDefaultsActions.deleteListingDefaultImage(image);
 	  } else {
-	  	this.props.listingActions.deleteListingImage(publisher, image);
+      this.props.listingActions.removeListingImage(image.id);
+	  	//this.props.listingActions.deleteListingImage(publisher, image);
 	  }
 	}
 
@@ -104,8 +106,8 @@ class ImageItem extends Component {
 	  const { uploading, deleting } = this.props.image;
 
 	  return (
-  <div className="img-container">
-    {
+      <div className="img-container">
+        {
         	this.state.url && !uploading &&
         	<Image
           src={RemoveIcon}
@@ -115,20 +117,20 @@ class ImageItem extends Component {
           onClick={this.remove.bind(this)}
         	/>
       	}
-    {
+        {
         	this.state.url &&
         	<img alt="" src={this.state.url} width={132} height={100} className="added-img" />
         }
-    {
+        {
 	      	(uploading || deleting) &&
 	      	<div className="loading-overlay">
-  <Dimmer active inverted>
-    <Loader size="small" />
-  </Dimmer>
+            <Dimmer active inverted>
+              <Loader size="small" />
+            </Dimmer>
 	      	</div>
         }
-    { this.renderError() }
-  </div>
+        { this.renderError() }
+      </div>
 	  );
 	}
 }
@@ -161,7 +163,8 @@ ImageItem.defaultProps = {
 const mapDispatch = dispatch => ({
   listingActions: bindActionCreators({
     deleteListingImage,
-    clearListingImageError
+    clearListingImageError,
+    removeListingImage
   }, dispatch),
   listingDefaultsActions: bindActionCreators({
   	deleteListingDefaultImage,

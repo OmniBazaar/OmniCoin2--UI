@@ -7,8 +7,14 @@ import { injectIntl } from 'react-intl';
 import shortid from 'shortid';
 
 import AddIcon from '../../../../../../../../images/btn-add-image.svg';
-import { deleteListingImage, uploadListingImage } from '../../../../../../../../../../services/listing/listingActions';
-import { deleteListingDefaultImage, uploadListingDefaultImage } from '../../../../../../../../../../services/listing/listingDefaultsActions';
+import {
+  addListingImage,
+  deleteListingImage
+} from '../../../../../../../../../../services/listing/listingActions';
+import {
+  deleteListingDefaultImage,
+  uploadListingDefaultImage
+} from '../../../../../../../../../../services/listing/listingDefaultsActions';
 import ImageItem from './ImageItem';
 
 const imageLimit = 10;
@@ -18,6 +24,7 @@ export const getImageId = () => shortid.generate();
 
 class Images extends Component {
   componentWillReceiveProps(nextProps) {
+    /*
     const { publisher } = this.props;
 
     if (publisher && nextProps.publisher && nextProps.publisher.id !== this.props.publisher.id) {
@@ -37,7 +44,7 @@ class Images extends Component {
           deleteImage(...deleteParams);
           uploadImage(...uploadParams);
         });
-    }
+    }*/
   }
 
   onClickAddImage() {
@@ -66,8 +73,8 @@ class Images extends Component {
       const { uploadListingDefaultImage } = this.props.listingDefaultsActions;
       uploadListingDefaultImage(file, imageId);
     } else {
-      const { uploadListingImage } = this.props.listingActions;
-      uploadListingImage(publisher, file, imageId);
+      const { addListingImage } = this.props.listingActions;
+      addListingImage(file, imageId);
     }
   }
 
@@ -119,7 +126,6 @@ class Images extends Component {
             onClick={this
             .onClickAddImage
             .bind(this)}
-            disabled={disabled}
             type="button"
           >
             <Image src={AddIcon} width={iconSize} height={iconSize} />
@@ -133,7 +139,7 @@ class Images extends Component {
 Images.propTypes = {
   listingActions: PropTypes.shape({
     deleteListingImage: PropTypes.func,
-    uploadListingImage: PropTypes.func,
+    addListingImage: PropTypes.func,
   }).isRequired,
   listingDefaultsActions: PropTypes.shape({
     deleteListingDefaultImage: PropTypes.func,
@@ -144,14 +150,12 @@ Images.propTypes = {
   isListingDefaults: PropTypes.bool,
   publisher: PropTypes.shape({
     id: PropTypes.string,
-  }),
-  disabled: PropTypes.bool
+  })
 };
 
 Images.defaultProps = {
   isListingDefaults: false,
-  publisher: null,
-  disabled: false
+  publisher: null
 };
 
 const mapState = state => ({
@@ -162,7 +166,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   listingActions: bindActionCreators({
     deleteListingImage,
-    uploadListingImage
+    addListingImage
   }, dispatch),
   listingDefaultsActions: bindActionCreators({
     deleteListingDefaultImage,
