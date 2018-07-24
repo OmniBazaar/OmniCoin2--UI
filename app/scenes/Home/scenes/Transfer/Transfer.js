@@ -713,8 +713,12 @@ class Transfer extends Component {
 
   submitTransfer(paramValues) {
     const { transferCurrency } = this.props.transfer;
+    const params = new URLSearchParams(this.props.location.search);
     const values = {
-      ...paramValues
+      ...paramValues,
+      title: params.get('title'),
+      ip: params.get('ip'),
+      seller: params.get('seller_name')
     };
 
     if (transferCurrency === 'omnicoin') {

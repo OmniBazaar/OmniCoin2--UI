@@ -10,7 +10,10 @@ const {
   filterData,
   setPagination,
   setActivePage,
-  sortData
+  sortData,
+  addPurchase,
+  addPurchaseSucceeded,
+  addPurchaseFailed
 } = createActions({
   GET_MY_PURCHASES: () => ({ }),
   GET_MY_PURCHASES_SUCCEEDED: (myPurchases) => ({ myPurchases }),
@@ -22,6 +25,9 @@ const {
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SORT_DATA: (sortColumn) => ({ sortColumn }),
+  ADD_PURCHASE: (purchase) => ({ purchase }),
+  ADD_PURCHASE_SUCCEEDED: () => ({ }),
+  ADD_PURCHASE_FAILED: (error) => ({ error })
 });
 
 export {
@@ -34,5 +40,8 @@ export {
   filterData,
   setPagination,
   setActivePage,
-  sortData
+  sortData,
+  addPurchase,
+  addPurchaseSucceeded,
+  addPurchaseFailed
 };

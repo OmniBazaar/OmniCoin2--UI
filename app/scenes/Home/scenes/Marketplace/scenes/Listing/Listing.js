@@ -282,21 +282,22 @@ class Listing extends Component {
   buyItem = () => {
     const { listingDetail } = this.props.listing;
     const { activeCurrency } = this.props.listing.buyListing;
+    const title = listingDetail.listing_title;
+    const listingId = this.props.listing.buyListing.blockchainListing.id;
+    const publisherIp = listingDetail.ip;
+    const number = this.props.listing.buyListing.numberToBuy;
+    const sellerName = listingDetail.owner;
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = this.getOmnicoinPrice(listingDetail);
-      const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = this.getBitcoinPrice(listingDetail);
-      const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.bitcoin_address;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
   };
 
