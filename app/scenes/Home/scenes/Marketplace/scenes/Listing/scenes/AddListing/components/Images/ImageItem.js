@@ -8,7 +8,6 @@ import fileUrl from 'file-url';
 import RemoveIcon from '../../../../../../../../images/btn-remove-image-norm+press.svg';
 import LoadingIcon from '../../../../../../../../images/loading.gif';
 import {
-  deleteListingImage,
   clearListingImageError,
   removeListingImage
 } from '../../../../../../../../../../services/listing/listingActions';
@@ -54,18 +53,12 @@ class ImageItem extends Component {
 	}
 
 	remove() {
-	  const { image, isListingDefaults, publisher, listingPublisher } = this.props;
-    console.log('IMAGE', image);
+	  const { image, isListingDefaults, publisher } = this.props;
 	  if (isListingDefaults) {
 	  	this.props.listingDefaultsActions.deleteListingDefaultImage(image);
-	  } else if (image.file) {
-      this.props.listingActions.removeListingImage(image.id);
 	  } else {
-      this.props.listingActions.deleteListingImage(
-        listingPublisher ? listingPublisher : publisher,
-        image
-      );
-    }
+      this.props.listingActions.removeListingImage(image.id);
+	  }
 	}
 
 	clearError() {
@@ -167,7 +160,6 @@ ImageItem.defaultProps = {
 
 const mapDispatch = dispatch => ({
   listingActions: bindActionCreators({
-    deleteListingImage,
     clearListingImageError,
     removeListingImage
   }, dispatch),

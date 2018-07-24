@@ -160,6 +160,7 @@ class ListingForm extends Component {
   }
 
   resetForm() {
+    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -264,7 +265,8 @@ class ListingForm extends Component {
         data.push({
           path: this.fixImagePath(image),
           thumb: this.fixThumbPath(thumb),
-          image_name: fileName
+          image_name: fileName,
+          id: imageId
         });
       }
     }
@@ -602,7 +604,6 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={12}>
               <Images
-                listingPublisher={editingListing ? { publisher_ip: editingListing.ip } : null}
                 publisher={publisher}
               />
             </Grid.Column>

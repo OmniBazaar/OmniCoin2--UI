@@ -89,7 +89,7 @@ class Images extends Component {
   }
 
   renderImages() {
-    const { isListingDefaults, publisher, listingPublisher } = this.props;
+    const { isListingDefaults, publisher } = this.props;
     const images = this.getImages();
 
     return Object
@@ -101,7 +101,6 @@ class Images extends Component {
           image={images[imageId]}
           isListingDefaults={isListingDefaults}
           publisher={publisher}
-          listingPublisher={listingPublisher}
         />
       ));
   }

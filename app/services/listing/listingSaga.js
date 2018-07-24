@@ -141,7 +141,7 @@ function* uploadFile(imageId, user, publisher, file) {
   }
 }
 
-function* checkAndUploadImages(user, publisher, listing) {
+function* checkAndUploadImages(user, publisher, listing, oldPublisher) {
   const results = yield all(listing.images.map((imageItem) => {
     const { localFilePath, path, file, id } = imageItem;
     if (localFilePath) {
@@ -149,7 +149,19 @@ function* checkAndUploadImages(user, publisher, listing) {
     } else if (file) {
       return call(uploadFile, id, user, publisher, file);
     } else {
-      return imageItem;
+      if (!oldPublisher) {
+        const img = { ...imageItem };
+        delete img.id;
+        return img;
+      }
+      
+      const url = `http://${oldPublisher.publisher_ip}/publisher-images/${imageItem.path}`;
+      const nFile = {
+        name: imageItem.path,
+        type: mime.lookup(imageItem.path),
+        url
+      };
+      return call(uploadFile, id, user, publisher, nFile);
     }
   }));
 
@@ -162,29 +174,13 @@ function* checkAndUploadImages(user, publisher, listing) {
   return results;
 }
 
-function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, listing) {
-  for (let i = 0; i < listing.images.length; ++i) {
-    const url = `http://${oldPublisher.publisher_ip}/publisher-images/${listing.images[i].path}`;
-    const result = yield call(saveImage, user, newPublisher, {
-      name: listing.images[i].path,
-      type: mime.lookup(listing.images[i].path),
-      url
-    });
-    listing.images[i] = {
-      path: result.image,
-      thumb: result.thumb,
-      image_name: result.fileName
-    };
-  }
-}
-
 function* moveToAnotherPublisher(user, publisher, listing, listingId) {
   const oldPublisher = yield call(getPublisherByIp, listing.ip);
-  yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, publisher, listing);
+  listing.images = yield call(checkAndUploadImages, user, publisher, listing, oldPublisher);
   yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
   listing = ensureListingData(listing);
   yield call(updateListingOnBlockchain, user, publisher, listingId, listing);
-  yield call(createListingOnPublisher, user, listing, publisher, listingId);
+  return yield call(createListingOnPublisher, user, listing, publisher, listingId);
 }
 
 function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
@@ -207,7 +203,7 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
 
     if (listingId) {
       if (publisher.publisher_ip !== listing.ip) {
-        yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
+        result = yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
       } else {
         listing.images = yield call(checkAndUploadImages, user, publisher, listing);
         result = yield call(editListing, user, publisher, listingId, listing);
@@ -220,6 +216,8 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     if (!listingId) {
       listingId = result.listing_id;
     }
+
+    result.ip = publisher.publisher_ip;
 
     yield put({ type: 'DHT_RECONNECT' });
     yield put(saveListingSuccess(result, listingId));
