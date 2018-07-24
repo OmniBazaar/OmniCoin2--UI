@@ -104,6 +104,10 @@ const messages = defineMessages({
     id: 'Settings.wantsToVote',
     defaultMessage: 'Vote for yourself'
   },
+  voteFee: {
+    id: 'Settings.voteFee',
+    defaultMessage: 'Fee for voting operation is 20xom'
+  },
   customDownloadAddress: {
     id: 'Settings.customDownloadAddress',
     defaultMessage: 'Your custom OmniBazaar download address:'
@@ -249,6 +253,9 @@ class PublicData extends Component {
             {formatMessage(messages.wantsToVote)}
           </span>
         </div>
+        <span className="vote-fee-cont">
+            {formatMessage(messages.voteFee)}
+          </span>
       </div>
     );
   }
