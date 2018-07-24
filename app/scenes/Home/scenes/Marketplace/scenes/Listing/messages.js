@@ -131,7 +131,7 @@ export default defineMessages({
   },
   reportListingErrorPopScore: {
     id: 'Listing.reportListingErrorPopScore',
-    defaultMessage: 'Your report of this listing has been accepted.'
+    defaultMessage: 'Your PoP score is not high enough to be able to report a listing.'
   },
   reportListingError: {
     id: 'Listing.reportListingError',
