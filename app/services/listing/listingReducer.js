@@ -358,6 +358,8 @@ const reducer = handleActions({
         thumb,
         fileName,
       };
+      delete imageItem.file;
+      delete imageItem.localFilePath;
 
       return {
         ...state,

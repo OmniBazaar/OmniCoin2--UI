@@ -209,11 +209,11 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
       if (publisher.publisher_ip !== listing.ip) {
         yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
       } else {
+        listing.images = yield call(checkAndUploadImages, user, publisher, listing);
         result = yield call(editListing, user, publisher, listingId, listing);
       }
     } else {
-      const images = yield call(checkAndUploadImages, user, publisher, listing);
-      listing.images = images;
+      listing.images = yield call(checkAndUploadImages, user, publisher, listing);
       result = yield call(createListing, user, publisher, listing);
     }
 

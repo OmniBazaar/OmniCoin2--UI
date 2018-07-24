@@ -54,13 +54,18 @@ class ImageItem extends Component {
 	}
 
 	remove() {
-	  const { image, isListingDefaults, publisher } = this.props;
+	  const { image, isListingDefaults, publisher, listingPublisher } = this.props;
+    console.log('IMAGE', image);
 	  if (isListingDefaults) {
 	  	this.props.listingDefaultsActions.deleteListingDefaultImage(image);
-	  } else {
+	  } else if (image.file) {
       this.props.listingActions.removeListingImage(image.id);
-	  	//this.props.listingActions.deleteListingImage(publisher, image);
-	  }
+	  } else {
+      this.props.listingActions.deleteListingImage(
+        listingPublisher ? listingPublisher : publisher,
+        image
+      );
+    }
 	}
 
 	clearError() {
@@ -88,17 +93,17 @@ class ImageItem extends Component {
 	  );
 
 	  return (
-  <div className="loading-overlay">
-    <div className="content">
-      <span className="error">{msg}</span>
-      <Button
-        type="submit"
-        content={formatMessage(messages.close)}
-        className="button--green-bg btn-close"
-        onClick={this.clearError.bind(this)}
-      />
-    </div>
-  </div>
+      <div className="loading-overlay">
+        <div className="content">
+          <span className="error">{msg}</span>
+          <Button
+            type="submit"
+            content={formatMessage(messages.close)}
+            className="button--green-bg btn-close"
+            onClick={this.clearError.bind(this)}
+          />
+        </div>
+      </div>
 	  );
 	}
 

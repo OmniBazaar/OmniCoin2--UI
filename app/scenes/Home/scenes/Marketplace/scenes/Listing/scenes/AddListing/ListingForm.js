@@ -602,6 +602,7 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={12}>
               <Images
+                listingPublisher={editingListing ? { publisher_ip: editingListing.ip } : null}
                 publisher={publisher}
               />
             </Grid.Column>
