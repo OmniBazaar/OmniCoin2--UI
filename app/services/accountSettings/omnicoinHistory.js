@@ -406,8 +406,7 @@ class OmnicoinHistory extends BaseStorage {
             isIncoming: false
           };
           if ([ChainTypes.operations.listing_create_operation,
-            ChainTypes.operations.listing_update_operation,
-            ChainTypes.operations.listing_delete_operation].includes(el.op[0])) {
+               ChainTypes.operations.listing_update_operation].includes(el.op[0])) {
             const [publisher, seller] = await Promise.all([
               FetchChain('getAccount', el.op[1].publisher),
               FetchChain('getAccount', el.op[1].seller)
