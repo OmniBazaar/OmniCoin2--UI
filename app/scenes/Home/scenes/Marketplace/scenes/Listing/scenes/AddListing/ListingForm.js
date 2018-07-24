@@ -160,6 +160,7 @@ class ListingForm extends Component {
   }
 
   resetForm() {
+    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -185,7 +186,9 @@ class ListingForm extends Component {
         if (error.statusCode === 413) {
           msg = formatMessage(messages.imageSizeTooLarge);
         } else if (error.message) {
-          if (error.message === 'no_changes') {
+          if (/StatusCodeError: 413/.test(error.message)) {
+            msg = formatMessage(messages.imageSizeTooLarge);
+          } else if (error.message === 'no_changes') {
             msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
           } else if (error.message === 'publisher_not_alive') {
             msg = formatMessage(messages.publisherNotReachable);
@@ -241,9 +244,9 @@ class ListingForm extends Component {
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
       const {
-        uploadError, image, thumb, fileName, localFilePath, path
+        uploadError, image, thumb, fileName, localFilePath, path, file
       } = imageItem;
-      if (uploadError || (!image && !localFilePath)) {
+      if (uploadError || (!image && !localFilePath && !file)) {
         continue;
       }
 
@@ -253,11 +256,17 @@ class ListingForm extends Component {
           path,
           id: imageId
         });
+      } else if (file) {
+        data.push({
+          file,
+          id: imageId
+        });
       } else {
         data.push({
           path: this.fixImagePath(image),
           thumb: this.fixThumbPath(thumb),
-          image_name: fileName
+          image_name: fileName,
+          id: imageId
         });
       }
     }
@@ -596,7 +605,6 @@ class ListingForm extends Component {
             <Grid.Column width={12}>
               <Images
                 publisher={publisher}
-                disabled={!publisher}
               />
             </Grid.Column>
           </Grid.Row>
