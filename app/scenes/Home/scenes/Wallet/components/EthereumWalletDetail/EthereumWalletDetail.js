@@ -4,8 +4,8 @@ import { Image } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import UserIcon from '../../../../images/th-user.svg';
-import EthereumIcon from '../../images/th-bitcoin.svg';
-import EthereumIconLg from '../../images/bg-bitcoin.svg';
+import EthereumIcon from '../../images/eth-small.svg';
+import EthereumIconLg from '../../images/eth-large.svg';
 
 import '../../wallet.scss';
 

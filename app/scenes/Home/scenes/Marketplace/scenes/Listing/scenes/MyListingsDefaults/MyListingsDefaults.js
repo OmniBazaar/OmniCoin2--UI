@@ -136,7 +136,7 @@ class MyListingsDefaults extends Component {
       price_using_eth,
     } = this.props.formValues ? this.props.formValues : {};
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
-    const ethWalletAddress = ethereum.wallet ? ethereum.wallet.address : null;
+    const ethWalletAddress = ethereum.address;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>

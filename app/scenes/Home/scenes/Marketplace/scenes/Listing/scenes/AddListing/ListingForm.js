@@ -344,7 +344,7 @@ class ListingForm extends Component {
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
-    const ethWalletAddress = ethereum.wallet.length ? bitcoin.wallet.address : null;
+    const ethWalletAddress = ethereum.address;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>

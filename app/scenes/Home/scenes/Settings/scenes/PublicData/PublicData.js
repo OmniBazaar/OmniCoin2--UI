@@ -279,9 +279,9 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth, bitcoin: { wallets }, ethereum: { wallet } } = this.props;
+    const { account, auth, bitcoin: { wallets }, ethereum } = this.props;
     const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
-    const ethWalletAddress = wallet.length ? wallet.address : null;
+    const ethWalletAddress = ethereum.address
 
     return (
       <div className="check-form">
