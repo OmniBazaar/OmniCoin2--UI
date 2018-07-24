@@ -64,6 +64,7 @@ import { loadListingDefault } from '../../services/listing/listingDefaultsAction
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
 const iconSize = 20;
 
@@ -72,6 +73,7 @@ class Home extends Component {
 
   componentWillMount() {
     this.props.preferencesActions.loadPreferences();
+    this.props.bitcoinActions.getWallets();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -297,7 +299,8 @@ export default connect(
     preferencesActions: bindActionCreators({
       loadPreferences
     }, dispatch),
-    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
+    bitcoinActions: bindActionCreators({ getWallets }, dispatch),
   })
 )(Home);
 
