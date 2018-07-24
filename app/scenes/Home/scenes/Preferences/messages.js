@@ -176,5 +176,11 @@ export default defineMessages({
   autoRunNote: {
     id: 'Preferences.autoRunNote',
     defaultMessage: 'This action requires admin rights'
+  },
+  listingOptionsToolTip: {
+    id: 'Preferences.listingOptionsToolTip',
+    defaultMessage: 'When more than one keyword set search will be performed ' +
+                    'either using any of those (any) or return only those ' +
+                    'listings which have all your search criteria keywords'
   }
 });

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Modal, Tab, Form, Button, Select, Image, Icon, Grid } from 'semantic-ui-react';
+import { Modal, Tab, Form, Button, Select, Image, Icon, Grid, Popup } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
@@ -224,10 +224,12 @@ class PreferencesTab extends Component {
                 </Grid.Column>
               </Grid.Row>
             }
-
             <Grid.Row>
               <Grid.Column width={4}>
-                <span>{formatMessage(messages.searchListingOptions)}</span>
+                <Popup
+                  trigger={<span>{formatMessage(messages.searchListingOptions)}</span>}
+                  content={formatMessage(messages.listingOptionsToolTip)}
+                />
               </Grid.Column>
               <Grid.Column width={5}>
                 <div className="radios field">
