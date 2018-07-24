@@ -31,10 +31,6 @@ const messages = defineMessages({
     id: 'NewWallet.email',
     defaultMessage: 'Email address for Restoring Access'
   },
-  message: {
-    id: 'NewWallet.message',
-    defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case your password is lost.'
-  },
   createWallet: {
     id: 'NewWallet.createWallet',
     defaultMessage: 'CREATE WALLET'
@@ -153,12 +149,11 @@ class NewWallet extends Component {
           placeholder={formatMessage(messages.email)}
           type="email"
           message={formatMessage(messages.email)}
+          validate={[
+            required({ message: formatMessage(messages.fieldRequired) }),
+          ]}
           component={FormField}
         />
-        <div className="form-field">
-          <div />
-          <span className="email-tooltip">{formatMessage(messages.message)}</span>
-        </div>
         <ModalFooter
           successContent={formatMessage(messages.createWallet)}
           cancelContent={formatMessage(messages.cancel)}

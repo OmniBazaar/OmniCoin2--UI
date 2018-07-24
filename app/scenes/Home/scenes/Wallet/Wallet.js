@@ -9,6 +9,7 @@ import { injectIntl } from 'react-intl';
 import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
+const { shell } = require('electron');
 import ip from 'ip';
 
 import Header from '../../../../components/Header';
@@ -87,6 +88,12 @@ class Wallet extends Component {
     this.props.bitcoinActions.toggleAddAddressModal();
   }
 
+  openLink(e, path) {
+    e.preventDefault();
+    shell.openExternal(path);
+  }
+
+
   openWalletModal() {
 
   }
@@ -134,7 +141,17 @@ class Wallet extends Component {
           {elements}
         </div>
         <div className="note">
-          <span>{formatMessage(messages.bitcoinNote)}</span>
+          <span>
+            {formatMessage(messages.bitcoinNote)}{" "}
+            <a href="https://login.blockchain.com/" onClick={(e) => this.openLink(e, "https://login.blockchain.com/")}>
+              login.blockchain.com
+            </a>
+          </span><br/>
+          {formatMessage(messages.instructions)}<br/>
+          {formatMessage(messages.step1)}<br/>
+          {formatMessage(messages.step2)}<br/>
+          {formatMessage(messages.step3)}<br/>
+          {formatMessage(messages.step4)}<br/>
         </div>
       </div>
     );
