@@ -13,11 +13,13 @@ import {
 } from 'redux-saga/effects';
 import _ from 'lodash';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import * as EthereumApi from '../blockchain/ethereum/EthereumApi';
 import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
+import { makeEthereumPayment } from '../blockchain/ethereum/EthereumSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
 import { TOKENS_IN_XOM } from '../../utils/constants';
 

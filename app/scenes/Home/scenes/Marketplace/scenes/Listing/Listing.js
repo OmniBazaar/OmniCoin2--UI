@@ -279,6 +279,14 @@ class Listing extends Component {
     return amount;
   }
 
+  getEthereumPrice(listingDetail) {
+    let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail.currency, 'ETHEREUM');
+    amount = Math.ceil(amount * Math.pow(10, 18));
+    amount = (amount / Math.pow(10, 18)).toFixed(18);
+
+    return amount;
+  }
+
   buyItem = () => {
     const { listingDetail } = this.props.listing;
     const { activeCurrency } = this.props.listing.buyListing;
@@ -296,6 +304,14 @@ class Listing extends Component {
       const price = this.getBitcoinPrice(listingDetail);
       const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.bitcoin_address;
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+    }
+    if (activeCurrency === CoinTypes.ETHEREUM) {
+      const type = CoinTypes.ETHEREUM;
+      const listingId = this.props.listing.buyListing.blockchainListing.id;
+      const price = this.getEthereumPrice(listingDetail);
+      const number = this.props.listing.buyListing.numberToBuy;
+      const to = listingDetail.ethereum_address;
       this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
     }
   };
@@ -435,6 +451,18 @@ class Listing extends Component {
     );
   }
 
+  renderEthereumPrice(listingDetail) {
+    const amount = this.getEthereumPrice(listingDetail);
+    return (
+      <PriceItem
+        amount={amount}
+        coinLabel={CoinTypes.ETHEREUM}
+        currency={CoinTypes.ETHEREUM_CURRENCY}
+        isUserOwner={this.isOwner()}
+      />
+    );
+  }
+
   renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
@@ -497,8 +525,13 @@ class Listing extends Component {
             listingDetail.price_using_btc &&
             this.renderBitcoinPrice(listingDetail)
           }
+          {
+            listingDetail.price_using_eth &&
+            this.renderEthereumPrice(listingDetail)
+          }
           {(!(listingDetail.currency === 'OMNICOIN' && listingDetail.price_using_omnicoin) &&
-           !(listingDetail.currency === 'BITCOIN' && listingDetail.price_using_btc)) &&
+           !(listingDetail.currency === 'BITCOIN' && listingDetail.price_using_btc) &&
+           !(listingDetail.currency === 'ETHEREUM' && listingDetail.price_using_eth)) &&
            <PriceItem
              amount={listingDetail.price}
              coinLabel={CoinTypes.LOCAL}

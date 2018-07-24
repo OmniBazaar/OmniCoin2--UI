@@ -42,6 +42,7 @@ export function* updatePublicData() {
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
       btc_address: account.btcAddress,
+      eth_address: account.ethAddress,
     });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {

@@ -14,6 +14,7 @@ import {
   requestMyListingsSuccess,
   requestMyListingsError,
   setBitcoinPrice,
+  setEthereumPrice,
   setContinuous,
   setOmnicoinPrice,
   addListingImage,
@@ -71,6 +72,7 @@ const defaultState = {
   myListingsSubCategory: 'all',
   myListingsSearchTerm: '',
   bitcoinPrice: false,
+  ethereumPrice: false,
   omnicoinPrice: false,
   isContinuous: false,
   isFavorite: false,
@@ -296,6 +298,12 @@ const reducer = handleActions({
     return {
       ...state,
       bitcoinPrice: !state.bitcoinPrice
+    };
+  },
+  [setEthereumPrice](state) {
+    return {
+      ...state,
+      ethereumPrice: !state.ethereumPrice
     };
   },
   [setOmnicoinPrice](state) {

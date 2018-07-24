@@ -65,6 +65,10 @@ const messages = defineMessages({
     id: 'AddListing.bitcoinPrice',
     defaultMessage: 'Show Bitcoin Price'
   },
+  ethereumPrice: {
+    id: 'AddListing.ethereumPrice',
+    defaultMessage: 'Show Ethereum Price'
+  },
   omnicoinPrice: {
     id: 'AddListing.omnicoinPrice',
     defaultMessage: 'Show Omnicoin Price'
@@ -256,6 +260,14 @@ const messages = defineMessages({
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
+  },
+  ethereumFieldValidator: {
+    id: 'AddListing.ethereumFieldValidator',
+    defaultMessage: 'Should be greater or equal to 1 wei'
+  },
+  ethereumAddress: {
+    id: 'AddListing.ethereumAddress',
+    defaultMessage: 'Ethereum address'
   },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',

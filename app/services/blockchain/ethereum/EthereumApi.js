@@ -86,6 +86,25 @@ const getEthereumAddress = function (xpub, address, privateKey) {
 
 const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddress}?module=account&action=txlist&startblock=0&endblock=latest&sort=asc&address=${address}&apikey=${ApiKey}`));
 
+const validateEthereumAddress =  function (address) {
+  var provider = null;
+
+  if (isProd()) {
+    provider = ethers.providers.getDefaultProvider();
+  } else {
+    provider = ethers.providers.getDefaultProvider('ropsten');
+  }
+
+  var wallet = new ethers.Wallet(privateKey, provider);
+
+  var balancePromise = wallet.getBalance();
+
+  return provider.getBalance(address).then(function(balance) {
+    console.log(address + ':' + ethers.utils.formatEther(balance));
+    debugger;
+});
+};
+
 export {
   createEthereumWallet,
   getEthereumWallets,
@@ -93,5 +112,6 @@ export {
   getEthereumBalance,
   addEthereumAddress,
   getEthereumAddress,
-  getEthereumTransactions
+  getEthereumTransactions,
+  validateEthereumAddress
 };

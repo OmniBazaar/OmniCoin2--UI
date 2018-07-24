@@ -36,11 +36,13 @@ import {
   changeIpAddress,
   changeSearchPriorityData,
   setBtcAddress,
+  setEthAddress,
 } from './accountActions';
 
 const defaultState = {
   referrer: true,
   btcAddress: '',
+  ethAddress: '',
   publisher: false,
   transactionProcessor: false,
   wantsToVote: false,
@@ -179,6 +181,12 @@ const reducer = handleActions({
     return {
       ...state,
       btcAddress: address,
+    };
+  },
+  [setEthAddress](state, { payload: { address } }) {
+    return {
+      ...state,
+      ethAddress: address,
     };
   },
   [setPublisher](state) {

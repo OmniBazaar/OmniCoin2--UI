@@ -25,6 +25,7 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
+// import EthereumWalletDropdown from './component/EthereumWalletDropdown';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
@@ -36,6 +37,7 @@ import {
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import { makeEthereumPayment } from '../../../../services/blockchain/ethereum/EthereumActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
 
@@ -64,6 +66,12 @@ const currencyOptions = [
     description: 'BitCoin Currency'
   },
   {
+    key: 'ethereum',
+    value: 'ethereum',
+    text: 'Ethereum',
+    description: 'Ethereum Currency'
+  },
+  {
     key: 'omnicoin',
     value: 'omnicoin',
     text: 'OmniCoin',
@@ -76,6 +84,7 @@ const FEE_CONVERSION_FACTOR = 10000;
 
 const initialState = {
   bitcoinWallets: [],
+  ethereumWallet: {},
   wallets: [],
   listingId: null,
   number: null,
@@ -142,6 +151,7 @@ class Transfer extends Component {
     this.hideEscrow = this.hideEscrow.bind(this);
 
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
+    this.EthereumWalletDropdown = makeValidatableField(EthereumWalletDropdown);
 
     this.state = {
       ...initialState,
@@ -167,7 +177,12 @@ class Transfer extends Component {
     if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
       this.props.change('currencySelected', 'bitcoin');
-    } else {
+    }
+    if (type === CoinTypes.ETHEREUM) {
+      this.props.transferActions.setCurrency('ethereum');
+      this.props.change('currencySelected', 'ethereum');
+    } 
+    if (type === CoinTypes.OMNI_COIN) {
       this.props.transferActions.setCurrency('omnicoin');
       this.props.change('currencySelected', 'omnicoin');
     }
@@ -201,12 +216,19 @@ class Transfer extends Component {
       this.props.change('password', this.props.bitcoin.password);
       this.props.change('guid', this.props.bitcoin.guid);
     }
+
+    if (nextProps.ethereum.wallets !== this.state.ethereumWallets) {
+      this.props.change('privateKey', this.props.ethereum.privateKey);
+      this.props.change('address', this.props.bitcoin.address);
+    }
+
     if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
       const { amount } = this.props.transferForm;
       if (nextProps.transfer.transferCurrency === 'omnicoin') {
         const convertedAmount = currencyConverter(amount, 'BITCOIN', 'OMNICOIN');
         this.props.change('amount', convertedAmount);
-      } else {
+      }
+      if (nextProps.transfer.transferCurrency === 'bitcoin') {
         const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
         this.props.change('amount', convertedAmount)
       }

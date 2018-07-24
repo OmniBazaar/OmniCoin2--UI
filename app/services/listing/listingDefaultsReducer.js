@@ -21,6 +21,7 @@ const defaultState = {
   subcategory: '',
   currency: '',
   price_using_btc: false,
+  price_using_eth: false,
   price_using_omnicoin: false,
   description: '',
   images: {},
@@ -30,7 +31,8 @@ const defaultState = {
   country: '',
   state: '',
   name: '',
-  bitcoin_address: ''
+  bitcoin_address: '',
+  ethereum_address: ''
 };
 
 const fixImagesData = (data) => {
@@ -48,6 +50,10 @@ const reducer = handleActions({
     const data = getStoredListingDefautls();
     if (!data.price_using_btc && data.currency !== 'BITCOIN') {
       delete data.bitcoin_address;
+    }
+
+    if (!data.price_using_eth && data.currency !== 'ETHEREUM') {
+      delete data.ethereum_address;
     }
 
     if (Object.keys(data).length) {
@@ -70,6 +76,9 @@ const reducer = handleActions({
 
     if (!data.price_using_btc && data.currency !== 'BITCOIN') {
       delete data.bitcoin_address;
+    }
+    if (!data.price_using_eth && data.currency !== 'ETHEREUM') {
+      delete data.ethereum_address;
     }
 
     storeListingDefaults(data);

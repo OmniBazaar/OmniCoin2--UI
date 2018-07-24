@@ -351,9 +351,9 @@ const cryptoCategories = defineMessages({
     id: 'Marketplace.localBitCoin',
     defaultMessage: 'Local + Bitcoin'
   },
-  localEutherium: {
-    id: 'Marketplace.localEutherium',
-    defaultMessage: 'Local + Eutherium'
+  localEthereum: {
+    id: 'Marketplace.localEthereum',
+    defaultMessage: 'Local + Ethereum'
   },
   localMonero: {
     id: 'Marketplace.localMonero',
@@ -366,6 +366,10 @@ const cryptoCategories = defineMessages({
   omniCoinBitCoin: {
     id: 'Marketplace.omniCoinBitCoin',
     defaultMessage: 'OmniCoin + Bitcoin'
+  },
+  omniCoinEthereum: {
+    id: 'Marketplace.omniCoinEthereum',
+    defaultMessage: 'OmniCoin + Ethereum'
   },
   omniCoinOther: {
     id: 'Marketplace.omniCoinOther',
