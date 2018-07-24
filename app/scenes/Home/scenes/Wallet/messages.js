@@ -37,6 +37,10 @@ export default defineMessages({
     id: 'Wallet.addWallet',
     defaultMessage: 'ADD OR OPEN A WALLET'
   },
+  refreshWallet: {
+    id: 'Wallet.refreshWallet',
+    defaultMessage: 'REFRESH'
+  },
   noWalletYet: {
     id: 'Wallet.noWalletYet',
     defaultMessage: 'You haven\'t created or opened a wallet yet'

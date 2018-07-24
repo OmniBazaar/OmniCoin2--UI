@@ -45,6 +45,7 @@ class Wallet extends Component {
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
+    this.onClickRefreshWallets = this.onClickRefreshWallets.bind(this);
   }
 
   componentWillMount() {
@@ -86,6 +87,10 @@ class Wallet extends Component {
 
   onClickAddAddress() {
     this.props.bitcoinActions.toggleAddAddressModal();
+  }
+
+  onClickRefreshWallets() {
+    this.props.bitcoinActions.getWallets();
   }
 
   openLink(e, path) {
@@ -167,12 +172,15 @@ class Wallet extends Component {
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
-          hasButton={this.state.activeTab}
+          hasButton={this.state.activeTab === 1}
           buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
           loading={this.props.bitcoin.loading}
           onClick={this.onClickAddWallet}
+          refreshButton={this.state.activeTab === 1}
+          refreshButtonContent={formatMessage(messages.refreshWallet)}
+          onRefresh={this.onClickRefreshWallets}
         />
         <div className="body">
           <Tab
