@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 import { Image, Button } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
 import shortid from 'shortid';
+
 import AddIcon from '../../../../../../../../images/btn-add-image.svg';
-import { getFileExtension } from '../../../../../../../../../../utils/file';
-import { uploadListingImage } from '../../../../../../../../../../services/listing/listingActions';
-import { uploadListingDefaultImage } from '../../../../../../../../../../services/listing/listingDefaultsActions';
+import { deleteListingImage, uploadListingImage } from '../../../../../../../../../../services/listing/listingActions';
+import { deleteListingDefaultImage, uploadListingDefaultImage } from '../../../../../../../../../../services/listing/listingDefaultsActions';
 import ImageItem from './ImageItem';
-import messages from '../../messages';
 
 const imageLimit = 10;
 const iconSize = 42;
@@ -18,85 +17,113 @@ const iconSize = 42;
 export const getImageId = () => shortid.generate();
 
 class Images extends Component {
+  componentWillReceiveProps(nextProps) {
+    const { publisher } = this.props;
+
+    if (publisher && nextProps.publisher && nextProps.publisher.id !== this.props.publisher.id) {
+      const { isListingDefaults, listingDefaultsImages, listingImages } = this.props;
+      const images = { ...(isListingDefaults ? listingDefaultsImages : listingImages) };
+      const deleteImage = isListingDefaults ? deleteListingDefaultImage : deleteListingImage;
+      const uploadImage = isListingDefaults ? uploadListingDefaultImage : uploadListingImage;
+
+
+      Object.keys(images)
+        .forEach((imageId) => {
+          const image = images[imageId];
+          const { id, file } = image;
+          const deleteParams = isListingDefaults ? [image] : [publisher, image];
+          const uploadParams = isListingDefaults ? [file, id] : [nextProps.publisher, file, id];
+
+          deleteImage(...deleteParams);
+          uploadImage(...uploadParams);
+        });
+    }
+  }
+
   onClickAddImage() {
     this.inputElement.click();
   }
 
-  onImageChange(event) {
-    const files = this.inputElement.files;
+  onImageChange() {
+    const { files } = this.inputElement;
+
     if (files && files.length) {
       const file = files[0];
 
       if (file.type.match('image.*')) {
-      	this.uploadImage(file);
+        this.uploadImage(file);
       }
     }
 
     this.inputElement.value = '';
   }
 
-   uploadImage(file) {
-  	const imageId = getImageId();
-  	const { isListingDefaults, publisher } = this.props;
-  	if (isListingDefaults) {
-  		const { uploadListingDefaultImage } = this.props.listingDefaultsActions;
-  		uploadListingDefaultImage(file, imageId);
-  	} else {
+  uploadImage(file) {
+    const imageId = getImageId();
+    const { isListingDefaults, publisher } = this.props;
+
+    if (isListingDefaults) {
+      const { uploadListingDefaultImage } = this.props.listingDefaultsActions;
+      uploadListingDefaultImage(file, imageId);
+    } else {
       const { uploadListingImage } = this.props.listingActions;
-  		uploadListingImage(publisher, file, imageId);
-  	}
+      uploadListingImage(publisher, file, imageId);
+    }
   }
 
   getImages() {
-  	const { isListingDefaults } = this.props;
-  	if (isListingDefaults) {
-  		return this.props.listingDefaultsImages;
-  	}
-  		return this.props.listingImages;
+    const { isListingDefaults } = this.props;
+
+    if (isListingDefaults) {
+      return this.props.listingDefaultsImages;
+    }
+
+    return this.props.listingImages;
   }
 
   renderImages() {
-  	const {
-  	  isListingDefaults,
-      publisher
-  	} = this.props;
-  	const images = this.getImages();
-    return Object.keys(images).map((imageId) => (
-      <ImageItem
-        key={imageId}
-        imageId={imageId}
-        image={images[imageId]}
-        isListingDefaults={isListingDefaults}
-        publisher={publisher}
-      />
-    ));
+    const { isListingDefaults, publisher } = this.props;
+    const images = this.getImages();
+
+    return Object
+      .keys(images)
+      .map((imageId) => (
+        <ImageItem
+          key={imageId}
+          imageId={imageId}
+          image={images[imageId]}
+          isListingDefaults={isListingDefaults}
+          publisher={publisher}
+        />
+      ));
   }
 
   render() {
     const { disabled } = this.props;
-  	const images = this.getImages();
+    const images = this.getImages();
+
     return (
       <div className="listing-image-container">
         <input
-          ref={(ref) => this.inputElement = ref}
+          ref={(ref) => { this.inputElement = ref; }}
           type="file"
-          onChange={this.onImageChange.bind(this)}
+          onChange={() => this.onImageChange()}
           className="filetype"
           accept="image/*"
         />
         <div className="images-wrapper">
           {this.renderImages()}
-          {
-	        	(Object.keys(images).length < imageLimit) &&
-	        	<Button
-              className="add-img-button"
-              onClick={this.onClickAddImage.bind(this)}
-              disabled={disabled}
-              type="button"
-	        	>
-  						<Image src={AddIcon} width={iconSize} height={iconSize} />
-		        </Button>
-	        }
+          {(Object.keys(images).length < imageLimit) &&
+          <Button
+            className="add-img-button"
+            onClick={this
+            .onClickAddImage
+            .bind(this)}
+            disabled={disabled}
+            type="button"
+          >
+            <Image src={AddIcon} width={iconSize} height={iconSize} />
+          </Button>}
         </div>
       </div>
     );
@@ -105,17 +132,21 @@ class Images extends Component {
 
 Images.propTypes = {
   listingActions: PropTypes.shape({
-    uploadListingImage: PropTypes.func
+    deleteListingImage: PropTypes.func,
+    uploadListingImage: PropTypes.func,
   }).isRequired,
-  listingImages: PropTypes.object.isRequired,
-  intl: PropTypes.shape({
-    formatMessage: PropTypes.func
+  listingDefaultsActions: PropTypes.shape({
+    deleteListingDefaultImage: PropTypes.func,
+    uploadListingDefaultImage: PropTypes.func,
   }).isRequired,
+  listingImages: PropTypes.shape({}).isRequired,
+  listingDefaultsImages: PropTypes.shape({}).isRequired,
   isListingDefaults: PropTypes.bool,
-  publisher: PropTypes.shape({}),
+  publisher: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   disabled: PropTypes.bool
 };
-
 
 Images.defaultProps = {
   isListingDefaults: false,
@@ -125,15 +156,17 @@ Images.defaultProps = {
 
 const mapState = state => ({
   listingImages: state.default.listing.listingImages,
-  listingDefaultsImages: state.default.listingDefaults.images
+  listingDefaultsImages: state.default.listingDefaults.images,
 });
 
 const mapDispatch = dispatch => ({
   listingActions: bindActionCreators({
+    deleteListingImage,
     uploadListingImage
   }, dispatch),
   listingDefaultsActions: bindActionCreators({
-  	uploadListingDefaultImage
+    deleteListingDefaultImage,
+    uploadListingDefaultImage
   }, dispatch)
 });
 

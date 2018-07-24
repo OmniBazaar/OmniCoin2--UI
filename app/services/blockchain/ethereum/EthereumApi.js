@@ -3,16 +3,27 @@ import { wrapRequest } from '../../utils';
 import ethers from 'ethers';
 
 var Wallet = ethers.Wallet;
-// remove this on production.
-Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
-const ApiAddress = 'http://api-ropsten.etherscan.io/api';
+const isProd = () => process.env.NODE_ENV === 'production';
+const ApiAddress = isProd() ? 'http://api.etherscan.io/api' : 'http://api-ropsten.etherscan.io/api';
+const ApiKey = '76ST8GSF68S6Q9TY1EMQ6ZQKZXMZ9N6HJ1';
 
 const createEthereumWallet = function () {
+  if (isProd()) {
+    Wallet.provider = ethers.providers.getDefaultProvider();
+  } else {
+    Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+  }
   var wallet = Wallet.createRandom();
   return wallet;
 };
 
 const getEthereumWallets = function (privateKey, brainKey) {
+  if (isProd()) {
+    Wallet.provider = ethers.providers.getDefaultProvider();
+  } else {
+    Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+  }
+
   if (brainKey) {
     var wallet = new Wallet.fromMnemonic(brainKey);
     return wallet;
@@ -23,12 +34,14 @@ const getEthereumWallets = function (privateKey, brainKey) {
 };
 
 const getEthereumBalance = function (privateKey) {
-  // var networks = ethers.networks;
-  // var providers = ethers.providers;
-  // wallet.provider = ethers.providers.getDefaultProvider();
-  // wallet.provider = ethers.providers.networks.ropsten;
+  var provider = null;
 
-  var provider = ethers.providers.getDefaultProvider('ropsten');
+  if (isProd()) {
+    provider = ethers.providers.getDefaultProvider();
+  } else {
+    provider = ethers.providers.getDefaultProvider('ropsten');
+  }
+
   var wallet = new ethers.Wallet(privateKey, provider);
 
   var balancePromise = wallet.getBalance();
@@ -40,6 +53,12 @@ const getEthereumBalance = function (privateKey) {
 };
 
 const makeEthereumPayment = function (privateKey, to, amount) {
+  if (isProd()) {
+    Wallet.provider = ethers.providers.getDefaultProvider();
+  } else {
+    Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+  }
+
   var wallet = new Wallet(privateKey);
   var amount = ethers.utils.parseEther(amount);
   var sendPromise = wallet.send(to, amount);
@@ -65,7 +84,7 @@ const getEthereumAddress = function (xpub, address, privateKey) {
 };
 
 
-const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddress}?module=account&action=txlist&startblock=0&endblock=latest&sort=asc&address=${address}`));
+const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddress}?module=account&action=txlist&startblock=0&endblock=latest&sort=asc&address=${address}&apikey=${ApiKey}`));
 
 export {
   createEthereumWallet,

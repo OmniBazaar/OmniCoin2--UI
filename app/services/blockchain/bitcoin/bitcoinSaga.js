@@ -43,7 +43,6 @@ function* connectWallet({ payload: { guid, password } }) {
       type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password
     });
   } catch (error) {
-    console.log('Connect bitcoin wallet error', error);
     yield put(connectWalletFinish(error));
   }
 }

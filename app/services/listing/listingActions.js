@@ -76,7 +76,7 @@ const {
   UPLOAD_LISTING_IMAGE_ERROR: (imageId, error) => ({ imageId, error }),
   CLEAR_LISTING_IMAGE_ERROR: (imageId) => ({ imageId }),
   RESET_SAVE_LISTING: () => ({}),
-  SAVE_LISTING: (publisher, listing, listingId) => ({ publisher, listing, listingId }),
+  SAVE_LISTING: (publisher, listing, listingId) => ({ publisher, listing, list:listing, listingId }),
   SAVE_LISTING_SUCCESS: (listing, listingId) => ({ listing, listingId }),
   SAVE_LISTING_ERROR: (listingId, error) => ({ listingId, error }),
   RESET_DELETE_LISTING: () => ({}),

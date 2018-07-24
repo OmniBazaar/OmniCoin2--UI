@@ -36,10 +36,8 @@ import {
   searchPublishersFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
-import {
-  countPeersForKeywords
-} from '../search/dht/dhtSaga';
-import {getAllPublishers, getPublisherByIp} from '../accountSettings/services';
+import { countPeersForKeywords } from '../search/dht/dhtSaga';
+import { getAllPublishers, getPublisherByIp } from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
@@ -49,7 +47,10 @@ import {
   ensureListingData,
   checkPublisherAliveStatus,
   createListing,
-  getListingFromBlockchain
+  deleteListing,
+  editListing,
+  getListingFromBlockchain,
+  reportListingOnBlockchain,
 } from './apis';
 
 
@@ -140,7 +141,6 @@ function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, lis
       type: mime.lookup(listing.images[i].path),
       url
     });
-    console.log('RESULT ', result);
     listing.images[i] = {
       path: result.image,
       thumb: result.thumb,
@@ -152,10 +152,8 @@ function* uploadImagesFromAnotherPublisher(user, oldPublisher, newPublisher, lis
 function* moveToAnotherPublisher(user, publisher, listing, listingId) {
   const oldPublisher = yield call(getPublisherByIp, listing.ip);
   yield call(uploadImagesFromAnotherPublisher, user, oldPublisher, publisher, listing);
-  console.log('DONE UPLOADING');
   yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
   listing = ensureListingData(listing);
-  console.log("LISTING TO SHOW ", publisher);
   yield call(updateListingOnBlockchain, user, publisher, listingId, listing);
   yield call(createListingOnPublisher, user, listing, publisher, listingId);
 }

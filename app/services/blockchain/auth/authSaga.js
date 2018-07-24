@@ -8,6 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import { ipcRenderer } from 'electron';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
@@ -16,7 +17,8 @@ import {
   getAccount as getAccountAction,
   welcomeBonus as welcomeBonusAction,
   welcomeBonusSucceeded,
-  welcomeBonusFailed
+  welcomeBonusFailed,
+  requestReferrerFinish
 } from './authActions';
 import { getFirstReachable } from './services';
 
@@ -48,6 +50,7 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
+    takeEvery('REQUEST_REFERRER', requestReferrer)
   ]);
 }
 
@@ -226,4 +229,18 @@ export function* getWelcomeBonusAmount() {
   } catch (error) {
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
   }
+}
+
+const getDefaultReferrer = () => new Promise((resolve, reject) => {
+  ipcRenderer.once('receive-referrer', (event, arg) => {
+    const referrer = arg.referrer;
+    localStorage.setItem('referrer', referrer);
+    resolve(referrer);
+  });
+  ipcRenderer.send('get-referrer', null);
+});
+
+function* requestReferrer() {
+  const referrer = yield call(getDefaultReferrer);
+  yield put(requestReferrerFinish(referrer));
 }

@@ -9,6 +9,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Tab, Image, Loader, Button } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
+import ip from 'ip';
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
@@ -120,6 +121,7 @@ class Wallet extends Component {
 
   getBitcoinContent() {
     const { wallets, guid } = this.props.bitcoin;
+    const { formatMessage } = this.props.intl;
     const elements = wallets.map((wallet, index) => (
       <BitcoinWalletDetail
         key={hash(wallet)}
@@ -141,7 +143,23 @@ class Wallet extends Component {
         />
       </div>);
     }
-    return elements;
+    if (this.props.bitcoin.isGettingWallets) {
+      return (
+        <div className="content">
+          <div className="load-container"><Loader inline active /></div>
+        </div>
+      );
+    }
+    return (
+      <div className="bitcoin-addresses">
+        <div className="content">
+          {elements}
+        </div>
+        <div className="note">
+          <span>{formatMessage(messages.bitcoinNote)}</span>
+        </div>
+      </div>
+    );
   }
 
 
@@ -149,25 +167,25 @@ class Wallet extends Component {
     const { address, balance, brainKey } = this.props.ethereum;
     const wallet = [
       <EthereumWalletDetail
-      openWalletModal={this.openWalletModal}
-      address={address}
-      balance={balance}
-      brainKey={brainKey}
+        openWalletModal={this.openWalletModal}
+        address={address}
+        balance={balance}
+        brainKey={brainKey}
       />
     ];
     if (brainKey) {
       wallet.push(<Button
-          content="Export key"
-          className="button--primary"
-          onClick={() => this.downloadBrainKeyFile(brainKey)}
-        />)
+        content="Export key"
+        className="button--primary"
+        onClick={() => this.downloadBrainKeyFile(brainKey)}
+      />)
     }
     return wallet
   }
 
   downloadBrainKeyFile(brainKey) {
     var element = document.createElement("a");
-    var file = new Blob([brainKey], {type: 'text/plain'});
+    var file = new Blob([brainKey], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
     element.download = "wallet-brain-key.txt";
     element.click();
@@ -218,16 +236,16 @@ class Wallet extends Component {
                   </Tab.Pane>
                 )
               },
-               {
-                 menuItem: 'BitCoin',
-                 render: () =>
-                   (<Tab.Pane>
-                     {this.props.bitcoin.wallets.length ?
-                       <div className="content">
-                         {
+              {
+                menuItem: 'BitCoin',
+                render: () =>
+                  (<Tab.Pane>
+                    {this.props.bitcoin.wallets.length ?
+                      <div className="content">
+                        {
                           this.props.bitcoin.isGettingWallets ?
                             <div className="load-container"><Loader inline active /></div> :
-                          this.getBitcoinContent()
+                            this.getBitcoinContent()
                         }
                       </div>
                       :

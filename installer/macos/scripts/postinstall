@@ -12,6 +12,7 @@ name=$(basename "$1")
 
 mkdir "$HOME/Library/Preferences/OmniBazaar"
 chown -R $USER "$HOME/Library/Preferences/OmniBazaar"
+rm "$HOME/Library/Preferences/OmniBazaar/omnibazaar.set"
 echo "referrer=$name" >> "$HOME/Library/Preferences/OmniBazaar/omnibazaar.set"
 
 exit 0
