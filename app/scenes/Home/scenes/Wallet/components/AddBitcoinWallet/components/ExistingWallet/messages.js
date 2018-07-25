@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   enterPassword: {
     id: 'ExistingWallet.enterPassword',
-    defaultMessage: 'Enter Password for Account Access',
+    defaultMessage: 'Enter Password for Account Access'
   },
   pleaseEnter: {
     id: 'ExistingWallet.pleaseEnter',
@@ -32,5 +32,9 @@ export default defineMessages({
   connectErrorMessage: {
     id: 'NewWallet.connectErrorMessage',
     defaultMessage: 'Having error when conneting wallet'
+  },
+  ipError: {
+    id: 'Bitcoin.ipError',
+    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info'
   }
 });

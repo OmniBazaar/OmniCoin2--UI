@@ -2,13 +2,13 @@ import { eventChannel } from 'redux-saga';
 import {
   ob2SocketClosed,
   ob2SocketOpened
-} from "./marketplace/marketplaceActions";
+} from './marketplace/marketplaceActions';
 
 function wrapRequest(func) {
   return async (...args) => {
     const res = await func(...args);
     if (res.status !== 200) {
-      throw res;
+      throw await res.json();
     } else {
       return res.json();
     }
@@ -20,11 +20,11 @@ function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
       console.log('Connection opened');
-      emitter(ob2SocketOpened())
+      emitter(ob2SocketOpened());
     };
     socket.onerror = (error) => {
       console.log(`WebSocket error ${error}`);
-      emitter(ob2SocketClosed())
+      emitter(ob2SocketClosed());
     };
     socket.onmessage = (e) => {
       try {
@@ -73,7 +73,7 @@ const coefficients = {
 
 Object.keys(coefficients).forEach(key => {
   const units = key.split('to');
-  coefficients[`${units[1]}to${units[0]}`] = 1/coefficients[key];
+  coefficients[`${units[1]}to${units[0]}`] = 1 / coefficients[key];
 });
 
 const currencyConverter = (amount, fromCur, toCur) => {
@@ -88,7 +88,7 @@ const currencyConverter = (amount, fromCur, toCur) => {
 
   const inverD = `${toCur}to${fromCur}`;
   if (coefficients[inverD]) {
-    coefficients[d] = 1/coefficients[inverD];
+    coefficients[d] = 1 / coefficients[inverD];
     return amount * coefficients[d];
   }
 
@@ -100,7 +100,7 @@ const currencyConverter = (amount, fromCur, toCur) => {
 
   coefficients[d] = coefficients[toUSD] * coefficients[fromUSD];
   return amount * coefficients[d];
-}
+};
 /*
 function currencyConverter(amount, from, to) {
   const usdRates = {
@@ -119,7 +119,7 @@ function currencyConverter(amount, from, to) {
   if (to === 'BTC') {
     return (amount  / (btcUSD * (usdRates[from] || 1))).toFixed(8);
   }
-}*/
+} */
 
 export {
   wrapRequest,

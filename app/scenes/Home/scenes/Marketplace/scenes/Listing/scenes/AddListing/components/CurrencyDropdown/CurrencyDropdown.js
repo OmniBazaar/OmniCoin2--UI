@@ -12,9 +12,9 @@ class CurrencyDropdown extends Component {
       currenciesData = {
         ...currencies
       };
-      delete currenciesData['ALL'];
+      delete currenciesData.ALL;
     }
-    
+
     this.options = Object.keys(currenciesData).map(id => ({
       value: id,
       text: formatMessage(currenciesData[id])
@@ -33,18 +33,13 @@ class CurrencyDropdown extends Component {
 
   render() {
     const { value } = this.props.input;
-    const { removeAll } = this.props;
-    let options = this.options;
-    if(removeAll){
-      options = options.filter((item) => item.text !== 'All');
-    }
 
     return (
       <Dropdown
         compact
         selection
         placeholder={this.props.placeholder}
-        options={options}
+        options={this.options}
         onChange={this.onChange.bind(this)}
         value={value}
       />

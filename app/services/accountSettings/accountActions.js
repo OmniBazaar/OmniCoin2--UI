@@ -28,7 +28,8 @@ const {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -36,13 +37,13 @@ const {
   SET_ESCROW: () => ({}),
   CHANGE_PRIORITY: (priority) => ({ priority }),
   CHANGE_COUNTRY: (country) => ({ country }),
-  CHANGE_STATE: (state) => ({state}),
+  CHANGE_STATE: (state) => ({ state }),
   CHANGE_CITY: (city) => ({ city }),
   CHANGE_CATEGORY: (category) => ({ category }),
   CHANGE_PUBLISHER_NAME: (publisher) => ({ publisher }),
   CHANGE_KEYWORDS: (keywords) => ({ keywords }),
   CHANGE_SEARCH_PRIORITY_DATA: (data) => ({ data }),
-  GET_RECENT_TRANSACTIONS: () => ({ }),
+  GET_RECENT_TRANSACTIONS: (coinType) => ({ coinType }),
   SET_ACTIVE_PAGE: (activePage) => ({ activePage }),
   SET_PAGINATION: (rowsPerPage) => ({ rowsPerPage }),
   SORT_DATA: (sortColumn, direction) => ({ sortColumn, direction }),
@@ -57,7 +58,8 @@ const {
   GET_PUBLISHER_DATA: () => ({}),
   UPDATE_PUBLISHER_DATA: (data) => ({ data }),
   GET_PUBLISHERS: () => ({}),
-  CHANGE_IP_ADDRESS: (ip) => ({ ip })
+  CHANGE_IP_ADDRESS: (ip) => ({ ip }),
+  SET_BTC_ADDRESS: (address) => ({ address }),
 });
 
 export {
@@ -88,5 +90,6 @@ export {
   getPublisherData,
   updatePublisherData,
   getPublishers,
-  changeIpAddress
+  changeIpAddress,
+  setBtcAddress,
 };

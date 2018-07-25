@@ -19,6 +19,7 @@ const {
   getIdentityVerificationTokenSucceeded,
   requestPcIds,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal
@@ -31,7 +32,9 @@ const {
       username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
-  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({ username, referrer, macAddress, harddriveId }),
+  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({
+    username, referrer, macAddress, harddriveId
+  }),
   WELCOME_BONUS_SUCCEEDED: () => ({ }),
   WELCOME_BONUS_FAILED: (error) => ({ error }),
   GET_WELCOME_BONUS_AMOUNT: () => {},
@@ -42,6 +45,7 @@ const {
   GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (token) => ({ token }),
   REQUEST_PC_IDS: () => ({}),
   REQUEST_REFERRER: () => ({}),
+  REQUEST_REFERRER_FINISH: (referrer) => ({ referrer }),
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
   SHOW_TERMS_MODAL: () => ({}),
@@ -63,6 +67,7 @@ export {
   getIdentityVerificationTokenSucceeded,
   requestPcIds,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal

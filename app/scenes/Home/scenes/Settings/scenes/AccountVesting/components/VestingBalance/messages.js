@@ -29,7 +29,7 @@ export default defineMessages({
   },
   daysLeft: {
     id: 'VestingBalance.daysLeft',
-    defaultMessage: 'Days left of vesting period'
+    defaultMessage: '{number} days'
   },
   availableToClaim: {
     id: 'VestingBalance.available',
@@ -49,7 +49,7 @@ export default defineMessages({
   },
   [VestingTypes.none]: {
     id: 'VestingBalance.none',
-    defaultMessage: 'UNKNOWN'
+    defaultMessage: '\u200b'
   },
   [VestingTypes.escrowFee]: {
     id: 'VestingBalance.escrowFee',

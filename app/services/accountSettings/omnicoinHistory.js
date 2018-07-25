@@ -1,15 +1,17 @@
 import { orderBy, zip, uniqBy } from 'lodash';
-import {FetchChain, ChainStore, ChainTypes} from 'omnibazaarjs/es';
+import { FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 
 import BaseStorage from '../../utils/baseStorage';
-import {decodeMemo, generateKeyFromPassword} from "../blockchain/utils/wallet";
-import {calcBlockTime, getDynGlobalObject, getGlobalObject} from "../blockchain/utils/miscellaneous";
+import { decodeMemo, generateKeyFromPassword } from '../blockchain/utils/wallet';
+import { calcBlockTime, getDynGlobalObject, getGlobalObject } from '../blockchain/utils/miscellaneous';
+import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { TOKENS_IN_XOM } from '../../utils/constants';
 
 
 const key = 'historyStorage';
 
-class HistoryStorage extends BaseStorage {
+class OmnicoinHistory extends BaseStorage {
   constructor(accountName) {
     super(key, accountName);
     this.cache = this.getData();
@@ -19,19 +21,6 @@ class HistoryStorage extends BaseStorage {
     }
   }
 
-  // static updateBalances(transactions) {
-  //   if (transactions.length) {
-  //     transactions[transactions.length - 1].balance = transactions[transactions.length - 1].amount;
-  //     for (let i = transactions.length - 2; i >= 0; --i) {
-  //       transactions[i].balance = transactions[i + 1].balance
-  //                                 + transactions[i].balance
-  //                                 + transactions[i].amount;
-  //       transactions[i].amount = Math.abs(transactions[i].amount);
-  //     }
-  //   }
-  //   return transactions;
-  // }
-
   getOperation(id) {
     return this.cache[id];
   }
@@ -40,12 +29,16 @@ class HistoryStorage extends BaseStorage {
     return !!this.cache[id];
   }
 
+  isEscrowResult(op) {
+    return op.operationType === ChainTypes.operations.escrow_release_operation
+        || op.operationType === ChainTypes.operations.escrow_return_operation;
+  }
+
   operationAmount(op) {
     if (op.amount) {
       return op.amount;
     }
-    if (op.operationType === ChainTypes.operations.escrow_release_operation
-      || op.operationType === ChainTypes.operations.escrow_return_operation) {
+    if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       return escrowTr.amount;
     }
@@ -55,29 +48,36 @@ class HistoryStorage extends BaseStorage {
   operationMemo(op) {
     if (op.memo) {
       return op.memo;
-    } else if (op.operationType === ChainTypes.operations.escrow_release_operation
-      || op.operationType === ChainTypes.operations.escrow_return_operation) {
+    } else if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
       return escrowTr.memo;
     }
     return '';
   }
 
+  getObFee(op) {
+    if (this.isEscrowResult(op)) {
+      return this.findEscrowTransactionByResult(op).obFee;
+    }
+    return op.obFee;
+  }
+
   totalObFee(op) {
     let total = 0;
-    if (op.obFee) {
-      Object.keys(op.obFee).forEach(key => {
-          total += op.obFee[key];
-      })
+    const obFee = this.getObFee(op);
+    if (obFee) {
+      Object.keys(obFee).forEach(key => {
+        total += obFee[key];
+      });
     }
     return total;
   }
 
   processObFee(fee) {
-    const out  = {};
+    const out = {};
     if (fee) {
       Object.keys(fee).forEach(key => {
-        out[key] = fee[key].amount / 100000;
+        out[key] = fee[key].amount / TOKENS_IN_XOM;
       });
     }
     return out;
@@ -100,7 +100,20 @@ class HistoryStorage extends BaseStorage {
     return this.cache[filtered[0]];
   }
 
+  //checks if publisher and user is not a publisher himself
+  isPublisherListingRelatedOp(op) {
+    const currentUser = getStoredCurrentUser();
+    return  (op.to === currentUser.username && op.to !== op.from) && (
+      op.operationType === ChainTypes.operations.listing_create_operation
+      || op.operationType === ChainTypes.operations.listing_update_operation
+      || op.operationType === ChainTypes.operations.listing_delete_operation
+    );
+  }
+
   includeOperation(op) {
+    if (this.isPublisherListingRelatedOp(op)) {
+      return false;
+    }
     if (op.operationType === ChainTypes.operations.escrow_create_operation) {
       const result = this.findEscrowTransactionResult(op);
       return !result && (op.from === this.accountName || op.to === this.accountName);
@@ -111,8 +124,11 @@ class HistoryStorage extends BaseStorage {
     return true;
   }
 
+
+
   getHistory() {
     const transactions = {};
+    const currentUser = getStoredCurrentUser();
     Object.keys(this.cache).forEach(i => {
       if (!this.includeOperation(this.cache[i])) {
         return;
@@ -136,15 +152,40 @@ class HistoryStorage extends BaseStorage {
       }
       const totalObFee = this.totalObFee(op);
       if (op.isIncoming) {
-        transactions[trxKey].amount += this.operationAmount(op) - totalObFee;
+        transactions[trxKey].amount += this.operationAmount(op);
       } else {
         transactions[trxKey].amount -= this.operationAmount(op);
       }
-      transactions[trxKey].fee += op.fee + totalObFee;
 
+      // when user is publishing listings on his own publisher node
+      if (op.from === op.to) {
+        transactions[trxKey].fee += op.fee + totalObFee;
+      } else if (op.to === currentUser.username) {
+        if (op.operationType === ChainTypes.operations.listing_create_operation
+            || op.operationType === ChainTypes.operations.listing_update_operation
+            || op.operationType === ChainTypes.operations.transfer) {
+          transactions[trxKey].fee += totalObFee;
+        }
+      } else if (op.from === currentUser.username) {
+        transactions[trxKey].fee += op.fee;
+        if (op.operationType !== ChainTypes.operations.transfer
+            && op.operationType !== ChainTypes.operations.listing_create_operation
+            && op.operationType !== ChainTypes.operations.listing_update_operation) {
+          transactions[trxKey].fee += totalObFee;
+        } else {
+          transactions[trxKey].fee += op.obFee.publisher_fee || 0;
+        }
+      }
       transactions[trxKey].memo = this.operationMemo(op);
+      let obFee;
+      if (op.operationType === ChainTypes.operations.listing_create_operation
+          || op.operationType === ChainTypes.operations.listing_update_operation
+          || op.operationType === ChainTypes.operations.transfer) {
+        obFee = this.getObFee(op);
+      }
       transactions[trxKey].operations.push({
         ...op,
+        obFee,
         amount: this.operationAmount(op)
       });
     });
@@ -165,42 +206,40 @@ class HistoryStorage extends BaseStorage {
           const result = this.findEscrowTransactionResult(op);
           if (result && result.operationType === ChainTypes.operations.escrow_release_operation) {
             return {
-                ...result,
-                listingId: op.listingId,
-                listingCount: op.listingCount
-              }
+              ...result,
+              listingId: op.listingId,
+              listingCount: op.listingCount
+            };
           }
         }
         return op;
       })
       // throwing away unreleased escrow_create operations
-      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation)
+      .filter(op => op.operationType !== ChainTypes.operations.escrow_create_operation);
   }
 
   getBuyOperations() {
     const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => !op.isIncoming)
-      .map(op => {
-        return {
-          key: op.id,
-          id: op.listingId,
-          count: op.listingCount,
-          date: op.date,
-      }});
+      .map(op => ({
+        key: op.id,
+        id: op.listingId,
+        count: op.listingCount,
+        date: op.date,
+      }));
   }
 
   getSellOperations() {
     const operations = this.getListingPurchaseOperations();
     return operations
       .filter(op => op.isIncoming)
-      .map(op => {
-        return {
-          key: op.id,
-          id: op.listingId,
-          count: op.listingCount,
-          date: op.date,
-        }});
+      .map(op => ({
+        key: op.id,
+        id: op.listingId,
+        count: op.listingCount,
+        date: op.date,
+      }));
   }
 
 
@@ -208,43 +247,39 @@ class HistoryStorage extends BaseStorage {
     const listingIds = operations.map(op => op.id);
     let listingObjects = await Apis.instance().db_api().exec('get_objects', [listingIds]);
     listingObjects = listingObjects.filter(listing => !!listing);
-    listingObjects = await Promise.all(
-      listingObjects.map(async el => await Promise.all([
-        FetchChain('getAccount', el.seller),
-        FetchChain('getAccount', el.publisher)
-      ]).then(res => {
-        return {
-          ...el,
-          price: el.price.amount / 100000,
-          seller: res[0].get('name'),
-          publisher: res[1].get('name')
-        }
-      }))
-    );
+    listingObjects = await Promise.all(listingObjects.map(async el => await Promise.all([
+      FetchChain('getAccount', el.seller),
+      FetchChain('getAccount', el.publisher)
+    ]).then(res => ({
+      ...el,
+      price: el.price.amount / TOKENS_IN_XOM,
+      seller: res[0].get('name'),
+      publisher: res[1].get('name')
+    }))));
     return listingObjects;
   }
   async getBuyHistory() {
-    let buyOperations = this.getBuyOperations();
+    const buyOperations = this.getBuyOperations();
     const listingObjects = await this.getListingObjects(buyOperations);
     return buyOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
-      }
+      };
     });
   }
 
   async getSellHistory() {
-    let sellOperations = this.getSellOperations();
+    const sellOperations = this.getSellOperations();
     const listingObjects = await this.getListingObjects(sellOperations);
     return sellOperations.map(op => {
       const item = listingObjects.find(item => item.id === op.id);
       return {
         ...item,
         ...op,
-      }
-    })
+      };
+    });
   }
 
   save() {
@@ -305,25 +340,33 @@ class HistoryStorage extends BaseStorage {
       ChainTypes.operations.welcome_bonus_operation,
       ChainTypes.operations.referral_bonus_operation,
       ChainTypes.operations.sale_bonus_operation,
+      ChainTypes.operations.witness_bonus_operation,
       ChainTypes.operations.witness_create,
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
       if (!this.exists(el.id)) {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
-            || el.op[0] === ChainTypes.operations.sale_bonus_operation) {
-          this.addOperation({
+            || el.op[0] === ChainTypes.operations.sale_bonus_operation
+            || el.op[0] === ChainTypes.operations.witness_bonus_operation) {
+          const operation = {
             id: el.id,
             blockNum: el.block_num,
             opInTrx: el.op_in_trx,
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-            fee: el.op[1].fee.amount / 100000,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
-            amount: el.result[1].amount / 100000,
+            amount: el.result[1].amount / TOKENS_IN_XOM,
             isIncoming: true
-          });
+          };
+          if ((operation.operationType === ChainTypes.operations.sale_bonus_operation
+                && el.op[1].seller === account.get('id'))
+              || operation.operationType === ChainTypes.operations.welcome_bonus_operation
+              || operation.operationType === ChainTypes.operations.witness_bonus_operation) {
+            this.addOperation(operation);
+          }
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
             const [referredAcc, referrerAcc] = await Promise.all([
@@ -336,10 +379,10 @@ class HistoryStorage extends BaseStorage {
               opInTrx: el.op_in_trx,
               trxInBlock: el.trx_in_block,
               date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-              fee: el.op[1].fee.amount / 100000,
+              fee: el.op[1].fee.amount / TOKENS_IN_XOM,
               obFee: this.processObFee(el.op[1].ob_fee),
               operationType: el.op[0],
-              amount: el.result[1].amount / 100000,
+              amount: el.result[1].amount / TOKENS_IN_XOM,
               from: referrerAcc.get('name'),
               to: referredAcc.get('name'),
               fromTo: referredAcc.get('name'),
@@ -347,23 +390,41 @@ class HistoryStorage extends BaseStorage {
             });
           }
         } else if ([ChainTypes.operations.listing_create_operation,
-              ChainTypes.operations.listing_update_operation,
-              ChainTypes.operations.listing_delete_operation,
-              ChainTypes.operations.witness_create,
-              ChainTypes.operations.account_update].includes(el.op[0])) {
-          this.addOperation({
+          ChainTypes.operations.listing_update_operation,
+          ChainTypes.operations.listing_delete_operation,
+          ChainTypes.operations.witness_create,
+          ChainTypes.operations.account_update].includes(el.op[0])) {
+          const operation = {
             id: el.id,
             blockNum: el.block_num,
             opInTrx: el.op_in_trx,
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-            fee: el.op[1].fee.amount / 100000,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             isIncoming: false
-          });
+          };
+          if ([ChainTypes.operations.listing_create_operation,
+               ChainTypes.operations.listing_update_operation].includes(el.op[0])) {
+            const [publisher, seller] = await Promise.all([
+              FetchChain('getAccount', el.op[1].publisher),
+              FetchChain('getAccount', el.op[1].seller)
+            ]);
+            operation.from = seller.get('name');
+            operation.to = publisher.get('name');
+            operation.fromTo = currentUser.username === seller.get('name')
+              ? publisher.get('name')
+              : seller.get('name');
+            if (operation.from === operation.to) {
+              operation.isIncoming = false;
+            } else if (el.op[1].publisher === account.get('id')) {
+              operation.isIncoming = true;
+            }
+          }
+          this.addOperation(operation);
         } else {
-          const [from, to] = await HistoryStorage.getParties(el.op);
+          const [from, to] = await OmnicoinHistory.getParties(el.op);
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
@@ -374,8 +435,8 @@ class HistoryStorage extends BaseStorage {
             from: from.get('name'),
             to: to.get('name'),
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
-            amount: el.op[1].amount ? el.op[1].amount.amount / 100000 : 0,
-            fee: el.op[1].fee.amount / 100000,
+            amount: el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0,
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
             // will be undefined if operation type is transfer
@@ -393,4 +454,4 @@ class HistoryStorage extends BaseStorage {
   }
 }
 
-export default HistoryStorage;
+export default OmnicoinHistory;

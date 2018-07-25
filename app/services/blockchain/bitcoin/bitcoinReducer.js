@@ -162,7 +162,11 @@ const reducer = handleActions({
       connectingWallet: false,
       connectWalletError: error
     };
-  }
+  },
+  LOGOUT: (state) => ({
+    ...state,
+    ...defaultState
+  }),
 }, defaultState);
 
 export default reducer;

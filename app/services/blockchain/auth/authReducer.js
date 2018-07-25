@@ -7,7 +7,7 @@ import {
   logout,
   getCurrentUser,
   requestPcIds,
-  requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal,
@@ -33,6 +33,7 @@ const defaultState = {
   welcomeBonusAmount: null,
   isWelcomeBonusAvailable: null,
   identityVerificationToken: null,
+  defaultReferrer: null
 };
 
 const reducer = handleActions({
@@ -51,8 +52,10 @@ const reducer = handleActions({
   },
   [logout](state) {
     removeStoredCurrentUser();
+
     return {
       ...state,
+      account: null,
       currentUser: null
     };
   },
@@ -81,18 +84,17 @@ const reducer = handleActions({
     ipcRenderer.send('get-pc-ids', null);
     return state;
   },
-  [requestReferrer](state) {
-    ipcRenderer.once('receive-referrer', (event, arg) => {
-      localStorage.setItem('referrer', arg.referrer);
-    });
-    ipcRenderer.send('get-referrer', null);
-    return state;
+  [requestReferrerFinish](state, { payload: { referrer } }) {
+    return {
+      ...state,
+      defaultReferrer: referrer
+    };
   },
   [getLastLoginUserName]: (state) => {
     const username = getLastStoredUserName();
     return {
       ...state,
-      lastLoginUserName: username ? username : null
+      lastLoginUserName: username || null,
     };
   },
   LOGIN_FAILED: (state, action) => ({

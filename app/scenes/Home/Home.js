@@ -40,6 +40,7 @@ import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
+import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -60,13 +61,15 @@ import { showSettingsModal, showPreferencesModal } from '../../services/menu/men
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
 import { getAccount, logout } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
-import { restartNode } from "../../services/blockchain/connection/connectionActions";
+import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
 const iconSize = 20;
 
 class Home extends Component {
+
   constructor(props) {
     super(props);
     ipcRenderer.on('messageForIdentityWindow', () => {
@@ -75,16 +78,20 @@ class Home extends Component {
   }
   state = { visible: true };
 
-  componentWillReceiveProps(nextProps) {
+componentDidMount() {
+  this.init();
+}  
+componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
   }
 
-  componentDidMount() {
+  init() {
+    this.props.preferencesActions.loadPreferences();
+    this.props.bitcoinActions.getWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
-    this.props.preferencesActions.loadPreferences();
     this.props.dhtActions.dhtReconnect();
   }
 
@@ -93,7 +100,6 @@ class Home extends Component {
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
-
 
   renderAccountSettings() {
     const { props } = this;
@@ -122,14 +128,14 @@ class Home extends Component {
   };
 
   handleChange = ({ idle }) => {
-    let { logoutTimeout } = this.props.preferences.preferences;
+    const { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout && idle && this.props.authActions.logout();
   };
 
   render() {
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
-    logoutTimeout = logoutTimeout * 60000;
+    logoutTimeout *= 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -178,8 +184,8 @@ class Home extends Component {
                 <NavLink to="/wallet" activeClassName="active" className="menu-item">
                   <Image src={WalletIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id="Home.wallet"
-                    defaultMessage="Wallet"
+                    id="Home.wallets"
+                    defaultMessage="Wallets"
                   />
                 </NavLink>
                 <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
@@ -220,8 +226,8 @@ class Home extends Component {
                 <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id='SettingsMenu.quickStart'
-                    defaultMessage='Quick Start'
+                    id="SettingsMenu.quickStart"
+                    defaultMessage="Quick Start"
                   />
                 </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
@@ -231,6 +237,8 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <UpdateNotification />
+
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -294,7 +302,8 @@ export default connect(
     preferencesActions: bindActionCreators({
       loadPreferences
     }, dispatch),
-    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
+    bitcoinActions: bindActionCreators({ getWallets }, dispatch),
   })
 )(Home);
 

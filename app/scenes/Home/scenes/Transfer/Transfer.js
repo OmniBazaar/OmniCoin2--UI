@@ -8,7 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, numericality, length } from 'redux-form-validators';
+import { required, numericality, length, addValidator } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
@@ -17,18 +17,15 @@ import {
   initialize,
 } from 'redux-form';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
-import { FetchChain } from 'omnibazaarjs/es';
 import { $ } from 'moneysafe';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
-import {
-  makeValidatableField
-} from '../../../../components/ValidatableField/ValidatableField';
+import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
   setCurrency,
@@ -40,6 +37,7 @@ import {
 import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
+import { currencyConverter } from "../../../../services/utils";
 
 import messages from './messages';
 
@@ -75,6 +73,7 @@ const currencyOptions = [
 
 const FEE_PERCENT = 0.01;
 const FEE_CONVERSION_FACTOR = 10000;
+const XOM_DECIMALS_LIMIT = 5;
 
 const initialState = {
   bitcoinWallets: [],
@@ -84,15 +83,26 @@ const initialState = {
   price: 0.00,
 };
 
-class Transfer extends Component {
-  static asyncValidate = async (values) => {
-    try {
-      await FetchChain('getAccount', values.toName);
-    } catch (e) {
-      console.log('ERR', e);
-      throw { toName: messages.accountDoNotExist };
+const amountDecimalsValidator = addValidator({
+  validator(options, value) {
+    if (!(/^\d+(\.\d{1,5})*$/).test(value)) {
+      return {
+        id: 'form.errors.custom',
+        defaultMessage: options.message,
+      };
     }
-  };
+  },
+});
+
+class Transfer extends Component {
+  // static asyncValidate = async (values) => {
+  //   try {
+  //     await FetchChain('getAccount', values.toName);
+  //   } catch (e) {
+  //     console.log('ERR', e);
+  //     throw { toName: messages.accountDoNotExist };
+  //   }
+  // };
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -177,7 +187,7 @@ class Transfer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
-
+    const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
@@ -199,18 +209,31 @@ class Transfer extends Component {
                 && nextProps.transferForm.useEscrow) {
       this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
-
     if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
       this.props.change('password', this.props.bitcoin.password);
       this.props.change('guid', this.props.bitcoin.guid);
     }
+    if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
+      const { amount } = this.props.transferForm;
+      if (nextProps.transfer.transferCurrency === 'omnicoin') {
+        const convertedAmount = currencyConverter(amount, 'BITCOIN', 'OMNICOIN');
+        this.props.change('amount', convertedAmount);
+      } else {
+        const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
+        this.props.change('amount', convertedAmount)
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.transferActions.setCurrency(undefined);
   }
 
   handleInitialize(price, to) {
     this.props.initialize({
       reputation: 5,
       toName: to,
-      amount: price
+      amount: price || 0.00
     });
   }
 
@@ -410,18 +433,22 @@ class Transfer extends Component {
 
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { transfer } = this.props;
-    const {
+    const { transfer, transferForm } = this.props;
+    let {
       gettingCommonEscrows,
-      commonEscrows
+      commonEscrows,
     } = this.props.transfer;
+
+    commonEscrows = commonEscrows.filter((item) => item.name !== transferForm.toName);
 
     return (
       <div>
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>
+              {formatMessage(messages.accountName)}*
+            </span>
             <Field
               type="text"
               name="toName"
@@ -448,7 +475,12 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) })
+                numericality({ message: formatMessage(messages.numberRequired) }),
+                amountDecimalsValidator({
+                  message: formatMessage(messages.numberExceedsDecimalsLimit, {
+                    limit: XOM_DECIMALS_LIMIT
+                  }),
+                })
               ]}
               disabled={!!this.state.listingId}
             />
@@ -583,7 +615,7 @@ class Transfer extends Component {
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
-            <span>{formatMessage(messages.accountNameOrPublicKey)}*</span>
+            <span>{formatMessage(messages.bitcoinAddress)}*</span>
             <Field
               type="text"
               name="toName"
@@ -681,8 +713,12 @@ class Transfer extends Component {
 
   submitTransfer(paramValues) {
     const { transferCurrency } = this.props.transfer;
+    const params = new URLSearchParams(this.props.location.search);
     const values = {
-      ...paramValues
+      ...paramValues,
+      title: params.get('title'),
+      ip: params.get('ip'),
+      seller: params.get('seller_name')
     };
 
     if (transferCurrency === 'omnicoin') {
@@ -807,6 +843,6 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
-    asyncValidate: Transfer.asyncValidate,
+  //  asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

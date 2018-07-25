@@ -20,6 +20,7 @@ e.g.  "version": "1.0.5916"
     │   README.txt
     │   ssleay32.dll
     │   witness_node.exe
+    │   cli_wallet.exe
     │
     └───witness_node_data_dir
             config.ini

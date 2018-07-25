@@ -8,6 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import { ipcRenderer } from 'electron';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
@@ -16,7 +17,8 @@ import {
   getAccount as getAccountAction,
   welcomeBonus as welcomeBonusAction,
   welcomeBonusSucceeded,
-  welcomeBonusFailed
+  welcomeBonusFailed,
+  requestReferrerFinish
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
@@ -27,7 +29,7 @@ import { SubmissionError } from 'redux-form';
 const messages = defineMessages({
   invalidPassword: {
     id: 'AuthService.invalidPassword',
-    defaultMessage: 'Invalid password',
+    defaultMessage: 'Invalid password'
   },
   noAccount: {
     id: 'AuthService.noAccount',
@@ -39,7 +41,7 @@ const messages = defineMessages({
   },
   invalidUsername: {
     id: 'AuthService.invalidUsername',
-    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
+    defaultMessage: 'Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.'
   },
   invalidTelegramPhoneNumber: {
     id: 'AuthService.invalidTelegramPhoneNumber',
@@ -64,7 +66,8 @@ export function* subscriber() {
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
     takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
-    takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken)
+    takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
+    takeEvery('REQUEST_REFERRER', requestReferrer)
   ]);
 }
 
@@ -118,6 +121,14 @@ export function* signup(action) {
   const macAddress = localStorage.getItem('macAddress');
   const harddriveId = localStorage.getItem('hardDriveId');
   try {
+    const referrerAccount = yield Apis.instance().db_api().exec('get_account_by_name', [referrer]);
+
+    if (referrer) {
+      if (referrerAccount == null || !referrerAccount.is_referrer) {
+        throw new Error('Referrer account not found');
+      }
+    }
+
     const result = yield call(fetch, `${faucet}/api/v1/accounts`, {
       method: 'post',
       mode: 'cors',
@@ -140,7 +151,7 @@ export function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
-      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);    
+      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
@@ -149,6 +160,7 @@ export function* signup(action) {
         },
         isWelcomeBonusAvailable: isAvailable
       });
+      yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
     } else {
       const { error } = resJson;
@@ -166,7 +178,8 @@ export function* signup(action) {
     }
   } catch (e) {
     console.log('ERROR', e);
-    yield put({ type: 'SIGNUP_FAILED', error: e });
+    const error = (typeof e === 'object') ? e.message : e;
+    yield put({ type: 'SIGNUP_FAILED', error });
   }
 }
 
@@ -247,7 +260,7 @@ export function* getIdentityVerificationToken({ payload: { username } }) {
 
 export function* receiveWelcomeBonus({ payload: { data: { values, reject, formatMessage } } }) {
   const errors = {};
-  // Check if the user's telephone number is connected to the OmniBazaar's Telegram channel and Bot      
+  // Check if the user's telephone number is connected to the OmniBazaar's Telegram channel and Bot
   try {
     const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, values.telegramPhoneNumber);
     if (telegramUserIdRes && telegramUserIdRes.result.contact.user_id) {
@@ -260,21 +273,21 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject, format
       errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
     }
   }
-  // Check if the user's twitter name is following the OmniBazaar's Twitter account    
+  // Check if the user's twitter name is following the OmniBazaar's Twitter account
   try {
     const twitterTokenRes = yield call(AuthApi.getTwitterBearerToken);
     const twitterRes = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: values.twitterUsername });
     if (!twitterRes.relationship.source.following) {
       errors.twitterUsername = formatMessage(messages.invalidTwitterUsername);
     }
-// Check if the user's email is in the OmniBazaar's MailChimp list        
+    // Check if the user's email is in the OmniBazaar's MailChimp list
     yield call(AuthApi.checkMailChimpSubscribed, { email: values.email });
   } catch (error) {
     if (error.status === 404) {
       errors.email = formatMessage(messages.invalidMailChimpEmail);
     }
   }
-// in case user doesn't follow OmniBazaar's one of the 3 social channels throw error
+  // in case user doesn't follow OmniBazaar's one of the 3 social channels throw error
   if (Object.keys(errors).length > 0) {
     yield call(reject, new SubmissionError(errors));
     yield put(welcomeBonusFailed());
@@ -285,4 +298,18 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject, format
     const { currentUser } = (yield select()).default.auth;
     yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
   }
+}
+  const getDefaultReferrer = () => new Promise((resolve, reject) => {
+    ipcRenderer.once('receive-referrer', (event, arg) => {
+      const referrer = arg.referrer;
+      localStorage.setItem('referrer', referrer);
+      resolve(referrer);
+    });
+    ipcRenderer.send('get-referrer', null);
+  });
+
+
+function* requestReferrer() {
+  const referrer = yield call(getDefaultReferrer);
+  yield put(requestReferrerFinish(referrer));
 }

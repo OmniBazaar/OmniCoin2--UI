@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
+const { shell } = require('electron');
+
 import { searchListings } from '../../../../../../services/search/searchActions';
 
 import { setActiveCategory } from '../../../../../../services/marketplace/marketplaceActions';
@@ -120,9 +122,14 @@ class Menu extends Component {
       </li>
     );
   }
-  
+
   toggleSettingsAccount = () => {
     this.props.menuActions.showSettingsModal();
+  }
+
+  openLink(e, path) {
+    e.preventDefault();
+    shell.openExternal(path);
   }
 
   renderOption(category, parentCategory, path, isExternal) {
@@ -150,12 +157,11 @@ class Menu extends Component {
     }
 
     return (
-      <a href={path} target="_blank">
+      <a href={path} onClick={(e) => this.openLink(e, path)}>
         {menuItem}
       </a>
     );
   }
-
   setActiveCategory = () => {
     if (this.props.marketplaceActions.setActiveCategory) {
       this.props.marketplaceActions.setActiveCategory('Marketplace.home');
@@ -386,7 +392,7 @@ class Menu extends Component {
             <p className="title">{formatMessage(aboutCategories.connections)}</p>
             <div className="sub-categories">
               {this.renderOption(aboutCategories.downloadOmniBazaar, mainCategories.about, 'http://download.omnibazaar.com/support/download', true)}
-              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, '', true)}
+              {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, 'http://18.204.40.151:8080', true)}
               {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
               {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
               {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
@@ -420,9 +426,6 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/my-purchases">{formatMessage(userMenu.myPurchases)}</NavLink>
         </div>
-        <div className="link-item account-settings-link" onClick={this.toggleSettingsAccount}>
-          {formatMessage(userMenu.accountSettings)}
-         </div>
         <div className="link-menu">
           <NavLink to="/favorite-listings">{formatMessage(userMenu.favoriteListings)}</NavLink>
         </div>
@@ -432,7 +435,7 @@ class Menu extends Component {
         <div className="link-menu">
           <NavLink to="/search-priority">{formatMessage(userMenu.searchPriority)}</NavLink>
         </div>
-        {/*<div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div>*/}
+        {/* <div className="link-menu">{formatMessage(userMenu.resyncWithServer)}</div> */}
       </Popup>
     );
   }

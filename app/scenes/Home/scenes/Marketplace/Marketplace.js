@@ -81,7 +81,6 @@ class Marketplace extends Component {
       this.props.searchActions.filterSearchByCategory();
     }
 
-    // const { country, city } = this.props.account.publisherData;
     if (this.props.account.publisherData !== nextProps.account.publisherData) {
       if (!nextProps.listing.saveListing.saving) {
         this.fetchListings(nextProps.account.publisherData);
@@ -93,8 +92,17 @@ class Marketplace extends Component {
     }
   }
 
-  fetchListings({ country, state, city, keywords }) {
-    this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+  fetchListings({
+    country, state, city, keywords
+  }) {
+    const searchListings = () => {
+      if (!this.props.dht.isConnecting && this.props.dht.connector) {
+        this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+      } else {
+        setTimeout(searchListings, 500);
+      }
+    };
+    searchListings();
   }
 
   listItems(items, size) {
@@ -103,14 +111,18 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-  
+
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
-        const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        let imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        if(!image){
+          imageUrl = ObNet
+        }
+        
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-  
+
         let categoryTitle = '';
         if (item.category && item.category.toLowerCase() !== 'all') {
           categoryTitle = mainCategories[item.category] ?
@@ -118,7 +130,7 @@ class Marketplace extends Component {
         }
         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
         const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
-        
+
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
             <Link to={`listing/${item.listing_id}`}>
@@ -296,7 +308,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper overview">
-        <Image src={Overview} width={490} height={380}/>
+        <Image src={Overview} width={490} height={380} />
       </div>
     );
   }
@@ -306,7 +318,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper versatility">
-        <Image src={Versatility} width={456} height={300}/>
+        <Image src={Versatility} width={456} height={300} />
       </div>
     );
   }
@@ -326,7 +338,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper benefits">
-        <Image src={Benefits} width={760} height={500}/>
+        <Image src={Benefits} width={760} height={500} />
       </div>
     );
   }
@@ -336,7 +348,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper fees">
-        <Image src={Fees} width={456} height={300}/>
+        <Image src={Fees} width={456} height={300} />
       </div>
     );
   }
@@ -403,7 +415,8 @@ class Marketplace extends Component {
     if (type === CategoriesTypes.FEATURED) {
       maxDisplay = 12;
     }
-
+    let content = this.listItems(itemsList, maxDisplay);
+    content = content.length !== 0 ? content : formatMessage(messages.noListingsFound);
     return (
       <div className="list-container">
         <div className="top-detail">
@@ -416,9 +429,8 @@ class Marketplace extends Component {
         </div>
         <div className="items">
           {
-            loading ?
-            <div className='loading-container'><Loader inline active /></div> :
-            this.listItems(itemsList, maxDisplay)
+            loading ? <div className="loading-container"><Loader inline active /></div>
+                    : content
           }
         </div>
       </div>
@@ -518,11 +530,11 @@ class Marketplace extends Component {
                   formatMessage(mainCategories.jobs),
                   this.getListingForCategory(categories.jobs)
                 )}
-                {/*{this.renderListItems(
+                {/* {this.renderListItems(
                   CategoriesTypes.RENTALS,
                   formatMessage(mainCategories.rentals),
                   this.getListingForCategory(categories.rentals)
-                )}*/}
+                )} */}
                 {this.renderListItems(
                   CategoriesTypes.CRYPTO_BAZAAR,
                   formatMessage(mainCategories.cryptoBazaar),

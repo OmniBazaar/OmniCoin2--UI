@@ -1,7 +1,6 @@
 .content {
   .check-form {
     .description {
-      display: flex;
       margin-bottom: 30px;
 
       img {
@@ -43,6 +42,7 @@
     }
 
     .ref-link-cont {
+      display: inline-block;
       padding-bottom: 20px;
 
       .ref-link-label {
@@ -52,6 +52,26 @@
         width: 500px;
       }
 
+      .ref-link-input, .ref-btc-input {
+        margin-right: 10px;
+      }
     }
   }
+}
+
+.check-container {
+  float: left;
+}
+
+.bottom-detail{
+  display: flex;
+}
+
+.labels {
+  display: flex;
+  align-items: center;
+}
+
+.vote-fee-cont {
+  color: #ff0000;
 }

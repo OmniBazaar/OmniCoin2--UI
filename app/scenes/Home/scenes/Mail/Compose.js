@@ -93,17 +93,16 @@ const mailMessages = defineMessages({
 });
 
 class Compose extends Component {
-
   static asyncValidate = async (values, dispatch, props, field) => {
     const previousErrors = props.asyncErrors;
     if (field === 'recipient') {
       try {
         const account = await FetchChain('getAccount', values.recipient);
       } catch (e) {
-        throw  {
+        throw {
           ...previousErrors,
           recipient: mailMessages.usernameDoesNotExist
-        }
+        };
       }
     }
     if (previousErrors) {
@@ -119,7 +118,7 @@ class Compose extends Component {
 
   componentWillMount() {
     const { reply, to } = this.props.mail;
-    
+
     if (reply) {
       const message = this.getActiveMessage();
       const creationTime = new Date(message.creation_time * 1000).toLocaleString();
@@ -131,8 +130,8 @@ class Compose extends Component {
         body: `\n\nOn ${date} <${message.sender}> wrote:\n\n${message.body}`
       });
     }
-    
-    if(!reply && to) {
+
+    if (!reply && to) {
       this.props.initialize({
         recipient: this.props.mail.to,
       });
@@ -199,25 +198,25 @@ class Compose extends Component {
   }
 
   renderRecipientField = ({
-                           input, disabled, loading, meta: { touched, error, warning }
-                         }) => {
+    input, disabled, loading, meta: { touched, error, warning }
+  }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
-        <div className="form-group address-wrap">
-          <label>
-            {formatMessage(mailMessages.to)}*
-            <br/>
-            {touched && ((error && <span className="error">{errorMessage}</span>))}
-          </label>
-          <input
-            {...input}
-            type="text"
-            className="textfield"
-            placeholder={formatMessage(mailMessages.enterUsername)}
-          />
-          {/*<Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" />*/}
-        </div>
+      <div className="form-group address-wrap">
+        <label>
+          {formatMessage(mailMessages.to)}*
+          <br />
+          {touched && ((error && <span className="error">{errorMessage}</span>))}
+        </label>
+        <input
+          {...input}
+          type="text"
+          className="textfield"
+          placeholder={formatMessage(mailMessages.enterUsername)}
+        />
+        {/* <Button type="button" content={formatMessage(mailMessages.addressBook)} onClick={this.onClickAddress} className="button--green address-button" /> */}
+      </div>
     );
   };
 

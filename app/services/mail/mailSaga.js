@@ -12,7 +12,7 @@ import {
 } from './mailStorage';
 
 import MailTypes from './mailTypes';
-import {getStoredCurrentUser} from "../blockchain/auth/services";
+import { getStoredCurrentUser } from '../blockchain/auth/services';
 
 
 export function* mailSubscriber() {

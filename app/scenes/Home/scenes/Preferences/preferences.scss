@@ -2,6 +2,7 @@
 
 .ui.modal {
   .preferences-form-container {
+
     .form-group {
       label, span {
         flex: 2;
@@ -16,7 +17,6 @@
       .radios {
         flex: 3;
       }
-
       &.top {
         span {
           align-self: flex-start;
@@ -120,4 +120,20 @@
 
 .priority-listings {
   width: 100%!important;
+}
+
+.radio-group {
+  display: flex;
+}
+
+.autorun {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: -7px;
+  float: left;
+}
+
+.autorun-note {
+  margin-top: 3px;
 }

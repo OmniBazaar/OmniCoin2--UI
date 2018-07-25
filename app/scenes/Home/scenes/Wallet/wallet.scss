@@ -53,6 +53,15 @@
         align-items: center;
         width: 100%;
       }
+      .bitcoin-addresses {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        .note {
+          margin-top: 10px;
+          color: $red;
+        }
+      }
       .no-wallet-yet {
         display: flex;
         flex: 1;

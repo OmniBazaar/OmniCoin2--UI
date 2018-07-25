@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { Loader } from 'semantic-ui-react';
+import { startCase } from 'lodash';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import DataTable from '../../../../components/DataTable/DataTable';
@@ -16,9 +17,7 @@ import {
   searchListings
 } from '../../../../../../../../services/search/searchActions';
 
-import {
-  getPublisherData
-} from "../../../../../../../../services/accountSettings/accountActions";
+import { getPublisherData } from '../../../../../../../../services/accountSettings/accountActions';
 
 
 import './recent-searches.scss';
@@ -69,6 +68,14 @@ class RecentSearches extends Component {
       loading,
       saving
     } = this.props.search;
+
+    const searches = recentSearches
+      .map(search => ({
+        ...search,
+        categoryToRead: startCase(search.category),
+        subCategoryToRead: startCase(search.subCategory),
+      }));
+
     return (
       <div className="marketplace-container category-listing recent-searches">
         <div className="header">
@@ -90,7 +97,7 @@ class RecentSearches extends Component {
                 </div>
               :
                 <DataTable
-                  data={recentSearches}
+                  data={searches}
                   sortBy={recentSortOptions.by}
                   sortDirection={recentSortOptions.direction}
                   sort={this.props.searchActions.sortRecentSearches}

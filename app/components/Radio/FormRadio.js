@@ -16,9 +16,11 @@ class FormRadio extends Component {
     const { input, ...params } = this.props;
     const checked = input.value === this.props.value;
     return (
-      <Radio {...params}
+      <Radio
+        {...params}
         checked={checked}
-        onChecked={this.onChecked.bind(this)}/>
+        onChecked={this.onChecked.bind(this)}
+      />
     );
   }
 }
@@ -33,6 +35,6 @@ FormRadio.propTypes = {
 FormRadio.defaultProps = {
   height: size,
   width: size
-}
+};
 
 export default FormRadio;

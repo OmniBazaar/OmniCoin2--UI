@@ -12,14 +12,13 @@ import _ from 'lodash';
 
 import { updateAccount } from '../accountSettings/accountSaga';
 import { parseEscrowTransactions } from './escrowUtils';
-import { fetchAccount } from '../blockchain/utils/miscellaneous';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import {
   getEscrowSettingsFailed,
   getEscrowSettingsSucceeded,
   updateEscrowSettingsFailed,
   updateEscrowSettingsSucceeded,
-} from "./escrowActions";
+} from './escrowActions';
 import {
   getEscrowSettings as getEscrowSettingsService,
   getEscrowAgents as getEscrowAgentsService,
@@ -217,10 +216,10 @@ function* updateEscrowSettings({ payload: { settings } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    yield put(updateEscrowSettingsSucceeded(settings))
+    yield put(updateEscrowSettingsSucceeded(settings));
   } catch (error) {
-    console.log("ERROR ", error);
-    yield put(updateEscrowSettingsFailed(error))
+    console.log('ERROR ', error);
+    yield put(updateEscrowSettingsFailed(error));
   }
 }
 
@@ -238,7 +237,7 @@ function* getEscrowSettings() {
       positiveRating: options.positive_rating,
       transactionProcessor: options.voted_witness,
       activeTransactionProcessor: options.active_witness
-    }))
+    }));
   } catch (error) {
     console.log('ERROR ', error);
     yield put(getEscrowSettingsFailed(error));

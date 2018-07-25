@@ -26,7 +26,6 @@
 
     .top-section {
       flex: 1;
-      overflow: auto;
       border-bottom: 1px solid $border-gray;
 
       .listing-body {
@@ -102,4 +101,8 @@ p.modal-content {
 
 .publishers-dropdown {
   margin-top: 12px!important;
+}
+
+.publishers-input{
+  width: 150px;
 }

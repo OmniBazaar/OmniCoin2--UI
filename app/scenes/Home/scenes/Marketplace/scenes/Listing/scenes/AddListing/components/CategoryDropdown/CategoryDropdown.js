@@ -12,7 +12,12 @@ const categoryIds = [
 class CategoryDropdown extends Component {
   componentWillMount() {
     const { formatMessage } = this.props.intl;
-    this.options = categoryIds.map(id => ({
+    let categoryIdsData = categoryIds;
+    if (this.props.disableAllOption) {
+      categoryIdsData = categoryIds.filter((item) => item !== 'all');
+    }
+
+    this.options = categoryIdsData.map(id => ({
       value: id,
       text: formatMessage(mainCategories[id])
     }));

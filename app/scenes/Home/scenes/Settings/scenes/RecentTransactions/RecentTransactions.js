@@ -20,6 +20,7 @@ import {
 import { debounce } from 'lodash';
 import { ChainTypes } from 'omnibazaarjs/es';
 import cn from 'classnames';
+import { CoinTypes } from '../../../Wallet/constants';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import TransactionDetails from './components/TransactionDetails/TransactionDetails';
@@ -113,6 +114,10 @@ const messages = defineMessages({
   [ChainTypes.operations.sale_bonus_operation]: {
     id: 'Settings.saleBonus',
     defaultMessage: 'SALE BONUS'
+  },
+  [ChainTypes.operations.witness_bonus_operation]: {
+    id: 'Settings.witnessBonus',
+    defaultMessage: 'WITNESS BONUS'
   }
 });
 
@@ -126,11 +131,13 @@ class RecentTransactions extends Component {
   }
 
   componentWillMount() {
-    this.props.accountSettingsActions.getRecentTransactions();
+    this.fetchTransactions(this.props.coinType);
   }
-  
+
   componentWillUnmount() {
-    this.onCloseDetails();
+    if (this.props.account.showDetails) {
+      this.props.accountSettingsActions.showDetailsModal();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -138,6 +145,13 @@ class RecentTransactions extends Component {
       this.props.accountSettingsActions.sortData('date', 'descending');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
+    if (this.props.coinType !== nextProps.coinType) {
+      this.fetchTransactions(nextProps.coinType);
+    }
+  }
+
+  fetchTransactions(coinType) {
+    this.props.accountSettingsActions.getRecentTransactions(coinType);
   }
 
   handleFilterChange(e, data) {
@@ -270,7 +284,7 @@ class RecentTransactions extends Component {
                           </TableCell>
                           <TableCell>{row.memo}</TableCell>
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
+                          <TableCell>{row.fee}</TableCell>
                           <TableCell>
                             <div className={cn('badge-tag', row.statusText)}>
                               {formatMessage(messages[row.type])}
@@ -321,6 +335,7 @@ class RecentTransactions extends Component {
 
 
 RecentTransactions.propTypes = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: PropTypes.shape({
     sortData: PropTypes.func,
     filterData: PropTypes.func,
@@ -352,6 +367,7 @@ RecentTransactions.propTypes = {
 };
 
 RecentTransactions.defaultProps = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
   account: {},
   tableProps: {},

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import { toastr } from 'react-redux-toastr';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -12,11 +12,11 @@ import {
 
 import './vesting-balance.scss';
 import messages from './messages';
-import { claim } from "../../../../../../../../services/accountSettings/vestingBalances/vestingBalancesActions";
-import VestingTypes from "../../types";
+import { claim } from '../../../../../../../../services/accountSettings/vestingBalances/vestingBalancesActions';
+import VestingTypes from '../../types';
+import { TOKENS_IN_XOM } from '../../../../../../../../utils/constants';
 
 class VestingBalance extends Component {
-
   handleClaim = () => {
     this.props.vestingBalancesActions.claim(this.props.vb);
   };
@@ -52,19 +52,20 @@ class VestingBalance extends Component {
         size="large"
         celled
         collapsing
-        fixed>
+        fixed
+      >
         <Table.Header>
           <Table.Row>
-              <Table.HeaderCell colSpan="2">
-                <span className="blue">
-                  {formatMessage(messages[Object.values(VestingTypes).includes(vb.type)
+            <Table.HeaderCell colSpan="2">
+              <span className="blue">
+                {formatMessage(messages[Object.values(VestingTypes).includes(vb.type)
                     ? vb.type
                     : VestingTypes.none
                     ])}
-                  {" "}
-                  {formatMessage(messages.vestingId, {id: vb.id})}
-                </span>
-              </Table.HeaderCell>
+                {' '}
+                {formatMessage(messages.vestingId, { id: vb.id })}
+              </span>
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -72,50 +73,57 @@ class VestingBalance extends Component {
           <Table.Row>
             <Table.Cell>{formatMessage(messages.vbAmount)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {vb.balance.amount / 100000} XOM
+              {vb.balance.amount / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdEarned)}</Table.Cell>
             <Table.Cell textAlign="right">
               {formatMessage(messages.coinDays, {
-                  number: Math.ceil(earned / secondsPerDay / 100000)
+                  number: Math.ceil(earned / secondsPerDay / TOKENS_IN_XOM)
               })}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {formatMessage(messages.coinDays, { number: Math.ceil(
-                  vb.balance.amount
+              {formatMessage(messages.coinDays, {
+ number: Math.ceil(vb.balance.amount
                   * vestingPeriod
                   / secondsPerDay
-                  / 100000)
+                  / TOKENS_IN_XOM)
               })}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {availablePercent * 100}% / {availablePercent * vb.balance.amount / 100000}
+              {(availablePercent * 100).toFixed(2)}% / {(availablePercent * vb.balance.amount / TOKENS_IN_XOM).toFixed(2)}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>{formatMessage(messages.availableToClaim)}</Table.Cell>
+            <Table.Cell textAlign="right">
+              {vb.amountAvailable / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell
               colSpan="2"
-              textAlign="right">
+              textAlign="right"
+            >
               <Button
                 content={formatMessage(messages.claim)}
                 onClick={this.handleClaim}
                 className="button--primary"
                 loading={loading}
+                disabled={vb.amountAvailable === 0}
               />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
-    )
-
+    );
   }
 }
 
@@ -134,4 +142,4 @@ export default connect(
       claim
     }, dispatch)
   })
-)(injectIntl(VestingBalance))
+)(injectIntl(VestingBalance));

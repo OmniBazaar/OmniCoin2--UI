@@ -42,9 +42,7 @@ function* searchListings({
   try {
     const { saving } = (yield select()).default.listing.saveListing;
     if (saving) {
-      yield put(setSearchListingsParams(
-        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
-      ));
+      yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
       return;
     }
 
@@ -52,7 +50,7 @@ function* searchListings({
     const { currentUser } = (yield select()).default.auth;
     if (historify) {
       const searchHistory = new SearchHistory(currentUser.username);
-      searchHistory.add({ searchTerm, category });
+      searchHistory.add({ searchTerm, category, subCategory });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
     yield put({
@@ -91,7 +89,7 @@ export function* searchListingsByPeersMap({
     });
   }
 
-  if (subCategory) {
+  if (subCategory && subCategory !== 'all') {
     filters.push({
       op: '=',
       name: 'subcategory',
@@ -162,10 +160,8 @@ export function* searchListingsByPeersMap({
 function* getRecentSearches() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const searches = yield call(async () => {
-      const history = new SearchHistory(currentUser.username);
-      return history.getHistory();
-    });
+    const history = new SearchHistory(currentUser.username);
+    const searches = history.getHistory();
     yield put(getRecentSearchesSucceeded(searches));
   } catch (error) {
     console.log('ERROR ', error);

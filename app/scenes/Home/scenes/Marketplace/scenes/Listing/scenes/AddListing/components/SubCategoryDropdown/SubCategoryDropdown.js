@@ -34,6 +34,10 @@ class SubCategoryDropdown extends Component {
     if (subcategories) {
       const { formatMessage } = this.props.intl;
 
+      if (this.props.disableAllOption) {
+        delete subcategories.all;
+      }
+
       return Object.keys(subcategories).map(key => ({
         value: key,
         text: formatMessage(subcategories[key])

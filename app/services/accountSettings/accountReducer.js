@@ -34,20 +34,13 @@ import {
   updatePublisherData,
   getPublishers,
   changeIpAddress,
-  changeSearchPriorityData
+  changeSearchPriorityData,
+  setBtcAddress,
 } from './accountActions';
-
-const defaultPublisherData = {
-  priority: 'local',
-  country: '',
-  city: '',
-  category: '',
-  publisherName: '',
-  keywords: []
-};
 
 const defaultState = {
   referrer: true,
+  btcAddress: '',
   publisher: false,
   transactionProcessor: false,
   wantsToVote: false,
@@ -127,8 +120,12 @@ const getBadgeClass = (type) => {
       return 'rBonus';
     case ChainTypes.operations.sale_bonus_operation:
       return 'sBonus';
+    case ChainTypes.operations.witness_bonus_operation:
+      return 'witBonus';
+    default:
+      break;
   }
-}
+};
 
 const savePublisherData = data => {
   let newData = {
@@ -158,6 +155,8 @@ const savePublisherData = data => {
         keywords: []
       };
       break;
+    default:
+      break;
   }
 
   data = {
@@ -173,7 +172,13 @@ const reducer = handleActions({
   [setReferrer](state) {
     return {
       ...state,
-      referrer: true,
+      referrer: !state.referrer,
+    };
+  },
+  [setBtcAddress](state, { payload: { address } }) {
+    return {
+      ...state,
+      btcAddress: address,
     };
   },
   [setPublisher](state) {
@@ -378,24 +383,26 @@ const reducer = handleActions({
   [getRecentTransactions](state) {
     return {
       ...state,
+      recentTransactions: [],
+      recentTransactionsFiltered: [],
+      recentTransactionsVisible: [],
       loading: true,
       error: null
     };
   },
   GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
-    const changedTransactions = transactions.map((item) => {
-      return {
-        ...item,
-        statusText: getBadgeClass(item.type)
-      }
-    });
+    const changedTransactions = transactions.map((item) => ({
+      ...item,
+      statusText: getBadgeClass(item.type),
+    }));
+    console.log('CHANGED TRANSACTIONS ', changedTransactions);
     return {
       ...state,
       loading: false,
       error: null,
       recentTransactions: changedTransactions,
       recentTransactionsFiltered: changedTransactions,
-    }
+    };
   },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
@@ -407,7 +414,7 @@ const reducer = handleActions({
     const { rowsPerPage } = state;
     let filteredData = state.recentTransactions;
     if (filterText) {
-      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
     const totalPages = getTotalPages(filteredData, rowsPerPage);
     const currentData = sliceData(filteredData, activePage, rowsPerPage);
@@ -451,8 +458,8 @@ const reducer = handleActions({
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
         sortedData = data;
-        //const sortBy = _.sortBy(data, [sortColumn]);
-        //sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+        // const sortBy = _.sortBy(data, [sortColumn]);
+        // sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
       currentData = sliceData(sortedData, activePage, rowsPerPage);
 
@@ -493,17 +500,17 @@ const reducer = handleActions({
         sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
     }
-    
-    if (!!filterText) {
+
+    if (filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
-    
-    let sortFields = [sortColumn];
-    if('fromTo' === sortColumn) {
-      sortFields.unshift('isIncoming')
+
+    const sortFields = [sortColumn];
+    if (sortColumn === 'fromTo') {
+      sortFields.unshift('isIncoming');
     }
     sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
-    
+
     const { rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePageSort, rowsPerPage);
 
@@ -552,7 +559,11 @@ const reducer = handleActions({
       ...state,
       ipAddress: ip
     };
-  }
+  },
+  LOGOUT: (state) => ({
+    ...state,
+    ...defaultState,
+  }),
 }, defaultState);
 
 export default reducer;

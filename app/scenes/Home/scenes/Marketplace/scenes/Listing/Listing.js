@@ -26,6 +26,7 @@ import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from '../../../../../../services/utils';
+import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
 import './listing.scss';
@@ -46,7 +47,6 @@ import {
 const iconSizeSmall = 12;
 
 class Listing extends Component {
-
   state = {
     confirmDeleteOpen: false,
     confirmReportOpen: false,
@@ -114,7 +114,12 @@ class Listing extends Component {
     }
     if (this.props.listing.reportListing.reporting && !nextProps.listing.reportListing.reporting) {
       if (nextProps.listing.reportListing.error) {
-        this.errorToast(messages.reportListingError);
+        const { error } = nextProps.listing.reportListing;
+        if (error.indexOf('Proof of Participation score is too low.') !== -1) {
+          this.errorToast(messages.reportListingErrorPopScore);
+        } else {
+          this.errorToast(messages.reportListingError);
+        }
       } else {
         this.successToast(messages.reportListingSuccess);
         this.props.listingActions.getListingDetail(this.props.match.params.id);
@@ -162,19 +167,19 @@ class Listing extends Component {
   reportListing = () => {
     this.setState({
       confirmReportOpen: true
-    })
+    });
   };
 
   onOkDelete() {
     this.closeConfirm();
     const { listingDetail } = this.props.listing;
-    this.props.listingActions.deleteListing({publisher_ip: listingDetail.ip }, listingDetail);
+    this.props.listingActions.deleteListing({ publisher_ip: listingDetail.ip }, listingDetail);
   }
 
   onOkReport() {
     this.closeConfirm();
     const { listingDetail } = this.props.listing;
-    this.props.listingActions.reportListing(listingDetail['listing_id']);
+    this.props.listingActions.reportListing(listingDetail.listing_id);
   }
 
   closeConfirm() {
@@ -201,7 +206,7 @@ class Listing extends Component {
         <div className="contact-popup">
           <div className="info">
             <span>{formatMessage(messages.preferredContact)}</span>
-            <span className="value">{listingDetail['contact_type']}</span>
+            <span className="value">{listingDetail.contact_type}</span>
           </div>
           <div className="two-column">
             <div className="info">
@@ -216,7 +221,7 @@ class Listing extends Component {
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.postalCode)}</span>
-              <span className="value">{listingDetail['post_code']}</span>
+              <span className="value">{listingDetail.post_code}</span>
             </div>
             <div className="info">
               <span>{formatMessage(messages.address)}</span>
@@ -226,7 +231,8 @@ class Listing extends Component {
           <Link to={{
             pathname: '/mail',
             username: listingDetail.owner
-          }}>
+          }}
+          >
             <div className="contact-seller">
               <span>{formatMessage(messages.contactSeller)}</span>
             </div>
@@ -257,24 +263,41 @@ class Listing extends Component {
     );
   }
 
+  getOmnicoinPrice(listingDetail) {
+    let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail.currency, 'OMNICOIN');
+    amount = Math.ceil(amount * Math.pow(10, 5));
+    amount = (amount / Math.pow(10, 5)).toFixed(5);
+
+    return amount;
+  }
+
+  getBitcoinPrice(listingDetail) {
+    let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail.currency, 'BITCOIN');
+    amount = Math.ceil(amount * Math.pow(10, 8));
+    amount = (amount / Math.pow(10, 8)).toFixed(8);
+
+    return amount;
+  }
+
   buyItem = () => {
     const { listingDetail } = this.props.listing;
     const { activeCurrency } = this.props.listing.buyListing;
+    const title = listingDetail.listing_title;
+    const listingId = this.props.listing.buyListing.blockchainListing.id;
+    const publisherIp = listingDetail.ip;
+    const number = this.props.listing.buyListing.numberToBuy;
+    const sellerName = listingDetail.owner;
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(5);
-      const number =  this.props.listing.buyListing.numberToBuy;
+      const price = this.getOmnicoinPrice(listingDetail);
       const to = listingDetail.owner;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
-      const price = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(8);
-      const number = this.props.listing.buyListing.numberToBuy;
-      const to = listingDetail['bitcoin_address'];
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`)
+      const price = this.getBitcoinPrice(listingDetail);
+      const to = listingDetail.bitcoin_address;
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
   };
 
@@ -285,9 +308,8 @@ class Listing extends Component {
 
   removeFromFavorites = () => {
     const { listingDetail } = this.props.listing;
-    this.props.listingActions.removeFromFavorites(listingDetail['listing_id']);
+    this.props.listingActions.removeFromFavorites(listingDetail.listing_id);
   };
-
 
 
   setItemsAmount = (valueAsNumber, max) => {
@@ -305,7 +327,10 @@ class Listing extends Component {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
     const { listingDetail } = this.props.listing;
+    const { existsInBlockchain, isReportedByCurrentUser } = listingDetail;
     const disabled = !!error || maxQuantity === 0 || !listingDetail.existsInBlockchain;
+    const disableReportBtn = isReportedByCurrentUser || !existsInBlockchain;
+
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -340,9 +365,11 @@ class Listing extends Component {
         }
         <Button
           onClick={() => this.reportListing()}
-          content={formatMessage(messages.report)}
+          content={disableReportBtn ?
+            formatMessage(messages.reported) :
+              formatMessage(messages.report)}
           loading={this.props.listing.reportListing.reporting}
-          disabled={listingDetail.isReportedByCurrentUser || !listingDetail.existsInBlockchain}
+          disabled={disableReportBtn}
           className="button--gray-text"
         />
       </div>
@@ -350,14 +377,23 @@ class Listing extends Component {
   }
 
   renderGallery(listingDetail) {
+
+    let items = listingDetail.images.map(image => ({
+      original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
+      thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
+    }));
+
+    if (!listingDetail.images.length) {
+      items = [{
+        original: ObNet,
+        thumbnail: ObNet
+      }];
+    }
+
     return (
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery
-          items={listingDetail.images.map(image => ({
-            original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
-            thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
-            })
-          )}
+          items={items}
           showPlayButton={false}
           showFullscreenButton={false}
         />
@@ -376,6 +412,30 @@ class Listing extends Component {
     return locations.join(', ');
   }
 
+  renderOmncoinPrice(listingDetail) {
+    const amount = this.getOmnicoinPrice(listingDetail);
+    return (
+      <PriceItem
+        amount={amount}
+        coinLabel={CoinTypes.OMNI_COIN}
+        currency={CoinTypes.OMNI_CURRENCY}
+        isUserOwner={this.isOwner()}
+      />
+    );
+  }
+
+  renderBitcoinPrice(listingDetail) {
+    const amount = this.getBitcoinPrice(listingDetail);
+    return (
+      <PriceItem
+        amount={amount}
+        coinLabel={CoinTypes.BIT_COIN}
+        currency={CoinTypes.BIT_CURRENCY}
+        isUserOwner={this.isOwner()}
+      />
+    );
+  }
+
   renderItemDetails(listingDetail) {
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
@@ -392,15 +452,15 @@ class Listing extends Component {
           <div className="seller-info">
             {this.renderUser(listingDetail)}
             <span className="rating">
-                <ReactStars
-                  count={5}
-                  size={16}
-                  value={ listingDetail.reputationScore / 10000 * 5 }
-                  color1="#F6D4A2"
-                  color2="#F6AE4B"
-                  edit={false}
-                  half={true}
-                />
+              <ReactStars
+                count={5}
+                size={16}
+                value={listingDetail.reputationScore / 10000 * 5}
+                color1="#F6D4A2"
+                color2="#F6AE4B"
+                edit={false}
+                half
+              />
             </span>
             <div className="votes">
               <span className="total-votes">{integerWithCommas(listingDetail.reputationVotesCount)}</span>
@@ -411,11 +471,11 @@ class Listing extends Component {
         <div className="details-wrapper">
           <div className="info">
             <span>{formatMessage(messages.listingDate)}</span>
-            <span className="value">{listingDetail['start_date']}</span>
+            <span className="value">{listingDetail.start_date}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.condition)}</span>
-            <span className="value">{listingDetail['condition']}</span>
+            <span className="value">{listingDetail.condition}</span>
           </div>
           <div className="info">
             <span>{formatMessage(messages.cityLocation)}</span>
@@ -430,25 +490,22 @@ class Listing extends Component {
               formatMessage(messages.selectCurrency)
             }
           </span>
-          {listingDetail['price_using_omnicoin'] &&
-              <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'OMNICOIN').toFixed(5)}
-                         coinLabel={CoinTypes.OMNI_COIN}
-                         currency={CoinTypes.OMNI_CURRENCY}
-                         isUserOwner={this.isOwner()}/>
+          {
+            listingDetail.price_using_omnicoin &&
+            this.renderOmncoinPrice(listingDetail)
           }
-          {listingDetail['price_using_btc'] &&
-            <PriceItem amount={currencyConverter(Number.parseFloat(listingDetail.price), listingDetail['currency'], 'BITCOIN').toFixed(8)}
-                       coinLabel={CoinTypes.BIT_COIN}
-                       currency={CoinTypes.BIT_CURRENCY}
-                       isUserOwner={this.isOwner()}/>
+          {
+            listingDetail.price_using_btc &&
+            this.renderBitcoinPrice(listingDetail)
           }
-          {!(listingDetail['currency'] === 'OMNICOIN' && listingDetail['price_using_omnicoin']) &&
-            <PriceItem
-              amount={listingDetail.price}
-              coinLabel={CoinTypes.LOCAL}
-              currency={listingDetail['currency']}
-              isUserOwner={this.isOwner()}
-            />
+          {(!(listingDetail.currency === 'OMNICOIN' && listingDetail.price_using_omnicoin) &&
+           !(listingDetail.currency === 'BITCOIN' && listingDetail.price_using_btc)) &&
+           <PriceItem
+             amount={listingDetail.price}
+             coinLabel={CoinTypes.LOCAL}
+             currency={listingDetail.currency}
+             isUserOwner={this.isOwner()}
+           />
           }
         </div>
         {this.isOwner() ?
@@ -458,7 +515,7 @@ class Listing extends Component {
         }
         <div className="availability">
           <span>{formatMessage(messages.available)}</span>
-          <span>{listingDetail.quantity + ' ' + listingDetail.units}</span>
+          <span>{`${listingDetail.quantity} ${listingDetail.units}`}</span>
         </div>
       </div>
     );
