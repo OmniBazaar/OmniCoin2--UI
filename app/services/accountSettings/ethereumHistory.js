@@ -1,27 +1,45 @@
-import BaseStorage from '../../utils/baseStorage';
+import { getEthereumTransactions } from '../blockchain/ethereum/EthereumApi';
+import { utils } from 'ethers'
 
-const key = 'ethereumHistory';
-
-class EthereumHistory extends BaseStorage {
-  constructor(accountName) {
-    super(key, accountName);
-    this.cache = this.getData();
-    if (!this.cache) {
-      this.init();
-      this.cache = {};
-    }
+class EthereumHistory {
+  constructor(address) {
+    this.address = address;
+    this.transactions = [];
   }
 
-  addOperation(op) {
-    this.cache[op.id] = op;
+  async loadTransactions() {
+    const response = await getEthereumTransactions(this.address);
+    this.transactions = response.result;
   }
 
-  save() {
-    super.save(this.cache);
+  isIncoming(toAddress) {
+    return this.address.toLowerCase() === toAddress.toLowerCase();
+  }
+
+  transactionType(toAddress) {
+    return this.isIncoming(toAddress) ? "Incoming" : "Outgoing";
   }
 
   getHistory() {
-    return [];
+    const formattedTransactions = this.transactions.map(transaction => {
+      return {
+        id: transaction.hash,
+        isEther: true,
+        date: (transaction.timeStamp * 1000),
+        amount: utils.formatEther(transaction.value),
+        blockNum: transaction.blockNumber,
+        isIncoming: this.isIncoming(transaction.to),
+        from: transaction.from,
+        to: transaction.to,
+        fromTo: this.transactionType(transaction.to),
+        fee: 0,
+        type: 0,
+        operationType: 0,
+        operations: []
+      }
+    });
+
+    return formattedTransactions;
   }
 }
 

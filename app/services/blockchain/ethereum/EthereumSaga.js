@@ -12,6 +12,7 @@ import {
 
 import * as EthereumApi from './EthereumApi';
 import { persitEthereumWalletData, getEthereumWalletData } from './EthereumServices';
+import { getRecentTransactions } from '../../accountSettings/accountActions';
 import { connectEthereumWalletFinish } from './EthereumActions';
 
 export function* ethereumSubscriber() {
@@ -33,6 +34,7 @@ function* createEthereumWallet() {
     const { currentUser } = (yield select()).default.auth;
     yield call(persitEthereumWalletData, res.address, res.privateKey, res.mnemonic, currentUser);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_SUCCEEDED', address: res.address, brainKey: res.mnemonic });
+    yield put(getRecentTransactions("ethereum"))
   } catch (error) {
     console.log('ERROR ', error);
     yield put({ type: 'CREATE_ETHEREUM_WALLET_FAILED', error });
@@ -49,6 +51,7 @@ function* connectEthereumWallet({ payload: { walletPrivateKey, walletBrainKey } 
     yield put(connectEthereumWalletFinish());
     yield put({ type: 'GET_ETHEREUM_BALANCE', payload: { address, privateKey }});
     yield put({ type: 'GET_ETHEREUM_WALLETS_SUCCEEDED', wallets: res, address, privateKey, brainKey });
+    yield put(getRecentTransactions("ethereum"))
   } catch (error) {
     console.log('Connect Ethereum wallet error', error);
     // delay for 1 ms because of not showing toastr error
