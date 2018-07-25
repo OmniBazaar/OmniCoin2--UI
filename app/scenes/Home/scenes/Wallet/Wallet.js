@@ -10,7 +10,6 @@ import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 const { shell } = require('electron');
-import ip from 'ip';
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
@@ -34,6 +33,7 @@ import Settings from '../Settings/Settings';
 import './wallet.scss';
 import { CoinTypes } from './constants';
 import { TOKENS_IN_XOM } from '../../../../utils/constants';
+import publicIp from "public-ip";
 
 class Wallet extends Component {
   constructor(props) {
@@ -56,7 +56,19 @@ class Wallet extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.bitcoin.error && !this.props.bitcoin.error) {
-      toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+      if (nextProps.bitcoin.error.indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
+        publicIp.v4().then(ip => {
+          toastr.error(
+            formatMessage(messages.error),
+            formatMessage(messages.ipError, { ip }),
+            {
+              timeOut: 0
+            }
+          );
+        });
+      } else {
+        toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+      }
     }
   }
 

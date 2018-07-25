@@ -73,5 +73,9 @@ export default defineMessages({
   step4: {
     id: 'Bitcoin.step4',
     defaultMessage: '4. Refresh the Wallet page from the application if needed.'
+  },
+  ipError: {
+    id: 'Bitcoin.ipError',
+    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info'
   }
 });
