@@ -63,7 +63,8 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
-    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus)
+    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
+    takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken)
   ]);
 }
 
@@ -230,6 +231,15 @@ export function* getWelcomeBonusAmount() {
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_SUCCEEDED', amount });
   } catch (error) {
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
+  }
+}
+
+export function* getIdentityVerificationToken({ payload: { username } }) {
+  try {
+    const resp = yield call(AuthApi.getIdentityVerificationToken, username);
+    yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token: resp.token });
+  } catch (error) {
+    console.log(error);
   }
 }
 

@@ -31,7 +31,8 @@ const defaultState = {
   lastLoginUserName: null,
   showTermsModal: false,
   welcomeBonusAmount: null,
-  isWelcomeBonusAvailable: null
+  isWelcomeBonusAvailable: null,
+  identityVerificationToken: null,
 };
 
 const reducer = handleActions({
@@ -124,6 +125,10 @@ const reducer = handleActions({
       loading: false
     };
   },
+  GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (state, action) => ({
+    ...state,
+    identityVerificationToken: action.token
+  }),
   SIGNUP_FAILED: (state, action) => ({
     ...state,
     currentUser: null,

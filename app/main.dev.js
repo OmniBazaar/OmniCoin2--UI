@@ -275,6 +275,29 @@ app.on('ready', async () => {
     mainWindow.focus();
   });
 
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+    if (frameName === 'identity') {
+      // open window as modal
+      event.preventDefault();
+      Object.assign(options, {
+        modal: true,
+        parent: mainWindow,
+        show: false,
+        width: 1024,
+        height: 728
+      });
+      const identityWindow = new BrowserWindow(options);
+      identityWindow.loadURL(`file://${__dirname}/app.html`);
+      identityWindow.webContents.send('message', 'Hello second window!');
+      identityWindow.webContents.on('did-finish-load', () => {
+        identityWindow.webContents.send('messageForIdentityWindow');
+        identityWindow.show();
+        identityWindow.focus();
+        mainWindow.webContents.send('messageForMainWindow');
+      });
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });

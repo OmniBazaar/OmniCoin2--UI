@@ -21,5 +21,6 @@
   "AirDropForm.receiveWelcomeBonus": "Receive Welcome Bonus",
   "AirDropForm.skipFreeCoins": "Skip the free coins",
   "AirDropForm.fieldRequired": "This field is required",
-  "AirDropForm.invalidEmail": "Email is invalid"
+  "AirDropForm.invalidEmail": "Email is invalid",
+  "AirDropForm.getWhiteListedForTokenSale": "Get white-listed for our token sale"
 }

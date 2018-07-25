@@ -57,4 +57,17 @@ const checkMailChimpSubscribed = wrapRequest(async ({ email }) => fetch(`${mailC
   },
 }));
 
-export { getTelegramUserId, getTelegramChatMember, getTwitterBearerToken, checkTwitterFollowing, checkMailChimpSubscribed };
+const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
+const identityVerificationBaseURL = 'https://test-api.sumsub.com';
+const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}&key=${identityVerificationApiKey}`, {
+  method: 'POST'
+}));
+
+export {
+  getIdentityVerificationToken,
+  getTelegramUserId,
+  getTelegramChatMember,
+  getTwitterBearerToken,
+  checkTwitterFollowing,
+  checkMailChimpSubscribed
+};

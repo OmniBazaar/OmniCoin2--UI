@@ -11,6 +11,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
 import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
+import { ipcRenderer } from 'electron';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
@@ -98,9 +99,13 @@ const messages = defineMessages({
     defaultMessage: 'Email is invalid'
   },
   signup: {
-    id: 'LoginForm.signup',
+    id: 'AirDropForm.signup',
     defaultMessage: 'Sign up'
   },
+  getWhiteListedForTokenSale: {
+    id: 'AirDropForm.getWhiteListedForTokenSale',
+    defaultMessage: 'Get white-listed for our token sale'
+  }
 });
 
 class AirDropForm extends Component {
@@ -120,8 +125,20 @@ class AirDropForm extends Component {
     } else if (/^.+@.+$/i.test(values.mailingList)) {
       errors.mailingList = messages.invalidEmail;
     }
+    // if (!values.identityVerification) {
+    //   errors.identityVerification = messages.fieldRequired;
+    // }
     return errors;
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+    ipcRenderer.on('messageForMainWindow', () => {
+      this.setState({ loading: false });
+    });
+  }
 
   componentDidMount() {
     this.props.authActions.getWelcomeBonusAmount();
@@ -129,6 +146,11 @@ class AirDropForm extends Component {
 
   signUp = () => {
     this.props.history.push('/');
+  }
+
+  handleClick = () => {
+    this.setState({ loading: true });
+    window.open('', 'identity');
   }
 
   onTelegramChannelCheck = isChecked => {
@@ -144,6 +166,9 @@ class AirDropForm extends Component {
   };
   onMailingListCheck = isChecked => {
     this.props.formActions.change('mailingList', isChecked);
+  };
+  onIdentityVerificationChecked = isChecked => {
+    this.props.formActions.change('identityVerification', isChecked);
   };
 
   renderTelegramChannelField = () => {
@@ -264,6 +289,31 @@ class AirDropForm extends Component {
     );
   };
 
+  renderIdentityVerificationField = () => {
+    const btnClass = this.state.loading ? 'ui loading' : '';
+    const { formatMessage } = this.props.intl;
+    return (
+      <React.Fragment>
+        <div className="joined-channel">
+          <Checkbox
+            width={inputCustomSize}
+            height={inputCustomSize}
+            onChecked={this.onIdentityVerificationChecked}
+          />
+          <p>
+            <Button
+              className={btnClass}
+              content={formatMessage(messages.getWhiteListedForTokenSale)}
+              color="green"
+              type="submit"
+              onClick={this.handleClick}
+            />
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  };
+
   submit = values => new Promise((resolve, reject) => {
     this.props.authActions.receiveWelcomeBonus({
       values,
@@ -278,34 +328,37 @@ class AirDropForm extends Component {
     const { handleSubmit, valid } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <div className="airdrop-container">
-        <h2>
-          {formatMessage(messages.receiveOmnicoinsByFollowingActions, {
-            current_bonus_amount: welcomeBonusAmount
-          })}
-        </h2>
-        <Form onSubmit={handleSubmit(this.submit)} className="form">
-          <Field name="telegramChannel" component={this.renderTelegramChannelField} />
-          <Field name="telegramBot" component={this.renderTelegramBotField} />
-          <Field name="twitterChannel" component={this.renderTwitterChannelField} />
-          <Field name="mailingList" component={this.renderMailingListField} />
-          <div className="buttons">
-            <Button
-              disabled={!valid}
-              className={btnClass}
-              content={formatMessage(messages.receiveWelcomeBonus)}
-              color="green"
-              type="submit"
-            />
-            <Button
-              className="skipFreeCoins"
-              content={formatMessage(messages.skipFreeCoins)}
-              color="white"
-              onClick={this.signUp}
-            />
-          </div>
-        </Form>
-      </div>
+      <React.Fragment>
+        <div className="airdrop-container">
+          <h2>
+            {formatMessage(messages.receiveOmnicoinsByFollowingActions, {
+              current_bonus_amount: welcomeBonusAmount
+            })}
+          </h2>
+          <Form onSubmit={handleSubmit(this.submit)} className="form">
+            <Field name="telegramChannel" component={this.renderTelegramChannelField} />
+            <Field name="telegramBot" component={this.renderTelegramBotField} />
+            <Field name="twitterChannel" component={this.renderTwitterChannelField} />
+            <Field name="mailingList" component={this.renderMailingListField} />
+            {/* <Field name="identityVerification" component={this.renderIdentityVerificationField} /> */}
+            <div className="buttons">
+              <Button
+                disabled={!valid}
+                className={btnClass}
+                content={formatMessage(messages.receiveWelcomeBonus)}
+                color="green"
+                type="submit"
+              />
+              <Button
+                className="skipFreeCoins"
+                content={formatMessage(messages.skipFreeCoins)}
+                color="white"
+                onClick={this.signUp}
+              />
+            </div>
+          </Form>
+        </div>
+      </React.Fragment>
     );
   }
 }

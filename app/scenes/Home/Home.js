@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import Idled from "react-idled";
-
+import Idled from 'react-idled';
+import { ipcRenderer } from 'electron';
 import {
   Route,
   NavLink,
@@ -67,8 +67,13 @@ import { dhtReconnect } from '../../services/search/dht/dhtActions';
 const iconSize = 20;
 
 class Home extends Component {
-
-  state = {visible: true};
+  constructor(props) {
+    super(props);
+    ipcRenderer.on('messageForIdentityWindow', () => {
+      props.history.push('/identity-verification');
+    });
+  }
+  state = { visible: true };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
@@ -306,6 +311,9 @@ Home.propTypes = {
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func,
@@ -327,5 +335,7 @@ Home.defaultProps = {
   connection: {},
   auth: null,
   menuActions: null,
-  authActions: {}
+  authActions: {},
+  history: {},
+  dhtActions: {}
 };
