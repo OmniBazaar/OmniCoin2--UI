@@ -186,8 +186,9 @@ class RecentTransactions extends Component {
       loading,
       showDetails
     } = this.props.account;
+    const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
-
+    console.log('REC ', recentTransactionsVisible, coinType);
     return (
       <div className="recent-transactions">
         <div className="data-table">
@@ -208,7 +209,7 @@ class RecentTransactions extends Component {
             </div>
           </div>
           <div className="table-container">
-            {loading ? <Loader active inline="centered" /> :
+            {loading || coinType !== this.props.account.coinType ? <Loader active inline="centered" /> :
             <Table {...this.props.tableProps}>
               <TableHeader>
                 <TableRow>
@@ -228,13 +229,15 @@ class RecentTransactions extends Component {
                     <Image src={IncomingIcon} width={iconSize} height={iconSize} className="from-icon" />From
                     <Image src={OutgoingIcon} width={iconToSize} height={iconSizeToHeight} className="to-icon" />To
                   </TableHeaderCell>
-                  <TableHeaderCell
-                    key="memo"
-                    sorted={sortColumn === 'memo' ? sortDirection : null}
-                    onClick={this.sortData('memo')}
-                  >
-                    {formatMessage(messages.memo)}
-                  </TableHeaderCell>
+                  {coinType === CoinTypes.OMNI_COIN &&
+                    <TableHeaderCell
+                      key="memo"
+                      sorted={sortColumn === 'memo' ? sortDirection : null}
+                      onClick={this.sortData('memo')}
+                    >
+                      {formatMessage(messages.memo)}
+                    </TableHeaderCell>
+                  }
                   <TableHeaderCell
                     key="amount"
                     sorted={sortColumn === 'amount' ? sortDirection : null}
@@ -249,13 +252,15 @@ class RecentTransactions extends Component {
                   >
                     {formatMessage(messages.fee)}
                   </TableHeaderCell>
-                  <TableHeaderCell
-                    key="fee"
-                    sorted={sortColumn === 'type' ? sortDirection : null}
-                    onClick={this.sortData('statusText')}
-                  >
-                    {formatMessage(messages.status)}
-                  </TableHeaderCell>
+                  {coinType === CoinTypes.OMNI_COIN &&
+                    <TableHeaderCell
+                      key="type"
+                      sorted={sortColumn === 'type' ? sortDirection : null}
+                      onClick={this.sortData('statusText')}
+                    >
+                      {formatMessage(messages.status)}
+                    </TableHeaderCell>
+                  }
                   {/* <TableHeaderCell */}
                   {/* key="balance" */}
                   {/* sorted={sortColumn === 'balance' ? sortDirection : null} */}
@@ -282,28 +287,34 @@ class RecentTransactions extends Component {
                               <span> {row.fromTo} </span>
                             </div>
                           </TableCell>
-                          <TableCell>{row.memo}</TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>{row.memo}</TableCell>
+                          }
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
-                          <TableCell>
-                            <div className={cn('badge-tag', row.statusText)}>
-                              {formatMessage(messages[row.type])}
-                            </div>
-                          </TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>
+                              <div className={cn('badge-tag', row.statusText)}>
+                                {formatMessage(messages[row.type])}
+                              </div>
+                            </TableCell>
+                          }
                           {/* <TableCell className="balance"> */}
                           {/* {row.balance} */}
                           {/* </TableCell> */}
-                          <TableCell>
-                            <span
-                              className="link"
-                              onClick={() => this.onClickDetails(row.id)}
-                              onKeyDown={() => this.onClickDetails(row.id)}
-                              role="link"
-                              tabIndex={0}
-                            >
-                              {formatMessage(messages.details)}
-                            </span>
-                          </TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>
+                              <span
+                                className="link"
+                                onClick={() => this.onClickDetails(row.id)}
+                                onKeyDown={() => this.onClickDetails(row.id)}
+                                role="link"
+                                tabIndex={0}
+                              >
+                                {formatMessage(messages.details)}
+                              </span>
+                            </TableCell>
+                          }
                         </TableRow>
                       ))
                     }

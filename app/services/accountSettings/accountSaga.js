@@ -16,8 +16,19 @@ import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
 import OmnicoinHistory from './omnicoinHistory';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { voteForProcessors } from '../processors/utils';
-import BitcoinHistory from './bitcoinHistory';
+import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import {SATOSHI_IN_BTC} from "../../utils/constants";
 
+const processBitcoinTransactions = (txs) => {
+    return txs.map(tx => ({
+        date: tx.time * 1000,
+        fromTo: tx.out[0].addr,
+        amount: tx.out[0].value / SATOSHI_IN_BTC,
+        fee: tx.fee / SATOSHI_IN_BTC,
+        isIncoming: tx.result > 0,
+      })
+    );
+};
 
 export function* accountSubscriber() {
   yield all([
@@ -118,15 +129,16 @@ export function* updateAccount(payload) {
 export function* getRecentTransactions({ payload: { coinType } }) {
   const { currentUser } = (yield select()).default.auth;
   try {
-    let historyStorage;
     if (coinType === CoinTypes.OMNI_COIN) {
-      historyStorage = new OmnicoinHistory(currentUser.username);
+      const historyStorage = new OmnicoinHistory(currentUser.username);
       yield historyStorage.refresh(currentUser);
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.BIT_COIN) {
-      historyStorage = new BitcoinHistory(currentUser.username);
+      const { wallets } = (yield select()).default.bitcoin;
+      const res = yield call(BitcoinApi.getHistory, wallets, 10000, 0);
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: processBitcoinTransactions(res.txs) });
     }
-    console.log('COIN TYPE IN SAGA ', coinType);
-    yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
+
   } catch (e) {
     console.log('ERROR', e);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });
