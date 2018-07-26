@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Field, reduxForm, change, Form } from 'redux-form';
+import { Field, reduxForm, change, Form, formValueSelector } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
@@ -17,8 +17,6 @@ import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 
 import './air-drop-form.scss';
-
-const inputCustomSize = 15;
 
 const messages = defineMessages({
   receiveOmnicoinsByFollowingActions: {
@@ -153,23 +151,22 @@ class AirDropForm extends Component {
     window.open('', 'identity');
   }
 
-  onTelegramChannelCheck = isChecked => {
-    this.props.formActions.change('telegramChannel', isChecked);
-  };
-
-  onTelegramBotCheck = isChecked => {
-    this.props.formActions.change('telegramBot', isChecked);
-  };
-
-  onTwitterChannelCheck = isChecked => {
-    this.props.formActions.change('twitterChannel', isChecked);
-  };
-  onMailingListCheck = isChecked => {
-    this.props.formActions.change('mailingList', isChecked);
-  };
-  onIdentityVerificationChecked = isChecked => {
-    this.props.formActions.change('identityVerification', isChecked);
-  };
+  renderCheckboxField = ({ input, label, onCheck }) => (
+    <div className="transfer-input" style={{ display: 'flex' }}>
+      <Checkbox
+        value={input.value}
+        onChecked={(value) => {
+            input.onChange(value);
+            if (onCheck) {
+              onCheck(value);
+            }
+          }}
+      />
+      <span className="label">
+        {label}
+      </span>
+    </div>
+  );
 
   renderTelegramChannelField = () => {
     const { formatMessage } = this.props.intl;
@@ -184,10 +181,9 @@ class AirDropForm extends Component {
           </p>
         </div>
         <div className="joined-channel">
-          <Checkbox
-            width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onTelegramChannelCheck}
+          <Field
+            name="telegramChannel"
+            component={this.renderCheckboxField}
           />
           <p>{formatMessage(messages.joinTelegramChannelConfirmation)} </p>
           <div className="ui form">
@@ -196,7 +192,7 @@ class AirDropForm extends Component {
               name="telegramPhoneNumber"
               placeholder={formatMessage(messages.telegramPhoneNumber)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              validate={this.props.AirDropForm.telegramChannel ? [required({ message: formatMessage(messages.fieldRequired) })] : undefined}
             />
           </div>
         </div>
@@ -214,10 +210,9 @@ class AirDropForm extends Component {
           </p>
         </div>
         <div className="joined-channel">
-          <Checkbox
-            width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onTelegramBotCheck}
+          <Field
+            name="telegramBot"
+            component={this.renderCheckboxField}
           />
           <p>{formatMessage(messages.joinTelegramBotConfirmation)} </p>
         </div>
@@ -237,10 +232,9 @@ class AirDropForm extends Component {
           </p>
         </div>
         <div className="joined-channel">
-          <Checkbox
-            width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onTwitterChannelCheck}
+          <Field
+            name="twitterChannel"
+            component={this.renderCheckboxField}
           />
           <p>{formatMessage(messages.joinTwitterChannelConfirmation)} </p>
           <div className="ui form">
@@ -249,7 +243,7 @@ class AirDropForm extends Component {
               name="twitterUsername"
               placeholder={formatMessage(messages.twitterUserName)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              validate={this.props.AirDropForm.twitterChannel ? [required({ message: formatMessage(messages.fieldRequired) })] : undefined}
             />
           </div>
         </div>
@@ -269,10 +263,9 @@ class AirDropForm extends Component {
           </p>
         </div>
         <div className="joined-channel">
-          <Checkbox
-            width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onMailingListCheck}
+          <Field
+            name="mailingList"
+            component={this.renderCheckboxField}
           />
           <p>{formatMessage(messages.joinNewsletterChannelConfirmation)} </p>
           <div className="ui form">
@@ -281,7 +274,7 @@ class AirDropForm extends Component {
               name="email"
               placeholder={formatMessage(messages.email)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) }), email({ message: formatMessage(messages.invalidEmail) })]}
+              validate={this.props.AirDropForm.mailingList ? [required({ message: formatMessage(messages.fieldRequired) }), email({ message: formatMessage(messages.invalidEmail) })] : undefined}
             />
           </div>
         </div>
@@ -295,10 +288,8 @@ class AirDropForm extends Component {
     return (
       <React.Fragment>
         <div className="joined-channel">
-          <Checkbox
-            width={inputCustomSize}
-            height={inputCustomSize}
-            onChecked={this.onIdentityVerificationChecked}
+          <Field
+            component={this.renderCheckboxField}
           />
           <p>
             <Button
@@ -372,14 +363,20 @@ AirDropForm = reduxForm({
   destroyOnUnmount: true
 })(AirDropForm);
 
+const selector = formValueSelector('AirDropForm');
+
 AirDropForm = injectIntl(AirDropForm);
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({
+    ...state.default,
+    AirDropForm: {
+      telegramChannel: selector(state, 'telegramChannel'),
+      twitterChannel: selector(state, 'twitterChannel'),
+      mailingList: selector(state, 'mailingList')
+    }
+  }),
   dispatch => ({
-    formActions: bindActionCreators({
-      change: (field, value) => change('AirDropForm', field, value)
-    }, dispatch),
     authActions: bindActionCreators({ getWelcomeBonusAmount, receiveWelcomeBonus }, dispatch),
   })
 )(AirDropForm);
@@ -388,14 +385,24 @@ AirDropForm.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }),
+  AirDropForm: PropTypes.shape({
+    telegramChannel: PropTypes.bool,
+    twitterChannel: PropTypes.bool,
+    mailingList: PropTypes.bool
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
+  authActions: PropTypes.shape({
+    getWelcomeBonusAmount: PropTypes.func,
+  }),
   handleSubmit: PropTypes.func.isRequired,
-  valid: PropTypes.bool.isRequired,
-  formActions: PropTypes.shape({
-    change: PropTypes.func
-  })
+  valid: PropTypes.bool.isRequired
 };
 
 AirDropForm.defaultProps = {
   intl: {},
-  formActions: {}
+  AirDropForm: {},
+  history: {},
+  authActions: {}
 };
