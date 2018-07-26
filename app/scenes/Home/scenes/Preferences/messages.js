@@ -177,6 +177,10 @@ export default defineMessages({
     id: 'Preferences.autoRunNote',
     defaultMessage: 'This action requires admin rights'
   },
+  autoLogOut: {
+    id: 'Preferences.autoLogOut',
+    defaultMessage: '0 - auto logout turned off'
+  },
   listingOptionsToolTip: {
     id: 'Preferences.listingOptionsToolTip',
     defaultMessage: 'When more than one keyword set search will be performed ' +
