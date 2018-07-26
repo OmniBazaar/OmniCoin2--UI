@@ -755,7 +755,16 @@ class Transfer extends Component {
   }
 
   onChangeCurrency = (data) => {
-    this.props.transferActions.setCurrency(data.value);
+    const { formatMessage } = this.props.intl;
+
+    if (data.value === 'ethereum' && this.props.transfer.transferCurrency !== 'ethereum') {
+      const confimationDialog = confirm(formatMessage(messages.confirmEthereumCurrency));
+      if (confimationDialog) {
+        this.props.transferActions.setCurrency(data.value);
+      }
+    } else {
+      this.props.transferActions.setCurrency(data.value);
+    }
   };
 
   transferForm() {

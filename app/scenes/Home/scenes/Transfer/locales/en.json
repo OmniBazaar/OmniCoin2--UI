@@ -15,5 +15,6 @@
   "Transfer.successTransfer":"Transferred successfully",
   "Transfer.failedTransfer":"Failed to transfer",
   "Transfer.maxLength":"Memo must be less than 150 characters",
-  "Transfer.defaultWalletLabel": "Wallet"
+  "Transfer.defaultWalletLabel": "Wallet",
+  "Transfer.confirmEthereumCurrency": "Are you sure you want to choose Ethereum?"
 }
