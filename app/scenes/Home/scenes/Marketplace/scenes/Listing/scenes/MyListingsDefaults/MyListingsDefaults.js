@@ -50,7 +50,11 @@ class MyListingsDefaults extends Component {
         await EthereumApi.validateEthereumAddress(ethereum_address);
       }
     } catch (e) {
-      throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
+      if (e === "Invalid Ethereum Address") {
+        throw Object.create({ ethereum_address: listingDefaultMessages.invalidAddress });
+      } else {
+        throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
+      }
     }
   };
 

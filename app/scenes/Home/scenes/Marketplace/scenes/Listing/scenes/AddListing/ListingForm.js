@@ -66,7 +66,11 @@ class ListingForm extends Component {
         await EthereumApi.validateEthereumAddress(ethereum_address);
       }
     } catch (e) {
-      throw { bitcoin_address: messages.invalidAddress };
+      if (e === "Invalid Ethereum Address") {
+        throw { ethereum_address: messages.invalidAddress };
+      } else {
+        throw { bitcoin_address: messages.invalidAddress };
+      }
     }
   };
 
