@@ -302,7 +302,7 @@ class PublicData extends Component {
         <div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
+            <Input className="ref-link-input" value={`http://publisher.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
           </div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
