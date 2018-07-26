@@ -34,7 +34,7 @@ import {
   requestMyListingsError,
   isListingFineSucceeded,
   isListingFineFailed,
-  searchPublishersFinish
+  searchPublishersFinish, awaitListingDetail
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
 import { countPeersForKeywords } from '../search/dht/dhtSaga';
@@ -65,7 +65,8 @@ export function* listingSubscriber() {
     takeEvery('DELETE_LISTING', deleteMyListing),
     takeEvery('IS_LISTING_FINE', checkListingHash),
     takeEvery('SEARCH_PUBLISHERS', searchPublishers),
-    takeEvery('REPORT_LISTING', reportListing)
+    takeEvery('REPORT_LISTING', reportListing),
+    takeEvery('MARKETPLACE_RETURN_LISTINGS', marketplaceReturnListings)
   ]);
 }
 
@@ -154,7 +155,7 @@ function* checkAndUploadImages(user, publisher, listing, oldPublisher) {
         delete img.id;
         return img;
       }
-      
+
       const url = `http://${oldPublisher.publisher_ip}/publisher-images/${imageItem.path}`;
       const nFile = {
         name: imageItem.path,
@@ -229,33 +230,21 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
 
 export function* getListingDetail({ payload: { listingId } }) {
   try {
-    const { currentUser } = (yield select()).default.auth;
-    const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
-    let listings = (yield select()).default.search.searchResults;
-    let listingDetail = yield call(async () => listings.find(listing => listing.listing_id === listingId));
-    if (!listingDetail) {
-      listings = (yield select()).default.listing.myListings;
-      listingDetail = yield call(async () => listings.find(listing => listing.listing_id === listingId));
-    }
-
     const blockchainListingData = yield call(getListingFromBlockchain, listingId);
-    if (!blockchainListingData) {
-      listingDetail.existsInBlockchain = false;
-      listingDetail.quantity = 0;
-    } else {
-      listingDetail.existsInBlockchain = true;
-      listingDetail.quantity = blockchainListingData.quantity;
-      listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
-    }
-
-    const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
-    listingDetail.reputationScore = ownerAcc.reputation_unweighted_score;
-    listingDetail.reputationVotesCount = ownerAcc.reputation_votes_count;
-    if (listingDetail.reputationVotesCount === 0) {
-      listingDetail.reputationScore = 5000;
-    }
-
-    yield put(getListingDetailSucceeded(listingDetail));
+    const publisherAcc = yield call(FetchChain, 'getAccount', blockchainListingData.publisher);
+    const id = getNewId().toString();
+    const message = {
+      id: id,
+      type: messageTypes.MARKETPLACE_GET_LISTING,
+      command: {
+        publishers: [{
+          address: publisherAcc.get('publisher_ip'),
+          listing_ids: [listingId]
+        }]
+      }
+    };
+    ws.send(JSON.stringify(message));
+    yield put(awaitListingDetail(listingId, id));
   } catch (error) {
     console.log(error);
     yield put(getListingDetailFailed(error));
@@ -384,5 +373,40 @@ function* reportListing({ payload: { listingId } }) {
     yield put(reportListingSuccess());
   } catch (error) {
     yield put(reportListingError(error.toString()));
+  }
+}
+
+function* marketplaceReturnListings({ data }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
+    const listingsObj = JSON.parse(data.command.listings);
+    const { listingDetailRequest } = (yield select()).default.listing;
+    if (!!listingsObj.listings && data.id === listingDetailRequest.wsMessageId) {
+      const listingDetail = listingsObj.listings[0];
+      listingDetail.ip = data.command.address;
+      const blockchainListingData = yield call(getListingFromBlockchain, listingDetailRequest.listingId);
+
+      if (!blockchainListingData) {
+        listingDetail.existsInBlockchain = false;
+        listingDetail.quantity = 0;
+      } else {
+        listingDetail.existsInBlockchain = true;
+        listingDetail.quantity = blockchainListingData.quantity;
+        listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
+      }
+
+      const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
+      listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
+      listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+      if (listingDetail.reputationVotesCount === 0) {
+        listingDetail.reputationScore = 5000;
+      }
+
+      yield put(getListingDetailSucceeded(listingDetail));
+    }
+  } catch (error) {
+      console.log("ERROR ", error);
+      yield put(getListingDetailFailed(error));
   }
 }

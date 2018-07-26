@@ -6,6 +6,7 @@ import {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  awaitListingDetail,
   isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
@@ -58,6 +59,8 @@ const CoinTypes = Object.freeze({
 const defaultState = {
   listingDetail: null,
   listingDetailRequest: {
+    listingId: null,
+    wsMessageId: null,
     loading: false,
     error: null
   },
@@ -129,6 +132,7 @@ const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
   };
 });
 
+
 const storageKey = 'favoritesListings';
 
 const reducer = handleActions({
@@ -190,11 +194,13 @@ const reducer = handleActions({
       favoriteListings
     };
   },
-  [getListingDetail](state) {
+  [getListingDetail](state, { payload: { listingId } }) {
     return {
       ...state,
       listingDetail: null,
       listingDetailRequest: {
+        ...state.listingDetailRequest,
+        listingId,
         loading: true,
         error: null
       }
@@ -219,6 +225,16 @@ const reducer = handleActions({
         error: true
       }
     };
+  },
+  [awaitListingDetail](state, { payload: { listingId, wsMessageId } }) {
+    return {
+      ...state,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        listingId,
+        wsMessageId
+      }
+    }
   },
   [isListingFine](state, { payload: { listing } }) {
     return {
