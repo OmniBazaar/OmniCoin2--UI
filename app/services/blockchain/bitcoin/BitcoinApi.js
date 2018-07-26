@@ -33,6 +33,11 @@ const getAddress = wrapRequest(async (xpub, guid, password) => fetch(`${address}
 
 const validateAddress = wrapRequest(async (address) => fetch(`${blockInfoAddress}/address/${address}?format=json&offset=0`));
 
+const getHistory = wrapRequest(async (addresses, n, offset) => {
+  const active = addresses.reduce((accumulated, val) => accumulated + '|' + val.extendedPublicKey, '');
+  return fetch(`${blockInfoAddress}/multiaddr?active=${active}&format=json&n=${n}&offset=${offset}`)
+});
+
 export {
   createWallet,
   getWallets,
@@ -40,5 +45,6 @@ export {
   getBalance,
   addAddress,
   getAddress,
-  validateAddress
+  validateAddress,
+  getHistory
 };
