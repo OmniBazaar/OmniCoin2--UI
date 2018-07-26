@@ -20,6 +20,10 @@ class EthereumHistory {
     return this.isIncoming(toAddress) ? "Incoming" : "Outgoing";
   }
 
+  getFeeTransaction(toAddress, gasPrice) {
+    return this.isIncoming(toAddress) ? 0 : utils.formatEther(gasPrice)
+  }
+
   getHistory() {
     const formattedTransactions = this.transactions.map(transaction => {
       return {
@@ -32,7 +36,7 @@ class EthereumHistory {
         from: transaction.from,
         to: transaction.to,
         fromTo: this.transactionType(transaction.to),
-        fee: 0,
+        fee: this.getFeeTransaction(transaction.to, transaction.gasPrice),
         type: 0,
         operationType: 0,
         operations: []

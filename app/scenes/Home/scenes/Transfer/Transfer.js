@@ -25,7 +25,6 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
-// import EthereumWalletDropdown from './component/EthereumWalletDropdown';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
@@ -37,7 +36,7 @@ import {
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
-import { makeEthereumPayment } from '../../../../services/blockchain/ethereum/EthereumActions';
+import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
 
@@ -151,7 +150,6 @@ class Transfer extends Component {
     this.hideEscrow = this.hideEscrow.bind(this);
 
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
-    this.EthereumWalletDropdown = makeValidatableField(EthereumWalletDropdown);
 
     this.state = {
       ...initialState,
@@ -186,6 +184,10 @@ class Transfer extends Component {
       this.props.transferActions.setCurrency('omnicoin');
       this.props.change('currencySelected', 'omnicoin');
     }
+  }
+
+  componentWillMount() {
+    this.props.ethereumActions.getEthereumWallets()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -676,6 +678,67 @@ class Transfer extends Component {
     );
   }
 
+  renderEthereumForm() {
+    const { formatMessage } = this.props.intl;
+    const { transfer } = this.props;
+
+    return (
+      <div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.to)}</p>
+          <div className="form-group">
+            <span>{formatMessage(messages.ethereumAddress)}*</span>
+            <Field
+              type="text"
+              name="toAddress"
+              placeholder={formatMessage(messages.pleaseEnter)}
+              component="input"
+              className="textfield"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) })
+              ]}
+            />
+            <div className="col-1" />
+          </div>
+        </div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.transfer)}</p>
+          <div className="form-group">
+            <span>{formatMessage(messages.amount)}*</span>
+            <Field
+              type="text"
+              name="amount"
+              placeholder="0.0"
+              component={this.renderUnitsField}
+              className="textfield1"
+              buttonText="ETH"
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) }),
+                numericality({ message: formatMessage(messages.numberRequired) })
+              ]}
+              disabled={this.state.listingId}
+            />
+            <Field type="text" name="privateKey" fieldValue={this.props.ethereum.privateKey} component={this.renderHiddenField} />
+            <div className="col-1" />
+          </div>
+        </div>
+        <div className="form-group">
+          <span />
+          <div className="field left floated">
+            <Button
+              type="submit"
+              loading={transfer.loading}
+              content={formatMessage(messages.TRANSFER)}
+              className="button--green-bg"
+              disabled={this.props.invalid}
+            />
+          </div>
+          <div className="col-1" />
+        </div>
+      </div>
+    );
+  }
+
   renderForm() {
     const { transferCurrency } = this.props.transfer;
 
@@ -684,6 +747,8 @@ class Transfer extends Component {
         return this.renderOmniCoinForm();
       case 'bitcoin':
         return this.renderBitCoinForm();
+      case 'ethereum':
+        return this.renderEthereumForm();
       default:
         return this.renderBitCoinForm();
     }
@@ -823,6 +888,9 @@ export default compose(
       }
     }),
     (dispatch) => ({
+      ethereumActions: bindActionCreators({
+        getEthereumWallets
+      }, dispatch),
       transferActions: bindActionCreators({
         makePayment,
         setCurrency,

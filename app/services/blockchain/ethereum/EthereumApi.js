@@ -53,17 +53,20 @@ const getEthereumBalance = function (privateKey) {
 };
 
 const makeEthereumPayment = function (privateKey, to, amount) {
+  var provider = null;
+
   if (isProd()) {
-    Wallet.provider = ethers.providers.getDefaultProvider();
+    provider = ethers.providers.getDefaultProvider();
   } else {
-    Wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+    provider = ethers.providers.getDefaultProvider('ropsten');
   }
 
-  var wallet = new Wallet(privateKey);
+  validateEthereumAddress(to)
+  var wallet = new Wallet(privateKey, provider);
   var amount = ethers.utils.parseEther(amount);
   var sendPromise = wallet.send(to, amount);
 
-  sendPromise.then(function (transactionHash) {
+  return sendPromise.then(function (transactionHash) {
     console.log(transactionHash);
     return transactionHash;
   });

@@ -11,6 +11,10 @@ import {
   fork,
   call
 } from 'redux-saga/effects';
+import {
+  delay
+} from 'redux-saga'
+
 import _ from 'lodash';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
 import * as EthereumApi from '../blockchain/ethereum/EthereumApi';
@@ -102,6 +106,24 @@ function* submitBitcoinTransfer(data) {
   }
 }
 
+function* submitEthereumTransfer(data) {
+  const {
+    privateKey,
+    toAddress,
+    amount
+  } = data.payload.data;
+
+  try {
+    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toAddress, amount);
+    console.log("Ether res", res)
+    yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+  } catch (error) {
+    console.log('ERROR', error);
+    yield delay(1)
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+  }
+}
+
 export function* submitTransfer(data) {
   const currencySelectedStr = (yield select()).default.transfer.transferCurrency;
   switch (currencySelectedStr) {
@@ -111,6 +133,9 @@ export function* submitTransfer(data) {
     case 'bitcoin':
       yield fork(submitBitcoinTransfer, data);
       break;
+    case 'ethereum':
+      yield fork(submitEthereumTransfer, data);
+      break
     default:
       yield fork(submitBitcoinTransfer, data);
   }
