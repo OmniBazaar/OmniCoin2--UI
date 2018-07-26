@@ -191,7 +191,7 @@ class MyListingsDefaults extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <Field
                 name="price_using_btc"
                 component={Checkbox}
@@ -200,7 +200,7 @@ class MyListingsDefaults extends Component {
                 }}
               />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <Field
                 name="price_using_eth"
                 component={Checkbox}
@@ -209,7 +209,7 @@ class MyListingsDefaults extends Component {
                 }}
               />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <Field
                 name="price_using_omnicoin"
                 component={Checkbox}
