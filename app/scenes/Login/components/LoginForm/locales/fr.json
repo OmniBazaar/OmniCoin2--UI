@@ -4,7 +4,7 @@
   "LoginForm.unlock": "Unlock",
   "LoginForm.enterUsername": "Enter your username",
   "LoginForm.fieldRequired": "This field is required",
-  "LoginForm.noAccount": "Do not have an account?",
+  "LoginForm.noAccount": "Don't have an account yet?",
   "LoginForm.signup": "Sign up",
   "LoginForm.error": "Error"
 }

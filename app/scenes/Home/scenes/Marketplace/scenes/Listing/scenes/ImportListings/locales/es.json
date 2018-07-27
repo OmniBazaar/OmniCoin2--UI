@@ -8,6 +8,6 @@
   "ImportListings.removeAll": "REMOVE ALL",
   "ImportListings.importedData": "Imported Data",
   "ImportListings.warning": "Warning",
-  "ImportListings.ok": "Ok",
-  "ImportListings.onlyTextFileMsg": "Only txt files are allowed."
+  "ImportListings.ok": "Okay",
+  "ImportListings.onlyTextFileMsg": "Only TXT files are allowed."
 }
