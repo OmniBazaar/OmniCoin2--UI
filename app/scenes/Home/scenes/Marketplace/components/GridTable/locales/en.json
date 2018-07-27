@@ -9,5 +9,6 @@
   "GridTable.error": "Error",
   "GridTable.success": "Success",
   "GridTable.deleteListingError": "Having error when delete listing",
-  "GridTable.deleteListingSuccess": "Listing is deleted successfully"
+  "GridTable.deleteListingSuccess": "Listing is deleted successfully",
+  "GridTable.removeFromFavorites": "REMOVE FROM FAVORITES"
 }

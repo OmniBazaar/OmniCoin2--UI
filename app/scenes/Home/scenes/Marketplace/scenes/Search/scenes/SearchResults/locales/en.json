@@ -7,5 +7,10 @@
   "SearchResults.lowestPrice": "Lowest Price",
   "SearchResults.highestPrice": "Highest Price",
   "SearchResults.allCategories": "All Categories",
-  "SearchResults.searchResults": "Search results"
+  "SearchResults.searchResults": "Search results",
+  "SearchResults.searchingForPublishers": "Searching for publishers",
+  "SearchResults.loadingListings": "Loading listings",
+  "SearchResults.currency": "Currency",
+  "SearchResults.category": "Category",
+  "SearchResults.subCategory": "Sub-category"
 }

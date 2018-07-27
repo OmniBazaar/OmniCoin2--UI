@@ -4,5 +4,7 @@
   "MyEscrowAgents.approveChanges": "Approve changes",
   "MyEscrowAgents.user": "User",
   "MyEscrowAgents.approve": "Approve",
-  "MyEscrowAgents.agentsApproved": "Agents successfully approved"
+  "MyEscrowAgents.agentsApproved": "Agents successfully approved",
+  "MyEscrowAgents.error": "Error",
+  "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
 }

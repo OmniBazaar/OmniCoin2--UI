@@ -263,5 +263,8 @@
   "Marketplace.noChargeBacks": "No charge-backs",
   "Marketplace.usersProtectFromIllegal": "Users protect the marketplace from illegal listings.",
   "Marketplace.priorityListingsAvailable": "Priority listings available",
-  "Marketplace.makeImportantListings": "You can make important listings stand out."
+  "Marketplace.makeImportantListings": "You can make important listings stand out.",
+  "Marketplace.noListingsFound": "No listings were found.",
+  "Marketplace.searchingForPublishers": "Searching for publishers",
+  "Marketplace.loadingListings": "Loading listings"
 }

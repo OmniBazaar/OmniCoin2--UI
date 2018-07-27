@@ -5,5 +5,12 @@
   "NewWallet.message": "Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.",
   "NewWallet.createWallet": "CREATE WALLET",
   "NewWallet.cancel": "CANCEL",
-  "NewWallet.enter": "Please enter"
+  "NewWallet.enter": "Please enter",
+  "NewWallet.error": "Error",
+  "NewWallet.noMatch": "Passwords do not match.",
+  "NewWallet.required": "This field is required.",
+  "NewWallet.label": "Label",
+  "NewWallet.success": "Success",
+  "NewWallet.rememberGuid": "Please write down protect your guid.",
+  "NewWallet.minLength": "This field must be at least 10 characters in length."
 }

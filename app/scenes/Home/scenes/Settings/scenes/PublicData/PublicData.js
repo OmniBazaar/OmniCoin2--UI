@@ -33,83 +33,83 @@ import './public.scss';
 const iconSize = 20;
 const messages = defineMessages({
   referrerTitle: {
-    id: 'Setting.referrerTitle',
+    id: 'PublicData.referrerTitle',
     defaultMessage: 'I\'d like to refer my friends to OmniBazaar.'
   },
   referrerBody: {
-    id: 'Setting.referrerBody',
+    id: 'PublicData.referrerBody',
     defaultMessage: 'REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. You will also receive a referral fee (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. Please provide the Bitcoin and Ether addresses where you wish to receive these referral fees.'
   },
   btcAddressTitle: {
-    id: 'Setting.btcAddressTitle',
+    id: 'PublicData.btcAddressTitle',
     defaultMessage: 'Bitcoin address'
   },
   publisherTitle: {
-    id: 'Setting.publisherTitle',
+    id: 'PublicData.publisherTitle',
     defaultMessage: 'I would like to run a "shop" and publish listings for other users.'
   },
   publisherBody: {
-    id: 'Setting.publisherBody',
+    id: 'PublicData.publisherBody',
     defaultMessage: 'PUBLISHER: As a Publisher you receive OmniCoins for each new user listing published on your server but you must keep your server continuously running and available on the Internet. Check this box only if you have installed and configured the OmniBazaar Publisher Module (database) on this computer. You must also have either a static IP address or a DNS redirect service, such as'
   },
   or: {
-    id: 'Settings.or',
+    id: 'PublicData.or',
     defaultMessage: 'or'
   },
   processorTitle: {
-    id: 'Settings.processorTitle',
+    id: 'PublicData.processorTitle',
     defaultMessage: 'I would like to apply to be a Transaction Processor.'
   },
   processorBody: {
-    id: 'Settings.processorBody',
+    id: 'PublicData.processorBody',
     defaultMessage: 'TRANSACTION PROCESSOR: Transaction Processors are paid OmniCoins for processing the transactions of the other user in the marketplace. Because this is a well-paid and highly-responsible position, Transaction Processor are selected only from the most active participants in the marketplace. Referring new users, publishing listings for others, being known and trusted by other users, and having a good reputation in the marketplace all count toward being recognized as an "active participant" and qualifying to be a Transaction Processor.'
   },
   escrowTitle: {
-    id: 'Settings.escrowTitle',
+    id: 'PublicData.escrowTitle',
     defaultMessage: 'I\'m willing to perform the duties of an Escrow Agent.'
   },
   escrowBody: {
-    id: 'Settings.escrowBody',
+    id: 'PublicData.escrowBody',
     defaultMessage: 'ESCROW: Escrow Agents help ensure that marketplace transactions are carried out honestly and fairly. When you choose to become an Escrow Agent, you agree to settle disputes that may arise between buyers and sellers. If you are called upon to settle a dispute, you must review the evidence provided by both sides and make an impartial decision about whether to return funds to the buyer or release them to the seller. You receive a fee (in OmniCoins) from every transaction for which you are chosen as the escrow agent, regardless of whether or not you are called upon to settle a dispute.'
   },
   updateTransactionFee: {
-    id: 'Settings.updateTransactionFee',
-    defaultMessage: 'Update'
+    id: 'PublicData.updateTransactionFee',
+    defaultMessage: 'Update data transaction fee: '
   },
   update: {
-    id: 'Settings.update',
+    id: 'PublicData.update',
     defaultMessage: 'Update'
   },
   successUpdate: {
-    id: 'Settings.successUpdate',
+    id: 'PublicData.successUpdate',
     defaultMessage: 'Updated successfully'
   },
   failedUpdate: {
-    id: 'Settings.failedUpdate',
+    id: 'PublicData.failedUpdate',
     defaultMessage: 'Failed to update account'
   },
   publisherExists: {
-    id: 'Settings.publisherExists',
+    id: 'PublicData.publisherExists',
     defaultMessage: 'There is an existing publisher for this PC'
   },
   invalidIp: {
-    id: 'Settings.invalidIp',
+    id: 'PublicData.invalidIp',
     defaultMessage: 'IP address is invalid'
   },
   witnessRegisterFee: {
-    id: 'Settings.witnessRegisterFee',
+    id: 'PublicData.witnessRegisterFee',
     defaultMessage: 'Witness registration fee is 5000 XOM. Are you sure you want to proceed?'
   },
   wantsToVote: {
-    id: 'Settings.wantsToVote',
+    id: 'PublicData.wantsToVote',
     defaultMessage: 'Vote for yourself'
   },
   voteFee: {
-    id: 'Settings.voteFee',
+    id: 'PublicData.voteFee',
     defaultMessage: 'Fee for voting operation is 20xom'
   },
   customDownloadAddress: {
-    id: 'Settings.customDownloadAddress',
+    id: 'PublicData.customDownloadAddress',
     defaultMessage: 'Your custom OmniBazaar download address:'
   }
 });

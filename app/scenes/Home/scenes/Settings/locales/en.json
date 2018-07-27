@@ -2,18 +2,11 @@
   "Settings.account": "Account",
   "Settings.registered": "REGISTERED",
   "Settings.xom": "XOM",
+  "Settings.btc": "BTC",
   "Settings.accountId": "Account ID",
   "Settings.currentBalance": "Current Balance",
   "Settings.publicData": "Public Data",
   "Settings.privateData": "Private Data",
   "Settings.recentTransactions": "Recent Transactions",
-  "Settings.close": "CLOSE",
-  "Settings.operations": "Operations",
-  "Settings.timeStamp": "TimeStamp",
-  "Settings.transaction": "Transaction",
-  "Settings.block": "Block",
-  "Settings.transactionDetails": "Transaction Details",
-  "Settings.withdraw": "Withdraw",
-  "Settings.deposit": "Deposit",
-  "Settings.amountOfAsset": "amount of asset"
+  "Settings.vestingBalances": "Vesting Balances"
 }

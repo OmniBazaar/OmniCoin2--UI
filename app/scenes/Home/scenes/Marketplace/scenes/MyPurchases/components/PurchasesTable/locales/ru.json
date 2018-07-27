@@ -1,0 +1,10 @@
+{
+  "PurchasesTable.id": "ID",
+  "PurchasesTable.title": "Title",
+  "PurchasesTable.count": "Count",
+  "PurchasesTable.expirationTime": "Exp. time",
+  "PurchasesTable.price": "Price",
+  "PurchasesTable.publisher": "Publisher",
+  "PurchasesTable.seller": "Seller",
+  "PurchasesTable.date": "Date"
+}

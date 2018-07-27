@@ -1,2 +1,13 @@
 {
+  "ImportListings.myListings": "My Listings",
+  "ImportListings.importListings": "Import Listings",
+  "ImportListings.files": "Files",
+  "ImportListings.listingsVendor": "Listings Vendor",
+  "ImportListings.filesToImport": "Files to Import",
+  "ImportListings.addFiles": "ADD FILES",
+  "ImportListings.removeAll": "REMOVE ALL",
+  "ImportListings.importedData": "Imported Data",
+  "ImportListings.warning": "Warning",
+  "ImportListings.ok": "Ok",
+  "ImportListings.onlyTextFileMsg": "Only txt files are allowed."
 }

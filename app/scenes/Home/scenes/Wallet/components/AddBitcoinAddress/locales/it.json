@@ -1,3 +1,6 @@
 {
-
+  "AddBitcoinAddress.label": "Label (optional)",
+  "AddBitcoinAddress.createWallet": "ADD",
+  "AddBitcoinAddress.cancel": "CANCEL",
+  "AddBitcoinAddress.pleaseEnter": "Please enter"
 }

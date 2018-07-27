@@ -1,1 +1,23 @@
-{}
+{
+  "AirDropForm.receiveOmnicoinsByFollowingActions":
+    "You can receive {current_bonus_amount} OmniCoins just for doing the following actions",
+  "AirDropForm.joinTelegramChannelSuggestion": "Join our Telegram channel here:",
+  "AirDropForm.telegramLink": "OmniBazaar on Telegram",
+  "AirDropForm.joinTelegramChannelConfirmation":
+    "I joined the OmniBazaar channel. My Telegram user name is",
+  "AirDropForm.telegramUserName": "User name",
+  "AirDropForm.joinTwitterChannelSuggestion": "Join our Twitter channel here:",
+  "AirDropForm.twitterLink": "OmniBazaar on Twitter",
+  "AirDropForm.joinTwitterChannelConfirmation":
+    "I joined the OmniBazaar channel. My Twitter user name is",
+  "AirDropForm.twitterUserName": "User name",
+  "AirDropForm.joinNewsletterChannelSuggestion": "Join our Newsletter mailing list here:",
+  "AirDropForm.mailchimpLink": "OmniBazaar on MailChimp",
+  "AirDropForm.joinNewsletterChannelConfirmation":
+    "I joined the OmniBazaar mailing list. My e-mail address is:",
+  "AirDropForm.email": "E-mail Address",
+  "AirDropForm.receiveWelcomeBonus": "Receive Welcome Bonus",
+  "AirDropForm.skipFreeCoins": "Skip the free coins",
+  "AirDropForm.fieldRequired": "This field is required",
+  "AirDropForm.invalidEmail": "Email is invalid"
+}

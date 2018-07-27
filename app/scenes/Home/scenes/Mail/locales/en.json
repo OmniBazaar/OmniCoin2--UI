@@ -10,5 +10,11 @@
   "Mail.enterMessage": "Enter message",
   "Mail.send": "SEND",
   "Mail.cancel": "CANCEL",
-  "Mail.addressBook": "ADDRESS BOOK"
+  "Mail.addressBook": "ADDRESS BOOK",
+  "Mail.success": "Success",
+  "Mail.mailSent": "Mail sent successfully",
+  "Mail.error": "Error",
+  "Mail.mailNotSent": "There was an error while trying to send your mail",
+  "Mail.usernameDoesNotExist": "Not found",
+  "Mail.required": "Required"
 }

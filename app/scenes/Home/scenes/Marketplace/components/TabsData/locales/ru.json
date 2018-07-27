@@ -1,2 +1,8 @@
 {
+  "TabsData.featured": "Featured",
+  "TabsData.newArrivals": "New Arrivals",
+  "TabsData.lowestPrice": "Lowest Price",
+  "TabsData.highestPrice": "Highest Price",
+  "TabsData.allCategories": "All Categories",
+  "TabsData.searchResults": "Search results"
 }

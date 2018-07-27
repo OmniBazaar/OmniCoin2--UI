@@ -44,79 +44,79 @@ const iconSizeToHeight = 16;
 
 const messages = defineMessages({
   date: {
-    id: 'Settings.date',
+    id: 'RecentTransactions.date',
     defaultMessage: 'Date'
   },
   memo: {
-    id: 'Settings.memo',
+    id: 'RecentTransactions.memo',
     defaultMessage: 'Memo'
   },
   amount: {
-    id: 'Settings.amount',
+    id: 'RecentTransactions.amount',
     defaultMessage: 'Amount'
   },
   fee: {
-    id: 'Settings.fee',
+    id: 'RecentTransactions.fee',
     defaultMessage: 'Fee'
   },
   balance: {
-    id: 'Settings.balance',
+    id: 'RecentTransactions.balance',
     defaultMessage: 'Balance'
   },
   details: {
-    id: 'Settings.details',
+    id: 'RecentTransactions.details',
     defaultMessage: 'DETAILS'
   },
   status: {
-    id: 'Settings.type',
+    id: 'RecentTransactions.type',
     defaultMessage: 'Status'
   },
   [ChainTypes.operations.transfer]: {
-    id: 'Settings.transfer',
+    id: 'RecentTransactions.transfer',
     defaultMessage: 'TRANSFER'
   },
   [ChainTypes.operations.escrow_create_operation]: {
-    id: 'Settings.pending',
+    id: 'RecentTransactions.pending',
     defaultMessage: 'PENDING'
   },
   [ChainTypes.operations.escrow_return_operation]: {
-    id: 'Settings.return',
+    id: 'RecentTransactions.return',
     defaultMessage: 'RETURNED'
   },
   [ChainTypes.operations.escrow_release_operation]: {
-    id: 'Settings.release',
+    id: 'RecentTransactions.release',
     defaultMessage: 'RELEASED'
   },
   [ChainTypes.operations.listing_create_operation]: {
-    id: 'Settings.createListing',
+    id: 'RecentTransactions.createListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.listing_update_operation]: {
-    id: 'Settings.updateListing',
+    id: 'RecentTransactions.updateListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.listing_delete_operation]: {
-    id: 'Settings.deleteListing',
+    id: 'RecentTransactions.deleteListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.account_update]: {
-    id: 'Settings.updateAccount',
+    id: 'RecentTransactions.updateAccount',
     defaultMessage: 'ACCOUNT'
   },
   [ChainTypes.operations.referral_bonus_operation]: {
-    id: 'Settings.referralBonus',
+    id: 'RecentTransactions.referralBonus',
     defaultMessage: 'REFERRAL BONUS'
   },
   [ChainTypes.operations.welcome_bonus_operation]: {
-    id: 'Settings.welcomeBonus',
+    id: 'RecentTransactions.welcomeBonus',
     defaultMessage: 'WELCOME BONUS'
   },
   [ChainTypes.operations.sale_bonus_operation]: {
-    id: 'Settings.saleBonus',
+    id: 'RecentTransactions.saleBonus',
     defaultMessage: 'SALE BONUS'
   },
   [ChainTypes.operations.witness_bonus_operation]: {
-    id: 'Settings.witnessBonus',
+    id: 'RecentTransactions.witnessBonus',
     defaultMessage: 'WITNESS BONUS'
   }
 });

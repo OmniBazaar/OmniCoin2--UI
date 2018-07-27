@@ -144,5 +144,5 @@ export default defineMessages({
   contactSeller: {
     id: 'Listing.contactSeller',
     defaultMessage: 'Contact Seller'
-  },
+  }
 });

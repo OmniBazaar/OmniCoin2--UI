@@ -33,5 +33,10 @@
   "Preferences.errorTitle": "Error",
   "Preferences.successTitle": "Success",
   "Preferences.saveErrorMessage": "Having error when saving Preferences data",
-  "Preferences.saveSuccessMessage": "Preferences data is saved successful"
+  "Preferences.saveSuccessMessage": "Preferences data is saved successful",
+  "Preferences.fieldRequired": "This field is required.",
+  "Preferences.autoRun": "Autorun witness node",
+  "Preferences.autoRunNote": "This action requires admin rights",
+  "Preferences.autoLogOut": "0 - auto logout turned off",
+  "Preferences.listingOptionsToolTip": "When more than one keyword set search will be performed either using any of those (any) or return only those listings which have all your search criteria keywords"
 }

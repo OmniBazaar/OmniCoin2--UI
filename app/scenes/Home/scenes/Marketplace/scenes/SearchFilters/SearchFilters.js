@@ -22,19 +22,19 @@ const iconSizeSmall = 12;
 
 const messages = defineMessages({
   search: {
-    id: 'SearchResults.search',
+    id: 'SearchFilters.search',
     defaultMessage: 'Search'
   },
   currency: {
-    id: 'SearchMenu.currency',
+    id: 'SearchFilters.currency',
     defaultMessage: 'Currency'
   },
   category: {
-    id: 'AddListing.category',
+    id: 'SearchFilters.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'SearchMenu.subCategory',
+    id: 'SearchFilters.subCategory',
     defaultMessage: 'Sub-category'
   },
 });

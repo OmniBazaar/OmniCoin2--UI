@@ -1,3 +1,10 @@
 {
-
+  "LoginForm.accountDoesntExist": "Account doesn't exist",
+  "LoginForm.enterPassword": "Enter password",
+  "LoginForm.unlock": "Unlock",
+  "LoginForm.enterUsername": "Enter your username",
+  "LoginForm.fieldRequired": "This field is required",
+  "LoginForm.noAccount": "Do not have an account?",
+  "LoginForm.signup": "Sign up",
+  "LoginForm.error": "Error"
 }

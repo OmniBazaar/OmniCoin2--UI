@@ -1,3 +1,20 @@
 {
-
+  "RecentTransactions.memo": "Memo",
+  "RecentTransactions.amount": "Amount",
+  "RecentTransactions.fee": "Fee",
+  "RecentTransactions.balance": "Balance",
+  "RecentTransactions.details": "DETAILS",
+  "RecentTransactions.type": "Status",
+  "RecentTransactions.transfer": "TRANSFER",
+  "RecentTransactions.pending": "PENDING",
+  "RecentTransactions.return": "RETURNED",
+  "RecentTransactions.release": "RELEASED",
+  "RecentTransactions.createListing": "LISTING",
+  "RecentTransactions.updateListing": "LISTING",
+  "RecentTransactions.deleteListing": "LISTING",
+  "RecentTransactions.updateAccount": "ACCOUNT",
+  "RecentTransactions.referralBonus": "REFERRAL BONUS",
+  "RecentTransactions.welcomeBonus": "WELCOME BONUS",
+  "RecentTransactions.saleBonus": "SALE BONUS",
+  "RecentTransactions.witnessBonus": "WITNESS BONUS"
 }
