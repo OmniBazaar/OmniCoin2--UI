@@ -7,9 +7,9 @@ import { bindActionCreators } from 'redux';
 import open from 'open';
 
 const messages = defineMessages({
-  newVersionAvailable: {
-    id: 'Home.newVersionAvailable',
-    defaultMessage: 'A new version is available'
+  updatesAvailable: {
+    id: 'Home.updatesAvailable',
+    defaultMessage: 'Updates available'
   }
 });
 
@@ -31,7 +31,7 @@ class UpdateNotification extends Component {
       return (
         <div className="update-notification">
           <Button className="button--green-bg" onClick={this.onClickUpdate.bind(this)}>
-            {formatMessage(messages.newVersionAvailable)}
+            {formatMessage(messages.updatesAvailable)}
           </Button>
         </div>
       );

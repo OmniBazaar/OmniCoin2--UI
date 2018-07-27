@@ -48,6 +48,7 @@ const defaultState = {
   recentTransactions: [],
   recentTransactionsFiltered: [],
   recentTransactionsVisible: [],
+  coinType: null,
   sortDirection: 'descending',
   sortColumn: 'date',
   activePage: 1,
@@ -83,7 +84,7 @@ const defaultState = {
     loading: false,
     error: null
   },
-  ipAddress: ''
+  ipAddress: '',
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -380,12 +381,13 @@ const reducer = handleActions({
       rescanBlockchain: !state.rescanBlockchain,
     };
   },
-  [getRecentTransactions](state) {
+  [getRecentTransactions](state, { payload: { coinType } }) {
     return {
       ...state,
       recentTransactions: [],
       recentTransactionsFiltered: [],
       recentTransactionsVisible: [],
+      coinType,
       loading: true,
       error: null
     };

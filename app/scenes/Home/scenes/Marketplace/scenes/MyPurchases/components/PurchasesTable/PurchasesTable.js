@@ -14,9 +14,12 @@ import {
   TableHeader,
   Input,
   Icon,
-  Image,
   Loader
 } from 'semantic-ui-react';
+import {
+  NavLink
+} from 'react-router-dom';
+
 import { debounce } from 'lodash';
 
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
@@ -212,7 +215,11 @@ class PurchasesTable extends Component {
                 {!!dataFiltered && dataFiltered.map(row =>
                     (
                       <TableRow key={hash(row)}>
-                        <TableCell>{row.id}</TableCell>
+                        <TableCell>
+                          <NavLink to={`/listing/${row.id}`}>
+                              {row.id}
+                          </NavLink>
+                        </TableCell>
                         {this.props.type === 'buy' &&
                           <TableCell>{row.title}</TableCell>
                         }
