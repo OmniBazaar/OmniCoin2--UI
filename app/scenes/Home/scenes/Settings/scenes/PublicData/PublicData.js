@@ -325,7 +325,7 @@ class PublicData extends Component {
               {`${formatMessage(messages.publisherBody)} `}
               <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
-            <div> Download publisher server here: <a href="http://publisher.omnibazaar.com" target="_blank">http://publisher.omnibazaar.com</a></div>
+            <div> Download publisher server here: <a href="http://publisher.omnibazaar.com" target="_blank">{"http://publisher.omnibazaar.com"}</a></div>
           </div>
         </div>
         {account.publisher &&
