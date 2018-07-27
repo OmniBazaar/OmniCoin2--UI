@@ -302,7 +302,7 @@ class PublicData extends Component {
         <div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{formatMessage(messages.customDownloadAddress)}</div>
-            <Input className="ref-link-input" value={`http://publisher.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
+            <Input className="ref-link-input" value={`http://download.omnibazaar.com/support/download?ref=${auth.currentUser.username}`} />
           </div>
           <div className="ref-link-cont">
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
@@ -325,6 +325,7 @@ class PublicData extends Component {
               {`${formatMessage(messages.publisherBody)} `}
               <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
+            <div> Download publisher server here: <a href="http://publisher.omnibazaar.com" target="_blank">{"http://publisher.omnibazaar.com"}</a></div>
           </div>
         </div>
         {account.publisher &&
