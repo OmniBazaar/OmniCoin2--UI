@@ -26,6 +26,4 @@ npm run package
             config.ini
             config_log.ini
 			
-4. Open "setup.iss" in InnoSetup app and build the installer.
-OR
-4. Add path to your Inno Setup installation to PATH environment variable and run ".\build_installers.bat" script.
+4. Run build_installers.bat script as admin. You must have certificate and password to build installer.

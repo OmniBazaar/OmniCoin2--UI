@@ -1,2 +1,0 @@
-iscc setup.iss
-pause
