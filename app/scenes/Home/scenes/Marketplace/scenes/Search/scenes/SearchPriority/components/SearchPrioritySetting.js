@@ -168,106 +168,125 @@ class SearchPrioritySetting extends Component {
     this.props.dhtActions.dhtReconnect();
   }
 
-  renderPublisherFormFields() {
+  renderLocalDataOptions() {
+    const { publisherData } = this.props.account;
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div>
+        <div className="form-group">
+          <span>{formatMessage(messages.country)}*</span>
+          <CountryDropdown
+            value={publisherData.country}
+            classes="ui dropdown textfield"
+            onChange={this.onChangeCountry}
+          />
+          <div className="col-1" />
+        </div>
+        <div className="form-group">
+          <span>{formatMessage(messages.state)}</span>
+          <RegionDropdown
+            country={publisherData.country}
+            value={publisherData.state}
+            defaultOptionLabel=""
+            blankOptionLabel=""
+            classes="ui dropdown textfield"
+            onChange={this.onChangeState}
+          />
+          <div className="col-1" />
+        </div>
+        <div className="form-group">
+          <span>{formatMessage(messages.city)}</span>
+          <input
+            type="text"
+            className="textfield"
+            value={publisherData.city}
+            onChange={this.onChangeCity}
+          />
+          <div className="col-1" />
+        </div>
+      </div>
+    );
+  }
+
+  renderCategoryOptions() {
+    const { publisherData } = this.props.account;
+    const { formatMessage } = this.props.intl;
+
+    let { keywords } = publisherData;
+
+    if (!keywords) keywords = [];
+
+    return (
+      <div className="form-group keyword-container" key="category">
+        <span>{formatMessage(messages.keywordLabel)}*</span>
+        <TagsInput
+          value={keywords}
+          inputProps={{
+            className: cn('react-tagsinput-input', { empty: !keywords.length }),
+            placeholder: (
+              formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
+            )
+          }}
+          onChange={this.onChangeKeywords.bind(this)}
+        />
+        <div className="col-1" />
+      </div>
+    );
+  }
+
+  renderPublisherOptions() {
     const { publisherData, publishers } = this.props.account;
     const { formatMessage } = this.props.intl;
 
+    let publisher = '';
+
+    if (this.publishers.length) {
+      publisher = _.find(this.publishers, { text: publisherData.publisherName.name });
+    }
+
+    return (
+      <div className="form-group" key="publisher">
+        <span>{formatMessage(messages.publisherName)}*</span>
+        <Dropdown
+          placeholder={formatMessage(messages.publisherPlaceholder)}
+          defaultValue={publisherData.publisherName}
+          loading={publishers.loading}
+          fluid
+          selection
+          options={this.publishers.length && this.publishers}
+          onChange={this.onChangePublisherName}
+        />
+        <div className="col-1" />
+      </div>
+    );
+  }
+
+  renderPublisherFormFields() {
+    const { publisherData } = this.props.account;
+
     switch (publisherData.priority) {
       case PriorityTypes.LOCAL_DATA:
-        return (
-          <div>
-            <div className="form-group">
-              <span>{formatMessage(messages.country)}*</span>
-              <CountryDropdown
-                value={publisherData.country}
-                classes="ui dropdown textfield"
-                onChange={this.onChangeCountry}
-              />
-              <div className="col-1" />
-            </div>
-            <div className="form-group">
-              <span>{formatMessage(messages.state)}*</span>
-              <RegionDropdown
-                country={publisherData.country}
-                value={publisherData.state}
-                defaultOptionLabel=""
-                blankOptionLabel=""
-                classes="ui dropdown textfield"
-                onChange={this.onChangeState}
-              />
-              <div className="col-1" />
-            </div>
-            <div className="form-group">
-              <span>{formatMessage(messages.city)}</span>
-              <input
-                type="text"
-                className="textfield"
-                value={publisherData.city}
-                onChange={this.onChangeCity}
-              />
-              <div className="col-1" />
-            </div>
-          </div>
-        );
+        return this.renderLocalDataOptions();
       case PriorityTypes.BY_CATEGORY:
-        let keywords = publisherData.keywords;
-        if (!keywords) keywords = [];
-        return (
-          <div className="form-group keyword-container" key="category">
-            <span>{formatMessage(messages.keywordLabel)}*</span>
-            <TagsInput
-              value={keywords}
-              inputProps={{
-                className: cn('react-tagsinput-input', { empty: !keywords.length }),
-                placeholder: (
-                  formatMessage(!keywords.length ? messages.keywords : messages.addKeyword)
-                )
-              }}
-              onChange={this.onChangeKeywords.bind(this)}
-            />
-            <div className="col-1" />
-          </div>
-        );
+        return this.renderCategoryOptions();
       case PriorityTypes.PUBLISHER:
-        let publisher = '';
-        if(this.publishers.length) {
-          publisher = _.find(this.publishers, {text: publisherData.publisherName.name});
-        }
-        return (
-          <div className="form-group" key="publisher">
-            <span>{formatMessage(messages.publisherName)}*</span>
-            <Dropdown
-              placeholder={formatMessage(messages.publisherPlaceholder)}
-              defaultValue={publisherData.publisherName}
-              loading={publishers.loading}
-              fluid
-              selection
-              options={this.publishers.length && this.publishers}
-              onChange={this.onChangePublisherName}
-            />
-            <div className="col-1" />
-          </div>
-        );
+        return this.renderPublisherOptions();
       default:
         return null;
     }
   }
 
   render() {
-    let isDisabled = false;
     const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
     const { isConnecting } = this.props.dht;
 
-
-    if (
-      (publisherData.priority === 'category' && !publisherData.keywords.length) ||
-      (publisherData.priority === 'publisher' && !publisherData.publisherName) ||
-      (publisherData.priority === 'local' && (!publisherData.state || !publisherData.country))
-    ) {
-      isDisabled = true;
-    }
+    const noCategoryIsSelected = publisherData.priority === 'category' && !publisherData.keywords.length;
+    const noPublisherIsSelected = publisherData.priority === 'publisher' && !publisherData.publisherName;
+    const noCountryIsSelected = publisherData.priority === 'local' && !publisherData.country;
+    const isDisabled = noCategoryIsSelected || noPublisherIsSelected || noCountryIsSelected;
 
     return (
       <div className="search-priority-setting">
@@ -334,11 +353,14 @@ class SearchPrioritySetting extends Component {
 
 SearchPrioritySetting.propTypes = {
   accountSettingsActions: PropTypes.shape({
-    changePriority: PropTypes.func,
-    changeCountry: PropTypes.func,
     changeCity: PropTypes.func,
+    changeState: PropTypes.func,
+    changeCountry: PropTypes.func,
+    changeKeywords: PropTypes.func,
+    changePriority: PropTypes.func,
     changePublisherName: PropTypes.func,
     getPublishers: PropTypes.func,
+    getPublisherData: PropTypes.func,
     updatePublisherData: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
