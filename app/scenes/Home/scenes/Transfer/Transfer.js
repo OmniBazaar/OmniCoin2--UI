@@ -104,14 +104,6 @@ class Transfer extends Component {
   //   }
   // };
 
-  static escrowOptions(escrows) {
-    return escrows.map(escrow => ({
-      key: escrow.id,
-      value: escrow.id,
-      text: escrow.name
-    }));
-  }
-
   static expirationTimeOptions(formatMessage) {
     return [
       {
@@ -237,8 +229,20 @@ class Transfer extends Component {
     });
   }
 
+  escrowOptions(escrows = []) {
+    const { auth: { account }, transferForm: { toName } } = this.props;
+
+    return escrows
+      .filter(({ id, name }) => account.id !== id || name !== toName)
+      .map(escrow => ({
+        key: escrow.id,
+        value: escrow.id,
+        text: escrow.name
+      }));
+  }
+
   initializeEscrow(escrows) {
-    const escrowOptions = Transfer.escrowOptions(escrows);
+    const escrowOptions = this.escrowOptions(escrows);
     const expirationTimeOptions = Transfer.expirationTimeOptions(this.props.intl.formatMessage);
     this.props.changeFieldValue('escrow', escrowOptions[0].value);
     this.props.changeFieldValue('expirationTime', expirationTimeOptions[0].value);
@@ -526,7 +530,7 @@ class Transfer extends Component {
                   <Field
                     type="text"
                     name="escrow"
-                    options={Transfer.escrowOptions(commonEscrows)}
+                    options={this.escrowOptions(commonEscrows)}
                     component={this.renderSelectField}
                   />
                 </div>
