@@ -47,7 +47,7 @@ const contactOmniMessage = 'OmniMessage';
 const requiredFieldValidator = required({ message: messages.fieldRequired });
 const numericFieldValidator = numericality({ message: messages.fieldNumeric });
 const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
-const bitcoinFieldValidator = numericality({ '>=': 1 / SATOSHI_IN_BTC, msg: messages.bitcoinFieldValidator });
+const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
