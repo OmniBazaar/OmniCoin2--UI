@@ -28,7 +28,7 @@ let lastLanguage = null;
 
 class PreferencesTab extends Component {
   static validate = (values) => {
-    const { logoutTimeout, chargeFee } = values;
+    const { logoutTimeout, chargeFee, searchListingOption } = values;
     const errors = {};
     const number = value => (value && !isNaN(Number(value)));
 
@@ -243,8 +243,8 @@ class PreferencesTab extends Component {
                       name="searchListingOption"
                       component={FormRadio}
                       props={{
-                    value: 'anyKeyword'
-                  }}
+                        value: 'anyKeyword'
+                      }}
                     />
                     <span>{formatMessage(messages.byAnyKeyword)}</span>
                   </div>
@@ -256,6 +256,9 @@ class PreferencesTab extends Component {
                     <Field
                       name="searchListingOption"
                       component={FormRadio}
+                      props={{
+                        value: 'allKeywords'
+                      }}
                     />
                     <span>{formatMessage(messages.byAllKeywords)}</span>
                   </div>
