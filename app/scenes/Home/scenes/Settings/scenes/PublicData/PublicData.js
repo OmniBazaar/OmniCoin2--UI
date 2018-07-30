@@ -17,6 +17,7 @@ import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import { getCurrentUser, getAccount } from '../../../../../../services/blockchain/auth/authActions';
 import { getAccountBalance } from '../../../../../../services/blockchain/wallet/walletActions';
+import { restartNode } from "../../../../../../services/blockchain/connection/connectionActions";
 
 import {
   setReferrer,
@@ -111,6 +112,26 @@ const messages = defineMessages({
   customDownloadAddress: {
     id: 'PublicData.customDownloadAddress',
     defaultMessage: 'Your custom OmniBazaar download address:'
+  },
+  restartNode: {
+    id: 'PublicData.restartNode',
+    defaultMessage: 'RESTART NODE'
+  },
+  error: {
+    id: 'PublicData.error',
+    defaultMessage: 'Error'
+  },
+  success: {
+    id: 'PublicData.success',
+    defaultMessage: 'Success'
+  },
+  nodeRestartError: {
+    id: 'PublicData.nodeRestartError',
+    defaultMessage: 'An error occured while restarting witness node'
+  },
+  nodeRestartSuccess: {
+    id: 'PublicData.nodeRestartSuccess',
+    defaultMessage: 'Witness node was restarted successfully'
   }
 });
 
@@ -125,6 +146,7 @@ class PublicData extends Component {
     this.updatePublicData = this.updatePublicData.bind(this);
     this.freezeSettings = this.freezeSettings.bind(this);
     this.onChangeIpAddress = debounce(this.onChangeIpAddress.bind(this), 500);
+    this.restartNode = this.restartNode.bind(this);
 
     this.state = {
       ip: '',
@@ -159,15 +181,23 @@ class PublicData extends Component {
     if (this.props.account.loading && !nextProps.account.loading) {
       if (nextProps.account.error) {
         if (nextProps.account.error.message.indexOf('is already registered') !== -1) {
-          toastr.error(formatMessage(messages.update), formatMessage(messages.publisherExists));
+          toastr.error(formatMessage(messages.error), formatMessage(messages.publisherExists));
           return;
         }
-        toastr.error(formatMessage(messages.update), formatMessage(messages.failedUpdate));
+        toastr.error(formatMessage(messages.error), formatMessage(messages.failedUpdate));
       } else {
         this.updateAccountInfo();
-        toastr.success(formatMessage(messages.update), formatMessage(messages.successUpdate));
+        toastr.success(formatMessage(messages.success), formatMessage(messages.successUpdate));
         this.props.walletActions.getAccountBalance(this.props.auth.account);
         this.freezeSettings();
+      }
+    }
+
+    if (this.props.connection.restartingNode && !nextProps.connection.restartingNode) {
+      if (nextProps.connection.error) {
+        toastr.error(formatMessage(messages.error), formatMessage(messages.nodeRestartError));
+      } else {
+        toastr.success(formatMessage(messages.success), formatMessage(messages.nodeRestartSuccess));
       }
     }
   }
@@ -191,6 +221,10 @@ class PublicData extends Component {
 
   setBtcAddress({ target: { value } }) {
     this.props.accountSettingsActions.setBtcAddress(value);
+  }
+
+  restartNode() {
+    this.props.connectionActions.restartNode();
   }
 
   updatePublicData() {
@@ -353,6 +387,14 @@ class PublicData extends Component {
               {formatMessage(messages.processorBody)}
             </div>
           </div>
+          {this.props.auth.account.is_a_processor &&
+            <Button
+              loading={this.props.connection.restartingNode}
+              content={formatMessage(messages.restartNode)}
+              onClick={this.restartNode}
+              className="button--primary restart"
+            />
+          }
         </div>
         <div className="description">
           <div className="check-container">
@@ -460,5 +502,8 @@ export default connect(
     authActions: bindActionCreators({
       getAccount
     }, dispatch),
+    connectionActions: bindActionCreators({
+      restartNode
+    }, dispatch)
   })
 )(injectIntl(PublicData));

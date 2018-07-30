@@ -18,5 +18,10 @@
   "PublicData.witnessRegisterFee": "Witness registration fee is 5000 XOM. Are you sure you want to proceed?",
   "PublicData.wantsToVote": "Vote for yourself",
   "PublicData.voteFee": "Fee for voting operation is 20xom",
-  "PublicData.customDownloadAddress": "Your custom OmniBazaar download address:"
+  "PublicData.customDownloadAddress": "Your custom OmniBazaar download address:",
+  "PublicData.restartNode": "Restart node",
+  "PublicData.error": "Error",
+  "PublicData.success": "Success",
+  "PublicData.nodeRestartError": "An error occured while restarting witness node",
+  "PublicData.nodeRestartSuccess": "Witness node was restarted successfully"
 }
