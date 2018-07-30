@@ -179,7 +179,7 @@ export default defineMessages({
   },
   autoLogOut: {
     id: 'Preferences.autoLogOut',
-    defaultMessage: '0 - auto logout turned off'
+    defaultMessage: 'To disable Log Out option set 0 value in Timeout field.'
   },
   listingOptionsToolTip: {
     id: 'Preferences.listingOptionsToolTip',
