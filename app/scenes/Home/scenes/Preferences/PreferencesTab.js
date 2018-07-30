@@ -129,6 +129,9 @@ class PreferencesTab extends Component {
                   component={ValidatableField}
                   validate={[required({ message: formatMessage(messages.fieldRequired) })]}
                 />
+                <div className="auto-log-out">
+                  {formatMessage(messages.autoLogOut)}
+                </div>
               </Grid.Column>
             </Grid.Row>
             {/* <div className="form-group">

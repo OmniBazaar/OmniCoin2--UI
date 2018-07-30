@@ -89,7 +89,7 @@ export function* searchListingsByPeersMap({
     });
   }
 
-  if (subCategory) {
+  if (subCategory && subCategory !== 'all') {
     filters.push({
       op: '=',
       name: 'subcategory',

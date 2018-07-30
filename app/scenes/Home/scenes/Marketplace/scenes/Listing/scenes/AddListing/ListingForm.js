@@ -309,7 +309,7 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
-    
+
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
@@ -694,7 +694,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
-                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">

@@ -1,7 +1,7 @@
 {
   "Latency.seconds": "{latency} s",
   "Latency.milliseconds": "{latency} ms",
-  "Latency.low": "Low latency",
-  "Latency.medium": "Medium latency",
-  "Latency.high": "High latency"
+  "Latency.low": "Latency.low",
+  "Latency.medium": "Latency.medium",
+  "Latency.high": "Latency.high"
 }

@@ -11,67 +11,67 @@ import './transaction-details.scss';
 
 const messages = defineMessages({
   close: {
-    id: 'Settings.close',
+    id: 'TransactionDetails.close',
     defaultMessage: 'CLOSE'
   },
   operations: {
-    id: 'Settings.operations',
+    id: 'TransactionDetails.operations',
     defaultMessage: 'Operations'
   },
   timeStamp: {
-    id: 'Settings.timeStamp',
+    id: 'TransactionDetails.timeStamp',
     defaultMessage: 'TimeStamp'
   },
   transaction: {
-    id: 'Settings.transaction',
+    id: 'TransactionDetails.transaction',
     defaultMessage: 'Transaction'
   },
   block: {
-    id: 'Settings.block',
+    id: 'TransactionDetails.block',
     defaultMessage: 'Block'
   },
   transactionDetails: {
-    id: 'Settings.transactionDetails',
+    id: 'TransactionDetails.transactionDetails',
     defaultMessage: 'Transaction Details'
   },
   withdraw: {
-    id: 'Settings.withdraw',
+    id: 'TransactionDetails.withdraw',
     defaultMessage: 'Withdraw'
   },
   deposit: {
-    id: 'Settings.deposit',
+    id: 'TransactionDetails.deposit',
     defaultMessage: 'Deposit'
   },
   amountOfAsset: {
-    id: 'Settings.amountOfAsset',
+    id: 'TransactionDetails.amountOfAsset',
     defaultMessage: 'Amount of asset,'
   },
   next: {
-    id: 'Settings.next',
+    id: 'TransactionDetails.next',
     defaultMessage: 'Next'
   },
   feeDetail: {
-    id: 'Settings.feeDetail',
+    id: 'TransactionDetails.feeDetail',
     defaultMessage: 'Fee: {fee} XOM'
   },
   omnibazaarFeeDetail: {
-    id: 'Settings.omnibazaarFeeDetail',
+    id: 'TransactionDetails.omnibazaarFeeDetail',
     defaultMessage: 'OmniBazaar fee: {fee} XOM'
   },
   escrowFeeDetail: {
-    id: 'Settings.escrowFeeDetail',
+    id: 'TransactionDetails.escrowFeeDetail',
     defaultMessage: 'Escrow fee: {fee} XOM'
   },
   referrerBuyerFee: {
-    id: 'Settings.referrerBuyerFee',
+    id: 'TransactionDetails.referrerBuyerFee',
     defaultMessage: 'Buyer\'s Referrer fee: {fee} XOM'
   },
   referrerSellerFee: {
-    id: 'Settings.referrerSellerFee',
+    id: 'TransactionDetails.referrerSellerFee',
     defaultMessage: 'Sellers\'s Referrer fee: {fee} XOM'
   },
   publisherFee: {
-    id: 'Settings.publisherFee',
+    id: 'TransactionDetails.publisherFee',
     defaultMessage: 'Publisher fee: {fee} XOM'
   }
 });

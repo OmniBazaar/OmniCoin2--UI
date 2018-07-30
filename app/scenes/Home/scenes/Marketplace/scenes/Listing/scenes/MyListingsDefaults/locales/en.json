@@ -1,8 +1,8 @@
 {
   "ListingsDefaults.myListings": "My Listings",
   "ListingsDefaults.createListing": "Create Listings",
-  "ListingsDefaults.listingDefaults": "Listings Defaults",
+  "ListingsDefaults.listingDefaults": "Listing Defaults",
   "ListingsDefaults.saveDefaults": "SAVE DEFAULTS",
-  "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults is saved successful",
+  "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.",
   "ListingsDefaults.success": "Success"
 }

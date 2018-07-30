@@ -92,11 +92,11 @@ const messages = defineMessages({
     defaultMessage: 'seller'
   },
   voteUpTooltip: {
-    id: 'VotingToggle.voteUpTooltip',
+    id: 'MyEscrowTransactions.voteUpTooltip',
     defaultMessage: 'Click here when you are satisfied with the seller\'s product or performance. This will release to the seller the funds held in escrow.'
   },
   voteDownTooltip: {
-    id: 'VotingToggle.voteDownTooltip',
+    id: 'MyEscrowTransactions.voteDownTooltip',
     defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow.'
   }
 });

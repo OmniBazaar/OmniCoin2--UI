@@ -1,9 +1,10 @@
 {
-  "Home.wallet": "Кошелек",
-  "Home.marketplace": "Маркетплейс",
-  "Home.transfer": "Перевод",
-  "Home.escrow": "Эскроу",
-  "Home.processors": "Коммитет",
-  "Home.mail": "Почта",
-  "Home.support": "Поддержка"
+  "Home.wallet": "Wallet",
+  "Home.marketplace": "Marketplace",
+  "Home.transfer": "Transfer",
+  "Home.escrow": "Escrow",
+  "Home.processors": "Processors",
+  "Home.mail": "Mail",
+  "Home.support": "Support",
+  "Home.newVersionAvailable": "A new version is available"
 }

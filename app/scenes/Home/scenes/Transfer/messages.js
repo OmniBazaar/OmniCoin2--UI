@@ -123,7 +123,7 @@ export default defineMessages({
   },
   numberExceedsDecimalsLimit: {
     id: 'Transfer.numberExceedsDecimalsLimit',
-    defaultMessage: 'Number has not valid decimals amount: no more than {limit}'
+    defaultMessage: 'Amount cannot have more than {limit} numbers after decimal'
   },
   currency: {
     id: 'Transfer.currency',

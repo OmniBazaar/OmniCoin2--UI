@@ -53,19 +53,19 @@ const messages = defineMessages({
     defaultMessage: 'Searching for publishers'
   },
   loadingListings: {
-    id: 'SearchMenu.loadingListings',
+    id: 'SearchResults.loadingListings',
     defaultMessage: 'Loading listings'
   },
   currency: {
-    id: 'SearchMenu.currency',
+    id: 'SearchResults.currency',
     defaultMessage: 'Currency'
   },
   category: {
-    id: 'AddListing.category',
+    id: 'SearchResults.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'SearchMenu.subCategory',
+    id: 'SearchResults.subCategory',
     defaultMessage: 'Sub-category'
   },
 });

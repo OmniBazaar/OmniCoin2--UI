@@ -237,8 +237,13 @@ const processReferrer = async () => {
         //console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: '' });
       } else {
-        const start = data.lastIndexOf('-') + 1;
+        let start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
+
+		if (start === 0) {
+			start = end;
+		}
+
         event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
       }
     });
