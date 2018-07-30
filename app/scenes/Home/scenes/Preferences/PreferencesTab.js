@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 import { required } from 'redux-form-validators';
+import Info from '../../images/info2.png';
 
 import { savePreferences } from '../../../../services/preferences/preferencesActions';
 import FormInputWithIconOnRight
@@ -229,8 +230,9 @@ class PreferencesTab extends Component {
             }
             <Grid.Row>
               <Grid.Column width={4}>
+                <span className="search-list-options">{formatMessage(messages.searchListingOptions)}</span>
                 <Popup
-                  trigger={<span>{formatMessage(messages.searchListingOptions)}</span>}
+                  trigger={<span><Image src={Info} width={20} height={20} /></span>}
                   content={formatMessage(messages.listingOptionsToolTip)}
                 />
               </Grid.Column>
