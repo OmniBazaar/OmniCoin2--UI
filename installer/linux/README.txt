@@ -9,15 +9,12 @@ e.g.  "version": "1.0.5916"
 npm install
 npm run package
 
-3. Update app version in "installer.dbp" and "installer_full.dbp" files.
+3. Update app version in "installer.dbp" file.
 
-4. Build light installer with "installer.dbp".
-
-5. Get latest build of witness_node and unpack it in this folder in "witness_node" subfolder, so that final folder structure is like this:
+4. Get latest build of witness_node and unpack it in this folder in "witness_node" subfolder, so that final folder structure is like this:
 +---linux
 |   |   icon.ico
 |   |   installer.dbp
-|   |   installer_full.dbp
 |   |   README.txt
 |   |
 |   +---service
@@ -33,4 +30,4 @@ npm run package
 |               config.ini
 |               config_log.ini
 
-6. Build full installer with "installer_full.dbp".
+5. Build installer with "installer.dbp".
