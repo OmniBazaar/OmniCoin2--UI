@@ -11,6 +11,6 @@
   "NewWallet.required": "This field is required.",
   "NewWallet.label": "Label",
   "NewWallet.success": "Success",
-  "NewWallet.rememberGuid": "Please write down protect your guid.",
-  "NewWallet.minLength": "This field must be at least 10 characters in length."
+  "NewWallet.rememberGuid": "Please write down protect your GUID.",
+  "NewWallet.minLength": "This password must be at least 10 characters in length."
 }

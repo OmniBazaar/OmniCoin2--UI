@@ -11,11 +11,11 @@
   "Wallet.refreshWallet": "REFRESH",
   "Wallet.noWalletYet": "You haven't created or opened a wallet yet",
   "Wallet.error": "Error",
-  "Bitcoin.note": "NOTE: if you want to use your bitcoin wallet from another ip address you should whitelist another ip in blockchain.info -",
-  "Bitcoin.instructions": "Here is the step by step instruction of how this can be achieved:",
-  "Bitcoin.step1": "1. Confirm your e-mail address from the e-mail message you should've received",
-  "Bitcoin.step2": "2. Login into your account",
-  "Bitcoin.step3": "3. Go to Setttings->Security->Advanced Settings and add your possible range of IP addresses to IP Whitelist like that: 85.173.%.%",
-  "Bitcoin.step4": "4. Refresh the Wallet page from the application if needed.",
-  "Bitcoin.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info"
+  "Bitcoin.note": "NOTE: If your IP address on this machine changes, or you want to access this bitcoin wallet from a different IP address, you will need to whitelist the new or different IP address at www.blockchain.com. This is a security feature.",
+  "Bitcoin.instructions": "Here are the step-by-step instructions for how to do this:",
+  "Bitcoin.step1": "1. Confirm your e-mail address using the link in the e-mail message you received from Blockchain.com.",
+  "Bitcoin.step2": "2. When the link takes you to Blockchain.com, log into your account using the GUID and password for the wallet you created here.",
+  "Bitcoin.step3": "3. Go to Setttings->Security->Advanced Settings and \"white-list\" your new IP address. You can white-list a range of IP addresses using the '%' symbol like this: 85.173.%.%",
+  "Bitcoin.step4": "4. Log out of Blockchain.com and return to OmniBazaar. Try again to open your wallet. Refresh this Wallet page, if necessary.",
+  "Bitcoin.ipError": "This wallet was created using a different IP address. Please whitelist {ip} by logging into this wallet at www.Blockchain.com."
 }

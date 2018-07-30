@@ -35,8 +35,8 @@
   "Preferences.saveErrorMessage": "An error occurred while saving Preferences data.",
   "Preferences.saveSuccessMessage": "Preferences data was saved successfully.",
   "Preferences.fieldRequired": "This field is required.",
-  "Preferences.autoRun": "Autorun witness node",
-  "Preferences.autoRunNote": "This action requires admin rights",
-  "Preferences.autoLogOut": "0 - auto logout turned off",
-  "Preferences.listingOptionsToolTip": "When more than one keyword set search will be performed either using any of those (any) or return only those listings which have all your search criteria keywords"
+  "Preferences.autoRun": "Start the Transaction Processor Module when this computer starts",
+  "Preferences.autoRunNote": "This action requires admin rights.",
+  "Preferences.autoLogOut": "0 - auto log-out turned off.",
+  "Preferences.listingOptionsToolTip": "When using more than one keyword, searches will return results that contain ANY of those words, or will return only those listings which contain ALL of your keywords"
 }

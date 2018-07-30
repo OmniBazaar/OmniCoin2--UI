@@ -1,8 +1,8 @@
 {
-  "AirDropForm.receiveOmnicoinsByFollowingActions": "You can receive {current_bonus_amount} OmniCoins just for doing the following actions",
+  "AirDropForm.receiveOmnicoinsByFollowingActions": "You can receive {current_bonus_amount} OmniCoins just for doing the following actions:",
   "AirDropForm.joinTelegramChannelSuggestion": "Join our Telegram channel here:",
   "AirDropForm.telegramLink": "OmniBazaar on Telegram",
-  "AirDropForm.joinTelegramChannelConfirmation": "I joined the OmniBazaar channel. My Telegram phone number is",
+  "AirDropForm.joinTelegramChannelConfirmation": "I joined the OmniBazaar/OmniCoin channel. My Telegram phone number is",
   "AirDropForm.telegramUserName": "User name",
   "AirDropForm.joinTwitterChannelSuggestion": "Join our Twitter channel here:",
   "AirDropForm.twitterLink": "OmniBazaar on Twitter",

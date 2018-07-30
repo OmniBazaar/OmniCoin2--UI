@@ -5,6 +5,6 @@
   "ExistingWallet.cancel": "CANCEL",
   "ExistingWallet.connect": "CONNECT",
   "NewWallet.connectErrorTitle": "Connect error",
-  "NewWallet.connectErrorMessage": "Having error when conneting wallet",
+  "NewWallet.connectErrorMessage": "An error occurred while connecting wallet",
   "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info"
 }

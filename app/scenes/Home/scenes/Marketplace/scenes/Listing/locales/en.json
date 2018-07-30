@@ -47,6 +47,6 @@
   "Listing.reportConfirmationQuestion": "Are you sure you want to report this listing?",
   "Listing.reportListingErrorPopScore": "Your PoP score is not high enough to be able to report a listing.",
   "Listing.reportListingError": "An error occurred with your report of this listing.",
-  "Listing.reportListingSuccess": "Listing is reported successfully",
+  "Listing.reportListingSuccess": "Listing was reported successfully.",
   "Listing.contactSeller": "Contact Seller"
 }
