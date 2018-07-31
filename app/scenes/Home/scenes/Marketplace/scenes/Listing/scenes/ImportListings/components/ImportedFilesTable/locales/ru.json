@@ -1,2 +1,10 @@
 {
+  "ImportedFilesTable.listingType": "Listing Type",
+  "ImportedFilesTable.category": "Category",
+  "ImportedFilesTable.subCategory": "Sub-Category",
+  "ImportedFilesTable.contactType": "Contact Type",
+  "ImportedFilesTable.contactInfo": "Contact Info",
+  "ImportedFilesTable.title": "Title",
+  "ImportedFilesTable.price": "Price",
+  "ImportedFilesTable.currency": "Currency"
 }

@@ -26,6 +26,7 @@ import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from '../../../../../../services/utils';
+import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
 import './listing.scss';
@@ -281,21 +282,22 @@ class Listing extends Component {
   buyItem = () => {
     const { listingDetail } = this.props.listing;
     const { activeCurrency } = this.props.listing.buyListing;
+    const title = listingDetail.listing_title;
+    const listingId = this.props.listing.buyListing.blockchainListing.id;
+    const publisherIp = listingDetail.ip;
+    const number = this.props.listing.buyListing.numberToBuy;
+    const sellerName = listingDetail.owner;
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = this.getOmnicoinPrice(listingDetail);
-      const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.owner;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = this.getBitcoinPrice(listingDetail);
-      const number = this.props.listing.buyListing.numberToBuy;
       const to = listingDetail.bitcoin_address;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
     }
   };
 
@@ -325,7 +327,10 @@ class Listing extends Component {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
     const { listingDetail } = this.props.listing;
+    const { existsInBlockchain, isReportedByCurrentUser } = listingDetail;
     const disabled = !!error || maxQuantity === 0 || !listingDetail.existsInBlockchain;
+    const disableReportBtn = isReportedByCurrentUser || !existsInBlockchain;
+
     return (
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
@@ -360,9 +365,11 @@ class Listing extends Component {
         }
         <Button
           onClick={() => this.reportListing()}
-          content={formatMessage(messages.report)}
+          content={disableReportBtn ?
+            formatMessage(messages.reported) :
+              formatMessage(messages.report)}
           loading={this.props.listing.reportListing.reporting}
-          disabled={listingDetail.isReportedByCurrentUser || !listingDetail.existsInBlockchain}
+          disabled={disableReportBtn}
           className="button--gray-text"
         />
       </div>
@@ -370,13 +377,23 @@ class Listing extends Component {
   }
 
   renderGallery(listingDetail) {
+
+    let items = listingDetail.images.map(image => ({
+      original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
+      thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
+    }));
+
+    if (!listingDetail.images.length) {
+      items = [{
+        original: ObNet,
+        thumbnail: ObNet
+      }];
+    }
+
     return (
       <div ref={gallery => { this.gallery = gallery; }} className="gallery-container">
         <ImageGallery
-          items={listingDetail.images.map(image => ({
-            original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
-            thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
-            }))}
+          items={items}
           showPlayButton={false}
           showFullscreenButton={false}
         />

@@ -28,7 +28,7 @@ const inputCustomSize = 15;
 const messages = defineMessages({
   usernameExists: {
     id: 'SignupForm.usernameExists',
-    defaultMessage: 'Username already taken'
+    defaultMessage: 'That username is already taken.'
   },
   noAccount: {
     id: 'SignupForm.noAccount',
@@ -36,15 +36,15 @@ const messages = defineMessages({
   },
   fieldRequired: {
     id: 'SignupForm.fieldRequired',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   passwordDoesntMatch: {
     id: 'SignupForm.passwordDoesntMatch',
-    defaultMessage: 'Password doesn\'t match'
+    defaultMessage: 'Passwords don\'t match.'
   },
   copy: {
     id: 'SignupForm.copy',
-    defaultMessage: 'Copy'
+    defaultMessage: 'Copy password'
   },
   passwordCopied: {
     id: 'SignupForm.passwordCopied',
@@ -52,11 +52,11 @@ const messages = defineMessages({
   },
   referrerName: {
     id: 'SignupForm.referrerName',
-    defaultMessage: 'Referrer name'
+    defaultMessage: 'Who referred you?'
   },
   accountName: {
     id: 'SignupForm.accountName',
-    defaultMessage: 'Account name'
+    defaultMessage: 'Choose an account name'
   },
   confirmPassword: {
     id: 'SignupForm.confirmPassword',
@@ -64,7 +64,7 @@ const messages = defineMessages({
   },
   agree: {
     id: 'SignupForm.agree',
-    defaultMessage: 'I agree with'
+    defaultMessage: 'I agree with the OmniBazaar'
   },
   termsAndCond: {
     id: 'SignupForm.termsAndCond',
@@ -112,7 +112,7 @@ const messages = defineMessages({
   },
   keywords: {
     id: 'SignupForm.keywords',
-    defaultMessage: 'Keywords for listing your want to see'
+    defaultMessage: 'Provide keywords for listing you want to see'
   },
   addKeyword: {
     id: 'SignupForm.addKeyword',
@@ -124,11 +124,11 @@ const messages = defineMessages({
   },
   savePassword1: {
     id: 'SignupForm.savePassword1',
-    defaultMessage: 'Please save your password.'
+    defaultMessage: 'IMPORTANT: This password is the ONLY key to your OmniCoin wallet.'
   },
   savePassword2: {
     id: 'SignupForm.savePassword2',
-    defaultMessage: "In case it is lost it can't be recovered."
+    defaultMessage: 'Save and protect it. If lost, it cannot be recovered.'
   }
 });
 
@@ -167,18 +167,24 @@ class SignupForm extends Component {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
       searchPriority: PriorityTypes.LOCAL_DATA,
+      referrer: this.props.auth.defaultReferrer
     });
   }
 
   componentDidMount() {
-    if (this.defaultReferrer && this.defaultReferrer !== 'null') {
-      this.props.formActions.change('referrer', this.defaultReferrer);
+    if(this.props.auth.defaultReferrer){
+      this.props.formActions.change('referrer', this.props.auth.defaultReferrer);
       this.referrerInput.focus();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
+
+    if(nextProps.auth.defaultReferrer !== this.props.auth.defaultReferrer){
+      this.props.formActions.change('referrer', nextProps.auth.defaultReferrer);
+    }
+
     if (nextProps.auth.error && !this.props.auth.error) {
       const content = (
         nextProps.auth.error.id

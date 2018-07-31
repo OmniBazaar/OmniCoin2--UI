@@ -7,16 +7,20 @@ import { bindActionCreators } from 'redux';
 import open from 'open';
 
 const messages = defineMessages({
-  newVersionAvailable: {
-    id: 'Home.newVersionAvailable',
-    defaultMessage: "Update's available"
+  updatesAvailable: {
+    id: 'Home.updatesAvailable',
+    defaultMessage: 'Updates available'
   }
 });
 
 class UpdateNotification extends Component {
   onClickUpdate() {
+    let appName=null;
+    if (process.platform === 'linux') {
+      appName = 'xdg-open';
+    }
     const { updateLink } = this.props.updateNotification;
-    open(updateLink);
+    open(updateLink, appName);
   }
 
   render() {
@@ -27,7 +31,7 @@ class UpdateNotification extends Component {
       return (
         <div className="update-notification">
           <Button className="button--green-bg" onClick={this.onClickUpdate.bind(this)}>
-            {formatMessage(messages.newVersionAvailable)}
+            {formatMessage(messages.updatesAvailable)}
           </Button>
         </div>
       );

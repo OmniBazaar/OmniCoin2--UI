@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
   approveChanges: {
     id: 'MyEscrowAgents.approveChanges',
-    defaultMessage: 'Approve changes'
+    defaultMessage: 'Approve'
   },
   user: {
     id: 'MyEscrowAgents.user',

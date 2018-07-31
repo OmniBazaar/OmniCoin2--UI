@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   guid: {
     id: 'BitcoinWalletDetail.guid',
-    defaultMessage: 'Wallet GUID: '
+    defaultMessage: 'Wallet GUID:'
   },
   currentBalance: {
     id: 'BitcoinWalletDetail.currentBalance',

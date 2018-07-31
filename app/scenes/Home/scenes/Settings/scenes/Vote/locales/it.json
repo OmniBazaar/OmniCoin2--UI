@@ -1,3 +1,8 @@
 {
-
+  "Settings.currentVotes": "Current Votes",
+  "Settings.vote": "VOTE",
+  "Settings.processor": "Processor",
+  "Settings.votes": "Votes (XOM)",
+  "Settings.approval": "Approval",
+  "Settings.voted": "Voted"
 }

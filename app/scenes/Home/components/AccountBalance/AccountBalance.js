@@ -9,7 +9,7 @@ import { getAccountBalance } from '../../../../services/blockchain/wallet/wallet
 import OmniIcon from '../../images/th-omnicoin.svg';
 import messages from '../../scenes/Settings/messages';
 import './style.scss';
-import { TOKENS_IN_XOM } from '../../../../utils/constants';
+import { TOKENS_IN_XOM, SATOSHI_IN_BTC } from '../../../../utils/constants';
 
 const iconSize = 20;
 
@@ -38,6 +38,17 @@ class AccountBalance extends Component {
     }
     return 0.00;
   }
+  
+  getBtcBalance() {
+    const { wallets } = this.props.bitcoin;
+    let balance = 0.00;
+    if (wallets && wallets.length) {
+      wallets.forEach(function (item) {
+        balance = balance + item.balance
+      });
+    }
+    return balance / SATOSHI_IN_BTC;
+  }
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -48,9 +59,12 @@ class AccountBalance extends Component {
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">
+          <div className="balance">
             {this.getBalance()} {formatMessage(messages.xom)}
-          </span>
+          </div>
+          <div className="balance">
+            {this.getBtcBalance()} {formatMessage(messages.btc)}
+          </div>
         </div>
       </div>
     );
@@ -72,7 +86,8 @@ AccountBalance.propTypes = {
 export default connect(
   state => ({
     auth: state.default.auth,
-    blockchainWallet: state.default.blockchainWallet
+    blockchainWallet: state.default.blockchainWallet,
+    bitcoin: state.default.bitcoin
   }),
   (dispatch) => ({
     walletActions: bindActionCreators({

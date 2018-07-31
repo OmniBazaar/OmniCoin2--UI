@@ -100,7 +100,20 @@ class OmnicoinHistory extends BaseStorage {
     return this.cache[filtered[0]];
   }
 
+  //checks if publisher and user is not a publisher himself
+  isPublisherListingRelatedOp(op) {
+    const currentUser = getStoredCurrentUser();
+    return  (op.to === currentUser.username && op.to !== op.from) && (
+      op.operationType === ChainTypes.operations.listing_create_operation
+      || op.operationType === ChainTypes.operations.listing_update_operation
+      || op.operationType === ChainTypes.operations.listing_delete_operation
+    );
+  }
+
   includeOperation(op) {
+    if (this.isPublisherListingRelatedOp(op)) {
+      return false;
+    }
     if (op.operationType === ChainTypes.operations.escrow_create_operation) {
       const result = this.findEscrowTransactionResult(op);
       return !result && (op.from === this.accountName || op.to === this.accountName);
@@ -110,6 +123,8 @@ class OmnicoinHistory extends BaseStorage {
     }
     return true;
   }
+
+
 
   getHistory() {
     const transactions = {};
@@ -162,9 +177,15 @@ class OmnicoinHistory extends BaseStorage {
         }
       }
       transactions[trxKey].memo = this.operationMemo(op);
+      let obFee;
+      if (op.operationType === ChainTypes.operations.listing_create_operation
+          || op.operationType === ChainTypes.operations.listing_update_operation
+          || op.operationType === ChainTypes.operations.transfer) {
+        obFee = this.getObFee(op);
+      }
       transactions[trxKey].operations.push({
         ...op,
-        obFee: op.to === currentUser.username ? this.getObFee(op) : undefined,
+        obFee,
         amount: this.operationAmount(op)
       });
     });
@@ -385,8 +406,7 @@ class OmnicoinHistory extends BaseStorage {
             isIncoming: false
           };
           if ([ChainTypes.operations.listing_create_operation,
-            ChainTypes.operations.listing_update_operation,
-            ChainTypes.operations.listing_delete_operation].includes(el.op[0])) {
+               ChainTypes.operations.listing_update_operation].includes(el.op[0])) {
             const [publisher, seller] = await Promise.all([
               FetchChain('getAccount', el.op[1].publisher),
               FetchChain('getAccount', el.op[1].seller)
@@ -396,8 +416,10 @@ class OmnicoinHistory extends BaseStorage {
             operation.fromTo = currentUser.username === seller.get('name')
               ? publisher.get('name')
               : seller.get('name');
-            if (el.op[1].publisher === account.get('id')) {
+            if (operation.from === operation.to) {
               operation.isIncoming = false;
+            } else if (el.op[1].publisher === account.get('id')) {
+              operation.isIncoming = true;
             }
           }
           this.addOperation(operation);

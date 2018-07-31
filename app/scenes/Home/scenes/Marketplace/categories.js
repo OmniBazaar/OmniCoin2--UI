@@ -92,7 +92,7 @@ const saleCategories = defineMessages({
   },
   artsCrafts: {
     id: 'Marketplace.artsCrafts',
-    defaultMessage: 'Arts / Crafts'
+    defaultMessage: 'Arts'
   },
   babyChild: {
     id: 'Marketplace.babyChild',
@@ -172,7 +172,7 @@ const saleCategories = defineMessages({
   },
   musicalInstruments: {
     id: 'Marketplace.musicalInstruments',
-    defaultMessage: 'Musical Instruments'
+    defaultMessage: 'Music'
   },
   photoVideo: {
     id: 'Marketplace.photoVideo',
@@ -724,7 +724,7 @@ const aboutCategories = defineMessages({
   },
   telegramOmniBazaar: {
     id: 'Marketplace.telegramOmniBazaar',
-    defaultMessage: 'OmniBazaar Telegram'
+    defaultMessage: 'Telegram'
   },
   telegramOmniCoin: {
     id: 'Marketplace.telegramOmniCoin',

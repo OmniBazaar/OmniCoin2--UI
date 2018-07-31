@@ -1,3 +1,9 @@
 {
-
+  "MyEscrowSettings.title": "I approve the following categories of users to be escrow agents for my transactions:",
+  "MyEscrowSettings.firstCategory": "Any user I give a positive reputation rating",
+  "MyEscrowSettings.secondCategory": "Any user I vote for as Transaction Processor",
+  "MyEscrowSettings.thirdCategory": "Any top participant who is an Active Transaction Processor",
+  "MyEscrowSettings.save": "SAVE SETTINGS",
+  "MyEscrowSettings.saved": "Successfully saved",
+  "MyEscrowSettings.error": "Error"
 }

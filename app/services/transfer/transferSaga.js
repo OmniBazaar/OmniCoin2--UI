@@ -20,6 +20,7 @@ import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
 import { TOKENS_IN_XOM } from '../../utils/constants';
+import {addPurchase} from "../marketplace/myPurchases/myPurchasesActions";
 
 export function* transferSubscriber() {
   yield all([
@@ -66,6 +67,7 @@ function* submitOmniCoinTransfer(data) {
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+    yield put(addPurchase(data.payload.data));
     yield put(getAccountBalance(account));
   } catch (error) {
     let e = JSON.stringify(error);
@@ -77,15 +79,14 @@ function* submitOmniCoinTransfer(data) {
   }
 }
 
-function* submitBitcoinTransfer(data) {
+function* submitBitcoinTransfer({ payload: { data }}) {
   const {
     guid,
     password,
     toName,
     amount,
     fromName
-  } = data.payload.data;
-
+  } = data;
   try {
     if (!Number.isInteger(fromName)) {
       throw new Error('Transaction from value need to be a wallet index');
@@ -94,6 +95,7 @@ function* submitBitcoinTransfer(data) {
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+    yield put(addPurchase(data));
   } catch (error) {
     console.log('ERROR', error);
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });

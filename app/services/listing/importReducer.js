@@ -6,7 +6,9 @@ import {
   importFiles,
   removeFile,
   removeAllFiles,
-  sortImportData
+  sortImportData,
+  updateFileItemSubcategory,
+  updateFileItemCategory,
 } from './importActions';
 
 const defaultState = {
@@ -16,6 +18,16 @@ const defaultState = {
   importingFile: false,
   stagingFile: false,
   error: null,
+};
+
+const updateFileItemProp = ({
+  prop, value, fileIndex, itemIndex, files,
+}) => {
+  const importedFiles = [...files];
+
+  importedFiles[fileIndex].items[itemIndex][prop] = value;
+
+  return importedFiles;
 };
 
 const reducer = handleActions({
@@ -75,6 +87,32 @@ const reducer = handleActions({
       importedFiles: sortedBy,
       sortDirection,
       sortColumn,
+    };
+  },
+
+  [updateFileItemCategory](state, { payload: { category, index, fileIndex } }) {
+    return {
+      ...state,
+      importedFiles: [...updateFileItemProp({
+        fileIndex,
+        prop: 'category',
+        value: category,
+        itemIndex: index,
+        files: state.importedFiles,
+      })],
+    };
+  },
+
+  [updateFileItemSubcategory](state, { payload: { subcategory, index, fileIndex } }) {
+    return {
+      ...state,
+      importedFiles: [...updateFileItemProp({
+        fileIndex,
+        prop: 'subcategory',
+        value: subcategory,
+        itemIndex: index,
+        files: state.importedFiles,
+      })],
     };
   },
 

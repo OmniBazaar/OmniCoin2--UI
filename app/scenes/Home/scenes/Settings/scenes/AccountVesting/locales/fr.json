@@ -1,3 +1,5 @@
 {
-
+  "AccountVesting.success": "Success",
+  "AccountVesting.error": "Error",
+  "AccountVesting.noVestings": "You have no vesting balances."
 }

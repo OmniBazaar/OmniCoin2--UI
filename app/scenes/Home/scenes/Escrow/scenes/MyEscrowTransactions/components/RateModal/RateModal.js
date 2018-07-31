@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   cancel: {
     id: 'RateModal.cancel',
-    defaultMessage: 'Cancel',
+    defaultMessage: 'Cancel'
   }
 });
 

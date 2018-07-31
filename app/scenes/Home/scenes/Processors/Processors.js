@@ -14,7 +14,7 @@ import './processors.scss';
 const messages = defineMessages({
   topProcessors: {
     id: 'Processors.topProcessors',
-    defaultMessage: 'Top Processors'
+    defaultMessage: 'Active Processors'
   },
   standbyProcessors: {
     id: 'Processors.standbyProcessors',
@@ -26,7 +26,7 @@ const messages = defineMessages({
   },
   voteSuccess: {
     id: 'Processors.voteSuccess',
-    defaultMessage: 'Voted successfully!'
+    defaultMessage: 'You voted successfully!'
   },
   error: {
     id: 'Processors.error',

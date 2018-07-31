@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   approval: {
     id: 'ProcessorsTable.approval',
-    defaultMessage: 'Approval',
+    defaultMessage: 'Approval'
   },
   reliability: {
     id: 'ProcessorsTable.reliability',

@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   error: {
     id: 'MyEscrowTransactions.error',
-    defaultMessage: 'Error',
+    defaultMessage: 'Error'
   },
   successRelease: {
     id: 'MyEscrowTransactions.successRelease',
@@ -81,23 +81,23 @@ const messages = defineMessages({
   },
   escrow: {
     id: 'MyEscrowTransactions.escrow',
-    defaultMessage: 'escrow',
+    defaultMessage: 'escrow'
   },
   buyer: {
     id: 'MyEscrowTransactions.buyer',
-    defaultMessage: 'buyer',
+    defaultMessage: 'buyer'
   },
   seller: {
     id: 'MyEscrowTransactions.seller',
-    defaultMessage: 'seller',
+    defaultMessage: 'seller'
   },
   voteUpTooltip: {
-    id: 'VotingToggle.voteUpTooltip',
-    defaultMessage: 'Click here when you satisfied with the seller\'s product or performance. Doing so will release the escrowed funds to the seller.'
+    id: 'MyEscrowTransactions.voteUpTooltip',
+    defaultMessage: 'Click here when you are satisfied with the seller\'s product or performance. This will release to the seller the funds held in escrow.'
   },
   voteDownTooltip: {
-    id: 'VotingToggle.voteDownTooltip',
-    defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. Doing so will return the escrowed funds to the buyer'
+    id: 'MyEscrowTransactions.voteDownTooltip',
+    defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow.'
   }
 });
 

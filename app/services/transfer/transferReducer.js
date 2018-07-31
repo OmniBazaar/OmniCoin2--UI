@@ -22,7 +22,7 @@ const defaultState = {
   loading: false,
   gettingCommonEscrows: false,
   commonEscrows: [],
-  transferCurrency: 'bitcoin'
+  transferCurrency: null
 };
 
 const reducer = handleActions({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import {
@@ -15,6 +15,9 @@ import hash from 'object-hash';
 import { numberWithCommas } from '../../../../../../../../../../utils/numeric';
 
 import { sortImportData } from '../../../../../../../../../../services/listing/importActions';
+import { makeValidatableField } from '../../../../../../../../../../components/ValidatableField/ValidatableField';
+import CategoryDropdown from '../../../AddListing/components/CategoryDropdown/CategoryDropdown';
+import SubCategoryDropdown from '../../../AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
 
 const messages = defineMessages({
   listingType: {
@@ -27,7 +30,7 @@ const messages = defineMessages({
   },
   subCategory: {
     id: 'ImportedFilesTable.subCategory',
-    defaultMessage: 'Sub Category'
+    defaultMessage: 'Sub-Category'
   },
   contactType: {
     id: 'ImportedFilesTable.contactType',
@@ -52,9 +55,49 @@ const messages = defineMessages({
 });
 
 class ImportedFilesTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.categoryDropdown = makeValidatableField(CategoryDropdown);
+    this.subCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+  }
+
   sortData = (clickedColumn) => () => {
     this.props.listingActions.sortImportData(clickedColumn);
   };
+
+  renderCategoryDropdown({ category, index, fileIndex }) {
+    const { onCategoryChange } = this.props;
+
+    return (
+      <CategoryDropdown
+        selection
+        disableAllOption
+        input={{
+          value: category,
+          onChange: categorySelected => onCategoryChange({ categorySelected, index, fileIndex }),
+        }}
+      />
+    );
+  }
+
+  renderSubCategoryDropdown({
+    category, subcategory, index, fileIndex
+  }) {
+    const { onSubCategoryChange } = this.props;
+
+    return (
+      <SubCategoryDropdown
+        selection
+        disableAllOption
+        parentCategory={category}
+        input={{
+          value: subcategory,
+          onChange: subCategory => onSubCategoryChange({ subCategory, index, fileIndex }),
+        }}
+      />
+    );
+  }
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -98,11 +141,15 @@ class ImportedFilesTable extends Component {
             </TableHeader>
             <TableBody>
               {
-                importedFiles.map(row => row.items && row.items.map((item, index) => (
+                importedFiles.map((row, fileIndex) => row.items && row.items.map((item, index) => (
                   <TableRow key={hash(row) + hash(item) + hash(index)}>
                     <TableCell>{item.listing_type}</TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>{item.subcategory}</TableCell>
+                    <TableCell>
+                      {this.renderCategoryDropdown({ ...item, index, fileIndex })}
+                    </TableCell>
+                    <TableCell>
+                      {this.renderSubCategoryDropdown({ ...item, index, fileIndex })}
+                    </TableCell>
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
                     <TableCell>{item.listing_title}</TableCell>
@@ -138,6 +185,8 @@ ImportedFilesTable.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
+  onCategoryChange: PropTypes.func.isRequired,
+  onSubCategoryChange: PropTypes.func.isRequired,
 };
 
 ImportedFilesTable.defaultProps = {

@@ -8,6 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
+import { ipcRenderer } from 'electron';
 
 import { generateKeyFromPassword } from '../utils/wallet';
 import { fetchAccount } from '../utils/miscellaneous';
@@ -16,7 +17,8 @@ import {
   getAccount as getAccountAction,
   welcomeBonus as welcomeBonusAction,
   welcomeBonusSucceeded,
-  welcomeBonusFailed
+  welcomeBonusFailed,
+  requestReferrerFinish
 } from './authActions';
 import { getFirstReachable } from './services';
 
@@ -24,7 +26,7 @@ import { getFirstReachable } from './services';
 const messages = defineMessages({
   invalidPassword: {
     id: 'AuthService.invalidPassword',
-    defaultMessage: 'Invalid password',
+    defaultMessage: 'Invalid password'
   },
   noAccount: {
     id: 'AuthService.noAccount',
@@ -36,7 +38,7 @@ const messages = defineMessages({
   },
   invalidUsername: {
     id: 'AuthService.invalidUsername',
-    defaultMessage: 'Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.'
+    defaultMessage: 'Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.'
   }
 });
 
@@ -48,6 +50,7 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
+    takeEvery('REQUEST_REFERRER', requestReferrer)
   ]);
 }
 
@@ -138,6 +141,7 @@ export function* signup(action) {
           password
         }
       });
+      yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
       yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
@@ -225,4 +229,18 @@ export function* getWelcomeBonusAmount() {
   } catch (error) {
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_FAILED', error });
   }
+}
+
+const getDefaultReferrer = () => new Promise((resolve, reject) => {
+  ipcRenderer.once('receive-referrer', (event, arg) => {
+    const referrer = arg.referrer;
+    localStorage.setItem('referrer', referrer);
+    resolve(referrer);
+  });
+  ipcRenderer.send('get-referrer', null);
+});
+
+function* requestReferrer() {
+  const referrer = yield call(getDefaultReferrer);
+  yield put(requestReferrerFinish(referrer));
 }

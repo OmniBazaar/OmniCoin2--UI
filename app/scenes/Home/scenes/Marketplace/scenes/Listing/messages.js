@@ -51,7 +51,7 @@ export default defineMessages({
   },
   condition: {
     id: 'Listing.condition',
-    defaultMessage: 'condition'
+    defaultMessage: 'Condition'
   },
   cityLocation: {
     id: 'Listing.cityLocation',
@@ -77,13 +77,17 @@ export default defineMessages({
     id: 'Listing.report',
     defaultMessage: 'REPORT'
   },
+  reported: {
+    id: 'Listing.reported',
+    defaultMessage: 'REPORTED'
+  },
   removeFromFavorites: {
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
   },
   hashIsInvalid: {
     id: 'Listing.hashIsInvalid',
-    defaultMessage: 'Listing is corrupted'
+    defaultMessage: 'Listing is corrupt'
   },
   error: {
     id: 'Listing.error',
@@ -99,11 +103,11 @@ export default defineMessages({
   },
   deleteListingError: {
     id: 'Listing.deleteListingError',
-    defaultMessage: 'Delete listing error'
+    defaultMessage: 'Error deleting listing'
   },
   loadListingError: {
     id: 'Listing.loadListingError',
-    defaultMessage: 'Cannot load listing'
+    defaultMessage: 'Load listing'
   },
   loadListing: {
     id: 'Listing.loadListing',
@@ -115,7 +119,7 @@ export default defineMessages({
   },
   notInBlockchain: {
     id: 'Listing.notInBlockchain',
-    defaultMessage: 'The listing was deleted from the blockchain'
+    defaultMessage: 'The listing was deleted from the blockchain.'
   },
   reportDeleteQuestion: {
     id: 'Listing.reportDeleteQuestion',
@@ -127,7 +131,7 @@ export default defineMessages({
   },
   reportListingErrorPopScore: {
     id: 'Listing.reportListingErrorPopScore',
-    defaultMessage: 'Your PoP score is too low to report the listing'
+    defaultMessage: 'Your PoP score is not high enough to be able to report a listing.'
   },
   reportListingError: {
     id: 'Listing.reportListingError',
@@ -140,5 +144,5 @@ export default defineMessages({
   contactSeller: {
     id: 'Listing.contactSeller',
     defaultMessage: 'Contact Seller'
-  },
+  }
 });

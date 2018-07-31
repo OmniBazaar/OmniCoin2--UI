@@ -3,6 +3,7 @@ import {
   call,
   put,
   takeEvery,
+  takeLatest,
   fork
 } from 'redux-saga/effects';
 import { includes, uniqBy } from 'lodash';
@@ -13,6 +14,7 @@ import DHTConnector from '../../../utils/dht-connector';
 import { searchListingsByPeersMap } from '../searchSaga';
 import AccountSettingsStorage from '../../accountSettings/accountStorage';
 import { getPreferences } from '../../preferences/services';
+import { getAllPublishers } from '../../accountSettings/services';
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -20,7 +22,7 @@ const dhtConnector = new DHTConnector();
 export function* dhtSubscriber() {
   yield all([
     takeEvery('DHT_CONNECT', connect),
-    takeEvery('DHT_RECONNECT', reconnect),
+    takeLatest('DHT_RECONNECT', reconnect),
     takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
   ]);
 }
@@ -68,6 +70,27 @@ async function doLocalSearch({ country, state, city }) {
   ]);
 }
 
+const checkPresent = (host, filter, dhtResp) => {
+  if (!filter) {
+    return true;
+  }
+
+  if (!dhtResp) {
+    return false;
+  }
+
+  for (let i = 0; i < dhtResp.length; i++) {
+    if (dhtResp[i].peers) {
+      const found = dhtResp[i].peers.find(({ host: pHost }) => pHost === host);
+      if (found) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function isPresentInFilters(
   host,
   {
@@ -77,18 +100,20 @@ function isPresentInFilters(
     category, subCategory, country, state, city
   }
 ) {
-  const isInCategories = categoryResp && categoryResp.peers ? categoryResp.peers
-    .find(({ host: ctgHost }) => ctgHost === host) : !category;
-  const isInSubCategories = subCategoryResp && subCategoryResp.peers ? subCategoryResp.peers
-    .find(({ host: subHost }) => subHost === host) : !subCategory;
-  const isInCountry = countryResp && countryResp.peers ? countryResp.peers
-    .find(({ host: contryHost }) => contryHost === host) : !country;
-  const isInState = stateResp && stateResp.peers ? stateResp.peers
-    .find(({ host: stateHost }) => stateHost === host) : !state;
-  const isInCity = cityResp && cityResp.peers ? cityResp.peers
-    .find(({ host: cityHost }) => cityHost === host) : !city;
+  if (category === 'All' || category === 'featuredListings') {
+    category = '';
+  }
+  if (subCategory === 'all') {
+    subCategory = '';
+  }
 
-  return isInCategories && isInSubCategories && isInCountry && isInState && isInCity;
+  return (
+    checkPresent(host, category, categoryResp) &&
+    checkPresent(host, subCategory, subCategoryResp) &&
+    checkPresent(host, country, countryResp) &&
+    checkPresent(host, state, stateResp) &&
+    checkPresent(host, city, cityResp)
+  )
 }
 
 export function* getPeersFor({
@@ -108,8 +133,8 @@ export function* getPeersFor({
     const subcategoryKey = subCategory ? `subcategory:${subCategory}` : '';
 
     let extraKeywordsResponse = yield Promise.all([
-      (category !== 'All' && category !== 'featuredListings' && !subCategory) ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
-      subCategory ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
+      (category && category !== 'All' && category !== 'featuredListings') ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+      (subCategory && subCategory !== 'all') ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
     ]);
 
     if (publisherData.priority === 'local' && country) {
@@ -152,29 +177,52 @@ export function* getPeersFor({
     const allResponses = yield Promise.all(responses)
       .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
 
-    console.log('Keywords results', allResponses);
-    console.log('Extra keywords results', extraKeywordsResponse);
-
     let peersMap;
 
+    const extraKeywordsPeerHosts = extraKeywordsPeers.map(i => i.host);
+
+    const publishers = yield getAllPublishers();
+    const publisherIps = {};
+    publishers.forEach((publisher) => {
+      if (!publisherIps[publisher.publisher_ip]) {
+        publisherIps[publisher.publisher_ip] = true;
+      }
+    });
+
     if (keywords.length) {
+      const isExtraFilter = (
+        (category && category !== 'All' && category !== 'featuredListings') ||
+        (subCategory && subCategory !== 'all') ||
+        country ||
+        state ||
+        city
+      );
       peersMap = allResponses.map((response) => ({
         keyword: response.keyword ? response.keyword.substring(8) : '',
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || [])
-            .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
-              .map(i => i.host), keyPeer.host)),
+          (response.peers || []).filter(keyPeer => (
+            publisherIps[keyPeer.host] &&
+            (
+              !isExtraFilter ||
+              includes(extraKeywordsPeerHosts, keyPeer.host)
+            )
+          )),
       })).filter(({ publishers }) => publishers.length);
     } else {
       peersMap = extraKeywordsResponse.map((response) => ({
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || [])
-            .filter(keyPeer => !extraKeywordsPeers.length || includes(extraKeywordsPeers
-              .map(i => i.host), keyPeer.host)),
-      })).filter(el => el.publishers.length);
+          (response.peers || []).filter(keyPeer => (
+              publisherIps[keyPeer.host] && 
+              includes(extraKeywordsPeerHosts, keyPeer.host)
+          )),
+        })).filter(el => el.publishers.length);
     }
+
+    peersMap.forEach((peerItem) => {
+      peerItem
+    });
 
     peersMap = adjustPeersMap(peersMap);
 
@@ -190,6 +238,7 @@ export function* getPeersFor({
           subCategory,
           searchTerm,
           country: country || publisherData.country,
+          state,
           city: city || (country && publisherData.city) || '',
           searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
           fromSearchMenu

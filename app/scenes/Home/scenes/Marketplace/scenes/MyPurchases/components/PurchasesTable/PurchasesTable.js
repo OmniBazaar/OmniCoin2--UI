@@ -14,9 +14,12 @@ import {
   TableHeader,
   Input,
   Icon,
-  Image,
   Loader
 } from 'semantic-ui-react';
+import {
+  NavLink
+} from 'react-router-dom';
+
 import { debounce } from 'lodash';
 
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
@@ -35,6 +38,10 @@ const messages = defineMessages({
   id: {
     id: 'PurchasesTable.id',
     defaultMessage: 'ID'
+  },
+  title: {
+    id: 'PurchasesTable.title',
+    defaultMessage: 'Title'
   },
   count: {
     id: 'PurchasesTable.count',
@@ -105,6 +112,16 @@ class PurchasesTable extends Component {
     this.props.myPurchasesActions.setActivePage(activePage);
   };
 
+  getCurrencyAbbreviation(currency) {
+    switch (currency) {
+      case 'omnicoin':
+        return 'XOM';
+      case 'bitcoin':
+        return 'BTC';
+      default:
+        return 'XOM';
+    }
+  }
 
   render() {
     const {
@@ -148,6 +165,15 @@ class PurchasesTable extends Component {
                   >
                     {formatMessage(messages.id)}
                   </TableHeaderCell>
+                  {this.props.type === 'buy' &&
+                    <TableHeaderCell
+                      key="title"
+                      sorted={sortColumn === 'title' ? sortDirection : null}
+                      onClick={this.sortData('title')}
+                    >
+                      {formatMessage(messages.title)}
+                    </TableHeaderCell>
+                  }
                   <TableHeaderCell
                     key="id"
                     sorted={sortColumn === 'date' ? sortDirection : null}
@@ -155,15 +181,6 @@ class PurchasesTable extends Component {
                   >
                     {formatMessage(messages.date)}
                   </TableHeaderCell>
-                  {this.props.type === 'buy' &&
-                    <TableHeaderCell
-                      key="expiration_time"
-                      sorted={sortColumn === 'expiration_time' ? sortDirection : null}
-                      onClick={this.sortData('expiration_time')}
-                    >
-                      {formatMessage(messages.expirationTime)}
-                    </TableHeaderCell>
-                    }
                   <TableHeaderCell
                     key="count"
                     sorted={sortColumn === 'count' ? sortDirection : null}
@@ -198,13 +215,17 @@ class PurchasesTable extends Component {
                 {!!dataFiltered && dataFiltered.map(row =>
                     (
                       <TableRow key={hash(row)}>
-                        <TableCell>{row.id}</TableCell>
-                        <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
+                        <TableCell>
+                          <NavLink to={`/listing/${row.id}`}>
+                              {row.id}
+                          </NavLink>
+                        </TableCell>
                         {this.props.type === 'buy' &&
-                        <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
+                          <TableCell>{row.title}</TableCell>
                         }
+                        <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                         <TableCell>{row.count}</TableCell>
-                        <TableCell>{row.price} XOM</TableCell>
+                        <TableCell>{row.price} {this.getCurrencyAbbreviation(row.currencySelected)}</TableCell>
                         <TableCell>{row.publisher}</TableCell>
                         <TableCell>{row.seller}</TableCell>
                       </TableRow>
