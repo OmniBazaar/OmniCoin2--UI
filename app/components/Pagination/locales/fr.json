@@ -1,3 +1,10 @@
 {
-
+  "Pagination.ariaFirst": "First item",
+  "Pagination.contentFirst": "<< First",
+  "Pagination.ariaLast": "Last item",
+  "Pagination.contentLast": "Last >>",
+  "Pagination.ariaPrev": "Previous item",
+  "Pagination.contentPrev": "< Prev",
+  "Pagination.ariaNext": "Next item",
+  "Pagination.contentNext": "Next >"
 }

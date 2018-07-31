@@ -104,14 +104,6 @@ class Transfer extends Component {
   //   }
   // };
 
-  static escrowOptions(escrows) {
-    return escrows.map(escrow => ({
-      key: escrow.id,
-      value: escrow.id,
-      text: escrow.name
-    }));
-  }
-
   static expirationTimeOptions(formatMessage) {
     return [
       {
@@ -198,12 +190,18 @@ class Transfer extends Component {
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
-    if (!nextProps.transfer.gettingCommonEscrows
-        && nextProps.transferForm.useEscrow
-        && nextProps.transfer.commonEscrows.length === 0
-    ) {
-      this.hideEscrow();
-      toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+
+    const useEscrow = !nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow;
+
+    if (useEscrow) {
+      const { transferForm } = this.props;
+      const escrowsWithoutSeller = nextProps.transfer.commonEscrows
+        .filter(item => item.name !== transferForm.toName);
+
+      if (!nextProps.transfer.commonEscrows.length || !escrowsWithoutSeller.length) {
+        this.hideEscrow();
+        toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+      }
     } else if (this.props.transfer.gettingCommonEscrows
                 && !nextProps.transfer.gettingCommonEscrows
                 && nextProps.transferForm.useEscrow) {
@@ -220,7 +218,7 @@ class Transfer extends Component {
         this.props.change('amount', convertedAmount);
       } else {
         const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
-        this.props.change('amount', convertedAmount)
+        this.props.change('amount', convertedAmount);
       }
     }
   }
@@ -237,8 +235,20 @@ class Transfer extends Component {
     });
   }
 
+  escrowOptions(escrows = []) {
+    const { auth: { account }, transferForm: { toName } } = this.props;
+
+    return escrows
+      .filter(({ id, name }) => account.id !== id || name !== toName)
+      .map(escrow => ({
+        key: escrow.id,
+        value: escrow.id,
+        text: escrow.name
+      }));
+  }
+
   initializeEscrow(escrows) {
-    const escrowOptions = Transfer.escrowOptions(escrows);
+    const escrowOptions = this.escrowOptions(escrows);
     const expirationTimeOptions = Transfer.expirationTimeOptions(this.props.intl.formatMessage);
     this.props.changeFieldValue('escrow', escrowOptions[0].value);
     this.props.changeFieldValue('expirationTime', expirationTimeOptions[0].value);
@@ -434,12 +444,10 @@ class Transfer extends Component {
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer, transferForm } = this.props;
-    let {
-      gettingCommonEscrows,
-      commonEscrows,
-    } = this.props.transfer;
+    const { gettingCommonEscrows } = this.props.transfer;
+    let { commonEscrows } = this.props.transfer;
 
-    commonEscrows = commonEscrows.filter((item) => item.name !== transferForm.toName);
+    commonEscrows = commonEscrows.filter(item => item.name !== transferForm.toName);
 
     return (
       <div>
@@ -458,6 +466,7 @@ class Transfer extends Component {
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
+              onBlur={() => this.handleEscrowTransactionChecked(true)}
             />
             <div className="col-1" />
           </div>
@@ -526,7 +535,7 @@ class Transfer extends Component {
                   <Field
                     type="text"
                     name="escrow"
-                    options={Transfer.escrowOptions(commonEscrows)}
+                    options={this.escrowOptions(commonEscrows)}
                     component={this.renderSelectField}
                   />
                 </div>

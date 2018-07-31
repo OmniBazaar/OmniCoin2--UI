@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 import { required } from 'redux-form-validators';
+import Info from '../../images/info2.png';
 
 import { savePreferences } from '../../../../services/preferences/preferencesActions';
 import FormInputWithIconOnRight
@@ -27,7 +28,7 @@ let lastLanguage = null;
 
 class PreferencesTab extends Component {
   static validate = (values) => {
-    const { logoutTimeout, chargeFee } = values;
+    const { logoutTimeout, chargeFee, searchListingOption } = values;
     const errors = {};
     const number = value => (value && !isNaN(Number(value)));
 
@@ -128,6 +129,9 @@ class PreferencesTab extends Component {
                   component={ValidatableField}
                   validate={[required({ message: formatMessage(messages.fieldRequired) })]}
                 />
+                <div className="auto-log-out">
+                  {formatMessage(messages.autoLogOut)}
+                </div>
               </Grid.Column>
             </Grid.Row>
             {/* <div className="form-group">
@@ -226,8 +230,9 @@ class PreferencesTab extends Component {
             }
             <Grid.Row>
               <Grid.Column width={4}>
+                <span className="search-list-options">{formatMessage(messages.searchListingOptions)}</span>
                 <Popup
-                  trigger={<span>{formatMessage(messages.searchListingOptions)}</span>}
+                  trigger={<span><Image src={Info} width={20} height={20} /></span>}
                   content={formatMessage(messages.listingOptionsToolTip)}
                 />
               </Grid.Column>
@@ -238,8 +243,8 @@ class PreferencesTab extends Component {
                       name="searchListingOption"
                       component={FormRadio}
                       props={{
-                    value: 'anyKeyword'
-                  }}
+                        value: 'anyKeyword'
+                      }}
                     />
                     <span>{formatMessage(messages.byAnyKeyword)}</span>
                   </div>
@@ -251,6 +256,9 @@ class PreferencesTab extends Component {
                     <Field
                       name="searchListingOption"
                       component={FormRadio}
+                      props={{
+                        value: 'allKeywords'
+                      }}
                     />
                     <span>{formatMessage(messages.byAllKeywords)}</span>
                   </div>

@@ -177,6 +177,10 @@ export default defineMessages({
     id: 'Preferences.autoRunNote',
     defaultMessage: 'This action requires admin rights'
   },
+  autoLogOut: {
+    id: 'Preferences.autoLogOut',
+    defaultMessage: 'To disable Log Out option set 0 value in Timeout field.'
+  },
   listingOptionsToolTip: {
     id: 'Preferences.listingOptionsToolTip',
     defaultMessage: 'When more than one keyword set search will be performed ' +

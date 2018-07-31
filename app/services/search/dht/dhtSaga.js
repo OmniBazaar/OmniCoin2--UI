@@ -14,6 +14,7 @@ import DHTConnector from '../../../utils/dht-connector';
 import { searchListingsByPeersMap } from '../searchSaga';
 import AccountSettingsStorage from '../../accountSettings/accountStorage';
 import { getPreferences } from '../../preferences/services';
+import { getAllPublishers } from '../../accountSettings/services';
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -180,6 +181,14 @@ export function* getPeersFor({
 
     const extraKeywordsPeerHosts = extraKeywordsPeers.map(i => i.host);
 
+    const publishers = yield getAllPublishers();
+    const publisherIps = {};
+    publishers.forEach((publisher) => {
+      if (!publisherIps[publisher.publisher_ip]) {
+        publisherIps[publisher.publisher_ip] = true;
+      }
+    });
+
     if (keywords.length) {
       const isExtraFilter = (
         (category && category !== 'All' && category !== 'featuredListings') ||
@@ -192,20 +201,28 @@ export function* getPeersFor({
         keyword: response.keyword ? response.keyword.substring(8) : '',
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || [])
-            .filter(keyPeer => (
+          (response.peers || []).filter(keyPeer => (
+            publisherIps[keyPeer.host] &&
+            (
               !isExtraFilter ||
               includes(extraKeywordsPeerHosts, keyPeer.host)
-            )),
+            )
+          )),
       })).filter(({ publishers }) => publishers.length);
     } else {
       peersMap = extraKeywordsResponse.map((response) => ({
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || [])
-            .filter(keyPeer => includes(extraKeywordsPeerHosts, keyPeer.host)),
-      })).filter(el => el.publishers.length);
+          (response.peers || []).filter(keyPeer => (
+              publisherIps[keyPeer.host] && 
+              includes(extraKeywordsPeerHosts, keyPeer.host)
+          )),
+        })).filter(el => el.publishers.length);
     }
+
+    peersMap.forEach((peerItem) => {
+      peerItem
+    });
 
     peersMap = adjustPeersMap(peersMap);
 

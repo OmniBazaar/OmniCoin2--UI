@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Modal,
-  Form,
-  Button
-} from 'semantic-ui-react';
+import { Modal, Form } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -16,6 +12,10 @@ import { toggleAddAddressModal, addAddress } from '../../../../../../services/bl
 import './add-bitcoin-address.scss';
 
 const messages = defineMessages({
+  addSubWallet: {
+    id: 'AddBitcoinAddress.addSubWallet',
+    defaultMessage: 'Add Sub-Wallet'
+  },
   label: {
     id: 'AddBitcoinAddress.label',
     defaultMessage: 'Label (optional)'
@@ -74,6 +74,7 @@ class AddBitcoinAddress extends Component {
     const { handleSubmit } = this.props;
     return (
       <Modal size="tiny" open={isOpen} onClose={this.toggleModal} closeIcon>
+        <Modal.Header>{formatMessage(messages.addSubWallet)}</Modal.Header>
         <Modal.Content>
           <Form className="add-bitcoin-address" onSubmit={handleSubmit(this.handleSubmit)}>
             <Field
