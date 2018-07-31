@@ -22,6 +22,10 @@ const messages = defineMessages({
     id: 'LoginForm.accountDoesntExist',
     defaultMessage: 'Account doesn\'t exist'
   },
+  connectionDoesntExist: {
+    id: 'LoginForm.connectionDoesntExist',
+    defaultMessage: 'There is no internet connection. Please connect to the internet and try again'
+  },
   enterPassword: {
     id: 'LoginForm.enterPassword',
     defaultMessage: 'Enter password'
@@ -58,7 +62,13 @@ class LoginForm extends Component {
       const account = await FetchChain('getAccount', values.username);
     } catch (e) {
       console.log('ERR', e);
-      throw { username: messages.accountDoesntExist };
+      if(e.message){
+        throw { username: messages.connectionDoesntExist };
+      } else if (e.indexOf('request timed out') !== -1) {
+        throw { username: messages.accountDoesntExist };
+      } else {
+        throw { username: messages.accountDoesntExist };
+      }
     }
   };
 
