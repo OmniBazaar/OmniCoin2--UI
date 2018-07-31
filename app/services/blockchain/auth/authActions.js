@@ -18,6 +18,7 @@ const {
   getIdentityVerificationToken,
   getIdentityVerificationTokenSucceeded,
   requestPcIds,
+  requestAppVersion,
   requestReferrer,
   requestReferrerFinish,
   getAccount,
@@ -44,6 +45,7 @@ const {
   GET_IDENTITY_VERIFICATION_TOKEN: (username) => ({ username }),
   GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (token) => ({ token }),
   REQUEST_PC_IDS: () => ({}),
+  REQUEST_APP_VERSION: () => ({}),
   REQUEST_REFERRER: () => ({}),
   REQUEST_REFERRER_FINISH: (referrer) => ({ referrer }),
   GET_ACCOUNT: (username) => ({ username }),
@@ -70,5 +72,6 @@ export {
   requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
-  showTermsModal
+  showTermsModal,
+  requestAppVersion
 };

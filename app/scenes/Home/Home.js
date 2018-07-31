@@ -59,7 +59,7 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
@@ -69,19 +69,20 @@ import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 const iconSize = 20;
 
 class Home extends Component {
-
   constructor(props) {
     super(props);
     ipcRenderer.on('messageForIdentityWindow', () => {
       props.history.push('/identity-verification');
     });
   }
-  state = { visible: true };
 
-componentDidMount() {
-  this.init();
-}  
-componentWillReceiveProps(nextProps) {
+  state = {
+    visible: true
+  };
+  componentDidMount() {
+    this.init();
+  }
+  componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
@@ -93,6 +94,7 @@ componentWillReceiveProps(nextProps) {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
+    this.props.authActions.requestAppVersion();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -133,6 +135,7 @@ componentWillReceiveProps(nextProps) {
   };
 
   render() {
+    const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout *= 60000;
@@ -160,6 +163,7 @@ componentWillReceiveProps(nextProps) {
         }}
       />);
     }
+
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -238,7 +242,6 @@ componentWillReceiveProps(nextProps) {
                   />
                 </NavLink>
                 <UpdateNotification />
-
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -248,6 +251,7 @@ componentWillReceiveProps(nextProps) {
             <AccountFooter />
             <AccountBalance />
             <SocialNetworksFooter />
+            <div className="version">{`Version: ${appVersion}`}</div>
           </div>
         </div>
         <div className={homeContentClass}>
@@ -296,7 +300,7 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout, requestAppVersion }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
@@ -330,7 +334,8 @@ Home.propTypes = {
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
-    logout: PropTypes.func
+    logout: PropTypes.func,
+    requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadPreferences: PropTypes.func
