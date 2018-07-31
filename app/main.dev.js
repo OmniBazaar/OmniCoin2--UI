@@ -251,12 +251,7 @@ const processReferrer = async () => {
 
 const getAppVersion = () => {
   ipcMain.on('get-app-version', (event) => {
-    let obj;
-    fs.readFile(__dirname+'/package.json', 'utf8', function (err, data) {
-      if (err) throw err;
-      obj = JSON.parse(data);
-      event.sender.send('receive-app-version', { appVersion: obj.version });
-    });
+    event.sender.send('receive-app-version', { appVersion: app.getVersion() });
   });
 };
 
