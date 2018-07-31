@@ -256,49 +256,21 @@ export function* getIdentityVerificationToken({ payload: { username } }) {
   }
 }
 
-// Check if the user is connected to all 3 OmnibaZaar social media channels
-
-export function* receiveWelcomeBonus({ payload: { data: { values, reject, formatMessage } } }) {
-  const errors = {};
-  // Check if the user's telephone number is connected to the OmniBazaar's Telegram channel and Bot
+export function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
   try {
-    const telegramUserIdRes = yield call(AuthApi.getTelegramUserId, values.telegramPhoneNumber);
-    if (telegramUserIdRes && telegramUserIdRes.result.contact.user_id) {
-      yield call(AuthApi.getTelegramChatMember, telegramUserIdRes.result.contact.user_id);
-    } else {
-      errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
-    }
-  } catch (error) {
-    if (!error.ok) {
-      errors.telegramPhoneNumber = formatMessage(messages.invalidTelegramPhoneNumber);
-    }
-  }
-  // Check if the user's twitter name is following the OmniBazaar's Twitter account
-  try {
-    const twitterTokenRes = yield call(AuthApi.getTwitterBearerToken);
-    const twitterRes = yield call(AuthApi.checkTwitterFollowing, { token: twitterTokenRes.access_token, username: values.twitterUsername });
-    if (!twitterRes.relationship.source.following) {
-      errors.twitterUsername = formatMessage(messages.invalidTwitterUsername);
-    }
-    // Check if the user's email is in the OmniBazaar's MailChimp list
-    yield call(AuthApi.checkMailChimpSubscribed, { email: values.email });
-  } catch (error) {
-    if (error.status === 404) {
-      errors.email = formatMessage(messages.invalidMailChimpEmail);
-    }
-  }
-  // in case user doesn't follow OmniBazaar's one of the 3 social channels throw error
-  if (Object.keys(errors).length > 0) {
-    yield call(reject, new SubmissionError(errors));
-    yield put(welcomeBonusFailed());
-  } else {
+    // Check if the user is connected to all 3 OmnibaZaar social media channels
+    yield call(AuthApi.checkBonus, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
     const referrer = localStorage.getItem('referrer');
     const { currentUser } = (yield select()).default.auth;
     yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
+  } catch (error) {
+    yield call(reject, new SubmissionError(error.messages));
+    yield put(welcomeBonusFailed());
   }
 }
+
   const getDefaultReferrer = () => new Promise((resolve, reject) => {
     ipcRenderer.once('receive-referrer', (event, arg) => {
       const referrer = arg.referrer;

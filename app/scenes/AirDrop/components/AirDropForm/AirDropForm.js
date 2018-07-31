@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Field, reduxForm, change, Form, formValueSelector } from 'redux-form';
+import { Field, reduxForm, Form, formValueSelector } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
