@@ -284,7 +284,11 @@ const messages = defineMessages({
   imageSizeTooLarge: {
     id: 'AddListing.imageSizeTooLarge',
     defaultMessage: 'Image size is too large'
-  }
+  },
+  addKeywords: {
+    id: 'AddListing.addKeywords',
+    defaultMessage: 'Add keywords'
+  },
 });
 
 export default messages;
