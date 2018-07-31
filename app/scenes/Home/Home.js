@@ -59,7 +59,7 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
@@ -69,7 +69,10 @@ import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 const iconSize = 20;
 
 class Home extends Component {
-  state = { visible: true };
+  state = {
+    visible: true,
+    appVersion: ''
+  };
   
   componentDidMount() {
     this.init();
@@ -87,6 +90,8 @@ class Home extends Component {
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
+    this.props.authActions.requestAppVersion();
+
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -127,6 +132,7 @@ class Home extends Component {
   };
 
   render() {
+    const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout *= 60000;
@@ -154,6 +160,7 @@ class Home extends Component {
         }}
       />);
     }
+    
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -232,7 +239,6 @@ class Home extends Component {
                   />
                 </NavLink>
                 <UpdateNotification />
-
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -242,6 +248,7 @@ class Home extends Component {
             <AccountFooter />
             <AccountBalance />
             <SocialNetworksFooter />
+            <div className="version">{'Version: '+appVersion}</div>
           </div>
         </div>
         <div className={homeContentClass}>
@@ -290,7 +297,7 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout, requestAppVersion }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
@@ -321,7 +328,8 @@ Home.propTypes = {
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
-    logout: PropTypes.func
+    logout: PropTypes.func,
+    requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func

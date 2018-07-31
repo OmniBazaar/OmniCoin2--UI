@@ -16,7 +16,7 @@ const defaultState = {
     vote: 'all',
     language: 'en',
     isReferrer: false,
-    listingPriority: 'normal',
+    listingPriority: 50,
     publisherFee: 0.25,
     escrowFee: 1,
     searchListingOption: 'anyKeyword'

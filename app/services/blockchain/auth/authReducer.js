@@ -12,6 +12,7 @@ import {
   getLastLoginUserName,
   showTermsModal,
   getWelcomeBonusAmountSucceeded,
+  requestAppVersion
 } from './authActions';
 
 import {
@@ -30,7 +31,8 @@ const defaultState = {
   lastLoginUserName: null,
   showTermsModal: false,
   welcomeBonusAmount: null,
-  defaultReferrer: null
+  defaultReferrer: null,
+  appVersion: ''
 };
 
 const reducer = handleActions({
@@ -79,6 +81,13 @@ const reducer = handleActions({
       localStorage.setItem('macAddress', arg.macAddress);
     });
     ipcRenderer.send('get-pc-ids', null);
+    return state;
+  },
+  [requestAppVersion](state) {
+    ipcRenderer.once('receive-app-version', (event, arg) => {
+      localStorage.setItem('appVersion', arg.appVersion);
+    });
+    ipcRenderer.send('get-app-version', null);
     return state;
   },
   [requestReferrerFinish](state, { payload: { referrer } }) {

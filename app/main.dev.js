@@ -29,7 +29,6 @@ if (isProd()) {
   sourceMapSupport.install();
 }
 
-
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
   const path = require('path');
@@ -250,6 +249,12 @@ const processReferrer = async () => {
   });
 };
 
+const getAppVersion = () => {
+  ipcMain.on('get-app-version', (event) => {
+    event.sender.send('receive-app-version', { appVersion: app.getVersion() });
+  });
+};
+
 const processMacAddress = async () => {
   getmac.getMac((err, macAddress) => {
     if (err) throw err;
@@ -294,6 +299,7 @@ app.on('ready', async () => {
   await runOb2();
   await processMacAddress();
   await runBitcoinCli();
+  getAppVersion();
 
   ipcMain.on('restart-node', (event, witnessId, pubKey, privKey) => {
     restartNodeIfExists(witnessId, pubKey, privKey);
@@ -301,14 +307,12 @@ app.on('ready', async () => {
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
 
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728
   });
-
-
+  
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
