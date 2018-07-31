@@ -114,7 +114,11 @@ class Marketplace extends Component {
 
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
-        const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        let imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        if(!image){
+          imageUrl = ObNet
+        }
+
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
@@ -256,6 +260,7 @@ class Marketplace extends Component {
   }
 
   renderCryptoCategory() {
+    const categoryName = CategoriesTypes.CRYPTO_BAZAAR;
     const { formatMessage } = this.props.intl;
     const style = { backgroundImage: `url(${CryptoIcon})` };
 
@@ -264,6 +269,15 @@ class Marketplace extends Component {
         <span className="title">{formatMessage(mainCategories.cryptoBazaar)}</span>
         <div className="sub-categories">
           {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
+          <div
+            className="view-all"
+            onClick={() => this.viewAllSubCategories(categoryName)}
+            onKeyDown={() => this.viewAllSubCategories(categoryName)}
+            tabIndex={0}
+            role="link"
+          >
+            {formatMessage(messages.viewAll)}
+          </div>
         </div>
       </div>
     );

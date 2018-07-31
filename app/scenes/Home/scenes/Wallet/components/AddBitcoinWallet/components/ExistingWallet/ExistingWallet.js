@@ -7,12 +7,14 @@ import { Form, Button } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
+import publicIp from 'public-ip';
 
 import FormField from '../../../FormField/FormField';
 import ModalFooter from '../../../../../../../../components/ModalFooter/ModalFooter';
 import { toggleModal, getWallets, connectWallet } from '../../../../../../../../services/blockchain/bitcoin/bitcoinActions';
 import messages from './messages';
 import './existing-wallet.scss';
+import ip from "ip";
 
 class ExistingWallet extends Component {
   constructor(props) {
@@ -22,16 +24,29 @@ class ExistingWallet extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
     if (!nextProps.bitcoin.connectingWallet
           && this.props.bitcoin.connectingWallet) {
       if (nextProps.bitcoin.modal.isOpen) {
         this.toggleModal();
       }
-      if (nextProps.bitcoin.connectWalletError) {
-        this.showErrorToast(
-          messages.connectErrorTitle,
-          messages.connectErrorMessage
-        );
+      if (nextProps.bitcoin.connectWalletError && !this.props.bitcoin.connectWalletError) {
+        if (nextProps.bitcoin.connectWalletError.error.indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
+          publicIp.v4().then(ip => {
+            toastr.error(
+              formatMessage(messages.connectErrorTitle),
+              formatMessage(messages.ipError, { ip }),
+              {
+                timeOut: 0
+              }
+            );
+          })
+        } else {
+          this.showErrorToast(
+            messages.connectErrorTitle,
+            messages.connectErrorMessage
+          );
+        }
       }
     }
   }

@@ -42,16 +42,14 @@ import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin
 
 import './add-listing.scss';
 import { FetchChain } from 'omnibazaarjs';
+import {SATOSHI_IN_BTC, TOKENS_IN_XOM} from "../../../../../../../../utils/constants";
 
 const contactOmniMessage = 'OmniMessage';
 
-const requiredFieldValidator = [
-  required({ message: messages.fieldRequired })
-];
-
-const numericFieldValidator = [
-  numericality({ message: messages.fieldNumeric })
-];
+const requiredFieldValidator = required({ message: messages.fieldRequired });
+const numericFieldValidator = numericality({ message: messages.fieldNumeric });
+const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
+const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
@@ -174,6 +172,7 @@ class ListingForm extends Component {
   }
 
   resetForm() {
+    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -199,7 +198,9 @@ class ListingForm extends Component {
         if (error.statusCode === 413) {
           msg = formatMessage(messages.imageSizeTooLarge);
         } else if (error.message) {
-          if (error.message === 'no_changes') {
+          if (/StatusCodeError: 413/.test(error.message)) {
+            msg = formatMessage(messages.imageSizeTooLarge);
+          } else if (error.message === 'no_changes') {
             msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
           } else if (error.message === 'publisher_not_alive') {
             msg = formatMessage(messages.publisherNotReachable);
@@ -209,7 +210,7 @@ class ListingForm extends Component {
             msg = error.message;
           }
         } else {
-          msg = msg = formatMessage(messages.saveListingErrorMessage);
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
 
         this.showErrorToast(formatMessage(messages.error), msg);
@@ -255,9 +256,9 @@ class ListingForm extends Component {
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
       const {
-        uploadError, image, thumb, fileName, localFilePath, path
+        uploadError, image, thumb, fileName, localFilePath, path, file
       } = imageItem;
-      if (uploadError || (!image && !localFilePath)) {
+      if (uploadError || (!image && !localFilePath && !file)) {
         continue;
       }
 
@@ -267,11 +268,17 @@ class ListingForm extends Component {
           path,
           id: imageId
         });
+      } else if (file) {
+        data.push({
+          file,
+          id: imageId
+        });
       } else {
         data.push({
           path: this.fixImagePath(image),
           thumb: this.fixThumbPath(thumb),
-          image_name: fileName
+          image_name: fileName,
+          id: imageId
         });
       }
     }
@@ -314,8 +321,6 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
-
-    this.props.accountActions.updatePublicData();
 
     saveListing(publisher, {
       ...data,
@@ -376,7 +381,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -392,7 +397,7 @@ class ListingForm extends Component {
                 onBlur={this.onKeywordsBlur.bind(this)}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
               <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
@@ -409,7 +414,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.category),
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
@@ -421,7 +426,7 @@ class ListingForm extends Component {
                   parentCategory: category,
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -438,7 +443,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -448,7 +453,12 @@ class ListingForm extends Component {
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  // we don't want other currencies including bitcoin be less then 10^-8
+                  currency === 'OMNICOIN' ? omnicoinFieldValidator : bitcoinFieldValidator
+                ]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -483,7 +493,7 @@ class ListingForm extends Component {
                 name="bitcoin_address"
                 component={InputField}
                 className="textfield"
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
                 value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
@@ -510,7 +520,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[requiredFieldValidator, numericFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -520,7 +530,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.unitsOfMeasure)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -538,7 +548,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.from)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             {
@@ -553,7 +563,7 @@ class ListingForm extends Component {
                   props={{
                     placeholder: formatMessage(messages.to)
                   }}
-                  validate={requiredFieldValidator}
+                  validate={[requiredFieldValidator]}
                 />
               </Grid.Column>
             }
@@ -596,7 +606,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.selectPublisher),
                   keywords: this.state.keywords
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -624,7 +634,6 @@ class ListingForm extends Component {
             <Grid.Column width={12}>
               <Images
                 publisher={publisher}
-                disabled={!publisher}
               />
             </Grid.Column>
           </Grid.Row>
@@ -645,7 +654,7 @@ class ListingForm extends Component {
                 component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -667,7 +676,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -678,7 +687,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.preferredContact)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -688,7 +697,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -704,7 +713,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.country)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -714,7 +723,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
-                validate={requiredFieldValidator}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -724,7 +732,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -739,7 +747,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.state),
                   country
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -749,7 +757,7 @@ class ListingForm extends Component {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>

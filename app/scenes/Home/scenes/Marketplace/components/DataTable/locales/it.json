@@ -1,3 +1,13 @@
 {
-
+  "DataTable.default": "Default",
+  "DataTable.date": "Date",
+  "DataTable.search": "Search",
+  "DataTable.parameters": "Parameters",
+  "DataTable.save": "SAVE",
+  "DataTable.delete": "DELETE",
+  "DataTable.view": "VIEW",
+  "DataTable.error": "Error",
+  "DataTable.success": "Success",
+  "DataTable.successSave": "Successfully saved",
+  "DataTable.successDelete": "Successfully deleted"
 }

@@ -11,7 +11,7 @@ import {
   filterData,
   sortData,
   setActivePage,
-  setPagination
+  setPagination,
 } from './myPurchasesActions';
 
 const defaultState = {
@@ -34,6 +34,8 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => (
   Math.ceil(data.length / rowsPerPage)
 );
+
+
 
 const reducer = handleActions({
   [getMyPurchases](state) {
@@ -143,7 +145,7 @@ const reducer = handleActions({
       sortDirection,
       sortColumn,
     };
-  },
+  }
 }, defaultState);
 
 export default reducer;

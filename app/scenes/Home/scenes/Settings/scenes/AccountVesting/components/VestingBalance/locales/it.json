@@ -1,3 +1,18 @@
 {
-
+  "VestingBalance.success": "Success",
+  "VestingBalance.error": "Error",
+  "VestingBalance.vestingId": "VESTING #{id}",
+  "VestingBalance.vbAmount": "Vesting balance amount",
+  "VestingBalance.cdEarned": "Coin days earned",
+  "VestingBalance.cdRequired": "Coin days required",
+  "VestingBalance.daysLeft": "Days left of vesting period",
+  "VestingBalance.available": "Available to claim",
+  "VestingBalance.days": "{number} days",
+  "VestingBalance.coinDays": "{number} coin days",
+  "VestingBalance.claim": "Claim",
+  "VestingBalance.none": "UNKNOWN",
+  "VestingBalance.escrowFee": "ESCROW FEE",
+  "VestingBalance.founderFee": "FOUNDER FEE",
+  "VestingBalance.publisherFee": "PUBLISHER FEE",
+  "VestingBalance.referrerFee": "REFERRER FEE"
 }

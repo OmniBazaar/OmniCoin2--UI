@@ -6,6 +6,7 @@ import {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  awaitListingDetail,
   isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
@@ -17,10 +18,12 @@ import {
   setContinuous,
   setOmnicoinPrice,
   addListingImage,
+  removeListingImage,
   startDeleteListingImage,
   deleteListingImageSuccess,
   deleteListingImageError,
   setListingImages,
+  startUploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
   clearListingImageError,
@@ -56,6 +59,8 @@ const CoinTypes = Object.freeze({
 const defaultState = {
   listingDetail: null,
   listingDetailRequest: {
+    listingId: null,
+    wsMessageId: null,
     loading: false,
     error: null
   },
@@ -127,6 +132,7 @@ const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
   };
 });
 
+
 const storageKey = 'favoritesListings';
 
 const reducer = handleActions({
@@ -188,11 +194,13 @@ const reducer = handleActions({
       favoriteListings
     };
   },
-  [getListingDetail](state) {
+  [getListingDetail](state, { payload: { listingId } }) {
     return {
       ...state,
       listingDetail: null,
       listingDetailRequest: {
+        ...state.listingDetailRequest,
+        listingId,
         loading: true,
         error: null
       }
@@ -217,6 +225,16 @@ const reducer = handleActions({
         error: true
       }
     };
+  },
+  [awaitListingDetail](state, { payload: { listingId, wsMessageId } }) {
+    return {
+      ...state,
+      listingDetailRequest: {
+        ...state.listingDetailRequest,
+        listingId,
+        wsMessageId
+      }
+    }
   },
   [isListingFine](state, { payload: { listing } }) {
     return {
@@ -317,7 +335,6 @@ const reducer = handleActions({
         ...state.listingImages,
         [imageId]: {
           file,
-          uploading: true,
           id: imageId
         }
       }
@@ -327,6 +344,18 @@ const reducer = handleActions({
     return {
       ...state,
       listingImages: images || {}
+    };
+  },
+  [startUploadListingImage](state, { payload: { imageId } }) {
+    return {
+      ...state,
+      listingImages: {
+        ...state.listingImages,
+        [imageId]: {
+          ...state.listingImages[imageId],
+          uploading: true
+        }
+      }
     };
   },
   [uploadListingImageSuccess](state, {
@@ -344,8 +373,9 @@ const reducer = handleActions({
         image,
         thumb,
         fileName,
-        file: null
       };
+      delete imageItem.file;
+      delete imageItem.localFilePath;
 
       return {
         ...state,
@@ -364,7 +394,6 @@ const reducer = handleActions({
         ...state.listingImages[imageId],
         uploading: false,
         uploadError: error,
-        file: null
       };
 
       return {
@@ -377,6 +406,15 @@ const reducer = handleActions({
     }
 
     return state;
+  },
+  [removeListingImage](state, { payload: { imageId } }) {
+    const listingImages = { ...state.listingImages };
+    delete listingImages[imageId];
+
+    return {
+      ...state,
+      listingImages
+    };
   },
   [startDeleteListingImage](state, { payload: { imageId } }) {
     if (state.listingImages[imageId]) {

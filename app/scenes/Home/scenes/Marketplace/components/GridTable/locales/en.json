@@ -3,11 +3,12 @@
   "GridTable.delete": "DELETE",
   "GridTable.noData": "No data found.",
   "GridTable.confirmDeleteTitle": "Confirm",
-  "GridTable.confirmDeleteMessage": "Are you sure you want to delete this listing ?",
+  "GridTable.confirmDeleteMessage": "Are you sure you want to delete this listing?",
   "GridTable.ok": "OK",
   "GridTable.cancel": "Cancel",
   "GridTable.error": "Error",
   "GridTable.success": "Success",
-  "GridTable.deleteListingError": "Having error when delete listing",
-  "GridTable.deleteListingSuccess": "Listing is deleted successfully"
+  "GridTable.deleteListingError": "An error occured while deleting the listing.",
+  "GridTable.deleteListingSuccess": "Listing was deleted successfully.",
+  "GridTable.removeFromFavorites": "REMOVE FROM FAVORITES"
 }

@@ -118,11 +118,11 @@ async function commitProcessors(processors, toggledProcessors, account, password
 
 
 async function processProcessors(processors) {
-  const filteredPr = await Promise.all(processors.map(el => fetchAccount(el.witness_account).then(account => ({
+  const filteredProcessors = await Promise.all(processors.map(el => fetchAccount(el.witness_account).then(account => ({
     ...el,
     witness_account: account
   }))));
-  return _.sortBy(filteredPr, ['pop_score'], ['desc']).map((el, index) => ({
+  return _.orderBy(filteredProcessors, ['witness_account.pop_score'], ['desc']).map((el, index) => ({
     ...el,
     rank: index + 1
   }));

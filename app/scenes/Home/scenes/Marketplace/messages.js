@@ -271,7 +271,7 @@ export default defineMessages({
   },
   omniBazaarFeatures: {
     id: 'Marketplace.omniBazaarFeatures',
-    defaultMessage: 'OmniBazaar Features and Benefits'
+    defaultMessage: 'OmniBazaar Feature'
   },
   omniBazaarFeature: {
     id: 'Marketplace.omniBazaarFeature',
@@ -342,12 +342,11 @@ export default defineMessages({
     defaultMessage: 'No listings were found.'
   },
   searchingForPublishers: {
-    id: 'SearchResults.searchingForPublishers',
+    id: 'Marketplace.searchingForPublishers',
     defaultMessage: 'Searching for publishers'
   },
   loadingListings: {
-    id: 'SearchMenu.loadingListings',
+    id: 'Marketplace.loadingListings',
     defaultMessage: 'Loading listings'
-  },
-
+  }
 });

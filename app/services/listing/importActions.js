@@ -5,13 +5,19 @@ const {
   importFiles,
   removeFile,
   removeAllFiles,
-  sortImportData
+  sortImportData,
+  updateFileItemCategory,
+  updateFileItemSubcategory,
 } = createActions({
   STAGE_FILE: (file, defaultValues, vendor) => ({ file, defaultValues, vendor }),
   IMPORT_FILES: ({ publisher, filesToImport }) => ({ publisher, filesToImport }),
   REMOVE_FILE: (fileIndex) => ({ fileIndex }),
   REMOVE_ALL_FILES: () => ({}),
   SORT_IMPORT_DATA: (sortColumn) => ({ sortColumn }),
+  UPDATE_FILE_ITEM_CATEGORY: ({ category, index, fileIndex }) => ({ category, index, fileIndex }),
+  UPDATE_FILE_ITEM_SUBCATEGORY: ({ subcategory, index, fileIndex }) => ({
+    subcategory, index, fileIndex
+  }),
 });
 
 export {
@@ -19,5 +25,7 @@ export {
   importFiles,
   removeFile,
   removeAllFiles,
-  sortImportData
+  sortImportData,
+  updateFileItemCategory,
+  updateFileItemSubcategory,
 };

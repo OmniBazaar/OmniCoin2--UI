@@ -26,6 +26,7 @@ import Dollar from '../../../../../../assets/images/currency-icons/dollar.png';
 import Euro from '../../../../../../assets/images/currency-icons/euro.png';
 import Btc from '../../../../../../assets/images/currency-icons/btc.png';
 import Omni from '../../../../../../assets/images/currency-icons/omnic.svg';
+import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import {
   setPaginationGridTable,
@@ -199,8 +200,11 @@ class GridTable extends Component {
                   (
                     <TableRow key={hash(row)} className="items">
                       {row.map(item => {
-                        const image = item.ip ?
+                        let image = item.ip ?
                           `http://${item.ip}/publisher-images/${item.images && item.images[0] ? item.images[0].thumb : ''}` : null; // todo
+                        if(!item.images.length) {
+                          image = ObNet
+                        }
                         const style = image ? { backgroundImage: `url(${image})` } : {};
                         let { description } = item;
                         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;

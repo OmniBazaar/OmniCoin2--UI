@@ -2,7 +2,9 @@
   .check-form {
     .description {
       margin-bottom: 30px;
-
+      .restart {
+        margin-top: 5px;
+      }
       img {
         margin-right: 12px;
       }
@@ -70,4 +72,8 @@
 .labels {
   display: flex;
   align-items: center;
+}
+
+.vote-fee-cont {
+  color: #ff0000;
 }

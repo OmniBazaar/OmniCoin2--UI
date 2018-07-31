@@ -207,7 +207,7 @@ const messages = defineMessages({
   },
   saveListingErrorMessage: {
     id: 'AddListing.saveListingErrorMessage',
-    defaultMessage: 'Have error when saving listing'
+    defaultMessage: 'Save Listing'
   },
   saveListingSuccessMessage: {
     id: 'AddListing.saveListingSuccessMessage',
@@ -244,6 +244,14 @@ const messages = defineMessages({
   fieldNumeric: {
     id: 'AddListing.fieldNumeric',
     defaultMessage: 'Should be a number'
+  },
+  omnicoinFieldValidator: {
+    id: 'AddListing.omnicoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00001'
+  },
+  bitcoinFieldValidator: {
+    id: 'AddListing.bitcoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.000001'
   },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',

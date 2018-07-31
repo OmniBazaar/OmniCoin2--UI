@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'Settings.xom',
     defaultMessage: 'XOM'
   },
+  btc: {
+    id: 'Settings.btc',
+    defaultMessage: 'BTC'
+  },
   accountId: {
     id: 'Settings.accountId',
     defaultMessage: 'Account ID'

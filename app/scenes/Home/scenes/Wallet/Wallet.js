@@ -5,10 +5,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Tab, Image, Loader } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
+const { shell } = require('electron');
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
@@ -32,6 +33,7 @@ import Settings from '../Settings/Settings';
 import './wallet.scss';
 import { CoinTypes } from './constants';
 import { TOKENS_IN_XOM } from '../../../../utils/constants';
+import publicIp from "public-ip";
 
 class Wallet extends Component {
   constructor(props) {
@@ -43,6 +45,7 @@ class Wallet extends Component {
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
+    this.onClickRefreshWallets = this.onClickRefreshWallets.bind(this);
   }
 
   componentWillMount() {
@@ -53,7 +56,19 @@ class Wallet extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.bitcoin.error && !this.props.bitcoin.error) {
-      toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+      if (nextProps.bitcoin.error.indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
+        publicIp.v4().then(ip => {
+          toastr.error(
+            formatMessage(messages.error),
+            formatMessage(messages.ipError, { ip }),
+            {
+              timeOut: 0
+            }
+          );
+        });
+      } else {
+        toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+      }
     }
   }
 
@@ -86,6 +101,16 @@ class Wallet extends Component {
     this.props.bitcoinActions.toggleAddAddressModal();
   }
 
+  onClickRefreshWallets() {
+    this.props.bitcoinActions.getWallets();
+  }
+
+  openLink(e, path) {
+    e.preventDefault();
+    shell.openExternal(path);
+  }
+
+
   openWalletModal() {
 
   }
@@ -98,6 +123,7 @@ class Wallet extends Component {
 
   getBitcoinContent() {
     const { wallets, guid } = this.props.bitcoin;
+    const { formatMessage } = this.props.intl;
     const elements = wallets.map((wallet, index) => (
       <BitcoinWalletDetail
         key={hash(wallet)}
@@ -119,7 +145,33 @@ class Wallet extends Component {
         />
                     </div>);
     }
-    return elements;
+    if (this.props.bitcoin.isGettingWallets) {
+      return (
+        <div className="content">
+          <div className="load-container"><Loader inline active/></div>
+        </div>
+      );
+    }
+    return (
+      <div className="bitcoin-addresses">
+        <div className="content">
+          {elements}
+        </div>
+        <div className="note">
+          <span>
+            {formatMessage(messages.bitcoinNote)}{" "}
+            <a href="https://login.blockchain.com/" onClick={(e) => this.openLink(e, "https://login.blockchain.com/")}>
+              login.blockchain.com
+            </a>
+          </span><br/>
+          {formatMessage(messages.instructions)}<br/>
+          {formatMessage(messages.step1)}<br/>
+          {formatMessage(messages.step2)}<br/>
+          {formatMessage(messages.step3)}<br/>
+          {formatMessage(messages.step4)}<br/>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -132,12 +184,15 @@ class Wallet extends Component {
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
-          hasButton={this.state.activeTab}
+          hasButton={this.state.activeTab === 1}
           buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
           loading={this.props.bitcoin.loading}
           onClick={this.onClickAddWallet}
+          refreshButton={this.state.activeTab === 1}
+          refreshButtonContent={formatMessage(messages.refreshWallet)}
+          onRefresh={this.onClickRefreshWallets}
         />
         <div className="body">
           <Tab
@@ -165,13 +220,7 @@ class Wallet extends Component {
                  render: () =>
                    (<Tab.Pane>
                      {this.props.bitcoin.wallets.length ?
-                       <div className="content">
-                         {
-                          this.props.bitcoin.isGettingWallets ?
-                            <div className="load-container"><Loader inline active /></div> :
-                          this.getBitcoinContent()
-                        }
-                       </div>
+                       this.getBitcoinContent()
                      :
                        <div className="no-wallet-yet">
                          <span>{formatMessage(messages.noWalletYet)}</span>

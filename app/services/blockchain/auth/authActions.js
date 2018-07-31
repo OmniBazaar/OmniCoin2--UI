@@ -16,6 +16,7 @@ const {
   getWelcomeBonusAmountFailed,
   requestPcIds,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal
@@ -38,6 +39,7 @@ const {
   GET_WELCOME_BONUS_AMOUNT_FAILED: () => {},
   REQUEST_PC_IDS: () => ({}),
   REQUEST_REFERRER: () => ({}),
+  REQUEST_REFERRER_FINISH: (referrer) => ({ referrer }),
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
   SHOW_TERMS_MODAL: () => ({}),
@@ -56,6 +58,7 @@ export {
   getWelcomeBonusAmountFailed,
   requestPcIds,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal

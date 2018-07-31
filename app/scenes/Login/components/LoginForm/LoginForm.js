@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
   noAccount: {
     id: 'LoginForm.noAccount',
-    defaultMessage: 'Do not have an account?'
+    defaultMessage: 'Don\'t have an account yet?'
   },
   signup: {
     id: 'LoginForm.signup',

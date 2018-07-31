@@ -64,27 +64,26 @@ import { loadListingDefault } from '../../services/listing/listingDefaultsAction
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
 const iconSize = 20;
 
 class Home extends Component {
   state = { visible: true };
-
-  componentWillMount() {
-    this.props.preferencesActions.loadPreferences();
+  
+  componentDidMount() {
+    this.init();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
-
-    if (!this.props.auth.currentUser && nextProps.auth.currentUser) {
-      this.init();
-    }
   }
 
   init() {
+    this.props.preferencesActions.loadPreferences();
+    this.props.bitcoinActions.getWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
@@ -297,7 +296,8 @@ export default connect(
     preferencesActions: bindActionCreators({
       loadPreferences
     }, dispatch),
-    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
+    bitcoinActions: bindActionCreators({ getWallets }, dispatch),
   })
 )(Home);
 
