@@ -189,7 +189,7 @@ MyListings.propTypes = {
     filterMyListings: PropTypes.func
   }),
   listing: PropTypes.shape({
-    myListings: PropTypes.object,
+    myListings: PropTypes.arrayOf(PropTypes.object),
     myListingsFiltered: PropTypes.array,
     myListingsCurrency: PropTypes.string,
     myListingsCategory: PropTypes.string,

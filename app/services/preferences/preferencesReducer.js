@@ -14,7 +14,7 @@ const defaultState = {
     vote: 'all',
     language: 'en',
     isReferrer: false,
-    listingPriority: 'normal',
+    listingPriority: 50,
     chargeFee: 0.25,
     searchListingOption: 'anyKeyword'
   },
