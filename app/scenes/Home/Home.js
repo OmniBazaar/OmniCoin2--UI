@@ -62,7 +62,7 @@ import { setActiveCategory } from '../../services/marketplace/marketplaceActions
 import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
-import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
@@ -89,7 +89,7 @@ class Home extends Component {
   }
 
   init() {
-    this.props.preferencesActions.loadPreferences();
+    this.props.preferencesActions.loadLocalPreferences();
     this.props.bitcoinActions.getWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
@@ -304,7 +304,7 @@ export default connect(
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
@@ -338,7 +338,7 @@ Home.propTypes = {
     requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func

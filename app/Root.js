@@ -19,7 +19,7 @@ import {
   requestReferrer
 } from './services/blockchain/auth/authActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
-import { loadPreferences } from './services/preferences/preferencesActions';
+import { loadLocalPreferences } from './services/preferences/preferencesActions';
 import { getConfig } from './services/config/configActions';
 import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
@@ -31,7 +31,7 @@ class Root extends Component {
     this.props.authActions.requestReferrer();
     this.props.authActions.getLastLoginUserName();
     this.props.listingDefaultsActions.loadListingDefault();
-    this.props.preferencesActions.loadPreferences();
+    this.props.preferencesActions.loadLocalPreferences();
     this.props.updateNotificationActions.checkUpdate();
   }
 
@@ -91,7 +91,7 @@ Root.propTypes = {
     loadListingDefault: PropTypes.func
   }).isRequired,
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   preferences: PropTypes.shape({
     preferences: PropTypes.shape({
@@ -113,7 +113,7 @@ export default connect(
       loadListingDefault
     }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
     configActions: bindActionCreators({
       getConfig

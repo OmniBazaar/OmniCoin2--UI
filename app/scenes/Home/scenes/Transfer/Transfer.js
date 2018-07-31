@@ -104,6 +104,14 @@ class Transfer extends Component {
   //   }
   // };
 
+  static escrowOptions(escrows) {
+    return escrows.map(escrow => ({
+      key: escrow.id,
+      value: escrow.id,
+      text: `${escrow.name} (${escrow.escrow_fee / 100}% Fee)`
+    }));
+  }
+
   static expirationTimeOptions(formatMessage) {
     return [
       {
