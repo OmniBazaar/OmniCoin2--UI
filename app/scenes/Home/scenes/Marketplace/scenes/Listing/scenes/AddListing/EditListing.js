@@ -23,11 +23,11 @@ class EditListing extends Component {
     const { listingDetail } = this.props;
     return (
       <div>
-        { listingDetail && <ListingForm editingListing={listingDetail} /> }
-        { !listingDetail &&
-          <div className='not-found'>
-            {formatMessage(messages.listingNotFound)}
-          </div>
+        { listingDetail ?
+          <ListingForm editingListing={listingDetail} />
+          : <div className='not-found'>
+              {formatMessage(messages.listingNotFound)}
+            </div>
         }
       </div>
     );

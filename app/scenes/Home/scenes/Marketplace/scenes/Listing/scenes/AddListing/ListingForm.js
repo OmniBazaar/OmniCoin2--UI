@@ -590,7 +590,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.selectPriorityFee),
                   priorityFees
                 }}
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
