@@ -4,7 +4,7 @@
 import cryptoJs from 'crypto-js';
 import { wrapRequest } from '../../utils';
 
-const apiURL = 'http://localhost:5000/api';
+const apiURL = 'http://18.204.40.151:3000/api';
 
 
 export const checkBonus = wrapRequest(async (data) => fetch(`${apiURL}/bonus-check`, {
