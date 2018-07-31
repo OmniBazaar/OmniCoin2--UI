@@ -12,6 +12,7 @@ import {
   getLastLoginUserName,
   showTermsModal,
   getWelcomeBonusAmountSucceeded,
+  welcomeBonusSucceeded,
   requestAppVersion
 } from './authActions';
 
@@ -31,6 +32,8 @@ const defaultState = {
   lastLoginUserName: null,
   showTermsModal: false,
   welcomeBonusAmount: null,
+  isWelcomeBonusAvailable: null,
+  identityVerificationToken: null,
   defaultReferrer: null,
   appVersion: ''
 };
@@ -109,6 +112,10 @@ const reducer = handleActions({
     error: action.error,
     loading: false
   }),
+  WELCOME_BONUS_FAILED: state => ({
+    ...state,
+    loading: false
+  }),
   LOGIN_SUCCEEDED: (state, action) => {
     storeCurrentUser(action.user);
     return {
@@ -124,10 +131,15 @@ const reducer = handleActions({
     return {
       ...state,
       currentUser: action.user,
+      isWelcomeBonusAvailable: action.isWelcomeBonusAvailable,
       error: null,
       loading: false
     };
   },
+  GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (state, action) => ({
+    ...state,
+    identityVerificationToken: action.token
+  }),
   SIGNUP_FAILED: (state, action) => ({
     ...state,
     currentUser: null,
@@ -146,6 +158,11 @@ const reducer = handleActions({
     error,
     isAccountLoading: false
   }),
+  RECEIVE_WELCOME_BONUS: (state) => ({
+    ...state,
+    error: null,
+    loading: true
+  }),
   [showTermsModal](state) {
     return {
       ...state,
@@ -156,6 +173,12 @@ const reducer = handleActions({
     return ({
       ...state,
       welcomeBonusAmount: amount
+    });
+  },
+  [welcomeBonusSucceeded](state) {
+    return ({
+      ...state,
+      isWelcomeBonusAvailable: false
     });
   },
 }, defaultState);
