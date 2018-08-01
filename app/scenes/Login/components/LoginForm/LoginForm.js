@@ -62,10 +62,8 @@ class LoginForm extends Component {
       const account = await FetchChain('getAccount', values.username);
     } catch (e) {
       console.log('ERR', e);
-      if(e.message){
+      if(!navigator.onLine){
         throw { username: messages.connectionDoesntExist };
-      } else if (e.indexOf('request timed out') !== -1) {
-        throw { username: messages.accountDoesntExist };
       } else {
         throw { username: messages.accountDoesntExist };
       }
