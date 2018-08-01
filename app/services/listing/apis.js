@@ -21,7 +21,7 @@ let authHeaders = null;
 const listingProps = [
   'listing_title', 'listing_type', 'listing_id', 'category',
   'subcategory', 'price', 'currency', 'price_using_btc',
-  'bitcoin_address', 'price_using_omnicoin', 'condition',
+  'bitcoin_address',  'price_using_eth', 'ethereum_address', 'price_using_omnicoin', 'condition',
   'quantity', 'units', 'start_date', 'end_date', 'continuous',
   'images', 'description', 'keywords', 'name', 'contact_type',
   'contact_info', 'country', 'address', 'city', 'post_code',

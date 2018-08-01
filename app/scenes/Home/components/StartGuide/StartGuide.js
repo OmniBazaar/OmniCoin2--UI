@@ -98,11 +98,11 @@ const messages = defineMessages({
   },
   earnBySelling: {
     id: 'StartGuide.earnBySelling',
-    defaultMessage: 'Earn OmniCoins and Bitcoins by Selling in the Marketplace'
+    defaultMessage: 'Earn OmniCoins, Bitcoins and Ethereum by Selling in the Marketplace'
   },
   earnBySellingDesc: {
     id: 'StartGuide.earnBySellingDesc',
-    defaultMessage: 'Of course, you can also earn OmniCoins (and bitcoins) by selling goods or services in the marketplace. Purchasers will pay you in one of these cryptocurrencies, and you will have more coins to spend. You can also trade your local currency for bitcoins or OmniCoins -- either by private transactions through the OmniBazaar marketplace, or through a cryptocurrency exchange business on the Internet. Exchanges that list OmniCoins include [coming soon].'
+    defaultMessage: 'Of course, you can also earn OmniCoins (and bitcoins or ethereum) by selling goods or services in the marketplace. Purchasers will pay you in one of these cryptocurrencies, and you will have more coins to spend. You can also trade your local currency for bitcoins or OmniCoins -- either by private transactions through the OmniBazaar marketplace, or through a cryptocurrency exchange business on the Internet. Exchanges that list OmniCoins include [coming soon].'
   },
   goShopping: {
     id: 'StartGuide.goShopping',

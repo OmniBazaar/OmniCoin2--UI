@@ -478,6 +478,7 @@ ImportListings.propTypes = {
     subcategory: PropTypes.string,
     currency: PropTypes.string,
     price_using_btc: PropTypes.bool,
+    price_using_eth: PropTypes.bool,
     price_using_omnicoin: PropTypes.bool,
     description: PropTypes.string,
     images: PropTypes.object,

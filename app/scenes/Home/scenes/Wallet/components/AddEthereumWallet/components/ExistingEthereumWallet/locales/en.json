@@ -1,0 +1,12 @@
+{
+  "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key",
+  "ExistingEthereumWallet.pleaseEnter": "Please Enter",
+  "ExistingEthereumWallet.cancel": "CANCEL",
+  "ExistingEthereumWallet.connect": "CONNECT",
+  "NewEthereumWallet.connectErrorTitle": "Connect error",
+  "NewEthereumWallet.connectErrorMessage": "Having error when conneting wallet",
+  "NewEthereumWallet.chooseOption": "Choose option to add wallet",
+  "NewEthereumWallet.usingPrivateKey": "Using Private Key",
+  "NewEthereumWallet.usingBrainKey": "Using Brain Key",
+  "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key"
+}
