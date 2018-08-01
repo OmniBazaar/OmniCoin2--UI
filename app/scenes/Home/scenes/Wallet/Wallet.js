@@ -243,7 +243,7 @@ class Wallet extends Component {
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
           hasButton={this.state.activeTab}
-          buttonContent={this.state.activeTab == 1 ? formatMessage(messages.addWallet) : formatMessage(messages.addEthereumWallet)}
+          buttonContent={formatMessage(messages.addWallet)}
           className="button--green-bg"
           title="Wallets"
           loading={this.state.activeTab == 1 ? this.props.bitcoin.loading : this.props.ethereum.loading}

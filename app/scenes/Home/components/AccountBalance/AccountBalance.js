@@ -50,6 +50,15 @@ class AccountBalance extends Component {
     return balance / SATOSHI_IN_BTC;
   }
 
+  getEthBalance() {
+    const { balance } = this.props.ethereum;
+    let ethereumBalance = 0;
+    if (balance) {
+      ethereumBalance = balance
+    }
+    return ethereumBalance;
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     return (
@@ -64,6 +73,9 @@ class AccountBalance extends Component {
           </div>
           <div className="balance">
             {this.getBtcBalance()} {formatMessage(messages.btc)}
+          </div>
+          <div className="balance">
+            {this.getEthBalance()} {formatMessage(messages.eth)}
           </div>
         </div>
       </div>
@@ -87,7 +99,8 @@ export default connect(
   state => ({
     auth: state.default.auth,
     blockchainWallet: state.default.blockchainWallet,
-    bitcoin: state.default.bitcoin
+    bitcoin: state.default.bitcoin,
+    ethereum: state.default.ethereum
   }),
   (dispatch) => ({
     walletActions: bindActionCreators({

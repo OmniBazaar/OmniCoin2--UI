@@ -65,6 +65,7 @@ import { restartNode } from '../../services/blockchain/connection/connectionActi
 import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
+import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
 
 const iconSize = 20;
 
@@ -91,6 +92,7 @@ class Home extends Component {
   init() {
     this.props.preferencesActions.loadLocalPreferences();
     this.props.bitcoinActions.getWallets();
+    this.props.ethereumActions.getEthereumWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
@@ -313,6 +315,7 @@ export default connect(
     }, dispatch),
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
+    ethereumActions: bindActionCreators({ getEthereumWallets }, dispatch),
   })
 )(Home);
 
