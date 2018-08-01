@@ -69,7 +69,7 @@ class Settings extends Component {
     const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
 
-    if (coinType === CoinTypes.BIT_COIN) {
+    if (coinType === CoinTypes.BIT_COIN || coinType === CoinTypes.ETHEREUM) {
       return (<Tab
         className="tabs"
         key={0}

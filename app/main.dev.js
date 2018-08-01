@@ -290,6 +290,22 @@ app.on('window-all-closed', () => {
   }
 });
 
+// shouldQuit will be truthy if another instance of this app attempts to start
+// and therefore, we'll finish the process
+const shouldQuit = app.makeSingleInstance(() => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
+
 
 app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
@@ -312,7 +328,7 @@ app.on('ready', async () => {
     width: 1024,
     height: 728
   });
-  
+
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event

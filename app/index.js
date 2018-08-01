@@ -26,6 +26,7 @@ import {
   walletSubscriber,
   processorsSubscriber,
   bitcoinSubscriber,
+  ethereumSubscriber,
   transferSubscriber,
   dhtSubscriber,
   searchSubscriber,
@@ -79,6 +80,7 @@ sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);
+sagaMiddleware.run(ethereumSubscriber);
 sagaMiddleware.run(searchSubscriber);
 sagaMiddleware.run(wsMarketplaceSubscriber);
 sagaMiddleware.run(dhtSubscriber);

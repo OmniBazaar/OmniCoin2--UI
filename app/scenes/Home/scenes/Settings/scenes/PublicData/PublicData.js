@@ -45,6 +45,10 @@ const messages = defineMessages({
     id: 'PublicData.btcAddressTitle',
     defaultMessage: 'Bitcoin address'
   },
+  ethAddressTitle: {
+    id: 'Setting.ethAddressTitle',
+    defaultMessage: 'Ethereum address'
+  },
   publisherTitle: {
     id: 'PublicData.publisherTitle',
     defaultMessage: 'I would like to run a "shop" and publish listings for other users.'
@@ -316,8 +320,9 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth, bitcoin: { wallets } } = this.props;
+    const { account, auth, bitcoin: { wallets }, ethereum } = this.props;
     const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
+    const ethWalletAddress = ethereum.address
 
     return (
       <div className="check-form">
@@ -472,10 +477,14 @@ PublicData.propTypes = {
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
   }),
+  ethereum: PropTypes.shape({
+    wallet: PropTypes.object,
+  }),
 };
 
 PublicData.defaultProps = {
   bitcoin: {},
+  ethereum: {},
   accountSettingsActions: {},
   account: {},
   intl: {},

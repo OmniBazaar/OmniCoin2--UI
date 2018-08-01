@@ -7,6 +7,7 @@ import { transferSubscriber } from './transfer/transferSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
+import { ethereumSubscriber } from './blockchain/ethereum/EthereumSaga';
 import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
 import { searchSubscriber } from './search/searchSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
@@ -28,6 +29,7 @@ export {
   walletSubscriber,
   processorsSubscriber,
   bitcoinSubscriber,
+  ethereumSubscriber,
   transferSubscriber,
   dhtSubscriber,
   wsMarketplaceSubscriber,

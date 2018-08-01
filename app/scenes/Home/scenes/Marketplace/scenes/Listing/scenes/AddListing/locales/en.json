@@ -14,6 +14,7 @@
   "AddListing.pricePerItem": "Price per item",
   "AddListing.na": "N/A",
   "AddListing.bitcoinPrice": "Show Bitcoin Price",
+  "AddListing.ethereumPrice": "Show Ethereum Price",
   "AddListing.omnicoinPrice": "Show Omnicoin Price",
   "AddListing.additionalInfo": "Additional Info",
   "AddListing.condition": "Enter condition",
