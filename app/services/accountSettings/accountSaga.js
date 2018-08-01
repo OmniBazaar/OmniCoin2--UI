@@ -136,8 +136,9 @@ export function* getRecentTransactions({ payload: { coinType } }) {
       yield historyStorage.refresh(currentUser);
       yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.ETHEREUM) {
-      historyStorage = new EthereumHistory(ethereum.address);
-      yield historyStorage.loadTransactions()
+      const historyStorage = new EthereumHistory(ethereum.address);
+      yield historyStorage.loadTransactions();
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.BIT_COIN) {
       const { wallets } = (yield select()).default.bitcoin;
       const res = yield call(BitcoinApi.getHistory, wallets, 10000, 0);
