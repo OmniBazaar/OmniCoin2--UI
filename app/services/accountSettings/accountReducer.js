@@ -63,6 +63,7 @@ const defaultState = {
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
+  loadingRecentTransactions: false,
   error: null,
   privateData: {
     firstname: '',
@@ -388,7 +389,7 @@ const reducer = handleActions({
       recentTransactionsFiltered: [],
       recentTransactionsVisible: [],
       coinType,
-      loading: true,
+      loadingRecentTransactions: true,
       error: null
     };
   },
@@ -397,10 +398,9 @@ const reducer = handleActions({
       ...item,
       statusText: getBadgeClass(item.type),
     }));
-    console.log('CHANGED TRANSACTIONS ', changedTransactions);
     return {
       ...state,
-      loading: false,
+      loadingRecentTransactions: false,
       error: null,
       recentTransactions: changedTransactions,
       recentTransactionsFiltered: changedTransactions,
@@ -408,7 +408,7 @@ const reducer = handleActions({
   },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
-    loading: false,
+    loadingRecentTransactions: false,
     error
   }),
   [filterData](state, { payload: { filterText } }) {

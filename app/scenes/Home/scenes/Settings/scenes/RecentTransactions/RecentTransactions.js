@@ -141,7 +141,7 @@ class RecentTransactions extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.account.loading && !nextProps.account.loading) {
+    if (this.props.account.loadingRecentTransactions && !nextProps.account.loadingRecentTransactions) {
       this.props.accountSettingsActions.sortData('date', 'descending');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
@@ -183,12 +183,11 @@ class RecentTransactions extends Component {
       totalPages,
       sortColumn,
       recentTransactionsVisible,
-      loading,
+      loadingRecentTransactions,
       showDetails
     } = this.props.account;
     const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
-    console.log('REC ', recentTransactionsVisible, coinType);
     return (
       <div className="recent-transactions">
         <div className="data-table">
@@ -209,7 +208,7 @@ class RecentTransactions extends Component {
             </div>
           </div>
           <div className="table-container">
-            {loading || coinType !== this.props.account.coinType ? <Loader active inline="centered" /> :
+            {loadingRecentTransactions || coinType !== this.props.account.coinType ? <Loader active inline="centered" /> :
             <Table {...this.props.tableProps}>
               <TableHeader>
                 <TableRow>
@@ -369,7 +368,7 @@ RecentTransactions.propTypes = {
     totalPages: 1,
     sortColumn: 'date',
     sortDirection: 'descending',
-    loading: PropTypes.bool
+    loadingRecentTransactions: PropTypes.bool
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
