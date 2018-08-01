@@ -304,7 +304,6 @@ const shouldQuit = app.makeSingleInstance(() => {
 
 if (shouldQuit) {
   app.quit();
-  return;
 }
 
 
