@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import hash from 'object-hash';
+import { injectIntl } from 'react-intl';
 
 import { Button, Image } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -27,8 +28,11 @@ import {
   setActiveMessage,
   showReplyModal
 } from '../../../../services/mail/mailActions';
-
 import Header from '../../../../components/Header';
+
+import { purchaseInfoSubject } from "../../../../services/mail/mailSaga";
+
+import mailMessages from './messages';
 
 import './mail.scss';
 
@@ -110,6 +114,34 @@ class Mail extends Component {
     this.props.mailActions.loadFolder(username, MailTypes.SENT);
     this.props.mailActions.loadFolder(username, MailTypes.DELETED);
     this.changeFolder(MailTypes.INBOX);
+  }
+
+  getSubject(message) {
+    const { formatMessage } = this.props.intl;
+    if (message.subject === purchaseInfoSubject) {
+      const body = JSON.parse(message.body);
+      console.log("MESSAGE BODY ", body);
+      return formatMessage(mailMessages.purchaseSubject, {
+        buyer: message.user,
+        listing: body.title
+      })
+    } else {
+      return message.subject;
+    }
+  }
+
+  getBody(message) {
+    const { formatMessage } = this.props.intl;
+    if (message.subject === purchaseInfoSubject) {
+      const body = JSON.parse(message.body);
+      return formatMessage(mailMessages.purchaseBody, {
+        buyer: message.user,
+        number: body.listingCount,
+        listing: body.title,
+      })
+    } else {
+      return message.body;
+    }
   }
 
   subscribe() {
@@ -211,7 +243,7 @@ class Mail extends Component {
               <div className="date">{creationTime}</div>
             </div>
             <div className="title">
-              {message.subject}
+              {this.getSubject(message)}
             </div>
           </div>
         );
@@ -246,7 +278,7 @@ class Mail extends Component {
           </div>
           <div className="mail-title">
             <div className="title">
-              {message.subject}
+              {this.getSubject(message)}
             </div>
             <div>
               { this.props.mail.activeFolder === MailTypes.INBOX &&
@@ -257,7 +289,7 @@ class Mail extends Component {
           </div>
         </div>
         <div className="message-body">
-          {message.body}
+          {this.getBody(message)}
         </div>
       </div>
     );
@@ -375,4 +407,4 @@ export default connect(
       showReplyModal,
     }, dispatch),
   }),
-)(Mail);
+)(injectIntl(Mail));

@@ -27,6 +27,7 @@ import { makeEthereumPayment } from '../blockchain/ethereum/EthereumSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
 import { TOKENS_IN_XOM } from '../../utils/constants';
 import {addPurchase} from "../marketplace/myPurchases/myPurchasesActions";
+import { sendPurchaseInfoMail } from "../mail/mailActions";
 
 export function* transferSubscriber() {
   yield all([
@@ -73,8 +74,11 @@ function* submitOmniCoinTransfer(data) {
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
-    yield put(addPurchase(data.payload.data));
     yield put(getAccountBalance(account));
+    if (data.payload.data.listingId) {
+      yield put(addPurchase(data.payload.data));
+      yield put(sendPurchaseInfoMail(senderNameStr, toNameStr, JSON.stringify(data.payload.data)))
+    }
   } catch (error) {
     let e = JSON.stringify(error);
     console.log('ERROR', error);
@@ -137,7 +141,7 @@ export function* submitTransfer(data) {
       break;
     case 'ethereum':
       yield fork(submitEthereumTransfer, data);
-      break
+      break;
     default:
       yield fork(submitBitcoinTransfer, data);
   }
