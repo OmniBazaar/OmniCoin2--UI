@@ -45,7 +45,7 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
       const itemToSave = {
         ...item,
         end_date: item.end_date || item.start_date,
-        name: item.name || item.listing_title,
+        name: defaultValues.name,
       };
 
       if (!itemToSave.imageURL) {

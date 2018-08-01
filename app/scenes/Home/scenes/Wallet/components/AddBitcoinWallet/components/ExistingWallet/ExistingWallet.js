@@ -33,7 +33,13 @@ class ExistingWallet extends Component {
       if (nextProps.bitcoin.connectWalletError && !this.props.bitcoin.connectWalletError) {
         if (nextProps.bitcoin.connectWalletError.error.indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
           publicIp.v4().then(ip => {
-            toastr.error(formatMessage(messages.ipError, { ip }));
+            toastr.error(
+              formatMessage(messages.connectErrorTitle),
+              formatMessage(messages.ipError, { ip }),
+              {
+                timeOut: 0
+              }
+            );
           })
         } else {
           this.showErrorToast(

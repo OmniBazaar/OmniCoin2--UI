@@ -255,7 +255,7 @@ const messages = defineMessages({
   },
   bitcoinFieldValidator: {
     id: 'AddListing.bitcoinFieldValidator',
-    defaultMessage: 'Should be greater or equal to 0.00000001'
+    defaultMessage: 'Should be greater or equal to 0.000001'
   },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
@@ -296,7 +296,63 @@ const messages = defineMessages({
   imageSizeTooLarge: {
     id: 'AddListing.imageSizeTooLarge',
     defaultMessage: 'Image size is too large'
-  }
+  },
+  priorityHighest: {
+    id: 'AddListing.priorityHighest',
+    defaultMessage: 'Highest (2.00% Fee)'
+  },
+  priorityHigher: {
+    id: 'AddListing.priorityHigher',
+    defaultMessage: 'Higher (1.50% Fee)'
+  },
+  priorityHigh: {
+    id: 'AddListing.priorityHigh',
+    defaultMessage: 'High (1.00% Fee)'
+  },
+  priorityNormal: {
+    id: 'AddListing.priorityNormal',
+    defaultMessage: 'Normal (0.50% Fee)'
+  },
+  priorityLow: {
+    id: 'AddListing.priorityLow',
+    defaultMessage: 'Low (0.00% Fee)'
+  },
+  loadListing: {
+    id: 'AddListing.loadListing',
+    defaultMessage: 'Load listing'
+  },
+  selectPriorityFee: {
+    id: 'AddListing.selectPriorityFee',
+    defaultMessage: 'Select Priority Fee'
+  },
+  priorityFee: {
+    id: 'AddListing.priorityFee',
+    defaultMessage: 'Priority For Listings You Create'
+  },
+  priorityHighest: {
+    id: 'AddListing.priorityHighest',
+    defaultMessage: 'Highest (2.00% Fee)'
+  },
+  priorityHigher: {
+    id: 'AddListing.priorityHigher',
+    defaultMessage: 'Higher (1.50% Fee)'
+  },
+  priorityHigh: {
+    id: 'AddListing.priorityHigh',
+    defaultMessage: 'High (1.00% Fee)'
+  },
+  priorityNormal: {
+    id: 'AddListing.priorityNormal',
+    defaultMessage: 'Normal (0.50% Fee)'
+  },
+  priorityLow: {
+    id: 'AddListing.priorityLow',
+    defaultMessage: 'Low (0.00% Fee)'
+  },
+  loadListing: {
+    id: 'AddListing.loadListing',
+    defaultMessage: 'Load listing'
+  },
 });
 
 export default messages;

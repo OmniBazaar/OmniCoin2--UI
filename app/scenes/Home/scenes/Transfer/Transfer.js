@@ -8,7 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
-import { required, numericality, length } from 'redux-form-validators';
+import { required, numericality, length, addValidator } from 'redux-form-validators';
 import {
   Field,
   reduxForm,
@@ -80,6 +80,7 @@ const currencyOptions = [
 
 const FEE_PERCENT = 0.01;
 const FEE_CONVERSION_FACTOR = 10000;
+const XOM_DECIMALS_LIMIT = 5;
 
 const initialState = {
   bitcoinWallets: [],
@@ -89,6 +90,17 @@ const initialState = {
   number: null,
   price: 0.00,
 };
+
+const amountDecimalsValidator = addValidator({
+  validator(options, value) {
+    if (!(/^\d+(\.\d{1,5})*$/).test(value)) {
+      return {
+        id: 'form.errors.custom',
+        defaultMessage: options.message,
+      };
+    }
+  },
+});
 
 class Transfer extends Component {
   // static asyncValidate = async (values) => {
@@ -104,7 +116,7 @@ class Transfer extends Component {
     return escrows.map(escrow => ({
       key: escrow.id,
       value: escrow.id,
-      text: escrow.name
+      text: `${escrow.name} (${escrow.escrow_fee / 100}% Fee)`
     }));
   }
 
@@ -203,12 +215,18 @@ class Transfer extends Component {
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
-    if (!nextProps.transfer.gettingCommonEscrows
-        && nextProps.transferForm.useEscrow
-        && nextProps.transfer.commonEscrows.length === 0
-    ) {
-      this.hideEscrow();
-      toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+
+    const useEscrow = !nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow;
+
+    if (useEscrow) {
+      const { transferForm } = this.props;
+      const escrowsWithoutSeller = nextProps.transfer.commonEscrows
+        .filter(item => item.name !== transferForm.toName);
+
+      if (!nextProps.transfer.commonEscrows.length || !escrowsWithoutSeller.length) {
+        this.hideEscrow();
+        toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+      }
     } else if (this.props.transfer.gettingCommonEscrows
                 && !nextProps.transfer.gettingCommonEscrows
                 && nextProps.transferForm.useEscrow) {
@@ -232,7 +250,7 @@ class Transfer extends Component {
       }
       if (nextProps.transfer.transferCurrency === 'bitcoin') {
         const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
-        this.props.change('amount', convertedAmount)
+        this.props.change('amount', convertedAmount);
       }
     }
   }
@@ -245,12 +263,24 @@ class Transfer extends Component {
     this.props.initialize({
       reputation: 5,
       toName: to,
-      amount: price
+      amount: price || 0.00
     });
   }
 
+  escrowOptions(escrows = []) {
+    const { auth: { account }, transferForm: { toName } } = this.props;
+
+    return escrows
+      .filter(({ id, name }) => account.id !== id || name !== toName)
+      .map(escrow => ({
+        key: escrow.id,
+        value: escrow.id,
+        text: escrow.name
+      }));
+  }
+
   initializeEscrow(escrows) {
-    const escrowOptions = Transfer.escrowOptions(escrows);
+    const escrowOptions = this.escrowOptions(escrows);
     const expirationTimeOptions = Transfer.expirationTimeOptions(this.props.intl.formatMessage);
     this.props.changeFieldValue('escrow', escrowOptions[0].value);
     this.props.changeFieldValue('expirationTime', expirationTimeOptions[0].value);
@@ -446,12 +476,10 @@ class Transfer extends Component {
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer, transferForm } = this.props;
-    let {
-      gettingCommonEscrows,
-      commonEscrows,
-    } = this.props.transfer;
+    const { gettingCommonEscrows } = this.props.transfer;
+    let { commonEscrows } = this.props.transfer;
 
-    commonEscrows = commonEscrows.filter((item) => item.name !== transferForm.toName);
+    commonEscrows = commonEscrows.filter(item => item.name !== transferForm.toName);
 
     return (
       <div>
@@ -470,6 +498,7 @@ class Transfer extends Component {
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
+              onBlur={() => this.handleEscrowTransactionChecked(true)}
             />
             <div className="col-1" />
           </div>
@@ -487,7 +516,12 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) })
+                numericality({ message: formatMessage(messages.numberRequired) }),
+                amountDecimalsValidator({
+                  message: formatMessage(messages.numberExceedsDecimalsLimit, {
+                    limit: XOM_DECIMALS_LIMIT
+                  }),
+                })
               ]}
               disabled={!!this.state.listingId}
             />
@@ -533,7 +567,7 @@ class Transfer extends Component {
                   <Field
                     type="text"
                     name="escrow"
-                    options={Transfer.escrowOptions(commonEscrows)}
+                    options={this.escrowOptions(commonEscrows)}
                     component={this.renderSelectField}
                   />
                 </div>
@@ -792,8 +826,12 @@ class Transfer extends Component {
 
   submitTransfer(paramValues) {
     const { transferCurrency } = this.props.transfer;
+    const params = new URLSearchParams(this.props.location.search);
     const values = {
-      ...paramValues
+      ...paramValues,
+      title: params.get('title'),
+      ip: params.get('ip'),
+      seller: params.get('seller_name')
     };
 
     if (transferCurrency === 'omnicoin') {

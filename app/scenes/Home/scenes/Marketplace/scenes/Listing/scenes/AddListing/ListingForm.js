@@ -12,6 +12,7 @@ import moment from 'moment';
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
+import PriorityFeeDropdown from './components/PriorityFeeDropdown/PriorityFeeDropdown';
 import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
 import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
 import UnitDropdown from './components/UnitDropdown/UnitDropdown';
@@ -23,6 +24,7 @@ import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
+import priorityFees from './priorityFees';
 import {
   InputField,
   makeValidatableField
@@ -49,7 +51,7 @@ const contactOmniMessage = 'OmniMessage';
 const requiredFieldValidator = required({ message: messages.fieldRequired });
 const numericFieldValidator = numericality({ message: messages.fieldNumeric });
 const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
-const bitcoinFieldValidator = numericality({ '>=': 1 / SATOSHI_IN_BTC, msg: messages.bitcoinFieldValidator });
+const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
 const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
@@ -80,6 +82,7 @@ class ListingForm extends Component {
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.PriorityFeeDropdown = makeValidatableField(PriorityFeeDropdown);
     this.ConditionDropdown = makeValidatableField(ConditionDropdown);
     this.UnitDropdown = makeValidatableField(UnitDropdown);
     this.ContactDropdown = makeValidatableField(ContactDropdown);
@@ -127,9 +130,11 @@ class ListingForm extends Component {
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
       const { btc_address, eth_address } = this.props.auth.account;
+      const listingPriority = this.getDefaultListingPriority();
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
+        priority_fee: listingPriority,
         price_using_btc: false,
         price_using_eth: false,
         continuous: true,
@@ -147,6 +152,13 @@ class ListingForm extends Component {
     }
 
     this.props.initialize(data);
+  }
+
+  getDefaultListingPriority() {
+    const preferencesStorageKey = `preferences_${this.props.auth.currentUser.username}`;
+    const userPreferences = JSON.parse(localStorage.getItem(preferencesStorageKey));
+
+    return userPreferences && userPreferences.listingPriority ? parseInt(userPreferences.listingPriority) : 50
   }
 
   initImages() {
@@ -174,6 +186,7 @@ class ListingForm extends Component {
   }
 
   resetForm() {
+    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -199,7 +212,9 @@ class ListingForm extends Component {
         if (error.statusCode === 413) {
           msg = formatMessage(messages.imageSizeTooLarge);
         } else if (error.message) {
-          if (error.message === 'no_changes') {
+          if (/StatusCodeError: 413/.test(error.message)) {
+            msg = formatMessage(messages.imageSizeTooLarge);
+          } else if (error.message === 'no_changes') {
             msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
           } else if (error.message === 'publisher_not_alive') {
             msg = formatMessage(messages.publisherNotReachable);
@@ -255,9 +270,9 @@ class ListingForm extends Component {
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
       const {
-        uploadError, image, thumb, fileName, localFilePath, path
+        uploadError, image, thumb, fileName, localFilePath, path, file
       } = imageItem;
-      if (uploadError || (!image && !localFilePath)) {
+      if (uploadError || (!image && !localFilePath && !file)) {
         continue;
       }
 
@@ -267,11 +282,17 @@ class ListingForm extends Component {
           path,
           id: imageId
         });
+      } else if (file) {
+        data.push({
+          file,
+          id: imageId
+        });
       } else {
         data.push({
           path: this.fixImagePath(image),
           thumb: this.fixThumbPath(thumb),
-          image_name: fileName
+          image_name: fileName,
+          id: imageId
         });
       }
     }
@@ -314,7 +335,7 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
-    
+
     saveListing(publisher, {
       ...data,
       images: this.getImagesData(),
@@ -629,6 +650,23 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
+              <span>{formatMessage(messages.priorityFee)}*</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                type="text"
+                name="priority_fee"
+                component={this.PriorityFeeDropdown}
+                props={{
+                  placeholder: formatMessage(messages.selectPriorityFee),
+                  priorityFees
+                }}
+                validate={[requiredFieldValidator]}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
               <span>{formatMessage(messages.publisher)}*</span>
             </Grid.Column>
             <Grid.Column width={8}>
@@ -667,7 +705,6 @@ class ListingForm extends Component {
             <Grid.Column width={12}>
               <Images
                 publisher={publisher}
-                disabled={!publisher}
               />
             </Grid.Column>
           </Grid.Row>
@@ -757,7 +794,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
-                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">

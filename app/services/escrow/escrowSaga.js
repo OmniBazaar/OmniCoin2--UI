@@ -55,6 +55,16 @@ function* loadEscrowTransactions(action) {
   }
 }
 
+function* getAgentEscrowFee(escrow) {
+  const agent = yield (Apis.instance().db_api().exec('get_account_by_name', [escrow.name]));
+  const escrowFee = agent.escrow_fee / 100;
+  return {
+    ...escrow,
+    escrowFee
+  }
+}
+
+
 function* loadEscrowAgents({
   payload: {
     start, limit, searchTerm
@@ -66,9 +76,12 @@ function* loadEscrowAgents({
       limit,
       searchTerm
     ]));
+
+    const agents = yield result.map(escrow => call(getAgentEscrowFee, escrow));
+
     yield put({
       type: 'LOAD_ESCROW_AGENTS_SUCCEEDED',
-      agents: result
+      agents
     });
   } catch (e) {
     yield put({

@@ -5,7 +5,7 @@ import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import Idled from 'react-idled';
-
+import { ipcRenderer } from 'electron';
 import {
   Route,
   NavLink,
@@ -59,35 +59,42 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
-import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
 const iconSize = 20;
 
 class Home extends Component {
-  state = { visible: true };
-
-  componentWillMount() {
-    this.props.preferencesActions.loadPreferences();
+  constructor(props) {
+    super(props);
+    ipcRenderer.on('messageForIdentityWindow', () => {
+      props.history.push('/identity-verification');
+    });
   }
 
+  state = {
+    visible: true
+  };
+  componentDidMount() {
+    this.init();
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
-
-    if (!this.props.auth.currentUser && nextProps.auth.currentUser) {
-      this.init();
-    }
   }
 
   init() {
+    this.props.preferencesActions.loadLocalPreferences();
+    this.props.bitcoinActions.getWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
+    this.props.authActions.requestAppVersion();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -128,6 +135,7 @@ class Home extends Component {
   };
 
   render() {
+    const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout *= 60000;
@@ -155,6 +163,7 @@ class Home extends Component {
         }}
       />);
     }
+
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -233,7 +242,6 @@ class Home extends Component {
                   />
                 </NavLink>
                 <UpdateNotification />
-
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -243,6 +251,7 @@ class Home extends Component {
             <AccountFooter />
             <AccountBalance />
             <SocialNetworksFooter />
+            <div className="version">{`Version: ${appVersion}`}</div>
           </div>
         </div>
         <div className={homeContentClass}>
@@ -291,13 +300,14 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout, requestAppVersion }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
-    dhtActions: bindActionCreators({ dhtReconnect }, dispatch)
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
+    bitcoinActions: bindActionCreators({ getWallets }, dispatch),
   })
 )(Home);
 
@@ -314,6 +324,9 @@ Home.propTypes = {
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func,
@@ -321,10 +334,11 @@ Home.propTypes = {
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
-    logout: PropTypes.func
+    logout: PropTypes.func,
+    requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
@@ -335,5 +349,7 @@ Home.defaultProps = {
   connection: {},
   auth: null,
   menuActions: null,
-  authActions: {}
+  authActions: {},
+  history: {},
+  dhtActions: {}
 };

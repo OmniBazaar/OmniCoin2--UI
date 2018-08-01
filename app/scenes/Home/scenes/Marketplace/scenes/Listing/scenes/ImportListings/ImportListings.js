@@ -15,12 +15,16 @@ import {
   stageFile,
   importFiles,
   removeFile,
-  removeAllFiles
+  removeAllFiles,
+  updateFileItemCategory,
+  updateFileItemSubcategory,
 } from '../../../../../../../../services/listing/importActions';
 import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
+
+const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
 
 const iconSize = 42;
 
@@ -209,7 +213,7 @@ class ImportListings extends Component {
       category, currency, description, name,
     } = pick(
       this.props.listingDefaults,
-      ['category', 'currency', 'description', 'name']
+      MANDATORY_DEFAULTS_FIELDS
     );
 
     if (!category || !currency || !description || !name) {
@@ -368,6 +372,18 @@ class ImportListings extends Component {
     );
   }
 
+  updateCategory({ categorySelected, index, fileIndex }) {
+    this.props.listingActions.updateFileItemCategory({
+      index, fileIndex, category: categorySelected,
+    });
+  }
+
+  updateSubCategory({ subCategory, index, fileIndex }) {
+    this.props.listingActions.updateFileItemSubcategory({
+      index, fileIndex, subcategory: subCategory,
+    });
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
@@ -415,6 +431,8 @@ class ImportListings extends Component {
                   basic: 'very',
                   size: 'small'
                 }}
+                onCategoryChange={params => this.updateCategory(params)}
+                onSubCategoryChange={params => this.updateSubCategory(params)}
               />}
             </div>
           </div>
@@ -452,6 +470,8 @@ ImportListings.propTypes = {
     importFiles: PropTypes.func,
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
+    updateFileItemCategory: PropTypes.func,
+    updateFileItemSubcategory: PropTypes.func,
   }),
   listingDefaults: PropTypes.shape({
     category: PropTypes.string,
@@ -484,7 +504,9 @@ export default connect(
       stageFile,
       importFiles,
       removeFile,
-      removeAllFiles
+      removeAllFiles,
+      updateFileItemCategory,
+      updateFileItemSubcategory,
     }, dispatch),
   })
 )(injectIntl(ImportListings));

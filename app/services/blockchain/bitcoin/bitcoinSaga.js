@@ -9,6 +9,8 @@ import {
 import * as BitcoinApi from './BitcoinApi';
 import { persitBitcoinWalletData, getBitcoinWalletData } from './services';
 import { connectWalletFinish } from './bitcoinActions';
+import {CoinTypes} from "../../../scenes/Home/scenes/Wallet/constants";
+import { getRecentTransactions } from "../../accountSettings/accountActions";
 
 export function* bitcoinSubscriber() {
   yield all([
@@ -17,7 +19,8 @@ export function* bitcoinSubscriber() {
     takeEvery('MAKE_PAYMENT', makePayment),
     takeEvery('GET_BALANCE', getBalance),
     takeEvery('ADD_ADDRESS', addAddress),
-    takeEvery('CONNECT_WALLET', connectWallet)
+    takeEvery('CONNECT_WALLET', connectWallet),
+    takeEvery('GET_WALLETS_SUCCEEDED', getWalletsSucceededHandler)
   ]);
 }
 
@@ -104,4 +107,8 @@ function* addAddress({ payload: { guid, password, label } }) {
   } catch (error) {
     yield put({ type: 'ADD_ADDRESS_FAILED', error });
   }
+}
+
+function* getWalletsSucceededHandler() {
+  yield put(getRecentTransactions(CoinTypes.BIT_COIN));
 }

@@ -1,3 +1,5 @@
 {
-
+  "DealRating.awful": "AWFUL",
+  "DealRating.neutral": "NEUTRAL",
+  "DealRating.great": "GREAT!"
 }

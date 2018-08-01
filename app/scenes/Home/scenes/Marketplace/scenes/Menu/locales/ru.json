@@ -1,2 +1,14 @@
 {
+  "Menu.addListing": "ADD LISTING",
+  "Menu.community": "Community",
+  "Menu.housing": "Housing",
+  "Menu.gigs": "Gigs",
+  "Menu.quickLinks": "Quick Links",
+  "Menu.support": "Support",
+  "Menu.usefulLinks": "Useful Links",
+  "Menu.omniLink": "OmniBazaar.com",
+  "Menu.recent": "Recent",
+  "Menu.extendedSearch": "Extended Search",
+  "Menu.viewAll": "VIEW ALL",
+  "Menu.default": "Default"
 }

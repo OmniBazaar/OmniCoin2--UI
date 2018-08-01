@@ -21,6 +21,9 @@ import {
   requestReferrerFinish
 } from './authActions';
 import { getFirstReachable } from './services';
+import * as AuthApi from './AuthApi';
+import { email } from 'redux-form-validators';
+import { SubmissionError } from 'redux-form';
 
 
 const messages = defineMessages({
@@ -39,6 +42,18 @@ const messages = defineMessages({
   invalidUsername: {
     id: 'AuthService.invalidUsername',
     defaultMessage: 'Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.'
+  },
+  invalidTelegramPhoneNumber: {
+    id: 'AuthService.invalidTelegramPhoneNumber',
+    defaultMessage: 'Not joined to channel or not started the bot'
+  },
+  invalidTwitterUsername: {
+    id: 'AuthService.invalidTwitterUsername',
+    defaultMessage: 'Not following'
+  },
+  invalidMailChimpEmail: {
+    id: 'AuthService.invalidMailChimpEmail',
+    defaultMessage: 'Not subscribed'
   }
 });
 
@@ -50,6 +65,8 @@ export function* subscriber() {
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
+    takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
+    takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
     takeEvery('REQUEST_REFERRER', requestReferrer)
   ]);
 }
@@ -134,19 +151,19 @@ export function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
+      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
           username,
           password
-        }
+        },
+        isWelcomeBonusAvailable: isAvailable
       });
       yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
-      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
       const { error } = resJson;
-      console.log('ERROR', error);
       let e;
       if (error.base && error.base.length && error.base.length > 0) {
         e = error.base[0] === 'Account exists' ? messages.accountExists : messages.invalidUsername;
@@ -157,7 +174,6 @@ export function* signup(action) {
       } else {
         e = JSON.stringify(error);
       }
-
       yield put({ type: 'SIGNUP_FAILED', error: e });
     }
   } catch (e) {
@@ -231,14 +247,39 @@ export function* getWelcomeBonusAmount() {
   }
 }
 
-const getDefaultReferrer = () => new Promise((resolve, reject) => {
-  ipcRenderer.once('receive-referrer', (event, arg) => {
-    const referrer = arg.referrer;
-    localStorage.setItem('referrer', referrer);
-    resolve(referrer);
+export function* getIdentityVerificationToken({ payload: { username } }) {
+  try {
+    const resp = yield call(AuthApi.getIdentityVerificationToken, username);
+    yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token: resp.token });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
+  try {
+    // Check if the user is connected to all 3 OmnibaZaar social media channels
+    yield call(AuthApi.checkBonus, values);
+    const macAddress = localStorage.getItem('macAddress');
+    const harddriveId = localStorage.getItem('hardDriveId');
+    const referrer = localStorage.getItem('referrer');
+    const { currentUser } = (yield select()).default.auth;
+    yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
+  } catch (error) {
+    yield call(reject, new SubmissionError(error.messages));
+    yield put(welcomeBonusFailed());
+  }
+}
+
+  const getDefaultReferrer = () => new Promise((resolve, reject) => {
+    ipcRenderer.once('receive-referrer', (event, arg) => {
+      const referrer = arg.referrer;
+      localStorage.setItem('referrer', referrer);
+      resolve(referrer);
+    });
+    ipcRenderer.send('get-referrer', null);
   });
-  ipcRenderer.send('get-referrer', null);
-});
+
 
 function* requestReferrer() {
   const referrer = yield call(getDefaultReferrer);

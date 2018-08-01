@@ -17,11 +17,7 @@ AppCopyright=© {#GetDateTimeString('yyyy', '', '')} {#APP_PUBLISHER}
 DefaultDirName={pf}\{#APP_NAME}
 DefaultGroupName={#APP_NAME}
 AllowNoIcons=yes
-#ifdef INCLUDE_WITNESS_NODE
-OutputBaseFilename={#APP_NAME}_setup_full_{#APP_VERSION}
-#else
 OutputBaseFilename={#APP_NAME}_setup_{#APP_VERSION}
-#endif
 SetupIconFile=icon.ico
 Compression=lzma/Ultra
 SolidCompression=yes
@@ -38,11 +34,9 @@ Name: "{userappdata}\{#APPDATA_DIR}"
 [Files]
 Source: "..\..\release\win-unpacked\*"; DestDir: {app}; Flags: ignoreversion recursesubdirs
 Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR}; Flags: ignoreversion
-#ifdef INCLUDE_WITNESS_NODE
 Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion
 Source: ".\witness_node\witness_node_data_dir\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node\witness_node_data_dir; Flags: ignoreversion onlyifdoesntexist
 Source: ".\vc_redist.x64.exe"; DestDir: {app}; Flags: ignoreversion 
-#endif
 
 [UninstallRun]
 Filename: "{cmd}"; Parameters: "/C taskkill /im Omnibazaar.exe /f /t 1> NUL 2> NUL && timeout 5 > NUL"
@@ -56,10 +50,8 @@ Type: filesandordirs; Name: "{userappdata}\{#APPDATA_DIR}"
 Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
 Name: {group}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
 
-#ifdef INCLUDE_WITNESS_NODE
 [Run]
 Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";
-#endif
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);

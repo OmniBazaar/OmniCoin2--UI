@@ -29,7 +29,6 @@ if (isProd()) {
   sourceMapSupport.install();
 }
 
-
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
   const path = require('path');
@@ -237,11 +236,22 @@ const processReferrer = async () => {
         //console.log('ERR ', err);
         event.sender.send('receive-referrer', { referrer: '' });
       } else {
-        const start = data.lastIndexOf('-') + 1;
+        let start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
+
+		if (start === 0) {
+			start = end;
+		}
+
         event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
       }
     });
+  });
+};
+
+const getAppVersion = () => {
+  ipcMain.on('get-app-version', (event) => {
+    event.sender.send('receive-app-version', { appVersion: app.getVersion() });
   });
 };
 
@@ -289,6 +299,7 @@ app.on('ready', async () => {
   await runOb2();
   await processMacAddress();
   await runBitcoinCli();
+  getAppVersion();
 
   ipcMain.on('restart-node', (event, witnessId, pubKey, privKey) => {
     restartNodeIfExists(witnessId, pubKey, privKey);
@@ -296,14 +307,12 @@ app.on('ready', async () => {
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
 
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728
   });
-
-
+  
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
@@ -314,6 +323,29 @@ app.on('ready', async () => {
     }
     mainWindow.show();
     mainWindow.focus();
+  });
+
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+    if (frameName === 'identity') {
+      // open window as modal
+      event.preventDefault();
+      Object.assign(options, {
+        modal: true,
+        parent: mainWindow,
+        show: false,
+        width: 1024,
+        height: 728
+      });
+      const identityWindow = new BrowserWindow(options);
+      identityWindow.loadURL(`file://${__dirname}/app.html`);
+      identityWindow.webContents.send('message', 'Hello second window!');
+      identityWindow.webContents.on('did-finish-load', () => {
+        identityWindow.webContents.send('messageForIdentityWindow');
+        identityWindow.show();
+        identityWindow.focus();
+        mainWindow.webContents.send('messageForMainWindow');
+      });
+    }
   });
 
   mainWindow.on('closed', () => {

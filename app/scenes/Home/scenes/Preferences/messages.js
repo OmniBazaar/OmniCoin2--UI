@@ -57,6 +57,10 @@ export default defineMessages({
     id: 'Preferences.publisherFee',
     defaultMessage: 'Publisher Fee You Receive'
   },
+  escrowFee: {
+    id: 'Preferences.escrowFee',
+    defaultMessage: 'Escrow Fee You Receive'
+  },
   chargeFee: {
     id: 'Preferences.chargeFee',
     defaultMessage: 'Fee You Charge to Publish Listings'
@@ -176,5 +180,15 @@ export default defineMessages({
   autoRunNote: {
     id: 'Preferences.autoRunNote',
     defaultMessage: 'This action requires admin rights'
+  },
+  autoLogOut: {
+    id: 'Preferences.autoLogOut',
+    defaultMessage: 'To disable Log Out option set 0 value in Timeout field.'
+  },
+  listingOptionsToolTip: {
+    id: 'Preferences.listingOptionsToolTip',
+    defaultMessage: 'When more than one keyword set search will be performed ' +
+                    'either using any of those (any) or return only those ' +
+                    'listings which have all your search criteria keywords'
   }
 });

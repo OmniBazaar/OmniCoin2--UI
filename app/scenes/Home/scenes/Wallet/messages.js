@@ -41,6 +41,10 @@ export default defineMessages({
     id: 'Wallet.addEthereumWallet',
     defaultMessage: 'ADD ETHEREUM WALLET'
   },
+  refreshWallet: {
+    id: 'Wallet.refreshWallet',
+    defaultMessage: 'REFRESH'
+  },
   noWalletYet: {
     id: 'Wallet.noWalletYet',
     defaultMessage: 'You haven\'t created or opened a wallet yet'
@@ -52,6 +56,30 @@ export default defineMessages({
   bitcoinNote: {
     id: 'Bitcoin.note',
     defaultMessage: 'NOTE: if you want to use your bitcoin wallet from another ip address ' +
-    'you should whitelist another ip in blockchain.info console - login.blockchain.com.'
+    'you should whitelist another ip in blockchain.info - '
+  },
+  instructions: {
+    id: 'Bitcoin.instructions',
+    defaultMessage: 'Here is the step by step instruction of how this can be achieved:'
+  },
+  step1: {
+    id: 'Bitcoin.step1',
+    defaultMessage: '1. Confirm your e-mail address from the e-mail message you should\'ve received'
+  },
+  step2: {
+    id: 'Bitcoin.step2',
+    defaultMessage: '2. Login into your account'
+  },
+  step3: {
+    id: 'Bitcoin.step3',
+    defaultMessage: '3. Go to Setttings->Security->Advanced Settings and add your possible range of IP addresses to IP Whitelist like that: 85.173.%.%'
+  },
+  step4: {
+    id: 'Bitcoin.step4',
+    defaultMessage: '4. Refresh the Wallet page from the application if needed.'
+  },
+  ipError: {
+    id: 'Bitcoin.ipError',
+    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info'
   }
 });

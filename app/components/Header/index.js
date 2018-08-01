@@ -18,14 +18,24 @@ export default class Header extends Component {
     return (
       <div className="header">
         <span className="title">{props.title}</span>
-        {props.hasButton ?
-          <Button
-            content={props.buttonContent}
-            onClick={props.onClick}
-            loading={props.loading}
-            className={containerClass}
-          />
-        : null }
+        <div>
+          {props.hasButton &&
+            <Button
+              content={props.buttonContent}
+              onClick={props.onClick}
+              loading={props.loading}
+              className={containerClass}
+            />
+          }
+          {props.refreshButton &&
+            <Button
+              content={props.refreshButtonContent}
+              onClick={props.onRefresh}
+              className="button--primary"
+              loading={props.loading}
+            />
+          }
+        </div>
       </div>
     );
   }

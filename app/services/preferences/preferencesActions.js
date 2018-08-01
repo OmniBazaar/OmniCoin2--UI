@@ -1,19 +1,25 @@
 import { createActions } from 'redux-actions';
 
 const {
-  loadPreferences,
+  loadLocalPreferences,
+  loadServerPreferences,
+  loadServerPreferencesSuccess,
   savePreferences,
   savePreferencesSuccess,
   savePreferencesError
 } = createActions({
-  LOAD_PREFERENCES: () => ({}),
+  LOAD_LOCAL_PREFERENCES: () => ({}),
+  LOAD_SERVER_PREFERENCES: () => ({}),
+  LOAD_SERVER_PREFERENCES_SUCCESS: (preferences) => ({ preferences }),
   SAVE_PREFERENCES: (preferences) => ({ preferences }),
   SAVE_PREFERENCES_SUCCESS: (preferences) => ({ preferences }),
   SAVE_PREFERENCES_ERROR: (error) => ({ error })
 });
 
 export {
-  loadPreferences,
+  loadLocalPreferences,
+  loadServerPreferences,
+  loadServerPreferencesSuccess,
   savePreferences,
   savePreferencesSuccess,
   savePreferencesError
