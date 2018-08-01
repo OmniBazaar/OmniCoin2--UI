@@ -38,6 +38,22 @@ $closed-side-bar-size: 70px;
           color: $primary-white;
           margin-left: 15px;
         }
+
+        &.has-notifications {
+          background-color: $secondary-red;
+
+          &:hover {
+            background-color: rgba($secondary-red, .7);
+          }
+
+          .notifications-counter {
+            width: 20px;
+            margin-left: 59%;
+            text-align: center;
+            background-color: $secondary-white;
+            border-radius: 50%;
+          }
+        }
       }
       .active {
         border-radius: 5px;

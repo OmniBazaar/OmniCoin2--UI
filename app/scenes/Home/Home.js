@@ -164,6 +164,10 @@ class Home extends Component {
       />);
     }
 
+    const { mail: { messages: { inbox } } } = this.props;
+
+    const unreadMessages = (inbox || []).filter(email => !email.read_status);
+
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -220,12 +224,13 @@ class Home extends Component {
                     defaultMessage="Processors"
                   />
                 </NavLink>
-                <NavLink to="/mail" activeClassName="active" className="menu-item">
+                <NavLink to="/mail" activeClassName="active" className={`menu-item${unreadMessages.length ? ' has-notifications' : ''}`}>
                   <Image src={MailIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.mail"
                     defaultMessage="Mail"
                   />
+                  {unreadMessages.length > 0 && <span className="notifications-counter">{unreadMessages.length}</span>}
                 </NavLink>
                 <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
@@ -342,7 +347,12 @@ Home.propTypes = {
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
-  })
+  }),
+  mail: PropTypes.shape({
+    messages: PropTypes.shape({
+      inbox: PropTypes.array,
+    }),
+  }).isRequired
 };
 
 Home.defaultProps = {
