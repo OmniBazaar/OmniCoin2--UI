@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import { Tab, Image, Loader } from 'semantic-ui-react';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Tab, Image, Loader, Button } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 const { shell } = require('electron');
@@ -16,13 +16,20 @@ import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletD
 import OmnicoinWalletDetail from './components/OmnicoinWalletDetail/OmnicoinWalletDetail';
 import AddBitcoinWallet from './components/AddBitcoinWallet/AddBitcoinWallet';
 import AddBitcoinAddress from './components/AddBitcoinAddress/AddBitcoinAddress';
+
+import EthereumWalletDetail from './components/EthereumWalletDetail/EthereumWalletDetail';
+import AddEthereumWallet from './components/AddEthereumWallet/AddEthereumWallet';
+import AddEthereumAddress from './components/AddEthereumAddress/AddEthereumAddress';
+import { toggleEthereumModal, toggleAddAddressEthereumModal, getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
+
 import { toggleModal, toggleAddAddressModal } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import {
   getBitcoinWallets,
+  getEtherWallets,
   getOmniCoinWallets
 } from '../../../../services/wallet/walletActions';
-import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 
+import { getAccountBalance } from '../../../../services/blockchain/wallet/walletActions';
 import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 
 import AddIcon from '../../images/btn-add-image.svg';
@@ -44,12 +51,17 @@ class Wallet extends Component {
     this.openWalletModal = this.openWalletModal.bind(this);
     this.onClickAddWallet = this.onClickAddWallet.bind(this);
     this.onClickAddAddress = this.onClickAddAddress.bind(this);
+
+    this.onClickAddEthereumWallet = this.onClickAddEthereumWallet.bind(this);
+    this.onClickAddEthereumAddress = this.onClickAddEthereumAddress.bind(this);
+
     this.onTabChange = this.onTabChange.bind(this);
     this.onClickRefreshWallets = this.onClickRefreshWallets.bind(this);
   }
 
   componentWillMount() {
     this.props.bitcoinActions.getWallets();
+    this.props.ethereumActions.getEthereumWallets();
     this.requestBalance();
   }
 
@@ -90,6 +102,8 @@ class Wallet extends Component {
         return CoinTypes.OMNI_COIN;
       case 1:
         return CoinTypes.BIT_COIN;
+      case 2:
+        return CoinTypes.ETHEREUM;
     }
   }
 
@@ -101,8 +115,16 @@ class Wallet extends Component {
     this.props.bitcoinActions.toggleAddAddressModal();
   }
 
+  onClickAddEthereumWallet() {
+    this.props.ethereumActions.toggleEthereumModal();
+  }
+
+  onClickAddEthereumAddress() {
+    this.props.bitcoinActions.toggleAddAddressEthereumModal();
+  }
+
   onClickRefreshWallets() {
-    this.props.bitcoinActions.getWallets();
+    this.state.activeTab == 1 ? this.props.bitcoinActions.getWallets() : this.props.ethereumActions.getEthereumWallets();
   }
 
   openLink(e, path) {
@@ -143,12 +165,12 @@ class Wallet extends Component {
           height={100}
           onClick={this.onClickAddAddress}
         />
-                    </div>);
+      </div>);
     }
     if (this.props.bitcoin.isGettingWallets) {
       return (
         <div className="content">
-          <div className="load-container"><Loader inline active/></div>
+          <div className="load-container"><Loader inline active /></div>
         </div>
       );
     }
@@ -163,16 +185,46 @@ class Wallet extends Component {
             <a href="https://login.blockchain.com/" onClick={(e) => this.openLink(e, "https://login.blockchain.com/")}>
               login.blockchain.com
             </a>
-          </span><br/>
-          {formatMessage(messages.instructions)}<br/>
-          {formatMessage(messages.step1)}<br/>
-          {formatMessage(messages.step2)}<br/>
-          {formatMessage(messages.step3)}<br/>
-          {formatMessage(messages.step4)}<br/>
+          </span><br />
+          {formatMessage(messages.instructions)}<br />
+          {formatMessage(messages.step1)}<br />
+          {formatMessage(messages.step2)}<br />
+          {formatMessage(messages.step3)}<br />
+          {formatMessage(messages.step4)}<br />
         </div>
       </div>
     );
   }
+
+
+  getEthereumContent() {
+    const { address, balance, brainKey } = this.props.ethereum;
+    const wallet = [
+      <EthereumWalletDetail
+        openWalletModal={this.openWalletModal}
+        address={address}
+        balance={balance}
+        brainKey={brainKey}
+      />
+    ];
+    if (brainKey) {
+      wallet.push(<Button
+        content="Export key"
+        className="button--primary"
+        onClick={() => this.downloadBrainKeyFile(brainKey)}
+      />)
+    }
+    return wallet
+  }
+
+  downloadBrainKeyFile(brainKey) {
+    var element = document.createElement("a");
+    var file = new Blob([brainKey], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "wallet-brain-key.txt";
+    element.click();
+  }
+
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -181,16 +233,22 @@ class Wallet extends Component {
       addAddressModal,
       modal
     } = this.props.bitcoin;
+
+    const {
+      addAddressEthereumModal,
+      modalEthereum
+    } = this.props.ethereum;
+
     return (
       <div ref={container => { this.container = container; }} className="container wallet">
         <Header
-          hasButton={this.state.activeTab === 1}
-          buttonContent={formatMessage(messages.addWallet)}
+          hasButton={this.state.activeTab}
+          buttonContent={this.state.activeTab == 1 ? formatMessage(messages.addWallet) : formatMessage(messages.addEthereumWallet)}
           className="button--green-bg"
           title="Wallets"
-          loading={this.props.bitcoin.loading}
-          onClick={this.onClickAddWallet}
-          refreshButton={this.state.activeTab === 1}
+          loading={this.state.activeTab == 1 ? this.props.bitcoin.loading : this.props.ethereum.loading}
+          onClick={this.state.activeTab == 1 ? this.onClickAddWallet : this.onClickAddEthereumWallet}
+          refreshButton={this.state.activeTab}
           refreshButtonContent={formatMessage(messages.refreshWallet)}
           onRefresh={this.onClickRefreshWallets}
         />
@@ -215,20 +273,45 @@ class Wallet extends Component {
                   </Tab.Pane>
                 )
               },
-               {
-                 menuItem: 'BitCoin',
-                 render: () =>
-                   (<Tab.Pane>
-                     {this.props.bitcoin.wallets.length ?
-                       this.getBitcoinContent()
-                     :
-                       <div className="no-wallet-yet">
-                         <span>{formatMessage(messages.noWalletYet)}</span>
-                       </div>
-                   }
-                   </Tab.Pane>)
-               }
-             ]}
+              {
+                menuItem: 'BitCoin',
+                render: () =>
+                  (<Tab.Pane>
+                    {this.props.bitcoin.wallets.length ?
+                      <div className="content">
+                        {
+                          this.props.bitcoin.isGettingWallets ?
+                            <div className="load-container"><Loader inline active /></div> :
+                            this.getBitcoinContent()
+                        }
+                      </div>
+                      :
+                      <div className="no-wallet-yet">
+                        <span>{formatMessage(messages.noWalletYet)}</span>
+                      </div>
+                    }
+                  </Tab.Pane>)
+              },
+              {
+                menuItem: 'Ethereum',
+                render: () =>
+                  (<Tab.Pane>
+                    {this.props.ethereum.address ?
+                      <div className="content">
+                        {
+                          this.props.ethereum.isGettingWallets ?
+                            <div className='load-container'><Loader inline active /></div> :
+                            this.getEthereumContent()
+                        }
+                      </div>
+                      :
+                      <div className="no-wallet-yet">
+                        <span>{formatMessage(messages.noWalletYet)}</span>
+                      </div>
+                    }
+                  </Tab.Pane>)
+              }
+            ]}
           />
           <div className="content">
             <Settings
@@ -236,8 +319,13 @@ class Wallet extends Component {
             />
           </div>
         </div>
-        { modal.isOpen && <AddBitcoinWallet /> }
-        { addAddressModal.isOpen && <AddBitcoinAddress /> }
+        {modal.isOpen && <AddBitcoinWallet />}
+        {addAddressModal.isOpen && <AddBitcoinAddress />}
+
+
+        {modalEthereum.isOpen && <AddEthereumWallet />}
+        {addAddressEthereumModal.isOpen && <AddEthereumAddress />}
+
       </div>
     );
   }
@@ -246,6 +334,7 @@ class Wallet extends Component {
 Wallet.propTypes = {
   walletActions: PropTypes.shape({
     getBitcoinWallets: PropTypes.func,
+    getEtherWallets: PropTypes.func,
     getOmniCoinWallets: PropTypes.func
   }),
   bitcoin: PropTypes.shape({
@@ -259,6 +348,17 @@ Wallet.propTypes = {
     toggleAddAddressModal: PropTypes.func,
     getWallets: PropTypes.func
   }).isRequired,
+  ethereum: PropTypes.shape({
+    address: PropTypes.string,
+    loading: PropTypes.bool,
+    balance: PropTypes.number,
+    isGettingWallets: PropTypes.bool
+  }).isRequired,
+  ethereumActions: PropTypes.shape({
+    toggleEthereumModal: PropTypes.func,
+    toggleAddAddressEthereumModal: PropTypes.func,
+    getEthereumWallets: PropTypes.func
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }).isRequired
@@ -267,11 +367,16 @@ Wallet.propTypes = {
 export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
-    walletActions: bindActionCreators({ getBitcoinWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
+    walletActions: bindActionCreators({ getBitcoinWallets, getEtherWallets, getOmniCoinWallets, getAccountBalance }, dispatch),
     bitcoinActions: bindActionCreators({
       toggleModal,
       toggleAddAddressModal,
       getWallets
+    }, dispatch),
+    ethereumActions: bindActionCreators({
+      toggleEthereumModal,
+      toggleAddAddressEthereumModal,
+      getEthereumWallets
     }, dispatch),
   }),
 )(injectIntl(Wallet));

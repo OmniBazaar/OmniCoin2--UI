@@ -25,6 +25,7 @@ import ConfirmationModal from '../../../../../../components/ConfirmationModal/Co
 import Dollar from '../../../../../../assets/images/currency-icons/dollar.png';
 import Euro from '../../../../../../assets/images/currency-icons/euro.png';
 import Btc from '../../../../../../assets/images/currency-icons/btc.png';
+import Eth from '../../../../../../assets/images/currency-icons/eth.png';
 import Omni from '../../../../../../assets/images/currency-icons/omnic.svg';
 import ObNet from '../../../../../../assets/images/ob-net.png';
 
@@ -158,6 +159,8 @@ class GridTable extends Component {
       return <Image src={Euro} className="currency-icon" />;
     } else if (type === 'BITCOIN') {
       return <Image src={Btc} className="currency-icon" />;
+    } else if (type === 'ETHEREUM') {
+      return <Image src={Eth} className="currency-icon" />;
     }
     return <Image src={Omni} className="currency-icon" />;
   }

@@ -202,6 +202,11 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
       delete listing.bitcoin_address;
     }
 
+    if (!listing.price_using_eth && listing.currency !== 'ETHEREUM') {
+      listing = { ...listing };
+      delete listing.ethereum_address;
+    }
+
     if (listingId) {
       if (publisher.publisher_ip !== listing.ip) {
         result = yield call(moveToAnotherPublisher, user, publisher, listing, listingId);

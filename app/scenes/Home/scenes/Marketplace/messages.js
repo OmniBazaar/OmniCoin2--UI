@@ -265,6 +265,10 @@ export default defineMessages({
     id: 'Marketplace.useBitcoin',
     defaultMessage: 'Use Bitcoin and Omnicoin'
   },
+  useEthereum: {
+    id: 'Marketplace.useEthereum',
+    defaultMessage: 'Use Ethereum and Omnicoin'
+  },
   communityPolicing: {
     id: 'Marketplace.communityPolicing',
     defaultMessage: 'Community policing'
