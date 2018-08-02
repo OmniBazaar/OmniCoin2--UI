@@ -1,7 +1,9 @@
 import { handleActions } from 'redux-actions';
 import { getPreferences as getPreferencesService } from './services';
 import {
-  loadPreferences,
+  loadLocalPreferences,
+  loadServerPreferences,
+  loadServerPreferencesSuccess,
   savePreferences,
   savePreferencesSuccess,
   savePreferencesError
@@ -14,16 +16,18 @@ const defaultState = {
     vote: 'all',
     language: 'en',
     isReferrer: false,
-    listingPriority: 'normal',
-    chargeFee: 0.25,
+    listingPriority: 50,
+    publisherFee: 0.25,
+    escrowFee: 1,
     searchListingOption: 'anyKeyword'
   },
+  loading: false,
   saving: false,
   error: null
 };
 
 const reducer = handleActions({
-  [loadPreferences](state) {
+  [loadLocalPreferences](state) {
     const data = getPreferencesService();
     return {
       ...state,
@@ -32,6 +36,22 @@ const reducer = handleActions({
         ...data
       }
     };
+  },
+  [loadServerPreferences](state) {
+    return {
+      ...state,
+      loading: true
+    }
+  },
+  [loadServerPreferencesSuccess](state, { payload: { preferences } }) {
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        ...preferences
+      },
+      loading: false
+    }
   },
   [savePreferences](state) {
     return {

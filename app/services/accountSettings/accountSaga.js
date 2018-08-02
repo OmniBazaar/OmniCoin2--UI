@@ -16,6 +16,7 @@ import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
 import OmnicoinHistory from './omnicoinHistory';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { voteForProcessors } from '../processors/utils';
+import EthereumHistory from './ethereumHistory';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
 import {SATOSHI_IN_BTC} from "../../utils/constants";
 
@@ -52,6 +53,7 @@ export function* updatePublicData() {
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
       btc_address: account.btcAddress,
+      eth_address: account.ethAddress,
     });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
@@ -127,11 +129,15 @@ export function* updateAccount(payload) {
 
 
 export function* getRecentTransactions({ payload: { coinType } }) {
-  const { currentUser } = (yield select()).default.auth;
+  const { auth: { currentUser }, ethereum } = (yield select()).default
   try {
     if (coinType === CoinTypes.OMNI_COIN) {
       const historyStorage = new OmnicoinHistory(currentUser.username);
       yield historyStorage.refresh(currentUser);
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
+    } else if (coinType === CoinTypes.ETHEREUM) {
+      const historyStorage = new EthereumHistory(ethereum.address);
+      yield historyStorage.loadTransactions();
       yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.BIT_COIN) {
       const { wallets } = (yield select()).default.bitcoin;

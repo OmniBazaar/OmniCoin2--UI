@@ -135,21 +135,23 @@ const messages = defineMessages({
 class SignupForm extends Component {
   static validate = (values) => {
     const errors = {};
+
     if (!values.username) {
       errors.username = messages.fieldRequired;
     }
+
     if (!values.agreementTerms) {
       errors.agreementTerms = messages.fieldRequired;
     }
+
     if (values.password !== values.passwordConfirmation) {
       errors.passwordConfirmation = messages.passwordDoesntMatch;
     }
+
     if (!values.country) {
       errors.country = messages.fieldRequired;
     }
-    if (!values.state) {
-      errors.state = messages.fieldRequired;
-    }
+
     return errors;
   };
 
@@ -172,7 +174,7 @@ class SignupForm extends Component {
   }
 
   componentDidMount() {
-    if(this.props.auth.defaultReferrer){
+    if (this.props.auth.defaultReferrer) {
       this.props.formActions.change('referrer', this.props.auth.defaultReferrer);
       this.referrerInput.focus();
     }
@@ -181,7 +183,7 @@ class SignupForm extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
 
-    if(nextProps.auth.defaultReferrer !== this.props.auth.defaultReferrer){
+    if (nextProps.auth.defaultReferrer !== this.props.auth.defaultReferrer) {
       this.props.formActions.change('referrer', nextProps.auth.defaultReferrer);
     }
 
@@ -272,7 +274,7 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={this.showSuccessCopy.bind(this)}>
+          <Button className='copy-password-btn' onClick={this.showSuccessCopy.bind(this)}>
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
@@ -487,7 +489,6 @@ class SignupForm extends Component {
               country={country}
               state={state}
               component={this.renderStateField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <Field
               type="text"

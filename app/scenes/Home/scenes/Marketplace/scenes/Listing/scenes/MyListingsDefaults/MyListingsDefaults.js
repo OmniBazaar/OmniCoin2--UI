@@ -30,8 +30,10 @@ import {
 import {
   updatePublicData,
   setBtcAddress,
+  setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
+import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import '../AddListing/add-listing.scss';
 
@@ -40,12 +42,19 @@ const iconSize = 42;
 class MyListingsDefaults extends Component {
   static asyncValidate = async (values) => {
     try {
-      const { price_using_btc, bitcoin_address } = values;
+      const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
       if (price_using_btc && bitcoin_address) {
         await BitcoinApi.validateAddress(bitcoin_address);
       }
+      if (price_using_eth && ethereum_address) {
+        await EthereumApi.validateEthereumAddress(ethereum_address);
+      }
     } catch (e) {
-      throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
+      if (e === "Invalid Ethereum Address") {
+        throw Object.create({ ethereum_address: listingDefaultMessages.invalidAddress });
+      } else {
+        throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
+      }
     }
   };
 
@@ -121,15 +130,17 @@ class MyListingsDefaults extends Component {
   defaultsForm() {
     const { formatMessage } = this.props.intl;
     const {
-      account, auth, bitcoin, handleSubmit,
+      account, auth, bitcoin, ethereum, handleSubmit,
     } = this.props;
     const {
       category,
       country,
       currency,
       price_using_btc,
+      price_using_eth,
     } = this.props.formValues ? this.props.formValues : {};
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
+    const ethWalletAddress = ethereum.address;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -184,7 +195,7 @@ class MyListingsDefaults extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <Field
                 name="price_using_btc"
                 component={Checkbox}
@@ -193,7 +204,16 @@ class MyListingsDefaults extends Component {
                 }}
               />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
+              <Field
+                name="price_using_eth"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(addListingMessages.ethereumPrice)
+                }}
+              />
+            </Grid.Column>
+            <Grid.Column width={4}>
               <Field
                 name="price_using_omnicoin"
                 component={Checkbox}
@@ -219,6 +239,23 @@ class MyListingsDefaults extends Component {
             </Grid.Column>
           </Grid.Row>
           }
+          {(price_using_eth || currency === 'ETHEREUM') &&
+          <Grid.Row>
+            <Grid.Column width={4}>
+              {formatMessage(addListingMessages.ethereumAddress)}
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="ethereum_address"
+                component={InputField}
+                className="textfield"
+                value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          }
+
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
@@ -359,16 +396,22 @@ class MyListingsDefaults extends Component {
 MyListingsDefaults.propTypes = {
   account: PropTypes.shape({
     btcAddress: PropTypes.string,
+    ethAddress: PropTypes.string,
   }),
   accountActions: PropTypes.shape({
     updatePublicData: PropTypes.func,
     setBtcAddress: PropTypes.func,
+    setEthAddress: PropTypes.func,
   }),
   auth: PropTypes.shape({
     btc_address: PropTypes.string,
+    eth_address: PropTypes.string,
   }),
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
+  }),
+  ethereum: PropTypes.shape({
+    wallet: PropTypes.object,
   }),
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
@@ -391,6 +434,7 @@ MyListingsDefaults.propTypes = {
 MyListingsDefaults.defaultProps = {
   formValues: {},
   bitcoin: {},
+  ethereum: {},
   auth: {},
   account: {},
   accountActions: {},
@@ -403,6 +447,7 @@ export default compose(
       account: state.default.account,
       auth: state.default.auth,
       bitcoin: state.default.bitcoin,
+      ethereum: state.default.ethereum,
       formValues: getFormValues('listingDefaultsForm')(state)
     }),
     (dispatch) => ({
@@ -413,6 +458,7 @@ export default compose(
       accountActions: bindActionCreators({
         updatePublicData,
         setBtcAddress,
+        setEthAddress,
       }, dispatch)
     })
   ),
@@ -420,6 +466,6 @@ export default compose(
     form: 'listingDefaultsForm',
     destroyOnUnmount: true,
     asyncValidate: MyListingsDefaults.asyncValidate,
-    asyncBlurFields: ['bitcoin_address']
+    asyncBlurFields: ['bitcoin_address', 'ethereum_address']
   })
 )(injectIntl(MyListingsDefaults));

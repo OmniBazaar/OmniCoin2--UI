@@ -11,7 +11,8 @@ const {
   showReplyModal,
   sendMail,
   deleteMail,
-  mailSetRead
+  mailSetRead,
+  sendPurchaseInfoMail
 } = createActions({
   SHOW_COMPOSE_MODAL: (showCompose, to) => ({ showCompose, to }),
   SUBSCRIBE_FOR_MAIL: (reciever, afterMailStoredCallback) => ({
@@ -31,7 +32,8 @@ const {
   }),
   MAIL_SET_READ: (user, messageFolder, messageUUID, afterSetCallback) => ({
     user, messageFolder, messageUUID, afterSetCallback
-  })
+  }),
+  SEND_PURCHASE_INFO_MAIL: (from, to, info) => ({ from, to, info })
 });
 
 export {
@@ -45,5 +47,6 @@ export {
   showReplyModal,
   sendMail,
   deleteMail,
-  mailSetRead
+  mailSetRead,
+  sendPurchaseInfoMail
 };

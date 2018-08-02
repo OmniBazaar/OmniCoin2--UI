@@ -21,11 +21,11 @@ let authHeaders = null;
 const listingProps = [
   'listing_title', 'listing_type', 'listing_id', 'category',
   'subcategory', 'price', 'currency', 'price_using_btc',
-  'bitcoin_address', 'price_using_omnicoin', 'condition',
+  'bitcoin_address',  'price_using_eth', 'ethereum_address', 'price_using_omnicoin', 'condition',
   'quantity', 'units', 'start_date', 'end_date', 'continuous',
   'images', 'description', 'keywords', 'name', 'contact_type',
   'contact_info', 'country', 'address', 'city', 'post_code',
-  'state', 'owner'
+  'state', 'owner', "priority_fee"
 ];
 
 
@@ -122,7 +122,7 @@ const createListingOnBlockchain = async (user, publisher, listing) => {
     quantity: parseInt(listing.quantity),
     listing_hash: listingHash,
     publisher: publisher.id,
-    priority_fee: 50 // default
+    priority_fee: parseInt(listing.priority_fee)
   });
   await tr.set_required_fees();
   await tr.add_signer(key.privKey, key.pubKey);
@@ -175,7 +175,8 @@ export const updateListingOnBlockchain = async (user, publisher, listingId, list
     },
     quantity: parseInt(listing.quantity),
     publisher: publisher.id,
-    update_expiration_time: true
+    update_expiration_time: true,
+    priority_fee: parseInt(listing.priority_fee)
   };
   if (listingHash !== blockchainListing.listing_hash) {
     operation.listing_hash = listingHash;
@@ -197,7 +198,7 @@ export const getListingFromBlockchain = async listingId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (listing[key]) {
+    if (listing[key] !== undefined) {
       result[key] = listing[key];
     }
   });

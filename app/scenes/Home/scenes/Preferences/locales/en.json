@@ -12,6 +12,7 @@
   "Preferences.referralProgramText": "REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. You will also receive a referral fee (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. Please provide the Bitcoin and Ether addresses where you wish to receive these referral fees.",
   "Preferences.priorityForListing": "Priority for Listings You Create",
   "Preferences.publisherFee": "Publisher Fee You Receive",
+  "Preferences.escrowFee": "Escrow Fee You Receive",
   "Preferences.chargeFee": "Fee You Charge to Publish Listings",
   "Preferences.update": "UPDATE",
   "Preferences.commandHint": "Type command and hit enter",

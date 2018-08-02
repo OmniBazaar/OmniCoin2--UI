@@ -17,6 +17,7 @@ import listingDefaultsReducer from './listing/listingDefaultsReducer';
 import importReducer from './listing/importReducer';
 import searchReducer from './search/searchReducer';
 import bitcoinReducer from './blockchain/bitcoin/bitcoinReducer';
+import EthereumReducer from './blockchain/ethereum/EthereumReducer';
 import transferReducer from './transfer/transferReducer';
 import dhtReducer from './search/dht/dhtReducer';
 import myPurchasesReducer from './marketplace/myPurchases/myPurchasesReducer';
@@ -43,6 +44,7 @@ export default combineReducers({
   listingImport: importReducer,
   search: searchReducer,
   bitcoin: bitcoinReducer,
+  ethereum: EthereumReducer,
   dht: dhtReducer,
   transfer: transferReducer,
   data: myPurchasesReducer,

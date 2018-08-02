@@ -13,7 +13,8 @@ class AgentItem extends Component {
     const {
       isSelected,
       toggleSelect,
-      name
+      name,
+      escrowFee
     } = this.props;
     return (
       <div className="agent-item">
@@ -21,7 +22,7 @@ class AgentItem extends Component {
           <div className="icon">
             <Image src={UserIcon} width={iconSize} height={iconSize} />
           </div>
-          <span>{name}</span>
+          <span>{`${name} (${escrowFee}% Fee )`}</span>
         </div>
         <CheckBox
           value={isSelected}

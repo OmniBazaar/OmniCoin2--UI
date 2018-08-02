@@ -12,6 +12,7 @@ import moment from 'moment';
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
+import PriorityFeeDropdown from './components/PriorityFeeDropdown/PriorityFeeDropdown';
 import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
 import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
 import UnitDropdown from './components/UnitDropdown/UnitDropdown';
@@ -23,6 +24,7 @@ import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
+import priorityFees from './priorityFees';
 import {
   InputField,
   makeValidatableField
@@ -35,14 +37,16 @@ import {
 import {
   updatePublicData,
   setBtcAddress,
+  setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
 import cn from 'classnames';
+import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import './add-listing.scss';
 import { FetchChain } from 'omnibazaarjs';
-import {SATOSHI_IN_BTC, TOKENS_IN_XOM} from "../../../../../../../../utils/constants";
+import {SATOSHI_IN_BTC, TOKENS_IN_XOM, WEI_IN_ETH} from "../../../../../../../../utils/constants";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -50,6 +54,7 @@ const requiredFieldValidator = required({ message: messages.fieldRequired });
 const numericFieldValidator = numericality({ message: messages.fieldNumeric });
 const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
 const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
+const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
@@ -57,12 +62,19 @@ const MAX_IMAGE_SIZE = '1mb';
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
     try {
-      const { price_using_btc, bitcoin_address } = values;
+      const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
       if (price_using_btc && bitcoin_address) {
         await BitcoinApi.validateAddress(bitcoin_address);
       }
+      if (price_using_eth && ethereum_address) {
+        await EthereumApi.validateEthereumAddress(ethereum_address);
+      }
     } catch (e) {
-      throw { bitcoin_address: messages.invalidAddress };
+      if (e === "Invalid Ethereum Address") {
+        throw { ethereum_address: messages.invalidAddress };
+      } else {
+        throw { bitcoin_address: messages.invalidAddress };
+      }
     }
   };
 
@@ -72,6 +84,7 @@ class ListingForm extends Component {
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.PriorityFeeDropdown = makeValidatableField(PriorityFeeDropdown);
     this.ConditionDropdown = makeValidatableField(ConditionDropdown);
     this.UnitDropdown = makeValidatableField(UnitDropdown);
     this.ContactDropdown = makeValidatableField(ContactDropdown);
@@ -118,11 +131,14 @@ class ListingForm extends Component {
       };
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
-      const { btc_address } = this.props.auth.account;
+      const { btc_address, eth_address } = this.props.auth.account;
+      const listingPriority = this.getDefaultListingPriority();
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
+        priority_fee: listingPriority,
         price_using_btc: false,
+        price_using_eth: false,
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
@@ -132,9 +148,19 @@ class ListingForm extends Component {
       if (btc_address) {
         data.bitcoin_address = btc_address;
       }
+      if (eth_address) {
+        data.ethereum_address = eth_address;
+      }
     }
 
     this.props.initialize(data);
+  }
+
+  getDefaultListingPriority() {
+    const preferencesStorageKey = `preferences_${this.props.auth.currentUser.username}`;
+    const userPreferences = JSON.parse(localStorage.getItem(preferencesStorageKey));
+
+    return userPreferences && userPreferences.listingPriority ? parseInt(userPreferences.listingPriority) : 50
   }
 
   initImages() {
@@ -350,12 +376,14 @@ class ListingForm extends Component {
       currency,
       publisher,
       price_using_btc,
+      price_using_eth,
       continuous
     } = this.props.formValues ? this.props.formValues : {};
     const {
       account,
       auth,
       bitcoin,
+      ethereum,
       handleSubmit,
       editingListing,
       invalid,
@@ -366,6 +394,7 @@ class ListingForm extends Component {
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
+    const ethWalletAddress = ethereum.address;
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -451,6 +480,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
+              {currency === 'OMNICOIN' &&
               <Field
                 type="text"
                 name="price"
@@ -461,9 +491,36 @@ class ListingForm extends Component {
                   requiredFieldValidator,
                   numericFieldValidator,
                   // we don't want other currencies including bitcoin be less then 10^-8
-                  currency === 'OMNICOIN' ? omnicoinFieldValidator : bitcoinFieldValidator
+                  omnicoinFieldValidator
                 ]}
-              />
+              />}
+              {currency === 'BITCOIN' &&
+              <Field
+                type="text"
+                name="price"
+                placeholder={formatMessage(messages.pricePerItem)}
+                component={this.PriceInput}
+                className="textfield"
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  // we don't want other currencies including bitcoin be less then 10^-8
+                  bitcoinFieldValidator
+                ]}
+              />}
+              {currency === 'ETHEREUM' &&
+              <Field
+                type="text"
+                name="price"
+                placeholder={formatMessage(messages.pricePerItem)}
+                component={this.PriceInput}
+                className="textfield"
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  ethereumFieldValidator
+                ]}
+              />}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -474,6 +531,15 @@ class ListingForm extends Component {
                 component={Checkbox}
                 props={{
                   label: formatMessage(messages.bitcoinPrice)
+                }}
+              />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Field
+                name="price_using_eth"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.ethereumPrice)
                 }}
               />
             </Grid.Column>
@@ -500,6 +566,23 @@ class ListingForm extends Component {
                 validate={[requiredFieldValidator]}
                 value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          }
+          {(price_using_eth || currency === 'ETHEREUM') &&
+          <Grid.Row>
+            <Grid.Column width={4}>
+              {formatMessage(messages.ethereumAddress)}
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="ethereum_address"
+                component={InputField}
+                className="textfield"
+                validate={[requiredFieldValidator]}
+                value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -578,6 +661,23 @@ class ListingForm extends Component {
                 props={{
                   label: formatMessage(messages.continuous)
                 }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.priorityFee)}*</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                type="text"
+                name="priority_fee"
+                component={this.PriorityFeeDropdown}
+                props={{
+                  placeholder: formatMessage(messages.selectPriorityFee),
+                  priorityFees
+                }}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -779,22 +879,28 @@ ListingForm.propTypes = {
   accountActions: PropTypes.shape({
     updatePublicData: PropTypes.func,
     setBtcAddress: PropTypes.func,
+    setEthAddress: PropTypes.func,
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
   account: PropTypes.shape({
     btcAddress: PropTypes.string,
+    ethAddress: PropTypes.string,
   }).isRequired,
   auth: PropTypes.shape({
     account: PropTypes.shape({
       btc_address: PropTypes.string,
+      eth_address: PropTypes.string,
     }),
     currentUser: PropTypes.shape({
       username: PropTypes.string,
     })
   }).isRequired,
   bitcoin: PropTypes.shape({
+    wallets: PropTypes.array
+  }).isRequired,
+  ethereum: PropTypes.shape({
     wallets: PropTypes.array
   }).isRequired,
   listing: PropTypes.shape({
@@ -817,7 +923,7 @@ export default compose(
     form: 'listingForm',
     destroyOnUnmount: true,
     asyncValidate: ListingForm.asyncValidate,
-    asyncBlurFields: ['bitcoin_address'],
+    asyncBlurFields: ['bitcoin_address', 'ethereum_address'],
   }),
   connect(
     state => ({
@@ -826,7 +932,8 @@ export default compose(
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults,
-      bitcoin: state.default.bitcoin
+      bitcoin: state.default.bitcoin,
+      ethereum: state.default.ethereum
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
@@ -836,6 +943,7 @@ export default compose(
       }, dispatch),
       accountActions: bindActionCreators({
         setBtcAddress,
+        setEthAddress,
         updatePublicData,
       }, dispatch),
       formActions: bindActionCreators({

@@ -143,6 +143,7 @@ class MyEscrowAgents extends Component {
               isSelected={isSelected}
               toggleSelect={() => this.toggleSelectAgent(agent)}
               name={agent.name}
+              escrowFee={agent.escrowFee}
             />
           </li>
         );
