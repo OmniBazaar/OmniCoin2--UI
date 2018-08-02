@@ -22,4 +22,4 @@ const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${iden
   method: 'POST'
 }));
 
-export {getIdentityVerificationToken};
+export { getIdentityVerificationToken };
