@@ -118,6 +118,8 @@ class PurchasesTable extends Component {
         return 'XOM';
       case 'bitcoin':
         return 'BTC';
+      case 'ethereum':
+        return 'ETH';
       default:
         return 'XOM';
     }
@@ -155,69 +157,69 @@ class PurchasesTable extends Component {
           </div>
           <div className="table-container">
             {loading ? <Loader active inline="centered" /> :
-            <Table {...this.props.tableProps}>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderCell
-                    key="id"
-                    sorted={sortColumn === 'id' ? sortDirection : null}
-                    onClick={this.sortData('id')}
-                  >
-                    {formatMessage(messages.id)}
-                  </TableHeaderCell>
-                  {this.props.type === 'buy' &&
+              <Table {...this.props.tableProps}>
+                <TableHeader>
+                  <TableRow>
                     <TableHeaderCell
-                      key="title"
-                      sorted={sortColumn === 'title' ? sortDirection : null}
-                      onClick={this.sortData('title')}
+                      key="id"
+                      sorted={sortColumn === 'id' ? sortDirection : null}
+                      onClick={this.sortData('id')}
                     >
-                      {formatMessage(messages.title)}
+                      {formatMessage(messages.id)}
                     </TableHeaderCell>
-                  }
-                  <TableHeaderCell
-                    key="id"
-                    sorted={sortColumn === 'date' ? sortDirection : null}
-                    onClick={this.sortData('date')}
-                  >
-                    {formatMessage(messages.date)}
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    key="count"
-                    sorted={sortColumn === 'count' ? sortDirection : null}
-                    onClick={this.sortData('count')}
-                  >
-                    {formatMessage(messages.count)}
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    key="amount"
-                    sorted={sortColumn === 'price' ? sortDirection : null}
-                    onClick={this.sortData('price')}
-                  >
-                    {formatMessage(messages.price)}
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    key="publisher"
-                    sorted={sortColumn === 'publisher' ? sortDirection : null}
-                    onClick={this.sortData('publisher')}
-                  >
-                    {formatMessage(messages.publisher)}
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    key="seller"
-                    sorted={sortColumn === 'seller' ? sortDirection : null}
-                    onClick={this.sortData('seller')}
-                  >
-                    {formatMessage(messages.seller)}
-                  </TableHeaderCell>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {!!dataFiltered && dataFiltered.map(row =>
+                    {this.props.type === 'buy' &&
+                      <TableHeaderCell
+                        key="title"
+                        sorted={sortColumn === 'title' ? sortDirection : null}
+                        onClick={this.sortData('title')}
+                      >
+                        {formatMessage(messages.title)}
+                      </TableHeaderCell>
+                    }
+                    <TableHeaderCell
+                      key="id"
+                      sorted={sortColumn === 'date' ? sortDirection : null}
+                      onClick={this.sortData('date')}
+                    >
+                      {formatMessage(messages.date)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="count"
+                      sorted={sortColumn === 'count' ? sortDirection : null}
+                      onClick={this.sortData('count')}
+                    >
+                      {formatMessage(messages.count)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="amount"
+                      sorted={sortColumn === 'price' ? sortDirection : null}
+                      onClick={this.sortData('price')}
+                    >
+                      {formatMessage(messages.price)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="publisher"
+                      sorted={sortColumn === 'publisher' ? sortDirection : null}
+                      onClick={this.sortData('publisher')}
+                    >
+                      {formatMessage(messages.publisher)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="seller"
+                      sorted={sortColumn === 'seller' ? sortDirection : null}
+                      onClick={this.sortData('seller')}
+                    >
+                      {formatMessage(messages.seller)}
+                    </TableHeaderCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {!!dataFiltered && dataFiltered.map(row =>
                     (
                       <TableRow key={hash(row)}>
                         <TableCell>
                           <NavLink to={`/listing/${row.id}`}>
-                              {row.id}
+                            {row.id}
                           </NavLink>
                         </TableCell>
                         {this.props.type === 'buy' &&
@@ -231,8 +233,8 @@ class PurchasesTable extends Component {
                       </TableRow>
                     ))
                   }
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
             }
           </div>
 
