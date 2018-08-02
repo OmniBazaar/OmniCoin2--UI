@@ -480,6 +480,17 @@ class ListingForm extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
+              {(currency === 'USD' || currency === 'EUR') &&
+              <Field
+                type="text"
+                name="price"
+                placeholder={formatMessage(messages.pricePerItem)}
+                component={this.PriceInput}
+                className="textfield"
+                validate={[
+                  numericFieldValidator,
+                ]}
+              />}
               {currency === 'OMNICOIN' &&
               <Field
                 type="text"
