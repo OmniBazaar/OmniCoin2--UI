@@ -40,6 +40,8 @@ import {
   setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
+import TagsInput from '../../../../../../../../components/TagsInput';
+import cn from 'classnames';
 import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import './add-listing.scss';
@@ -186,7 +188,6 @@ class ListingForm extends Component {
   }
 
   resetForm() {
-    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -202,6 +203,8 @@ class ListingForm extends Component {
     )) {
       this.resetForm();
     }
+
+    this.setState({ keywords: nextProps.formValues.keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
 
@@ -251,16 +254,17 @@ class ListingForm extends Component {
     this.props.formActions.change('contact_info', contactInfo);
   }
 
-  onContinuousChange = (event, newValue) => {
+  onContinuousChange = () => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
     });
   };
 
-  onKeywordsBlur(e) {
-    this.setState({
-      keywords: e.target.value
-    });
+  onKeywordsChange(keys) {
+    const keywords = keys.join(',');
+
+    this.props.formActions.change('keywords', keywords);
+    this.setState({ keywords });
   }
 
   getImagesData() {
@@ -343,6 +347,27 @@ class ListingForm extends Component {
     }, listing_id);
   }
 
+  renderKeywordsInput() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div>
+        <TagsInput
+          value={this.state.keywords ? this.state.keywords.split(',') : []}
+          name="keywords"
+          inputProps={{
+            className: cn('react-tagsinput-input', { empty: !this.state.keywords }),
+            placeholder: (
+              formatMessage(messages.addKeywords)
+            )
+          }}
+          onChange={this.onKeywordsChange.bind(this)}
+        />
+        <div className="note">{formatMessage(messages.keywordsNote)}</div>
+      </div>
+    );
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -406,17 +431,8 @@ class ListingForm extends Component {
             <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
-            <Grid.Column width={12} className="keywords">
-              <Field
-                type="text"
-                name="keywords"
-                component={InputField}
-                onBlur={this.onKeywordsBlur.bind(this)}
-                className="textfield"
-                placeholder={formatMessage(messages.keywordCommas)}
-                validate={[requiredFieldValidator]}
-              />
-              <div className="note">{formatMessage(messages.keywordsNote)}</div>
+            <Grid.Column width={12} className="keywords form-group keyword-container">
+              {this.renderKeywordsInput()}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -896,7 +912,10 @@ ListingForm.propTypes = {
   }).isRequired,
   listingDefaults: PropTypes.shape({
     images: PropTypes.object
-  }).isRequired
+  }).isRequired,
+  formActions: PropTypes.shape({
+    change: PropTypes.func,
+  }).isRequired,
 };
 
 export default compose(
