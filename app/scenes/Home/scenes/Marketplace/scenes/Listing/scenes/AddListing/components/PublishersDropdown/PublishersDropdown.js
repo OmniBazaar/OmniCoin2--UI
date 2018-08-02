@@ -1,23 +1,17 @@
 import React, { Component } from 'react';
 import { Dropdown, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {  injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {
-  getPublishers
-} from "../../../../../../../../../../services/accountSettings/accountActions";
-import {
-  searchPublishers
-} from '../../../../../../../../../../services/listing/listingActions';
+import { getPublishers } from '../../../../../../../../../../services/accountSettings/accountActions';
+import { searchPublishers } from '../../../../../../../../../../services/listing/listingActions';
 import messages from '../../messages';
 
 class PublishersDropdown extends Component {
-
   state = {
     options: [],
-    disabled: false
   };
 
   componentWillMount() {
@@ -36,11 +30,16 @@ class PublishersDropdown extends Component {
     } = this.props.input || this.props;
     if (!nextProps.publishers.searching && this.props.publishers.searching) {
       if (!nextProps.publishers.error) {
-        const options = nextProps.publishers.publishers.map(publisher => ({
-          value: publisher,
-          text: publisher.name + (publisher.listingCount ? ` (${publisher.listingCount})` : ''),
-          key: publisher.name
-        }));
+        const options = nextProps.publishers.publishers.map(publisher => {
+          const publisherFee = publisher.publisher_fee ? `(${parseInt(publisher.publisher_fee) / 100}% Fee)` : '';
+          const listingCount = publisher.listingCount ? `(${publisher.listingCount})` : '';
+
+          return {
+            value: publisher,
+            text: publisher.name + ` ${publisherFee} ${listingCount}`,
+            key: publisher.name
+          }
+        });
         this.setState({
           options
         });
@@ -48,7 +47,6 @@ class PublishersDropdown extends Component {
         if (value && typeof value === 'string') {
           const publisher = options.find(el => el.value.publisher_ip === value);
           this.props.input.onChange(publisher.value);
-          this.setState({disabled: true});
         }
       } else {
         const { formatMessage } = this.props.intl;
@@ -84,7 +82,6 @@ class PublishersDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
         loading={searching}
-        disabled={this.state.disabled}
       />
     );
   }

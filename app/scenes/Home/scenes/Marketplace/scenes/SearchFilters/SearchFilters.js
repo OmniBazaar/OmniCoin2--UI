@@ -22,19 +22,19 @@ const iconSizeSmall = 12;
 
 const messages = defineMessages({
   search: {
-    id: 'SearchResults.search',
+    id: 'SearchFilters.search',
     defaultMessage: 'Search'
   },
   currency: {
-    id: 'SearchMenu.currency',
+    id: 'SearchFilters.currency',
     defaultMessage: 'Currency'
   },
   category: {
-    id: 'AddListing.category',
+    id: 'SearchFilters.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'SearchMenu.subCategory',
+    id: 'SearchFilters.subCategory',
     defaultMessage: 'Sub-category'
   },
 });
@@ -49,7 +49,9 @@ class SearchFilters extends Component {
   }
 
   componentDidMount() {
-    const { searchTerm, category, subCategory, currency } = this.props.search;
+    const {
+      searchTerm, category, subCategory, currency
+    } = this.props.search;
     this.props.initialize({
       searchTerm,
       category,
@@ -176,10 +178,8 @@ export default compose(
     form: 'searchForm',
     destroyOnUnmount: true,
   }),
-  connect(
-    (state) => ({
-      ...state.default,
-      formValues: getFormValues('searchForm')(state)
-    })
-  )
+  connect((state) => ({
+    ...state.default,
+    formValues: getFormValues('searchForm')(state)
+  }))
 )(injectIntl(SearchFilters));

@@ -7,10 +7,13 @@ import {
   logout,
   getCurrentUser,
   requestPcIds,
-  requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
-  showTermsModal
+  showTermsModal,
+  getWelcomeBonusAmountSucceeded,
+  welcomeBonusSucceeded,
+  requestAppVersion
 } from './authActions';
 
 import {
@@ -27,7 +30,12 @@ const defaultState = {
   loading: false,
   isAccountLoading: false,
   lastLoginUserName: null,
-  showTermsModal: false
+  showTermsModal: false,
+  welcomeBonusAmount: null,
+  isWelcomeBonusAvailable: null,
+  identityVerificationToken: null,
+  defaultReferrer: null,
+  appVersion: ''
 };
 
 const reducer = handleActions({
@@ -46,8 +54,10 @@ const reducer = handleActions({
   },
   [logout](state) {
     removeStoredCurrentUser();
+
     return {
       ...state,
+      account: null,
       currentUser: null
     };
   },
@@ -76,24 +86,34 @@ const reducer = handleActions({
     ipcRenderer.send('get-pc-ids', null);
     return state;
   },
-  [requestReferrer](state) {
-    ipcRenderer.once('receive-referrer', (event, arg) => {
-      localStorage.setItem('referrer', arg.referrer);
+  [requestAppVersion](state) {
+    ipcRenderer.once('receive-app-version', (event, arg) => {
+      localStorage.setItem('appVersion', arg.appVersion);
     });
-    ipcRenderer.send('get-referrer', null);
+    ipcRenderer.send('get-app-version', null);
     return state;
+  },
+  [requestReferrerFinish](state, { payload: { referrer } }) {
+    return {
+      ...state,
+      defaultReferrer: referrer
+    };
   },
   [getLastLoginUserName]: (state) => {
     const username = getLastStoredUserName();
     return {
       ...state,
-      lastLoginUserName: username ? username : null
+      lastLoginUserName: username || null,
     };
   },
   LOGIN_FAILED: (state, action) => ({
     ...state,
     currentUser: null,
     error: action.error,
+    loading: false
+  }),
+  WELCOME_BONUS_FAILED: state => ({
+    ...state,
     loading: false
   }),
   LOGIN_SUCCEEDED: (state, action) => {
@@ -111,10 +131,15 @@ const reducer = handleActions({
     return {
       ...state,
       currentUser: action.user,
+      isWelcomeBonusAvailable: action.isWelcomeBonusAvailable,
       error: null,
       loading: false
     };
   },
+  GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (state, action) => ({
+    ...state,
+    identityVerificationToken: action.token
+  }),
   SIGNUP_FAILED: (state, action) => ({
     ...state,
     currentUser: null,
@@ -133,11 +158,28 @@ const reducer = handleActions({
     error,
     isAccountLoading: false
   }),
+  RECEIVE_WELCOME_BONUS: (state) => ({
+    ...state,
+    error: null,
+    loading: true
+  }),
   [showTermsModal](state) {
     return {
       ...state,
       showTermsModal: !state.showTermsModal
     };
+  },
+  [getWelcomeBonusAmountSucceeded](state, { amount }) {
+    return ({
+      ...state,
+      welcomeBonusAmount: amount
+    });
+  },
+  [welcomeBonusSucceeded](state) {
+    return ({
+      ...state,
+      isWelcomeBonusAvailable: false
+    });
   },
 }, defaultState);
 

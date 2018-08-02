@@ -4,7 +4,7 @@ import {
   takeEvery,
   all,
   select
-} from "redux-saga/effects";
+} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain, TransactionBuilder } from 'omnibazaarjs/es';
 
@@ -13,8 +13,9 @@ import {
   getVestingBalancesFailed,
   claimSucceeded,
   claimFailed
-} from "./vestingBalancesActions";
-import { generateKeyFromPassword } from "../../blockchain/utils/wallet";
+} from './vestingBalancesActions';
+import { generateKeyFromPassword } from '../../blockchain/utils/wallet';
+import { getAmountAvailable } from './utils';
 
 export function* vestingBalancesSubscriber() {
   yield all([
@@ -27,9 +28,13 @@ function* getVestingBalances() {
   try {
     const { currentUser } = (yield select()).default.auth;
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
-    const vbs = yield Apis.instance()
-                          .db_api()
-                          .exec("get_vesting_balances", [userAcc.get('id')]);
+    let vbs = yield Apis.instance()
+      .db_api()
+      .exec('get_vesting_balances', [userAcc.get('id')]);
+    vbs = vbs.map(vb => ({
+      ...vb,
+      amountAvailable: getAmountAvailable(vb, true)
+    }));
     yield put(getVestingBalancesSucceeded(vbs));
   } catch (error) {
     console.log('ERROR', error);
@@ -43,19 +48,11 @@ function* claim({ payload: { vestingBalance, forceAll } }) {
     const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
     const tr = new TransactionBuilder();
 
-    const balance = vestingBalance.balance.amount,
-      earned = vestingBalance.policy[1].coin_seconds_earned,
-      vestingPeriod = vestingBalance.policy[1].vesting_seconds,
-      availablePercent =
-        (forceAll || vestingPeriod) === 0
-          ? 1
-          : earned / (vestingPeriod * balance);
-
-    tr.add_type_operation("vesting_balance_withdraw", {
+    tr.add_type_operation('vesting_balance_withdraw', {
       owner: userAcc.get('id'),
       vesting_balance: vestingBalance.id,
       amount: {
-        amount: Math.floor(balance * availablePercent),
+        amount: vestingBalance.amountAvailable,
         asset_id: vestingBalance.balance.asset_id
       }
     });
@@ -63,8 +60,8 @@ function* claim({ payload: { vestingBalance, forceAll } }) {
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    yield put(claimSucceeded())
-  } catch(error) {
+    yield put(claimSucceeded());
+  } catch (error) {
     console.log('ERROR ', error);
     yield put(claimFailed(JSON.stringify(error)));
   }

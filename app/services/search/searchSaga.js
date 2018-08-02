@@ -16,8 +16,10 @@ import {
   deleteSearchFailed,
   saveSearchSucceeded,
   saveSearchFailed,
-  searching
+  searching,
+  setSearchListingsParams
 } from './searchActions';
+import { clearMyListings } from '../listing/listingActions';
 import SearchHistory from './searchHistory';
 import { getNewId, messageTypes, ws } from '../marketplace/wsSaga';
 
@@ -34,14 +36,21 @@ export function* searchSubscriber() {
 
 function* searchListings({
   payload: {
-    searchTerm, category, country, city, historify, subCategory, fromSearchMenu
+    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }
 }) {
   try {
+    const { saving } = (yield select()).default.listing.saveListing;
+    if (saving) {
+      yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
+      return;
+    }
+
+    yield put(clearMyListings());
     const { currentUser } = (yield select()).default.auth;
     if (historify) {
       const searchHistory = new SearchHistory(currentUser.username);
-      searchHistory.add({ searchTerm, category });
+      searchHistory.add({ searchTerm, category, subCategory });
     }
     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
     yield put({
@@ -50,6 +59,7 @@ function* searchListings({
         searchTerm,
         category,
         country,
+        state,
         city,
         searchListings: true,
         subCategory,
@@ -64,7 +74,7 @@ function* searchListings({
 
 export function* searchListingsByPeersMap({
   payload: {
-    peersMap, category, country, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
+    peersMap, category, country, state, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
   }
 }) {
   let message;
@@ -79,7 +89,7 @@ export function* searchListingsByPeersMap({
     });
   }
 
-  if (subCategory) {
+  if (subCategory && subCategory !== 'all') {
     filters.push({
       op: '=',
       name: 'subcategory',
@@ -92,6 +102,14 @@ export function* searchListingsByPeersMap({
       op: '=',
       name: 'country',
       value: country,
+    });
+  }
+
+  if (state) {
+    filters.push({
+      op: '=',
+      name: 'state',
+      value: state,
     });
   }
 
@@ -142,10 +160,8 @@ export function* searchListingsByPeersMap({
 function* getRecentSearches() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const searches = yield call(async () => {
-      const history = new SearchHistory(currentUser.username);
-      return history.getHistory();
-    });
+    const history = new SearchHistory(currentUser.username);
+    const searches = history.getHistory();
     yield put(getRecentSearchesSucceeded(searches));
   } catch (error) {
     console.log('ERROR ', error);

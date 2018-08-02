@@ -65,6 +65,10 @@ const messages = defineMessages({
     id: 'AddListing.bitcoinPrice',
     defaultMessage: 'Show Bitcoin Price'
   },
+  ethereumPrice: {
+    id: 'AddListing.ethereumPrice',
+    defaultMessage: 'Show Ethereum Price'
+  },
   omnicoinPrice: {
     id: 'AddListing.omnicoinPrice',
     defaultMessage: 'Show Omnicoin Price'
@@ -207,11 +211,15 @@ const messages = defineMessages({
   },
   saveListingErrorMessage: {
     id: 'AddListing.saveListingErrorMessage',
-    defaultMessage: 'Have error when saving listing'
+    defaultMessage: 'Save Listing'
   },
   saveListingSuccessMessage: {
     id: 'AddListing.saveListingSuccessMessage',
     defaultMessage: 'Listing is saved successful'
+  },
+  saveListingNotEnoughFunds: {
+    id: 'AddListing.saveListingNotEnoughFunds',
+    defaultMessage: 'Insufficient funds to pay fee to publisher.'
   },
   error: {
     id: 'AddListing.error',
@@ -241,9 +249,25 @@ const messages = defineMessages({
     id: 'AddListing.fieldNumeric',
     defaultMessage: 'Should be a number'
   },
+  omnicoinFieldValidator: {
+    id: 'AddListing.omnicoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.00001'
+  },
+  bitcoinFieldValidator: {
+    id: 'AddListing.bitcoinFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.000001'
+  },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
+  },
+  ethereumFieldValidator: {
+    id: 'AddListing.ethereumFieldValidator',
+    defaultMessage: 'Should be greater or equal to 1 wei'
+  },
+  ethereumAddress: {
+    id: 'AddListing.ethereumAddress',
+    defaultMessage: 'Ethereum address'
   },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
@@ -258,9 +282,77 @@ const messages = defineMessages({
     defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
   },
   saveListingErrorNoChangeDetectedMessage: {
-    'id': 'AddListing.saveListingErrorNoChangeDetectedMessage',
+    id: 'AddListing.saveListingErrorNoChangeDetectedMessage',
     defaultMessage: 'Listing has no changes detected, please change data and submit again'
-  }
+  },
+  publisherNotReachable: {
+    id: 'AddListing.publisherNotReachable',
+    defaultMessage: 'Publisher is not reachable'
+  },
+  invalidAddress: {
+    id: 'AddListing.invalidAddress',
+    defaultMessage: 'Invalid address'
+  },
+  imageSizeTooLarge: {
+    id: 'AddListing.imageSizeTooLarge',
+    defaultMessage: 'Image size is too large'
+  },
+  priorityHighest: {
+    id: 'AddListing.priorityHighest',
+    defaultMessage: 'Highest (2.00% Fee)'
+  },
+  priorityHigher: {
+    id: 'AddListing.priorityHigher',
+    defaultMessage: 'Higher (1.50% Fee)'
+  },
+  priorityHigh: {
+    id: 'AddListing.priorityHigh',
+    defaultMessage: 'High (1.00% Fee)'
+  },
+  priorityNormal: {
+    id: 'AddListing.priorityNormal',
+    defaultMessage: 'Normal (0.50% Fee)'
+  },
+  priorityLow: {
+    id: 'AddListing.priorityLow',
+    defaultMessage: 'Low (0.00% Fee)'
+  },
+  loadListing: {
+    id: 'AddListing.loadListing',
+    defaultMessage: 'Load listing'
+  },
+  selectPriorityFee: {
+    id: 'AddListing.selectPriorityFee',
+    defaultMessage: 'Select Priority Fee'
+  },
+  priorityFee: {
+    id: 'AddListing.priorityFee',
+    defaultMessage: 'Priority For Listings You Create'
+  },
+  priorityHighest: {
+    id: 'AddListing.priorityHighest',
+    defaultMessage: 'Highest (2.00% Fee)'
+  },
+  priorityHigher: {
+    id: 'AddListing.priorityHigher',
+    defaultMessage: 'Higher (1.50% Fee)'
+  },
+  priorityHigh: {
+    id: 'AddListing.priorityHigh',
+    defaultMessage: 'High (1.00% Fee)'
+  },
+  priorityNormal: {
+    id: 'AddListing.priorityNormal',
+    defaultMessage: 'Normal (0.50% Fee)'
+  },
+  priorityLow: {
+    id: 'AddListing.priorityLow',
+    defaultMessage: 'Low (0.00% Fee)'
+  },
+  loadListing: {
+    id: 'AddListing.loadListing',
+    defaultMessage: 'Load listing'
+  },
 });
 
 export default messages;

@@ -21,6 +21,7 @@ const defaultState = {
   subcategory: '',
   currency: '',
   price_using_btc: false,
+  price_using_eth: false,
   price_using_omnicoin: false,
   description: '',
   images: {},
@@ -29,7 +30,9 @@ const defaultState = {
   post_code: '',
   country: '',
   state: '',
-  name: ''
+  name: '',
+  bitcoin_address: '',
+  ethereum_address: ''
 };
 
 const fixImagesData = (data) => {
@@ -40,11 +43,18 @@ const fixImagesData = (data) => {
   }
 
   return data;
-}
+};
 
 const reducer = handleActions({
   [loadListingDefault](state) {
     const data = getStoredListingDefautls();
+    if (!data.price_using_btc && data.currency !== 'BITCOIN') {
+      delete data.bitcoin_address;
+    }
+
+    if (!data.price_using_eth && data.currency !== 'ETHEREUM') {
+      delete data.ethereum_address;
+    }
 
     if (Object.keys(data).length) {
       return {
@@ -63,6 +73,14 @@ const reducer = handleActions({
       ...state,
       ...listingDefault
     };
+
+    if (!data.price_using_btc && data.currency !== 'BITCOIN') {
+      delete data.bitcoin_address;
+    }
+    if (!data.price_using_eth && data.currency !== 'ETHEREUM') {
+      delete data.ethereum_address;
+    }
+
     storeListingDefaults(data);
     return fixImagesData(data);
   },
@@ -144,7 +162,7 @@ const reducer = handleActions({
         images
       };
     }
-    
+
     return state;
   },
   [deleteListingDefaultImageError](state, { payload: { imageId, error } }) {

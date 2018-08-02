@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 
 import {
   getMyPurchases,
@@ -10,8 +11,8 @@ import {
   filterData,
   sortData,
   setActivePage,
-  setPagination
-} from "./myPurchasesActions";
+  setPagination,
+} from './myPurchasesActions';
 
 const defaultState = {
   data: [],
@@ -34,55 +35,59 @@ const getTotalPages = (data, rowsPerPage) => (
   Math.ceil(data.length / rowsPerPage)
 );
 
+
+
 const reducer = handleActions({
   [getMyPurchases](state) {
     return {
       ...state,
       loading: true,
       error: null
-    }
+    };
   },
   [getMyPurchasesSucceeded](state, { payload: { myPurchases } }) {
+    const orderedPurchases = _.orderBy(myPurchases, ['date'], ['desc']);
     return {
       ...state,
-      data: myPurchases,
+      data: orderedPurchases,
       loading: false,
-    }
+    };
   },
   [getMyPurchasesFailed](state, { payload: { error } }) {
     return {
       ...state,
       loading: false,
       error
-    }
+    };
   },
   [getMySellings](state) {
     return {
       ...state,
       loading: true,
       error: null
-    }
+    };
   },
   [getMySellingsSucceeded](state, { payload: { mySellings } }) {
+    const orderedSellings = _.orderBy(mySellings, ['date'], ['desc']);
     return {
       ...state,
-      data: mySellings,
+      data: orderedSellings,
       loading: false,
-    }
+    };
   },
   [getMySellingsFailed](state, { payload: { error } }) {
     return {
       ...state,
       loading: false,
       error
-    }
+    };
   },
   [filterData](state, { payload: { filterText } }) {
     const activePage = 1;
     const { rowsPerPage } = state;
     let filteredData = state.data;
     if (filterText) {
-      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
     const totalPages = getTotalPages(filteredData, rowsPerPage);
     const currentData = sliceData(filteredData, activePage, rowsPerPage);
@@ -125,10 +130,10 @@ const reducer = handleActions({
   },
   [sortData](state, { payload: { sortColumn } }) {
     const { filterText } = state;
-    let sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
+    const sortDirection = state.sortDirection === 'ascending' ? 'descending' : 'ascending';
     let data = state.data;
-    if (!!filterText) {
-      data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+    if (filterText) {
+      data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
     const sortedData = _.orderBy(data, [sortColumn], [sortDirection === 'ascending' ? 'asc' : 'desc']);
     const { activePage, rowsPerPage } = state;
@@ -140,7 +145,7 @@ const reducer = handleActions({
       sortDirection,
       sortColumn,
     };
-  },
+  }
 }, defaultState);
 
 export default reducer;

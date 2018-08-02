@@ -15,11 +15,15 @@ const currencies = {
     id: 'Marketplace.currencyBitcoin',
     defaultMessage: 'Bitcoin'
   },
+  ETHEREUM: {
+    id: 'Marketplace.currencyEthereum',
+    defaultMessage: 'Ethereum'
+  },
   OMNICOIN: {
     id: 'Marketplace.currencyOmnycoin',
     defaultMessage: 'Omnicoin'
   }
-  /*GBP: {
+  /* GBP: {
     id: 'Marketplace.currencyGbp',
     defaultMessage: 'Sterling'
   },
@@ -38,7 +42,7 @@ const currencies = {
   JPY: {
     id: 'Marketplace.currencyJpy',
     defaultMessage: 'Yen'
-  },*/
+  }, */
 };
 
 export default currencies;

@@ -9,6 +9,7 @@ import { getAccountBalance } from '../../../../services/blockchain/wallet/wallet
 import OmniIcon from '../../images/th-omnicoin.svg';
 import messages from '../../scenes/Settings/messages';
 import './style.scss';
+import { TOKENS_IN_XOM, SATOSHI_IN_BTC } from '../../../../utils/constants';
 
 const iconSize = 20;
 
@@ -33,27 +34,41 @@ class AccountBalance extends Component {
   getBalance() {
     const { balance } = this.props.blockchainWallet;
     if (balance && balance.balance) {
-      return balance.balance / 100000;
+      return balance.balance / TOKENS_IN_XOM;
     }
     return 0.00;
   }
+  
+  getBtcBalance() {
+    const { wallets } = this.props.bitcoin;
+    let balance = 0.00;
+    if (wallets && wallets.length) {
+      wallets.forEach(function (item) {
+        balance = balance + item.balance
+      });
+    }
+    return balance / SATOSHI_IN_BTC;
+  }
 
-	render() {
+  render() {
     const { formatMessage } = this.props.intl;
-		return (
-			<div className="account-balance">
+    return (
+      <div className="account-balance">
         <Image src={OmniIcon} width={iconSize} height={iconSize} />
         <div className="balance-info">
           <div className="title">
             <span>{formatMessage(messages.currentBalance)}</span>
           </div>
-          <span className="balance">
+          <div className="balance">
             {this.getBalance()} {formatMessage(messages.xom)}
-          </span>
+          </div>
+          <div className="balance">
+            {this.getBtcBalance()} {formatMessage(messages.btc)}
+          </div>
         </div>
       </div>
-		);
-	}
+    );
+  }
 }
 
 AccountBalance.propTypes = {
@@ -66,12 +81,13 @@ AccountBalance.propTypes = {
   walletActions: PropTypes.shape({
     getAccountBalance: PropTypes.func
   }).isRequired
-}
+};
 
 export default connect(
   state => ({
     auth: state.default.auth,
-    blockchainWallet: state.default.blockchainWallet
+    blockchainWallet: state.default.blockchainWallet,
+    bitcoin: state.default.bitcoin
   }),
   (dispatch) => ({
     walletActions: bindActionCreators({

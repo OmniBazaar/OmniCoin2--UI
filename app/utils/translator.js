@@ -10,6 +10,11 @@ const outputLanguageDataDir = './app/dist/i18n/';
 const defaultMessages = globSync(filePattern)
   .map((filename) =>  {
     const file = fs.readFileSync(filename, 'utf8');
+    try {
+      JSON.parse(file);
+    } catch (error) {
+      console.log('ERROR ' + filename);
+    }
     const locale = filename.split('/').pop().split('.')[0];
     return { file, locale };
   })

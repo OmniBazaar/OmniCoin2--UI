@@ -265,13 +265,17 @@ export default defineMessages({
     id: 'Marketplace.useBitcoin',
     defaultMessage: 'Use Bitcoin and Omnicoin'
   },
+  useEthereum: {
+    id: 'Marketplace.useEthereum',
+    defaultMessage: 'Use Ethereum and Omnicoin'
+  },
   communityPolicing: {
     id: 'Marketplace.communityPolicing',
     defaultMessage: 'Community policing'
   },
   omniBazaarFeatures: {
     id: 'Marketplace.omniBazaarFeatures',
-    defaultMessage: 'OmniBazaar Features and Benefits'
+    defaultMessage: 'OmniBazaar Feature'
   },
   omniBazaarFeature: {
     id: 'Marketplace.omniBazaarFeature',
@@ -337,12 +341,16 @@ export default defineMessages({
     id: 'Marketplace.makeImportantListings',
     defaultMessage: 'You can make important listings stand out.'
   },
+  noListingsFound: {
+    id: 'Marketplace.noListingsFound',
+    defaultMessage: 'No listings were found.'
+  },
   searchingForPublishers: {
-    id: 'SearchResults.searchingForPublishers',
+    id: 'Marketplace.searchingForPublishers',
     defaultMessage: 'Searching for publishers'
   },
   loadingListings: {
-    id: 'SearchMenu.loadingListings',
+    id: 'Marketplace.loadingListings',
     defaultMessage: 'Loading listings'
-  },
+  }
 });

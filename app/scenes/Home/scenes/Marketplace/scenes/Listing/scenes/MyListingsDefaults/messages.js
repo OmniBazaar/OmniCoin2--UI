@@ -11,18 +11,26 @@ export default defineMessages({
   },
   defaultsNote: {
     id: 'ListingsDefaults.defaultsNote',
-    defaultMessage: 'Pre-defined information for all new listings you are creating.'
+    defaultMessage: 'This information will be pre-populated into all new listings you create.'
   },
   saveListingSuccessMessage: {
     id: 'ListingsDefaults.saveListingSuccessMessage',
-    defaultMessage: 'Listing Defaults is saved successful'
+    defaultMessage: 'Listing Defaults were saved successfully.'
   },
   success: {
     id: 'ListingsDefaults.success',
     defaultMessage: 'Success'
   },
+  error: {
+    id: 'ListingsDefaults.error',
+    defaultMessage: 'Error'
+  },
   saveDefaults: {
     id: 'ListingsDefaults.saveDefaults',
     defaultMessage: 'SAVE DEFAULTS'
-  }
+  },
+  invalidAddress: {
+    id: 'ListingsDefaults.invalidAddress',
+    defaultMessage: 'Invalid address'
+  },
 });

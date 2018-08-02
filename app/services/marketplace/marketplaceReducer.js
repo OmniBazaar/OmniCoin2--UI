@@ -153,9 +153,10 @@ const reducer = handleActions({
 
     if (sortGridBy === 'price') {
       sortBy = 'convertedPrice';
+      const convertTo = (currency && currency === 'ALL') ? 'USD' : currency;
       gridData = gridData.map((item) => {
         const newItem = { ...item };
-        newItem.convertedPrice = currencyConverter(item.price, item.currency, currency);
+        newItem.convertedPrice = currencyConverter(item.price, item.currency, convertTo);
         return newItem;
       });
     }

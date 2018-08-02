@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux';
 import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import Idled from "react-idled";
-
+import Idled from 'react-idled';
+import { ipcRenderer } from 'electron';
 import {
   Route,
   NavLink,
@@ -40,6 +40,7 @@ import StartGuide from './components/StartGuide/StartGuide';
 import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
+import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -58,27 +59,42 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
-import { restartNode } from "../../services/blockchain/connection/connectionActions";
-import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { restartNode } from '../../services/blockchain/connection/connectionActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
+import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 
 const iconSize = 20;
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    ipcRenderer.on('messageForIdentityWindow', () => {
+      props.history.push('/identity-verification');
+    });
+  }
 
-  state = {visible: true};
-
+  state = {
+    visible: true
+  };
+  componentDidMount() {
+    this.init();
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
   }
 
-  componentDidMount() {
+  init() {
+    this.props.preferencesActions.loadLocalPreferences();
+    this.props.bitcoinActions.getWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
-    this.props.preferencesActions.loadPreferences();
+    this.props.dhtActions.dhtReconnect();
+    this.props.authActions.requestAppVersion();
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -86,7 +102,6 @@ class Home extends Component {
   toggleSettingsAccount = () => this.props.menuActions.showSettingsModal();
 
   togglePreferences = () => this.props.menuActions.showPreferencesModal();
-
 
   renderAccountSettings() {
     const { props } = this;
@@ -115,14 +130,15 @@ class Home extends Component {
   };
 
   handleChange = ({ idle }) => {
-    let { logoutTimeout } = this.props.preferences.preferences;
+    const { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout && idle && this.props.authActions.logout();
   };
 
   render() {
+    const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
-    logoutTimeout = logoutTimeout * 60000;
+    logoutTimeout *= 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
     if (!this.props.auth.currentUser) {
@@ -143,10 +159,15 @@ class Home extends Component {
     if (this.props.location.pathname === '/') {
       return (<Redirect
         to={{
-          pathname: '/start-guide',
+          pathname: '/marketplace',
         }}
       />);
     }
+
+    const { mail: { messages: { inbox } } } = this.props;
+
+    const unreadMessages = (inbox || []).filter(email => !email.read_status);
+
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -171,8 +192,8 @@ class Home extends Component {
                 <NavLink to="/wallet" activeClassName="active" className="menu-item">
                   <Image src={WalletIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id="Home.wallet"
-                    defaultMessage="Wallet"
+                    id="Home.wallets"
+                    defaultMessage="Wallets"
                   />
                 </NavLink>
                 <NavLink to="/marketplace" activeClassName="active" className="menu-item" onClick={() => this.setActiveCategory()}>
@@ -203,18 +224,19 @@ class Home extends Component {
                     defaultMessage="Processors"
                   />
                 </NavLink>
-                <NavLink to="/mail" activeClassName="active" className="menu-item">
+                <NavLink to="/mail" activeClassName="active" className={`menu-item${unreadMessages.length ? ' has-notifications' : ''}`}>
                   <Image src={MailIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.mail"
                     defaultMessage="Mail"
                   />
+                  {unreadMessages.length > 0 && <span className="notifications-counter">{unreadMessages.length}</span>}
                 </NavLink>
                 <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
-                    id='SettingsMenu.quickStart'
-                    defaultMessage='Quick Start'
+                    id="SettingsMenu.quickStart"
+                    defaultMessage="Quick Start"
                   />
                 </NavLink>
                 <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
@@ -224,6 +246,7 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <UpdateNotification />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
@@ -233,6 +256,7 @@ class Home extends Component {
             <AccountFooter />
             <AccountBalance />
             <SocialNetworksFooter />
+            <div className="version">{`Version: ${appVersion}`}</div>
           </div>
         </div>
         <div className={homeContentClass}>
@@ -281,12 +305,14 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout, requestAppVersion }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
+    dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
+    bitcoinActions: bindActionCreators({ getWallets }, dispatch),
   })
 )(Home);
 
@@ -303,6 +329,9 @@ Home.propTypes = {
     error: PropTypes.shape({}),
     loading: PropTypes.bool
   }),
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }),
   menuActions: PropTypes.shape({
     showSettingsModal: PropTypes.func,
     showPreferencesModal: PropTypes.func,
@@ -310,10 +339,19 @@ Home.propTypes = {
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func,
-    logout: PropTypes.func
+    logout: PropTypes.func,
+    requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
+  }).isRequired,
+  dhtActions: PropTypes.shape({
+    dhtReconnect: PropTypes.func
+  }),
+  mail: PropTypes.shape({
+    messages: PropTypes.shape({
+      inbox: PropTypes.array,
+    }),
   }).isRequired
 };
 
@@ -321,5 +359,7 @@ Home.defaultProps = {
   connection: {},
   auth: null,
   menuActions: null,
-  authActions: {}
+  authActions: {},
+  history: {},
+  dhtActions: {}
 };

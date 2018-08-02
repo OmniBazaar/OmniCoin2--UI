@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import _ from 'lodash';
+import { ChainTypes } from 'omnibazaarjs/es';
 import dateformat from 'dateformat';
 
 import PriorityTypes from '../../common/SearchPriorityType';
@@ -12,6 +13,7 @@ import {
   setEscrow,
   changePriority,
   changeCountry,
+  changeState,
   changeCity,
   changeCategory,
   changePublisherName,
@@ -32,20 +34,15 @@ import {
   updatePublisherData,
   getPublishers,
   changeIpAddress,
-  changeSearchPriorityData
+  changeSearchPriorityData,
+  setBtcAddress,
+  setEthAddress,
 } from './accountActions';
-
-const defaultPublisherData = {
-  priority: 'local',
-  country: '',
-  city: '',
-  category: '',
-  publisherName: '',
-  keywords: []
-};
 
 const defaultState = {
   referrer: true,
+  btcAddress: '',
+  ethAddress: '',
   publisher: false,
   transactionProcessor: false,
   wantsToVote: false,
@@ -53,6 +50,7 @@ const defaultState = {
   recentTransactions: [],
   recentTransactionsFiltered: [],
   recentTransactionsVisible: [],
+  coinType: null,
   sortDirection: 'descending',
   sortColumn: 'date',
   activePage: 1,
@@ -67,6 +65,7 @@ const defaultState = {
   sortVoteDirection: 'descending',
   sortVoteColumn: 'processor',
   loading: false,
+  loadingRecentTransactions: false,
   error: null,
   privateData: {
     firstname: '',
@@ -77,6 +76,7 @@ const defaultState = {
   publisherData: {
     priority: 'local',
     country: '',
+    state: '',
     city: '',
     category: '',
     publisherName: '',
@@ -87,7 +87,7 @@ const defaultState = {
     loading: false,
     error: null
   },
-  ipAddress: ''
+  ipAddress: '',
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -97,6 +97,39 @@ const sliceData = (data, activePage, rowsPerPage) => (
 const getTotalPages = (data, rowsPerPage) => (
   Math.ceil(data.length / rowsPerPage)
 );
+
+const getBadgeClass = (type) => {
+  switch (type) {
+    case ChainTypes.operations.escrow_create_operation:
+      return 'pending';
+    case ChainTypes.operations.transfer:
+      return 'transfer';
+    case ChainTypes.operations.escrow_release_operation:
+      return 'released';
+    case ChainTypes.operations.escrow_return_operation:
+      return 'returned';
+    case ChainTypes.operations.listing_delete_operation:
+      return 'listing';
+    case ChainTypes.operations.listing_update_operation:
+      return 'listing';
+    case ChainTypes.operations.listing_create_operation:
+      return 'listing';
+    case ChainTypes.operations.account_update:
+      return 'account';
+    case ChainTypes.operations.witness_create:
+      return 'account';
+    case ChainTypes.operations.welcome_bonus_operation:
+      return 'wBonus';
+    case ChainTypes.operations.referral_bonus_operation:
+      return 'rBonus';
+    case ChainTypes.operations.sale_bonus_operation:
+      return 'sBonus';
+    case ChainTypes.operations.witness_bonus_operation:
+      return 'witBonus';
+    default:
+      break;
+  }
+};
 
 const savePublisherData = data => {
   let newData = {
@@ -113,6 +146,7 @@ const savePublisherData = data => {
     case PriorityTypes.BY_CATEGORY:
       newData = {
         country: '',
+        state: '',
         city: '',
         publisherName: ''
       };
@@ -120,9 +154,12 @@ const savePublisherData = data => {
     case PriorityTypes.PUBLISHER:
       newData = {
         country: '',
+        state: '',
         city: '',
         keywords: []
       };
+      break;
+    default:
       break;
   }
 
@@ -139,7 +176,19 @@ const reducer = handleActions({
   [setReferrer](state) {
     return {
       ...state,
-      referrer: true,
+      referrer: !state.referrer,
+    };
+  },
+  [setBtcAddress](state, { payload: { address } }) {
+    return {
+      ...state,
+      btcAddress: address,
+    };
+  },
+  [setEthAddress](state, { payload: { address } }) {
+    return {
+      ...state,
+      ethAddress: address,
     };
   },
   [setPublisher](state) {
@@ -176,6 +225,15 @@ const reducer = handleActions({
       publisherData: {
         ...state.publisherData,
         country
+      }
+    };
+  },
+  [changeState](state, { payload }) {
+    return {
+      ...state,
+      publisherData: {
+        ...state.publisherData,
+        state: payload.state
       }
     };
   },
@@ -332,23 +390,33 @@ const reducer = handleActions({
       rescanBlockchain: !state.rescanBlockchain,
     };
   },
-  [getRecentTransactions](state) {
+  [getRecentTransactions](state, { payload: { coinType } }) {
     return {
       ...state,
-      loading: true,
+      recentTransactions: [],
+      recentTransactionsFiltered: [],
+      recentTransactionsVisible: [],
+      coinType,
+      loadingRecentTransactions: true,
       error: null
     };
   },
-  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => ({
-    ...state,
-    loading: false,
-    error: null,
-    recentTransactions: transactions,
-    recentTransactionsFiltered: transactions,
-  }),
+  GET_RECENT_TRANSACTIONS_SUCCEEDED: (state, { transactions }) => {
+    const changedTransactions = transactions.map((item) => ({
+      ...item,
+      statusText: getBadgeClass(item.type),
+    }));
+    return {
+      ...state,
+      loadingRecentTransactions: false,
+      error: null,
+      recentTransactions: changedTransactions,
+      recentTransactionsFiltered: changedTransactions,
+    };
+  },
   GET_RECENT_TRANSACTIONS_FAILED: (state, { error }) => ({
     ...state,
-    loading: false,
+    loadingRecentTransactions: false,
     error
   }),
   [filterData](state, { payload: { filterText } }) {
@@ -356,7 +424,7 @@ const reducer = handleActions({
     const { rowsPerPage } = state;
     let filteredData = state.recentTransactions;
     if (filterText) {
-      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1)
+      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
     const totalPages = getTotalPages(filteredData, rowsPerPage);
     const currentData = sliceData(filteredData, activePage, rowsPerPage);
@@ -399,8 +467,9 @@ const reducer = handleActions({
         });
         sortedData = sortDirection === 'ascending' ? sortedData.reverse() : sortedData;
       } else {
-        const sortBy = _.sortBy(data, [sortColumn]);
-        sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
+        sortedData = data;
+        // const sortBy = _.sortBy(data, [sortColumn]);
+        // sortedData = sortDirection === 'ascending' ? sortBy.reverse() : sortBy;
       }
       currentData = sliceData(sortedData, activePage, rowsPerPage);
 
@@ -442,12 +511,19 @@ const reducer = handleActions({
       }
     }
 
-    if (!!filterText) {
+    if (filterText) {
       data = data.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
     }
 
+    const sortFields = [sortColumn];
+    if (sortColumn === 'fromTo') {
+      sortFields.unshift('isIncoming');
+    }
+    sortedData = _.orderBy(data, sortFields, [sortDirection === 'ascending' ? 'asc' : 'desc']);
+
     const { rowsPerPage } = state;
     const currentData = sliceData(sortedData, activePageSort, rowsPerPage);
+
 
     return {
       ...state,
@@ -493,7 +569,11 @@ const reducer = handleActions({
       ...state,
       ipAddress: ip
     };
-  }
+  },
+  LOGOUT: (state) => ({
+    ...state,
+    ...defaultState,
+  }),
 }, defaultState);
 
 export default reducer;

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {defineMessages, injectIntl} from 'react-intl';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import hash from 'object-hash';
 import dateformat from 'dateformat';
@@ -14,10 +14,13 @@ import {
   TableHeader,
   Input,
   Icon,
-  Image,
   Loader
 } from 'semantic-ui-react';
-import {debounce} from 'lodash';
+import {
+  NavLink
+} from 'react-router-dom';
+
+import { debounce } from 'lodash';
 
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import {
@@ -27,7 +30,7 @@ import {
   setActivePage,
   sortData,
   filterData
-} from "../../../../../../../../services/marketplace/myPurchases/myPurchasesActions";
+} from '../../../../../../../../services/marketplace/myPurchases/myPurchasesActions';
 
 import './purchases-table.scss';
 
@@ -35,6 +38,10 @@ const messages = defineMessages({
   id: {
     id: 'PurchasesTable.id',
     defaultMessage: 'ID'
+  },
+  title: {
+    id: 'PurchasesTable.title',
+    defaultMessage: 'Title'
   },
   count: {
     id: 'PurchasesTable.count',
@@ -78,7 +85,7 @@ class PurchasesTable extends Component {
   componentWillReceiveProps(nextProps) {
     const { type } = nextProps;
     if (type !== this.props.type) {
-     this.fetchData(type);
+      this.fetchData(type);
     }
     if (this.props.data.loading && !nextProps.data.loading) {
       this.props.myPurchasesActions.setPagination(this.props.rowsPerPage);
@@ -101,10 +108,22 @@ class PurchasesTable extends Component {
     this.props.myPurchasesActions.sortData(clickedColumn);
   };
 
-  handlePaginationChange = (e, {activePage}) => {
+  handlePaginationChange = (e, { activePage }) => {
     this.props.myPurchasesActions.setActivePage(activePage);
   };
 
+  getCurrencyAbbreviation(currency) {
+    switch (currency) {
+      case 'omnicoin':
+        return 'XOM';
+      case 'bitcoin':
+        return 'BTC';
+      case 'ethereum':
+        return 'ETH';
+      default:
+        return 'XOM';
+    }
+  }
 
   render() {
     const {
@@ -115,113 +134,121 @@ class PurchasesTable extends Component {
       dataFiltered,
       loading
     } = this.props.data;
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
 
     return (
-        <div className="purchases-table">
-          <div className="data-table">
-            <div className="top-detail">
-              <Input
-                icon={<Icon name="filter"/>}
-                iconPosition="left"
-                placeholder="Filter"
-                className="filter-input"
-                onChange={this.handleFilterChange}
+      <div className="purchases-table">
+        <div className="data-table">
+          <div className="top-detail">
+            <Input
+              icon={<Icon name="filter" />}
+              iconPosition="left"
+              placeholder="Filter"
+              className="filter-input"
+              onChange={this.handleFilterChange}
+            />
+            <div className="pagination-container">
+              <Pagination
+                activePage={activePage}
+                onPageChange={this.handlePaginationChange}
+                totalPages={totalPages}
               />
-              <div className="pagination-container">
-                <Pagination
-                  activePage={activePage}
-                  onPageChange={this.handlePaginationChange}
-                  totalPages={totalPages}
-                />
-              </div>
             </div>
-            <div className="table-container">
-              {loading ? <Loader active inline="centered"/> :
-                <Table {...this.props.tableProps}>
-                  <TableHeader>
-                    <TableRow>
+          </div>
+          <div className="table-container">
+            {loading ? <Loader active inline="centered" /> :
+              <Table {...this.props.tableProps}>
+                <TableHeader>
+                  <TableRow>
+                    <TableHeaderCell
+                      key="id"
+                      sorted={sortColumn === 'id' ? sortDirection : null}
+                      onClick={this.sortData('id')}
+                    >
+                      {formatMessage(messages.id)}
+                    </TableHeaderCell>
+                    {this.props.type === 'buy' &&
                       <TableHeaderCell
-                        key="id"
-                        sorted={sortColumn === 'id' ? sortDirection : null}
-                        onClick={this.sortData('id')}
+                        key="title"
+                        sorted={sortColumn === 'title' ? sortDirection : null}
+                        onClick={this.sortData('title')}
                       >
-                        {formatMessage(messages.id)}
+                        {formatMessage(messages.title)}
                       </TableHeaderCell>
-                      <TableHeaderCell
-                        key="id"
-                        sorted={sortColumn === 'date' ? sortDirection : null}
-                        onClick={this.sortData('date')}
-                      >
-                        {formatMessage(messages.date)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="expiration_time"
-                        sorted={sortColumn === 'expiration_time' ? sortDirection : null}
-                        onClick={this.sortData('expiration_time')}
-                      >
-                        {formatMessage(messages.expirationTime)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="count"
-                        sorted={sortColumn === 'count' ? sortDirection : null}
-                        onClick={this.sortData('count')}
-                      >
-                        {formatMessage(messages.count)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="amount"
-                        sorted={sortColumn === 'price' ? sortDirection : null}
-                        onClick={this.sortData('price')}
-                      >
-                        {formatMessage(messages.price)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="publisher"
-                        sorted={sortColumn === 'publisher' ? sortDirection : null}
-                        onClick={this.sortData('publisher')}
-                      >
-                        {formatMessage(messages.publisher)}
-                      </TableHeaderCell>
-                      <TableHeaderCell
-                        key="seller"
-                        sorted={sortColumn === 'seller' ? sortDirection : null}
-                        onClick={this.sortData('seller')}
-                      >
-                        {formatMessage(messages.seller)}
-                      </TableHeaderCell>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {!!dataFiltered && dataFiltered.map(row =>
-                      (
-                        <TableRow key={hash(row)}>
-                          <TableCell>{row.id}</TableCell>
-                          <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
-                          <TableCell>{dateformat(row.expiration_time, '	yyyy-mm-dd HH:MM:ss')}</TableCell>
-                          <TableCell>{row.count}</TableCell>
-                          <TableCell>{row.price} XOM</TableCell>
-                          <TableCell>{row.publisher}</TableCell>
-                          <TableCell>{row.seller}</TableCell>
-                        </TableRow>
-                      ))
                     }
-                  </TableBody>
-                </Table>
-              }
-            </div>
+                    <TableHeaderCell
+                      key="id"
+                      sorted={sortColumn === 'date' ? sortDirection : null}
+                      onClick={this.sortData('date')}
+                    >
+                      {formatMessage(messages.date)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="count"
+                      sorted={sortColumn === 'count' ? sortDirection : null}
+                      onClick={this.sortData('count')}
+                    >
+                      {formatMessage(messages.count)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="amount"
+                      sorted={sortColumn === 'price' ? sortDirection : null}
+                      onClick={this.sortData('price')}
+                    >
+                      {formatMessage(messages.price)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="publisher"
+                      sorted={sortColumn === 'publisher' ? sortDirection : null}
+                      onClick={this.sortData('publisher')}
+                    >
+                      {formatMessage(messages.publisher)}
+                    </TableHeaderCell>
+                    <TableHeaderCell
+                      key="seller"
+                      sorted={sortColumn === 'seller' ? sortDirection : null}
+                      onClick={this.sortData('seller')}
+                    >
+                      {formatMessage(messages.seller)}
+                    </TableHeaderCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {!!dataFiltered && dataFiltered.map(row =>
+                    (
+                      <TableRow key={hash(row)}>
+                        <TableCell>
+                          <NavLink to={`/listing/${row.id}`}>
+                            {row.id}
+                          </NavLink>
+                        </TableCell>
+                        {this.props.type === 'buy' &&
+                          <TableCell>{row.title}</TableCell>
+                        }
+                        <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
+                        <TableCell>{row.count}</TableCell>
+                        <TableCell>{row.price} {this.getCurrencyAbbreviation(row.currencySelected)}</TableCell>
+                        <TableCell>{row.publisher}</TableCell>
+                        <TableCell>{row.seller}</TableCell>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            }
+          </div>
 
-            <div className="top-detail bottom">
-              <div className="pagination-container">
-                <Pagination
-                  activePage={activePage}
-                  onPageChange={this.handlePaginationChange}
-                  totalPages={totalPages}
-                />
-              </div>
+          <div className="top-detail bottom">
+            <div className="pagination-container">
+              <Pagination
+                activePage={activePage}
+                onPageChange={this.handlePaginationChange}
+                totalPages={totalPages}
+              />
             </div>
           </div>
         </div>
+      </div>
     );
   }
 }

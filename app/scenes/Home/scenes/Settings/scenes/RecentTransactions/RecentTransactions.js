@@ -20,6 +20,7 @@ import {
 import { debounce } from 'lodash';
 import { ChainTypes } from 'omnibazaarjs/es';
 import cn from 'classnames';
+import { CoinTypes } from '../../../Wallet/constants';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import TransactionDetails from './components/TransactionDetails/TransactionDetails';
@@ -43,76 +44,80 @@ const iconSizeToHeight = 16;
 
 const messages = defineMessages({
   date: {
-    id: 'Settings.date',
+    id: 'RecentTransactions.date',
     defaultMessage: 'Date'
   },
   memo: {
-    id: 'Settings.memo',
+    id: 'RecentTransactions.memo',
     defaultMessage: 'Memo'
   },
   amount: {
-    id: 'Settings.amount',
+    id: 'RecentTransactions.amount',
     defaultMessage: 'Amount'
   },
   fee: {
-    id: 'Settings.fee',
+    id: 'RecentTransactions.fee',
     defaultMessage: 'Fee'
   },
   balance: {
-    id: 'Settings.balance',
+    id: 'RecentTransactions.balance',
     defaultMessage: 'Balance'
   },
   details: {
-    id: 'Settings.details',
+    id: 'RecentTransactions.details',
     defaultMessage: 'DETAILS'
   },
   status: {
-    id: 'Settings.type',
+    id: 'RecentTransactions.type',
     defaultMessage: 'Status'
   },
   [ChainTypes.operations.transfer]: {
-    id: 'Settings.transfer',
+    id: 'RecentTransactions.transfer',
     defaultMessage: 'TRANSFER'
   },
   [ChainTypes.operations.escrow_create_operation]: {
-    id: 'Settings.pending',
+    id: 'RecentTransactions.pending',
     defaultMessage: 'PENDING'
   },
   [ChainTypes.operations.escrow_return_operation]: {
-    id: 'Settings.return',
+    id: 'RecentTransactions.return',
     defaultMessage: 'RETURNED'
   },
   [ChainTypes.operations.escrow_release_operation]: {
-    id: 'Settings.release',
+    id: 'RecentTransactions.release',
     defaultMessage: 'RELEASED'
   },
   [ChainTypes.operations.listing_create_operation]: {
-    id: 'Settings.createListing',
+    id: 'RecentTransactions.createListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.listing_update_operation]: {
-    id: 'Settings.updateListing',
+    id: 'RecentTransactions.updateListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.listing_delete_operation]: {
-    id: 'Settings.deleteListing',
+    id: 'RecentTransactions.deleteListing',
     defaultMessage: 'LISTING'
   },
   [ChainTypes.operations.account_update]: {
-    id: 'Settings.updateAccount',
+    id: 'RecentTransactions.updateAccount',
     defaultMessage: 'ACCOUNT'
   },
   [ChainTypes.operations.referral_bonus_operation]: {
-    id: 'Settings.referralBonus',
+    id: 'RecentTransactions.referralBonus',
     defaultMessage: 'REFERRAL BONUS'
   },
   [ChainTypes.operations.welcome_bonus_operation]: {
-    id: 'Settings.welcomeBonus',
+    id: 'RecentTransactions.welcomeBonus',
     defaultMessage: 'WELCOME BONUS'
   },
   [ChainTypes.operations.sale_bonus_operation]: {
-    id: 'Settings.saleBonus',
+    id: 'RecentTransactions.saleBonus',
     defaultMessage: 'SALE BONUS'
+  },
+  [ChainTypes.operations.witness_bonus_operation]: {
+    id: 'RecentTransactions.witnessBonus',
+    defaultMessage: 'WITNESS BONUS'
   }
 });
 
@@ -126,14 +131,27 @@ class RecentTransactions extends Component {
   }
 
   componentWillMount() {
-    this.props.accountSettingsActions.getRecentTransactions();
+    this.fetchTransactions(this.props.coinType);
+  }
+
+  componentWillUnmount() {
+    if (this.props.account.showDetails) {
+      this.props.accountSettingsActions.showDetailsModal();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.account.loading && !nextProps.account.loading) {
+    if (this.props.account.loadingRecentTransactions && !nextProps.account.loadingRecentTransactions) {
       this.props.accountSettingsActions.sortData('date', 'descending');
       this.props.accountSettingsActions.setPagination(this.props.rowsPerPage);
     }
+    if (this.props.coinType !== nextProps.coinType) {
+      this.fetchTransactions(nextProps.coinType);
+    }
+  }
+
+  fetchTransactions(coinType) {
+    this.props.accountSettingsActions.getRecentTransactions(coinType);
   }
 
   handleFilterChange(e, data) {
@@ -158,35 +176,6 @@ class RecentTransactions extends Component {
     this.props.accountSettingsActions.showDetailsModal();
   }
 
-  getBadgeClass(type) {
-    switch (type) {
-      case ChainTypes.operations.escrow_create_operation:
-        return 'pending';
-      case ChainTypes.operations.transfer:
-        return 'transfer';
-      case ChainTypes.operations.escrow_release_operation:
-        return 'released';
-      case ChainTypes.operations.escrow_return_operation:
-        return 'returned';
-      case ChainTypes.operations.listing_delete_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_update_operation:
-        return 'listing';
-      case ChainTypes.operations.listing_create_operation:
-        return 'listing';
-      case ChainTypes.operations.account_update:
-        return 'account';
-      case ChainTypes.operations.witness_create:
-        return 'account';
-      case ChainTypes.operations.welcome_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.referral_bonus_operation:
-        return 'bonus';
-      case ChainTypes.operations.sale_bonus_operation:
-        return 'bonus';
-    }
-  }
-
   render() {
     const {
       activePage,
@@ -194,11 +183,11 @@ class RecentTransactions extends Component {
       totalPages,
       sortColumn,
       recentTransactionsVisible,
-      loading,
+      loadingRecentTransactions,
       showDetails
     } = this.props.account;
+    const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
-
     return (
       <div className="recent-transactions">
         <div className="data-table">
@@ -219,7 +208,7 @@ class RecentTransactions extends Component {
             </div>
           </div>
           <div className="table-container">
-            {loading ? <Loader active inline="centered" /> :
+            {loadingRecentTransactions || coinType !== this.props.account.coinType ? <Loader active inline="centered" /> :
             <Table {...this.props.tableProps}>
               <TableHeader>
                 <TableRow>
@@ -239,13 +228,15 @@ class RecentTransactions extends Component {
                     <Image src={IncomingIcon} width={iconSize} height={iconSize} className="from-icon" />From
                     <Image src={OutgoingIcon} width={iconToSize} height={iconSizeToHeight} className="to-icon" />To
                   </TableHeaderCell>
-                  <TableHeaderCell
-                    key="memo"
-                    sorted={sortColumn === 'memo' ? sortDirection : null}
-                    onClick={this.sortData('memo')}
-                  >
-                    {formatMessage(messages.memo)}
-                  </TableHeaderCell>
+                  {coinType === CoinTypes.OMNI_COIN &&
+                    <TableHeaderCell
+                      key="memo"
+                      sorted={sortColumn === 'memo' ? sortDirection : null}
+                      onClick={this.sortData('memo')}
+                    >
+                      {formatMessage(messages.memo)}
+                    </TableHeaderCell>
+                  }
                   <TableHeaderCell
                     key="amount"
                     sorted={sortColumn === 'amount' ? sortDirection : null}
@@ -260,13 +251,15 @@ class RecentTransactions extends Component {
                   >
                     {formatMessage(messages.fee)}
                   </TableHeaderCell>
-                  <TableHeaderCell
-                    key="fee"
-                    sorted={sortColumn === 'type' ? sortDirection : null}
-                    onClick={this.sortData('type')}
-                  >
-                    {formatMessage(messages.status)}
-                  </TableHeaderCell>
+                  {coinType === CoinTypes.OMNI_COIN &&
+                    <TableHeaderCell
+                      key="type"
+                      sorted={sortColumn === 'type' ? sortDirection : null}
+                      onClick={this.sortData('statusText')}
+                    >
+                      {formatMessage(messages.status)}
+                    </TableHeaderCell>
+                  }
                   {/* <TableHeaderCell */}
                   {/* key="balance" */}
                   {/* sorted={sortColumn === 'balance' ? sortDirection : null} */}
@@ -293,28 +286,34 @@ class RecentTransactions extends Component {
                               <span> {row.fromTo} </span>
                             </div>
                           </TableCell>
-                          <TableCell>{row.memo}</TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>{row.memo}</TableCell>
+                          }
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.isIncoming ? 0 : row.fee}</TableCell>
-                          <TableCell>
-                            <div className={cn('badge-tag', this.getBadgeClass(row.type))}>
-                              {formatMessage(messages[row.type])}
-                            </div>
-                          </TableCell>
+                          <TableCell>{row.fee}</TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>
+                              <div className={cn('badge-tag', row.statusText)}>
+                                {formatMessage(messages[row.type])}
+                              </div>
+                            </TableCell>
+                          }
                           {/* <TableCell className="balance"> */}
                           {/* {row.balance} */}
                           {/* </TableCell> */}
-                          <TableCell>
-                            <span
-                              className="link"
-                              onClick={() => this.onClickDetails(row.id)}
-                              onKeyDown={() => this.onClickDetails(row.id)}
-                              role="link"
-                              tabIndex={0}
-                            >
-                              {formatMessage(messages.details)}
-                            </span>
-                          </TableCell>
+                          {coinType === CoinTypes.OMNI_COIN &&
+                            <TableCell>
+                              <span
+                                className="link"
+                                onClick={() => this.onClickDetails(row.id)}
+                                onKeyDown={() => this.onClickDetails(row.id)}
+                                role="link"
+                                tabIndex={0}
+                              >
+                                {formatMessage(messages.details)}
+                              </span>
+                            </TableCell>
+                          }
                         </TableRow>
                       ))
                     }
@@ -346,6 +345,7 @@ class RecentTransactions extends Component {
 
 
 RecentTransactions.propTypes = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: PropTypes.shape({
     sortData: PropTypes.func,
     filterData: PropTypes.func,
@@ -368,7 +368,7 @@ RecentTransactions.propTypes = {
     totalPages: 1,
     sortColumn: 'date',
     sortDirection: 'descending',
-    loading: PropTypes.bool
+    loadingRecentTransactions: PropTypes.bool
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -377,6 +377,7 @@ RecentTransactions.propTypes = {
 };
 
 RecentTransactions.defaultProps = {
+  coinType: CoinTypes.OMNI_COIN,
   accountSettingsActions: {},
   account: {},
   tableProps: {},

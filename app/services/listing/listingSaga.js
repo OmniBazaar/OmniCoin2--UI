@@ -6,7 +6,7 @@ import {
   select
 } from 'redux-saga/effects';
 import mime from 'mime-types';
-import { FetchChain, TransactionBuilder, hash } from 'omnibazaarjs/es';
+import { FetchChain, hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
 import {
   ws,
@@ -16,6 +16,7 @@ import {
 
 import {
   addListingImage,
+  startUploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
   startDeleteListingImage,
@@ -31,25 +32,28 @@ import {
   getListingDetailFailed,
   requestMyListingsSuccess,
   requestMyListingsError,
-  isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
-  searchPublishersFinish
+  searchPublishersFinish, awaitListingDetail
 } from './listingActions';
-import {
-  countPeersForKeywords
-} from '../search/dht/dhtSaga';
-import { getAllPublishers } from '../accountSettings/services';
+import { clearSearchResults } from '../search/searchActions';
+import { countPeersForKeywords } from '../search/dht/dhtSaga';
+import { getAllPublishers, getPublisherByIp } from '../accountSettings/services';
 import {
   saveImage,
   deleteImage,
+  deleteListingOnPublisher,
+  createListingOnPublisher,
+  updateListingOnBlockchain,
+  ensureListingData,
+  checkPublisherAliveStatus,
   createListing,
-  editListing,
   deleteListing,
+  editListing,
   getListingFromBlockchain,
   reportListingOnBlockchain,
-  createListingHash
 } from './apis';
+
 
 export function* listingSubscriber() {
   yield all([
@@ -61,14 +65,16 @@ export function* listingSubscriber() {
     takeEvery('DELETE_LISTING', deleteMyListing),
     takeEvery('IS_LISTING_FINE', checkListingHash),
     takeEvery('SEARCH_PUBLISHERS', searchPublishers),
-    takeEvery('REPORT_LISTING', reportListing)
+    takeEvery('REPORT_LISTING', reportListing),
+    takeEvery('MARKETPLACE_RETURN_LISTINGS', marketplaceReturnListings)
   ]);
 }
 
-function* uploadImage({ payload: { publisher, file, imageId } }) {
+export function* uploadImage({ payload: { publisher, file, imageId } }) {
   try {
-    yield put(addListingImage(publisher, file, imageId));
-    const resultImage = yield call(saveImage, publisher, file);
+    const { currentUser } = (yield select()).default.auth;
+    yield put(addListingImage(file, imageId));
+    const resultImage = yield call(saveImage, currentUser, publisher, file);
     yield put(uploadListingImageSuccess(
       imageId,
       resultImage.image,
@@ -80,16 +86,17 @@ function* uploadImage({ payload: { publisher, file, imageId } }) {
   }
 }
 
-function* removeImage({ payload: { publisher, image } }) {
+export function* removeImage({ payload: { publisher, image } }) {
   const { id, fileName, localFilePath } = image;
   try {
     yield put(startDeleteListingImage(id));
     if (localFilePath && !fileName) {
-    	yield put(deleteListingImageSuccess(id));
-    	return;
+      yield put(deleteListingImageSuccess(id));
+      return;
     }
 
-    const result = yield call(deleteImage, publisher, fileName);
+    const { currentUser } = (yield select()).default.auth;
+    const result = yield call(deleteImage, currentUser, publisher, fileName);
     if (result.success) {
       yield put(deleteListingImageSuccess(id));
     } else {
@@ -101,46 +108,122 @@ function* removeImage({ payload: { publisher, image } }) {
   }
 }
 
-function* checkAndUploadImages(publisher, listing) {
-	for (let i=0; i<listing.images.length; i++) {
-		const imageItem = listing.images[i];
-		const { localFilePath, path, id } = imageItem;
-		if (localFilePath) {
-			const type = mime.lookup(path);
-			const file = {
-				path: localFilePath,
-				name: path,
-				type
-			};
-			const result = yield call(saveImage, publisher, file);
-			yield put(uploadListingImageSuccess(
-	      id,
-	      result.image,
-	      result.thumb,
-	      result.fileName
-	    ));
-	    listing.images[i] = {
-	    	path: result.image,
-	    	thumb: result.thumb,
-	    	image_name: result.fileName
-	    };
-		}
-	};
+function* uploadLocalFile(imageId, user, publisher, localFilePath, path) {
+  const type = mime.lookup(path);
+  const file = {
+    path: localFilePath,
+    name: path,
+    type
+  };
+  return yield call(uploadFile, imageId, user, publisher, file);
+}
+
+function* uploadFile(imageId, user, publisher, file) {
+  try{
+    yield put(startUploadListingImage(imageId));
+    const result = yield call(saveImage, user, publisher, file);
+    yield put(uploadListingImageSuccess(
+      imageId,
+      result.image,
+      result.thumb,
+      result.fileName
+    ));
+    return {
+      path: result.image,
+      thumb: result.thumb,
+      image_name: result.fileName
+    };
+  } catch (err) {
+    console.log(err);
+    yield put(uploadListingImageError(imageId, err));
+    return {
+      error: err
+    };
+  }
+}
+
+function* checkAndUploadImages(user, publisher, listing, oldPublisher) {
+  const results = yield all(listing.images.map((imageItem) => {
+    const { localFilePath, path, file, id } = imageItem;
+    if (localFilePath) {
+      return call(uploadLocalFile, id, user, publisher, localFilePath, path);
+    } else if (file) {
+      return call(uploadFile, id, user, publisher, file);
+    } else {
+      if (!oldPublisher) {
+        const img = { ...imageItem };
+        delete img.id;
+        return img;
+      }
+
+      const url = `http://${oldPublisher.publisher_ip}/publisher-images/${imageItem.path}`;
+      const nFile = {
+        name: imageItem.path,
+        type: mime.lookup(imageItem.path),
+        url
+      };
+      return call(uploadFile, id, user, publisher, nFile);
+    }
+  }));
+
+  for (let i = 0; i < results.length; i++) {
+    if (results[i].error) {
+      throw new Error('Upload image error: ' + results[i].error);
+    }
+  }
+
+  return results;
+}
+
+function* moveToAnotherPublisher(user, publisher, listing, listingId) {
+  const oldPublisher = yield call(getPublisherByIp, listing.ip);
+  listing.images = yield call(checkAndUploadImages, user, publisher, listing, oldPublisher);
+  yield call(deleteListingOnPublisher, user, oldPublisher, { ...listing, listing_id: listingId });
+  listing = ensureListingData(listing);
+  yield call(updateListingOnBlockchain, user, publisher, listingId, listing);
+  return yield call(createListingOnPublisher, user, listing, publisher, listingId);
 }
 
 function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   let result;
   try {
+    const { currentUser } = (yield select()).default.auth;
+
+    // saving take long time and user might logout in the middle of saving,
+    // so we need to clone current user object
+    const user = { ...currentUser };
+    const isPublisherAlive = yield call(checkPublisherAliveStatus, user, publisher);
+    if (!isPublisherAlive) {
+      throw new Error('publisher_not_alive');
+    }
+
+    if (!listing.price_using_btc && listing.currency !== 'BITCOIN') {
+      listing = { ...listing };
+      delete listing.bitcoin_address;
+    }
+
+    if (!listing.price_using_eth && listing.currency !== 'ETHEREUM') {
+      listing = { ...listing };
+      delete listing.ethereum_address;
+    }
+
     if (listingId) {
-      result = yield call(editListing, publisher, listingId, listing);
+      if (publisher.publisher_ip !== listing.ip) {
+        result = yield call(moveToAnotherPublisher, user, publisher, listing, listingId);
+      } else {
+        listing.images = yield call(checkAndUploadImages, user, publisher, listing);
+        result = yield call(editListing, user, publisher, listingId, listing);
+      }
     } else {
-      yield checkAndUploadImages(publisher, listing);
-      result = yield call(createListing, publisher, listing);
+      listing.images = yield call(checkAndUploadImages, user, publisher, listing);
+      result = yield call(createListing, user, publisher, listing);
     }
 
     if (!listingId) {
       listingId = result.listing_id;
     }
+
+    result.ip = publisher.publisher_ip;
 
     yield put({ type: 'DHT_RECONNECT' });
     yield put(saveListingSuccess(result, listingId));
@@ -150,56 +233,40 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
   }
 }
 
-function* getListingDetail({ payload: { listingId }}) {
+export function* getListingDetail({ payload: { listingId } }) {
   try {
-    const { currentUser } = (yield select()).default.auth;
-    const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
-    let listings = (yield select()).default.search.searchResults;
-    let listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
-    if (!listingDetail) {
-      listings = (yield select()).default.listing.myListings;
-      listingDetail = yield call(async () => listings.find(listing => listing['listing_id'] === listingId));
-    }
-
     const blockchainListingData = yield call(getListingFromBlockchain, listingId);
-    if (!blockchainListingData) {
-      listingDetail.existsInBlockchain = false;
-      listingDetail.quantity = 0;
-    } else {
-      listingDetail.existsInBlockchain = true;
-      listingDetail.quantity = blockchainListingData.quantity;
-      listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
-    }
-
-    const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
-    listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
-    listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
-    if (listingDetail.reputationVotesCount === 0) {
-      listingDetail.reputationScore = 5000;
-    }
-
-    yield put(getListingDetailSucceeded(listingDetail));
+    const publisherAcc = yield call(FetchChain, 'getAccount', blockchainListingData.publisher);
+    const id = getNewId().toString();
+    const message = {
+      id: id,
+      type: messageTypes.MARKETPLACE_GET_LISTING,
+      command: {
+        publishers: [{
+          address: publisherAcc.get('publisher_ip'),
+          listing_ids: [listingId]
+        }]
+      }
+    };
+    ws.send(JSON.stringify(message));
+    yield put(awaitListingDetail(listingId, id));
   } catch (error) {
     console.log(error);
     yield put(getListingDetailFailed(error));
   }
 }
 
-function* requestMyListings() {
-	try {
+export function* requestMyListings() {
+  try {
+    yield put(clearSearchResults());
+
     const { currentUser } = (yield select()).default.auth;
-		const myListings =  yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
-		let getListingCommands = (yield Promise.all(
-		  myListings.map(
-		    listing => FetchChain('getAccount', listing.publisher)
-      )
-    ))
-      .map((account, idx) => {
-        return {
-          listing_id: myListings[idx].id,
-          address: account.get('publisher_ip')
-        }
-      })
+    const myListings = yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
+    const getListingCommands = (yield Promise.all(myListings.map(listing => FetchChain('getAccount', listing.publisher))))
+      .map((account, idx) => ({
+        listing_id: myListings[idx].id,
+        address: account.get('publisher_ip')
+      }))
       .filter(el => !!el.address)
       .reduce((arr, curr) => {
         const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
@@ -210,15 +277,14 @@ function* requestMyListings() {
               address: curr.address,
               listing_ids: [curr.listing_id]
             }
-          ]
-        } else {
-          val.listing_ids.push(curr.listing_id);
-          return arr;
+          ];
         }
+        val.listing_ids.push(curr.listing_id);
+        return arr;
       }, []);
-		const ids = [];
+    const ids = [];
 
-		getListingCommands.forEach(command => {
+    getListingCommands.forEach(command => {
 		  const id = getNewId();
 		  ids.push(id);
 		  const message = {
@@ -232,15 +298,17 @@ function* requestMyListings() {
 		  ws.send(JSON.stringify(message));
     });
     yield put(requestMyListingsSuccess(ids));
-	} catch (err) {
+  } catch (err) {
     console.log(err);
-		yield put(requestMyListingsError(err));
-	}
+    yield put(requestMyListingsError(err));
+  }
 }
 
-function* deleteMyListing({ payload: { publisher, listing } }) {
+export function* deleteMyListing({ payload: { publisher, listing } }) {
   try {
-    yield call(deleteListing, publisher, listing);
+    const { currentUser } = (yield select()).default.auth;
+    const user = { ...currentUser };
+    yield call(deleteListing, user, publisher, listing);
     yield put(deleteListingSuccess(listing.listing_id));
   } catch (err) {
     console.log(err);
@@ -248,9 +316,9 @@ function* deleteMyListing({ payload: { publisher, listing } }) {
   }
 }
 
-function* checkListingHash({ payload: { listing } }) {
+export function* checkListingHash({ payload: { listing } }) {
   try {
-    const blockchainListing =  (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
+    const blockchainListing = (yield Apis.instance().db_api().exec('get_objects', [[listing.listing_id]]))[0];
 
     if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
       yield put(isListingFineSucceeded(blockchainListing));
@@ -262,7 +330,7 @@ function* checkListingHash({ payload: { listing } }) {
   }
 }
 
-function* searchPublishers({ payload: { keywords } }) {
+export function* searchPublishers({ payload: { keywords } }) {
   try {
     const publishers = yield call(getAllPublishers);
     if (!keywords || !keywords.length) {
@@ -271,12 +339,25 @@ function* searchPublishers({ payload: { keywords } }) {
     }
 
     const peers = yield call(countPeersForKeywords, keywords);
-
     const results = [];
-    publishers.forEach(pub => {
+    const {
+      default: {
+        account: { ipAddress, publisher },
+        auth: { account: { publisher_ip } },
+      },
+    } = (yield select());
+
+    publishers.forEach((pub) => {
+      const result = { ...pub };
+      const isAPublisherOnMemory = publisher && ipAddress === pub.publisher_ip;
+      const isAPublisherOnAuth = publisher_ip && pub.publisher_ip === publisher_ip;
+
       if (peers[pub.publisher_ip]) {
-        pub.listingCount = peers[pub.publisher_ip];
-        results.push(pub);
+        result.listingCount = peers[pub.publisher_ip];
+        results.push(result);
+      } else if (isAPublisherOnMemory || isAPublisherOnAuth) {
+        result.listingCount = 0;
+        results.push(result);
       }
     });
 
@@ -294,9 +375,43 @@ function* searchPublishers({ payload: { keywords } }) {
 function* reportListing({ payload: { listingId } }) {
   try {
     yield call(reportListingOnBlockchain, listingId);
-    yield put(reportListingSuccess())
+    yield put(reportListingSuccess());
   } catch (error) {
-    console.log('ERROR ', error);
-    yield put(reportListingError(JSON.stringify(error)));
+    yield put(reportListingError(error.toString()));
+  }
+}
+
+function* marketplaceReturnListings({ data }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const userAcc = yield call(FetchChain, 'getAccount', currentUser.username);
+    const listingsObj = JSON.parse(data.command.listings);
+    const { listingDetailRequest } = (yield select()).default.listing;
+    if (!!listingsObj.listings && data.id === listingDetailRequest.wsMessageId) {
+      const listingDetail = listingsObj.listings[0];
+      listingDetail.ip = data.command.address;
+      const blockchainListingData = yield call(getListingFromBlockchain, listingDetailRequest.listingId);
+
+      if (!blockchainListingData) {
+        listingDetail.existsInBlockchain = false;
+        listingDetail.quantity = 0;
+      } else {
+        listingDetail.existsInBlockchain = true;
+        listingDetail.quantity = blockchainListingData.quantity;
+        listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
+      }
+
+      const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
+      listingDetail.reputationScore = ownerAcc['reputation_unweighted_score'];
+      listingDetail.reputationVotesCount = ownerAcc['reputation_votes_count'];
+      if (listingDetail.reputationVotesCount === 0) {
+        listingDetail.reputationScore = 5000;
+      }
+
+      yield put(getListingDetailSucceeded(listingDetail));
+    }
+  } catch (error) {
+      console.log("ERROR ", error);
+      yield put(getListingDetailFailed(error));
   }
 }

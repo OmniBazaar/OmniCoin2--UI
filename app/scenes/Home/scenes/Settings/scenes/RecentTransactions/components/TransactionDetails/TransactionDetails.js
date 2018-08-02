@@ -11,68 +11,76 @@ import './transaction-details.scss';
 
 const messages = defineMessages({
   close: {
-    id: 'Settings.close',
+    id: 'TransactionDetails.close',
     defaultMessage: 'CLOSE'
   },
   operations: {
-    id: 'Settings.operations',
+    id: 'TransactionDetails.operations',
     defaultMessage: 'Operations'
   },
   timeStamp: {
-    id: 'Settings.timeStamp',
+    id: 'TransactionDetails.timeStamp',
     defaultMessage: 'TimeStamp'
   },
   transaction: {
-    id: 'Settings.transaction',
+    id: 'TransactionDetails.transaction',
     defaultMessage: 'Transaction'
   },
   block: {
-    id: 'Settings.block',
+    id: 'TransactionDetails.block',
     defaultMessage: 'Block'
   },
   transactionDetails: {
-    id: 'Settings.transactionDetails',
+    id: 'TransactionDetails.transactionDetails',
     defaultMessage: 'Transaction Details'
   },
   withdraw: {
-    id: 'Settings.withdraw',
+    id: 'TransactionDetails.withdraw',
     defaultMessage: 'Withdraw'
   },
   deposit: {
-    id: 'Settings.deposit',
+    id: 'TransactionDetails.deposit',
     defaultMessage: 'Deposit'
   },
   amountOfAsset: {
-    id: 'Settings.amountOfAsset',
-    defaultMessage: 'amount of asset,'
+    id: 'TransactionDetails.amountOfAsset',
+    defaultMessage: 'Amount of asset,'
   },
   next: {
-    id: 'Settings.next',
+    id: 'TransactionDetails.next',
     defaultMessage: 'Next'
   },
   feeDetail: {
-    id: 'Settings.feeDetail',
-    defaultMessage: 'fee: {fee} XOM'
+    id: 'TransactionDetails.feeDetail',
+    defaultMessage: 'Fee: {fee} XOM'
   },
   omnibazaarFeeDetail: {
-    id: 'Settings.omnibazaarFeeDetail',
-    defaultMessage: 'omnibazaar fee: {fee} XOM'
+    id: 'TransactionDetails.omnibazaarFeeDetail',
+    defaultMessage: 'OmniBazaar fee: {fee} XOM'
   },
   escrowFeeDetail: {
-    id: 'Settings.escrowFeeDetail',
-    defaultMessage: 'escrow fee: {fee} XOM'
+    id: 'TransactionDetails.escrowFeeDetail',
+    defaultMessage: 'Escrow fee: {fee} XOM'
   },
   referrerBuyerFee: {
-    id: 'Settings.referrerBuyerFee',
-    defaultMessage: 'buyer\'s referrer fee: {fee} XOM'
+    id: 'TransactionDetails.referrerBuyerFee',
+    defaultMessage: 'Buyer\'s Referrer fee: {fee} XOM'
   },
   referrerSellerFee: {
-    id: 'Settings.referrerSellerFee',
-    defaultMessage: 'sellers\'s referrer fee: {fee} XOM'
+    id: 'TransactionDetails.referrerSellerFee',
+    defaultMessage: 'Sellers\'s Referrer fee: {fee} XOM'
   },
   publisherFee: {
-    id: 'Settings.publisherFee',
-    defaultMessage: 'publisher fee: {fee} XOM'
+    id: 'TransactionDetails.publisherFee',
+    defaultMessage: 'Publisher fee: {fee} XOM'
+  },
+  from: {
+    id: 'Settings.from',
+    defaultMessage: 'From'
+  },
+  to: {
+    id: 'Settings.to',
+    defaultMessage: 'To'
   }
 });
 
@@ -91,26 +99,42 @@ class TransactionDetails extends Component {
 
   getFeeDetail(op) {
     const { formatMessage } = this.props.intl;
-    let feeDetail = formatMessage(messages.feeDetail, {fee: op.isIncoming ? 0 : op.fee});
+    let feeDetail = formatMessage(messages.feeDetail, { fee: op.isIncoming ? 0 : op.fee });
     if (op.obFee) {
-      if (op.obFee.omnibazaar_fee) {
-        feeDetail += ", " + formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})
-      }
-      if (op.obFee.escrow_fee) {
-        feeDetail += ", " + formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee});
-      }
-      if (op.obFee.referrer_buyer_fee) {
-        feeDetail += ", " + formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee});
-      }
-      if (op.obFee.referrer_seller_fee) {
-        feeDetail += ", " + formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})
-      }
-      if (op.obFee.publisher_fee) {
-        feeDetail += ", " + formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})
+      if (op.isIncoming) {
+        if (op.obFee.omnibazaar_fee) {
+          feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})}`;
+        }
+        if (op.obFee.escrow_fee) {
+          feeDetail += `, ${formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee})}`;
+        }
+        if (op.obFee.referrer_buyer_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee})}`;
+        }
+        if (op.obFee.referrer_seller_fee) {
+          feeDetail += `, ${formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})}`;
+        }
+      } else {
+        if (op.obFee.publisher_fee) {
+          feeDetail += `, ${formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})}`;
+        }
       }
       return feeDetail;
     }
-    return feeDetail
+    return feeDetail;
+  }
+
+  getEtherDetail(detailSelected) {
+    const { formatMessage } = this.props.intl;
+    const { from, to } = detailSelected
+
+    return (
+      <div>
+        <br />
+        <div className="deposit">{formatMessage(messages.to)}: {to}</div>
+        <div className="withdraw">{formatMessage(messages.from)}: {from}</div>
+      </div>
+    );
   }
 
   renderOperations(detailSelected) {
@@ -132,8 +156,11 @@ class TransactionDetails extends Component {
       const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : ',';
 
       return (
-        <div className={operationClass}>
-          {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
+        <div>
+          <p>{formatMessage(messages.operations)}</p>
+          <div className={operationClass}>
+            {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
+          </div>
         </div>
       );
     });
@@ -178,12 +205,12 @@ class TransactionDetails extends Component {
           </div>
         </div>
         <div className="separator" />
-        <div className="operations">
-          <p>{formatMessage(messages.operations)}</p>
-          <div>
-            {this.renderOperations(detailSelected)}
+          <div className="operations">
+            {detailSelected.isEther ?
+              this.getEtherDetail(detailSelected)
+              : this.renderOperations(detailSelected)
+            }
           </div>
-        </div>
       </div>
     );
   }

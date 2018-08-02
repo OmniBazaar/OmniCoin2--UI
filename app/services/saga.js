@@ -7,6 +7,7 @@ import { transferSubscriber } from './transfer/transferSaga';
 import { walletSubscriber } from './blockchain/wallet/walletSaga';
 import { processorsSubscriber } from './processors/processorsSaga';
 import { bitcoinSubscriber } from './blockchain/bitcoin/bitcoinSaga';
+import { ethereumSubscriber } from './blockchain/ethereum/EthereumSaga';
 import { wsMarketplaceSubscriber } from './marketplace/wsSaga';
 import { searchSubscriber } from './search/searchSaga';
 import { dhtSubscriber } from './search/dht/dhtSaga';
@@ -14,9 +15,10 @@ import { listingSubscriber } from './listing/listingSaga';
 import { importSubscriber } from './listing/importSaga';
 import { listingDefaultsSubscriber } from './listing/listingDefaultsSaga';
 import { preferencesSubscriber } from './preferences/preferencesSaga';
-import { myPurchasesSubscriber } from "./marketplace/myPurchases/myPurchasesSaga";
-import { configSubscriber } from "./config/configSaga";
-import { vestingBalancesSubscriber } from "./accountSettings/vestingBalances/vestingBalanacesSaga";
+import { myPurchasesSubscriber } from './marketplace/myPurchases/myPurchasesSaga';
+import { configSubscriber } from './config/configSaga';
+import { vestingBalancesSubscriber } from './accountSettings/vestingBalances/vestingBalanacesSaga';
+import { updateNotificationSubscriber } from './updateNotification/updateNotificationSaga';
 
 export {
   connectionSubscriber,
@@ -27,6 +29,7 @@ export {
   walletSubscriber,
   processorsSubscriber,
   bitcoinSubscriber,
+  ethereumSubscriber,
   transferSubscriber,
   dhtSubscriber,
   wsMarketplaceSubscriber,
@@ -37,5 +40,6 @@ export {
   importSubscriber,
   myPurchasesSubscriber,
   configSubscriber,
-  vestingBalancesSubscriber
+  vestingBalancesSubscriber,
+  updateNotificationSubscriber
 };

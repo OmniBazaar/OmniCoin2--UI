@@ -6,6 +6,4 @@ const {
   SEND_COMMAND: (command) => ({ command }),
 });
 
-export {
-	sendCommand
-};
+export { sendCommand };

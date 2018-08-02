@@ -1,2 +1,22 @@
 {
+  "Mail.compose": "Compose",
+  "Mail.close": "CLOSE",
+  "Mail.newMessage": "New Message",
+  "Mail.to": "To",
+  "Mail.subject": "Subject",
+  "Mail.enterSubject": "Enter subject",
+  "Mail.startTyping": "Start typing",
+  "Mail.message": "Message",
+  "Mail.enterMessage": "Enter message",
+  "Mail.send": "SEND",
+  "Mail.cancel": "CANCEL",
+  "Mail.addressBook": "ADDRESS BOOK",
+  "Mail.success": "Success",
+  "Mail.mailSent": "Mail sent successfully",
+  "Mail.error": "Error",
+  "Mail.mailNotSent": "There was an error while trying to send your mail",
+  "Mail.usernameDoesNotExist": "Not found",
+  "Mail.required": "Required",
+  "Mail.purchaseSubject": "{buyer} bought {listing}",
+  "Mail.purchaseBody": "{buyer} bought {number} of {listing} for {price}"
 }

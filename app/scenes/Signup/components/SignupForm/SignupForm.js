@@ -28,7 +28,7 @@ const inputCustomSize = 15;
 const messages = defineMessages({
   usernameExists: {
     id: 'SignupForm.usernameExists',
-    defaultMessage: 'Username already taken'
+    defaultMessage: 'That username is already taken.'
   },
   noAccount: {
     id: 'SignupForm.noAccount',
@@ -36,15 +36,15 @@ const messages = defineMessages({
   },
   fieldRequired: {
     id: 'SignupForm.fieldRequired',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   passwordDoesntMatch: {
     id: 'SignupForm.passwordDoesntMatch',
-    defaultMessage: 'Password doesn\'t match'
+    defaultMessage: 'Passwords don\'t match.'
   },
   copy: {
     id: 'SignupForm.copy',
-    defaultMessage: 'Copy'
+    defaultMessage: 'Copy password'
   },
   passwordCopied: {
     id: 'SignupForm.passwordCopied',
@@ -52,11 +52,11 @@ const messages = defineMessages({
   },
   referrerName: {
     id: 'SignupForm.referrerName',
-    defaultMessage: 'Referrer name'
+    defaultMessage: 'Who referred you?'
   },
   accountName: {
     id: 'SignupForm.accountName',
-    defaultMessage: 'Account name'
+    defaultMessage: 'Choose an account name'
   },
   confirmPassword: {
     id: 'SignupForm.confirmPassword',
@@ -64,7 +64,7 @@ const messages = defineMessages({
   },
   agree: {
     id: 'SignupForm.agree',
-    defaultMessage: 'I agree with'
+    defaultMessage: 'I agree with the OmniBazaar'
   },
   termsAndCond: {
     id: 'SignupForm.termsAndCond',
@@ -102,13 +102,17 @@ const messages = defineMessages({
     id: 'SignupForm.country',
     defaultMessage: 'Your Country'
   },
+  state: {
+    id: 'SignupForm.state',
+    defaultMessage: 'Your State'
+  },
   city: {
     id: 'SignupForm.city',
-    defaultMessage: 'Your State/City'
+    defaultMessage: 'Your City'
   },
   keywords: {
     id: 'SignupForm.keywords',
-    defaultMessage: 'Keywords for listing your want to see'
+    defaultMessage: 'Provide keywords for listing you want to see'
   },
   addKeyword: {
     id: 'SignupForm.addKeyword',
@@ -120,33 +124,34 @@ const messages = defineMessages({
   },
   savePassword1: {
     id: 'SignupForm.savePassword1',
-    defaultMessage: "Please save your password."
+    defaultMessage: 'IMPORTANT: This password is the ONLY key to your OmniCoin wallet.'
   },
   savePassword2: {
     id: 'SignupForm.savePassword2',
-    defaultMessage: "In case it is lost it can't be recovered."
+    defaultMessage: 'Save and protect it. If lost, it cannot be recovered.'
   }
 });
 
 class SignupForm extends Component {
-
   static validate = (values) => {
     const errors = {};
+
     if (!values.username) {
       errors.username = messages.fieldRequired;
     }
+
     if (!values.agreementTerms) {
       errors.agreementTerms = messages.fieldRequired;
     }
+
     if (values.password !== values.passwordConfirmation) {
       errors.passwordConfirmation = messages.passwordDoesntMatch;
     }
+
     if (!values.country) {
       errors.country = messages.fieldRequired;
     }
-    if (!values.city) {
-      errors.city = messages.fieldRequired;
-    }
+
     return errors;
   };
 
@@ -164,18 +169,24 @@ class SignupForm extends Component {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
       searchPriority: PriorityTypes.LOCAL_DATA,
+      referrer: this.props.auth.defaultReferrer
     });
   }
 
   componentDidMount() {
-    if (this.defaultReferrer && this.defaultReferrer !== 'null') {
-      this.props.formActions.change('referrer', this.defaultReferrer);
+    if (this.props.auth.defaultReferrer) {
+      this.props.formActions.change('referrer', this.props.auth.defaultReferrer);
       this.referrerInput.focus();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
+
+    if (nextProps.auth.defaultReferrer !== this.props.auth.defaultReferrer) {
+      this.props.formActions.change('referrer', nextProps.auth.defaultReferrer);
+    }
+
     if (nextProps.auth.error && !this.props.auth.error) {
       const content = (
         nextProps.auth.error.id
@@ -188,9 +199,13 @@ class SignupForm extends Component {
 
   onChangeCountry(country) {
     this.props.formActions.change('country', country);
-    if(!country) {
-      this.props.formActions.change('city', '');
+    if (!country) {
+      this.props.formActions.change('state', '');
     }
+  }
+
+  onChangeState(state) {
+    this.props.formActions.change('state', state);
   }
 
   onChangeCity(city) {
@@ -220,7 +235,7 @@ class SignupForm extends Component {
 
   submit(values) {
     const {
-      username, password, referrer, searchPriority, country, city, keywords
+      username, password, referrer, searchPriority, country, state, city, keywords
     } = values;
 
     this.props.authActions.signup(
@@ -230,6 +245,7 @@ class SignupForm extends Component {
       {
         priority: searchPriority,
         country,
+        state,
         city,
         keywords
       },
@@ -246,8 +262,8 @@ class SignupForm extends Component {
 
   renderPasswordGeneratorField = ({
     input, meta: {
-    asyncValidating, touched, error, warning
-  }
+      asyncValidating, touched, error, warning
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     return (
@@ -258,7 +274,7 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button onClick={this.showSuccessCopy.bind(this)}>
+          <Button className='copy-password-btn' onClick={this.showSuccessCopy.bind(this)}>
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
@@ -268,8 +284,8 @@ class SignupForm extends Component {
 
   renderReferrerField = ({
     input, meta: {
-    asyncValidating, touched, error, warning, active
-  }
+      asyncValidating, touched, error, warning, active
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
@@ -283,11 +299,11 @@ class SignupForm extends Component {
         </div>,
         <div className="hybrid-input">
           <input
-          {...input}
-          type="text"
-          placeholder={formatMessage(messages.referrerName)}
-          ref={(input) => { this.referrerInput = input; }}
-          className={inputClassName}
+            {...input}
+            type="text"
+            placeholder={formatMessage(messages.referrerName)}
+            ref={(input) => { this.referrerInput = input; }}
+            className={inputClassName}
           />
           <Icon
             name="checkmark"
@@ -301,8 +317,8 @@ class SignupForm extends Component {
 
   renderCountryField = ({
     input, meta: {
-    asyncValidating, touched, error, placeholder
-  }
+      asyncValidating, touched, error, placeholder
+    }
   }) => {
     const { formatMessage } = this.props.intl;
     const { country } = this.props.formValues;
@@ -325,13 +341,13 @@ class SignupForm extends Component {
     );
   };
 
-  renderCityField = ({
+  renderStateField = ({
     input, meta: {
-    asyncValidating, touched, error
-  }
+      asyncValidating, touched, error
+    }
   }) => {
     const { formatMessage } = this.props.intl;
-    const { country, city } = this.props.formValues;
+    const { country, state } = this.props.formValues;
     const errorMessage = error && error.id ? formatMessage(error) : error;
 
     return (
@@ -342,11 +358,11 @@ class SignupForm extends Component {
         <RegionDropdown
           {...input}
           country={country}
-          value={city}
-          defaultOptionLabel={formatMessage(messages.city)}
-          blankOptionLabel={formatMessage(messages.city)}
+          value={state}
+          defaultOptionLabel={formatMessage(messages.state)}
+          blankOptionLabel={formatMessage(messages.state)}
           classes="ui dropdown textfield"
-          onChange={this.onChangeCity.bind(this)}
+          onChange={this.onChangeState.bind(this)}
         />
       ]
     );
@@ -397,8 +413,8 @@ class SignupForm extends Component {
         <div className="agreement-terms">
           <Checkbox
             width={inputCustomSize}
-          height={inputCustomSize}
-          onChecked={this.onTermAndConditionCheck.bind(this)}
+            height={inputCustomSize}
+            onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
           <span className="link" onClick={this.toggleTermsModal}>
@@ -458,7 +474,7 @@ class SignupForm extends Component {
 
     switch (searchPriority) {
       case PriorityTypes.LOCAL_DATA:
-        const { country, city } = this.props.formValues;
+        const { country, state } = this.props.formValues;
         return (
           <div className="location-container">
             <Field
@@ -469,11 +485,16 @@ class SignupForm extends Component {
               validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <Field
-              name="city"
+              name="state"
               country={country}
-              city={city}
-              component={this.renderCityField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              state={state}
+              component={this.renderStateField}
+            />
+            <Field
+              type="text"
+              name="city"
+              placeholder={formatMessage(messages.city)}
+              component={ValidatableField}
             />
           </div>
         );
@@ -526,7 +547,7 @@ class SignupForm extends Component {
 
   render() {
     const {
-      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues
+      handleSubmit, valid, auth, asyncValidating, formSyncErrors, formValues, dht
     } = this.props;
     const agreementTerms = { formValues };
     const btnClass = cn(auth.loading || !!this.props.asyncValidating ? 'ui loading' : '');
@@ -580,6 +601,7 @@ class SignupForm extends Component {
           disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating || this.keywordVal()}
           color="green"
           className={btnClass}
+          loading={auth.loading || dht.isConnecting}
           type="submit"
         />
         <Divider fitted />

@@ -1,5 +1,3 @@
 import publicIp from 'public-ip';
 
-export const getIp = () => {
-	return publicIp.v4();
-}
+export const getIp = () => publicIp.v4();

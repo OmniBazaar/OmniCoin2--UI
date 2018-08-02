@@ -22,6 +22,7 @@ class Dropdown extends Component {
 
   render() {
     const { value } = this.props.input;
+    const { className } = this.props;
     return (
       <DropdownLib
         compact
@@ -30,6 +31,7 @@ class Dropdown extends Component {
         options={this.options}
         onChange={this.onChange.bind(this)}
         value={value}
+        className={className}
       />
     );
   }
@@ -46,6 +48,6 @@ Dropdown.propTypes = {
 
 Dropdown.defaultProps = {
   placeholder: ''
-}
+};
 
 export default injectIntl(Dropdown);

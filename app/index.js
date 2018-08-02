@@ -26,6 +26,7 @@ import {
   walletSubscriber,
   processorsSubscriber,
   bitcoinSubscriber,
+  ethereumSubscriber,
   transferSubscriber,
   dhtSubscriber,
   searchSubscriber,
@@ -36,7 +37,8 @@ import {
   importSubscriber,
   myPurchasesSubscriber,
   configSubscriber,
-  vestingBalancesSubscriber
+  vestingBalancesSubscriber,
+  updateNotificationSubscriber
 } from './services/saga';
 
 ChainConfig.address_prefix = 'XOM';
@@ -78,6 +80,7 @@ sagaMiddleware.run(transferSubscriber);
 sagaMiddleware.run(walletSubscriber);
 sagaMiddleware.run(processorsSubscriber);
 sagaMiddleware.run(bitcoinSubscriber);
+sagaMiddleware.run(ethereumSubscriber);
 sagaMiddleware.run(searchSubscriber);
 sagaMiddleware.run(wsMarketplaceSubscriber);
 sagaMiddleware.run(dhtSubscriber);
@@ -88,6 +91,7 @@ sagaMiddleware.run(importSubscriber);
 sagaMiddleware.run(myPurchasesSubscriber);
 sagaMiddleware.run(configSubscriber);
 sagaMiddleware.run(vestingBalancesSubscriber);
+sagaMiddleware.run(updateNotificationSubscriber);
 
 ReactDOM.render(
   (

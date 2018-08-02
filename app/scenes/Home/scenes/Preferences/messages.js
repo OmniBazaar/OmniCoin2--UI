@@ -15,7 +15,7 @@ export default defineMessages({
   },
   minutes: {
     id: 'Preferences.minutes',
-    defaultMessage: 'MINUTES'
+    defaultMessage: '(minutes)'
   },
   xomUnit: {
     id: 'Preferences.xomUnit',
@@ -47,7 +47,7 @@ export default defineMessages({
   },
   referralProgramText: {
     id: 'Preferences.referralProgramText',
-    defaultMessage: 'REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. As a Referrer, you agree to follow the OmniBazaar software to automatically send a small number of OmniCoins from your account to the new users you refer, to enable those new users to register their user names and get started in OmniBazaar. In exchange you receive a commission (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. In order to serve as a Referrer, you must keep the OmniBazaar application running on your computer.'
+    defaultMessage: 'REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. You will also receive a referral fee (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. Please provide the Bitcoin and Ether addresses where you wish to receive these referral fees.'
   },
   priorityForListing: {
     id: 'Preferences.priorityForListing',
@@ -56,6 +56,10 @@ export default defineMessages({
   publisherFee: {
     id: 'Preferences.publisherFee',
     defaultMessage: 'Publisher Fee You Receive'
+  },
+  escrowFee: {
+    id: 'Preferences.escrowFee',
+    defaultMessage: 'Escrow Fee You Receive'
   },
   chargeFee: {
     id: 'Preferences.chargeFee',
@@ -91,7 +95,7 @@ export default defineMessages({
   },
   priorityHighest: {
     id: 'Preferences.priorityHighest',
-    defaultMessage: 'Highest (2.00% Fee)'
+    defaultMessage: 'High (1.00% Fee)'
   },
   priorityHigher: {
     id: 'Preferences.priorityHigher',
@@ -145,16 +149,46 @@ export default defineMessages({
     id: 'Preferences.errorTitle',
     defaultMessage: 'Error'
   },
+  errorTimeout: {
+    id: 'Preferences.errorTimeout',
+    defaultMessage: 'LogOut Timeout must be a positive number.'
+  },
+  errorFee: {
+    id: 'Preferences.errorFee',
+    defaultMessage: 'Fee must be positive a number.'
+  },
   successTitle: {
     id: 'Preferences.successTitle',
     defaultMessage: 'Success'
   },
   saveErrorMessage: {
     id: 'Preferences.saveErrorMessage',
-    defaultMessage: 'Having error when saving Preferences data'
+    defaultMessage: 'An error occurred while saving Preferences data.'
   },
   saveSuccessMessage: {
     id: 'Preferences.saveSuccessMessage',
-    defaultMessage: 'Preferences data is saved successful'
+    defaultMessage: 'Preferences data was saved successfully.'
+  },
+  fieldRequired: {
+    id: 'Preferences.fieldRequired',
+    defaultMessage: 'This field is required.'
+  },
+  autoRun: {
+    id: 'Preferences.autoRun',
+    defaultMessage: 'Autorun witness node'
+  },
+  autoRunNote: {
+    id: 'Preferences.autoRunNote',
+    defaultMessage: 'This action requires admin rights'
+  },
+  autoLogOut: {
+    id: 'Preferences.autoLogOut',
+    defaultMessage: 'To disable Log Out option set 0 value in Timeout field.'
+  },
+  listingOptionsToolTip: {
+    id: 'Preferences.listingOptionsToolTip',
+    defaultMessage: 'When more than one keyword set search will be performed ' +
+                    'either using any of those (any) or return only those ' +
+                    'listings which have all your search criteria keywords'
   }
 });

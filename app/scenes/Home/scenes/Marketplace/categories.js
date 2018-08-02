@@ -70,7 +70,11 @@ const mainCategories = defineMessages({
   all: {
     id: 'Marketplace.all',
     defaultMessage: 'All'
-  }
+  },
+  myListings: {
+    id: 'Marketplace.myListings',
+    defaultMessage: 'My Listings'
+  },
 });
 
 const saleCategories = defineMessages({
@@ -88,7 +92,7 @@ const saleCategories = defineMessages({
   },
   artsCrafts: {
     id: 'Marketplace.artsCrafts',
-    defaultMessage: 'Arts / Crafts'
+    defaultMessage: 'Arts'
   },
   babyChild: {
     id: 'Marketplace.babyChild',
@@ -168,7 +172,7 @@ const saleCategories = defineMessages({
   },
   musicalInstruments: {
     id: 'Marketplace.musicalInstruments',
-    defaultMessage: 'Musical Instruments'
+    defaultMessage: 'Music'
   },
   photoVideo: {
     id: 'Marketplace.photoVideo',
@@ -347,9 +351,9 @@ const cryptoCategories = defineMessages({
     id: 'Marketplace.localBitCoin',
     defaultMessage: 'Local + Bitcoin'
   },
-  localEutherium: {
-    id: 'Marketplace.localEutherium',
-    defaultMessage: 'Local + Eutherium'
+  localEthereum: {
+    id: 'Marketplace.localEthereum',
+    defaultMessage: 'Local + Ethereum'
   },
   localMonero: {
     id: 'Marketplace.localMonero',
@@ -362,6 +366,10 @@ const cryptoCategories = defineMessages({
   omniCoinBitCoin: {
     id: 'Marketplace.omniCoinBitCoin',
     defaultMessage: 'OmniCoin + Bitcoin'
+  },
+  omniCoinEthereum: {
+    id: 'Marketplace.omniCoinEthereum',
+    defaultMessage: 'OmniCoin + Ethereum'
   },
   omniCoinOther: {
     id: 'Marketplace.omniCoinOther',
@@ -720,7 +728,7 @@ const aboutCategories = defineMessages({
   },
   telegramOmniBazaar: {
     id: 'Marketplace.telegramOmniBazaar',
-    defaultMessage: 'OmniBazaar Telegram'
+    defaultMessage: 'Telegram'
   },
   telegramOmniCoin: {
     id: 'Marketplace.telegramOmniCoin',

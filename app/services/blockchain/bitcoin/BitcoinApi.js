@@ -3,7 +3,9 @@ import { wrapRequest } from '../../utils';
 
 const apiKey = '4ad8f029-035c-4d68-8020-6f2fad9bfb7a';
 const address = 'http://localhost:3000';
-const feePerByte = 10; //satoshi
+const blockInfoAddress = 'https://blockchain.info';
+
+const feePerByte = 10; // satoshi
 
 const createWallet = wrapRequest(async (password, label, email) => {
   const createUrl = new URL(`${address}/api/v2/create`);
@@ -29,11 +31,20 @@ const addAddress = wrapRequest(async (password, guid, label) => fetch(`${address
 
 const getAddress = wrapRequest(async (xpub, guid, password) => fetch(`${address}/merchant/${guid}/accounts/${xpub}?password=${password}`));
 
+const validateAddress = wrapRequest(async (address) => fetch(`${blockInfoAddress}/address/${address}?format=json&offset=0`));
+
+const getHistory = wrapRequest(async (addresses, n, offset) => {
+  const active = addresses.reduce((accumulated, val) => accumulated + '|' + val.extendedPublicKey, '');
+  return fetch(`${blockInfoAddress}/multiaddr?active=${active}&format=json&n=${n}&offset=${offset}`)
+});
+
 export {
   createWallet,
   getWallets,
   makePayment,
   getBalance,
   addAddress,
-  getAddress
+  getAddress,
+  validateAddress,
+  getHistory
 };

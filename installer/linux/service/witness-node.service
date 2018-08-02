@@ -1,0 +1,12 @@
+[Unit]
+Description=Omnibazaar Witness node
+
+[Service]
+WorkingDirectory=~/.OmniBazaar/witness_node
+ExecStart=~/.OmniBazaar/witness_node/witness_node
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

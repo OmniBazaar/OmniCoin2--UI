@@ -4,6 +4,7 @@ const {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  awaitListingDetail,
   isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
@@ -13,14 +14,17 @@ const {
   requestMyListingsSuccess,
   requestMyListingsError,
   setBitcoinPrice,
+  setEthereumPrice,
   setOmnicoinPrice,
   setContinuous,
   addListingImage,
+  removeListingImage,
   deleteListingImage,
   startDeleteListingImage,
   deleteListingImageSuccess,
   deleteListingImageError,
   setListingImages,
+  startUploadListingImage,
   uploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
@@ -43,11 +47,13 @@ const {
   searchPublishers,
   searchPublishersFinish,
   filterMyListings,
-  filterFavorites
+  filterFavorites,
+  clearMyListings
 } = createActions({
   GET_LISTING_DETAIL: (listingId) => ({ listingId }),
   GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
   GET_LISTING_DETAIL_FAILED: (error) => ({ error }),
+  AWAIT_LISTING_DETAIL: (listingId, wsMessageId) => ({ listingId, wsMessageId }),
   IS_LISTING_FINE: (listing) => ({ listing }),
   IS_LISTING_FINE_SUCCEEDED: (blockchainListing) => ({ blockchainListing }),
   IS_LISTING_FINE_FAILED: (error) => ({ error }),
@@ -57,14 +63,17 @@ const {
   REQUEST_MY_LISTINGS_SUCCESS: (ids) => ({ ids }),
   REQUEST_MY_LISTINGS_ERROR: (error) => ({ error }),
   SET_BITCOIN_PRICE: () => ({}),
+  SET_ETHEREUM_PRICE: () => ({}),
   SET_OMNICOIN_PRICE: () => ({}),
   SET_CONTINUOUS: () => ({}),
-  ADD_LISTING_IMAGE: (publisher, file, imageId) => ({ publisher, file, imageId }),
+  ADD_LISTING_IMAGE: (file, imageId) => ({ file, imageId }),
+  REMOVE_LISTING_IMAGE: (imageId) => ({ imageId }),
   DELETE_LISTING_IMAGE: (publisher, image) => ({ publisher, image }),
   START_DELETE_LISTING_IMAGE: (imageId) => ({ imageId }),
   DELETE_LISTING_IMAGE_SUCCESS: (imageId) => ({ imageId }),
   DELETE_LISTING_IMAGE_ERROR: (imageId, error) => ({ imageId, error }),
   SET_LISTING_IMAGES: (images) => ({ images }),
+  START_UPLOAD_LISTING_IMAGE: (imageId) => ({ imageId }),
   UPLOAD_LISTING_IMAGE: (publisher, file, imageId) => ({ publisher, file, imageId }),
   UPLOAD_LISTING_IMAGE_SUCCESS: (imageId, image, thumb, fileName) => ({
     imageId,
@@ -103,12 +112,14 @@ const {
     subCategory,
     searchTerm
   }),
+  CLEAR_MY_LISTINGS: () => ({})
 });
 
 export {
   getListingDetail,
   getListingDetailSucceeded,
   getListingDetailFailed,
+  awaitListingDetail,
   isListingFine,
   isListingFineSucceeded,
   isListingFineFailed,
@@ -118,9 +129,11 @@ export {
   requestMyListingsSuccess,
   requestMyListingsError,
   setBitcoinPrice,
+  setEthereumPrice,
   setOmnicoinPrice,
   setContinuous,
   addListingImage,
+  removeListingImage,
   deleteListingImage,
   startDeleteListingImage,
   deleteListingImageSuccess,
@@ -129,6 +142,7 @@ export {
   reportListingSuccess,
   reportListingError,
   setListingImages,
+  startUploadListingImage,
   uploadListingImage,
   uploadListingImageSuccess,
   uploadListingImageError,
@@ -148,5 +162,6 @@ export {
   searchPublishers,
   searchPublishersFinish,
   filterMyListings,
-  filterFavorites
+  filterFavorites,
+  clearMyListings
 };

@@ -24,7 +24,9 @@ import {
   marketplaceReturnListings,
   marketplaceReturnBool,
   searchListings,
-  filterSearchByCategory
+  filterSearchByCategory,
+  setSearchListingsParams,
+  clearSearchResults
 } from './searchActions';
 
 const defaultState = {
@@ -52,7 +54,8 @@ const defaultState = {
   searching: false,
   fromSearchMenu: false,
   error: null,
-  currency: null
+  currency: null,
+  searchListingsParams: {}
 };
 
 const rowsPerPageSearchResults = 20;
@@ -75,7 +78,6 @@ const searchByFilters = (listings, category, subCategory) => {
   } else {
     if (categoryFilter !== 'all') searchesFiltered = listings.filter(el => el.category.toLowerCase() === categoryFilter);
     if (subCategoryFilter !== 'all') searchesFiltered = listings.filter(el => el.subcategory.toLowerCase() === subCategoryFilter);
-
   }
 
   return {
@@ -83,41 +85,37 @@ const searchByFilters = (listings, category, subCategory) => {
   };
 };
 
-const changeCurrencies = (selectedCurrency, listing ) => {
-  return listing.map((item) => {
-    if (selectedCurrency === item.currency) {
-      return {
-        ...item,
-        convertedPrice: item.price,
-      };
-    }
-
-    const price = currencyConverter(item.price, item.currency, selectedCurrency);
-
+const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
+  if (selectedCurrency === item.currency) {
     return {
       ...item,
-      convertedPrice: price
+      convertedPrice: item.price,
     };
-  });
-};
+  }
 
-const filterResultData = (searchResults, { searchText, currency, category, subCategory }) => {
+  const price = currencyConverter(item.price, item.currency, selectedCurrency);
+
+  return {
+    ...item,
+    convertedPrice: price
+  };
+});
+
+const filterResultData = (searchResults, {
+  searchText, currency, category, subCategory
+}) => {
   let data = searchResults;
 
   const activePageSearchResults = 1;
   let totalPagesSearchResults;
   if (currency !== 'all' && currency !== undefined) {
-    data = changeCurrencies(currency, data)
+    data = changeCurrencies(currency, data);
   }
   let currentData = [];
   let resultByFilters = [];
 
   if (searchText) {
-    let filteredData = data.filter(listing => {
-      return Object.values(listing).filter(
-          value => { return value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1; }
-        ).length !== 0;
-    });
+    let filteredData = data.filter(listing => Object.values(listing).filter(value => value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1).length !== 0);
     filteredData = _.without(filteredData, undefined);
 
     resultByFilters = searchByFilters(filteredData, category, subCategory);
@@ -138,11 +136,15 @@ const filterResultData = (searchResults, { searchText, currency, category, subCa
     searchResultsFiltered: currentData,
     currency
   };
-}
+};
 
 const reducer = handleActions({
 
-  [filterSearchResults](state, { payload: { searchText, currency, category, subCategory } }) {
+  [filterSearchResults](state, {
+    payload: {
+      searchText, currency, category, subCategory
+    }
+  }) {
     const filterData = filterResultData(state.searchResults, {
       searchText, currency, category, subCategory
     });
@@ -309,7 +311,7 @@ const reducer = handleActions({
       deleting: false
     };
   },
-  [searchListings](state, { payload: { searchTerm, category, subCategory }}) {
+  [searchListings](state, { payload: { searchTerm, category, subCategory } }) {
     return {
       ...state,
       searchId: null,
@@ -320,7 +322,11 @@ const reducer = handleActions({
       subCategory
     };
   },
-  [searching](state, { payload: { searchId, searchTerm, category, subCategory, fromSearchMenu }}) {
+  [searching](state, {
+    payload: {
+      searchId, searchTerm, category, subCategory, fromSearchMenu
+    }
+  }) {
     return {
       ...state,
       searchId,
@@ -336,9 +342,9 @@ const reducer = handleActions({
   [marketplaceReturnListings](state, { data }) {
     const commandListings = JSON.parse(data.command.listings);
     const listings = commandListings.listings ? commandListings.listings.map(listing => ({
-        ...listing,
-        ip: data.command.address
-      })) : [];
+      ...listing,
+      ip: data.command.address
+    })) : [];
 
     if (parseInt(data.id, 10) === state.searchId) {
       const searchResults = [
@@ -353,7 +359,7 @@ const reducer = handleActions({
       });
       return {
         ...state,
-        searchResults: searchResults,
+        searchResults,
         searchResultsFiltered: filterResults.searchResultsFiltered,
         searching: false,
       };
@@ -362,6 +368,22 @@ const reducer = handleActions({
     return {
       ...state,
       searching: false
+    };
+  },
+  [setSearchListingsParams](state, { payload }) {
+    return {
+      ...state,
+      searchId: null,
+      searchResults: [],
+      searchResultsFiltered: null,
+      searchListingsParams: payload
+    };
+  },
+  [clearSearchResults](state) {
+    return {
+      ...state,
+      searchResults: [],
+      searchResultsFiltered: null
     };
   }
 }, defaultState);

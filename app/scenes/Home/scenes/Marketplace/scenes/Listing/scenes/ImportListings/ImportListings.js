@@ -7,6 +7,7 @@ import { Icon, Form, Dropdown, Button, Grid, Modal, Input, Loader } from 'semant
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 import { pick } from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ImportedFilesTable from './components/ImportedFilesTable/ImportedFilesTable';
@@ -14,11 +15,16 @@ import {
   stageFile,
   importFiles,
   removeFile,
-  removeAllFiles
+  removeAllFiles,
+  updateFileItemCategory,
+  updateFileItemSubcategory,
 } from '../../../../../../../../services/listing/importActions';
 import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
+import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
+
+const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
 
 const iconSize = 42;
 
@@ -74,11 +80,11 @@ const messages = defineMessages({
   },
   ok: {
     id: 'ImportListings.ok',
-    defaultMessage: 'Ok'
+    defaultMessage: 'Okay'
   },
   onlyTextFileMsg: {
     id: 'ImportListings.onlyTextFileMsg',
-    defaultMessage: 'Only txt files are allowed.'
+    defaultMessage: 'Only TXT files are allowed.'
   },
   selectPublisher: {
     id: 'AddListing.selectPublisher',
@@ -90,7 +96,7 @@ const messages = defineMessages({
   },
   importationSuccessTitle: {
     id: 'ImportListings.successTitle',
-    defaultMessage: 'Success'
+    defaultMessage: 'The file has been imported successfully.'
   },
   importationSuccess: {
     id: 'ImportListings.success',
@@ -98,11 +104,15 @@ const messages = defineMessages({
   },
   importationPublisherRequired: {
     id: 'ImportListings.publisherRequired',
-    defaultMessage: 'A publisher must be selected'
+    defaultMessage: 'A publisher must be selected.'
+  },
+  importationPublisherNotAvailable: {
+    id: 'ImportListings.importationPublisherNotAvailable',
+    defaultMessage: 'This publisher is not active. Please choose another one.'
   },
   importationMissingDefaults: {
     id: 'ImportListings.missingDefaults',
-    defaultMessage: 'You should fill you Listing Default values to proceed...'
+    defaultMessage: 'Please enter your Listing Default values to proceed...'
   },
 });
 
@@ -116,6 +126,7 @@ class ImportListings extends Component {
       open: false,
       selectedPublisher: null,
       selectedVendor: null,
+      validatingPublisher: false,
     };
   }
 
@@ -130,6 +141,9 @@ class ImportListings extends Component {
           error
         );
       }
+
+      this.removeAllFiles();
+      this.setState({ selectedPublisher: null, selectedVendor: null });
 
       toastr.success(
         formatMessage(messages.importationSuccessTitle),
@@ -166,8 +180,9 @@ class ImportListings extends Component {
     );
   }
 
-  importFile(event) {
+  async importFile(file) {
     const { formatMessage } = this.props.intl;
+    const { auth } = this.props;
 
     if (!this.state.selectedPublisher) {
       return toastr.error(
@@ -176,11 +191,29 @@ class ImportListings extends Component {
       );
     }
 
+    this.setState({ validatingPublisher: true });
+
+    const isPublisherAlive = await checkPublisherAliveStatus(
+      auth.currentUser,
+      this.state.selectedPublisher
+    );
+
+    this.setState({ validatingPublisher: false });
+
+    if (!isPublisherAlive) {
+      this.removeAllFiles();
+
+      return toastr.error(
+        formatMessage(messages.importationErrorTitle),
+        formatMessage(messages.importationPublisherNotAvailable)
+      );
+    }
+
     const {
       category, currency, description, name,
     } = pick(
       this.props.listingDefaults,
-      ['category', 'currency', 'description', 'name']
+      MANDATORY_DEFAULTS_FIELDS
     );
 
     if (!category || !currency || !description || !name) {
@@ -191,19 +224,19 @@ class ImportListings extends Component {
     }
 
 
-    if (event.target.files && event.target.files[0]) {
-      const extFile = getFileExtension(event);
+    if (file && file) {
+      const extFile = getFileExtension(file);
 
       if (extFile !== 'txt') {
         return this.setState({ open: true });
       }
 
-      const file = this.inputElement.files[0];
+      const content = this.inputElement.files[0];
 
       this.props.listingActions.stageFile(
         {
-          content: file,
-          name: file.name,
+          content,
+          name: content.name,
         },
         this.props.listingDefaults,
         this.state.selectedVendor
@@ -212,6 +245,7 @@ class ImportListings extends Component {
   }
 
   onClickRemoveAll() {
+    this.removeAllFiles();
     this.props.listingActions.removeAllFiles();
   }
 
@@ -235,9 +269,14 @@ class ImportListings extends Component {
     });
   }
 
+  removeAllFiles() {
+    this.inputElement.value = '';
+  }
+
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
+    const { validatingPublisher } = this.state;
 
     return (
       <Form className="import-listing-form">
@@ -249,7 +288,7 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingsVendor)}</span>
+              <span>{formatMessage(messages.listingsVendor)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Dropdown
@@ -262,10 +301,10 @@ class ImportListings extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.selectPublisher)}</span>
+              <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
-            <Grid.Column width={12}>
-              <Input>
+            <Grid.Column width={12} className="publishers-dropdown">
+              <Input className="publishers-input">
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}
@@ -276,18 +315,24 @@ class ImportListings extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.filesToImport)}</span>
+              <span>{formatMessage(messages.filesToImport)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <div className="buttons-wrapper">
                 <input
                   ref={(ref) => { this.inputElement = ref; }}
                   type="file"
-                  onChange={this.importFile.bind(this)}
+                  onChange={({ target: { files } }) =>
+                    files && files[0] && this.importFile(files[0])}
                   className="filetype"
                   accept=".txt"
                 />
-                <Button content={formatMessage(messages.addFiles)} className="button--primary" onClick={() => this.onClickImportFile()} />
+                <Button
+                  className="button--primary"
+                  loading={validatingPublisher}
+                  content={formatMessage(messages.addFiles)}
+                  onClick={() => this.onClickImportFile()}
+                />
                 <Button content={formatMessage(messages.removeAll)} className="button--blue removeAll" onClick={() => this.onClickRemoveAll()} />
               </div>
             </Grid.Column>
@@ -327,9 +372,27 @@ class ImportListings extends Component {
     );
   }
 
+  updateCategory({ categorySelected, index, fileIndex }) {
+    this.props.listingActions.updateFileItemCategory({
+      index, fileIndex, category: categorySelected,
+    });
+  }
+
+  updateSubCategory({ subCategory, index, fileIndex }) {
+    this.props.listingActions.updateFileItemSubcategory({
+      index, fileIndex, subcategory: subCategory,
+    });
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
+    const { selectedVendor, selectedPublisher } = this.state;
+    let isDisabled = false;
+    if (!selectedVendor || !selectedPublisher || !importedFiles.length) {
+      isDisabled = true;
+    }
+
 
     return (
       <div className="marketplace-container category-listing import-listings">
@@ -342,7 +405,11 @@ class ImportListings extends Component {
               <div className="content">
                 <div className="category-title">
                   <div className="parent">
-                    <span>{formatMessage(messages.myListings)}</span>
+                    <NavLink to="/listings" activeClassName="active" className="menu-item">
+                      <span className="link">
+                        <span>{formatMessage(messages.myListings)}</span>
+                      </span>
+                    </NavLink>
                     <Icon name="long arrow right" width={iconSize} height={iconSize} />
                   </div>
                   <span className="child">{formatMessage(messages.importListings)}</span>
@@ -364,6 +431,8 @@ class ImportListings extends Component {
                   basic: 'very',
                   size: 'small'
                 }}
+                onCategoryChange={params => this.updateCategory(params)}
+                onSubCategoryChange={params => this.updateSubCategory(params)}
               />}
             </div>
           </div>
@@ -373,6 +442,7 @@ class ImportListings extends Component {
               className="button--green-bg"
               loading={importingFile}
               onClick={() => this.importListings()}
+              disabled={isDisabled}
             />
           </div>
         </div>
@@ -383,6 +453,9 @@ class ImportListings extends Component {
 }
 
 ImportListings.propTypes = {
+  auth: PropTypes.shape({
+    currentUser: PropTypes.object,
+  }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
@@ -397,12 +470,15 @@ ImportListings.propTypes = {
     importFiles: PropTypes.func,
     removeFile: PropTypes.func,
     removeAllFiles: PropTypes.func,
+    updateFileItemCategory: PropTypes.func,
+    updateFileItemSubcategory: PropTypes.func,
   }),
   listingDefaults: PropTypes.shape({
     category: PropTypes.string,
     subcategory: PropTypes.string,
     currency: PropTypes.string,
     price_using_btc: PropTypes.bool,
+    price_using_eth: PropTypes.bool,
     price_using_omnicoin: PropTypes.bool,
     description: PropTypes.string,
     images: PropTypes.object,
@@ -414,6 +490,7 @@ ImportListings.propTypes = {
 
 ImportListings.defaultProps = {
   account: {},
+  auth: {},
   listingImport: {},
   listingActions: {},
   listingDefaults: {},
@@ -427,7 +504,9 @@ export default connect(
       stageFile,
       importFiles,
       removeFile,
-      removeAllFiles
+      removeAllFiles,
+      updateFileItemCategory,
+      updateFileItemSubcategory,
     }, dispatch),
   })
 )(injectIntl(ImportListings));

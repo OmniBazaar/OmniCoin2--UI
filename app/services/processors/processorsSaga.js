@@ -12,8 +12,9 @@ import _ from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs/es';
 
+
 import { getGlobalObject, fetchAccount } from '../blockchain/utils/miscellaneous';
-import { voteForProcessors } from "./utils";
+import { voteForProcessors } from './utils';
 
 export function* processorsSubscriber() {
   yield all([
@@ -24,12 +25,18 @@ export function* processorsSubscriber() {
   ]);
 }
 
+export const getActiveWitnesses = async () => {
+  const globalObject = await getGlobalObject();
+  let topProcessors = await Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
+  topProcessors = await processProcessors(topProcessors);
+
+  return topProcessors;
+};
+
 function* getTopProcessors() {
   try {
-    const globalObject = yield call(getGlobalObject);
     const { currentUser } = (yield select()).default.auth;
-    let topProcessors = yield Apis.instance().db_api().exec('get_objects', [globalObject.active_witnesses]);
-    topProcessors = yield call(processProcessors, topProcessors);
+    let topProcessors = yield call(getActiveWitnesses);
     topProcessors = yield call(addApproveField, topProcessors, currentUser.username);
     yield put({ type: 'GET_TOP_PROCESSORS_SUCCEEDED', topProcessors });
   } catch (error) {
@@ -111,11 +118,11 @@ async function commitProcessors(processors, toggledProcessors, account, password
 
 
 async function processProcessors(processors) {
-  const filteredPr = await Promise.all(processors.map(el => FetchChain('getAccount', el.witness_account).then(account => ({
+  const filteredProcessors = await Promise.all(processors.map(el => fetchAccount(el.witness_account).then(account => ({
     ...el,
-    witness_account: account.toJS()
+    witness_account: account
   }))));
-  return _.sortBy(filteredPr, ['pop_score'], ['desc']).map((el, index) => ({
+  return _.orderBy(filteredProcessors, ['witness_account.pop_score'], ['desc']).map((el, index) => ({
     ...el,
     rank: index + 1
   }));

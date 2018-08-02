@@ -81,14 +81,28 @@ class Marketplace extends Component {
       this.props.searchActions.filterSearchByCategory();
     }
 
-    // const { country, city } = this.props.account.publisherData;
     if (this.props.account.publisherData !== nextProps.account.publisherData) {
-      this.fetchListings(nextProps.account.publisherData);
+      if (!nextProps.listing.saveListing.saving) {
+        this.fetchListings(nextProps.account.publisherData);
+      }
+    }
+
+    if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
+      this.fetchListings(this.props.account.publisherData);
     }
   }
 
-  fetchListings({ country, city, keywords }) {
-    this.props.searchActions.searchListings(keywords, 'All', country, city, true, null);
+  fetchListings({
+    country, state, city, keywords
+  }) {
+    const searchListings = () => {
+      if (!this.props.dht.isConnecting && this.props.dht.connector) {
+        this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+      } else {
+        setTimeout(searchListings, 500);
+      }
+    };
+    searchListings();
   }
 
   listItems(items, size) {
@@ -97,14 +111,18 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-  
+
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
-        const imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        let imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
+        if(!image){
+          imageUrl = ObNet
+        }
+
         const style = { backgroundImage: `url(${imageUrl})` };
         let { description } = item;
         description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
-  
+
         let categoryTitle = '';
         if (item.category && item.category.toLowerCase() !== 'all') {
           categoryTitle = mainCategories[item.category] ?
@@ -112,7 +130,7 @@ class Marketplace extends Component {
         }
         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
         const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
-        
+
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
             <Link to={`listing/${item.listing_id}`}>
@@ -138,9 +156,9 @@ class Marketplace extends Component {
   }
 
   viewAllSubCategories = (category) => {
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     this.props.history.push('/search-results');
-    this.props.searchActions.searchListings(null, category || 'All', country, city, true, null);
+    this.props.searchActions.searchListings(null, category || 'All', country, state, city, true, null);
   };
 
   renderOption(category, parentCategory) {
@@ -242,6 +260,7 @@ class Marketplace extends Component {
   }
 
   renderCryptoCategory() {
+    const categoryName = CategoriesTypes.CRYPTO_BAZAAR;
     const { formatMessage } = this.props.intl;
     const style = { backgroundImage: `url(${CryptoIcon})` };
 
@@ -250,6 +269,15 @@ class Marketplace extends Component {
         <span className="title">{formatMessage(mainCategories.cryptoBazaar)}</span>
         <div className="sub-categories">
           {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
+          <div
+            className="view-all"
+            onClick={() => this.viewAllSubCategories(categoryName)}
+            onKeyDown={() => this.viewAllSubCategories(categoryName)}
+            tabIndex={0}
+            role="link"
+          >
+            {formatMessage(messages.viewAll)}
+          </div>
         </div>
       </div>
     );
@@ -290,7 +318,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper overview">
-        <Image src={Overview} width={490} height={380}/>
+        <Image src={Overview} width={490} height={380} />
       </div>
     );
   }
@@ -300,7 +328,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper versatility">
-        <Image src={Versatility} width={456} height={300}/>
+        <Image src={Versatility} width={456} height={300} />
       </div>
     );
   }
@@ -320,7 +348,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper benefits">
-        <Image src={Benefits} width={760} height={500}/>
+        <Image src={Benefits} width={760} height={500} />
       </div>
     );
   }
@@ -330,7 +358,7 @@ class Marketplace extends Component {
 
     return (
       <div className="menu-wrapper fees">
-        <Image src={Fees} width={456} height={300}/>
+        <Image src={Fees} width={456} height={300} />
       </div>
     );
   }
@@ -381,13 +409,13 @@ class Marketplace extends Component {
 
   viewCategory = (categoryId, parent) => {
     this.props.history.push('/search-results');
-    const { country, city } = this.props.account.publisherData;
+    const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Marketplace.getValue(parent) : Marketplace.getValue(categoryId);
     const subCategory = parent ? Marketplace.getValue(categoryId) : null;
     if (categoryId !== 'featuredListings') {
-      this.props.searchActions.searchListings(null, category, country, city, true, subCategory);
+      this.props.searchActions.searchListings(null, category, country, state, city, true, subCategory);
     } else {
-      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, city, true, null);
+      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, state, city, true, null);
     }
   };
 
@@ -397,7 +425,8 @@ class Marketplace extends Component {
     if (type === CategoriesTypes.FEATURED) {
       maxDisplay = 12;
     }
-
+    let content = this.listItems(itemsList, maxDisplay);
+    content = content.length !== 0 ? content : formatMessage(messages.noListingsFound);
     return (
       <div className="list-container">
         <div className="top-detail">
@@ -410,9 +439,8 @@ class Marketplace extends Component {
         </div>
         <div className="items">
           {
-            loading ?
-            <div className='loading-container'><Loader inline active /></div> :
-            this.listItems(itemsList, maxDisplay)
+            loading ? <div className="loading-container"><Loader inline active /></div>
+                    : content
           }
         </div>
       </div>
@@ -466,6 +494,7 @@ class Marketplace extends Component {
     const { formatMessage } = this.props.intl;
     const { searchResults } = this.props.search;
     const isSearching = this.props.dht.isLoading || this.props.search.searching;
+    const { saving } = this.props.listing.saveListing;
 
     return (
       <div className="marketplace-container">
@@ -475,7 +504,7 @@ class Marketplace extends Component {
             CategoriesTypes.FEATURED,
             formatMessage(mainCategories.featuredListings),
             searchResults,
-            isSearching
+            saving || isSearching
           )}
           <div className="categories-container">
             <div className="top-detail">
@@ -483,11 +512,11 @@ class Marketplace extends Component {
             </div>
             {this.categoriesItems()}
           </div>
-          {(this.props.dht.isLoading || this.props.search.searching)
+          {(saving || this.props.dht.isLoading || this.props.search.searching)
             ?
               <Loader
                 content={
-                  this.props.dht.isLoading
+                  saving || this.props.dht.isLoading
                     ? formatMessage(messages.searchingForPublishers)
                     : formatMessage(messages.loadingListings)
                 }
@@ -511,11 +540,11 @@ class Marketplace extends Component {
                   formatMessage(mainCategories.jobs),
                   this.getListingForCategory(categories.jobs)
                 )}
-                {/*{this.renderListItems(
+                {/* {this.renderListItems(
                   CategoriesTypes.RENTALS,
                   formatMessage(mainCategories.rentals),
                   this.getListingForCategory(categories.rentals)
-                )}*/}
+                )} */}
                 {this.renderListItems(
                   CategoriesTypes.CRYPTO_BAZAAR,
                   formatMessage(mainCategories.cryptoBazaar),
@@ -562,6 +591,11 @@ Marketplace.propTypes = {
     recentSearches: PropTypes.array,
     searchResultsFiltered: PropTypes.array
   }),
+  listing: PropTypes.shape({
+    saveListing: PropTypes.shape({
+      saving: PropTypes.bool
+    })
+  })
 };
 
 Marketplace.defaultProps = {

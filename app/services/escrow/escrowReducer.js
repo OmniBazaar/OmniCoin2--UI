@@ -31,7 +31,9 @@ const defaultState = {
   releasedTransaction: null,
   returnedTransaction: null,
   error: null,
+  myEscrowError: null,
   loading: false,
+  myEscrowLoading: false,
   updating: false,
   updatingSettings: false,
   finalizing: false,
@@ -92,14 +94,14 @@ const reducer = handleActions(
         ...state,
         settings,
         loading: false,
-      }
+      };
     },
     [getEscrowSettingsFailed](state, { payload: { error } }) {
       return {
         ...state,
         loading: false,
         error
-      }
+      };
     },
     [updateEscrowSettings](state) {
       return {
@@ -113,14 +115,14 @@ const reducer = handleActions(
         ...state,
         settings,
         updatingSettings: false,
-      }
+      };
     },
     [updateEscrowSettingsFailed](state, { payload: { error } }) {
       return {
         ...state,
         error,
         updatingSettings: false
-      }
+      };
     },
     [clearEscrowAgents](state) {
       return {
@@ -132,19 +134,19 @@ const reducer = handleActions(
     [loadMyEscrowAgents](state) {
       return {
         ...state,
-        error: null,
-        loading: true
+        myEscrowError: null,
+        myEscrowLoading: true
       };
     },
     LOAD_MY_ESCROW_AGENTS_SUCCEEDED: (state, action) => ({
       ...state,
       myAgents: action.myAgents,
-      loading: false
+      myEscrowLoading: false
     }),
     LOAD_MY_ESCROW_AGENTS_FAILED: (state, action) => ({
       ...state,
-      error: action.error,
-      loading: false
+      myEscrowError: action.error,
+      myEscrowLoading: false
     }),
     [loadEscrowAgents](state) {
       return {

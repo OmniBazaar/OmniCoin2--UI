@@ -11,8 +11,16 @@ const {
   welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
+  getWelcomeBonusAmount,
+  getWelcomeBonusAmountSucceeded,
+  getWelcomeBonusAmountFailed,
+  receiveWelcomeBonus,
+  getIdentityVerificationToken,
+  getIdentityVerificationTokenSucceeded,
   requestPcIds,
+  requestAppVersion,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
   showTermsModal
@@ -25,11 +33,21 @@ const {
       username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
-  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({ username, referrer, macAddress, harddriveId }),
+  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({
+    username, referrer, macAddress, harddriveId
+  }),
   WELCOME_BONUS_SUCCEEDED: () => ({ }),
   WELCOME_BONUS_FAILED: (error) => ({ error }),
+  GET_WELCOME_BONUS_AMOUNT: () => {},
+  GET_WELCOME_BONUS_AMOUNT_SUCCEEDED: (amount) => ({ amount }),
+  GET_WELCOME_BONUS_AMOUNT_FAILED: () => {},
+  RECEIVE_WELCOME_BONUS: (data) => ({ data }),
+  GET_IDENTITY_VERIFICATION_TOKEN: (username) => ({ username }),
+  GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (token) => ({ token }),
   REQUEST_PC_IDS: () => ({}),
+  REQUEST_APP_VERSION: () => ({}),
   REQUEST_REFERRER: () => ({}),
+  REQUEST_REFERRER_FINISH: (referrer) => ({ referrer }),
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
   SHOW_TERMS_MODAL: () => ({}),
@@ -43,9 +61,17 @@ export {
   welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
+  getWelcomeBonusAmount,
+  getWelcomeBonusAmountSucceeded,
+  getWelcomeBonusAmountFailed,
+  receiveWelcomeBonus,
+  getIdentityVerificationToken,
+  getIdentityVerificationTokenSucceeded,
   requestPcIds,
   requestReferrer,
+  requestReferrerFinish,
   getAccount,
   getLastLoginUserName,
-  showTermsModal
+  showTermsModal,
+  requestAppVersion
 };

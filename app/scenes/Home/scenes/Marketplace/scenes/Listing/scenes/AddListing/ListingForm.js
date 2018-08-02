@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-import { Icon, Form, Image, Dropdown, Button, Grid } from 'semantic-ui-react';
+import { Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
@@ -12,6 +12,7 @@ import moment from 'moment';
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
+import PriorityFeeDropdown from './components/PriorityFeeDropdown/PriorityFeeDropdown';
 import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
 import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
 import UnitDropdown from './components/UnitDropdown/UnitDropdown';
@@ -23,39 +24,65 @@ import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
+import priorityFees from './priorityFees';
 import {
   InputField,
   makeValidatableField
 } from '../../../../../../../../components/ValidatableField/ValidatableField';
-
 import {
   setListingImages,
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import {
+  updatePublicData,
+  setBtcAddress,
+  setEthAddress
+} from '../../../../../../../../services/accountSettings/accountActions';
+import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
+import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import './add-listing.scss';
+import { FetchChain } from 'omnibazaarjs';
+import {SATOSHI_IN_BTC, TOKENS_IN_XOM, WEI_IN_ETH} from "../../../../../../../../utils/constants";
 
 const contactOmniMessage = 'OmniMessage';
 
-const requiredFieldValidator = [
-  required({ message: messages.fieldRequired })
-];
-
-const numericFieldValidator = [
-  numericality({ message: messages.fieldNumeric })
-];
+const requiredFieldValidator = required({ message: messages.fieldRequired });
+const numericFieldValidator = numericality({ message: messages.fieldNumeric });
+const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
+const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
+const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
-const MAX_IMAGE_SIZE = '10mb';
+const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
+  static asyncValidate = async (values) => {
+    try {
+      const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
+      if (price_using_btc && bitcoin_address) {
+        await BitcoinApi.validateAddress(bitcoin_address);
+      }
+      if (price_using_eth && ethereum_address) {
+        await EthereumApi.validateEthereumAddress(ethereum_address);
+      }
+    } catch (e) {
+      if (e === "Invalid Ethereum Address") {
+        throw { ethereum_address: messages.invalidAddress };
+      } else {
+        throw { bitcoin_address: messages.invalidAddress };
+      }
+    }
+  };
+
   constructor(props) {
     super(props);
 
     this.CategoryDropdown = makeValidatableField(CategoryDropdown);
     this.SubCategoryDropdown = makeValidatableField(SubCategoryDropdown);
     this.CurrencyDropdown = makeValidatableField(CurrencyDropdown);
+    this.PriorityFeeDropdown = makeValidatableField(PriorityFeeDropdown);
     this.ConditionDropdown = makeValidatableField(ConditionDropdown);
     this.UnitDropdown = makeValidatableField(UnitDropdown);
     this.ContactDropdown = makeValidatableField(ContactDropdown);
@@ -81,7 +108,7 @@ class ListingForm extends Component {
         className="textfield"
         placeholder={placeholder}
       />
-      <Button type='button' className="copy-btn button--gray-text">
+      <Button type="button" className="copy-btn button--gray-text">
         {buttonText}
       </Button>
     </div>
@@ -102,17 +129,36 @@ class ListingForm extends Component {
       };
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
+      const { btc_address, eth_address } = this.props.auth.account;
+      const listingPriority = this.getDefaultListingPriority();
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
+        priority_fee: listingPriority,
         price_using_btc: false,
+        price_using_eth: false,
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
+        start_date: moment().format('YYYY-MM-DD HH:mm:ss')
       };
+
+      if (btc_address) {
+        data.bitcoin_address = btc_address;
+      }
+      if (eth_address) {
+        data.ethereum_address = eth_address;
+      }
     }
 
     this.props.initialize(data);
+  }
+
+  getDefaultListingPriority() {
+    const preferencesStorageKey = `preferences_${this.props.auth.currentUser.username}`;
+    const userPreferences = JSON.parse(localStorage.getItem(preferencesStorageKey));
+
+    return userPreferences && userPreferences.listingPriority ? parseInt(userPreferences.listingPriority) : 50
   }
 
   initImages() {
@@ -140,6 +186,7 @@ class ListingForm extends Component {
   }
 
   resetForm() {
+    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -150,9 +197,9 @@ class ListingForm extends Component {
 
   componentWillReceiveProps(nextProps) {
     if ((
-        nextProps.formValues !== this.props.formValues
+      nextProps.formValues !== this.props.formValues
         && !nextProps.formValues
-      )) {
+    )) {
       this.resetForm();
     }
 
@@ -161,17 +208,26 @@ class ListingForm extends Component {
     if (this.props.listing.saveListing.saving && !saving) {
       const { formatMessage } = this.props.intl;
       if (error) {
-        if (error.message && error.message === 'no_changes') {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorNoChangeDetectedMessage)
-          );
+        let msg = null;
+        if (error.statusCode === 413) {
+          msg = formatMessage(messages.imageSizeTooLarge);
+        } else if (error.message) {
+          if (/StatusCodeError: 413/.test(error.message)) {
+            msg = formatMessage(messages.imageSizeTooLarge);
+          } else if (error.message === 'no_changes') {
+            msg = formatMessage(messages.saveListingErrorNoChangeDetectedMessage);
+          } else if (error.message === 'publisher_not_alive') {
+            msg = formatMessage(messages.publisherNotReachable);
+          } else if (error.message.includes(messages.saveListingNotEnoughFunds.defaultMessage)) {
+            msg = formatMessage(messages.saveListingNotEnoughFunds);
+          } else {
+            msg = error.message;
+          }
         } else {
-          this.showErrorToast(
-            formatMessage(messages.error),
-            formatMessage(messages.saveListingErrorMessage)
-          );
+          msg = formatMessage(messages.saveListingErrorMessage);
         }
+
+        this.showErrorToast(formatMessage(messages.error), msg);
       } else {
         const { editingListing } = this.props;
         if (!editingListing) {
@@ -198,7 +254,7 @@ class ListingForm extends Component {
   onContinuousChange = (event, newValue) => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
-    })
+    });
   };
 
   onKeywordsBlur(e) {
@@ -214,9 +270,9 @@ class ListingForm extends Component {
     for (const imageId in listingImages) {
       const imageItem = listingImages[imageId];
       const {
-        uploadError, image, thumb, fileName, localFilePath, path
+        uploadError, image, thumb, fileName, localFilePath, path, file
       } = imageItem;
-      if (uploadError || (!image && !localFilePath)) {
+      if (uploadError || (!image && !localFilePath && !file)) {
         continue;
       }
 
@@ -226,11 +282,17 @@ class ListingForm extends Component {
           path,
           id: imageId
         });
+      } else if (file) {
+        data.push({
+          file,
+          id: imageId
+        });
       } else {
         data.push({
           path: this.fixImagePath(image),
           thumb: this.fixThumbPath(thumb),
-          image_name: fileName
+          image_name: fileName,
+          id: imageId
         });
       }
     }
@@ -241,7 +303,7 @@ class ListingForm extends Component {
   fixImagePath(path) {
     const segs = path.split('/');
     if (segs.length > 2) {
-      return segs[segs.length - 2] + '/' + segs[segs.length - 1];
+      return `${segs[segs.length - 2]}/${segs[segs.length - 1]}`;
     }
 
     return path;
@@ -251,9 +313,9 @@ class ListingForm extends Component {
     const segs = path.split('/');
     if (segs.length > 3) {
       return (
-        segs[segs.length - 3]
-        + '/' + segs[segs.length - 2]
-        + '/' + segs[segs.length - 1]
+        `${segs[segs.length - 3]
+        }/${segs[segs.length - 2]
+        }/${segs[segs.length - 1]}`
       );
     }
 
@@ -270,7 +332,9 @@ class ListingForm extends Component {
 
   submit(values) {
     const { saveListing } = this.props.listingActions;
-    const { listing_id, publisher, keywords, ...data } = values;
+    const {
+      listing_id, publisher, keywords, ...data
+    } = values;
 
     saveListing(publisher, {
       ...data,
@@ -284,20 +348,30 @@ class ListingForm extends Component {
     const {
       category,
       country,
+      currency,
       publisher,
       price_using_btc,
+      price_using_eth,
       continuous
     } = this.props.formValues ? this.props.formValues : {};
     const {
+      account,
+      auth,
+      bitcoin,
+      ethereum,
       handleSubmit,
       editingListing,
-      invalid
+      invalid,
+      submitting,
+      asyncValidating
     } = this.props;
 
     const formValues = this.props.formValues || {};
-    const { error, saving } = this.props.listing.saveListing;
-    return (
+    const { saving } = this.props.listing.saveListing;
+    const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
+    const ethWalletAddress = ethereum.address;
 
+    return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
         <Grid>
           <Grid.Row>
@@ -324,7 +398,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -332,7 +406,7 @@ class ListingForm extends Component {
             <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
-            <Grid.Column width={12} className='keywords'>
+            <Grid.Column width={12} className="keywords">
               <Field
                 type="text"
                 name="keywords"
@@ -340,9 +414,9 @@ class ListingForm extends Component {
                 onBlur={this.onKeywordsBlur.bind(this)}
                 className="textfield"
                 placeholder={formatMessage(messages.keywordCommas)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
-              <div className='note'>{formatMessage(messages.keywordsNote)}</div>
+              <div className="note">{formatMessage(messages.keywordsNote)}</div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -354,9 +428,10 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
-                  placeholder: formatMessage(messages.category)
+                  placeholder: formatMessage(messages.category),
+                  disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
@@ -365,9 +440,10 @@ class ListingForm extends Component {
                 component={this.SubCategoryDropdown}
                 props={{
                   placeholder: formatMessage(messages.subCategory),
-                  parentCategory: category
+                  parentCategory: category,
+                  disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -379,23 +455,56 @@ class ListingForm extends Component {
               <Field
                 name="currency"
                 component={this.CurrencyDropdown}
-                removeAll={true}
+                removeAll
                 props={{
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
+              {currency === 'OMNICOIN' &&
               <Field
                 type="text"
                 name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
-              />
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  // we don't want other currencies including bitcoin be less then 10^-8
+                  omnicoinFieldValidator
+                ]}
+              />}
+              {currency === 'BITCOIN' &&
+              <Field
+                type="text"
+                name="price"
+                placeholder={formatMessage(messages.pricePerItem)}
+                component={this.PriceInput}
+                className="textfield"
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  // we don't want other currencies including bitcoin be less then 10^-8
+                  bitcoinFieldValidator
+                ]}
+              />}
+              {currency === 'ETHEREUM' &&
+              <Field
+                type="text"
+                name="price"
+                placeholder={formatMessage(messages.pricePerItem)}
+                component={this.PriceInput}
+                className="textfield"
+                validate={[
+                  requiredFieldValidator,
+                  numericFieldValidator,
+                  ethereumFieldValidator
+                ]}
+              />}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -411,6 +520,15 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <Field
+                name="price_using_eth"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.ethereumPrice)
+                }}
+              />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Field
                 name="price_using_omnicoin"
                 component={Checkbox}
                 props={{
@@ -419,7 +537,7 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
-          {price_using_btc &&
+          {(price_using_btc || currency === 'BITCOIN') &&
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.bitcoinAddress)}
@@ -429,7 +547,26 @@ class ListingForm extends Component {
                 name="bitcoin_address"
                 component={InputField}
                 className="textfield"
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
+                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          }
+          {(price_using_eth || currency === 'ETHEREUM') &&
+          <Grid.Row>
+            <Grid.Column width={4}>
+              {formatMessage(messages.ethereumAddress)}
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                name="ethereum_address"
+                component={InputField}
+                className="textfield"
+                validate={[requiredFieldValidator]}
+                value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+                onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -454,7 +591,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.numberAvailable)}
-                validate={[...requiredFieldValidator, ...numericFieldValidator]}
+                validate={[requiredFieldValidator, numericFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -464,7 +601,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.unitsOfMeasure)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -482,7 +619,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.from)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             {
@@ -497,7 +634,7 @@ class ListingForm extends Component {
                   props={{
                     placeholder: formatMessage(messages.to)
                   }}
-                  validate={requiredFieldValidator}
+                  validate={[requiredFieldValidator]}
                 />
               </Grid.Column>
             }
@@ -513,6 +650,23 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
+              <span>{formatMessage(messages.priorityFee)}*</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                type="text"
+                name="priority_fee"
+                component={this.PriorityFeeDropdown}
+                props={{
+                  placeholder: formatMessage(messages.selectPriorityFee),
+                  priorityFees
+                }}
+                validate={[requiredFieldValidator]}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
               <span>{formatMessage(messages.publisher)}*</span>
             </Grid.Column>
             <Grid.Column width={8}>
@@ -523,7 +677,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.selectPublisher),
                   keywords: this.state.keywords
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -551,7 +705,6 @@ class ListingForm extends Component {
             <Grid.Column width={12}>
               <Images
                 publisher={publisher}
-                disabled={!publisher}
               />
             </Grid.Column>
           </Grid.Row>
@@ -572,7 +725,7 @@ class ListingForm extends Component {
                 component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.pleaseEnter)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -594,7 +747,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.ownerName)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -605,7 +758,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.preferredContact)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -615,7 +768,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.enterPreferredContact)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -631,7 +784,7 @@ class ListingForm extends Component {
                 props={{
                   placeholder: formatMessage(messages.country)
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -641,7 +794,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.address)}
-                validate={requiredFieldValidator}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -651,7 +803,7 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.city)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -666,7 +818,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.state),
                   country
                 }}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -676,7 +828,7 @@ class ListingForm extends Component {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
-                validate={requiredFieldValidator}
+                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -686,15 +838,13 @@ class ListingForm extends Component {
               <Button
                 type="submit"
                 content={
-                  formatMessage(
-                    editingListing ?
+                  formatMessage(editingListing ?
                     messages.saveListing :
-                    messages.createListingCaps
-                  )
+                    messages.createListingCaps)
                 }
                 className="button--green-bg uppercase"
-                loading={saving}
-                disabled={saving || invalid}
+                loading={saving || submitting || asyncValidating}
+                disabled={saving || invalid || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
@@ -710,13 +860,32 @@ ListingForm.propTypes = {
     resetSaveListing: PropTypes.func,
     saveListing: PropTypes.func
   }).isRequired,
+  accountActions: PropTypes.shape({
+    updatePublicData: PropTypes.func,
+    setBtcAddress: PropTypes.func,
+    setEthAddress: PropTypes.func,
+  }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  account: PropTypes.shape({
+    btcAddress: PropTypes.string,
+    ethAddress: PropTypes.string,
+  }).isRequired,
   auth: PropTypes.shape({
+    account: PropTypes.shape({
+      btc_address: PropTypes.string,
+      eth_address: PropTypes.string,
+    }),
     currentUser: PropTypes.shape({
-      username: PropTypes.string
+      username: PropTypes.string,
     })
+  }).isRequired,
+  bitcoin: PropTypes.shape({
+    wallets: PropTypes.array
+  }).isRequired,
+  ethereum: PropTypes.shape({
+    wallets: PropTypes.array
   }).isRequired,
   listing: PropTypes.shape({
     saveListing: PropTypes.shape({
@@ -734,19 +903,29 @@ export default compose(
   reduxForm({
     form: 'listingForm',
     destroyOnUnmount: true,
+    asyncValidate: ListingForm.asyncValidate,
+    asyncBlurFields: ['bitcoin_address', 'ethereum_address'],
   }),
   connect(
     state => ({
       auth: state.default.auth,
+      account: state.default.account,
       listing: state.default.listing,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults
+      listingDefaults: state.default.listingDefaults,
+      bitcoin: state.default.bitcoin,
+      ethereum: state.default.ethereum
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
         setListingImages,
         saveListing,
         resetSaveListing
+      }, dispatch),
+      accountActions: bindActionCreators({
+        setBtcAddress,
+        setEthAddress,
+        updatePublicData,
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)

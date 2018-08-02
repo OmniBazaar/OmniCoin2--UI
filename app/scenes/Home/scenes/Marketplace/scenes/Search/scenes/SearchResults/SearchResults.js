@@ -53,19 +53,19 @@ const messages = defineMessages({
     defaultMessage: 'Searching for publishers'
   },
   loadingListings: {
-    id: 'SearchMenu.loadingListings',
+    id: 'SearchResults.loadingListings',
     defaultMessage: 'Loading listings'
   },
   currency: {
-    id: 'SearchMenu.currency',
+    id: 'SearchResults.currency',
     defaultMessage: 'Currency'
   },
   category: {
-    id: 'AddListing.category',
+    id: 'SearchResults.category',
     defaultMessage: 'Category'
   },
   subCategory: {
-    id: 'SearchMenu.subCategory',
+    id: 'SearchResults.subCategory',
     defaultMessage: 'Sub-category'
   },
 });
@@ -75,6 +75,16 @@ class SearchResults extends Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChangeCurrency = this.onChangeCurrency.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
+      const { searchListingsParams } = nextProps.search;
+      const {
+        searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
+      } = searchListingsParams;
+      this.props.searchActions.searchListings(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu);
+    }
   }
 
   handleSubmit(values, searchTerm) {
@@ -139,6 +149,7 @@ class SearchResults extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { category, subCategory } = this.props.search;
+    const { saveListing } = this.props.listing;
 
     return (
       <div className="marketplace-container category-listing search-results">
@@ -147,11 +158,11 @@ class SearchResults extends Component {
         </div>
         <div className="body">
           <Breadcrumb category={category} subCategory={subCategory} />
-          {(this.props.dht.isLoading || this.props.search.searching)
+          {(this.props.dht.isLoading || this.props.search.searching || saveListing.saving)
             ?
               <Loader
                 content={
-                  this.props.dht.isLoading
+                  saveListing.saving || this.props.dht.isLoading
                     ? formatMessage(messages.searchingForPublishers)
                     : formatMessage(messages.loadingListings)
                 }
@@ -171,6 +182,11 @@ SearchResults.propTypes = {
   account: PropTypes.shape({
     publisherData: PropTypes.object
   }),
+  listing: PropTypes.shape({
+    saveListing: PropTypes.shape({
+      saving: PropTypes.bool
+    })
+  }).isRequired,
   search: PropTypes.shape({
     searchResults: PropTypes.array,
     recentSearches: PropTypes.array,
@@ -179,6 +195,7 @@ SearchResults.propTypes = {
     category: PropTypes.string,
     subCategory: PropTypes.string,
     searching: PropTypes.bool,
+    searchListingsParams: PropTypes.object
   }),
   searchActions: PropTypes.shape({
     filterSearchResults: PropTypes.func,

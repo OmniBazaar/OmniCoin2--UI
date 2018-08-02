@@ -2,13 +2,13 @@ import { eventChannel } from 'redux-saga';
 import {
   ob2SocketClosed,
   ob2SocketOpened
-} from "./marketplace/marketplaceActions";
+} from './marketplace/marketplaceActions';
 
 function wrapRequest(func) {
   return async (...args) => {
     const res = await func(...args);
     if (res.status !== 200) {
-      throw res;
+      throw await res.json();
     } else {
       return res.json();
     }
@@ -19,11 +19,11 @@ function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
       console.log('Connection opened');
-      emitter(ob2SocketOpened())
+      emitter(ob2SocketOpened());
     };
     socket.onerror = (error) => {
       console.log(`WebSocket error ${error}`);
-      emitter(ob2SocketClosed())
+      emitter(ob2SocketClosed());
     };
     socket.onmessage = (e) => {
       try {
@@ -62,6 +62,7 @@ function reputationOptions(from = 0, to = 10) {
 const coefficients = {
   USDtoEUR: 0.86,
   USDtoBITCOIN: 0.000133,
+  USDtoETHEREUM: 0.002118,
   USDtoOMNICOIN: 300.03,
   USDtoGBP: 0.75,
   USDtoCAD: 0.76,
@@ -81,7 +82,7 @@ const getAllowedAmount = (amount) => {
 
 Object.keys(coefficients).forEach(key => {
   const units = key.split('to');
-  coefficients[`${units[1]}to${units[0]}`] = 1/coefficients[key];
+  coefficients[`${units[1]}to${units[0]}`] = 1 / coefficients[key];
 });
 
 const currencyConverter = (amount, fromCur, toCur) => {
@@ -127,7 +128,7 @@ function currencyConverter(amount, from, to) {
   if (to === 'BTC') {
     return (amount  / (btcUSD * (usdRates[from] || 1))).toFixed(8);
   }
-}*/
+} */
 
 export {
   wrapRequest,

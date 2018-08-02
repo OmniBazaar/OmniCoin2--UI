@@ -1,4 +1,9 @@
 {
   "AuthService.invalidPassword": "Invalid password",
-  "AuthService.noAccount": "Account doesn't exist"
+  "AuthService.noAccount": "Account doesn't exist",
+  "AuthService.accountExists": "This account name is already taken. Please choose another one",  
+  "AuthService.invalidUsername": "Only lowercase alphanumeric characters, dashes and periods. Must start with a letter and cannot end with a dash.",
+  "AuthService.invalidTelegramPhoneNumber": "Not joined to channel or not started the bot",
+  "AuthService.invalidTwitterUsername": "Not following",
+  "AuthService.invalidMailChimpEmail": "Not subscribed"
 }

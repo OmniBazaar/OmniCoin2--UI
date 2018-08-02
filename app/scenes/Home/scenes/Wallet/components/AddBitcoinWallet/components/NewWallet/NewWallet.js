@@ -29,11 +29,7 @@ const messages = defineMessages({
   },
   email: {
     id: 'NewWallet.email',
-    defaultMessage: 'Email for Restore Access'
-  },
-  message: {
-    id: 'NewWallet.message',
-    defaultMessage: 'Providing email is optional, but we strongly recommending to enter it. Otherwise, you will not be able to restore access to wallet in case password loss.'
+    defaultMessage: 'Email address for Restoring Access'
   },
   createWallet: {
     id: 'NewWallet.createWallet',
@@ -53,11 +49,11 @@ const messages = defineMessages({
   },
   noMatch: {
     id: 'NewWallet.noMatch',
-    defaultMessage: 'Passwords do not match'
+    defaultMessage: 'Passwords do not match.'
   },
   fieldRequired: {
     id: 'NewWallet.required',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   label: {
     id: 'NewWallet.label',
@@ -69,11 +65,11 @@ const messages = defineMessages({
   },
   rememberGuid: {
     id: 'NewWallet.rememberGuid',
-    defaultMessage: 'Please do not forget to write down or remember your guid'
+    defaultMessage: 'Please write down protect your guid.'
   },
   minLength: {
     id: 'NewWallet.minLength',
-    defaultMessage: 'This field must be at least 10 characters in length'
+    defaultMessage: 'This field must be at least 10 characters in length.'
   }
 });
 
@@ -127,7 +123,7 @@ class NewWallet extends Component {
           name="password"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
-          message={formatMessage(messages.createPassword) + '*'}
+          message={`${formatMessage(messages.createPassword)}*`}
           validate={[
             required({ message: formatMessage(messages.fieldRequired) }),
             length({ min: 10, message: formatMessage(messages.minLength) })
@@ -138,7 +134,7 @@ class NewWallet extends Component {
           name="repeatPassword"
           placeholder={formatMessage(messages.pleaseEnter)}
           type="password"
-          message={formatMessage(messages.repeatPassword) + '*'}
+          message={`${formatMessage(messages.repeatPassword)}*`}
           validate={[required({ message: formatMessage(messages.fieldRequired) })]}
           component={FormField}
         />
@@ -153,12 +149,11 @@ class NewWallet extends Component {
           placeholder={formatMessage(messages.email)}
           type="email"
           message={formatMessage(messages.email)}
+          validate={[
+            required({ message: formatMessage(messages.fieldRequired) }),
+          ]}
           component={FormField}
         />
-        <div className="form-field">
-          <div />
-          <span className="email-tooltip">{formatMessage(messages.message)}</span>
-        </div>
         <ModalFooter
           successContent={formatMessage(messages.createWallet)}
           cancelContent={formatMessage(messages.cancel)}

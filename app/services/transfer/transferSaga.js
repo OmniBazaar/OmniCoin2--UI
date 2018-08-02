@@ -11,14 +11,23 @@ import {
   fork,
   call
 } from 'redux-saga/effects';
+import {
+  delay
+} from 'redux-saga'
+
 import _ from 'lodash';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import * as EthereumApi from '../blockchain/ethereum/EthereumApi';
 import { Apis } from 'omnibazaarjs-ws';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
+import { makeEthereumPayment } from '../blockchain/ethereum/EthereumSaga';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
+import { TOKENS_IN_XOM } from '../../utils/constants';
+import {addPurchase} from "../marketplace/myPurchases/myPurchasesActions";
+import { sendPurchaseInfoMail } from "../mail/mailActions";
 
 export function* transferSubscriber() {
   yield all([
@@ -50,7 +59,7 @@ function* submitOmniCoinTransfer(data) {
       reputation_vote: parseInt(reputation),
       amount: {
         asset_id: '1.3.0',
-        amount: Math.ceil(amount * 100000)
+        amount: Math.ceil(amount * TOKENS_IN_XOM)
       },
     };
     if (memo.trim()) {
@@ -66,35 +75,57 @@ function* submitOmniCoinTransfer(data) {
     yield tr.broadcast();
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
     yield put(getAccountBalance(account));
+    if (data.payload.data.listingId) {
+      yield put(addPurchase(data.payload.data));
+      yield put(sendPurchaseInfoMail(senderNameStr, toNameStr, JSON.stringify(data.payload.data)))
+    }
   } catch (error) {
     let e = JSON.stringify(error);
     console.log('ERROR', error);
     if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
-      e = 'Not enough funds'
+      e = 'Not enough funds';
     }
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error: e });
   }
 }
 
-function* submitBitcoinTransfer(data) {
+function* submitBitcoinTransfer({ payload: { data }}) {
   const {
     guid,
     password,
     toName,
     amount,
     fromName
-  } = data.payload.data;
-
+  } = data;
   try {
     if (!Number.isInteger(fromName)) {
       throw new Error('Transaction from value need to be a wallet index');
     }
 
-    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
+    yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
+    yield put(addPurchase(data));
+  } catch (error) {
+    console.log('ERROR', error);
+    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+  }
+}
+
+function* submitEthereumTransfer(data) {
+  const {
+    privateKey,
+    toAddress,
+    amount
+  } = data.payload.data;
+
+  try {
+    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toAddress, amount);
+    console.log("Ether res", res)
     yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
   } catch (error) {
     console.log('ERROR', error);
+    yield delay(1)
     yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
   }
 }
@@ -108,14 +139,18 @@ export function* submitTransfer(data) {
     case 'bitcoin':
       yield fork(submitBitcoinTransfer, data);
       break;
+    case 'ethereum':
+      yield fork(submitEthereumTransfer, data);
+      break;
     default:
       yield fork(submitBitcoinTransfer, data);
   }
 }
 
 
-function* createEscrowTransaction({ payload: {
-    data : {
+function* createEscrowTransaction({
+  payload: {
+    data: {
       expirationTime,
       buyer,
       toName: seller,
@@ -145,7 +180,7 @@ function* createEscrowTransaction({ payload: {
       escrow: escrowAcc.get('id'),
       amount: {
         asset_id: '1.3.0',
-        amount: Math.ceil(amount * 100000)
+        amount: Math.ceil(amount * TOKENS_IN_XOM)
       },
       transfer_to_escrow: transferToEscrow
     };
@@ -162,7 +197,7 @@ function* createEscrowTransaction({ payload: {
     yield tr.broadcast();
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
-    const errorMsg = error.message.indexOf("Insufficient Balance") !== -1 ? "Not enough funds" : error.message;
+    const errorMsg = error.message.indexOf('Insufficient Balance') !== -1 ? 'Not enough funds' : error.message;
     console.log('ERROR', error);
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
@@ -192,7 +227,7 @@ function* getCommonEscrows({ payload: { from, to } }) {
   }
 }
 
-function* saleBonus({ payload: { seller, buyer }}) {
+function* saleBonus({ payload: { seller, buyer } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const [currUserAcc, sellerAcc, buyerAcc] = yield Promise.all([
@@ -200,7 +235,8 @@ function* saleBonus({ payload: { seller, buyer }}) {
       FetchChain('getAccount', seller),
       FetchChain('getAccount', buyer)
     ]);
-    const isAvailable = yield Apis.instance().db_api().exec('is_sale_bonus_available',
+    const isAvailable = yield Apis.instance().db_api().exec(
+      'is_sale_bonus_available',
       [sellerAcc.get('id'), buyerAcc.get('id')]
     );
     if (isAvailable) {

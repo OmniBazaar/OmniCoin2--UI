@@ -9,6 +9,8 @@ import {
 import * as BitcoinApi from './BitcoinApi';
 import { persitBitcoinWalletData, getBitcoinWalletData } from './services';
 import { connectWalletFinish } from './bitcoinActions';
+import {CoinTypes} from "../../../scenes/Home/scenes/Wallet/constants";
+import { getRecentTransactions } from "../../accountSettings/accountActions";
 
 export function* bitcoinSubscriber() {
   yield all([
@@ -17,7 +19,8 @@ export function* bitcoinSubscriber() {
     takeEvery('MAKE_PAYMENT', makePayment),
     takeEvery('GET_BALANCE', getBalance),
     takeEvery('ADD_ADDRESS', addAddress),
-    takeEvery('CONNECT_WALLET', connectWallet)
+    takeEvery('CONNECT_WALLET', connectWallet),
+    takeEvery('GET_WALLETS_SUCCEEDED', getWalletsSucceededHandler)
   ]);
 }
 
@@ -39,27 +42,32 @@ function* connectWallet({ payload: { guid, password } }) {
     const { currentUser } = (yield select()).default.auth;
     yield call(persitBitcoinWalletData, guid, password, currentUser);
     yield put(connectWalletFinish());
-    yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password });
+    yield put({
+      type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password
+    });
   } catch (error) {
-    console.log('Connect bitcoin wallet error', error);
     yield put(connectWalletFinish(error));
   }
 }
 
-function* getWallets({ payload: { guid, password }}) {
+function* getWallets({ payload: { guid, password } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
     if (guid && password) {
       const res = yield call(BitcoinApi.getWallets, password, guid);
-      yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password });
+      yield put({
+        type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password
+      });
     } else {
       const walletData = yield call(getBitcoinWalletData, currentUser);
       if (walletData) {
-        const {guid, password} = walletData;
+        const { guid, password } = walletData;
         const res = yield call(BitcoinApi.getWallets, password, guid);
-        yield put({type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password});
+        yield put({
+          type: 'GET_WALLETS_SUCCEEDED', wallets: res, guid, password
+        });
       } else {
-        yield put({type: 'GET_WALLETS_SUCCEEDED', wallets: []});
+        yield put({ type: 'GET_WALLETS_SUCCEEDED', wallets: [] });
       }
     }
   } catch (error) {
@@ -99,4 +107,8 @@ function* addAddress({ payload: { guid, password, label } }) {
   } catch (error) {
     yield put({ type: 'ADD_ADDRESS_FAILED', error });
   }
+}
+
+function* getWalletsSucceededHandler() {
+  yield put(getRecentTransactions(CoinTypes.BIT_COIN));
 }

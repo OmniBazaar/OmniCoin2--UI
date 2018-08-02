@@ -121,7 +121,7 @@
         }
 
         &.blue {
-         background-color: $primary-blue;
+          background-color: $primary-blue;
         }
 
         &.green {
@@ -243,7 +243,7 @@
         /* Extra large desktop */
         @media (min-width: 1700px) {
           .item {
-            flex: 0 1 19%;
+            /* flex: 0 1 19%;*/
           }
 
           .img-wrapper {
@@ -275,7 +275,7 @@
 
         @media (min-width: 980px) and (max-width: 1199px) {
           .item {
-            flex: 0 1 19%;
+            /*flex: 0 1 19%;*/
           }
 
           .img-wrapper {
@@ -286,7 +286,7 @@
         /* Portrait tablet to landscape and desktop */
         @media (min-width: 871px) and (max-width: 979px) {
           .item {
-            flex: 0 1 32%;
+            /*flex: 0 1 32%;*/
           }
 
           .img-wrapper {
@@ -297,7 +297,7 @@
         /* Portrait tablet to landscape and desktop */
         @media (min-width: 768px) and (max-width: 870px) {
           .item {
-            flex: 0 1 32%;
+            /*flex: 0 1 32%;*/
           }
 
           .img-wrapper {

@@ -5,19 +5,31 @@ import {
   all,
   call
 } from 'redux-saga/effects';
-import { TransactionBuilder, FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
+import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
-import {Apis} from "omnibazaarjs-ws";
+import { Apis } from 'omnibazaarjs-ws';
 import _ from 'lodash';
 
+import { CoinTypes } from '../../scenes/Home/scenes/Wallet/constants';
 import { getAllPublishers } from './services';
-import {
-  generateKeyFromPassword,
-} from '../blockchain/utils/wallet';
-import HistoryStorage from './historyStorage';
-import {getStoredCurrentUser} from "../blockchain/auth/services";
-import {voteForProcessors} from "../processors/utils";
+import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
+import OmnicoinHistory from './omnicoinHistory';
+import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { voteForProcessors } from '../processors/utils';
+import EthereumHistory from './ethereumHistory';
+import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import {SATOSHI_IN_BTC} from "../../utils/constants";
 
+const processBitcoinTransactions = (txs) => {
+    return txs.map(tx => ({
+        date: tx.time * 1000,
+        fromTo: tx.out[0].addr,
+        amount: tx.out[0].value / SATOSHI_IN_BTC,
+        fee: tx.fee / SATOSHI_IN_BTC,
+        isIncoming: tx.result > 0,
+      })
+    );
+};
 
 export function* accountSubscriber() {
   yield all([
@@ -34,11 +46,14 @@ export function* updatePublicData() {
   const { is_a_processor } = (yield select()).default.auth.account;
   try {
     yield updateAccount({
-      transactionProcessor: is_a_processor ? false: account.transactionProcessor,
+      transactionProcessor: is_a_processor ? false : account.transactionProcessor,
       wantsToVote: account.wantsToVote,
       is_a_publisher: account.publisher,
+      is_referrer: account.referrer,
       is_an_escrow: account.escrow,
       publisher_ip: account.ipAddress,
+      btc_address: account.btcAddress,
+      eth_address: account.ethAddress,
     });
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
@@ -62,20 +77,25 @@ export function* updateAccount(payload) {
   const { currentUser, account } = (yield select()).default.auth;
   const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   const tr = new TransactionBuilder();
-  let trObj = {...payload};
+  const trObj = { ...payload };
+
   if (!trObj.is_a_publisher) {
     delete trObj.publisher_ip;
   }
+
   if (trObj.transactionProcessor) {
     tr.add_type_operation('witness_create', {
       witness_account: account.id,
       url: '',
-      block_signing_key:  key.privKey.toPublicKey()
+      block_signing_key: key.privKey.toPublicKey(),
     });
   }
+
   const { wantsToVote } = trObj;
+
   delete trObj.wantsToVote;
   delete trObj.transactionProcessor;
+
   tr.add_type_operation(
     'account_update',
     {
@@ -102,18 +122,29 @@ export function* updateAccount(payload) {
         );
       }
     } catch (error) {
-      console.log("ERROR ", error);
+      console.log('ERROR ', error);
     }
   });
 }
 
 
-export function* getRecentTransactions() {
-  const {  currentUser } = (yield select()).default.auth;
+export function* getRecentTransactions({ payload: { coinType } }) {
+  const { auth: { currentUser }, ethereum } = (yield select()).default
   try {
-    const historyStorage = new HistoryStorage(currentUser.username);
-    yield historyStorage.refresh(currentUser);
-    yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
+    if (coinType === CoinTypes.OMNI_COIN) {
+      const historyStorage = new OmnicoinHistory(currentUser.username);
+      yield historyStorage.refresh(currentUser);
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
+    } else if (coinType === CoinTypes.ETHEREUM) {
+      const historyStorage = new EthereumHistory(ethereum.address);
+      yield historyStorage.loadTransactions();
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
+    } else if (coinType === CoinTypes.BIT_COIN) {
+      const { wallets } = (yield select()).default.bitcoin;
+      const res = yield call(BitcoinApi.getHistory, wallets, 10000, 0);
+      yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: processBitcoinTransactions(res.txs) });
+    }
+
   } catch (e) {
     console.log('ERROR', e);
     yield put({ type: 'GET_RECENT_TRANSACTIONS_FAILED', error: e });

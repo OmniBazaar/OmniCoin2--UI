@@ -31,6 +31,10 @@ const messages = defineMessages({
     id: 'DataTable.category',
     defaultMessage: 'Category'
   },
+  subCategory: {
+    id: 'DataTable.subCategory',
+    defaultMessage: 'SubCategory'
+  },
   save: {
     id: 'DataTable.save',
     defaultMessage: 'SAVE'
@@ -150,6 +154,9 @@ class DataTable extends Component {
                 <TableHeaderCell key="filters" sorted={sortBy === 'category' ? sortDirection : null} onClick={this.sortData('category')}>
                   {formatMessage(messages.parameters)}
                 </TableHeaderCell>
+                <TableHeaderCell key="filters" sorted={sortBy === 'subCategory' ? sortDirection : null} onClick={this.sortData('subCategory')}>
+                  {formatMessage(messages.subCategory)}
+                </TableHeaderCell>
                 <TableHeaderCell key="actions" onClick={this.sortData('actions')} />
               </TableRow>
             </TableHeader>
@@ -165,7 +172,12 @@ class DataTable extends Component {
                     </TableCell>
                     <TableCell>
                       <a onClick={() => onSearch('', row.category)}>
-                        {row.category}
+                        {row.categoryToRead}
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      <a onClick={() => onSearch('', row.subCategory)}>
+                        {row.subCategoryToRead}
                       </a>
                     </TableCell>
                     <TableCell className="actions">

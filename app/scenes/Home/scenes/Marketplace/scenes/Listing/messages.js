@@ -51,7 +51,7 @@ export default defineMessages({
   },
   condition: {
     id: 'Listing.condition',
-    defaultMessage: 'condition'
+    defaultMessage: 'Condition'
   },
   cityLocation: {
     id: 'Listing.cityLocation',
@@ -77,13 +77,17 @@ export default defineMessages({
     id: 'Listing.report',
     defaultMessage: 'REPORT'
   },
+  reported: {
+    id: 'Listing.reported',
+    defaultMessage: 'REPORTED'
+  },
   removeFromFavorites: {
     id: 'Listing.removeFromFavorites',
     defaultMessage: 'REMOVE FROM FAVORITES'
   },
   hashIsInvalid: {
     id: 'Listing.hashIsInvalid',
-    defaultMessage: 'Listing is corrupted'
+    defaultMessage: 'Listing is corrupt'
   },
   error: {
     id: 'Listing.error',
@@ -98,12 +102,12 @@ export default defineMessages({
     defaultMessage: 'Warning'
   },
   deleteListingError: {
-    id: "Listing.deleteListingError",
-    defaultMessage: 'Delete listing error'
+    id: 'Listing.deleteListingError',
+    defaultMessage: 'Error deleting listing'
   },
   loadListingError: {
     id: 'Listing.loadListingError',
-    defaultMessage: 'Cannot load listing'
+    defaultMessage: 'Load listing'
   },
   loadListing: {
     id: 'Listing.loadListing',
@@ -115,7 +119,7 @@ export default defineMessages({
   },
   notInBlockchain: {
     id: 'Listing.notInBlockchain',
-    defaultMessage: 'The listing was deleted from the blockchain'
+    defaultMessage: 'The listing was deleted from the blockchain.'
   },
   reportDeleteQuestion: {
     id: 'Listing.reportDeleteQuestion',
@@ -125,9 +129,13 @@ export default defineMessages({
     id: 'Listing.reportConfirmationQuestion',
     defaultMessage: 'Are you sure you want to report this listing?'
   },
+  reportListingErrorPopScore: {
+    id: 'Listing.reportListingErrorPopScore',
+    defaultMessage: 'Your PoP score is not high enough to be able to report a listing.'
+  },
   reportListingError: {
     id: 'Listing.reportListingError',
-    defaultMessage: 'An error occured while reporting the listing'
+    defaultMessage: 'Can\'t report the listing due to insufficient funds to pay the fee or connection error'
   },
   reportListingSuccess: {
     id: 'Listing.reportListingSuccess',
@@ -136,5 +144,5 @@ export default defineMessages({
   contactSeller: {
     id: 'Listing.contactSeller',
     defaultMessage: 'Contact Seller'
-  },
+  }
 });

@@ -2,6 +2,7 @@
 
 .ui.modal {
   .preferences-form-container {
+
     .form-group {
       label, span {
         flex: 2;
@@ -9,14 +10,13 @@
       }
 
       .dropdown, .textfield {
-        flex: 2.81;
+        flex: 2.81!important;
         padding: 0.67857143em 1em;
       }
 
       .radios {
         flex: 3;
       }
-
       &.top {
         span {
           align-self: flex-start;
@@ -116,4 +116,33 @@
 .error-message {
   height: 30px;
   color: #FF0000;
+}
+
+.priority-listings {
+  width: 100%!important;
+}
+
+.radio-group {
+  display: flex;
+}
+
+.autorun {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: -7px;
+  float: left;
+}
+
+.autorun-note {
+  margin-top: 3px;
+}
+
+.search-list-options {
+  float: left;
+  margin-right: 10px;
+}
+
+.auto-log-out {
+
 }

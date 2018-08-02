@@ -15,7 +15,6 @@ export const removeStoredCurrentUser = () => {
 };
 
 export const getFirstReachable = async (addresses) => {
-
   for (let i = 0; i < addresses.length; ++i) {
     const reachable = await isReachable(addresses[i]);
     if (reachable) {

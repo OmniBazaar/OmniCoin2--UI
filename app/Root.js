@@ -8,6 +8,8 @@ import { IntlProvider } from 'react-intl';
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
+import AirDrop from './scenes/AirDrop/AirDrop';
+import IdentityVerificationForm from './scenes/AirDrop/components/AirDropForm/IdentityVerificationForm';
 
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import {
@@ -17,8 +19,9 @@ import {
   requestReferrer
 } from './services/blockchain/auth/authActions';
 import { loadListingDefault } from './services/listing/listingDefaultsActions';
-import { loadPreferences } from './services/preferences/preferencesActions';
-import { getConfig } from "./services/config/configActions";
+import { loadLocalPreferences } from './services/preferences/preferencesActions';
+import { getConfig } from './services/config/configActions';
+import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
 
 class Root extends Component {
@@ -28,7 +31,8 @@ class Root extends Component {
     this.props.authActions.requestReferrer();
     this.props.authActions.getLastLoginUserName();
     this.props.listingDefaultsActions.loadListingDefault();
-    this.props.preferencesActions.loadPreferences();
+    this.props.preferencesActions.loadLocalPreferences();
+    this.props.updateNotificationActions.checkUpdate();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +63,8 @@ class Root extends Component {
         <Router>
           <Switch>
             <Route path="/signup" render={(props) => <Signup {...props} />} />
+            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
+            <Route path="/identity-verification" render={(props) => <IdentityVerificationForm {...props} />} />       
             <Route path="/login" render={(props) => <Login {...props} />} />
             <Route path="/" render={(props) => <Home {...props} />} />
           </Switch>
@@ -85,7 +91,7 @@ Root.propTypes = {
     loadListingDefault: PropTypes.func
   }).isRequired,
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   preferences: PropTypes.shape({
     preferences: PropTypes.shape({
@@ -107,10 +113,13 @@ export default connect(
       loadListingDefault
     }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
     configActions: bindActionCreators({
       getConfig
+    }, dispatch),
+    updateNotificationActions: bindActionCreators({
+      checkUpdate
     }, dispatch)
   })
 )(Root);
