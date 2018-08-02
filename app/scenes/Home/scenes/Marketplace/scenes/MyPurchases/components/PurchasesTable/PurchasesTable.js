@@ -63,6 +63,10 @@ const messages = defineMessages({
     id: 'PurchasesTable.seller',
     defaultMessage: 'Seller'
   },
+  buyer: {
+    id: 'PurchasesTable.buyer',
+    defaultMessage: 'Buyer'
+  },
   date: {
     id: 'PurchasesTable.date',
     defaultMessage: 'Date'
@@ -135,7 +139,7 @@ class PurchasesTable extends Component {
       loading
     } = this.props.data;
     const { formatMessage } = this.props.intl;
-
+    
     return (
       <div className="purchases-table">
         <div className="data-table">
@@ -204,13 +208,23 @@ class PurchasesTable extends Component {
                     >
                       {formatMessage(messages.publisher)}
                     </TableHeaderCell>
-                    <TableHeaderCell
-                      key="seller"
-                      sorted={sortColumn === 'seller' ? sortDirection : null}
-                      onClick={this.sortData('seller')}
-                    >
-                      {formatMessage(messages.seller)}
-                    </TableHeaderCell>
+                    {this.props.type === 'buy' ?
+                      <TableHeaderCell
+                        key="seller"
+                        sorted={sortColumn === 'seller' ? sortDirection : null}
+                        onClick={this.sortData('seller')}
+                      >
+                        {formatMessage(messages.seller)}
+                      </TableHeaderCell>
+                      :
+                      <TableHeaderCell
+                        key="buyer"
+                        sorted={sortColumn === 'buyer' ? sortDirection : null}
+                        onClick={this.sortData('buyer')}
+                      >
+                        {formatMessage(messages.buyer)}
+                      </TableHeaderCell>
+                    }
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -227,10 +241,14 @@ class PurchasesTable extends Component {
                         }
                         <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                         <TableCell>{row.count}</TableCell>
-                        <TableCell>{row.price} {this.getCurrencyAbbreviation(row.currencySelected)}</TableCell>
+                        <TableCell>{row.price} {this.getCurrencyAbbreviation(row.currency)}</TableCell>
                         <TableCell>{row.publisher}</TableCell>
-                        <TableCell>{row.seller}</TableCell>
-                      </TableRow>
+                        {this.props.type === 'buy' ?
+                          <TableCell>{row.seller}</TableCell>
+                          :
+                          <TableCell>{row.buyer}</TableCell>
+                        }
+                        </TableRow>
                     ))
                   }
                 </TableBody>

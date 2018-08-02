@@ -28,14 +28,15 @@ import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
+  omnicoinTransfer,
+  bitcoinTransfer,
+  ethereumTransfer,
   setCurrency,
-  submitTransfer,
   getCommonEscrows,
   createEscrowTransaction,
   saleBonus
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
-import { makePayment } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
@@ -82,14 +83,6 @@ const FEE_PERCENT = 0.01;
 const FEE_CONVERSION_FACTOR = 10000;
 const XOM_DECIMALS_LIMIT = 5;
 
-const initialState = {
-  bitcoinWallets: [],
-  ethereumWallet: {},
-  wallets: [],
-  listingId: null,
-  number: null,
-  price: 0.00,
-};
 
 const amountDecimalsValidator = addValidator({
   validator(options, value) {
@@ -103,14 +96,6 @@ const amountDecimalsValidator = addValidator({
 });
 
 class Transfer extends Component {
-  // static asyncValidate = async (values) => {
-  //   try {
-  //     await FetchChain('getAccount', values.toName);
-  //   } catch (e) {
-  //     console.log('ERR', e);
-  //     throw { toName: messages.accountDoNotExist };
-  //   }
-  // };
 
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
@@ -162,39 +147,32 @@ class Transfer extends Component {
     this.hideEscrow = this.hideEscrow.bind(this);
 
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
-
-    this.state = {
-      ...initialState,
-    };
   }
 
-  state = {
-    type: CoinTypes.OMNI_COIN,
-    listingId: null,
-    number: 0,
-    price: 0.00,
-  };
 
   componentDidMount() {
-    const params = new URLSearchParams(this.props.location.search);
-    const type = params.get('type');
-    const listingId = params.get('listing_id');
-    const price = params.get('price');
-    const to = params.get('to');
-    const number = params.get('number');
-    this.setState({ listingId, price, number });
-    this.handleInitialize(price * number, to);
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const type = purchaseParams.get('type');
+    const price = purchaseParams.get('price');
+    const number = purchaseParams.get('number');
+    const to = purchaseParams.get('seller_name');
+    const bitcoinAddress = purchaseParams.get('bitcoin_address');
+    const ethereumAddress = purchaseParams.get('ethereum_address');
+    this.handleInitialize(price * number);
     if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
       this.props.change('currencySelected', 'bitcoin');
+      this.props.change('toAddress', bitcoinAddress);
     }
     if (type === CoinTypes.ETHEREUM) {
       this.props.transferActions.setCurrency('ethereum');
       this.props.change('currencySelected', 'ethereum');
-    } 
+      this.props.change('toAddress', ethereumAddress);
+    }
     if (type === CoinTypes.OMNI_COIN) {
       this.props.transferActions.setCurrency('omnicoin');
       this.props.change('currencySelected', 'omnicoin');
+      this.props.change('toName', to);
     }
   }
 
@@ -210,14 +188,12 @@ class Transfer extends Component {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
       } else {
         this.props.reset();
-        this.setState({ listingId: null, price: 0, number: 0 });
-        this.handleInitialize(0, '');
+        this.handleInitialize(0);
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
       }
     }
 
     const useEscrow = !nextProps.transfer.gettingCommonEscrows && nextProps.transferForm.useEscrow;
-
     if (useEscrow) {
       const { transferForm } = this.props;
       const escrowsWithoutSeller = nextProps.transfer.commonEscrows
@@ -226,20 +202,18 @@ class Transfer extends Component {
       if (!nextProps.transfer.commonEscrows.length || !escrowsWithoutSeller.length) {
         this.hideEscrow();
         toastr.warning(formatMessage(messages.warning), formatMessage(messages.escrowsNotFound));
+      } else if (this.props.transfer.gettingCommonEscrows) {
+        this.initializeEscrow(escrowsWithoutSeller);
       }
-    } else if (this.props.transfer.gettingCommonEscrows
-                && !nextProps.transfer.gettingCommonEscrows
-                && nextProps.transferForm.useEscrow) {
-      this.initializeEscrow(nextProps.transfer.commonEscrows);
     }
-    if (nextProps.bitcoin.wallets !== this.state.bitcoinWallets) {
-      this.props.change('password', this.props.bitcoin.password);
-      this.props.change('guid', this.props.bitcoin.guid);
+    if (nextProps.bitcoin.wallets !== this.props.bitcoin.wallets) {
+      this.props.change('password', nextProps.bitcoin.password);
+      this.props.change('guid', nextProps.bitcoin.guid);
     }
 
-    if (nextProps.ethereum.wallets !== this.state.ethereumWallets) {
-      this.props.change('privateKey', this.props.ethereum.privateKey);
-      this.props.change('address', this.props.bitcoin.address);
+    if (nextProps.ethereum.wallets !== this.props.ethereum.wallets) {
+      this.props.change('privateKey', nextProps.ethereum.privateKey);
+      this.props.change('address', nextProps.bitcoin.address);
     }
 
     if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
@@ -259,10 +233,9 @@ class Transfer extends Component {
     this.props.transferActions.setCurrency(undefined);
   }
 
-  handleInitialize(price, to) {
+  handleInitialize(price) {
     this.props.initialize({
       reputation: 5,
-      toName: to,
       amount: price || 0.00
     });
   }
@@ -479,6 +452,9 @@ class Transfer extends Component {
     const { gettingCommonEscrows } = this.props.transfer;
     let { commonEscrows } = this.props.transfer;
 
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
+
     commonEscrows = commonEscrows.filter(item => item.name !== transferForm.toName);
 
     return (
@@ -523,7 +499,7 @@ class Transfer extends Component {
                   }),
                 })
               ]}
-              disabled={!!this.state.listingId}
+              disabled={!!listingId}
             />
             <div className="col-1" />
           </div>
@@ -635,6 +611,9 @@ class Transfer extends Component {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
 
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
+
     return (
       <div>
         <div className="section">
@@ -643,7 +622,7 @@ class Transfer extends Component {
             <span>{formatMessage(messages.selectWallet)}</span>
             <div className="transfer-input">
               <Field
-                name="fromName"
+                name="wallet"
                 component={this.BitcoinWalletDropdown}
                 validate={[
                   required({ message: formatMessage(messages.fieldRequired) })
@@ -659,7 +638,7 @@ class Transfer extends Component {
             <span>{formatMessage(messages.bitcoinAddress)}*</span>
             <Field
               type="text"
-              name="toName"
+              name="toAddress"
               placeholder={formatMessage(messages.pleaseEnter)}
               component="input"
               className="textfield"
@@ -685,7 +664,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
-              disabled={this.state.listingId}
+              disabled={listingId}
             />
             <div className="col-1" />
           </div>
@@ -715,6 +694,9 @@ class Transfer extends Component {
   renderEthereumForm() {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
+
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
 
     return (
       <div>
@@ -750,7 +732,7 @@ class Transfer extends Component {
                 required({ message: formatMessage(messages.fieldRequired) }),
                 numericality({ message: formatMessage(messages.numberRequired) })
               ]}
-              disabled={this.state.listingId}
+              disabled={listingId}
             />
             <Field type="text" name="privateKey" fieldValue={this.props.ethereum.privateKey} component={this.renderHiddenField} />
             <div className="col-1" />
@@ -824,34 +806,97 @@ class Transfer extends Component {
     );
   }
 
+  submitOmnicoinTransfer({
+                           toName,
+                           reputation,
+                           amount,
+                           memo,
+                           useEscrow,
+                           transferToEscrow,
+                           escrow,
+                           expirationTime
+  }) {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    if (!useEscrow) {
+      this.props.transferActions.omnicoinTransfer(
+        toName,
+        amount,
+        memo,
+        reputation,
+        purchaseParams.get('listing_id'),
+        purchaseParams.get('title'),
+        purchaseParams.get('number')
+      )
+    } else {
+      const { currentUser } = this.props.auth;
+      this.props.transferActions.createEscrowTransaction(
+        currentUser.username,
+        toName,
+        escrow,
+        amount,
+        memo,
+        transferToEscrow ? transferToEscrow : false,
+        expirationTime,
+        purchaseParams.get('listing_id'),
+        purchaseParams.get('title'),
+        purchaseParams.get('number')
+      )
+    }
+  }
+
+  submitBitcoinTransfer({
+                          toAddress,
+                          password,
+                          guid,
+                          wallet,
+                          amount
+  }) {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    this.props.transferActions.bitcoinTransfer(
+      toAddress,
+      purchaseParams.get('seller_name'),
+      guid,
+      password,
+      wallet,
+      amount,
+      purchaseParams.get('listing_id'),
+      purchaseParams.get('title'),
+      purchaseParams.get('number')
+    )
+  }
+
+  submitEthereumTransfer({
+                           toAddress,
+                           privateKey,
+                           amount
+  }) {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    this.props.transferActions.ethereumTransfer(
+      toAddress,
+      purchaseParams.get('seller_name'),
+      amount,
+      privateKey,
+      purchaseParams.get('listing_id'),
+      purchaseParams.get('title'),
+      purchaseParams.get('number')
+    )
+  }
+
   submitTransfer(paramValues) {
     const { transferCurrency } = this.props.transfer;
-    const params = new URLSearchParams(this.props.location.search);
-    const values = {
-      ...paramValues,
-      title: params.get('title'),
-      ip: params.get('ip'),
-      seller: params.get('seller_name')
-    };
-
-    if (transferCurrency === 'omnicoin') {
-      values.memo = paramValues.memo ? paramValues.memo : '';
-      values.amount = parseFloat(paramValues.amount).toFixed(5);
-    } else {
-      values.amount = parseFloat(paramValues.amount).toFixed(8);
-    }
-
-    const { currentUser } = this.props.auth;
-    if (this.state.listingId) {
-      this.props.transferActions.saleBonus(values.toName, currentUser.username);
-      values.listingCount = this.state.number;
-      values.listingId = this.state.listingId;
-    }
-    if (values.useEscrow) {
-      values.buyer = currentUser.username;
-      this.props.transferActions.createEscrowTransaction(values);
-    } else {
-      this.props.transferActions.submitTransfer(values);
+    switch (transferCurrency) {
+      case 'omnicoin':
+        this.submitOmnicoinTransfer(paramValues);
+        break;
+      case 'bitcoin':
+        this.submitBitcoinTransfer(paramValues);
+        break;
+      case 'ethereum':
+        this.submitEthereumTransfer(paramValues);
+        break;
+      default:
+        this.submitOmnicoinTransfer(paramValues);
+        break;
     }
   }
 
@@ -939,9 +984,10 @@ export default compose(
         getEthereumWallets
       }, dispatch),
       transferActions: bindActionCreators({
-        makePayment,
+        omnicoinTransfer,
+        bitcoinTransfer,
+        ethereumTransfer,
         setCurrency,
-        submitTransfer,
         getCommonEscrows,
         createEscrowTransaction,
         saleBonus

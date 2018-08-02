@@ -18,5 +18,5 @@
   "Mail.usernameDoesNotExist": "Not found",
   "Mail.required": "Required",
   "Mail.purchaseSubject": "{buyer} bought {listing}",
-  "Mail.purchaseBody": "{buyer} bought {number} of {listing} for {price}"
+  "Mail.purchaseBody": "{buyer} bought {number} {listing}"
 }
