@@ -25,6 +25,10 @@ const makePayment = wrapRequest(async (guid, password, to, amount, from) => (
   fetch(`${address}/merchant/${guid}/payment?password=${password}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
 ));
 
+const sendToMany = wrapRequest(async (guid, password, recipients, from) => (
+  fetch(`${address}/merchant/${guid}/sendmany?password=${password}&recipients=${encodeURIComponent(JSON.stringify(recipients))}&from=${from}&fee_per_byte=${feePerByte}`)
+));
+
 const getBalance = wrapRequest(async (address, guid, password) => fetch(`${address}/merchant/${guid}/balance?password=${password}`));
 
 const addAddress = wrapRequest(async (password, guid, label) => fetch(`${address}/merchant/${guid}/accounts/create?password=${password}&label=${label}`));
@@ -46,5 +50,6 @@ export {
   addAddress,
   getAddress,
   validateAddress,
-  getHistory
+  getHistory,
+  sendToMany
 };

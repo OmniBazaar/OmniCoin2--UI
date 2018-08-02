@@ -1,7 +1,14 @@
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
+import { FetchChain } from 'omnibazaarjs/es';
+import _ from 'lodash';
+
+import { getListingFromBlockchain } from "../../listing/apis";
 import { getUserDataFolder, checkDir, writeFile, isExist, readFile } from '../../fileUtils';
+import * as BitcoinApi from './BitcoinApi';
+import {SATOSHI_IN_BTC} from "../../../utils/constants";
+
 
 const algorithm = 'aes-256-ctr';
 
@@ -46,5 +53,36 @@ export const getBitcoinWalletData = async (account) => {
   } catch (err) {
     console.log(err);
     return null;
+  }
+};
+
+
+export const sendOBFees = async (purchase, guid, password) => {
+  const [omnibazaar, buyer, seller, listing] = await Promise.all([
+    FetchChain('getAccount', 'omnibazaar'),
+    FetchChain('getAccount', purchase.buyer),
+    FetchChain('getAccount', purchase.seller),
+    getListingFromBlockchain(purchase.listingId)
+  ]);
+  const [buyerReferrer, sellerReferrer] = await Promise.all([
+    FetchChain('getAccount', buyer.get('referrer')),
+    FetchChain('getAccount', seller.get('referrer'))
+  ]);
+  const recipients = {};
+  const omnibazaarFee = purchase.amount * listing.priority_fee / 10000 * SATOSHI_IN_BTC;
+  if (omnibazaarFee > 1000) {
+    recipients[omnibazaar.get('btc_address')] = omnibazaarFee;
+  }
+  const referrerFee = purchase.amount * 0.0025 * SATOSHI_IN_BTC;
+  if (seller.get('is_referrer') && referrerFee >= 1000) {
+    if (buyerReferrer.get('is_referrer') && buyerReferrer.get('btc_address')) {
+      recipients[buyerReferrer.get('btc_address')] = referrerFee;
+    }
+    if (sellerReferrer.get('is_referrer') && sellerReferrer.get('btc_address')) {
+      recipients[sellerReferrer.get('btc_address')] = referrerFee;
+    }
+  }
+  if (!_.isEmpty(recipients)) {
+    return await BitcoinApi.sendToMany(guid, password, recipients, 1);
   }
 };

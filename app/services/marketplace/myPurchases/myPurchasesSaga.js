@@ -55,7 +55,7 @@ const addPurchaseToFile = async (purchase, filePath) => {
     publisher: publisher.get('name'),
     price: purchase.amount,
     count: purchase.listingCount,
-    id: purchase.listingId,
+    listingId: purchase.listingId,
     seller: purchase.seller,
     buyer: purchase.buyer,
     currency: purchase.currency

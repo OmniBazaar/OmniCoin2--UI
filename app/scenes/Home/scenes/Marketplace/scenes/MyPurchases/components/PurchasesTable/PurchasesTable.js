@@ -139,7 +139,7 @@ class PurchasesTable extends Component {
       loading
     } = this.props.data;
     const { formatMessage } = this.props.intl;
-    
+
     return (
       <div className="purchases-table">
         <div className="data-table">
@@ -233,7 +233,7 @@ class PurchasesTable extends Component {
                       <TableRow key={hash(row)}>
                         <TableCell>
                           <NavLink to={`/listing/${row.id}`}>
-                            {row.id}
+                            {row.listingId}
                           </NavLink>
                         </TableCell>
                         {this.props.type === 'buy' &&
