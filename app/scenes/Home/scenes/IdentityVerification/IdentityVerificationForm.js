@@ -18,8 +18,8 @@ class IdentityVerificationForm extends Component {
     identityVerificationToken: null
   }
   componentDidMount() {
-    const { lastLoginUserName } = this.props.auth;
-    this.props.authActions.getIdentityVerificationToken(lastLoginUserName);
+    const { username } = this.props.auth.currentUser;
+    this.props.authActions.getIdentityVerificationToken(username);
   }
   componentWillReceiveProps(nextProps) {
     const { identityVerificationToken } = nextProps.auth;
@@ -86,7 +86,9 @@ IdentityVerificationForm.propTypes = {
     getIdentityVerificationToken: PropTypes.func,
   }).isRequired,
   auth: PropTypes.shape({
-    lastLoginUserName: PropTypes.string,
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+    })
   }).isRequired,
 };
 
@@ -98,4 +100,3 @@ export default connect(
     authActions: bindActionCreators({ getIdentityVerificationToken }, dispatch),
   })
 )(IdentityVerificationForm);
-

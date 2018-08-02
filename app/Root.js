@@ -9,7 +9,6 @@ import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
 import AirDrop from './scenes/AirDrop/AirDrop';
-import IdentityVerificationForm from './scenes/Home/scenes/IdentityVerification/IdentityVerificationForm';
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import {
   getCurrentUser,
