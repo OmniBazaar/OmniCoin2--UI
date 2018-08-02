@@ -51,6 +51,7 @@ class AccountBalance extends Component {
   }
 
   render() {
+    const BTC = this.getBtcBalance();
     const { formatMessage } = this.props.intl;
     return (
       <div className="account-balance">
@@ -62,9 +63,11 @@ class AccountBalance extends Component {
           <div className="balance">
             {this.getBalance()} {formatMessage(messages.xom)}
           </div>
-          <div className="balance">
-            {this.getBtcBalance()} {formatMessage(messages.btc)}
-          </div>
+          {!!BTC &&
+            <div className="balance">
+              {BTC} {formatMessage(messages.btc)}
+            </div>
+          }
         </div>
       </div>
     );
