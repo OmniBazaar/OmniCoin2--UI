@@ -28,6 +28,14 @@ const imageStoragePath = {
   development: imagesDevPath[process.platform],
 };
 
+const getDefaultListingPriority = ({ username }) => {
+  const preferencesStorageKey = `preferences_${username}`;
+  const userPreferences = JSON.parse(localStorage.getItem(preferencesStorageKey));
+  const hasListingPriority = userPreferences && userPreferences.listingPriority;
+
+  return hasListingPriority ? Number.parseInt(userPreferences.listingPriority, 10) : 50;
+};
+
 export function* importSubscriber() {
   yield all([
     takeLatest('STAGE_FILE', importListingsFromFile),
@@ -39,6 +47,7 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
   try {
     const { content, name } = file;
     const listings = yield call(listingHandlersByVendor[vendor] || getListings, content);
+    const { currentUser } = (yield select()).default.auth;
 
     const items = yield listings.map(async (item) => {
       let imageToSave;
@@ -46,6 +55,7 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
         ...item,
         end_date: item.end_date || item.start_date,
         name: defaultValues.name,
+        priority_fee: getDefaultListingPriority(currentUser),
       };
 
       if (!itemToSave.imageURL) {
@@ -111,6 +121,14 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
         delete itemToSave.productId;
         delete itemToSave.imageURL;
 
+        if (!itemToSave.price_using_btc) {
+          delete itemToSave.bitcoin_address;
+        }
+
+        if (!itemToSave.price_using_eth) {
+          delete itemToSave.ethereum_address;
+        }
+
         const listing = await createListing(
           currentUser,
           publisher,
@@ -121,7 +139,7 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
               image_name: fileName,
               path: image,
             }],
-          },
+          }
         );
 
         return {
