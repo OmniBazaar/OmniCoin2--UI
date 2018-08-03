@@ -326,6 +326,20 @@ class ListingForm extends Component {
     return path;
   }
 
+  getPriceValidators(currency) {
+    const priceValidators = [numericFieldValidator, requiredFieldValidator];
+    if (currency === 'OMNICOIN') {
+      priceValidators.push(omnicoinFieldValidator);
+    }
+    if (currency === 'BITCOIN') {
+      priceValidators.push(bitcoinFieldValidator);
+    }
+    if (currency === 'ETHEREUM') {
+      priceValidators.push(ethereumFieldValidator);
+    }
+    return priceValidators;
+  }
+
   showSuccessToast(title, message) {
     toastr.success(title, message);
   }
@@ -368,6 +382,7 @@ class ListingForm extends Component {
     );
   }
 
+
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -393,6 +408,7 @@ class ListingForm extends Component {
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
+
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
     const ethWalletAddress = ethereum.address;
 
@@ -480,58 +496,14 @@ class ListingForm extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
-              {(currency === 'USD' || currency === 'EUR') &&
               <Field
                 type="text"
                 name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                validate={[
-                  numericFieldValidator,
-                ]}
-              />}
-              {currency === 'OMNICOIN' &&
-              <Field
-                type="text"
-                name="price"
-                placeholder={formatMessage(messages.pricePerItem)}
-                component={this.PriceInput}
-                className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  // we don't want other currencies including bitcoin be less then 10^-8
-                  omnicoinFieldValidator
-                ]}
-              />}
-              {currency === 'BITCOIN' &&
-              <Field
-                type="text"
-                name="price"
-                placeholder={formatMessage(messages.pricePerItem)}
-                component={this.PriceInput}
-                className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  // we don't want other currencies including bitcoin be less then 10^-8
-                  bitcoinFieldValidator
-                ]}
-              />}
-              {currency === 'ETHEREUM' &&
-              <Field
-                type="text"
-                name="price"
-                placeholder={formatMessage(messages.pricePerItem)}
-                component={this.PriceInput}
-                className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  ethereumFieldValidator
-                ]}
-              />}
+                validate={this.getPriceValidators(currency)}
+              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
