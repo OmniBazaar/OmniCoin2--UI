@@ -18,7 +18,13 @@ import {
   releaseEscrowTransaction,
   returnEscrowTransaction,
   setActivePageMyEscrow,
-  setPaginationMyEscrow
+  setPaginationMyEscrow,
+  createEscrowExtendProposal,
+  createEscrowExtendProposalSucceeded,
+  createEscrowExtendProposalFailed,
+  getEscrowProposals,
+  getEscrowProposalsFailed,
+  getEscrowProposalsSucceeded
 } from './escrowActions';
 
 const defaultState = {
@@ -40,6 +46,15 @@ const defaultState = {
   activePageMyEscrow: 1,
   rowsPerPageMyEscrow: 20,
   totalPagesMyEscrow: 1,
+  escrowExtendProposal: {
+    loading: false,
+    error: null
+  },
+  activeEscrowProposals: {
+    proposals: [],
+    loading: false,
+    error: null
+  }
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -52,6 +67,33 @@ const getTotalPages = (data, rowsPerPage) => (
 
 const reducer = handleActions(
   {
+    [createEscrowExtendProposal](state) {
+      return {
+        ...state,
+        escrowExtendProposal: {
+          loading: true,
+          error: null
+        }
+      }
+    },
+    [createEscrowExtendProposalSucceeded](state) {
+      return {
+        ...state,
+        escrowExtendProposal: {
+          ...state.escrowExtendProposal,
+          loading: false,
+        }
+      }
+    },
+    [createEscrowExtendProposalFailed](state, { payload: { error } }) {
+      return {
+        ...state,
+        escrowExtendProposal: {
+          loading: false,
+          error
+        }
+      }
+    },
     [removeMyEscrowAgents](state, { payload: { agents } }) {
       return {
         ...state,
@@ -271,6 +313,36 @@ const reducer = handleActions(
         ...state,
       };
     },
+    [getEscrowProposals](state) {
+      return {
+        ...state,
+        activeEscrowProposals: {
+          ...state.activeEscrowProposals,
+          loading: true,
+          error: null
+        }
+      }
+    },
+    [getEscrowProposalsSucceeded](state, { payload: { proposals } }) {
+      return {
+        ...state,
+        activeProposals: {
+          proposals,
+          loading: false,
+          error: null
+        }
+      }
+    },
+    [getEscrowProposalsFailed](state, { payload: { error }}) {
+      return {
+        ...state,
+        activeProposals: {
+          ...state.active.proposals,
+          loading: false,
+          error
+        }
+      }
+    }
   }
   , defaultState
 );
