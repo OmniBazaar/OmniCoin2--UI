@@ -843,7 +843,7 @@ class ListingForm extends Component {
                 }
                 className="button--green-bg uppercase"
                 loading={saving || submitting || asyncValidating}
-                disabled={saving || invalid || submitting || asyncValidating}
+                disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
