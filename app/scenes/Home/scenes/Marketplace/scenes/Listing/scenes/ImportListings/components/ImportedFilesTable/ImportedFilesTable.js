@@ -174,7 +174,9 @@ class ImportedFilesTable extends Component {
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
                     <TableCell>{this.renderTitleInput({ ...item, index, fileIndex })}</TableCell>
-                    <TableCell>{this.renderTitleInput({ ...item, index, fileIndex })}</TableCell>
+                    <TableCell>
+                      {this.renderDescriptionInput({ ...item, index, fileIndex })}
+                    </TableCell>
                     <TableCell>{numberWithCommas(item.price)}</TableCell>
                     <TableCell>{item.currency}</TableCell>
                   </TableRow>
