@@ -198,7 +198,7 @@ export const getListingFromBlockchain = async listingId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (listing[key] !== undefined) {
+    if (listing[key]) {
       result[key] = listing[key];
     }
   });
