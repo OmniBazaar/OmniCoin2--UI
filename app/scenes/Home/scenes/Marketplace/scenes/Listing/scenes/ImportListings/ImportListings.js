@@ -433,6 +433,8 @@ class ImportListings extends Component {
                 }}
                 onCategoryChange={params => this.updateCategory(params)}
                 onSubCategoryChange={params => this.updateSubCategory(params)}
+                onTitleChange={() => {}}
+                onDescriptionChange={() => {}}
               />}
             </div>
           </div>
