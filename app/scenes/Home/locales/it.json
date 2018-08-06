@@ -6,5 +6,7 @@
   "Home.processors": "Processors",
   "Home.mail": "Mail",
   "Home.support": "Support",
-  "Home.newVersionAvailable": "A new version is available"
+  "Home.newVersionAvailable": "A new version is available",
+  "Home.updateMessage": "Before the new version is installed please double check and close the application if is currently running",
+  "Home.updatesAvailable": "Updates available"
 }
