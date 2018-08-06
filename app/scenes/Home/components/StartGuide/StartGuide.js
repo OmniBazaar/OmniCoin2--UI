@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   launch: {
     id: 'StartGuide.launch',
-    defaultMessage: 'The OmniBazaar marketplace is ready for you to use. When you click on the {Marketplace} tab, you will see listings that match the interests you mentioned during the sign-up process.'
+    defaultMessage: 'The OmniBazaar marketplace is ready for you to use. When you click on the Marketplace tab, you will see listings that match the interests you mentioned during the sign-up process.'
   },
   getMoreOC: {
     id: 'StartGuide.getMoreOC',

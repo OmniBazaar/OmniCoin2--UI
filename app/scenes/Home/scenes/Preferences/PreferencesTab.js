@@ -13,15 +13,14 @@ import {
   savePreferences,
   loadServerPreferences
 } from '../../../../services/preferences/preferencesActions';
-import FormInputWithIconOnRight
-  from '../../../../components/FormInputWithIconOnRight/FormInputWithIconOnRight';
+import { restartNode } from "../../../../services/blockchain/connection/connectionActions";
+
 import Dropdown from './components/Dropdown';
 import Checkbox from '../Marketplace/scenes/Listing/scenes/AddListing/components/Checkbox/Checkbox';
 import FormRadio from '../../../../components/Radio/FormRadio';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 import messages from './messages';
 import languages from './languages';
-import votes from './votes';
 import listingPriorities from './priorities';
 import './preferences.scss';
 
@@ -58,11 +57,12 @@ class PreferencesTab extends Component {
     if (!lastLanguage) {
       lastLanguage = props.preferences.preferences.language;
     }
+    this.restartNode = this.restartNode.bind(this);
   }
 
   componentWillMount() {
     const { preferences } = this.props.preferences;
-    this.props.preferencesActions.loadServerPreferences()
+    this.props.preferencesActions.loadServerPreferences();
     this.props.initialize(preferences);
   }
 
@@ -78,12 +78,13 @@ class PreferencesTab extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { formatMessage } = this.props.intl;
+
     if (!nextProps.preferences.loading && this.props.preferences.loading) {
       this.props.initialize(nextProps.preferences.preferences);
     }
 
     if (!nextProps.preferences.saving && this.props.preferences.saving) {
-      const { formatMessage } = this.props.intl;
       if (nextProps.preferences.error) {
         this.showErrorToast(
           formatMessage(messages.errorTitle),
@@ -96,10 +97,22 @@ class PreferencesTab extends Component {
         );
       }
     }
+    if (this.props.connection.restartingNode && !nextProps.connection.restartingNode) {
+      if (nextProps.connection.error) {
+        this.showErrorToast(formatMessage(messages.errorTitle), formatMessage(messages.nodeRestartError));
+      } else {
+        this.showSuccessToast(formatMessage(messages.successTitle), formatMessage(messages.nodeRestartSuccess));
+      }
+    }
   }
 
   componentWillUnmount() {
     lastLanguage = this.props.preferences.preferences.language;
+  }
+
+  restartNode(e) {
+    this.props.connectionActions.restartNode();
+    e.preventDefault();
   }
 
   showErrorToast(title, message) {
@@ -310,7 +323,7 @@ class PreferencesTab extends Component {
                   {formatMessage(messages.autoRun)}
                 </Grid.Column>
 
-                <Grid.Column width={10}>
+                <Grid.Column width={4}>
                   <div className="autorun">
                     <Field
                       name="autorun"
@@ -321,8 +334,19 @@ class PreferencesTab extends Component {
                     {formatMessage(messages.autoRunNote)}
                   </div>
                 </Grid.Column>
+                <Grid.Column width={3}>
+                  <Button
+                    disabled={!this.props.auth.account.is_a_processor}
+                    loading={this.props.connection.restartingNode}
+                    content={formatMessage(messages.restartNode)}
+                    onClick={this.restartNode}
+                    className="button--primary"
+                  />
+                </Grid.Column>
+                <Grid.Column width={3}>
+                </Grid.Column>
               </Grid.Row>
-              
+
             }
             <Grid.Row>
               <Grid.Column width={4}>
@@ -373,11 +397,15 @@ export default compose(
       account: state.default.account,
       auth: state.default.auth,
       dht: state.default.dht,
+      connection: state.default.connection
     }),
     dispatch => ({
       preferencesActions: bindActionCreators({
         savePreferences,
         loadServerPreferences
+      }, dispatch),
+      connectionActions: bindActionCreators({
+        restartNode
       }, dispatch)
     })
   ),
