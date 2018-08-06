@@ -20,6 +20,7 @@ import Processors from './scenes/Processors/Processors';
 import Settings from './scenes/Settings/Settings';
 import Preferences from './scenes/Preferences/Preferences';
 import Support from './scenes/Support/Support';
+import IdentityVerificationForm from './scenes/IdentityVerification/IdentityVerificationForm';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
 import Listing from './scenes/Marketplace/scenes/Listing/Listing';
@@ -70,13 +71,6 @@ import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumA
 const iconSize = 20;
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    ipcRenderer.on('messageForIdentityWindow', () => {
-      props.history.push('/identity-verification');
-    });
-  }
-
   state = {
     visible: true
   };
@@ -248,6 +242,12 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                <NavLink to="/identity-verification" activeClassName="active" className="menu-item">
+                  <FormattedMessage
+                    id="Home.IdentityVerification"
+                    defaultMessage="Identity Verification"
+                  />
+                </NavLink>
                 <UpdateNotification />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
@@ -270,6 +270,7 @@ class Home extends Component {
             <Route path="/processors" render={(props) => <Processors {...props} />} />
             <Route path="/settings" render={(props) => <Settings {...props} />} />
             <Route path="/support" render={(props) => <Support {...props} />} />
+            <Route path="/identity-verification" render={(props) => <IdentityVerificationForm {...props} />} />
             <Route path="/transfer" render={(props) => <Transfer {...props} />} />
             <Route path="/wallet" render={(props) => <Wallet {...props} />} />
             <Route path="/listing/:id" render={(props) => <Listing {...props} />} />

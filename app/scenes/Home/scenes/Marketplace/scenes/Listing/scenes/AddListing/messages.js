@@ -297,6 +297,10 @@ const messages = defineMessages({
     id: 'AddListing.imageSizeTooLarge',
     defaultMessage: 'Image size is too large'
   },
+  addKeywords: {
+    id: 'AddListing.addKeywords',
+    defaultMessage: 'Add keywords'
+  },
   priorityHighest: {
     id: 'AddListing.priorityHighest',
     defaultMessage: 'Highest (2.00% Fee)'

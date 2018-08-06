@@ -120,10 +120,9 @@ class Mail extends Component {
     const { formatMessage } = this.props.intl;
     if (message.subject === purchaseInfoSubject) {
       const body = JSON.parse(message.body);
-      console.log("MESSAGE BODY ", body);
       return formatMessage(mailMessages.purchaseSubject, {
         buyer: message.user,
-        listing: body.title
+        listing: body.listingTitle
       })
     } else {
       return message.subject;
@@ -137,7 +136,7 @@ class Mail extends Component {
       return formatMessage(mailMessages.purchaseBody, {
         buyer: message.user,
         number: body.listingCount,
-        listing: body.title,
+        listing: body.listingTitle,
       })
     } else {
       return message.body;

@@ -18,8 +18,8 @@ class IdentityVerificationForm extends Component {
     identityVerificationToken: null
   }
   componentDidMount() {
-    const { lastLoginUserName } = this.props.auth;
-    this.props.authActions.getIdentityVerificationToken(lastLoginUserName);
+    const { username } = this.props.auth.currentUser;
+    this.props.authActions.getIdentityVerificationToken(username);
   }
   componentWillReceiveProps(nextProps) {
     const { identityVerificationToken } = nextProps.auth;
@@ -32,13 +32,18 @@ class IdentityVerificationForm extends Component {
     if (this.state.identityVerificationToken && this.state.identityVerificationUiLoaded && !this.state.iframeLoaded) {
       idensic.init(
         // selector of an iframe container (see above)
-        '#root',
+        '#identityVerification',
         // configuration object (see preparation steps)
         {
           accessToken: this.state.identityVerificationToken,
+          excludedCountries: ['CHN', 'USA'],
           applicantDataPage: {
             enabled: true,
             fields: [
+              {
+                name: 'country',
+                required: true
+              },
               {
                 name: 'firstName',
                 required: true
@@ -46,10 +51,6 @@ class IdentityVerificationForm extends Component {
               {
                 name: 'lastName',
                 required: true
-              },
-              {
-                name: 'email',
-                required: false
               }
             ]
           },
@@ -69,10 +70,13 @@ class IdentityVerificationForm extends Component {
 
   render() {
     return (
-      <Script
-        url="https://test-api.sumsub.com/idensic/static/idensic.js"
-        onLoad={() => { this.setState({ identityVerificationUiLoaded: true }); }}
-      />
+      <React.Fragment>
+        <Script
+          url="https://test-api.sumsub.com/idensic/static/idensic.js"
+          onLoad={() => { this.setState({ identityVerificationUiLoaded: true }); }}
+        />
+        <div id="identityVerification" />
+      </React.Fragment>
     );
   }
 }
@@ -82,7 +86,9 @@ IdentityVerificationForm.propTypes = {
     getIdentityVerificationToken: PropTypes.func,
   }).isRequired,
   auth: PropTypes.shape({
-    lastLoginUserName: PropTypes.string,
+    currentUser: PropTypes.shape({
+      username: PropTypes.string,
+    })
   }).isRequired,
 };
 
@@ -94,4 +100,3 @@ export default connect(
     authActions: bindActionCreators({ getIdentityVerificationToken }, dispatch),
   })
 )(IdentityVerificationForm);
-

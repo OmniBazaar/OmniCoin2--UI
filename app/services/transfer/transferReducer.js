@@ -1,10 +1,18 @@
 import { handleActions } from 'redux-actions';
 
 import {
-  submitTransfer,
   createEscrowTransaction,
   getCommonEscrows,
-  setCurrency
+  setCurrency,
+  omnicoinTransfer,
+  omnicoinTransferSucceeded,
+  omnicoinTransferFailed,
+  bitcoinTransfer,
+  bitcoinTransferSucceeded,
+  bitcoinTransferFailed,
+  ethereumTransfer,
+  ethereumTransferSucceeded,
+  ethereumTransferFailed
 } from './transferActions';
 
 const defaultState = {
@@ -26,13 +34,65 @@ const defaultState = {
 };
 
 const reducer = handleActions({
-  [submitTransfer](state, { payload: { data } }) {
+  [omnicoinTransfer](state) {
     return {
       ...state,
-      ...data,
       loading: true,
       error: null
     };
+  },
+  [omnicoinTransferSucceeded](state) {
+    return {
+      ...state,
+      loading: false,
+    }
+  },
+  [omnicoinTransferFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      loading: false,
+      error
+    }
+  },
+  [bitcoinTransfer](state) {
+    return {
+      ...state,
+      loading: true,
+      error: null
+    };
+  },
+  [bitcoinTransferSucceeded](state) {
+    return {
+      ...state,
+      loading: false,
+    }
+  },
+  [bitcoinTransferFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      loading: false,
+      error
+    }
+  },
+  [ethereumTransfer](state) {
+    return {
+      ...state,
+      loading: true,
+      error: null
+    };
+  },
+  [ethereumTransferSucceeded](state) {
+    return {
+      ...state,
+      loading: false,
+    }
+  },
+  [ethereumTransferFailed](state, { payload: { error } }) {
+    return {
+      ...state,
+      loading: false,
+      error
+    }
   },
   [setCurrency](state, { payload: { transferCurrency } }) {
     return {
@@ -40,16 +100,6 @@ const reducer = handleActions({
       transferCurrency
     };
   },
-  SUBMIT_TRANSFER_SUCCEEDED: (state) => ({
-    ...state,
-    loading: false,
-    error: null
-  }),
-  SUBMIT_TRANSFER_FAILED: (state, { error }) => ({
-    ...state,
-    loading: false,
-    error
-  }),
   [createEscrowTransaction](state) {
     return {
       ...state,

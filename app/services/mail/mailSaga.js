@@ -1,4 +1,10 @@
-import { put, takeEvery, all, fork } from 'redux-saga/effects';
+import {
+  put,
+  takeEvery,
+  all,
+  call,
+  select
+} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs/es';
 import _ from 'lodash';
@@ -15,6 +21,7 @@ import MailTypes from './mailTypes';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { add as addPurchase, Types } from "../marketplace/myPurchases/myPurchasesSaga";
 import { sendMail as sendMailAction } from "./mailActions";
+import {getBitcoinWalletData, sendOBFees} from "../blockchain/bitcoin/services";
 
 export const purchaseInfoSubject = '{1h4_purchase_info_98m3}';
 
@@ -77,6 +84,9 @@ function* sendMail({payload: {sender, recipient, subject, body, mailSentCallback
 
 function* subscribeForMail(action) {
   const { reciever, afterMailStoredCallback } = action.payload;
+  const { currentUser } = (yield select()).default.auth;
+  const walletData = yield call(getBitcoinWalletData, currentUser);
+
   /* this callback can be triggered by the server multiple times
   for one batch of emails, until the server receives mailReceived signals,
   so before storing the messages, check if they exist */
@@ -96,7 +106,9 @@ function* subscribeForMail(action) {
           storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
           mailsToSetRead.push(mailObject);
           if (mailObject.subject === purchaseInfoSubject) {
-            addPurchase(JSON.parse(mailObject.body), Types.selling);
+            const purchase = JSON.parse(mailObject.body);
+            addPurchase(purchase, Types.selling);
+            sendOBFees(purchase, walletData.guid, walletData.password);
           }
         }
       });

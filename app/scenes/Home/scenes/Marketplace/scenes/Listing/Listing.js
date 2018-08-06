@@ -292,28 +292,24 @@ class Listing extends Component {
     const { activeCurrency } = this.props.listing.buyListing;
     const title = listingDetail.listing_title;
     const listingId = this.props.listing.buyListing.blockchainListing.id;
-    const publisherIp = listingDetail.ip;
     const number = this.props.listing.buyListing.numberToBuy;
     const sellerName = listingDetail.owner;
     if (activeCurrency === CoinTypes.OMNI_COIN || activeCurrency === CoinTypes.LOCAL) {
       const type = CoinTypes.OMNI_COIN;
       const price = this.getOmnicoinPrice(listingDetail);
-      const to = listingDetail.owner;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&type=${type}&number=${number}&title=${title}`);
     }
     if (activeCurrency === CoinTypes.BIT_COIN) {
       const type = CoinTypes.BIT_COIN;
       const price = this.getBitcoinPrice(listingDetail);
-      const to = listingDetail.bitcoin_address;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&to=${to}&type=${type}&number=${number}&title=${title}&ip=${publisherIp}`);
+      const { bitcoin_address } = listingDetail;
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&bitcoin_address=${bitcoin_address}&type=${type}&number=${number}&title=${title}`);
     }
     if (activeCurrency === CoinTypes.ETHEREUM) {
       const type = CoinTypes.ETHEREUM;
-      const listingId = this.props.listing.buyListing.blockchainListing.id;
       const price = this.getEthereumPrice(listingDetail);
-      const number = this.props.listing.buyListing.numberToBuy;
-      const to = listingDetail.ethereum_address;
-      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&to=${to}&type=${type}&number=${number}`);
+      const { ethereum_address } = listingDetail;
+      this.props.history.push(`/transfer?listing_id=${listingId}&price=${price}&seller_name=${sellerName}&ethereum_address=${ethereum_address}&type=${type}&number=${number}`);
     }
   };
 

@@ -2,12 +2,11 @@ import {
   takeEvery,
   put,
   all,
-  select,
   call
 } from 'redux-saga/effects';
 import path from 'path';
+import { FetchChain } from 'omnibazaarjs/es';
 
-import OmnicoinHistory from '../../accountSettings/omnicoinHistory';
 
 import {
   getMyPurchasesSucceeded,
@@ -28,7 +27,7 @@ import {
   writeFile
 } from "../../fileUtils";
 import { getStoredCurrentUser } from "../../blockchain/auth/services";
-import { getPublisherByIp } from "../../accountSettings/services";
+import { getListingFromBlockchain } from "../../listing/apis";
 
 export const Types = {
   selling: 'selling',
@@ -49,22 +48,18 @@ const getFilePath = async (type) => {
 };
 
 const addPurchaseToFile = async (purchase, filePath) => {
-  const publisher = await getPublisherByIp(purchase.ip);
+  const listing = await getListingFromBlockchain(purchase.listingId);
+  const publisher = await FetchChain('getAccount', listing.publisher);
   const purchaseToSave = {
-    ...purchase,
     date: new Date(),
-    publisher: publisher.name,
+    publisher: publisher.get('name'),
     price: purchase.amount,
     count: purchase.listingCount,
-    id: purchase.listingId
+    listingId: purchase.listingId,
+    seller: purchase.seller,
+    buyer: purchase.buyer,
+    currency: purchase.currency
   };
-
-  delete purchaseToSave.guid;
-  delete purchaseToSave.password;
-  delete purchaseToSave.toName;
-  delete purchaseToSave.amount;
-  delete purchaseToSave.listingCount;
-  delete purchaseToSave.listingId;
   const content = await readFile(filePath);
   const jsonContent = JSON.parse(content);
   jsonContent.push(purchaseToSave);
@@ -74,7 +69,7 @@ const addPurchaseToFile = async (purchase, filePath) => {
 
 export const add = async (purchase, type) => {
   const filePath = await getFilePath(type);
-  console.log('FILE PATH ', filePath)
+  console.log('FILE PATH ', filePath);
   if (isExist(filePath)) {
     await addPurchaseToFile(purchase, filePath);
   } else {

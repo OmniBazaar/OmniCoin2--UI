@@ -40,6 +40,8 @@ import {
   setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
+import TagsInput from '../../../../../../../../components/TagsInput';
+import cn from 'classnames';
 import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import './add-listing.scss';
@@ -186,7 +188,6 @@ class ListingForm extends Component {
   }
 
   resetForm() {
-    const { editingListing } = this.props;
     this.initFormData();
     this.initImages();
     this.props.listingActions.resetSaveListing();
@@ -202,6 +203,8 @@ class ListingForm extends Component {
     )) {
       this.resetForm();
     }
+
+    this.setState({ keywords: nextProps.formValues.keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
 
@@ -251,16 +254,17 @@ class ListingForm extends Component {
     this.props.formActions.change('contact_info', contactInfo);
   }
 
-  onContinuousChange = (event, newValue) => {
+  onContinuousChange = () => {
     this.setState({
       toDateDisabled: !this.state.toDateDisabled
     });
   };
 
-  onKeywordsBlur(e) {
-    this.setState({
-      keywords: e.target.value
-    });
+  onKeywordsChange(keys) {
+    const keywords = keys.join(',');
+
+    this.props.formActions.change('keywords', keywords);
+    this.setState({ keywords });
   }
 
   getImagesData() {
@@ -322,6 +326,20 @@ class ListingForm extends Component {
     return path;
   }
 
+  getPriceValidators(currency) {
+    const priceValidators = [numericFieldValidator, requiredFieldValidator];
+    if (currency === 'OMNICOIN') {
+      priceValidators.push(omnicoinFieldValidator);
+    }
+    if (currency === 'BITCOIN') {
+      priceValidators.push(bitcoinFieldValidator);
+    }
+    if (currency === 'ETHEREUM') {
+      priceValidators.push(ethereumFieldValidator);
+    }
+    return priceValidators;
+  }
+
   showSuccessToast(title, message) {
     toastr.success(title, message);
   }
@@ -342,6 +360,28 @@ class ListingForm extends Component {
       keywords: keywords.split(',').map(el => el.trim())
     }, listing_id);
   }
+
+  renderKeywordsInput() {
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div>
+        <TagsInput
+          value={this.state.keywords ? this.state.keywords.split(',') : []}
+          name="keywords"
+          inputProps={{
+            className: cn('react-tagsinput-input', { empty: !this.state.keywords }),
+            placeholder: (
+              formatMessage(messages.addKeywords)
+            )
+          }}
+          onChange={this.onKeywordsChange.bind(this)}
+        />
+        <div className="note">{formatMessage(messages.keywordsNote)}</div>
+      </div>
+    );
+  }
+
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -368,6 +408,7 @@ class ListingForm extends Component {
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
+
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
     const ethWalletAddress = ethereum.address;
 
@@ -406,17 +447,8 @@ class ListingForm extends Component {
             <Grid.Column width={4} className="align-top">
               <span>{formatMessage(messages.keywordsSearch)}*</span>
             </Grid.Column>
-            <Grid.Column width={12} className="keywords">
-              <Field
-                type="text"
-                name="keywords"
-                component={InputField}
-                onBlur={this.onKeywordsBlur.bind(this)}
-                className="textfield"
-                placeholder={formatMessage(messages.keywordCommas)}
-                validate={[requiredFieldValidator]}
-              />
-              <div className="note">{formatMessage(messages.keywordsNote)}</div>
+            <Grid.Column width={12} className="keywords form-group keyword-container">
+              {this.renderKeywordsInput()}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -464,47 +496,14 @@ class ListingForm extends Component {
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
-              {currency === 'OMNICOIN' &&
               <Field
                 type="text"
                 name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
                 className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  // we don't want other currencies including bitcoin be less then 10^-8
-                  omnicoinFieldValidator
-                ]}
-              />}
-              {currency === 'BITCOIN' &&
-              <Field
-                type="text"
-                name="price"
-                placeholder={formatMessage(messages.pricePerItem)}
-                component={this.PriceInput}
-                className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  // we don't want other currencies including bitcoin be less then 10^-8
-                  bitcoinFieldValidator
-                ]}
-              />}
-              {currency === 'ETHEREUM' &&
-              <Field
-                type="text"
-                name="price"
-                placeholder={formatMessage(messages.pricePerItem)}
-                component={this.PriceInput}
-                className="textfield"
-                validate={[
-                  requiredFieldValidator,
-                  numericFieldValidator,
-                  ethereumFieldValidator
-                ]}
-              />}
+                validate={this.getPriceValidators(currency)}
+              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -844,7 +843,7 @@ class ListingForm extends Component {
                 }
                 className="button--green-bg uppercase"
                 loading={saving || submitting || asyncValidating}
-                disabled={saving || invalid || submitting || asyncValidating}
+                disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
@@ -896,7 +895,10 @@ ListingForm.propTypes = {
   }).isRequired,
   listingDefaults: PropTypes.shape({
     images: PropTypes.object
-  }).isRequired
+  }).isRequired,
+  formActions: PropTypes.shape({
+    change: PropTypes.func,
+  }).isRequired,
 };
 
 export default compose(

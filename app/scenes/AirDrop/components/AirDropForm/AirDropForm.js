@@ -123,9 +123,6 @@ class AirDropForm extends Component {
     } else if (/^.+@.+$/i.test(values.mailingList)) {
       errors.mailingList = messages.invalidEmail;
     }
-    // if (!values.identityVerification) {
-    //   errors.identityVerification = messages.fieldRequired;
-    // }
     return errors;
   };
   constructor(props) {
@@ -133,9 +130,6 @@ class AirDropForm extends Component {
     this.state = {
       loading: false
     };
-    ipcRenderer.on('messageForMainWindow', () => {
-      this.setState({ loading: false });
-    });
   }
 
   componentDidMount() {
@@ -144,11 +138,6 @@ class AirDropForm extends Component {
 
   signUp = () => {
     this.props.history.push('/');
-  }
-
-  handleClick = () => {
-    this.setState({ loading: true });
-    window.open('', 'identity');
   }
 
   renderCheckboxField = ({ input, label, onCheck }) => (
@@ -282,29 +271,6 @@ class AirDropForm extends Component {
     );
   };
 
-  renderIdentityVerificationField = () => {
-    const btnClass = this.state.loading ? 'ui loading' : '';
-    const { formatMessage } = this.props.intl;
-    return (
-      <React.Fragment>
-        <div className="joined-channel">
-          <Field
-            component={this.renderCheckboxField}
-          />
-          <p>
-            <Button
-              className={btnClass}
-              content={formatMessage(messages.getWhiteListedForTokenSale)}
-              color="green"
-              type="submit"
-              onClick={this.handleClick}
-            />
-          </p>
-        </div>
-      </React.Fragment>
-    );
-  };
-
   submit = values => new Promise((resolve, reject) => {
     this.props.authActions.receiveWelcomeBonus({
       values,
@@ -331,7 +297,6 @@ class AirDropForm extends Component {
             <Field name="telegramBot" component={this.renderTelegramBotField} />
             <Field name="twitterChannel" component={this.renderTwitterChannelField} />
             <Field name="mailingList" component={this.renderMailingListField} />
-            {/* <Field name="identityVerification" component={this.renderIdentityVerificationField} /> */}
             <div className="buttons">
               <Button
                 disabled={!valid}

@@ -62,6 +62,7 @@
   "AddListing.saveListingErrorNoChangeDetectedMessage": "No changes detected in listing. Please change some data and submit again.",
   "AddListing.publisherNotReachable": "Publisher is not reachable",
   "AddListing.imageSizeTooLarge": "Image size is too large",
+  "AddListing.addKeywords": "Add keywords",
   "AddListing.selectPriorityFee": "Select Priority Fee",
   "AddListing.priorityFee": "Priority For Listings You Create",
   "AddListing.priorityHighest": "Highest (2.00% Fee)",

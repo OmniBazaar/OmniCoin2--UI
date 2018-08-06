@@ -79,6 +79,6 @@ export default defineMessages({
   },
   purchaseBody: {
     id: 'Mail.purchaseBody',
-    defaultMessage: '{buyer} bought {number} of {listing}'
+    defaultMessage: '{buyer} bought {number} {listing}'
   }
 });
