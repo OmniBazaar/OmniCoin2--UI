@@ -55,6 +55,7 @@ const numericFieldValidator = numericality({ message: messages.fieldNumeric });
 const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
 const bitcoinFieldValidator = numericality({ '>=': 0.000001, msg: messages.bitcoinFieldValidator });
 const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
+const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldValidator });
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
@@ -330,12 +331,12 @@ class ListingForm extends Component {
     const priceValidators = [numericFieldValidator, requiredFieldValidator];
     if (currency === 'OMNICOIN') {
       priceValidators.push(omnicoinFieldValidator);
-    }
-    if (currency === 'BITCOIN') {
+    } else if (currency === 'BITCOIN') {
       priceValidators.push(bitcoinFieldValidator);
-    }
-    if (currency === 'ETHEREUM') {
+    } else if (currency === 'ETHEREUM') {
       priceValidators.push(ethereumFieldValidator);
+    } else {
+      priceValidators.push(fiatFieldValidator);
     }
     return priceValidators;
   }

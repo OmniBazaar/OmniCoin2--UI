@@ -357,6 +357,10 @@ const messages = defineMessages({
     id: 'AddListing.loadListing',
     defaultMessage: 'Load listing'
   },
+  fiatFieldValidator: {
+    id: 'AddListing.fiatFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.01'
+  }
 });
 
 export default messages;
