@@ -161,10 +161,15 @@ class Transfer extends Component {
     const type = purchaseParams.get('type');
     const price = purchaseParams.get('price');
     const number = purchaseParams.get('number');
+    const amount = price * number;
     const to = purchaseParams.get('seller_name');
     const bitcoinAddress = purchaseParams.get('bitcoin_address');
     const ethereumAddress = purchaseParams.get('ethereum_address');
-    this.handleInitialize(price * number);
+    const listingCurrency = purchaseParams.get('currency')
+    const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
+    this.handleInitialize(amount);
+    this.props.change('amount', convertedAmount);
+
     if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
       this.props.change('currencySelected', 'bitcoin');
@@ -187,6 +192,9 @@ class Transfer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const purchaseParams = new URLSearchParams(this.props.location.search)
+    const price = purchaseParams.get('price');
+    const currency = purchaseParams.get('currency');
     const { formatMessage } = this.props.intl;
     const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
@@ -225,15 +233,15 @@ class Transfer extends Component {
     if (transferCurrency !== nextProps.transfer.transferCurrency && !!transferCurrency) {
       const { amount } = this.props.transferForm;
       if (nextProps.transfer.transferCurrency === 'omnicoin') {
-        const convertedAmount = currencyConverter(amount, 'BITCOIN', 'OMNICOIN');
+        const convertedAmount = currencyConverter(price, currency, 'OMNICOIN');
         this.props.change('amount', convertedAmount);
       }
       if (nextProps.transfer.transferCurrency === 'bitcoin') {
-        const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
+        const convertedAmount = currencyConverter(price, currency, 'BITCOIN');
         this.props.change('amount', convertedAmount);
       }
       if (nextProps.transfer.transferCurrency === 'ethereum') {
-        const convertedAmount = currencyConverter(amount, 'ETHEREUM', 'OMNICOIN');
+        const convertedAmount = currencyConverter(price, currency, 'ETHEREUM');
         this.props.change('amount', convertedAmount);
       }
     }
