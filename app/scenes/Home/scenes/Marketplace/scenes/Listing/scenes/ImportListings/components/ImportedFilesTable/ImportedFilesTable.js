@@ -58,6 +58,41 @@ const messages = defineMessages({
 });
 
 class ImportedFilesTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filesChanges: {},
+    };
+  }
+
+  componentDidMount() {
+    const { importedFiles } = this.props.listingImport;
+
+    this.loadFilesChanges(importedFiles);
+  }
+
+
+  loadFilesChanges(importedFiles) {
+    let filesChanges = {};
+
+    importedFiles.forEach((row, fileIndex) => row.items && row.items
+      .forEach(({ description, listing_title }, index) => {
+        const file = `files-${fileIndex}-${index}`;
+
+        filesChanges = {
+          ...filesChanges,
+          [file]: {
+            ...this.state.filesChanges[file],
+            title: listing_title,
+            description,
+          }
+        };
+      }));
+
+    this.setState({ filesChanges });
+  }
+
   sortData = (clickedColumn) => () => {
     this.props.listingActions.sortImportData(clickedColumn);
   };
@@ -95,25 +130,55 @@ class ImportedFilesTable extends Component {
     );
   }
 
-  renderTitleInput({ listing_title, index, fileIndex }) {
+  renderTitleInput({ index, fileIndex }) {
     const { onTitleChange } = this.props;
+    const file = `files-${fileIndex}-${index}`;
+    const fileChanges = this.state.filesChanges[file] || {};
 
     return (<input
       type="text"
       className="textfield"
-      value={listing_title}
-      onChange={editedTitle => onTitleChange({ editedTitle, index, fileIndex })}
+      value={fileChanges.title}
+      onChange={(e) => {
+        const editedTitle = e.target.value;
+
+        this.setState({
+          filesChanges: {
+            ...this.state.filesChanges,
+            [file]: {
+              ...fileChanges,
+              title: editedTitle,
+            }
+          }
+        });
+      }}
+      onBlur={() => onTitleChange({ editedTitle: fileChanges.title, index, fileIndex })}
     />);
   }
 
-  renderDescriptionInput({ description, index, fileIndex }) {
+  renderDescriptionInput({ index, fileIndex }) {
     const { onDescriptionChange } = this.props;
+    const file = `files-${fileIndex}-${index}`;
+    const fileChanges = this.state.filesChanges[file] || {};
 
     return (<input
       type="text"
       className="textfield"
-      value={description}
-      onChange={editedDesc => onDescriptionChange({ editedDesc, index, fileIndex })}
+      value={fileChanges.description}
+      onChange={(e) => {
+        const editedDesc = e.target.value;
+
+        this.setState({
+          filesChanges: {
+            ...this.state.filesChanges,
+            [file]: {
+              ...fileChanges,
+              description: editedDesc,
+            }
+          }
+        });
+      }}
+      onBlur={() => onDescriptionChange({ editedDesc: fileChanges.description, index, fileIndex })}
     />);
   }
 
@@ -173,9 +238,9 @@ class ImportedFilesTable extends Component {
                     </TableCell>
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
-                    <TableCell>{this.renderTitleInput({ ...item, index, fileIndex })}</TableCell>
+                    <TableCell>{this.renderTitleInput({ index, fileIndex })}</TableCell>
                     <TableCell>
-                      {this.renderDescriptionInput({ ...item, index, fileIndex })}
+                      {this.renderDescriptionInput({ index, fileIndex })}
                     </TableCell>
                     <TableCell>{numberWithCommas(item.price)}</TableCell>
                     <TableCell>{item.currency}</TableCell>

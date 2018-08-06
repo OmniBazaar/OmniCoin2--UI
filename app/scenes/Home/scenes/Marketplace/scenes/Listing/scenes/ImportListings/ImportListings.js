@@ -18,6 +18,8 @@ import {
   removeAllFiles,
   updateFileItemCategory,
   updateFileItemSubcategory,
+  updateFileItemTitle,
+  updateFileItemDescription,
 } from '../../../../../../../../services/listing/importActions';
 import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
@@ -384,6 +386,18 @@ class ImportListings extends Component {
     });
   }
 
+  updateTitle({ editedTitle, index, fileIndex }) {
+    this.props.listingActions.updateFileItemTitle({
+      index, fileIndex, title: editedTitle,
+    });
+  }
+
+  updateDescription({ editedDesc, index, fileIndex }) {
+    this.props.listingActions.updateFileItemDescription({
+      index, fileIndex, description: editedDesc,
+    });
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
@@ -433,8 +447,8 @@ class ImportListings extends Component {
                 }}
                 onCategoryChange={params => this.updateCategory(params)}
                 onSubCategoryChange={params => this.updateSubCategory(params)}
-                onTitleChange={() => {}}
-                onDescriptionChange={() => {}}
+                onTitleChange={params => this.updateTitle(params)}
+                onDescriptionChange={params => this.updateDescription(params)}
               />}
             </div>
           </div>
@@ -474,6 +488,8 @@ ImportListings.propTypes = {
     removeAllFiles: PropTypes.func,
     updateFileItemCategory: PropTypes.func,
     updateFileItemSubcategory: PropTypes.func,
+    updateFileItemTitle: PropTypes.func,
+    updateFileItemDescription: PropTypes.func,
   }),
   listingDefaults: PropTypes.shape({
     category: PropTypes.string,
@@ -509,6 +525,8 @@ export default connect(
       removeAllFiles,
       updateFileItemCategory,
       updateFileItemSubcategory,
+      updateFileItemTitle,
+      updateFileItemDescription,
     }, dispatch),
   })
 )(injectIntl(ImportListings));

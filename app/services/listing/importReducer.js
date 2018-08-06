@@ -9,6 +9,8 @@ import {
   sortImportData,
   updateFileItemSubcategory,
   updateFileItemCategory,
+  updateFileItemTitle,
+  updateFileItemDescription,
 } from './importActions';
 
 const defaultState = {
@@ -87,6 +89,32 @@ const reducer = handleActions({
       importedFiles: sortedBy,
       sortDirection,
       sortColumn,
+    };
+  },
+
+  [updateFileItemTitle](state, { payload: { title, index, fileIndex } }) {
+    return {
+      ...state,
+      importedFiles: [...updateFileItemProp({
+        fileIndex,
+        prop: 'listing_title',
+        value: title,
+        itemIndex: index,
+        files: state.importedFiles,
+      })],
+    };
+  },
+
+  [updateFileItemDescription](state, { payload: { description, index, fileIndex } }) {
+    return {
+      ...state,
+      importedFiles: [...updateFileItemProp({
+        fileIndex,
+        prop: 'description',
+        value: description,
+        itemIndex: index,
+        files: state.importedFiles,
+      })],
     };
   },
 
