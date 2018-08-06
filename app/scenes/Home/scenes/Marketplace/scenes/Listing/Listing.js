@@ -275,6 +275,7 @@ class Listing extends Component {
     let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail.currency, 'BITCOIN');
     amount = Math.ceil(amount * Math.pow(10, 8));
     amount = (amount / Math.pow(10, 8)).toFixed(8);
+    amount = parseFloat(amount);
 
     return amount;
   }
@@ -282,7 +283,8 @@ class Listing extends Component {
   getEthereumPrice(listingDetail) {
     let amount = currencyConverter(Number.parseFloat(listingDetail.price), listingDetail.currency, 'ETHEREUM');
     amount = Math.ceil(amount * Math.pow(10, 18));
-    amount = (amount / Math.pow(10, 18)).toFixed(18);
+    amount = (amount / Math.pow(10, 18));
+    amount = parseFloat(amount);
 
     return amount;
   }

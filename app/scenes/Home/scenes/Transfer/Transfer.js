@@ -22,6 +22,7 @@ import { toastr } from 'react-redux-toastr';
 import { $ } from 'moneysafe';
 
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import ConfirmationModal from '../../../../components/ConfirmationModal/ConfirmationModal';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
@@ -82,7 +83,6 @@ const currencyOptions = [
 const FEE_PERCENT = 0.01;
 const FEE_CONVERSION_FACTOR = 10000;
 const XOM_DECIMALS_LIMIT = 5;
-
 
 const amountDecimalsValidator = addValidator({
   validator(options, value) {
@@ -145,8 +145,14 @@ class Transfer extends Component {
     this.submitTransfer = this.submitTransfer.bind(this);
     this.handleEscrowTransactionChecked = this.handleEscrowTransactionChecked.bind(this);
     this.hideEscrow = this.hideEscrow.bind(this);
+    this.onApprove = this.onApprove.bind(this);
+    this.onCancel = this.onCancel.bind(this);
 
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
+
+    this.state = {
+      isModalOpen: false,
+    };
   }
 
 
@@ -224,6 +230,10 @@ class Transfer extends Component {
       }
       if (nextProps.transfer.transferCurrency === 'bitcoin') {
         const convertedAmount = currencyConverter(amount, 'OMNICOIN', 'BITCOIN');
+        this.props.change('amount', convertedAmount);
+      }
+      if (nextProps.transfer.transferCurrency === 'ethereum') {
+        const convertedAmount = currencyConverter(amount, 'ETHEREUM', 'OMNICOIN');
         this.props.change('amount', convertedAmount);
       }
     }
@@ -772,12 +782,9 @@ class Transfer extends Component {
 
   onChangeCurrency = (data) => {
     const { formatMessage } = this.props.intl;
-
     if (data.value === 'ethereum' && this.props.transfer.transferCurrency !== 'ethereum') {
-      const confimationDialog = confirm(formatMessage(messages.confirmEthereumCurrency));
-      if (confimationDialog) {
-        this.props.transferActions.setCurrency(data.value);
-      }
+      this.props.transferActions.setCurrency('ethereum');
+      this.setState({ isModalOpen: true })
     } else {
       this.props.transferActions.setCurrency(data.value);
     }
@@ -900,12 +907,28 @@ class Transfer extends Component {
     }
   }
 
+  onApprove() {
+    this.setState({ isModalOpen: false });
+  }
+
+  onCancel() {
+    this.props.transferActions.setCurrency('omnicoin');
+    this.setState({ isModalOpen: false });
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     return (
       <div ref={container => { this.container = container; }} className="container transfer">
         <Header className="button--green-bg" title={formatMessage(messages.transfer)} />
         {this.transferForm()}
+        <ConfirmationModal
+            onApprove={this.onApprove}
+            onCancel={this.onCancel}
+            isOpen={this.state.isModalOpen}
+          >
+            {formatMessage(messages.confirmEthereumCurrency)}
+          </ConfirmationModal>
       </div>
     );
   }
