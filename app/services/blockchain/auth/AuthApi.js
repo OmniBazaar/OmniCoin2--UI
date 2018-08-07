@@ -1,7 +1,6 @@
 /**
  * created by alaverdyanrafayel on 08/07/18
  */
-import cryptoJs from 'crypto-js';
 import { wrapRequest } from '../../utils';
 
 const apiURL = 'http://18.204.40.151:3000/api';
@@ -22,4 +21,8 @@ const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${iden
   method: 'POST'
 }));
 
-export { getIdentityVerificationToken };
+const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
+
+const getIdentityVerificationStatus = wrapRequest(async (applicantId) => fetch(`${identityVerificationBaseURL}/resources/applicants/${applicantId}/status?key=${identityVerificationApiKey}`));
+
+export { getIdentityVerificationToken, getApplicantInformation, getIdentityVerificationStatus };

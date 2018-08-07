@@ -38,6 +38,11 @@ $closed-side-bar-size: 70px;
           color: $primary-white;
           margin-left: 15px;
         }
+        .identity-verification-status {
+          position: absolute;
+          margin-top: 20px;
+          margin-left: 38px;
+        }
       }
       .active {
         border-radius: 5px;

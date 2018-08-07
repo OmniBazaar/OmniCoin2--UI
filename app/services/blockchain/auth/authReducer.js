@@ -25,6 +25,7 @@ import {
 
 const defaultState = {
   currentUser: null,
+  identityVerificationStatus: null,
   account: null,
   error: null,
   loading: false,
@@ -139,6 +140,10 @@ const reducer = handleActions({
   GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (state, action) => ({
     ...state,
     identityVerificationToken: action.token
+  }),
+  GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED: (state, action) => ({
+    ...state,
+    identityVerificationStatus: action.status
   }),
   SIGNUP_FAILED: (state, action) => ({
     ...state,

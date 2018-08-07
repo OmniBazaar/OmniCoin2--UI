@@ -5,7 +5,6 @@ import cn from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import Idled from 'react-idled';
-import { ipcRenderer } from 'electron';
 import {
   Route,
   NavLink,
@@ -60,7 +59,7 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout, requestAppVersion } from '../../services/blockchain/auth/authActions';
+import { getAccount, logout, requestAppVersion, getIdentityVerificationStatus } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadPreferences } from '../../services/preferences/preferencesActions';
@@ -81,7 +80,6 @@ class Home extends Component {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
   }
-
   init() {
     this.props.preferencesActions.loadPreferences();
     this.props.bitcoinActions.getWallets();
@@ -89,6 +87,10 @@ class Home extends Component {
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
     this.props.authActions.requestAppVersion();
+    const { currentUser } = this.props.auth;
+    if (currentUser) {
+      this.props.authActions.getIdentityVerificationStatus(currentUser.username);
+    }
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -129,6 +131,7 @@ class Home extends Component {
   };
 
   render() {
+    const { identityVerificationStatus } = this.props.auth;
     const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
@@ -240,6 +243,7 @@ class Home extends Component {
                     id="Home.IdentityVerification"
                     defaultMessage="Identity Verification"
                   />
+                  <span className="identity-verification-status">{identityVerificationStatus}</span>
                 </NavLink>
                 <UpdateNotification />
                 {this.renderAccountSettings()}
@@ -301,7 +305,7 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout, requestAppVersion }, dispatch),
+    authActions: bindActionCreators({ getAccount, logout, requestAppVersion, getIdentityVerificationStatus }, dispatch),
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
@@ -317,6 +321,7 @@ Home.propTypes = {
     node: PropTypes.object
   }),
   auth: PropTypes.shape({
+    identityVerificationStatus: PropTypes.string,
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string
@@ -334,6 +339,7 @@ Home.propTypes = {
     setActiveCategory: PropTypes.func
   }),
   authActions: PropTypes.shape({
+    getIdentityVerificationStatus: PropTypes.func,
     getAccount: PropTypes.func,
     logout: PropTypes.func,
     requestAppVersion: PropTypes.func
