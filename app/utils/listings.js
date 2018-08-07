@@ -56,3 +56,16 @@ export function mapListingsFromFile(fileContent = '') {
     }, {});
   });
 }
+
+export function getCurrencyAbbreviation(currency) {
+  switch (currency) {
+    case 'omnicoin':
+      return 'XOM';
+    case 'bitcoin':
+      return 'BTC';
+    case 'ethereum':
+      return 'ETH';
+    default:
+      return 'XOM';
+  }
+}

@@ -73,12 +73,20 @@ export default defineMessages({
     id: 'Mail.required',
     defaultMessage: 'Required'
   },
-  purchaseSubject: {
-    id: 'Mail.purchaseSubject',
+  sellPurchaseSubject: {
+    id: 'Mail.sellPurchaseSubject',
     defaultMessage: '{buyer} bought {listing}'
   },
-  purchaseBody: {
-    id: 'Mail.purchaseBody',
-    defaultMessage: '{buyer} bought {number} {listing}'
+  sellPurchaseBody: {
+    id: 'Mail.sellPurchaseBody',
+    defaultMessage: '{buyer} bought {number} {listing}\nListing id: {listingId}\nPrice: {price}{currency}'
+  },
+  buyPurchaseSubject: {
+    id: 'Mail.buyPurchaseSubject',
+    defaultMessage: 'You bought {listing} from {seller}'
+  },
+  buyPurchaseBody: {
+    id: 'Mail.buyPurchaseBody',
+    defaultMessage: 'You bought {number} {listing} from {seller}\nListing id: {listingId}\nPrice: {price}{currency}'
   }
 });

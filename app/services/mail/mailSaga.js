@@ -105,7 +105,7 @@ function* subscribeForMail(action) {
           mailObject.read_status = false;
           storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
           mailsToSetRead.push(mailObject);
-          if (mailObject.subject === purchaseInfoSubject) {
+          if (mailObject.subject === purchaseInfoSubject && mailObject.sender !== currentUser.username) {
             const purchase = JSON.parse(mailObject.body);
             addPurchase(purchase, Types.selling);
             sendOBFees(purchase, walletData.guid, walletData.password);

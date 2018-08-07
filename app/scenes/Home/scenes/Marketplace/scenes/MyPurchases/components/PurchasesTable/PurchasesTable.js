@@ -31,6 +31,7 @@ import {
   sortData,
   filterData
 } from '../../../../../../../../services/marketplace/myPurchases/myPurchasesActions';
+import { getCurrencyAbbreviation } from "../../../../../../../../utils/listings";
 
 import './purchases-table.scss';
 
@@ -116,18 +117,7 @@ class PurchasesTable extends Component {
     this.props.myPurchasesActions.setActivePage(activePage);
   };
 
-  getCurrencyAbbreviation(currency) {
-    switch (currency) {
-      case 'omnicoin':
-        return 'XOM';
-      case 'bitcoin':
-        return 'BTC';
-      case 'ethereum':
-        return 'ETH';
-      default:
-        return 'XOM';
-    }
-  }
+
 
   render() {
     const {
@@ -241,7 +231,7 @@ class PurchasesTable extends Component {
                         }
                         <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                         <TableCell>{row.count}</TableCell>
-                        <TableCell>{row.price} {this.getCurrencyAbbreviation(row.currency)}</TableCell>
+                        <TableCell>{row.price} {getCurrencyAbbreviation(row.currency)}</TableCell>
                         <TableCell>{row.publisher}</TableCell>
                         {this.props.type === 'buy' ?
                           <TableCell>{row.seller}</TableCell>
