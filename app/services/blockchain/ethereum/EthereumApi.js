@@ -63,7 +63,7 @@ const makeEthereumPayment = function (privateKey, to, amount) {
 
   validateEthereumAddress(to)
   var wallet = new Wallet(privateKey, provider);
-  var amount = ethers.utils.parseEther(amount);
+  var amount = ethers.utils.parseEther(amount + ''); //accept string only
   var sendPromise = wallet.send(to, amount);
 
   return sendPromise.then(function (transactionHash) {
