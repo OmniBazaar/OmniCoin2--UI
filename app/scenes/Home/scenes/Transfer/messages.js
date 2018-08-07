@@ -151,6 +151,6 @@ export default defineMessages({
   },
   confirmEthereumCurrency: {
     id: 'Transfer.confirmEthereumCurrency',
-    defaultMessage: 'Are you sure you want to choose Ethereum?'
+    defaultMessage: 'Are you sure you want to pay in Ethereum?'
   }
 });
