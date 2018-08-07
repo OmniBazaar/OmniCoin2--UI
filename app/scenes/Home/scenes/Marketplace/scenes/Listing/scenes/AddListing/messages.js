@@ -255,7 +255,7 @@ const messages = defineMessages({
   },
   bitcoinFieldValidator: {
     id: 'AddListing.bitcoinFieldValidator',
-    defaultMessage: 'Should be greater or equal to 0.000001'
+    defaultMessage: 'Should be greater or equal to 0.00001'
   },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
