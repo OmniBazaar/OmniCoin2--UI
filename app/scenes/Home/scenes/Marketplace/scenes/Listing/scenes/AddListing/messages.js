@@ -360,6 +360,10 @@ const messages = defineMessages({
   fiatFieldValidator: {
     id: 'AddListing.fiatFieldValidator',
     defaultMessage: 'Should be greater or equal to 0.01'
+  },
+  confirmationMessage: {
+    id: 'ListingsDefaults.confirmationMessage',
+    defaultMessage: 'If you close this page, the changes you made will not be saved unless you "Update" (save) your changes'
   }
 });
 
