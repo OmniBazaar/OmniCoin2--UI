@@ -7,7 +7,7 @@ import { Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Prompt } from 'react-router-dom';
 import moment from 'moment';
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
@@ -62,6 +62,7 @@ const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
+    this.setState({ isPromptVisible: true });
     try {
       const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
       if (price_using_btc && bitcoin_address) {
@@ -97,7 +98,8 @@ class ListingForm extends Component {
     this.PriceInput = makeValidatableField(this.renderLabeledField);
 
     this.state = {
-      keywords: ''
+      keywords: '',
+      isPromptVisible: false
     };
   }
 
@@ -360,6 +362,9 @@ class ListingForm extends Component {
       images: this.getImagesData(),
       keywords: keywords.split(',').map(el => el.trim())
     }, listing_id);
+    this.setState({
+      isPromptVisible: false
+    })
   }
 
   renderKeywordsInput() {
@@ -382,8 +387,7 @@ class ListingForm extends Component {
       </div>
     );
   }
-
-
+  
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -414,7 +418,11 @@ class ListingForm extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
+      <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
+        <Prompt
+          when={this.state.isPromptVisible}
+          message={location => formatMessage(messages.confirmationMessage)}
+        />
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
