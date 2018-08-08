@@ -62,7 +62,7 @@ const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
-    this.setState({ isShow: true });
+    this.setState({ isPromptVisible: true });
     try {
       const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
       if (price_using_btc && bitcoin_address) {
@@ -99,7 +99,7 @@ class ListingForm extends Component {
 
     this.state = {
       keywords: '',
-      isShow: false
+      isPromptVisible: false
     };
   }
 
@@ -363,7 +363,7 @@ class ListingForm extends Component {
       keywords: keywords.split(',').map(el => el.trim())
     }, listing_id);
     this.setState({
-      isShow: false
+      isPromptVisible: false
     })
   }
 
@@ -418,9 +418,9 @@ class ListingForm extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onChange={() => this.setState({ isShow: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
+      <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
         <Prompt
-          when={this.state.isShow}
+          when={this.state.isPromptVisible}
           message={location => formatMessage(messages.confirmationMessage)}
         />
         <Grid>
