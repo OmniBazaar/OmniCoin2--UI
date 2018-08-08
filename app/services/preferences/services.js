@@ -30,14 +30,14 @@ export const storePreferences = async (preferences) => {
       publisher_fee,
       escrow_fee
     };
-  
+    
     // save preferences on local storage
     await localStorage.setItem(preferences_key, JSON.stringify(preferences));
   
     if (isNaN(publisher_fee) || isNaN(escrow_fee)) {
       return
     }
-
+    
     /*if (isNaN(publisher_fee)) {
       delete trObj.publisher_fee
     }

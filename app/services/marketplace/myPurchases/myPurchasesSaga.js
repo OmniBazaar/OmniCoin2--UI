@@ -27,7 +27,7 @@ import {
   writeFile
 } from "../../fileUtils";
 import { getStoredCurrentUser } from "../../blockchain/auth/services";
-import { getListingFromBlockchain } from "../../listing/apis";
+import { getObjectById } from "../../listing/apis";
 
 export const Types = {
   selling: 'selling',
@@ -48,7 +48,7 @@ const getFilePath = async (type) => {
 };
 
 const addPurchaseToFile = async (purchase, filePath) => {
-  const listing = await getListingFromBlockchain(purchase.listingId);
+  const listing = await getObjectById(purchase.listingId);
   const publisher = await FetchChain('getAccount', listing.publisher);
   const purchaseToSave = {
     date: new Date(),

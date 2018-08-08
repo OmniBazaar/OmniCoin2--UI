@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { FetchChain } from 'omnibazaarjs/es';
 import _ from 'lodash';
 
-import { getListingFromBlockchain } from "../../listing/apis";
+import { getObjectById } from "../../listing/apis";
 import { getUserDataFolder, checkDir, writeFile, isExist, readFile } from '../../fileUtils';
 import * as BitcoinApi from './BitcoinApi';
 import {SATOSHI_IN_BTC} from "../../../utils/constants";
@@ -62,7 +62,7 @@ export const sendOBFees = async (purchase, guid, password) => {
     FetchChain('getAccount', 'omnibazaar'),
     FetchChain('getAccount', purchase.buyer),
     FetchChain('getAccount', purchase.seller),
-    getListingFromBlockchain(purchase.listingId)
+    getObjectById(purchase.listingId)
   ]);
   const [buyerReferrer, sellerReferrer] = await Promise.all([
     FetchChain('getAccount', buyer.get('referrer')),

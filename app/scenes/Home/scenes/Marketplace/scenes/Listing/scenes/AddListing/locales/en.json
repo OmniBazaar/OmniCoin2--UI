@@ -71,5 +71,6 @@
   "AddListing.priorityNormal": "Normal (0.50% Fee)",
   "AddListing.priorityLow": "Low (0.00% Fee)",
   "AddListing.loadListing": "Load listing",
-  "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01"
+  "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01",
+  "AddListing.confirmationMessage": "If you close this page, the changes you made will not be saved unless you 'Update' (save) your changes"
 }

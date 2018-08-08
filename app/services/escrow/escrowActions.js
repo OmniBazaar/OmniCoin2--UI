@@ -18,7 +18,16 @@ const {
   releaseEscrowTransaction,
   returnEscrowTransaction,
   setActivePageMyEscrow,
-  setPaginationMyEscrow
+  setPaginationMyEscrow,
+  createEscrowExtendProposal,
+  createEscrowExtendProposalSucceeded,
+  createEscrowExtendProposalFailed,
+  approveEscrowExtendProposal,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed,
+  getEscrowProposals,
+  getEscrowProposalsSucceeded,
+  getEscrowProposalsFailed,
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
@@ -40,7 +49,16 @@ createActions({
   RELEASE_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),
   RETURN_ESCROW_TRANSACTION: (escrowObject, votes) => ({ escrowObject, votes }),
   SET_PAGINATION_MY_ESCROW: (rowsPerPageMyEscrow) => ({ rowsPerPageMyEscrow }),
-  SET_ACTIVE_PAGE_MY_ESCROW: (activePageMyEscrow) => ({ activePageMyEscrow })
+  SET_ACTIVE_PAGE_MY_ESCROW: (activePageMyEscrow) => ({ activePageMyEscrow }),
+  CREATE_ESCROW_EXTEND_PROPOSAL: (escrowId, expirationTime) => ({ escrowId, expirationTime }),
+  CREATE_ESCROW_EXTEND_PROPOSAL_SUCCEEDED: () => ({ }),
+  CREATE_ESCROW_EXTEND_PROPOSAL_FAILED: (error) => ({ error }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL: (proposalId) => ({ proposalId }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL_SUCCEEDED: () => ({ }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL_FAILED: (error) => ({ error }),
+  GET_ESCROW_PROPOSALS: (accountIdOrName) => ({ accountIdOrName }),
+  GET_ESCROW_PROPOSALS_SUCCEEDED: (proposals) => ({ proposals }),
+  GET_ESCROW_PROPOSALS_FAILED: (error) => ({ error })
 });
 
 export {
@@ -61,5 +79,14 @@ export {
   releaseEscrowTransaction,
   returnEscrowTransaction,
   setActivePageMyEscrow,
-  setPaginationMyEscrow
+  setPaginationMyEscrow,
+  createEscrowExtendProposal,
+  createEscrowExtendProposalSucceeded,
+  createEscrowExtendProposalFailed,
+  approveEscrowExtendProposal,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed,
+  getEscrowProposals,
+  getEscrowProposalsSucceeded,
+  getEscrowProposalsFailed
 };

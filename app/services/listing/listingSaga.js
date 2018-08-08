@@ -50,7 +50,7 @@ import {
   createListing,
   deleteListing,
   editListing,
-  getListingFromBlockchain,
+  getObjectById,
   reportListingOnBlockchain,
 } from './apis';
 
@@ -235,7 +235,7 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
 
 export function* getListingDetail({ payload: { listingId } }) {
   try {
-    const blockchainListingData = yield call(getListingFromBlockchain, listingId);
+    const blockchainListingData = yield call(getObjectById, listingId);
     const publisherAcc = yield call(FetchChain, 'getAccount', blockchainListingData.publisher);
     const id = getNewId().toString();
     const message = {
@@ -390,7 +390,7 @@ function* marketplaceReturnListings({ data }) {
     if (!!listingsObj.listings && data.id === listingDetailRequest.wsMessageId) {
       const listingDetail = listingsObj.listings[0];
       listingDetail.ip = data.command.address;
-      const blockchainListingData = yield call(getListingFromBlockchain, listingDetailRequest.listingId);
+      const blockchainListingData = yield call(getObjectById, listingDetailRequest.listingId);
 
       if (!blockchainListingData) {
         listingDetail.existsInBlockchain = false;
