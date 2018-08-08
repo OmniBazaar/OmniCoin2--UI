@@ -29,7 +29,7 @@ export const storePreferences = async (preferences) => {
     const trObj = {
       publisher_fee,
       escrow_fee
-    }
+    };
 
     if (isNaN(publisher_fee)) {
       delete trObj.publisher_fee

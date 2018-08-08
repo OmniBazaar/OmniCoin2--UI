@@ -222,10 +222,6 @@ class MyEscrowTransactions extends Component {
     }
   }
 
-  componentDidMount() {
-    const { currentUser } = this.props.auth;
-    this.props.escrowActions.getEscrowProposals(currentUser.username);
-  }
 
   closeModal = () => {
     this.setState({
@@ -383,7 +379,7 @@ class MyEscrowTransactions extends Component {
       transactionID,
       expirationTime
     } = this.state.proposal;
-    this.props.escrowActions.createEscrowExtendProposal(transactionID, expirationTime.valueOf() - moment().valueOf());
+    this.props.escrowActions.createEscrowExtendProposal(transactionID, expirationTime.diff(moment().startOf('day'), 'seconds'));
   }
 
   renderRows() {

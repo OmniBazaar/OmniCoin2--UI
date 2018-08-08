@@ -1,3 +1,9 @@
 {
-
+  "MyEscrowProposals.error": "Error",
+  "MyEscrowProposals.success": "Success",
+  "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time ",
+  "MyEscrowProposals.to": " to {proposedTime}.",
+  "MyEscrowProposals.you": "You",
+  "MyEscrowProposals.approve": "Approve it",
+  "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
 }

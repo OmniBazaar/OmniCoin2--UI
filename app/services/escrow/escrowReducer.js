@@ -22,6 +22,9 @@ import {
   createEscrowExtendProposal,
   createEscrowExtendProposalSucceeded,
   createEscrowExtendProposalFailed,
+  approveEscrowExtendProposal,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed,
   getEscrowProposals,
   getEscrowProposalsFailed,
   getEscrowProposalsSucceeded
@@ -53,7 +56,12 @@ const defaultState = {
   activeEscrowProposals: {
     proposals: [],
     loading: false,
-    error: null
+    error: null,
+    proposalApprove: {
+      proposalId: null,
+      loading: false,
+      error: null
+    }
   }
 };
 
@@ -91,6 +99,44 @@ const reducer = handleActions(
         escrowExtendProposal: {
           loading: false,
           error
+        }
+      }
+    },
+    [approveEscrowExtendProposal](state, { payload: { proposalId } }) {
+      return {
+        ...state,
+        activeEscrowProposals: {
+          ...state.activeEscrowProposals,
+          proposalApprove: {
+            proposalId,
+            loading: true,
+            error: null
+          }
+        }
+      }
+    },
+    [approveEscrowExtendProposalSucceeded](state) {
+      return {
+        ...state,
+        activeEscrowProposals: {
+          ...state.activeEscrowProposals,
+          proposalApprove: {
+            ...state.activeEscrowProposals.proposalApprove,
+            loading: false
+          }
+        }
+      }
+    },
+    [approveEscrowExtendProposalFailed](state, { payload: { error } }) {
+      return {
+        ...state,
+        activeEscrowProposals: {
+          ...state.activeEscrowProposals,
+          proposalApprove: {
+            ...state.activeEscrowProposals.proposalApprove,
+            loading: false,
+            error
+          }
         }
       }
     },
@@ -326,7 +372,8 @@ const reducer = handleActions(
     [getEscrowProposalsSucceeded](state, { payload: { proposals } }) {
       return {
         ...state,
-        activeProposals: {
+        activeEscrowProposals: {
+          ...state.activeEscrowProposals,
           proposals,
           loading: false,
           error: null
@@ -336,7 +383,7 @@ const reducer = handleActions(
     [getEscrowProposalsFailed](state, { payload: { error }}) {
       return {
         ...state,
-        activeProposals: {
+        activeEscrowProposals: {
           ...state.active.proposals,
           loading: false,
           error

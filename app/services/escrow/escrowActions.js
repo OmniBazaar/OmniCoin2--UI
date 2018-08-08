@@ -22,9 +22,12 @@ const {
   createEscrowExtendProposal,
   createEscrowExtendProposalSucceeded,
   createEscrowExtendProposalFailed,
+  approveEscrowExtendProposal,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed,
   getEscrowProposals,
   getEscrowProposalsSucceeded,
-  getEscrowProposalsFailed
+  getEscrowProposalsFailed,
 } =
 createActions({
   LOAD_ESCROW_TRANSACTIONS: (username) => ({ username }),
@@ -50,6 +53,9 @@ createActions({
   CREATE_ESCROW_EXTEND_PROPOSAL: (escrowId, expirationTime) => ({ escrowId, expirationTime }),
   CREATE_ESCROW_EXTEND_PROPOSAL_SUCCEEDED: () => ({ }),
   CREATE_ESCROW_EXTEND_PROPOSAL_FAILED: (error) => ({ error }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL: (proposalId) => ({ proposalId }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL_SUCCEEDED: () => ({ }),
+  APPROVE_ESCROW_EXTEND_PROPOSAL_FAILED: (error) => ({ error }),
   GET_ESCROW_PROPOSALS: (accountIdOrName) => ({ accountIdOrName }),
   GET_ESCROW_PROPOSALS_SUCCEEDED: (proposals) => ({ proposals }),
   GET_ESCROW_PROPOSALS_FAILED: (error) => ({ error })
@@ -77,6 +83,9 @@ export {
   createEscrowExtendProposal,
   createEscrowExtendProposalSucceeded,
   createEscrowExtendProposalFailed,
+  approveEscrowExtendProposal,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed,
   getEscrowProposals,
   getEscrowProposalsSucceeded,
   getEscrowProposalsFailed
