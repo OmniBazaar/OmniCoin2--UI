@@ -29,6 +29,7 @@ import {
   showReplyModal
 } from '../../../../services/mail/mailActions';
 import Header from '../../../../components/Header';
+import { getCurrencyAbbreviation } from "../../../../utils/listings";
 
 import { purchaseInfoSubject } from "../../../../services/mail/mailSaga";
 
@@ -118,12 +119,20 @@ class Mail extends Component {
 
   getSubject(message) {
     const { formatMessage } = this.props.intl;
+    const { username } = this.props.auth.currentUser;
     if (message.subject === purchaseInfoSubject) {
       const body = JSON.parse(message.body);
-      return formatMessage(mailMessages.purchaseSubject, {
-        buyer: message.user,
-        listing: body.listingTitle
-      })
+      if (username === message.sender) {
+        return formatMessage(mailMessages.buyPurchaseSubject, {
+          seller: body.seller,
+          listing: body.listingTitle
+        })
+      } else {
+        return formatMessage(mailMessages.sellPurchaseSubject, {
+          buyer: body.buyer,
+          listing: body.listingTitle
+        });
+      }
     } else {
       return message.subject;
     }
@@ -131,13 +140,28 @@ class Mail extends Component {
 
   getBody(message) {
     const { formatMessage } = this.props.intl;
+    const { username } = this.props.auth.currentUser;
     if (message.subject === purchaseInfoSubject) {
       const body = JSON.parse(message.body);
-      return formatMessage(mailMessages.purchaseBody, {
-        buyer: message.user,
-        number: body.listingCount,
-        listing: body.listingTitle,
-      })
+      if (username === message.sender) {
+        return formatMessage(mailMessages.buyPurchaseBody, {
+          seller: body.seller,
+          number: body.listingCount,
+          listing: body.listingTitle,
+          listingId: body.listingId,
+          price: body.amount,
+          currency: getCurrencyAbbreviation(body.currency)
+        });
+      } else {
+        return formatMessage(mailMessages.sellPurchaseBody, {
+          buyer: message.user,
+          number: body.listingCount,
+          listing: body.listingTitle,
+          listingId: body.listingId,
+          price: body.price,
+          currency: getCurrencyAbbreviation(body.currency)
+        });
+      }
     } else {
       return message.body;
     }

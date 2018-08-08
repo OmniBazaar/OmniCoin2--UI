@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import MyEscrowAgents from './scenes/MyEscrowAgents/MyEscrowAgents';
 import MyEscrowSettings from './scenes/MyEscrowSettings/MyEscrowSettings';
 import MyEscrowTransactions from './scenes/MyEscrowTransactions/MyEscrowTransactions';
+import MyEscrowProposals from './scenes/MyEscrowProposals/MyEscrowProposals';
 import Header from '../../../../components/Header/index';
 
 import {
@@ -34,6 +35,10 @@ const messages = defineMessages({
   settings: {
     id: 'Escrow.settings',
     defaultMessage: 'My Escrow Settings'
+  },
+  proposals: {
+    id: 'Escrow.proposals',
+    defaultMessage: 'My Escrow Proposals'
   }
 });
 
@@ -89,7 +94,15 @@ class Escrow extends Component {
                          <MyEscrowSettings />
                        </Tab.Pane>
                      ),
-                   }
+                   },
+                  {
+                    menuItem: formatMessage(messages.proposals),
+                    render: () => (
+                      <Tab.Pane>
+                        <MyEscrowProposals />
+                      </Tab.Pane>
+                    )
+                  }
                  ]}
           />
         </div>

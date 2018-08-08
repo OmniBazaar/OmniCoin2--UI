@@ -4,7 +4,7 @@
   "VestingBalance.vestingId": "VESTING #{id}",
   "VestingBalance.vbAmount": "Vesting balance amount",
   "VestingBalance.cdEarned": "Coin days earned",
-  "VestingBalance.cdRequired": "Coin days required",
+  "VestingBalance.percentVested": "Percent Vested",
   "VestingBalance.daysLeft": "Days left of vesting period",
   "VestingBalance.available": "Available to claim",
   "VestingBalance.days": "{number} days",

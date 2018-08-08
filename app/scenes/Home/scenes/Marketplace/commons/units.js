@@ -1,8 +1,4 @@
 const units = {
-  '': {
-    id: 'Marketplace.unitOfMeasure',
-    defaultMessage: 'Units of Measure'
-  },
   Each: {
     id: 'Marketplace.each',
     defaultMessage: 'Each'

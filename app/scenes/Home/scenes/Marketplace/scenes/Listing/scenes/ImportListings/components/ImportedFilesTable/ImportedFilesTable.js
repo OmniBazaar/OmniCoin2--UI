@@ -15,7 +15,6 @@ import hash from 'object-hash';
 import { numberWithCommas } from '../../../../../../../../../../utils/numeric';
 
 import { sortImportData } from '../../../../../../../../../../services/listing/importActions';
-import { makeValidatableField } from '../../../../../../../../../../components/ValidatableField/ValidatableField';
 import CategoryDropdown from '../../../AddListing/components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from '../../../AddListing/components/SubCategoryDropdown/SubCategoryDropdown';
 
@@ -44,6 +43,10 @@ const messages = defineMessages({
     id: 'ImportedFilesTable.title',
     defaultMessage: 'Title'
   },
+  description: {
+    id: 'ImportedFilesTable.description',
+    defaultMessage: 'Description'
+  },
   price: {
     id: 'ImportedFilesTable.price',
     defaultMessage: 'Price'
@@ -58,8 +61,36 @@ class ImportedFilesTable extends Component {
   constructor(props) {
     super(props);
 
-    this.categoryDropdown = makeValidatableField(CategoryDropdown);
-    this.subCategoryDropdown = makeValidatableField(SubCategoryDropdown);
+    this.state = {
+      filesChanges: {},
+    };
+  }
+
+  componentDidMount() {
+    const { importedFiles } = this.props.listingImport;
+
+    this.loadFilesChanges(importedFiles);
+  }
+
+
+  loadFilesChanges(importedFiles) {
+    let filesChanges = {};
+
+    importedFiles.forEach((row, fileIndex) => row.items && row.items
+      .forEach(({ description, listing_title }, index) => {
+        const file = `files-${fileIndex}-${index}`;
+
+        filesChanges = {
+          ...filesChanges,
+          [file]: {
+            ...this.state.filesChanges[file],
+            title: listing_title,
+            description,
+          }
+        };
+      }));
+
+    this.setState({ filesChanges });
   }
 
   sortData = (clickedColumn) => () => {
@@ -99,6 +130,58 @@ class ImportedFilesTable extends Component {
     );
   }
 
+  renderTitleInput({ index, fileIndex }) {
+    const { onTitleChange } = this.props;
+    const file = `files-${fileIndex}-${index}`;
+    const fileChanges = this.state.filesChanges[file] || {};
+
+    return (<input
+      type="text"
+      className="textfield"
+      value={fileChanges.title}
+      onChange={(e) => {
+        const editedTitle = e.target.value;
+
+        this.setState({
+          filesChanges: {
+            ...this.state.filesChanges,
+            [file]: {
+              ...fileChanges,
+              title: editedTitle,
+            }
+          }
+        });
+      }}
+      onBlur={() => onTitleChange({ editedTitle: fileChanges.title, index, fileIndex })}
+    />);
+  }
+
+  renderDescriptionInput({ index, fileIndex }) {
+    const { onDescriptionChange } = this.props;
+    const file = `files-${fileIndex}-${index}`;
+    const fileChanges = this.state.filesChanges[file] || {};
+
+    return (<input
+      type="text"
+      className="textfield"
+      value={fileChanges.description}
+      onChange={(e) => {
+        const editedDesc = e.target.value;
+
+        this.setState({
+          filesChanges: {
+            ...this.state.filesChanges,
+            [file]: {
+              ...fileChanges,
+              description: editedDesc,
+            }
+          }
+        });
+      }}
+      onBlur={() => onDescriptionChange({ editedDesc: fileChanges.description, index, fileIndex })}
+    />);
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -131,6 +214,9 @@ class ImportedFilesTable extends Component {
                 <TableHeaderCell key="title" sorted={sortColumn === 'title' ? sortDirection : null} onClick={this.sortData('title')}>
                   {formatMessage(messages.title)}
                 </TableHeaderCell>
+                <TableHeaderCell key="description" sorted={sortColumn === 'description' ? sortDirection : null} onClick={this.sortData('description')}>
+                  {formatMessage(messages.description)}
+                </TableHeaderCell>
                 <TableHeaderCell key="price" sorted={sortColumn === 'price' ? sortDirection : null} onClick={this.sortData('price')}>
                   {formatMessage(messages.price)}
                 </TableHeaderCell>
@@ -152,7 +238,10 @@ class ImportedFilesTable extends Component {
                     </TableCell>
                     <TableCell>{item.contactType}</TableCell>
                     <TableCell>{item.contactInfo}</TableCell>
-                    <TableCell>{item.listing_title}</TableCell>
+                    <TableCell>{this.renderTitleInput({ index, fileIndex })}</TableCell>
+                    <TableCell>
+                      {this.renderDescriptionInput({ index, fileIndex })}
+                    </TableCell>
                     <TableCell>{numberWithCommas(item.price)}</TableCell>
                     <TableCell>{item.currency}</TableCell>
                   </TableRow>
@@ -187,6 +276,8 @@ ImportedFilesTable.propTypes = {
   }),
   onCategoryChange: PropTypes.func.isRequired,
   onSubCategoryChange: PropTypes.func.isRequired,
+  onTitleChange: PropTypes.func.isRequired,
+  onDescriptionChange: PropTypes.func.isRequired,
 };
 
 ImportedFilesTable.defaultProps = {

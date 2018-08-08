@@ -1,8 +1,4 @@
 const conditions = {
-  '': {
-    id: 'Marketplace.condition',
-    defaultMessage: 'Condition'
-  },
   Service: {
     id: 'Marketplace.service',
     defaultMessage: 'Service'

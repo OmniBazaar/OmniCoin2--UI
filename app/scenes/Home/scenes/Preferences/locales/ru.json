@@ -39,5 +39,8 @@
   "Preferences.autoRun": "Start the Transaction Processor Module when this computer starts",
   "Preferences.autoRunNote": "This action requires admin rights.",
   "Preferences.autoLogOut": "To disable Log Out option set 0 value in Timeout field.",
-  "Preferences.listingOptionsToolTip": "When using more than one keyword, searches will return results that contain ANY of those words, or will return only those listings which contain ALL of your keywords"
+  "Preferences.listingOptionsToolTip": "When using more than one keyword, searches will return results that contain ANY of those words, or will return only those listings which contain ALL of your keywords",
+  "Preferences.restartNode": "RESTART NODE",
+  "Preferences.nodeRestartError": "An error occured while restarting witness node",
+  "Preferences.nodeRestartSuccess": "Witness node was restarted successfully"
 }

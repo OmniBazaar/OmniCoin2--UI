@@ -90,7 +90,8 @@ function* omnicoinTransfer({payload: {
         currency: 'omnicoin'
       };
       yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, to, JSON.stringify(purchaseObject)))
+      yield put(sendPurchaseInfoMail(currentUser.username, to, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
     }
   } catch (error) {
     let e = JSON.stringify(error);
@@ -121,7 +122,8 @@ function* bitcoinTransfer({ payload: {
         currency: 'bitcoin'
       };
       yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)))
+      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
     }
   } catch (error) {
     console.log('ERROR', error);
@@ -146,7 +148,8 @@ function* ethereumTransfer({payload: {
         currency: 'ethereum'
       };
       yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)))
+      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
     }
     console.log("Ether res", res);
     yield put(ethereumTransferSucceeded());

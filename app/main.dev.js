@@ -21,6 +21,7 @@ import path from 'path';
 const sudo = require('sudo-prompt');
 
 let mainWindow = null;
+let nodeProcess = null;
 
 const isProd = () => process.env.NODE_ENV === 'production';
 
@@ -122,15 +123,17 @@ const runNode = () => {
   if (process.platform === 'win32') {
     nodePath = `${path}/witness_node.exe`;
   }
-  const ls = spawn(nodePath);
-  ls.stdout.on('data', (data) => {
+  if (nodeProcess) {
+    nodeProcess.kill();
+  }
+  nodeProcess = spawn(nodePath);
+  nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
-  ls.on('close', (code) => {
+  nodeProcess.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
   });
-
-  ls.stderr.on('data', (data) => {
+  nodeProcess.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`);
   });
 };
@@ -141,7 +144,6 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   if (isProd()) {
     path = getNodeDirProdPath();
   }
-  console.log('WITNESS ID ', witnessId);
   fs.readFile(`${path}/witness_node_data_dir/config.ini`, 'utf8', (err, data) => {
     if (err) {
       console.log('ERROR ', err);

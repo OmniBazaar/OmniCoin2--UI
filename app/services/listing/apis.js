@@ -159,7 +159,7 @@ export const reportListingOnBlockchain = async (listingId) => {
 
 export const updateListingOnBlockchain = async (user, publisher, listingId, listing) => {
   const seller = await FetchChain('getAccount', user.username);
-  const blockchainListing = await getListingFromBlockchain(listingId);
+  const blockchainListing = await getObjectById(listingId);
   const key = generateKeyFromPassword(user.username, 'active', user.password);
   const tr = new TransactionBuilder();
   const listingHash = hash.listingSHA256({
@@ -187,8 +187,8 @@ export const updateListingOnBlockchain = async (user, publisher, listingId, list
   await tr.broadcast();
 };
 
-export const getListingFromBlockchain = async listingId => {
-  const listing = await Apis.instance().db_api().exec('get_objects', [[listingId]]);
+export const getObjectById = async objectId => {
+  const listing = await Apis.instance().db_api().exec('get_objects', [[objectId]]);
   if (listing) {
     return listing[0];
   }
@@ -198,7 +198,7 @@ export const getListingFromBlockchain = async listingId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (listing[key] !== undefined) {
+    if (listing[key]) {
       result[key] = listing[key];
     }
   });
@@ -228,7 +228,7 @@ export const createListing = async (user, publisher, listing) => {
 
 export const editListing = async (user, publisher, listingId, listing) => {
   listing = ensureListingData(listing);
-  const blockchainListing = await getListingFromBlockchain(listingId);
+  const blockchainListing = await getObjectById(listingId);
   if (!blockchainListing) {
     throw new Error('Listing not exist on blockchain');
   }

@@ -6,5 +6,6 @@
   "ImportedFilesTable.contactInfo": "Contact Info",
   "ImportedFilesTable.title": "Title",
   "ImportedFilesTable.price": "Price",
-  "ImportedFilesTable.currency": "Currency"
+  "ImportedFilesTable.currency": "Currency",
+  "ImportedFilesTable.description": "Description"
 }

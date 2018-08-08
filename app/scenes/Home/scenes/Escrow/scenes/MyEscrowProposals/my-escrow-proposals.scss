@@ -1,0 +1,13 @@
+.proposals {
+  display: flex;
+  flex-direction: column;
+  .proposal {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  & .loading {
+    justify-content: center;
+    align-items: center;
+  }
+}
