@@ -26,6 +26,7 @@ import {
   updatePublicData,
   changeIpAddress,
   setBtcAddress,
+  setEthAddress,
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -205,6 +206,10 @@ class PublicData extends Component {
     this.props.accountSettingsActions.setBtcAddress(value);
   }
 
+  setEthAddress({ target: { value } }) {
+    this.props.accountSettingsActions.setEthAddress(value);
+  }
+
 
   updatePublicData() {
     const { formatMessage } = this.props.intl;
@@ -327,6 +332,15 @@ class PublicData extends Component {
               onChange={(data) => this.setBtcAddress(data)}
             />
           </div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{`${formatMessage(messages.ethAddressTitle)}:`}</div>
+            <Input
+              className="ref-btc-input"
+              defaultValue={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+              placeholder={formatMessage(messages.ethAddressTitle)}
+              onChange={(data) => this.setEthAddress(data)}
+            />
+          </div>
         </div>
         }
         <div className="description">
@@ -413,6 +427,7 @@ PublicData.propTypes = {
     updatePublicData: PropTypes.func,
     changeIpAddress: PropTypes.func,
     setBtcAddress: PropTypes.func,
+    setEthAddress: PropTypes.func,
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
@@ -466,6 +481,7 @@ export default connect(
       getCurrentUser,
       setReferrer,
       setBtcAddress,
+      setEthAddress,
       setPublisher,
       setTransactionProcessor,
       setEscrow,
