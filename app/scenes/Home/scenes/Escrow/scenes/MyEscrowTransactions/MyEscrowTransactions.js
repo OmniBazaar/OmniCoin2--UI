@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -10,7 +12,8 @@ import {
   TableHeaderCell,
   TableRow,
   TableHeader,
-  Loader
+  Loader,
+  Button
 } from 'semantic-ui-react';
 import { toastr } from 'react-redux-toastr';
 import dateformat from 'dateformat';
@@ -19,11 +22,15 @@ import {
   releaseEscrowTransaction,
   returnEscrowTransaction,
   setActivePageMyEscrow,
-  setPaginationMyEscrow
+  setPaginationMyEscrow,
+  createEscrowExtendProposal,
+  getEscrowProposals
 } from '../../../../../../services/escrow/escrowActions';
 import RateModal from './components/RateModal/RateModal';
 import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
+
 import './my-escrow-transactions.scss';
 
 const messages = defineMessages({
@@ -98,13 +105,37 @@ const messages = defineMessages({
   voteDownTooltip: {
     id: 'MyEscrowTransactions.voteDownTooltip',
     defaultMessage: 'Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow.'
-  }
+  },
+  proposal: {
+    id: 'MyEscrowTransactions.proposal',
+    defaultMessage: 'Proposal'
+  },
+  extendTime: {
+    id: 'MyEscrowTransactions.extendTime',
+    defaultMessage: 'EXTEND TIME'
+  },
+  proposalConfirmation: {
+    id: 'MyEscrowTransaction.proposalConfirmation',
+    defaultMessage: 'Are you sure you want to propose other party to extend expiration time to {time}?'
+  },
+  proposalCreateSuccess: {
+    id: 'MyEscrowTransaction.proposalSuccess',
+    defaultMessage: 'Proposal was created successfully'
+  },
 });
 
 const comparator = (transA, transB, headerName, asc) => {
   const compA = transA[headerName].toString();
   const compB = transB[headerName].toString();
   return compA.localeCompare(compB) * (asc ? 1 : -1);
+};
+
+const proposalInitialState = {
+  isCalendarOpen: false,
+  transactionID: null,
+  expirationTime: null,
+  minDate: null,
+  isConfirmationModalOpen: false
 };
 
 class MyEscrowTransactions extends Component {
@@ -126,9 +157,17 @@ class MyEscrowTransactions extends Component {
         name2: null,
         label2: null,
         onSubmit: () => {},
+      },
+      proposal: {
+        ...proposalInitialState
       }
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleExtendExpTime = this.handleExtendExpTime.bind(this);
+    this.handleCalendarChange = this.handleCalendarChange.bind(this);
+    this.submitProposal = this.submitProposal.bind(this);
+    this.toggleProposalConfirmationModal = this.toggleProposalConfirmationModal.bind(this);
+    this.toggleCalendar = this.toggleCalendar.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -172,7 +211,17 @@ class MyEscrowTransactions extends Component {
     if (this.props.escrow.loading !== nextProps.escrow.loading) {
       this.props.escrowActions.setPaginationMyEscrow(this.props.rowsPerPage);
     }
+
+    if (this.props.escrow.escrowExtendProposal.loading && !nextProps.escrow.escrowExtendProposal.loading) {
+      this.toggleProposalConfirmationModal();
+      if (!nextProps.escrow.escrowExtendProposal.error) {
+        toastr.success(formatMessage(messages.success), formatMessage(messages.proposalCreateSuccess));
+      } else {
+        toastr.error(formatMessage(messages.error), nextProps.escrow.escrowExtendProposal.error);
+      }
+    }
   }
+
 
   closeModal = () => {
     this.setState({
@@ -275,6 +324,64 @@ class MyEscrowTransactions extends Component {
     );
   }
 
+  clearProposalState() {
+    this.setState({
+      proposal: {
+        ...proposalInitialState
+      }
+    });
+  }
+
+  toggleCalendar(callback) {
+    this.setState({
+      proposal: {
+        ...this.state.proposal,
+        isCalendarOpen: !this.state.proposal.isCalendarOpen,
+      }
+    }, callback);
+  }
+
+  toggleProposalConfirmationModal() {
+    if (this.state.proposal.isConfirmationModalOpen) {
+      this.clearProposalState();
+    }
+    this.setState({
+      proposal: {
+        ...this.state.proposal,
+        isConfirmationModalOpen: !this.state.proposal.isConfirmationModalOpen
+      }
+    })
+  }
+
+  handleCalendarChange(date) {
+    this.setState({
+      proposal: {
+        ...this.state.proposal,
+        expirationTime: date
+      }
+    }, () => {
+      this.toggleCalendar(this.toggleProposalConfirmationModal);
+    });
+  }
+
+  handleExtendExpTime(escrowObject) {
+    this.setState({
+      proposal: {
+        ...this.state.proposal,
+        transactionID: escrowObject.transactionID,
+        minDate: moment(escrowObject.expirationTime).add(1, 'days'),
+      }
+    }, () => this.toggleCalendar());
+  }
+
+  submitProposal() {
+    const {
+      transactionID,
+      expirationTime
+    } = this.state.proposal;
+    this.props.escrowActions.createEscrowExtendProposal(transactionID, expirationTime.diff(moment().startOf('day'), 'seconds'));
+  }
+
   renderRows() {
     const { username } = this.props.auth.currentUser;
     const { formatMessage } = this.props.intl;
@@ -316,6 +423,13 @@ class MyEscrowTransactions extends Component {
             </div>
           }
         </TableCell>
+        <TableCell>
+          <Button
+            content={formatMessage(messages.extendTime)}
+            onClick={() => this.handleExtendExpTime(escrowObject)}
+            className="button--blue-text"
+          />
+        </TableCell>
       </TableRow>
     ));
   }
@@ -328,6 +442,7 @@ class MyEscrowTransactions extends Component {
       activePageMyEscrow,
       totalPagesMyEscrow
     } = this.props.escrow;
+
     return (
       <div className="data-table">
         <div className="top-detail">
@@ -371,6 +486,8 @@ class MyEscrowTransactions extends Component {
                     <TableHeaderCell className="sorted">
                       {formatMessage(messages.finalize)}
                     </TableHeaderCell>
+                    <TableHeaderCell>
+                    </TableHeaderCell>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -384,6 +501,24 @@ class MyEscrowTransactions extends Component {
           onCancel={this.closeModal}
           loading={finalizing}
         />
+        {
+          this.state.proposal.isCalendarOpen && (
+            <DatePicker
+              selected={this.state.startDate}
+              onChange={this.handleCalendarChange}
+              withPortal
+              minDate={this.state.proposal.minDate}
+              inline />
+          )
+        }
+        <ConfirmationModal
+            isOpen={this.state.proposal.isConfirmationModalOpen}
+            onApprove={this.submitProposal}
+            onCancel={this.toggleProposalConfirmationModal}
+            loading={this.props.escrow.escrowExtendProposal.loading}
+        >
+          {formatMessage(messages.proposalConfirmation, {time: moment(this.state.proposal.expirationTime).format('MMMM Do YYYY')})}
+        </ConfirmationModal>
       </div>
     );
   }
@@ -440,7 +575,9 @@ export default connect(
       returnEscrowTransaction,
       releaseEscrowTransaction,
       setActivePageMyEscrow,
-      setPaginationMyEscrow
+      setPaginationMyEscrow,
+      createEscrowExtendProposal,
+      getEscrowProposals
     }, dispatch),
   })
 )(injectIntl(MyEscrowTransactions));

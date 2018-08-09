@@ -29,16 +29,22 @@ export const storePreferences = async (preferences) => {
     const trObj = {
       publisher_fee,
       escrow_fee
+    };
+    
+    // save preferences on local storage
+    await localStorage.setItem(preferences_key, JSON.stringify(preferences));
+  
+    if (isNaN(publisher_fee) || isNaN(escrow_fee)) {
+      return
     }
-
-    if (isNaN(publisher_fee)) {
+    
+    /*if (isNaN(publisher_fee)) {
       delete trObj.publisher_fee
     }
     if (isNaN(escrow_fee)) {
       delete trObj.escrow_fee
-    }
-    // save preferences on local storage
-    await localStorage.setItem(preferences_key, JSON.stringify(preferences));
+    }*/
+    
     // save preferences on server
     const tr = new TransactionBuilder();
     tr.add_type_operation('account_update', {

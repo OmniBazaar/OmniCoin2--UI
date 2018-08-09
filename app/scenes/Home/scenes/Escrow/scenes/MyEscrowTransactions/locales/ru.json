@@ -16,5 +16,7 @@
   "MyEscrowTransactions.buyer": "buyer",
   "MyEscrowTransactions.seller": "seller",
   "MyEscrowTransactions.voteUpTooltip": "Click here when you are satisfied with the seller's product or performance. This will release to the seller the funds held in escrow.",
-  "MyEscrowTransactions.voteDownTooltip": "Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow."
+  "MyEscrowTransactions.voteDownTooltip": "Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow.",
+  "MyEscrowTransactions.proposal": "Proposal",
+  "MyEscrowTransactions.extendTime": "EXTEND TIME"
 }

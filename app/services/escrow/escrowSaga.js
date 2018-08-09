@@ -7,23 +7,30 @@ import {
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
-import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
+import { TransactionBuilder, FetchChain, ChainStore } from 'omnibazaarjs/es';
 import _ from 'lodash';
 
 import { updateAccount } from '../accountSettings/accountSaga';
-import { parseEscrowTransactions } from './escrowUtils';
+import { parseEscrowTransactions, parseProposals } from './escrowUtils';
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import {
   getEscrowSettingsFailed,
   getEscrowSettingsSucceeded,
   updateEscrowSettingsFailed,
   updateEscrowSettingsSucceeded,
+  createEscrowExtendProposalSucceeded,
+  createEscrowExtendProposalFailed,
+  getEscrowProposalsSucceeded,
+  getEscrowProposalsFailed,
+  approveEscrowExtendProposalSucceeded,
+  approveEscrowExtendProposalFailed
 } from './escrowActions';
 import {
   getEscrowSettings as getEscrowSettingsService,
   getEscrowAgents as getEscrowAgentsService,
   getImplicitEscrows
 } from './services';
+import { getObjectById } from "../listing/apis";
 
 export function* escrowSubscriber() {
   yield all([
@@ -35,7 +42,10 @@ export function* escrowSubscriber() {
     takeEvery('RELEASE_ESCROW_TRANSACTION', releaseEscrowTransaction),
     takeEvery('RETURN_ESCROW_TRANSACTION', returnEscrowTransaction),
     takeEvery('UPDATE_ESCROW_SETTINGS', updateEscrowSettings),
-    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings)
+    takeEvery('GET_ESCROW_SETTINGS', getEscrowSettings),
+    takeEvery('CREATE_ESCROW_EXTEND_PROPOSAL', createEscrowExtendProposal),
+    takeEvery('GET_ESCROW_PROPOSALS', getEscrowProposals),
+    takeEvery('APPROVE_ESCROW_EXTEND_PROPOSAL', approveEscrowExtendProposal)
   ]);
 }
 
@@ -254,5 +264,77 @@ function* getEscrowSettings() {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(getEscrowSettingsFailed(error));
+  }
+}
+
+function* createEscrowExtendProposal({ payload: { escrowId, expirationTime }}) {
+  try {
+    console.log('EXPIRATION TIME ', expirationTime);
+    const { currentUser } = (yield select()).default.auth;
+    const escrow = yield call(getObjectById, escrowId);
+    const [sec, feePayingAcc, sellerAcc, buyerAcc, escrowAcc] = yield Promise.all([
+      TransactionBuilder.fetch_base_expiration_sec(),
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', escrow['seller']),
+      FetchChain('getAccount', escrow['buyer']),
+      FetchChain('getAccount', escrow['escrow'])
+    ]);
+    let tr = new TransactionBuilder();
+    const escrowExtendOp = tr.get_type_operation(
+      'escrow_extend_operation',
+      {
+        fee_paying_account: feePayingAcc.get('id'),
+        escrow: escrowId,
+        seller_account: sellerAcc.get('id'),
+        buyer_account: buyerAcc.get('id'),
+        escrow_account: escrowAcc.get('id'),
+        expiration_time: sec + expirationTime
+      }
+    );
+    tr.add_type_operation("proposal_create", {
+      proposed_ops: [{op: escrowExtendOp}],
+      fee_paying_account: feePayingAcc.get('id')
+    });
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
+    yield put(createEscrowExtendProposalSucceeded());
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(createEscrowExtendProposalFailed(error));
+  }
+}
+
+function* getEscrowProposals({payload: { accountIdOrName } }) {
+  try {
+    const result = yield Apis.instance().db_api().exec("get_full_accounts", [[accountIdOrName], false]);
+    const account = result[0][1];
+    const parsedProposals = yield call(parseProposals, account['proposals']);
+    yield put(getEscrowProposalsSucceeded(parsedProposals));
+  } catch(error) {
+    console.log("ERROR ", error);
+    yield put(getEscrowProposalsFailed(error));
+  }
+}
+
+function* approveEscrowExtendProposal({ payload: { proposalId } }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const account = yield FetchChain('getAccount', currentUser.username);
+    let tr = new TransactionBuilder();
+    tr.add_type_operation("proposal_update", {
+      fee_paying_account: account.get('id'),
+      proposal: proposalId,
+      active_approvals_to_add: [account.get('id')]
+    });
+    const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+    yield tr.set_required_fees();
+    yield tr.add_signer(key.privKey, key.pubKey);
+    yield tr.broadcast();
+    yield put(approveEscrowExtendProposalSucceeded());
+  } catch (error) {
+    console.log('ERROR', error);
+    yield put(approveEscrowExtendProposalFailed(error));
   }
 }
