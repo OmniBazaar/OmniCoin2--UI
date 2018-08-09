@@ -18,10 +18,12 @@ import bitcoincli from 'blockchain-wallet-service';
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-const sudo = require('sudo-prompt');
+import sudo from 'sudo-prompt';
+import kill from 'kill-port';
 
 let mainWindow = null;
-let nodeProcess = null;
+
+const nodePort = 8099;
 
 const isProd = () => process.env.NODE_ENV === 'production';
 
@@ -114,7 +116,7 @@ const getNodeDirDevPath = () =>
 ;
 
 
-const runNode = () => {
+const runNode = async () => {
   let path = getNodeDirDevPath();
   if (isProd()) {
     path = getNodeDirProdPath();
@@ -123,10 +125,8 @@ const runNode = () => {
   if (process.platform === 'win32') {
     nodePath = `${path}/witness_node.exe`;
   }
-  if (nodeProcess) {
-    nodeProcess.kill();
-  }
-  nodeProcess = spawn(nodePath);
+  await kill(nodePort);
+  const nodeProcess = spawn(nodePath);
   nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
