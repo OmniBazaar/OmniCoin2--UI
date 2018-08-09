@@ -62,7 +62,6 @@ const MAX_IMAGE_SIZE = '1mb';
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
-    this.setState({ isPromptVisible: true });
     try {
       const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
       if (price_using_btc && bitcoin_address) {
