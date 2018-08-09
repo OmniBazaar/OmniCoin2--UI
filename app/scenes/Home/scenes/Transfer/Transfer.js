@@ -883,7 +883,7 @@ class Transfer extends Component {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     this.props.transferActions.ethereumTransfer(
       toAddress,
-      purchaseParams.get('toName'),
+      purchaseParams.get('seller_name'),
       privateKey,
       amount,
       purchaseParams.get('listing_id'),
