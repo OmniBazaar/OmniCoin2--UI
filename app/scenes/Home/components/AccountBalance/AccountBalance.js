@@ -78,7 +78,7 @@ class AccountBalance extends Component {
               {BTC} {formatMessage(messages.btc)}
             </div>
           }
-          {!!ETH &&
+          {ETH > 0 &&
             <div className="balance">
               {ETH} {formatMessage(messages.eth)}
             </div>

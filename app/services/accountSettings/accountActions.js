@@ -61,7 +61,7 @@ const {
   GET_PUBLISHERS: () => ({}),
   CHANGE_IP_ADDRESS: (ip) => ({ ip }),
   SET_BTC_ADDRESS: (address) => ({ address }),
-  SET_ETH_ADDRESS: (ethAddress) => ({ ethAddress }),
+  SET_ETH_ADDRESS: (address) => ({ address }),
 });
 
 export {

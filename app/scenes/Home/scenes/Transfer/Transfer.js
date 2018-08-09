@@ -302,9 +302,9 @@ class Transfer extends Component {
           {...input}
           value={input.value}
           onChange={(param, data) => {
-          const szDescription = data.options.find(o => o.value === data.value);
-          xomAmount.ref.innerHTML = szDescription.description;
-        }}
+            const szDescription = data.options.find(o => o.value === data.value);
+            xomAmount.ref.innerHTML = szDescription.description;
+          }}
           options={walletOptions}
           placeholder={placeholder}
           fluid
@@ -329,7 +329,7 @@ class Transfer extends Component {
     }
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && ((error && <span className="error">{errorMessage}</span>))}
         <input
           {...input}
           type="text"
@@ -343,12 +343,12 @@ class Transfer extends Component {
   renderHiddenField = ({
     input
   }) => (
-    <input
-      {...input}
-      type="hidden"
-      className="textfield"
-    />
-  );
+      <input
+        {...input}
+        type="hidden"
+        className="textfield"
+      />
+    );
 
   renderUnitsField = ({
     input, placeholder, buttonText, disabled, buttonClass, meta: { touched, error }
@@ -357,7 +357,7 @@ class Transfer extends Component {
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && ((error && <span className="error">{errorMessage}</span>))}
         <input
           {...input}
           type="text"
@@ -379,7 +379,7 @@ class Transfer extends Component {
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && ((error && <span className="error">{errorMessage}</span>))}
         <Select
           className="textfield"
           defaultValue={options[0] ? options[0].value : ''}
@@ -393,16 +393,16 @@ class Transfer extends Component {
   renderCurrencyField = ({
     input, options
   }) => (
-    <Select
-      className="textfield"
-      value={this.props.transfer.transferCurrency}
-      options={options}
-      onChange={(param, data) => {
-        input.onChange(data.value);
-        this.onChangeCurrency(data);
-      }}
-    />
-  );
+      <Select
+        className="textfield"
+        value={this.props.transfer.transferCurrency}
+        options={options}
+        onChange={(param, data) => {
+          input.onChange(data.value);
+          this.onChangeCurrency(data);
+        }}
+      />
+    );
 
   renderDealRatingField = ({
     input, options, meta: { touched, error }
@@ -411,7 +411,7 @@ class Transfer extends Component {
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input deal">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && ((error && <span className="error">{errorMessage}</span>))}
         <DealRating
           selectedValue={options[input.value] || options[5]}
           options={options}
@@ -428,7 +428,7 @@ class Transfer extends Component {
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && ((error && <span className="error">{errorMessage}</span>))}
         <TextArea
           {...input}
           autoHeight={false}
@@ -452,11 +452,11 @@ class Transfer extends Component {
       <Checkbox
         value={input.value}
         onChecked={(value) => {
-            input.onChange(value);
-            if (onCheck) {
-              onCheck(value);
-            }
-          }}
+          input.onChange(value);
+          if (onCheck) {
+            onCheck(value);
+          }
+        }}
       />
       <span className="label">
         {label}
@@ -549,9 +549,9 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           {gettingCommonEscrows &&
-          <div className="form-group">
-            <Loader active inline="centered" />
-          </div>
+            <div className="form-group">
+              <Loader active inline="centered" />
+            </div>
           }
           {commonEscrows.length !== 0 && this.props.transferForm.useEscrow && (
             [
@@ -594,18 +594,18 @@ class Transfer extends Component {
           )
           }
           {!this.props.transferForm.useEscrow &&
-          <div className="form-group" style={{ marginTop: '10px' }}>
-            <span style={{ marginBottom: '25px' }}>
-              {formatMessage(messages.reputation)}
-            </span>
-            <Field
-              type="text"
-              name="reputation"
-              options={reputationOptions()}
-              component={this.renderDealRatingField}
-            />
-            <div className="col-1" />
-          </div>
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <span style={{ marginBottom: '25px' }}>
+                {formatMessage(messages.reputation)}
+              </span>
+              <Field
+                type="text"
+                name="reputation"
+                options={reputationOptions()}
+                component={this.renderDealRatingField}
+              />
+              <div className="col-1" />
+            </div>
           }
         </div>
         <div className="form-group">
@@ -790,12 +790,7 @@ class Transfer extends Component {
 
   onChangeCurrency = (data) => {
     const { formatMessage } = this.props.intl;
-    if (data.value === 'ethereum' && this.props.transfer.transferCurrency !== 'ethereum') {
-      this.props.transferActions.setCurrency('ethereum');
-      this.setState({ isModalOpen: true })
-    } else {
-      this.props.transferActions.setCurrency(data.value);
-    }
+    this.props.transferActions.setCurrency(data.value);
   };
 
   transferForm() {
@@ -822,14 +817,14 @@ class Transfer extends Component {
   }
 
   submitOmnicoinTransfer({
-                           toName,
-                           reputation,
-                           amount,
-                           memo,
-                           useEscrow,
-                           transferToEscrow,
-                           escrow,
-                           expirationTime
+    toName,
+    reputation,
+    amount,
+    memo,
+    useEscrow,
+    transferToEscrow,
+    escrow,
+    expirationTime
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     if (!useEscrow) {
@@ -860,11 +855,11 @@ class Transfer extends Component {
   }
 
   submitBitcoinTransfer({
-                          toAddress,
-                          password,
-                          guid,
-                          wallet,
-                          amount
+    toAddress,
+    password,
+    guid,
+    wallet,
+    amount
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     this.props.transferActions.bitcoinTransfer(
@@ -881,16 +876,16 @@ class Transfer extends Component {
   }
 
   submitEthereumTransfer({
-                           toAddress,
-                           privateKey,
-                           amount
+    toAddress,
+    privateKey,
+    amount
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     this.props.transferActions.ethereumTransfer(
       toAddress,
       purchaseParams.get('seller_name'),
-      amount,
       privateKey,
+      amount,
       purchaseParams.get('listing_id'),
       purchaseParams.get('title'),
       purchaseParams.get('number')
@@ -907,7 +902,11 @@ class Transfer extends Component {
         this.submitBitcoinTransfer(paramValues);
         break;
       case 'ethereum':
-        this.submitEthereumTransfer(paramValues);
+        this.setState({
+          isModalOpen: true,
+          customParamValues: paramValues
+        });
+        // this.submitEthereumTransfer(paramValues);
         break;
       default:
         this.submitOmnicoinTransfer(paramValues);
@@ -916,12 +915,13 @@ class Transfer extends Component {
   }
 
   onApprove() {
+    const { customParamValues } = this.state;
+    this.submitEthereumTransfer(customParamValues);
     this.setState({ isModalOpen: false });
   }
 
   onCancel() {
-    this.props.transferActions.setCurrency('omnicoin');
-    this.setState({ isModalOpen: false });
+    this.setState({ isModalOpen: false, customParamValues: {} });
   }
 
   render() {
@@ -931,12 +931,12 @@ class Transfer extends Component {
         <Header className="button--green-bg" title={formatMessage(messages.transfer)} />
         {this.transferForm()}
         <ConfirmationModal
-            onApprove={this.onApprove}
-            onCancel={this.onCancel}
-            isOpen={this.state.isModalOpen}
-          >
-            {formatMessage(messages.confirmEthereumCurrency)}
-          </ConfirmationModal>
+          onApprove={this.onApprove}
+          onCancel={() => this.setState({ isModalOpen: false })}
+          isOpen={this.state.isModalOpen}
+        >
+          {formatMessage(messages.confirmEthereumCurrency)}
+        </ConfirmationModal>
       </div>
     );
   }
@@ -991,8 +991,8 @@ Transfer.defaultProps = {
   initialize: {},
   transfer: {},
   transferForm: {},
-  changeFieldValue: () => {},
-  reset: () => {},
+  changeFieldValue: () => { },
+  reset: () => { },
   history: {},
   auth: {}
 };
@@ -1036,6 +1036,6 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
-  //  asyncValidate: Transfer.asyncValidate,
+    //  asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

@@ -30,6 +30,7 @@ import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
 import { makeEthereumPayment } from '../blockchain/ethereum/EthereumSaga';
+import { sendOBFeesByEth } from '../blockchain/ethereum/EthereumServices';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
 import { TOKENS_IN_XOM } from '../../utils/constants';
 import {addPurchase} from "../marketplace/myPurchases/myPurchasesActions";
@@ -136,7 +137,7 @@ function* ethereumTransfer({payload: {
 } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount);
+    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
     if (listingId) {
       const purchaseObject = {
         seller: toName,
@@ -147,6 +148,7 @@ function* ethereumTransfer({payload: {
         listingTitle,
         currency: 'ethereum'
       };
+      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
       yield put(addPurchase(purchaseObject));
       yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
       yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
