@@ -25,6 +25,7 @@ import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
+import AmazonListingsConfig from './components/AmazonListingsConfig/AmazonListingsConfig';
 
 const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
 
@@ -129,6 +130,7 @@ class ImportListings extends Component {
       selectedPublisher: null,
       selectedVendor: null,
       validatingPublisher: false,
+      configValid: false,
     };
   }
 
@@ -152,6 +154,14 @@ class ImportListings extends Component {
         formatMessage(messages.importationSuccess)
       );
     }
+  }
+
+  vendorsConfigs = {
+    amazon: () => (
+      <AmazonListingsConfig
+        onConfigUpdate={() => this.setState({ configValid: true })}
+      />
+    )
   }
 
   removeFile(index) {
@@ -302,6 +312,8 @@ class ImportListings extends Component {
                 onChange={(e, { value }) => this.setState({ selectedVendor: value })}
               />
             </Grid.Column>
+            {this.state.selectedVendor && this.vendorsConfigs[this.state.selectedVendor] &&
+              this.vendorsConfigs[this.state.selectedVendor]()}
             <Grid.Column width={4}>
               <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
@@ -401,9 +413,9 @@ class ImportListings extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
-    const { selectedVendor, selectedPublisher } = this.state;
+    const { selectedVendor, selectedPublisher, configValid } = this.state;
     let isDisabled = false;
-    if (!selectedVendor || !selectedPublisher || !importedFiles.length) {
+    if (!selectedVendor || (selectedVendor !== 'all' && !configValid) || !selectedPublisher || !importedFiles.length) {
       isDisabled = true;
     }
 
