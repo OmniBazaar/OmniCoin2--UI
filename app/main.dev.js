@@ -18,9 +18,12 @@ import bitcoincli from 'blockchain-wallet-service';
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-const sudo = require('sudo-prompt');
+import sudo from 'sudo-prompt';
+import kill from 'kill-port';
 
 let mainWindow = null;
+
+const nodePort = 8099;
 
 const isProd = () => process.env.NODE_ENV === 'production';
 
@@ -113,7 +116,7 @@ const getNodeDirDevPath = () =>
 ;
 
 
-const runNode = () => {
+const runNode = async () => {
   let path = getNodeDirDevPath();
   if (isProd()) {
     path = getNodeDirProdPath();
@@ -122,15 +125,15 @@ const runNode = () => {
   if (process.platform === 'win32') {
     nodePath = `${path}/witness_node.exe`;
   }
-  const ls = spawn(nodePath);
-  ls.stdout.on('data', (data) => {
+  await kill(nodePort);
+  const nodeProcess = spawn(nodePath);
+  nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
-  ls.on('close', (code) => {
+  nodeProcess.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
   });
-
-  ls.stderr.on('data', (data) => {
+  nodeProcess.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`);
   });
 };
@@ -141,7 +144,6 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   if (isProd()) {
     path = getNodeDirProdPath();
   }
-  console.log('WITNESS ID ', witnessId);
   fs.readFile(`${path}/witness_node_data_dir/config.ini`, 'utf8', (err, data) => {
     if (err) {
       console.log('ERROR ', err);
@@ -290,6 +292,22 @@ app.on('window-all-closed', () => {
   }
 });
 
+// shouldQuit will be truthy if another instance of this app attempts to start
+// and therefore, we'll finish the process
+const shouldQuit = app.makeSingleInstance(() => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
+
 
 app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
@@ -306,13 +324,14 @@ app.on('ready', async () => {
   });
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
+  ipcMain.on('exit', () => app.quit());
 
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728
   });
-  
+
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event

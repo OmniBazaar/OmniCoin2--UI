@@ -73,6 +73,14 @@ const messages = defineMessages({
   publisherFee: {
     id: 'TransactionDetails.publisherFee',
     defaultMessage: 'Publisher fee: {fee} XOM'
+  },
+  from: {
+    id: 'Settings.from',
+    defaultMessage: 'From'
+  },
+  to: {
+    id: 'Settings.to',
+    defaultMessage: 'To'
   }
 });
 
@@ -116,6 +124,19 @@ class TransactionDetails extends Component {
     return feeDetail;
   }
 
+  getEtherDetail(detailSelected) {
+    const { formatMessage } = this.props.intl;
+    const { from, to } = detailSelected
+
+    return (
+      <div>
+        <br />
+        <div className="deposit">{formatMessage(messages.to)}: {to}</div>
+        <div className="withdraw">{formatMessage(messages.from)}: {from}</div>
+      </div>
+    );
+  }
+
   renderOperations(detailSelected) {
     const { props } = this;
 
@@ -135,8 +156,11 @@ class TransactionDetails extends Component {
       const text = operation.type === 'withdraw' ? formatMessage(messages.amountOfAsset) : ',';
 
       return (
-        <div className={operationClass}>
-          {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
+        <div>
+          <p>{formatMessage(messages.operations)}</p>
+          <div className={operationClass}>
+            {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
+          </div>
         </div>
       );
     });
@@ -173,7 +197,7 @@ class TransactionDetails extends Component {
           </div>
           <div className="item">
             <span>
-              {formatMessage(messages.timeStamp)} <span className="time-zone">(GMT +2)</span>
+              {formatMessage(messages.timeStamp)}
             </span>
             <span className="date">
               {detailSelected ? dateformat(detailSelected.date, 'yyyy-mm-dd HH:MM:ss') : ''}
@@ -181,12 +205,12 @@ class TransactionDetails extends Component {
           </div>
         </div>
         <div className="separator" />
-        <div className="operations">
-          <p>{formatMessage(messages.operations)}</p>
-          <div>
-            {this.renderOperations(detailSelected)}
+          <div className="operations">
+            {detailSelected.isEther ?
+              this.getEtherDetail(detailSelected)
+              : this.renderOperations(detailSelected)
+            }
           </div>
-        </div>
       </div>
     );
   }

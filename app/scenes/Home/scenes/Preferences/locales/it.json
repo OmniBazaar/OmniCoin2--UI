@@ -12,6 +12,7 @@
   "Preferences.referralProgramText": "REFERRER: During the initial phase of the OmniBazaar marketplace, you will receive a Referral Bonus of OmniCoins each time you refer a new user. You will also receive a referral fee (some OmniCoins) each time a user you referred buys or sells something in the OmniBazaar marketplace. Please provide the Bitcoin and Ether addresses where you wish to receive these referral fees.",
   "Preferences.priorityForListing": "Priority for Listings You Create",
   "Preferences.publisherFee": "Publisher Fee You Receive",
+  "Preferences.escrowFee": "Escrow Fee You Receive",
   "Preferences.chargeFee": "Fee You Charge to Publish Listings",
   "Preferences.update": "UPDATE",
   "Preferences.commandHint": "Type command and hit enter",
@@ -35,8 +36,11 @@
   "Preferences.saveErrorMessage": "An error occurred while saving Preferences data.",
   "Preferences.saveSuccessMessage": "Preferences data was saved successfully.",
   "Preferences.fieldRequired": "This field is required.",
-  "Preferences.autoRun": "Autorun witness node",
-  "Preferences.autoRunNote": "This action requires admin rights",
+  "Preferences.autoRun": "Start the Transaction Processor Module when this computer starts",
+  "Preferences.autoRunNote": "This action requires admin rights.",
   "Preferences.autoLogOut": "To disable Log Out option set 0 value in Timeout field.",
-  "Preferences.listingOptionsToolTip": "When more than one keyword set search will be performed either using any of those (any) or return only those listings which have all your search criteria keywords"
+  "Preferences.listingOptionsToolTip": "When using more than one keyword, searches will return results that contain ANY of those words, or will return only those listings which contain ALL of your keywords",
+  "Preferences.restartNode": "RESTART NODE",
+  "Preferences.nodeRestartError": "An error occured while restarting witness node",
+  "Preferences.nodeRestartSuccess": "Witness node was restarted successfully"
 }

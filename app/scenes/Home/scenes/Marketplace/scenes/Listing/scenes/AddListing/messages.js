@@ -65,6 +65,10 @@ const messages = defineMessages({
     id: 'AddListing.bitcoinPrice',
     defaultMessage: 'Show Bitcoin Price'
   },
+  ethereumPrice: {
+    id: 'AddListing.ethereumPrice',
+    defaultMessage: 'Show Ethereum Price'
+  },
   omnicoinPrice: {
     id: 'AddListing.omnicoinPrice',
     defaultMessage: 'Show Omnicoin Price'
@@ -251,11 +255,19 @@ const messages = defineMessages({
   },
   bitcoinFieldValidator: {
     id: 'AddListing.bitcoinFieldValidator',
-    defaultMessage: 'Should be greater or equal to 0.000001'
+    defaultMessage: 'Should be greater or equal to 0.00001'
   },
   bitcoinAddress: {
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
+  },
+  ethereumFieldValidator: {
+    id: 'AddListing.ethereumFieldValidator',
+    defaultMessage: 'Should be greater or equal to 1 wei'
+  },
+  ethereumAddress: {
+    id: 'AddListing.ethereumAddress',
+    defaultMessage: 'Ethereum address'
   },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
@@ -284,6 +296,10 @@ const messages = defineMessages({
   imageSizeTooLarge: {
     id: 'AddListing.imageSizeTooLarge',
     defaultMessage: 'Image size is too large'
+  },
+  addKeywords: {
+    id: 'AddListing.addKeywords',
+    defaultMessage: 'Add keywords'
   },
   priorityHighest: {
     id: 'AddListing.priorityHighest',
@@ -341,6 +357,14 @@ const messages = defineMessages({
     id: 'AddListing.loadListing',
     defaultMessage: 'Load listing'
   },
+  fiatFieldValidator: {
+    id: 'AddListing.fiatFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.01'
+  },
+  confirmationMessage: {
+    id: 'ListingsDefaults.confirmationMessage',
+    defaultMessage: 'If you close this page, the changes you made will not be saved unless you "Update" (save) your changes'
+  }
 });
 
 export default messages;

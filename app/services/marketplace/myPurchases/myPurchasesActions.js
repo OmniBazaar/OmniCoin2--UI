@@ -13,7 +13,10 @@ const {
   sortData,
   addPurchase,
   addPurchaseSucceeded,
-  addPurchaseFailed
+  addPurchaseFailed,
+  addSelling,
+  addSellingSucceeded,
+  addSellingFailed
 } = createActions({
   GET_MY_PURCHASES: () => ({ }),
   GET_MY_PURCHASES_SUCCEEDED: (myPurchases) => ({ myPurchases }),
@@ -27,8 +30,11 @@ const {
   SORT_DATA: (sortColumn) => ({ sortColumn }),
   ADD_PURCHASE: (purchase) => ({ purchase }),
   ADD_PURCHASE_SUCCEEDED: () => ({ }),
-  ADD_PURCHASE_FAILED: (error) => ({ error })
-});
+  ADD_PURCHASE_FAILED: (error) => ({ error }),
+  ADD_SELLING: (selling) => (selling),
+  ADD_SELLING_SUCCEEDED: () => ({ }),
+  ADD_SELLING_FAILED: (error) => ({ error })
+ });
 
 export {
   getMyPurchases,
@@ -43,5 +49,8 @@ export {
   sortData,
   addPurchase,
   addPurchaseSucceeded,
-  addPurchaseFailed
+  addPurchaseFailed,
+  addSelling,
+  addSellingSucceeded,
+  addSellingFailed
 };

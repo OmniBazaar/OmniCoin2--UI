@@ -76,29 +76,29 @@ class VestingBalance extends Component {
               {vb.balance.amount / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
+          {/*<Table.Row>*/}
+            {/*<Table.Cell>{formatMessage(messages.cdEarned)}</Table.Cell>*/}
+            {/*<Table.Cell textAlign="right">*/}
+              {/*{formatMessage(messages.coinDays, {*/}
+                  {/*number: Math.ceil(earned / secondsPerDay / TOKENS_IN_XOM)*/}
+              {/*})}*/}
+            {/*</Table.Cell>*/}
+          {/*</Table.Row>*/}
+          {/*<Table.Row>*/}
+            {/*<Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>*/}
+            {/*<Table.Cell textAlign="right">*/}
+              {/*{formatMessage(messages.coinDays, {*/}
+ {/*number: Math.ceil(vb.balance.amount*/}
+                  {/** vestingPeriod*/}
+                  {/*/ secondsPerDay*/}
+                  {/*/ TOKENS_IN_XOM)*/}
+              {/*})}*/}
+            {/*</Table.Cell>*/}
+          {/*</Table.Row>*/}
           <Table.Row>
-            <Table.Cell>{formatMessage(messages.cdEarned)}</Table.Cell>
+            <Table.Cell>{formatMessage(messages.percentVested)}</Table.Cell>
             <Table.Cell textAlign="right">
-              {formatMessage(messages.coinDays, {
-                  number: Math.ceil(earned / secondsPerDay / TOKENS_IN_XOM)
-              })}
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
-            <Table.Cell textAlign="right">
-              {formatMessage(messages.coinDays, {
- number: Math.ceil(vb.balance.amount
-                  * vestingPeriod
-                  / secondsPerDay
-                  / TOKENS_IN_XOM)
-              })}
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>
-            <Table.Cell textAlign="right">
-              {(availablePercent * 100).toFixed(2)}% / {(availablePercent * vb.balance.amount / TOKENS_IN_XOM).toFixed(2)}
+              {(availablePercent * 100).toFixed(2)}%
             </Table.Cell>
           </Table.Row>
           <Table.Row>

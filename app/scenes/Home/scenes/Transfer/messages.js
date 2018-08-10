@@ -33,6 +33,10 @@ export default defineMessages({
     id: 'Transfer.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
   },
+  ethereumAddress: {
+    id: 'Transfer.ethereumAddress',
+    defaultMessage: 'Ethereum address'
+  },
   pleaseEnter: {
     id: 'Transfer.pleaseEnter',
     defaultMessage: 'Please enter'
@@ -144,5 +148,9 @@ export default defineMessages({
   defaultWalletLabel: {
     id: 'Transfer.defaultWalletLabel',
     defaultMessage: 'Wallet'
+  },
+  confirmEthereumCurrency: {
+    id: 'Transfer.confirmEthereumCurrency',
+    defaultMessage: 'Are you sure you want to pay in Ethereum?'
   }
 });

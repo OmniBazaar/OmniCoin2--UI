@@ -57,6 +57,10 @@ export default defineMessages({
     id: 'Preferences.publisherFee',
     defaultMessage: 'Publisher Fee You Receive'
   },
+  escrowFee: {
+    id: 'Preferences.escrowFee',
+    defaultMessage: 'Escrow Fee You Receive'
+  },
   chargeFee: {
     id: 'Preferences.chargeFee',
     defaultMessage: 'Fee You Charge to Publish Listings'
@@ -186,5 +190,17 @@ export default defineMessages({
     defaultMessage: 'When more than one keyword set search will be performed ' +
                     'either using any of those (any) or return only those ' +
                     'listings which have all your search criteria keywords'
+  },
+  restartNode: {
+    id: 'Preferences.restartNode',
+    defaultMessage: 'RESTART NODE'
+  },
+  nodeRestartError: {
+    id: 'Preferences.nodeRestartError',
+    defaultMessage: 'An error occured while restarting witness node'
+  },
+  nodeRestartSuccess: {
+    id: 'Preferences.nodeRestartSuccess',
+    defaultMessage: 'Witness node was restarted successfully'
   }
 });

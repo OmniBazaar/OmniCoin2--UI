@@ -6,5 +6,7 @@
   "PurchasesTable.price": "Price",
   "PurchasesTable.publisher": "Publisher",
   "PurchasesTable.seller": "Seller",
+  "PurchasesTable.buyer": "Buyer",
   "PurchasesTable.date": "Date"
+
 }

@@ -8,128 +8,162 @@ import {
   takeEvery,
   select,
   all,
-  fork,
   call
 } from 'redux-saga/effects';
+
 import _ from 'lodash';
-import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
 import { Apis } from 'omnibazaarjs-ws';
+
+import {
+  omnicoinTransferSucceeded,
+  omnicoinTransferFailed,
+  bitcoinTransferSucceeded,
+  bitcoinTransferFailed,
+  ethereumTransferSucceeded,
+  ethereumTransferFailed
+} from "./transferActions";
+
+import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
+import * as EthereumApi from '../blockchain/ethereum/EthereumApi';
 
 import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { fetchAccount, memoObject } from '../blockchain/utils/miscellaneous';
 import { makePayment } from '../blockchain/bitcoin/bitcoinSaga';
+import { makeEthereumPayment } from '../blockchain/ethereum/EthereumSaga';
+import { sendOBFeesByEth } from '../blockchain/ethereum/EthereumServices';
 import { getAccountBalance } from '../blockchain/wallet/walletActions';
 import { TOKENS_IN_XOM } from '../../utils/constants';
 import {addPurchase} from "../marketplace/myPurchases/myPurchasesActions";
+import { sendPurchaseInfoMail } from "../mail/mailActions";
 
 export function* transferSubscriber() {
   yield all([
-    takeLatest('SUBMIT_TRANSFER', submitTransfer),
+    takeLatest('OMNICOIN_TRANSFER', omnicoinTransfer),
+    takeLatest('BITCOIN_TRANSFER', bitcoinTransfer),
+    takeLatest('ETHEREUM_TRANSFER', ethereumTransfer),
     takeLatest('CREATE_ESCROW_TRANSACTION', createEscrowTransaction),
     takeEvery('GET_COMMON_ESCROWS', getCommonEscrows),
     takeEvery('SALE_BONUS', saleBonus)
   ]);
 }
 
-function* submitOmniCoinTransfer(data) {
-  const { currentUser, account } = (yield select()).default.auth;
-  const senderNameStr = currentUser.username;
-  const toNameStr = data.payload.data.toName;
-  const {
-    amount, memo, reputation
-  } = data.payload.data;
+function* omnicoinTransfer({payload: {
+  to, amount, memo, reputation, listingId, listingTitle, listingCount
+}}) {
+  const { currentUser } = (yield select()).default.auth;
   try {
-    const [senderName, toName] = yield Promise.all([
-      FetchChain('getAccount', senderNameStr),
-      FetchChain('getAccount', toNameStr),
+    const [fromAcc, toAcc] = yield Promise.all([
+      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', to),
     ]);
-
-    const key = generateKeyFromPassword(senderName.get('name'), 'active', currentUser.password);
+    const key = generateKeyFromPassword(fromAcc.get('name'), 'active', currentUser.password);
     const tr = new TransactionBuilder();
     const operationObj = {
-      from: senderName.get('id'),
-      to: toName.get('id'),
+      from: fromAcc.get('id'),
+      to: toAcc.get('id'),
       reputation_vote: parseInt(reputation),
       amount: {
         asset_id: '1.3.0',
         amount: Math.ceil(amount * TOKENS_IN_XOM)
       },
     };
-    if (memo.trim()) {
-      operationObj.memo = memoObject(memo.trim(), senderName, toName, key.privKey);
+    if (memo && memo.trim()) {
+      operationObj.memo = memoObject(memo.trim(), fromAcc, toAcc, key.privKey);
     }
-    if (data.payload.data.listingId) {
-      operationObj.listing = data.payload.data.listingId;
-      operationObj.listing_count = parseInt(data.payload.data.listingCount);
+    if (listingId) {
+      operationObj.listing = listingId;
+      operationObj.listing_count = parseInt(listingCount);
     }
     tr.add_type_operation('transfer', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);
     yield tr.broadcast();
-    yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
-    yield put(addPurchase(data.payload.data));
-    yield put(getAccountBalance(account));
+    yield put(omnicoinTransferSucceeded());
+    yield put(getAccountBalance(fromAcc.toJS()));
+    if (listingId) {
+      const purchaseObject = {
+        seller: to,
+        buyer: currentUser.username,
+        amount,
+        listingId,
+        listingCount,
+        listingTitle,
+        currency: 'omnicoin'
+      };
+      yield put(addPurchase(purchaseObject));
+      yield put(sendPurchaseInfoMail(currentUser.username, to, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+    }
   } catch (error) {
     let e = JSON.stringify(error);
     console.log('ERROR', error);
     if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
       e = 'Not enough funds';
     }
-    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error: e });
+    yield put(omnicoinTransferFailed(e));
   }
 }
 
-function* submitBitcoinTransfer({ payload: { data }}) {
-  const {
-    guid,
-    password,
-    toName,
-    amount,
-    fromName
-  } = data;
+function* bitcoinTransfer({ payload: {
+  toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount
+}}) {
   try {
-    if (!Number.isInteger(fromName)) {
-      throw new Error('Transaction from value need to be a wallet index');
-    }
-
+    const { currentUser } = (yield select()).default.auth;
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
-    const res = yield call(BitcoinApi.makePayment, guid, password, toName, amountSatoshi, fromName);
-    yield put({ type: 'SUBMIT_TRANSFER_SUCCEEDED' });
-    yield put(addPurchase(data));
+    yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
+    yield put(bitcoinTransferSucceeded());
+    if (listingId) {
+      const purchaseObject = {
+        seller: toName,
+        buyer: currentUser.username,
+        amount,
+        listingId,
+        listingCount,
+        listingTitle,
+        currency: 'bitcoin'
+      };
+      yield put(addPurchase(purchaseObject));
+      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+    }
   } catch (error) {
     console.log('ERROR', error);
-    yield put({ type: 'SUBMIT_TRANSFER_FAILED', error });
+    yield put(bitcoinTransferFailed(error));
   }
 }
 
-export function* submitTransfer(data) {
-  const currencySelectedStr = (yield select()).default.transfer.transferCurrency;
-  switch (currencySelectedStr) {
-    case 'omnicoin':
-      yield fork(submitOmniCoinTransfer, data);
-      break;
-    case 'bitcoin':
-      yield fork(submitBitcoinTransfer, data);
-      break;
-    default:
-      yield fork(submitBitcoinTransfer, data);
-  }
-}
-
-
-function* createEscrowTransaction({
-  payload: {
-    data: {
-      expirationTime,
-      buyer,
-      toName: seller,
-      escrow,
-      amount,
-      transferToEscrow,
-      memo,
-      listingId,
-      listingCount
+function* ethereumTransfer({payload: {
+  toEthereumAddress, toName, privateKey, amount, listingId, listingTitle, listingCount
+} }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
+    if (listingId) {
+      const purchaseObject = {
+        seller: toName,
+        buyer: currentUser.username,
+        amount,
+        listingId,
+        listingCount,
+        listingTitle,
+        currency: 'ethereum'
+      };
+      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
+      yield put(addPurchase(purchaseObject));
+      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
+      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
     }
+    console.log("Ether res", res);
+    yield put(ethereumTransferSucceeded());
+  } catch (error) {
+    console.log('ERROR', error);
+    yield put(ethereumTransferFailed(error));
+  }
+}
+
+
+function* createEscrowTransaction({ payload: {
+    buyer, seller, escrow, amount, memo, transferToEscrow, expirationTime, listingId, listingCount
   }
 }) {
   try {
@@ -153,13 +187,14 @@ function* createEscrowTransaction({
       },
       transfer_to_escrow: transferToEscrow
     };
-    if (memo.trim()) {
+    if (memo && memo.trim()) {
       operationObj.memo = memoObject(memo.trim(), buyerAcc, sellerAcc, key.privKey);
     }
     if (listingId) {
       operationObj.listing = listingId;
       operationObj.listing_count = Number(listingCount);
     }
+
     tr.add_type_operation('escrow_create_operation', operationObj);
     yield tr.set_required_fees();
     yield tr.add_signer(key.privKey, key.pubKey);

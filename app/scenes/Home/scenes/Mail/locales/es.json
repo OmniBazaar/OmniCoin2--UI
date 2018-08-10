@@ -16,5 +16,9 @@
   "Mail.error": "Error",
   "Mail.mailNotSent": "There was an error while trying to send your mail",
   "Mail.usernameDoesNotExist": "Not found",
-  "Mail.required": "Required"
+  "Mail.required": "Required",
+  "Mail.sellPurchaseSubject": "{buyer} bought {listing}",
+  "Mail.sellPurchaseBody": "{buyer} bought {number} {listing}",
+  "Mail.buyPurchaseSubject": "You bought {listing} from {seller}",
+  "Mail.buyPurchaseBody": "You bought {number} {listing} from {seller}\nListing id: {listingId}\nPrice: {price}{currency}"
 }

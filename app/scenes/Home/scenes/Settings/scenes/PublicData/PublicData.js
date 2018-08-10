@@ -17,7 +17,6 @@ import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 
 import { getCurrentUser, getAccount } from '../../../../../../services/blockchain/auth/authActions';
 import { getAccountBalance } from '../../../../../../services/blockchain/wallet/walletActions';
-import { restartNode } from "../../../../../../services/blockchain/connection/connectionActions";
 
 import {
   setReferrer,
@@ -27,6 +26,7 @@ import {
   updatePublicData,
   changeIpAddress,
   setBtcAddress,
+  setEthAddress,
 } from '../../../../../../services/accountSettings/accountActions';
 import '../../settings.scss';
 import './public.scss';
@@ -44,6 +44,10 @@ const messages = defineMessages({
   btcAddressTitle: {
     id: 'PublicData.btcAddressTitle',
     defaultMessage: 'Bitcoin address'
+  },
+  ethAddressTitle: {
+    id: 'Setting.ethAddressTitle',
+    defaultMessage: 'Ethereum address'
   },
   publisherTitle: {
     id: 'PublicData.publisherTitle',
@@ -113,10 +117,6 @@ const messages = defineMessages({
     id: 'PublicData.customDownloadAddress',
     defaultMessage: 'Your custom OmniBazaar download address:'
   },
-  restartNode: {
-    id: 'PublicData.restartNode',
-    defaultMessage: 'RESTART NODE'
-  },
   error: {
     id: 'PublicData.error',
     defaultMessage: 'Error'
@@ -124,14 +124,6 @@ const messages = defineMessages({
   success: {
     id: 'PublicData.success',
     defaultMessage: 'Success'
-  },
-  nodeRestartError: {
-    id: 'PublicData.nodeRestartError',
-    defaultMessage: 'An error occured while restarting witness node'
-  },
-  nodeRestartSuccess: {
-    id: 'PublicData.nodeRestartSuccess',
-    defaultMessage: 'Witness node was restarted successfully'
   }
 });
 
@@ -146,7 +138,6 @@ class PublicData extends Component {
     this.updatePublicData = this.updatePublicData.bind(this);
     this.freezeSettings = this.freezeSettings.bind(this);
     this.onChangeIpAddress = debounce(this.onChangeIpAddress.bind(this), 500);
-    this.restartNode = this.restartNode.bind(this);
 
     this.state = {
       ip: '',
@@ -192,14 +183,6 @@ class PublicData extends Component {
         this.freezeSettings();
       }
     }
-
-    if (this.props.connection.restartingNode && !nextProps.connection.restartingNode) {
-      if (nextProps.connection.error) {
-        toastr.error(formatMessage(messages.error), formatMessage(messages.nodeRestartError));
-      } else {
-        toastr.success(formatMessage(messages.success), formatMessage(messages.nodeRestartSuccess));
-      }
-    }
   }
 
   updateAccountInfo() {
@@ -223,9 +206,10 @@ class PublicData extends Component {
     this.props.accountSettingsActions.setBtcAddress(value);
   }
 
-  restartNode() {
-    this.props.connectionActions.restartNode();
+  setEthAddress({ target: { value } }) {
+    this.props.accountSettingsActions.setEthAddress(value);
   }
+
 
   updatePublicData() {
     const { formatMessage } = this.props.intl;
@@ -316,8 +300,9 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth, bitcoin: { wallets } } = this.props;
+    const { account, auth, bitcoin: { wallets }, ethereum } = this.props;
     const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
+    const ethWalletAddress = ethereum.address
 
     return (
       <div className="check-form">
@@ -345,6 +330,15 @@ class PublicData extends Component {
               defaultValue={account.btcAddress || auth.account.btc_address || btcWalletAddress}
               placeholder={formatMessage(messages.btcAddressTitle)}
               onChange={(data) => this.setBtcAddress(data)}
+            />
+          </div>
+          <div className="ref-link-cont">
+            <div className="ref-link-label">{`${formatMessage(messages.ethAddressTitle)}:`}</div>
+            <Input
+              className="ref-btc-input"
+              defaultValue={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+              placeholder={formatMessage(messages.ethAddressTitle)}
+              onChange={(data) => this.setEthAddress(data)}
             />
           </div>
         </div>
@@ -387,14 +381,6 @@ class PublicData extends Component {
               {formatMessage(messages.processorBody)}
             </div>
           </div>
-          {this.props.auth.account.is_a_processor &&
-            <Button
-              loading={this.props.connection.restartingNode}
-              content={formatMessage(messages.restartNode)}
-              onClick={this.restartNode}
-              className="button--primary restart"
-            />
-          }
         </div>
         <div className="description">
           <div className="check-container">
@@ -441,6 +427,7 @@ PublicData.propTypes = {
     updatePublicData: PropTypes.func,
     changeIpAddress: PropTypes.func,
     setBtcAddress: PropTypes.func,
+    setEthAddress: PropTypes.func,
   }),
   authActions: PropTypes.shape({
     getAccount: PropTypes.func
@@ -472,10 +459,14 @@ PublicData.propTypes = {
   bitcoin: PropTypes.shape({
     wallets: PropTypes.array,
   }),
+  ethereum: PropTypes.shape({
+    wallet: PropTypes.object,
+  }),
 };
 
 PublicData.defaultProps = {
   bitcoin: {},
+  ethereum: {},
   accountSettingsActions: {},
   account: {},
   intl: {},
@@ -490,6 +481,7 @@ export default connect(
       getCurrentUser,
       setReferrer,
       setBtcAddress,
+      setEthAddress,
       setPublisher,
       setTransactionProcessor,
       setEscrow,
@@ -501,9 +493,6 @@ export default connect(
     }, dispatch),
     authActions: bindActionCreators({
       getAccount
-    }, dispatch),
-    connectionActions: bindActionCreators({
-      restartNode
     }, dispatch)
   })
 )(injectIntl(PublicData));

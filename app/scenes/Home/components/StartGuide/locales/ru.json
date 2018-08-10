@@ -1,7 +1,7 @@
 {
   "StartGuide.quickStart": "Quick-start Guide! (Please read...)",
   "StartGuide.welcome": "Welcome to OmniBazaar!",
-  "StartGuide.launch": "The OmniBazaar marketplace is ready for you to use. When you click on the {Marketplace} tab, you will see listings that match the interests you mentioned during the sign-up process.",
+  "StartGuide.launch": "The OmniBazaar marketplace is ready for you to use. When you click on the Marketplace tab, you will see listings that match the interests you mentioned during the sign-up process.",
   "StartGuide.welcomeBonus": "About the \"Welcome Bonus\"",
   "StartGuide.welcomeBonusText1": "The first time you launch OmniBazaar on this device, you will receive a Welcome Bonus. This Welcome Bonus is our way of saying \"thank you\" for installing and usingOmniBazaar.",
   "StartGuide.welcomeBonusText2": "What we ask in return is that you take some time to explore OmniBazaar, that you create at least one listing in the marketplace for some item or service that you are willing to sell or provide, and that you tell at least one other person about OmniBazaar.",
@@ -21,12 +21,12 @@
   "StartGuide.goToUserSettings1": "Go to the",
   "StartGuide.goToUserSettings2": "User Settings tab",
   "StartGuide.goToUserSettings3": "on your Account page to select the services you are willing and able to provide.",
-  "StartGuide.earnBySelling": "Earn OmniCoins and Bitcoins by Selling in the Marketplace",
-  "StartGuide.earnBySellingDesc": "Of course, you can also earn OmniCoins (and bitcoins) by selling goods or services in the marketplace. Purchasers will pay you in one of these cryptocurrencies, and you will have more coins to spend. You can also trade your local currency for bitcoins or OmniCoins -- either by private transactions through the OmniBazaar marketplace, or through a cryptocurrency exchange business on the Internet. Exchanges that list OmniCoins include [coming soon].",
+  "StartGuide.earnBySelling": "Earn OmniCoins, Bitcoins and Ethereum by Selling in the Marketplace",
+  "StartGuide.earnBySellingDesc": "Of course, you can also earn OmniCoins (and bitcoins, ethereum) by selling goods or services in the marketplace. Purchasers will pay you in one of these cryptocurrencies, and you will have more coins to spend. You can also trade your local currency for Bitcoins, Ethereum or OmniCoins -- either by private transactions through the OmniBazaar marketplace, or through a cryptocurrency exchange business on the Internet. Exchanges that list OmniCoins include [coming soon].",
   "StartGuide.goShopping": "Go Shopping in the OmniBazaar Marketplace",
   "StartGuide.toUseOmniBazaar": "To use OmniBazaar, simply publish in the marketplace a listing of the product or service you would like to sell. Or, search for the product or service you would like to buy. If you have ever used CraigsList, you will find OmniBazaar easy to use.",
   "StartGuide.toUseOmniBazaar2": "The marketplace matches buyers with sellers at a fraction of the cost of traditional e-commerce sites. Some optional marketplace services, such as escrow, may result in small fees when you buy or sell something. These fees are distributed to OmniBazaar users who provide the computer, network, escrow, and development services that make the marketplace possible. These fees are far less than the 10\u201315% fees charged by most e-commerce sites.",
   "StartGuide.aboutOmniCoin": "About OmniCoin",
   "StartGuide.aboutOmniCoinText1": "When you buy or sell using OmniCoins, you can use the \"SecureSend\" escrow service. SecureSend helps protect both buyers and sellers in long-distance transactions. OmniCoin also allows buyers and sellers to register reputation votes about each other. OmniCoin transactions \"clear\" approximately 120 times faster than Bitcoin transactions, and you can send payments to a user's name instead of of long string of numbers and letters.",
-  "StartGuide.aboutOmniCoinText2": "OmniCoin is the official \"currency\" of the OmniBazaar marketplace. By default, when you use OmniCoin or bitcoins to buy or sell in the marketplace, there is a one percent (1%) fee that is paid by the seller. This fee is divided among service providers in the OmniBazaar marketplace. It is possible to \"opt-out\" of all OmniBazaar fees. But, you will find that the benefits of paying some small fees outweigh the costs in almost every case."
+  "StartGuide.aboutOmniCoinText2": "OmniCoin is the official \"currency\" of the OmniBazaar marketplace. By default, when you use OmniCoin, Bitcoins or Ethereum to buy or sell in the marketplace, there is a one percent (1%) fee that is paid by the seller. This fee is divided among service providers in the OmniBazaar marketplace. It is possible to \"opt-out\" of all OmniBazaar fees. But, you will find that the benefits of paying some small fees outweigh the costs in almost every case."
 }

@@ -37,6 +37,10 @@ export default defineMessages({
     id: 'Wallet.addWallet',
     defaultMessage: 'ADD OR OPEN A WALLET'
   },
+  addEthereumWallet: {
+    id: 'Wallet.addEthereumWallet',
+    defaultMessage: 'ADD ETHEREUM WALLET'
+  },
   refreshWallet: {
     id: 'Wallet.refreshWallet',
     defaultMessage: 'REFRESH'

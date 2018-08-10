@@ -15,7 +15,6 @@ function wrapRequest(func) {
   };
 }
 
-
 function wsWatcher(socket, messageTypes) {
   return eventChannel(emitter => {
     socket.onopen = () => {
@@ -34,8 +33,8 @@ function wsWatcher(socket, messageTypes) {
         }
         const messageType = Object.keys(messageTypes).find(key => messageTypes[key] === msg.type);
         return emitter({ type: messageType, data: msg });
-      } catch (e) {
-        console.error(`Error parsing : ${e.data}`);
+      } catch (err) {
+        console.error(`Error parsing : ${err.data}`);
       }
     };
     return () => {
@@ -48,7 +47,7 @@ function wsWatcher(socket, messageTypes) {
 function reputationOptions(from = 0, to = 10) {
   const options = [];
 
-  for (let index = from; index < to + 1; index++) {
+  for (let index = from; index < to + 1; index += 1) {
     const option = {
       key: index,
       value: index,
@@ -63,12 +62,22 @@ function reputationOptions(from = 0, to = 10) {
 const coefficients = {
   USDtoEUR: 0.86,
   USDtoBITCOIN: 0.000133,
+  USDtoETHEREUM: 0.002118,
   USDtoOMNICOIN: 300.03,
   USDtoGBP: 0.75,
   USDtoCAD: 0.76,
   USDtoSEK: 8.89,
   USDtoAUD: 0.75,
   USDtoJPY: 108.5
+};
+const MINIMUN_AMOUNT = 0.00001;
+
+const getAllowedAmount = (amount) => {
+  if (amount >= MINIMUN_AMOUNT) {
+    return amount.toFixed(5);
+  }
+
+  return MINIMUN_AMOUNT;
 };
 
 Object.keys(coefficients).forEach(key => {
@@ -83,13 +92,13 @@ const currencyConverter = (amount, fromCur, toCur) => {
 
   const d = `${fromCur}to${toCur}`;
   if (coefficients[d]) {
-    return amount * coefficients[d];
+    return getAllowedAmount(amount * coefficients[d]);
   }
 
   const inverD = `${toCur}to${fromCur}`;
   if (coefficients[inverD]) {
-    coefficients[d] = 1 / coefficients[inverD];
-    return amount * coefficients[d];
+    coefficients[d] = 1/coefficients[inverD];
+    return getAllowedAmount(amount * coefficients[d]);
   }
 
   const toUSD = `${fromCur}toUSD`;
@@ -99,8 +108,8 @@ const currencyConverter = (amount, fromCur, toCur) => {
   }
 
   coefficients[d] = coefficients[toUSD] * coefficients[fromUSD];
-  return amount * coefficients[d];
-};
+  return getAllowedAmount(amount * coefficients[d]);
+}
 /*
 function currencyConverter(amount, from, to) {
   const usdRates = {

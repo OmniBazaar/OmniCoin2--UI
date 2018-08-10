@@ -1,11 +1,11 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: OmniBazaar
-Version: 1.0.6391
+Version: 1.0.6602
 Maintainer: OmniBazaar, Inc. <http://omnibazaar.com>
 Architecture: amd64
 Priority: optional
-Depends: libc6 (>=2.19-0ubuntu6.14), libcurl3
+Depends: libc6 (>=2.19-0ubuntu6.14), libcurl3 | libcurl4, libgconf-2-4
 Description: OmniBazaar Wallet and blockchain node
 
 <</CTRL>>

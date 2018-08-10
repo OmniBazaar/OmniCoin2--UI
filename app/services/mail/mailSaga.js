@@ -1,4 +1,10 @@
-import { put, takeEvery, all } from 'redux-saga/effects';
+import {
+  put,
+  takeEvery,
+  all,
+  call,
+  select
+} from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs/es';
 import _ from 'lodash';
@@ -13,7 +19,11 @@ import {
 
 import MailTypes from './mailTypes';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
+import { add as addPurchase, Types } from "../marketplace/myPurchases/myPurchasesSaga";
+import { sendMail as sendMailAction } from "./mailActions";
+import {getBitcoinWalletData, sendOBFees} from "../blockchain/bitcoin/services";
 
+export const purchaseInfoSubject = '{1h4_purchase_info_98m3}';
 
 export function* mailSubscriber() {
   yield all([
@@ -23,21 +33,13 @@ export function* mailSubscriber() {
     takeEvery('CONFIRMATION_RECEIVED', confirmationRecieved),
     takeEvery('LOAD_FOLDER', loadFolder),
     takeEvery('DELETE_MAIL', deleteMail),
-    takeEvery('MAIL_SET_READ', mailSetRead)
+    takeEvery('MAIL_SET_READ', mailSetRead),
+    takeEvery('SEND_PURCHASE_INFO_MAIL', sendPurchaseInfoMail)
   ]);
 }
 
 
-export function* sendMail(action) {
-  const {
-    sender,
-    recipient,
-    subject,
-    body,
-    mailSentCallback,
-    mailDeliveredCallback
-  } = action.payload;
-
+function* sendMail({payload: {sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback } }) {
   const currentTimeMil = (new Date()).getTime();
   const uuid = generateMailUUID(sender, currentTimeMil);
   const currentTimeSec = Math.floor(currentTimeMil / 1000);
@@ -80,8 +82,11 @@ export function* sendMail(action) {
   }
 }
 
-export function* subscribeForMail(action) {
+function* subscribeForMail(action) {
   const { reciever, afterMailStoredCallback } = action.payload;
+  const { currentUser } = (yield select()).default.auth;
+  const walletData = yield call(getBitcoinWalletData, currentUser);
+
   /* this callback can be triggered by the server multiple times
   for one batch of emails, until the server receives mailReceived signals,
   so before storing the messages, check if they exist */
@@ -100,6 +105,11 @@ export function* subscribeForMail(action) {
           mailObject.read_status = false;
           storeMessage(mailObject, mailObject.recipient, MailTypes.INBOX);
           mailsToSetRead.push(mailObject);
+          if (mailObject.subject === purchaseInfoSubject && mailObject.sender !== currentUser.username) {
+            const purchase = JSON.parse(mailObject.body);
+            addPurchase(purchase, Types.selling);
+            sendOBFees(purchase, walletData.guid, walletData.password);
+          }
         }
       });
     if (mailsToSetRead.length !== 0) {
@@ -114,7 +124,7 @@ export function* subscribeForMail(action) {
   }
 }
 
-export function* mailReceived(action) {
+function* mailReceived(action) {
   try {
     yield (Apis.instance().network_api().exec('mail_set_received', [action.payload.uuid]));
   } catch (err) {
@@ -122,7 +132,7 @@ export function* mailReceived(action) {
   }
 }
 
-export function* confirmationRecieved(action) {
+function* confirmationRecieved(action) {
   try {
     yield (Apis.instance().network_api().exec('mail_confirm_received', [action.payload.uuid]));
   } catch (err) {
@@ -130,7 +140,7 @@ export function* confirmationRecieved(action) {
   }
 }
 
-export function* loadFolder(action) {
+function* loadFolder(action) {
   const { user, messageFolder } = action.payload;
 
   const emails = getMessagesFromFolder(user, messageFolder);
@@ -143,7 +153,7 @@ export function* loadFolder(action) {
   });
 }
 
-export function* deleteMail(action) {
+function* deleteMail(action) {
   const {
     messageObject, messageFolder, user, afterDeletionCallback
   } = action.payload;
@@ -153,7 +163,7 @@ export function* deleteMail(action) {
   afterDeletionCallback();
 }
 
-export function* mailSetRead(action) {
+function* mailSetRead(action) {
   const {
     user, messageFolder, messageUUID, afterSetCallback
   } = action.payload;
@@ -165,4 +175,8 @@ export function* mailSetRead(action) {
   }
 
   afterSetCallback();
+}
+
+function* sendPurchaseInfoMail({ payload: { from, to, info } }) {
+  yield put(sendMailAction(from, to, purchaseInfoSubject, info, () => {}, () => {}));
 }

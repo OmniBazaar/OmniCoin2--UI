@@ -62,9 +62,10 @@ import { setActiveCategory } from '../../services/marketplace/marketplaceActions
 import { getAccount, logout, requestAppVersion, getIdentityVerificationStatus } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
-import { loadPreferences } from '../../services/preferences/preferencesActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
+import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
 
 const iconSize = 20;
 
@@ -81,8 +82,9 @@ class Home extends Component {
     }
   }
   init() {
-    this.props.preferencesActions.loadPreferences();
+    this.props.preferencesActions.loadLocalPreferences();
     this.props.bitcoinActions.getWallets();
+    this.props.ethereumActions.getEthereumWallets();
     this.props.listingActions.loadListingDefault();
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
@@ -161,6 +163,10 @@ class Home extends Component {
       />);
     }
 
+    const { mail: { messages: { inbox } } } = this.props;
+
+    const unreadMessages = (inbox || []).filter(email => !email.read_status);
+
     return (
       <div className="home-container">
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
@@ -217,12 +223,13 @@ class Home extends Component {
                     defaultMessage="Processors"
                   />
                 </NavLink>
-                <NavLink to="/mail" activeClassName="active" className="menu-item">
+                <NavLink to="/mail" activeClassName="active" className={`menu-item${unreadMessages.length ? ' has-notifications' : ''}`}>
                   <Image src={MailIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.mail"
                     defaultMessage="Mail"
                   />
+                  {unreadMessages.length > 0 && <span className="notifications-counter">{unreadMessages.length}</span>}
                 </NavLink>
                 <NavLink to="/start-guide" activeClassName="active" className="menu-item">
                   <Image src={UserIcon} height={iconSize} width={iconSize} />
@@ -309,10 +316,11 @@ export default connect(
     listingActions: bindActionCreators({ loadListingDefault }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
-      loadPreferences
+      loadLocalPreferences
     }, dispatch),
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
+    ethereumActions: bindActionCreators({ getEthereumWallets }, dispatch),
   })
 )(Home);
 
@@ -345,11 +353,16 @@ Home.propTypes = {
     requestAppVersion: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
-    loadPreferences: PropTypes.func
+    loadLocalPreferences: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
-  })
+  }),
+  mail: PropTypes.shape({
+    messages: PropTypes.shape({
+      inbox: PropTypes.array,
+    }),
+  }).isRequired
 };
 
 Home.defaultProps = {

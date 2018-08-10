@@ -8,6 +8,8 @@ const {
   sortImportData,
   updateFileItemCategory,
   updateFileItemSubcategory,
+  updateFileItemTitle,
+  updateFileItemDescription,
 } = createActions({
   STAGE_FILE: (file, defaultValues, vendor) => ({ file, defaultValues, vendor }),
   IMPORT_FILES: ({ publisher, filesToImport }) => ({ publisher, filesToImport }),
@@ -17,6 +19,10 @@ const {
   UPDATE_FILE_ITEM_CATEGORY: ({ category, index, fileIndex }) => ({ category, index, fileIndex }),
   UPDATE_FILE_ITEM_SUBCATEGORY: ({ subcategory, index, fileIndex }) => ({
     subcategory, index, fileIndex
+  }),
+  UPDATE_FILE_ITEM_TITLE: ({ title, index, fileIndex }) => ({ title, index, fileIndex }),
+  UPDATE_FILE_ITEM_DESCRIPTION: ({ description, index, fileIndex }) => ({
+    description, index, fileIndex
   }),
 });
 
@@ -28,4 +34,6 @@ export {
   sortImportData,
   updateFileItemCategory,
   updateFileItemSubcategory,
+  updateFileItemTitle,
+  updateFileItemDescription,
 };

@@ -23,9 +23,9 @@ export default defineMessages({
     id: 'VestingBalance.cdEarned',
     defaultMessage: 'Coin days earned'
   },
-  cdRequired: {
-    id: 'VestingBalance.cdRequired',
-    defaultMessage: 'Coin days required'
+  percentVested: {
+    id: 'VestingBalance.percentVested',
+    defaultMessage: 'Percent Vested'
   },
   daysLeft: {
     id: 'VestingBalance.daysLeft',

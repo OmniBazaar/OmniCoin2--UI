@@ -3,6 +3,7 @@
   "Settings.registered": "REGISTERED",
   "Settings.xom": "XOM",
   "Settings.btc": "BTC",
+  "Settings.eth": "ETH",
   "Settings.accountId": "Account ID",
   "Settings.currentBalance": "Current Balance",
   "Settings.publicData": "Public Data",
