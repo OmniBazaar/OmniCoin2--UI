@@ -324,6 +324,7 @@ app.on('ready', async () => {
   });
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
+  ipcMain.on('exit', () => app.quit());
 
   mainWindow = new BrowserWindow({
     show: false,

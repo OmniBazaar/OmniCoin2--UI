@@ -9,6 +9,7 @@ import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
 import Home from './scenes/Home/Home';
 import AirDrop from './scenes/AirDrop/AirDrop';
+import UpdateForcer from './components/UpdateForcer/UpdateForcer';
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
 import {
   getCurrentUser,
@@ -58,14 +59,17 @@ class Root extends Component {
     const messages = this.getLocaleMessages(language);
     return (
       <IntlProvider locale={language} messages={messages} key={language}>
-        <Router>
-          <Switch>
-            <Route path="/signup" render={(props) => <Signup {...props} />} />
-            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
-            <Route path="/login" render={(props) => <Login {...props} />} />
-            <Route path="/" render={(props) => <Home {...props} />} />
-          </Switch>
-        </Router>
+        <div>
+          <Router>
+            <Switch>
+              <Route path="/signup" render={(props) => <Signup {...props} />} />
+              <Route path="/air-drop" render={props => <AirDrop {...props} />} />
+              <Route path="/login" render={(props) => <Login {...props} />} />
+              <Route path="/" render={(props) => <Home {...props} />} />
+            </Switch>
+          </Router>
+          <UpdateForcer />
+        </div>
       </IntlProvider>
     );
   }
