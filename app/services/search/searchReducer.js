@@ -58,7 +58,7 @@ const defaultState = {
   searchListingsParams: {}
 };
 
-const rowsPerPageSearchResults = 20;
+const rowsPerPageSearchResults = 18;
 
 const sliceData = (data, activePage, rowsPerPage) => (
   data.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
@@ -117,23 +117,23 @@ const filterResultData = (searchResults, {
   if (searchText) {
     let filteredData = data.filter(listing => Object.values(listing).filter(value => value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1).length !== 0);
     filteredData = _.without(filteredData, undefined);
-
     resultByFilters = searchByFilters(filteredData, category, subCategory);
-
+    /*
     totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
     currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
+    */
   } else {
     currentData = data;
     resultByFilters = searchByFilters(currentData, category, subCategory);
+    /*
     totalPagesSearchResults = getTotalPages(resultByFilters.searchesFiltered, rowsPerPageSearchResults);
     currentData = sliceData(resultByFilters.searchesFiltered, activePageSearchResults, rowsPerPageSearchResults);
+    */
   }
 
   return {
     searchText,
-    activePageSearchResults,
-    totalPagesSearchResults,
-    searchResultsFiltered: currentData,
+    searchResultsFiltered: resultByFilters.searchesFiltered,
     currency
   };
 };
