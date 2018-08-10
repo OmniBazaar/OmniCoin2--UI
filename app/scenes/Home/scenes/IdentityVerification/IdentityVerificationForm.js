@@ -36,7 +36,7 @@ class IdentityVerificationForm extends Component {
         // configuration object (see preparation steps)
         {
           accessToken: this.state.identityVerificationToken,
-          excludedCountries: ['CHN', 'USA'],
+          excludedCountries: ['CHN', 'USA', 'UMI'],
           applicantDataPage: {
             enabled: true,
             fields: [
