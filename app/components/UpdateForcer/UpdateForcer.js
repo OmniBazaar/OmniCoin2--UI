@@ -37,11 +37,12 @@ class UpdateForcer extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
+    const { hasUpdate } = this.props.updateNotification;
     return (
       <ConfirmationModal
         onApprove={this.update}
         onCancel={this.close}
-        isOpen={true}
+        isOpen={hasUpdate}
         approveText={formatMessage(messages.install)}
         cancelText={formatMessage(messages.quit)}
       >
