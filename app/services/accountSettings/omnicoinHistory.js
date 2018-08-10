@@ -12,8 +12,9 @@ import { TOKENS_IN_XOM } from '../../utils/constants';
 const key = 'historyStorage';
 
 class OmnicoinHistory extends BaseStorage {
-  constructor(accountName) {
-    super(key, accountName);
+  constructor(currentUser) {
+    super(key, currentUser.username);
+    this.currentUser = currentUser;
     this.cache = this.getData();
     if (!this.cache) {
       this.init();
@@ -102,8 +103,7 @@ class OmnicoinHistory extends BaseStorage {
 
   //checks if publisher and user is not a publisher himself
   isPublisherListingRelatedOp(op) {
-    const currentUser = getStoredCurrentUser();
-    return  (op.to === currentUser.username && op.to !== op.from) && (
+    return  (op.to === this.currentUser.username && op.to !== op.from) && (
       op.operationType === ChainTypes.operations.listing_create_operation
       || op.operationType === ChainTypes.operations.listing_update_operation
       || op.operationType === ChainTypes.operations.listing_delete_operation
@@ -128,7 +128,6 @@ class OmnicoinHistory extends BaseStorage {
 
   getHistory() {
     const transactions = {};
-    const currentUser = getStoredCurrentUser();
     Object.keys(this.cache).forEach(i => {
       if (!this.includeOperation(this.cache[i])) {
         return;
@@ -160,13 +159,13 @@ class OmnicoinHistory extends BaseStorage {
       // when user is publishing listings on his own publisher node
       if (op.from === op.to) {
         transactions[trxKey].fee += op.fee + totalObFee;
-      } else if (op.to === currentUser.username) {
+      } else if (op.to === this.currentUser.username) {
         if (op.operationType === ChainTypes.operations.listing_create_operation
             || op.operationType === ChainTypes.operations.listing_update_operation
             || op.operationType === ChainTypes.operations.transfer) {
           transactions[trxKey].fee += totalObFee;
         }
-      } else if (op.from === currentUser.username) {
+      } else if (op.from === this.currentUser.username) {
         transactions[trxKey].fee += op.fee;
         if (op.operationType !== ChainTypes.operations.transfer
             && op.operationType !== ChainTypes.operations.listing_create_operation
@@ -316,13 +315,14 @@ class OmnicoinHistory extends BaseStorage {
     }
   }
 
-  async refresh(currentUser) {
-    const activeKey = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+  async refresh() {
+    const activeKey = generateKeyFromPassword(this.currentUser.username, 'active', this.currentUser.password);
     const [account, globalObject, dynGlobalObject] = await Promise.all([
-      FetchChain('getAccount', currentUser.username),
+      FetchChain('getAccount', this.currentUser.username),
       getGlobalObject(),
       getDynGlobalObject()
     ]);
+    console.log('DYN GLOBAL OBJECT ', dynGlobalObject);
     const result = await ChainStore.fetchRecentHistory(account.get('id'));
     let history = [];
     const h = result.get('history');
@@ -413,7 +413,7 @@ class OmnicoinHistory extends BaseStorage {
             ]);
             operation.from = seller.get('name');
             operation.to = publisher.get('name');
-            operation.fromTo = currentUser.username === seller.get('name')
+            operation.fromTo = this.currentUser.username === seller.get('name')
               ? publisher.get('name')
               : seller.get('name');
             if (operation.from === operation.to) {
@@ -431,7 +431,7 @@ class OmnicoinHistory extends BaseStorage {
             opInTrx: el.op_in_trx,
             trxInBlock: el.trx_in_block,
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
-            fromTo: from.get('name') === currentUser.username ? to.get('name') : from.get('name'),
+            fromTo: from.get('name') === this.currentUser.username ? to.get('name') : from.get('name'),
             from: from.get('name'),
             to: to.get('name'),
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
@@ -445,7 +445,7 @@ class OmnicoinHistory extends BaseStorage {
               : el.op[1].escrow,
             listingId: el.op[1].listing,
             listingCount: el.op[1].listing_count,
-            isIncoming: from.get('name') !== currentUser.username
+            isIncoming: from.get('name') !== this.currentUser.username
           });
         }
       }

@@ -217,7 +217,7 @@ class RecentTransactions extends Component {
                     sorted={sortColumn === 'date' ? sortDirection : null}
                     onClick={this.sortData('date')}
                   >
-                    {formatMessage(messages.date)} (GMT+2)
+                    {formatMessage(messages.date)}
                   </TableHeaderCell>
                   <TableHeaderCell
                     key="fromto"

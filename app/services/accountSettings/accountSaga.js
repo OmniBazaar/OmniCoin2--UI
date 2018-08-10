@@ -129,11 +129,11 @@ export function* updateAccount(payload) {
 
 
 export function* getRecentTransactions({ payload: { coinType } }) {
-  const { auth: { currentUser }, ethereum } = (yield select()).default
+  const { auth: { currentUser }, ethereum } = (yield select()).default;
   try {
     if (coinType === CoinTypes.OMNI_COIN) {
-      const historyStorage = new OmnicoinHistory(currentUser.username);
-      yield historyStorage.refresh(currentUser);
+      const historyStorage = new OmnicoinHistory(currentUser);
+      yield historyStorage.refresh();
       yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.ETHEREUM) {
       const historyStorage = new EthereumHistory(ethereum.address);
