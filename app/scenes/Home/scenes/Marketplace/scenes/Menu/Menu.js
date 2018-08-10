@@ -372,7 +372,7 @@ class Menu extends Component {
           <div className="submenu">
             <p className="title">{formatMessage(aboutCategories.community)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.telegramOmniBazaar, mainCategories.about, 'https://t.me/OmniBazaar', true)}
+              {this.renderOption(aboutCategories.telegramOmniBazaar, mainCategories.about, 'https://t.me/Omni_Bazaar', true)}
               {this.renderOption(aboutCategories.telegramOmniCoin, mainCategories.about, 'https://t.me/RealOmniCoin', true)}
               {this.renderOption(aboutCategories.reddit, mainCategories.about, 'https://www.reddit.com/r/OmniBazaar', true)}
               {this.renderOption(aboutCategories.twitter, mainCategories.about, 'https://twitter.com/OmniBazaar', true)}
