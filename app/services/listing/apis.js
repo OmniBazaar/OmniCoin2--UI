@@ -232,7 +232,8 @@ export const editListing = async (user, publisher, listingId, listing) => {
   if (!blockchainListing) {
     throw new Error('Listing not exist on blockchain');
   }
-  if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
+  if (blockchainListing.listing_hash === hash.listingSHA256(listing)
+     && listing.quantity == blockchainListing.quantity) {
     throw new Error('no_changes');
   }
 
