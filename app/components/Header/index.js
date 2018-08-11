@@ -19,7 +19,7 @@ export default class Header extends Component {
       <div className="header">
         <span className="title">{props.title}</span>
         <div>
-          {props.hasButton &&
+          {!!props.hasButton &&
             <Button
               content={props.buttonContent}
               onClick={props.onClick}
@@ -27,7 +27,7 @@ export default class Header extends Component {
               className={containerClass}
             />
           }
-          {props.refreshButton &&
+          {!!props.refreshButton &&
             <Button
               content={props.refreshButtonContent}
               onClick={props.onRefresh}
