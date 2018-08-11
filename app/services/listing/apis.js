@@ -198,7 +198,7 @@ export const getObjectById = async objectId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (listing[key]) {
+    if (listing.hasOwnProperty(key)) {
       result[key] = listing[key];
     }
   });
