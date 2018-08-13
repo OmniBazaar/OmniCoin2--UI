@@ -82,7 +82,9 @@ export const sendOBFees = async (purchase, guid, password) => {
       recipients[sellerReferrer.get('btc_address')] = referrerFee;
     }
   }
+  console.log('RECIPIENTS ', recipients);
   if (!_.isEmpty(recipients)) {
-    return await BitcoinApi.sendToMany(guid, password, recipients, 1);
+    const result =  await BitcoinApi.sendToMany(guid, password, recipients, 1);
+    console.log('result trx ', result);
   }
 };
