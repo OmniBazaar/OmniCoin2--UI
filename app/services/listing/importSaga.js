@@ -5,7 +5,7 @@ import fs from 'fs';
 import { getListings } from './../../utils/listings';
 import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
-import { encryptData } from './../../utils/encrypt';
+import { encryptDataInStorage } from './../../utils/encrypt';
 
 const listingHandlersByVendor = {
   amazon: getListings,
@@ -177,9 +177,8 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
 export function* updateImportConfig({ payload: { data, provider } }) {
   try {
     const { currentUser: { username } } = (yield select()).default.auth;
-    const path = process.env.DEBUG_PROD === 'true' ? imageStoragePath.development : imageStoragePath[process.env.NODE_ENV];
 
-    encryptData({ data, provider }, `${path}${provider}-${username}-import-data`);
+    encryptDataInStorage({ data, provider }, `${provider}-${username}-import-data`);
     yield put({ type: 'IMPORT_CONFIG_UPDATE_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_CONFIG_UPDATE_FAILED', error: e.message });

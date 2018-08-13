@@ -1,9 +1,8 @@
 import { createCipher, createDecipher } from 'crypto';
-import { writeFileSync, readFileSync } from 'fs';
 
 const ENCRYPTION_PASS = 'omnicoin_omnibazaar';
 
-const encryptData = (data, filePath) => {
+const encryptDataInStorage = (data, dataIndex) => {
   try {
     const cipher = createCipher('aes-256-cbc', ENCRYPTION_PASS);
     const encrypted = Buffer.concat([
@@ -11,7 +10,7 @@ const encryptData = (data, filePath) => {
       cipher.final()
     ]);
 
-    writeFileSync(filePath, encrypted);
+    localStorage.setItem(dataIndex, encrypted);
 
     return true;
   } catch (exception) {
@@ -19,9 +18,9 @@ const encryptData = (data, filePath) => {
   }
 };
 
-const decryptData = (filePath) => {
+const decryptDataFromStorage = (dataIndex) => {
   try {
-    const data = readFileSync(filePath);
+    const data = localStorage.getItem(dataIndex);
     const decipher = createDecipher('aes-256-cbc', ENCRYPTION_PASS);
     const decrypted = Buffer.concat([decipher.update(data), decipher.final()]);
 
@@ -32,6 +31,6 @@ const decryptData = (filePath) => {
 };
 
 export default {
-  encryptData,
-  decryptData,
+  encryptDataInStorage,
+  decryptDataFromStorage,
 };
