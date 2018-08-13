@@ -161,7 +161,7 @@ class PublicData extends Component {
       this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
     }
     if (account.is_a_processor !== this.props.account.transactionProcessor) {
-      this.toggleTransactionProcessor();
+      //this.toggleTransactionProcessor();
     }
     // todo referrer
     this.freezeSettings();
@@ -236,7 +236,7 @@ class PublicData extends Component {
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     } else if (!is_a_processor && !transactionProcessor) {
-      //this.toggleConfirmationModal();
+      this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
