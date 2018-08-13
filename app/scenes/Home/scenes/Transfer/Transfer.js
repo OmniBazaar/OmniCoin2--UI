@@ -61,6 +61,12 @@ const walletOptions = [
 
 const currencyOptions = [
   {
+    key: 'omnicoin',
+    value: 'omnicoin',
+    text: 'OmniCoin',
+    description: 'OmniCoin Currency'
+  },
+  {
     key: 'bitcoin',
     value: 'bitcoin',
     text: 'BitCoin',
@@ -71,12 +77,6 @@ const currencyOptions = [
     value: 'ethereum',
     text: 'Ethereum',
     description: 'Ethereum Currency'
-  },
-  {
-    key: 'omnicoin',
-    value: 'omnicoin',
-    text: 'OmniCoin',
-    description: 'OmniCoin Currency'
   }
 ];
 
@@ -784,7 +784,7 @@ class Transfer extends Component {
       case 'ethereum':
         return this.renderEthereumForm();
       default:
-        return this.renderBitCoinForm();
+        return this.renderOmniCoinForm();
     }
   }
 
