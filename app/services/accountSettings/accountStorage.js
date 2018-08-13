@@ -11,6 +11,9 @@ class AccountSettingsStorage {
 
   static get(key) {
     const user = getStoredCurrentUser();
+    if (!user) {
+      return {}
+    }
     const data = localStorage.getItem(`${key}_${user.username}`);
     if (!data) {
       return {};

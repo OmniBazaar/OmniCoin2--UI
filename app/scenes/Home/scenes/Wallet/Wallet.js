@@ -228,7 +228,7 @@ class Wallet extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account } = this.props.auth;
+    const account = this.props.auth.account || {};
     const {
       addAddressModal,
       modal
@@ -266,7 +266,7 @@ class Wallet extends Component {
                       <OmnicoinWalletDetail
                         id={account.id}
                         name={account.name}
-                        publicKey={account.active.key_auths[0][0]}
+                        publicKey={account.active && account.active.key_auths[0][0]}
                         balance={this.getBalance()}
                       />
                     </div>
