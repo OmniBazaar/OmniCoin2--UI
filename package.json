@@ -1,6 +1,6 @@
 {
-  "name": "Omnibazaae",
-  "productName": "Omnibazaar",
+  "name": "OmniBazaae",
+  "productName": "OmniBazaar",
   "version": "0.13.2",
   "description": "Comunity-owned peer-to-peer marketplace",
   "scripts": {
@@ -34,7 +34,7 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "Omnibazaar",
+    "productName": "OmniBazaar",
     "appId": "com.omnibazaar",
     "files": [
       "dist/",
@@ -83,7 +83,7 @@
     "url": "git+https://github.com/OmniBazaar/OmniCoin2--UI.git"
   },
   "author": {
-    "name": "Omnibazaar",
+    "name": "OmnibBazaar",
     "email": "Info@OmniBazaar.com",
     "url": "https://github.com/OmniBazaar"
   },
