@@ -832,7 +832,7 @@ class ListingForm extends Component {
               <Field
                 type="text"
                 name="post_code"
-                component="input"
+                component={InputField}
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
                 validate={[requiredFieldValidator]}

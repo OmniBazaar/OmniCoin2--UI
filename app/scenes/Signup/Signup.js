@@ -19,9 +19,9 @@ class Signup extends Component {
       )
     ) {
       if (nextProps.auth.isWelcomeBonusAvailable) {
-        this.props.history.push('/air-drop');
+        this.props.history.push('/');
       } else {
-        this.props.history.push('/');    
+        this.props.history.push('/');   
       }
     }
   }
