@@ -126,6 +126,8 @@ const getBadgeClass = (type) => {
       return 'sBonus';
     case ChainTypes.operations.witness_bonus_operation:
       return 'witBonus';
+    case ChainTypes.operations.founder_bonus_operation:
+      return 'fBonus';
     default:
       break;
   }
