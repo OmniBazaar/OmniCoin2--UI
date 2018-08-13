@@ -1,10 +1,58 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Button, Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
-import { toLinuxArchString } from 'builder-util';
+
+const AMAZON_PROVIDER = 'amazon';
+
+const messages = defineMessages({
+  accessKeyTitle: {
+    id: 'AmazonListingsConfig.accessKeyTitle',
+    defaultMessage: 'AWS Access Key*'
+  },
+  secretKeyTitle: {
+    id: 'AmazonListingsConfig.secretKeyTitle',
+    defaultMessage: 'AWS Secret Key*'
+  },
+  assocTagTitle: {
+    id: 'AmazonListingsConfig.assocTagTitle',
+    defaultMessage: 'AWS Assoc Tag*'
+  },
+  accessKey: {
+    id: 'AmazonListingsConfig.accessKey',
+    defaultMessage: 'Your access key'
+  },
+  secretKey: {
+    id: 'AmazonListingsConfig.secretKey',
+    defaultMessage: 'Your secret key'
+  },
+  assocTag: {
+    id: 'AmazonListingsConfig.assocTag',
+    defaultMessage: 'Your assoc tag'
+  },
+  accessKeyError: {
+    id: 'AmazonListingsConfig.accessKeyError',
+    defaultMessage: 'Your access key is missing'
+  },
+  secretKeyError: {
+    id: 'AmazonListingsConfig.secretKeyError',
+    defaultMessage: 'Your secret key is missing'
+  },
+  assocTagError: {
+    id: 'AmazonListingsConfig.assocTagError',
+    defaultMessage: 'Your assoc tag is missing'
+  },
+  updateConfig: {
+    id: 'AmazonListingsConfig.updateConfig',
+    defaultMessage: 'Update Config'
+  },
+  errorTitle: {
+    id: 'AmazonListingsConfig.errorTitle',
+    defaultMessage: 'Error'
+  }
+});
 
 class AmazonListingsConfig extends Component {
   constructor(props) {
@@ -14,86 +62,81 @@ class AmazonListingsConfig extends Component {
       accessKey: '',
       secret: '',
       assocTag: '',
-      updatingConfig: false,
     };
   }
 
   updateConfig() {
     const { accessKey, secret, assocTag } = this.state;
+    const { formatMessage } = this.props.intl;
     let errorMessage;
 
     if (!accessKey) {
-      errorMessage = 'Access Key is missing!';
+      errorMessage = formatMessage(messages.accessKeyError);
     } else if (!secret) {
-      errorMessage = 'Secret is missing!';
+      errorMessage = formatMessage(messages.secretKeyError);
     } else if (!assocTag) {
-      errorMessage = 'Assoc Tag is missing!';
+      errorMessage = formatMessage(messages.assocTagError);
     }
 
     if (errorMessage) {
       return toastr.error(
-        'Error',
+        formatMessage(messages.errorTitle),
         errorMessage
       );
     }
 
-    this.setState({ updatingConfig: true });
-
     this.props.listingsActions.updateImportConfig({
-      provider: 'amazon',
+      provider: AMAZON_PROVIDER,
       data: { accessKey, secret, assocTag },
     });
   }
 
   render() {
-    const { updatingConfig } = this.state;
-    const { accessKey, secret, assocTag } = this.props;
+    const { updatingConfig, intl: { formatMessage } } = this.props;
 
     return ([
       <Grid.Column width={4}>
-        AWS Access Key*
+        {formatMessage(messages.accessKeyTitle)}
       </Grid.Column>,
       <Grid.Column width={12} className="import-config">
         <input
           className="textfield"
           type="text"
           name="awsAccessKey"
-          placeholder="testing"
+          placeholder={formatMessage(messages.accessKey)}
           onChange={e => this.setState({ accessKey: e.target.value })}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
-        AWS Secret Key*
+        {formatMessage(messages.secretKeyTitle)}
       </Grid.Column>,
       <Grid.Column width={12} className="import-config">
         <input
           className="textfield"
           type="text"
           name="awsSecretKey"
-          placeholder="testing"
+          placeholder={formatMessage(messages.secretKey)}
           onChange={e => this.setState({ secret: e.target.value })}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
-        AWS Assoc Tag*
+        {formatMessage(messages.assocTagTitle)}
       </Grid.Column>,
       <Grid.Column width={12} className="import-config">
         <input
           className="textfield"
           type="text"
           name="awsAssocTag"
-          placeholder="testing"
+          placeholder={formatMessage(messages.assocTag)}
           onChange={e => this.setState({ assocTag: e.target.value })}
         />
       </Grid.Column>,
-      <Grid.Column width={4}>
-        Update configuration
-      </Grid.Column>,
-      <Grid.Column width={12}>
+      <Grid.Column width={4} />,
+      <Grid.Column width={12} className="import-config">
         <Button
           className="button--primary"
           loading={updatingConfig}
-          content="Update Config"
+          content={formatMessage(messages.updateConfig)}
           onClick={() => this.updateConfig()}
         />
       </Grid.Column>,
@@ -102,20 +145,16 @@ class AmazonListingsConfig extends Component {
 }
 
 AmazonListingsConfig.propTypes = {
-  onAccessKeyChange: PropTypes.func,
-  onSecretChange: PropTypes.func,
-  onAssocTagChange: PropTypes.func,
-};
-
-AmazonListingsConfig.defaultProps = {
-  onAccessKeyChange: () => {},
-  onSecretChange: () => {},
-  onAssocTagChange: () => {},
+  listingsActions: PropTypes.shape({
+    updateImportConfig: PropTypes.func,
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
+  updatingConfig: PropTypes.bool.isRequired,
 };
 
 export default connect(
-  state => ({ ...state.default }),
-  () => ({
-
-  })
+  state => ({ ...state.default.importListingsConfig, ...state.default.intl }),
+  dispatch => ({})
 )(injectIntl(AmazonListingsConfig));
