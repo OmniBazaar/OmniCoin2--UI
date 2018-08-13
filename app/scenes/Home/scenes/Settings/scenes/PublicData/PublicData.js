@@ -147,7 +147,7 @@ class PublicData extends Component {
   }
 
   componentWillMount() {
-    const { account } = this.props.auth;
+    const account = this.props.auth.account || {};
     if (account.is_referrer !== this.props.account.referrer) {
       this.toggleReferrer();
     }
@@ -230,7 +230,8 @@ class PublicData extends Component {
   }
 
   toggleTransactionProcessor() {
-    const { is_a_processor } = this.props.auth.account;
+    const account = this.props.auth.account || {};
+    const { is_a_processor } = account;
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
@@ -300,9 +301,10 @@ class PublicData extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { account, auth, bitcoin: { wallets }, ethereum } = this.props;
+    const { auth, bitcoin: { wallets }, ethereum } = this.props;
+    const account = this.props.account || {};
     const btcWalletAddress = wallets.length ? wallets[0].receiveAddress : null;
-    const ethWalletAddress = ethereum.address
+    const ethWalletAddress = ethereum.address;
 
     return (
       <div className="check-form">
@@ -327,7 +329,7 @@ class PublicData extends Component {
             <div className="ref-link-label">{`${formatMessage(messages.btcAddressTitle)}:`}</div>
             <Input
               className="ref-btc-input"
-              defaultValue={account.btcAddress || auth.account.btc_address || btcWalletAddress}
+              defaultValue={account.btcAddress || (auth.account && auth.account.btc_address) || btcWalletAddress}
               placeholder={formatMessage(messages.btcAddressTitle)}
               onChange={(data) => this.setBtcAddress(data)}
             />
@@ -336,7 +338,7 @@ class PublicData extends Component {
             <div className="ref-link-label">{`${formatMessage(messages.ethAddressTitle)}:`}</div>
             <Input
               className="ref-btc-input"
-              defaultValue={account.ethAddress || auth.account.eth_address || ethWalletAddress}
+              defaultValue={account.ethAddress || (auth.account && auth.account.eth_address) || ethWalletAddress}
               placeholder={formatMessage(messages.ethAddressTitle)}
               onChange={(data) => this.setEthAddress(data)}
             />
@@ -371,7 +373,7 @@ class PublicData extends Component {
               src={this.getTransactionIcon()}
               width={iconSize}
               height={iconSize}
-              className={cn('checkbox', this.props.auth.account.is_a_processor ? 'disabled' : '')}
+              className={cn('checkbox', this.props.auth.account && this.props.auth.account.is_a_processor ? 'disabled' : '')}
               onClick={this.toggleTransactionProcessor}
             />
           </div>
