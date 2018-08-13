@@ -174,11 +174,11 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
   }
 }
 
-export function* updateImportConfig({ payload: { data, provider } }) {
+export function* updateImportConfig({ payload: { data, provider, remember } }) {
   try {
     const { currentUser: { username } } = (yield select()).default.auth;
 
-    encryptDataInStorage({ data, provider }, `${provider}-${username}-import-data`);
+    encryptDataInStorage({ data, provider, remember }, `${provider}-${username}-import-data`);
     yield put({ type: 'IMPORT_CONFIG_UPDATE_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_CONFIG_UPDATE_FAILED', error: e.message });

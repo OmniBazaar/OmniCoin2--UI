@@ -147,13 +147,16 @@ const reducer = handleActions({
     };
   },
 
-  [updateImportConfig](state, { payload: { data, provider } }) {
+  [updateImportConfig](state, { payload: { data, provider, remember } }) {
     return {
       ...state,
       updatingConfig: true,
       importConfig: {
-        data,
-        provider,
+        ...state.importConfig,
+        [provider]: {
+          data,
+          remember,
+        },
       }
     };
   },

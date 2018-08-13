@@ -77,6 +77,7 @@ class AmazonListingsConfig extends Component {
       accessKey: '',
       secret: '',
       assocTag: '',
+      rememberConfig: false,
     };
   }
 
@@ -170,8 +171,8 @@ class AmazonListingsConfig extends Component {
       <Grid.Column width={4} />,
       <Grid.Column width={12} className="import-config">
         <Checkbox
-          value={false}
-          onChecked={() => {}}
+          value={this.state.rememberConfig}
+          onChecked={rememberConfig => this.setState({ rememberConfig })}
         />
         <span style={{ marginLeft: '3px' }}>{formatMessage(messages.rememberConfig)}</span>
       </Grid.Column>,

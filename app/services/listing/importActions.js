@@ -25,7 +25,7 @@ const {
   UPDATE_FILE_ITEM_DESCRIPTION: ({ description, index, fileIndex }) => ({
     description, index, fileIndex
   }),
-  UPDATE_IMPORT_CONFIG: ({ data, provider }) => ({ data, provider }),
+  UPDATE_IMPORT_CONFIG: ({ data, provider, remember }) => ({ data, provider, remember }),
 });
 
 export {
