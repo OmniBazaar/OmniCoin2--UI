@@ -11,6 +11,7 @@ import {
   updateFileItemCategory,
   updateFileItemTitle,
   updateFileItemDescription,
+  updateImportConfig,
 } from './importActions';
 
 const defaultState = {
@@ -20,6 +21,8 @@ const defaultState = {
   importingFile: false,
   stagingFile: false,
   error: null,
+  importConfig: null,
+  updatingConfig: false,
 };
 
 const updateFileItemProp = ({
@@ -144,6 +147,17 @@ const reducer = handleActions({
     };
   },
 
+  [updateImportConfig](state, { payload: { data, provider } }) {
+    return {
+      ...state,
+      updatingConfig: true,
+      importConfig: {
+        data,
+        provider,
+      }
+    };
+  },
+
   IMPORT_FILES_SUCCEEDED: (state) => ({
     ...state,
     importedFiles: [],
@@ -168,6 +182,18 @@ const reducer = handleActions({
     ...state,
     error,
     stagingFile: false,
+  }),
+
+  IMPORT_CONFIG_UPDATE_SUCCEEDED: (state) => ({
+    ...state,
+    updatingConfig: false,
+    error: null
+  }),
+
+  IMPORT_CONFIG_UPDATE_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    updatingConfig: false,
   }),
 }, defaultState);
 

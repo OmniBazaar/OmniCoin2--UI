@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Button, Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
+import { updateImportConfig } from '../../../../../../../../../../services/listing/importActions';
 
 const AMAZON_PROVIDER = 'amazon';
 
@@ -136,6 +138,7 @@ class AmazonListingsConfig extends Component {
         <Button
           className="button--primary"
           loading={updatingConfig}
+          disabled={updatingConfig}
           content={formatMessage(messages.updateConfig)}
           onClick={() => this.updateConfig()}
         />
@@ -155,6 +158,10 @@ AmazonListingsConfig.propTypes = {
 };
 
 export default connect(
-  state => ({ ...state.default.importListingsConfig, ...state.default.intl }),
-  dispatch => ({})
+  state => ({ ...state.default.listingImport, ...state.default.intl }),
+  dispatch => ({
+    listingsActions: bindActionCreators({
+      updateImportConfig,
+    }, dispatch)
+  })
 )(injectIntl(AmazonListingsConfig));
