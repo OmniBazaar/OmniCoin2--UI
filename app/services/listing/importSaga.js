@@ -11,6 +11,11 @@ const listingHandlersByVendor = {
   all: getListings,
 };
 
+const listingImageGetters = {
+  amazon: getImageFromAmazon,
+  all: getImageFromAmazon,
+};
+
 const imagesDevPath = {
   win32: './app/ob2/windows/',
   linux: './app/ob2/linux/',
@@ -40,6 +45,7 @@ export function* importSubscriber() {
   yield all([
     takeLatest('STAGE_FILE', importListingsFromFile),
     takeLatest('IMPORT_FILES', saveFiles),
+    takeLatest('UPDATE_IMPORT_CONFIG', updateImportConfig),
   ]);
 }
 
@@ -59,7 +65,9 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
       };
 
       if (!itemToSave.imageURL) {
-        imageToSave = await getImageFromAmazon(itemToSave.productId);
+        imageToSave = listingImageGetters[vendor] ?
+          await listingImageGetters[vendor](itemToSave.productId) :
+          await listingImageGetters.all(itemToSave.productId);
       } else {
         imageToSave = (await fetch(itemToSave.imageURL)).blob();
       }
@@ -162,5 +170,13 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
     yield put({ type: 'IMPORT_FILES_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
+  }
+}
+
+export function* updateImportConfig() {
+  try {
+    yield put({ type: 'IMPORT_CONFIG_UPDATE_SUCCEEDED' });
+  } catch (e) {
+    yield put({ type: 'IMPORT_CONFIG_UPDATE_FAILED', error: e.message });
   }
 }

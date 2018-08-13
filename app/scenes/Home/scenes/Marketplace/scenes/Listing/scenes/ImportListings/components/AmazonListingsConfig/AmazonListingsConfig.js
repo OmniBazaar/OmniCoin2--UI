@@ -53,6 +53,14 @@ const messages = defineMessages({
   errorTitle: {
     id: 'AmazonListingsConfig.errorTitle',
     defaultMessage: 'Error'
+  },
+  successTitle: {
+    id: 'AmazonListingsConfig.successTitle',
+    defaultMessage: 'Success'
+  },
+  successMessage: {
+    id: 'AmazonListingsConfig.successMessage',
+    defaultMessage: 'Config updated'
   }
 });
 
@@ -65,6 +73,27 @@ class AmazonListingsConfig extends Component {
       secret: '',
       assocTag: '',
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { updatingConfig } = nextProps;
+    const { formatMessage } = this.props.intl;
+
+    if (!updatingConfig && this.props.updatingConfig) {
+      if (this.props.error) {
+        toastr.error(
+          formatMessage(messages.errorTitle),
+          this.props.error
+        );
+      } else {
+        toastr.success(
+          formatMessage(messages.successTitle),
+          formatMessage(messages.successMessage)
+        );
+
+        this.props.onConfigUpdate();
+      }
+    }
   }
 
   updateConfig() {
@@ -155,6 +184,13 @@ AmazonListingsConfig.propTypes = {
     formatMessage: PropTypes.func,
   }).isRequired,
   updatingConfig: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  onConfigUpdate: PropTypes.func,
+};
+
+AmazonListingsConfig.defaultProps = {
+  error: '',
+  onConfigUpdate: () => ({}),
 };
 
 export default connect(
