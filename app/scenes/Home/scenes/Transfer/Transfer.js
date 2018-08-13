@@ -248,7 +248,7 @@ class Transfer extends Component {
   }
 
   componentWillUnmount() {
-    this.props.transferActions.setCurrency(undefined);
+    //this.props.transferActions.setCurrency(undefined);
   }
 
   handleInitialize(price) {
