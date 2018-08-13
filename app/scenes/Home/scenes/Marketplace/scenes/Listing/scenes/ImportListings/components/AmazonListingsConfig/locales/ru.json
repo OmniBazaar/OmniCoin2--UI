@@ -11,5 +11,6 @@
   "AmazonListingsConfig.updateConfig": "Update Config",
   "AmazonListingsConfig.errorTitle": "Error",
   "AmazonListingsConfig.successTitle": "Success",
-  "AmazonListingsConfig.successMessage": "Config updated"
+  "AmazonListingsConfig.successMessage": "Config updated",
+  "AmazonListingsConfig.rememberConfig": "I want to use this configuration for this provider's future importations"
 }

@@ -6,6 +6,7 @@ import { Button, Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { updateImportConfig } from '../../../../../../../../../../services/listing/importActions';
+import Checkbox from '../../../../../../../../../../components/Checkbox/Checkbox';
 
 const AMAZON_PROVIDER = 'amazon';
 
@@ -61,6 +62,10 @@ const messages = defineMessages({
   successMessage: {
     id: 'AmazonListingsConfig.successMessage',
     defaultMessage: 'Config updated'
+  },
+  rememberConfig: {
+    id: 'AmazonListingsConfig.rememberConfig',
+    defaultMessage: 'I want to use this configuration for this provider\'s future importations'
   }
 });
 
@@ -161,6 +166,14 @@ class AmazonListingsConfig extends Component {
           placeholder={formatMessage(messages.assocTag)}
           onChange={e => this.setState({ assocTag: e.target.value })}
         />
+      </Grid.Column>,
+      <Grid.Column width={4} />,
+      <Grid.Column width={12} className="import-config">
+        <Checkbox
+          value={false}
+          onChecked={() => {}}
+        />
+        <span style={{ marginLeft: '3px' }}>{formatMessage(messages.rememberConfig)}</span>
       </Grid.Column>,
       <Grid.Column width={4} />,
       <Grid.Column width={12} className="import-config">
