@@ -3,8 +3,10 @@ import {
   put,
   all,
   call,
-  select
+  select,
+  race
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import mime from 'mime-types';
 import { FetchChain, hash } from 'omnibazaarjs/es';
 import { Apis } from 'omnibazaarjs-ws';
@@ -34,7 +36,9 @@ import {
   requestMyListingsError,
   isListingFineSucceeded,
   isListingFineFailed,
-  searchPublishersFinish, awaitListingDetail
+  searchPublishersFinish,
+  awaitListingDetail,
+  checkPublishersAliveFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
 import { countPeersForKeywords } from '../search/dht/dhtSaga';
@@ -52,8 +56,10 @@ import {
   editListing,
   getObjectById,
   reportListingOnBlockchain,
+  getAuthHeaders
 } from './apis';
 
+const publishersAliveStatusCheckInterval = 600 * 1000;
 
 export function* listingSubscriber() {
   yield all([
@@ -66,7 +72,8 @@ export function* listingSubscriber() {
     takeEvery('IS_LISTING_FINE', checkListingHash),
     takeEvery('SEARCH_PUBLISHERS', searchPublishers),
     takeEvery('REPORT_LISTING', reportListing),
-    takeEvery('MARKETPLACE_RETURN_LISTINGS', marketplaceReturnListings)
+    takeEvery('MARKETPLACE_RETURN_LISTINGS', marketplaceReturnListings),
+    takeEvery('CHECK_PUBLISHERS_ALIVE', checkPublishersAlive)
   ]);
 }
 
@@ -332,7 +339,30 @@ export function* checkListingHash({ payload: { listing } }) {
 
 export function* searchPublishers({ payload: { keywords } }) {
   try {
-    const publishers = yield call(getAllPublishers);
+    const publisherResults = yield call(getAllPublishers);
+    const allPublishers = (yield select()).default.listing.allPublishers.publishers;
+    let publishers = [...allPublishers];
+    const existPublishers = {};
+    publishers.forEach(pub => {
+      existPublishers[pub.publisher_ip] = true;
+    });
+    const tasks = [];
+    const { currentUser } = (yield select()).default.auth;
+    const user = { ...currentUser }; 
+    publisherResults.forEach(pub => {
+      if (!existPublishers[pub.publisher_ip]) {
+        pub.alive = true;
+        publishers.push(pub);
+        tasks.push(call(checkPublisherAlive, user, pub));
+      }
+    });
+    if (tasks.length) {
+      yield all(tasks);
+      yield put(checkPublishersAliveFinish(null, publishers));
+    }
+
+    publishers = publishers.filter(pub => pub.alive);
+
     if (!keywords || !keywords.length) {
       yield put(searchPublishersFinish(null, publishers));
       return;
@@ -368,6 +398,46 @@ export function* searchPublishers({ payload: { keywords } }) {
     }
   } catch (err) {
     yield put(searchPublishersFinish(err));
+  }
+}
+
+
+function* checkPublisherAlive(user, publisher) {
+  const {status, timeout} = yield race({
+    status: call(checkPublisherAliveStatus, user, publisher),
+    timeout: delay(6000)
+  });
+  if (typeof status !== 'undefined') {
+    publisher.alive = status;
+  } else {
+    publisher.alive = false;
+  }
+}
+
+function* checkPublishersAlive() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    if (!currentUser) {
+      yield put(checkPublishersAliveFinish(null, []));
+      return;
+    }
+    const user = { ...currentUser }; 
+    yield call(getAuthHeaders, user);
+
+    const publishers = yield call(getAllPublishers);
+    
+    const tasks = publishers.map(pub => {
+      return call(checkPublisherAlive, user, pub);
+    });
+
+    yield all(tasks);
+    yield put(checkPublishersAliveFinish(null, publishers));
+  } catch (err) {
+    console.log(err);
+    yield put(checkPublishersAliveFinish(err));
+  } finally {
+    yield delay(publishersAliveStatusCheckInterval);
+    yield put({ type: 'CHECK_PUBLISHERS_ALIVE' })
   }
 }
 

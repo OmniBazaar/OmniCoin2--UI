@@ -12,11 +12,14 @@ import messages from '../../messages';
 class PublishersDropdown extends Component {
   state = {
     options: [],
+    loading: true
   };
 
   componentWillMount() {
     // this.props.accountActions.getPublishers();
-    this.props.listingActions.searchPublishers();
+    if (!this.props.allPublishers.loading) {
+      this.props.listingActions.searchPublishers();
+    }
   }
 
   showErrorToast(title, message) {
@@ -28,7 +31,11 @@ class PublishersDropdown extends Component {
       value,
       onChange
     } = this.props.input || this.props;
+    if (this.props.allPublishers.loading && !nextProps.allPublishers.loading) {
+      this.props.listingActions.searchPublishers();
+    }
     if (!nextProps.publishers.searching && this.props.publishers.searching) {
+      this.setState({ loading: false });
       if (!nextProps.publishers.error) {
         const options = nextProps.publishers.publishers.map(publisher => {
           const publisherFee = publisher.publisher_fee ? `(${parseInt(publisher.publisher_fee) / 100}% Fee)` : '';
@@ -81,7 +88,7 @@ class PublishersDropdown extends Component {
         options={this.state.options}
         onChange={this.onChange.bind(this)}
         value={value}
-        loading={searching}
+        loading={this.state.loading || searching}
       />
     );
   }
@@ -101,7 +108,10 @@ PublishersDropdown.propTypes = {
     publishers: PropTypes.array,
     searching: PropTypes.bool,
     error: PropTypes.object
-  }).isRequired
+  }).isRequired,
+  allPublishers: PropTypes.shape({
+    loading: PropTypes.bool
+  })
 };
 
 PublishersDropdown.defaultProps = {
@@ -111,7 +121,8 @@ PublishersDropdown.defaultProps = {
 export default connect(
   state => ({
     account: state.default.account,
-    publishers: state.default.listing.publishers
+    publishers: state.default.listing.publishers,
+    allPublishers: state.default.listing.allPublishers
   }),
   (dispatch) => ({
     accountActions: bindActionCreators({ getPublishers }, dispatch),
