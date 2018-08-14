@@ -245,7 +245,7 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
-                <NavLink to="/identity-verification" activeClassName="active" className="menu-item">
+                <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', identityVerificationStatus ? 'identity-verification' : '')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
                     defaultMessage="Identity Verification"
