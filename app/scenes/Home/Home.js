@@ -66,6 +66,7 @@ import { loadLocalPreferences } from '../../services/preferences/preferencesActi
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
+import { checkPublishersAlive } from '../../services/listing/listingActions'
 
 const iconSize = 20;
 
@@ -80,6 +81,9 @@ class Home extends Component {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
+    if (nextProps.auth.currentUser && !this.props.auth.currentUser) {
+      this.props.listingActions.checkPublishersAlive();
+    }
   }
   init() {
     this.props.preferencesActions.loadLocalPreferences();
@@ -92,6 +96,9 @@ class Home extends Component {
     const { currentUser } = this.props.auth;
     if (currentUser) {
       this.props.authActions.getIdentityVerificationStatus(currentUser.username);
+    }
+    if (this.props.auth.currentUser) {
+      this.props.listingActions.checkPublishersAlive();
     }
   }
 
@@ -313,7 +320,10 @@ export default connect(
       setActiveCategory
     }, dispatch),
     authActions: bindActionCreators({ getAccount, logout, requestAppVersion, getIdentityVerificationStatus }, dispatch),
-    listingActions: bindActionCreators({ loadListingDefault }, dispatch),
+    listingActions: bindActionCreators({
+      loadListingDefault,
+      checkPublishersAlive
+    }, dispatch),
     connectionActions: bindActionCreators({ restartNodeIfExists: restartNode }, dispatch),
     preferencesActions: bindActionCreators({
       loadLocalPreferences

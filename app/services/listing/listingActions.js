@@ -48,7 +48,9 @@ const {
   searchPublishersFinish,
   filterMyListings,
   filterFavorites,
-  clearMyListings
+  clearMyListings,
+  checkPublishersAlive,
+  checkPublishersAliveFinish
 } = createActions({
   GET_LISTING_DETAIL: (listingId) => ({ listingId }),
   GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
@@ -112,7 +114,9 @@ const {
     subCategory,
     searchTerm
   }),
-  CLEAR_MY_LISTINGS: () => ({})
+  CLEAR_MY_LISTINGS: () => ({}),
+  CHECK_PUBLISHERS_ALIVE: () => ({}),
+  CHECK_PUBLISHERS_ALIVE_FINISH: (error, publishers) => ({ error, publishers })
 });
 
 export {
@@ -163,5 +167,7 @@ export {
   searchPublishersFinish,
   filterMyListings,
   filterFavorites,
-  clearMyListings
+  clearMyListings,
+  checkPublishersAlive,
+  checkPublishersAliveFinish
 };
