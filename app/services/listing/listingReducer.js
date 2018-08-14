@@ -48,7 +48,9 @@ import {
   setNumberToBuy,
   filterMyListings,
   filterFavorites,
-  clearMyListings
+  clearMyListings,
+  checkPublishersAlive,
+  checkPublishersAliveFinish
 } from './listingActions';
 
 import { marketplaceReturnListings } from '../search/searchActions';
@@ -114,6 +116,11 @@ const defaultState = {
   },
   publishers: {
     searching: false,
+    publishers: [],
+    error: null
+  },
+  allPublishers: {
+    loading: false,
     publishers: [],
     error: null
   }
@@ -753,6 +760,27 @@ const reducer = handleActions({
     return {
       ...state,
       myListings: []
+    };
+  },
+  [checkPublishersAlive](state) {
+    return {
+      ...state,
+      allPublishers: {
+        ...state.allPublishers,
+        loading: true,
+        error: null
+      }
+    };
+  },
+  [checkPublishersAliveFinish](state, { payload: { error, publishers } }) {
+    return {
+      ...state,
+      allPublishers: {
+        ...state.allPublishers,
+        loading: false,
+        error,
+        publishers: error ? state.allPublishers.publishers : publishers
+      }
     };
   }
 }, defaultState);
