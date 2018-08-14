@@ -51,11 +51,12 @@ const addPurchaseToFile = async (purchase, filePath) => {
   const listing = await getObjectById(purchase.listingId);
   const publisher = await FetchChain('getAccount', listing.publisher);
   const purchaseToSave = {
-    date: new Date(),
+    date: new Date(purchase.date),
     publisher: publisher.get('name'),
     price: purchase.amount,
     count: purchase.listingCount,
     listingId: purchase.listingId,
+    title: purchase.listingTitle,
     seller: purchase.seller,
     buyer: purchase.buyer,
     currency: purchase.currency
@@ -69,7 +70,6 @@ const addPurchaseToFile = async (purchase, filePath) => {
 
 export const add = async (purchase, type) => {
   const filePath = await getFilePath(type);
-  console.log('FILE PATH ', filePath);
   if (isExist(filePath)) {
     await addPurchaseToFile(purchase, filePath);
   } else {
