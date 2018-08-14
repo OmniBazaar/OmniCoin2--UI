@@ -363,6 +363,10 @@ class MyEscrowTransactions extends Component {
       this.toggleCalendar(this.toggleProposalConfirmationModal);
     });
   }
+  
+  onClickOutside = () => {
+    this.toggleCalendar()
+  }
 
   handleExtendExpTime(escrowObject) {
     this.setState({
@@ -505,6 +509,7 @@ class MyEscrowTransactions extends Component {
         {
           this.state.proposal.isCalendarOpen && (
             <DatePicker
+              onClickOutside={this.onClickOutside}
               selected={this.state.startDate}
               onChange={this.handleCalendarChange}
               withPortal
