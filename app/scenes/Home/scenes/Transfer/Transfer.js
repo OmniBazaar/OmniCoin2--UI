@@ -394,7 +394,7 @@ class Transfer extends Component {
     input, options
   }) => (
       <Select
-        className="textfield"
+        className="textfield currency-dropdown-cont"
         value={this.props.transfer.transferCurrency}
         options={options}
         onChange={(param, data) => {
@@ -659,7 +659,7 @@ class Transfer extends Component {
               name="toAddress"
               placeholder={formatMessage(messages.pleaseEnter)}
               component="input"
-              className="textfield"
+              className="textfield currency-dropdown-cont"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -727,7 +727,7 @@ class Transfer extends Component {
               name="toAddress"
               placeholder={formatMessage(messages.pleaseEnter)}
               component="input"
-              className="textfield"
+              className="textfield transfer-input-cont"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
