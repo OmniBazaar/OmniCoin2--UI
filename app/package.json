@@ -1,11 +1,11 @@
 {
-  "name": "Omninazaar",
-  "productName": "Omnibazaar",
+  "name": "OmniBazaar",
+  "productName": "OmniBazaar",
   "version": "1.0.6176",
   "description": "Comunity-owned peer-to-peer marketplace",
   "main": "./main.prod.js",
   "author": {
-    "name": "Omnibazaar",
+    "name": "OmniBazaar",
     "email": "Info@OmniBazaar.com",
     "url": "https://github.com/OmniBazaar"
   },
