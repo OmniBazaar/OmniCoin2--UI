@@ -38,6 +38,9 @@ $closed-side-bar-size: 70px;
           color: $primary-white;
           margin-left: 15px;
         }
+        &.identity-verification {
+          padding: 8px 10px 25px 10px;
+        }
         .identity-verification-status {
           position: absolute;
           margin-top: 20px;
