@@ -425,6 +425,7 @@ class MyEscrowTransactions extends Component {
         </TableCell>
         <TableCell>
           <Button
+            disabled={escrowObject.escrow.name === username}
             content={formatMessage(messages.extendTime)}
             onClick={() => this.handleExtendExpTime(escrowObject)}
             className="button--blue-text"
