@@ -30,7 +30,7 @@ const defaultState = {
   loading: false,
   gettingCommonEscrows: false,
   commonEscrows: [],
-  transferCurrency: null
+  transferCurrency: 'omnicoin'
 };
 
 const reducer = handleActions({
