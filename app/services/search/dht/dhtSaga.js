@@ -39,6 +39,7 @@ export function* connect() {
         .db_api()
         .exec('get_publisher_nodes_names', []);
       ips = (yield Promise.all(publishers.map(publisher => FetchChain('getAccount', publisher))))
+        .filter(publisher => !!publisher.get('publisher_ip'))
         .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
     }
 
