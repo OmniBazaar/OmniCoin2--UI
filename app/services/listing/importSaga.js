@@ -189,9 +189,9 @@ export function* updateImportConfig({ payload: { data, provider, remember } }) {
 export function* loadImportConfig({ payload: { provider } }) {
   try {
     const { currentUser: { username } } = (yield select()).default.auth;
-    const importConfig = decryptDataFromStorage(`${provider}-${username}-import-config`);
+    const config = decryptDataFromStorage(`${provider}-${username}-import-config`);
 
-    yield put({ type: 'LOAD_IMPORT_CONFIG_SUCCEEDED', importConfig });
+    yield put({ type: 'LOAD_IMPORT_CONFIG_SUCCEEDED', importConfig: { config, provider } });
   } catch (e) {
     yield put({ type: 'LOAD_IMPORT_CONFIG_FAILED', error: e.message });
   }

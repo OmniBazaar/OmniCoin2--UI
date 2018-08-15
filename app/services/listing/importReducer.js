@@ -199,17 +199,33 @@ const reducer = handleActions({
     updatingConfig: false,
   }),
 
-  LOAD_IMPORT_CONFIG_SUCCEEDED: (state, { importConfig: { provider, data, remember } }) => ({
-    ...state,
-    error: null,
-    importConfig: {
-      ...state.importConfig,
-      [provider]: {
-        data,
-        remember,
-      },
+  LOAD_IMPORT_CONFIG_SUCCEEDED: (state, { importConfig: { config, provider } }) => {
+    const newState = {
+      ...state,
+      error: null,
+      importConfig: {
+        ...state.importConfig,
+        [provider]: null,
+      }
+    };
+
+    if (config) {
+      const { data, remember } = config;
+
+      return {
+        ...newState,
+        importConfig: {
+          ...state.importConfig,
+          [provider]: {
+            data,
+            remember,
+          },
+        }
+      };
     }
-  }),
+
+    return newState;
+  },
 
   LOAD_IMPORT_CONFIG_FAILED: (state, { error }) => ({
     ...state,
