@@ -103,7 +103,12 @@ class AmazonListingsConfig extends Component {
   }
 
   updateConfig() {
-    const { accessKey, secret, assocTag } = this.state;
+    const {
+      accessKey,
+      secret,
+      assocTag,
+      rememberConfig,
+    } = this.state;
     const { formatMessage } = this.props.intl;
     let errorMessage;
 
@@ -125,6 +130,7 @@ class AmazonListingsConfig extends Component {
     this.props.listingsActions.updateImportConfig({
       provider: AMAZON_PROVIDER,
       data: { accessKey, secret, assocTag },
+      remember: rememberConfig,
     });
   }
 
