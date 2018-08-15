@@ -413,7 +413,7 @@ class Listing extends Component {
 
   getLocation(listingDetail) {
     const locations = [];
-    const keys = ['city', 'state', 'country'];
+    const keys = ['city', 'state', 'country', 'address'];
     keys.forEach(k => {
       if (listingDetail[k]) {
         locations.push(listingDetail[k]);
