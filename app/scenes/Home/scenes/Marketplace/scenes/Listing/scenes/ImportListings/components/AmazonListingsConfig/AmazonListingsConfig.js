@@ -113,7 +113,7 @@ class AmazonListingsConfig extends Component {
     if (amazonConfig) {
       const { data: { accessKey, secret, assocTag }, remember } = amazonConfig;
 
-      if (remember) {
+      if (remember && !this.state.accessKey && !this.state.secret && !this.state.assocTag) {
         this.setState({
           accessKey,
           secret,
