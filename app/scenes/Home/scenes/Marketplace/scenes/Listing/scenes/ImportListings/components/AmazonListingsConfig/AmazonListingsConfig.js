@@ -9,6 +9,7 @@ import { updateImportConfig, loadImportConfig } from '../../../../../../../../..
 import Checkbox from '../../../../../../../../../../components/Checkbox/Checkbox';
 
 const AMAZON_PROVIDER = 'amazon';
+const REQUIRED_VALUES = ['accessKey', 'secret', 'assocTag'];
 
 const messages = defineMessages({
   accessKeyTitle: {
@@ -112,6 +113,16 @@ class AmazonListingsConfig extends Component {
 
     if (amazonConfig) {
       const { data: { accessKey, secret, assocTag }, remember } = amazonConfig;
+      const hasSameKey = accessKey === this.state.accessKey;
+      const hasSameSecret = secret === this.state.secret;
+      const hasSameTag = assocTag === this.state.assocTag;
+      const formIsUntouched = hasSameKey && hasSameSecret && hasSameTag;
+
+      if (this.state.accessKey && this.state.secret && this.state.assocTag && formIsUntouched) {
+        this.props.onConfigValid();
+      } else {
+        this.props.onConfigInvalid();
+      }
 
       if (remember && !this.state.accessKey && !this.state.secret && !this.state.assocTag) {
         this.setState({
@@ -157,6 +168,14 @@ class AmazonListingsConfig extends Component {
       }));
   }
 
+  onRequiredValueChange({ value, field }) {
+    this.setState({ [field]: value }, () => {
+      if (REQUIRED_VALUES.some(valueName => !this.state[valueName])) {
+        this.props.onConfigInvalid();
+      }
+    });
+  }
+
   render() {
     const { updatingConfig } = this.state;
     const { intl: { formatMessage } } = this.props;
@@ -172,7 +191,7 @@ class AmazonListingsConfig extends Component {
           name="awsAccessKey"
           placeholder={formatMessage(messages.accessKey)}
           value={this.state.accessKey}
-          onChange={e => this.setState({ accessKey: e.target.value })}
+          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'accessKey' })}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
@@ -185,7 +204,7 @@ class AmazonListingsConfig extends Component {
           name="awsSecretKey"
           placeholder={formatMessage(messages.secretKey)}
           value={this.state.secret}
-          onChange={e => this.setState({ secret: e.target.value })}
+          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'secret' })}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
@@ -198,7 +217,7 @@ class AmazonListingsConfig extends Component {
           name="awsAssocTag"
           placeholder={formatMessage(messages.assocTag)}
           value={this.state.assocTag}
-          onChange={e => this.setState({ assocTag: e.target.value })}
+          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'assocTag' })}
         />
       </Grid.Column>,
       <Grid.Column width={4} />,
@@ -234,13 +253,16 @@ AmazonListingsConfig.propTypes = {
   updatingConfig: PropTypes.bool.isRequired,
   error: PropTypes.string,
   onConfigUpdate: PropTypes.func,
+  onConfigValid: PropTypes.func,
+  onConfigInvalid: PropTypes.func,
   importConfig: PropTypes.shape({}),
 };
 
 AmazonListingsConfig.defaultProps = {
   error: '',
   onConfigUpdate: () => ({}),
-
+  onConfigValid: () => ({}),
+  onConfigInvalid: () => ({}),
   importConfig: {},
 };
 

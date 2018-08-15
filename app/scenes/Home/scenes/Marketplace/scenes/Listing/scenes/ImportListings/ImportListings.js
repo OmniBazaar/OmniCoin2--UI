@@ -160,6 +160,16 @@ class ImportListings extends Component {
     amazon: () => (
       <AmazonListingsConfig
         onConfigUpdate={() => this.setState({ configValid: true })}
+        onConfigValid={() => {
+          if (!this.state.configValid) {
+            this.setState({ configValid: true });
+          }
+        }}
+        onConfigInvalid={() => {
+          if (this.state.configValid) {
+            this.setState({ configValid: false });
+          }
+        }}
       />
     )
   }
@@ -285,10 +295,14 @@ class ImportListings extends Component {
     this.inputElement.value = '';
   }
 
+  onVendorChange(selectedVendor) {
+    this.setState({ selectedVendor, configValid: selectedVendor === 'all' });
+  }
+
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
-    const { validatingPublisher } = this.state;
+    const { validatingPublisher, configValid, selectedVendor } = this.state;
 
     return (
       <Form className="import-listing-form">
@@ -309,7 +323,7 @@ class ImportListings extends Component {
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
                 value={this.state.selectedVendor}
-                onChange={(e, { value }) => this.setState({ selectedVendor: value })}
+                onChange={(e, { value }) => this.onVendorChange(value)}
               />
             </Grid.Column>
             {this.state.selectedVendor && this.vendorsConfigs[this.state.selectedVendor] &&
@@ -345,6 +359,7 @@ class ImportListings extends Component {
                   className="button--primary"
                   loading={validatingPublisher}
                   content={formatMessage(messages.addFiles)}
+                  disabled={!selectedVendor || (selectedVendor !== 'all' && !configValid)}
                   onClick={() => this.onClickImportFile()}
                 />
                 <Button content={formatMessage(messages.removeAll)} className="button--blue removeAll" onClick={() => this.onClickRemoveAll()} />
