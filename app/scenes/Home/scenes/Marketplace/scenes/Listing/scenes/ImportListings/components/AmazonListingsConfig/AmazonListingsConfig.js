@@ -78,6 +78,7 @@ class AmazonListingsConfig extends Component {
       secret: '',
       assocTag: '',
       rememberConfig: false,
+      updatingConfig: false,
     };
   }
 
@@ -85,7 +86,7 @@ class AmazonListingsConfig extends Component {
     const { updatingConfig } = nextProps;
     const { formatMessage } = this.props.intl;
 
-    if (!updatingConfig && this.props.updatingConfig) {
+    if (!updatingConfig && this.state.updatingConfig) {
       if (this.props.error) {
         toastr.error(
           formatMessage(messages.errorTitle),
@@ -99,6 +100,8 @@ class AmazonListingsConfig extends Component {
 
         this.props.onConfigUpdate();
       }
+
+      this.setState({ updatingConfig: false });
     }
   }
 
@@ -127,15 +130,17 @@ class AmazonListingsConfig extends Component {
       );
     }
 
-    this.props.listingsActions.updateImportConfig({
-      provider: AMAZON_PROVIDER,
-      data: { accessKey, secret, assocTag },
-      remember: rememberConfig,
-    });
+    this.setState({ updatingConfig: true }, () => this.props.listingsActions
+      .updateImportConfig({
+        provider: AMAZON_PROVIDER,
+        data: { accessKey, secret, assocTag },
+        remember: rememberConfig,
+      }));
   }
 
   render() {
-    const { updatingConfig, intl: { formatMessage } } = this.props;
+    const { updatingConfig } = this.state;
+    const { intl: { formatMessage } } = this.props;
 
     return ([
       <Grid.Column width={4}>
