@@ -14,7 +14,7 @@ const listingHandlersByVendor = {
 
 const listingImageGetters = {
   amazon: getImageFromAmazon,
-  all: getImageFromAmazon,
+  default: getImageFromAmazon,
 };
 
 const imagesDevPath = {
@@ -56,6 +56,11 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
     const { content, name } = file;
     const listings = yield call(listingHandlersByVendor[vendor] || getListings, content);
     const { currentUser } = (yield select()).default.auth;
+    const { importConfig } = (yield select()).default.listingImport;
+
+    if (!vendor || (!importConfig[vendor] && vendor !== 'all')) {
+      throw new Error(`Missing import configuration for ${vendor}`);
+    }
 
     const items = yield listings.map(async (item) => {
       let imageToSave;
@@ -67,9 +72,14 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
       };
 
       if (!itemToSave.imageURL) {
-        imageToSave = listingImageGetters[vendor] ?
-          await listingImageGetters[vendor](itemToSave.productId) :
-          await listingImageGetters.all(itemToSave.productId);
+        if (listingImageGetters[vendor]) {
+          imageToSave = await listingImageGetters[vendor](
+            itemToSave.productId,
+            importConfig[vendor].data
+          );
+        } else {
+          imageToSave = await listingImageGetters.default(itemToSave.productId);
+        }
       } else {
         imageToSave = (await fetch(itemToSave.imageURL)).blob();
       }

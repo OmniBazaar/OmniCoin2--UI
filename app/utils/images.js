@@ -1,5 +1,4 @@
 import { getSignedUrl } from './signed-requester';
-import { AWS_ACCESS_KEY, AWS_ASSOC_TAG } from './constants';
 
 export default {
   /**
@@ -7,18 +6,18 @@ export default {
    *
    * @returns {Promise<Blob>}
    */
-  async getImageFromAmazon(productId) {
+  async getImageFromAmazon(productId, { accessKey, secret, assocTag }) {
     const params = {
+      AssociateTag: assocTag,
+      AWSAccessKeyId: accessKey,
       Service: 'AWSECommerceService',
       Operation: 'ItemLookup',
-      AWSAccessKeyId: AWS_ACCESS_KEY,
-      AssociateTag: AWS_ASSOC_TAG,
       ItemId: productId,
       IdType: 'ASIN',
       ResponseGroup: 'Images',
     };
 
-    const url = getSignedUrl(params);
+    const url = getSignedUrl(params, { accessKey, secret });
     const amazonResponse = await fetch(url);
     const doc = (new DOMParser()).parseFromString(await amazonResponse.text(), 'application/xml');
     const imageURL = doc.querySelector('LargeImage URL').innerHTML;
