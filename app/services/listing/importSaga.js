@@ -5,7 +5,7 @@ import fs from 'fs';
 import { getListings } from './../../utils/listings';
 import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
-import { encryptDataInStorage } from './../../utils/encrypt';
+import { encryptDataInStorage, decryptDataFromStorage } from './../../utils/encrypt';
 
 const listingHandlersByVendor = {
   amazon: getListings,
@@ -47,6 +47,7 @@ export function* importSubscriber() {
     takeLatest('STAGE_FILE', importListingsFromFile),
     takeLatest('IMPORT_FILES', saveFiles),
     takeLatest('UPDATE_IMPORT_CONFIG', updateImportConfig),
+    takeLatest('LOAD_IMPORT_CONFIG', loadImportConfig),
   ]);
 }
 
@@ -178,9 +179,20 @@ export function* updateImportConfig({ payload: { data, provider, remember } }) {
   try {
     const { currentUser: { username } } = (yield select()).default.auth;
 
-    encryptDataInStorage({ data, provider, remember }, `${provider}-${username}-import-data`);
+    encryptDataInStorage({ data, provider, remember }, `${provider}-${username}-import-config`);
     yield put({ type: 'IMPORT_CONFIG_UPDATE_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_CONFIG_UPDATE_FAILED', error: e.message });
+  }
+}
+
+export function* loadImportConfig({ payload: { provider } }) {
+  try {
+    const { currentUser: { username } } = (yield select()).default.auth;
+    const importConfig = decryptDataFromStorage(`${provider}-${username}-import-config`);
+
+    yield put({ type: 'LOAD_IMPORT_CONFIG_SUCCEEDED', importConfig });
+  } catch (e) {
+    yield put({ type: 'LOAD_IMPORT_CONFIG_FAILED', error: e.message });
   }
 }

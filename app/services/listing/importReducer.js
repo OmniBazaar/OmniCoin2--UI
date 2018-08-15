@@ -21,7 +21,7 @@ const defaultState = {
   importingFile: false,
   stagingFile: false,
   error: null,
-  importConfig: null,
+  importConfig: {},
   updatingConfig: false,
 };
 
@@ -197,6 +197,23 @@ const reducer = handleActions({
     ...state,
     error,
     updatingConfig: false,
+  }),
+
+  LOAD_IMPORT_CONFIG_SUCCEEDED: (state, { importConfig: { provider, data, remember } }) => ({
+    ...state,
+    error: null,
+    importConfig: {
+      ...state.importConfig,
+      [provider]: {
+        data,
+        remember,
+      },
+    }
+  }),
+
+  LOAD_IMPORT_CONFIG_FAILED: (state, { error }) => ({
+    ...state,
+    error,
   }),
 }, defaultState);
 

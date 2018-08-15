@@ -5,7 +5,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { Button, Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
-import { updateImportConfig } from '../../../../../../../../../../services/listing/importActions';
+import { updateImportConfig, loadImportConfig } from '../../../../../../../../../../services/listing/importActions';
 import Checkbox from '../../../../../../../../../../components/Checkbox/Checkbox';
 
 const AMAZON_PROVIDER = 'amazon';
@@ -82,8 +82,12 @@ class AmazonListingsConfig extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.listingsActions.loadImportConfig({ provider: AMAZON_PROVIDER });
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { updatingConfig } = nextProps;
+    const { updatingConfig, importConfig } = nextProps;
     const { formatMessage } = this.props.intl;
 
     if (!updatingConfig && this.state.updatingConfig) {
@@ -102,6 +106,21 @@ class AmazonListingsConfig extends Component {
       }
 
       this.setState({ updatingConfig: false });
+    }
+
+    const amazonConfig = importConfig[AMAZON_PROVIDER];
+
+    if (amazonConfig) {
+      const { data: { accessKey, secret, assocTag }, remember } = amazonConfig;
+
+      if (remember) {
+        this.setState({
+          accessKey,
+          secret,
+          assocTag,
+          rememberConfig: remember,
+        });
+      }
     }
   }
 
@@ -152,6 +171,7 @@ class AmazonListingsConfig extends Component {
           type="text"
           name="awsAccessKey"
           placeholder={formatMessage(messages.accessKey)}
+          value={this.state.accessKey}
           onChange={e => this.setState({ accessKey: e.target.value })}
         />
       </Grid.Column>,
@@ -164,6 +184,7 @@ class AmazonListingsConfig extends Component {
           type="text"
           name="awsSecretKey"
           placeholder={formatMessage(messages.secretKey)}
+          value={this.state.secret}
           onChange={e => this.setState({ secret: e.target.value })}
         />
       </Grid.Column>,
@@ -176,6 +197,7 @@ class AmazonListingsConfig extends Component {
           type="text"
           name="awsAssocTag"
           placeholder={formatMessage(messages.assocTag)}
+          value={this.state.assocTag}
           onChange={e => this.setState({ assocTag: e.target.value })}
         />
       </Grid.Column>,
@@ -204,6 +226,7 @@ class AmazonListingsConfig extends Component {
 AmazonListingsConfig.propTypes = {
   listingsActions: PropTypes.shape({
     updateImportConfig: PropTypes.func,
+    loadImportConfig: PropTypes.func,
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -211,11 +234,14 @@ AmazonListingsConfig.propTypes = {
   updatingConfig: PropTypes.bool.isRequired,
   error: PropTypes.string,
   onConfigUpdate: PropTypes.func,
+  importConfig: PropTypes.shape({}),
 };
 
 AmazonListingsConfig.defaultProps = {
   error: '',
   onConfigUpdate: () => ({}),
+
+  importConfig: {},
 };
 
 export default connect(
@@ -223,6 +249,7 @@ export default connect(
   dispatch => ({
     listingsActions: bindActionCreators({
       updateImportConfig,
+      loadImportConfig,
     }, dispatch)
   })
 )(injectIntl(AmazonListingsConfig));

@@ -11,6 +11,7 @@ const {
   updateFileItemTitle,
   updateFileItemDescription,
   updateImportConfig,
+  loadImportConfig,
 } = createActions({
   STAGE_FILE: (file, defaultValues, vendor) => ({ file, defaultValues, vendor }),
   IMPORT_FILES: ({ publisher, filesToImport }) => ({ publisher, filesToImport }),
@@ -26,6 +27,7 @@ const {
     description, index, fileIndex
   }),
   UPDATE_IMPORT_CONFIG: ({ data, provider, remember }) => ({ data, provider, remember }),
+  LOAD_IMPORT_CONFIG: ({ provider }) => ({ provider }),
 });
 
 export {
@@ -39,4 +41,5 @@ export {
   updateFileItemTitle,
   updateFileItemDescription,
   updateImportConfig,
+  loadImportConfig,
 };
