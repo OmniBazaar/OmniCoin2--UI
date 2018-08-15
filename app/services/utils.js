@@ -74,11 +74,11 @@ const MINIMUN_AMOUNT = 0.00001;
 
 const getAllowedAmount = (amount) => {
   if (amount >= MINIMUN_AMOUNT) {
-    return amount;
+    return amount.toFixed(5);
   }
 
   return MINIMUN_AMOUNT;
-}
+};
 
 Object.keys(coefficients).forEach(key => {
   const units = key.split('to');

@@ -118,7 +118,12 @@ const messages = defineMessages({
   [ChainTypes.operations.witness_bonus_operation]: {
     id: 'RecentTransactions.witnessBonus',
     defaultMessage: 'WITNESS BONUS'
+  },
+  [ChainTypes.operations.founder_bonus_operation]: {
+    id: 'RecentTransactions.developerBonus',
+    defaultMessage: 'DEVELOPER BONUS'
   }
+
 });
 
 
@@ -217,7 +222,7 @@ class RecentTransactions extends Component {
                     sorted={sortColumn === 'date' ? sortDirection : null}
                     onClick={this.sortData('date')}
                   >
-                    {formatMessage(messages.date)} (GMT+2)
+                    {formatMessage(messages.date)}
                   </TableHeaderCell>
                   <TableHeaderCell
                     key="fromto"

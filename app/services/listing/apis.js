@@ -29,7 +29,7 @@ const listingProps = [
 ];
 
 
-const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
+export const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
   // let user = getStoredCurrentUser();
   const user = currentUser;
 
@@ -198,7 +198,7 @@ export const getObjectById = async objectId => {
 export const ensureListingData = listing => {
   const result = {};
   listingProps.forEach(key => {
-    if (listing[key]) {
+    if (listing.hasOwnProperty(key)) {
       result[key] = listing[key];
     }
   });
@@ -232,7 +232,8 @@ export const editListing = async (user, publisher, listingId, listing) => {
   if (!blockchainListing) {
     throw new Error('Listing not exist on blockchain');
   }
-  if (blockchainListing.listing_hash === hash.listingSHA256(listing)) {
+  if (blockchainListing.listing_hash === hash.listingSHA256(listing)
+     && listing.quantity == blockchainListing.quantity) {
     throw new Error('no_changes');
   }
 
@@ -276,12 +277,12 @@ export const checkPublisherAliveStatus = async (user, publisher) => {
   try {
     const options = {
       method: 'GET',
-      json: true
+      json: true,
+      timeout: 6000
     };
     const alive = await makeRequest(user, publisher, 'alive/status', options);
     return alive.ok;
   } catch (err) {
-    console.log('Check publisher alive error', err);
     return false;
   }
 };

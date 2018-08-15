@@ -197,7 +197,7 @@ class TransactionDetails extends Component {
           </div>
           <div className="item">
             <span>
-              {formatMessage(messages.timeStamp)} <span className="time-zone">(GMT +2)</span>
+              {formatMessage(messages.timeStamp)}
             </span>
             <span className="date">
               {detailSelected ? dateformat(detailSelected.date, 'yyyy-mm-dd HH:MM:ss') : ''}

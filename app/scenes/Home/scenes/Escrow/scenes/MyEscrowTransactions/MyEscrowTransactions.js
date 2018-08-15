@@ -363,6 +363,10 @@ class MyEscrowTransactions extends Component {
       this.toggleCalendar(this.toggleProposalConfirmationModal);
     });
   }
+  
+  onClickOutside = () => {
+    this.toggleCalendar()
+  }
 
   handleExtendExpTime(escrowObject) {
     this.setState({
@@ -425,6 +429,7 @@ class MyEscrowTransactions extends Component {
         </TableCell>
         <TableCell>
           <Button
+            disabled={escrowObject.escrow.name === username}
             content={formatMessage(messages.extendTime)}
             onClick={() => this.handleExtendExpTime(escrowObject)}
             className="button--blue-text"
@@ -504,6 +509,7 @@ class MyEscrowTransactions extends Component {
         {
           this.state.proposal.isCalendarOpen && (
             <DatePicker
+              onClickOutside={this.onClickOutside}
               selected={this.state.startDate}
               onChange={this.handleCalendarChange}
               withPortal

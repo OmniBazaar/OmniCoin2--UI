@@ -319,19 +319,21 @@ class PreferencesTab extends Component {
             </Grid.Row>
             {this.props.auth.account.is_a_processor &&
               <Grid.Row>
-                <Grid.Column width={4}>
-                  {formatMessage(messages.autoRun)}
+                <Grid.Column width={3}>
+                  {false && formatMessage(messages.autoRun)}
                 </Grid.Column>
 
-                <Grid.Column width={4}>
-                  <div className="autorun">
-                    <Field
-                      name="autorun"
-                      component={Checkbox}
-                    />
-                  </div>
+                <Grid.Column>
+                  {false &&
+                    <div className="autorun">
+                      <Field
+                        name="autorun"
+                        component={Checkbox}
+                      />
+                    </div>
+                  }
                   <div className="autorun-note">
-                    {formatMessage(messages.autoRunNote)}
+                    {false && formatMessage(messages.autoRunNote)}
                   </div>
                 </Grid.Column>
                 <Grid.Column width={3}>

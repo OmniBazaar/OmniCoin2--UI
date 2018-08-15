@@ -1,11 +1,11 @@
 {
-  "name": "Omninazaar",
-  "productName": "Omnibazaar",
+  "name": "OmniBazaar",
+  "productName": "OmniBazaar",
   "version": "1.0.6176",
   "description": "Comunity-owned peer-to-peer marketplace",
   "main": "./main.prod.js",
   "author": {
-    "name": "Omnibazaar",
+    "name": "OmniBazaar",
     "email": "Info@OmniBazaar.com",
     "url": "https://github.com/OmniBazaar"
   },
@@ -17,6 +17,7 @@
   "dependencies": {
     "blockchain-wallet-service": "^0.26.1",
     "getmac": "^1.4.0",
+    "kill-port": "^1.3.1",
     "node-machine-id": "^1.1.10",
     "sudo-prompt": "^8.2.0"
   }

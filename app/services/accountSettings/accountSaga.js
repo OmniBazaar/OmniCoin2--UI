@@ -11,7 +11,7 @@ import { Apis } from 'omnibazaarjs-ws';
 import _ from 'lodash';
 
 import { CoinTypes } from '../../scenes/Home/scenes/Wallet/constants';
-import { getAllPublishers } from './services';
+import {getAllPublishers, getPublisherByIp} from './services';
 import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
 import OmnicoinHistory from './omnicoinHistory';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
@@ -79,7 +79,8 @@ export function* updateAccount(payload) {
   const tr = new TransactionBuilder();
   const trObj = { ...payload };
 
-  if (!trObj.is_a_publisher) {
+  const publisherAcc = yield call(getPublisherByIp, trObj.publisher_ip);
+  if (!trObj.is_a_publisher || (!!publisherAcc && trObj.publisher_ip)) {
     delete trObj.publisher_ip;
   }
 
@@ -129,11 +130,11 @@ export function* updateAccount(payload) {
 
 
 export function* getRecentTransactions({ payload: { coinType } }) {
-  const { auth: { currentUser }, ethereum } = (yield select()).default
+  const { auth: { currentUser }, ethereum } = (yield select()).default;
   try {
     if (coinType === CoinTypes.OMNI_COIN) {
-      const historyStorage = new OmnicoinHistory(currentUser.username);
-      yield historyStorage.refresh(currentUser);
+      const historyStorage = new OmnicoinHistory(currentUser);
+      yield historyStorage.refresh();
       yield put({ type: 'GET_RECENT_TRANSACTIONS_SUCCEEDED', transactions: historyStorage.getHistory() });
     } else if (coinType === CoinTypes.ETHEREUM) {
       const historyStorage = new EthereumHistory(ethereum.address);

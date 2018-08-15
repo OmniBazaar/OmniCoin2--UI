@@ -24,6 +24,7 @@ import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
 import { email } from 'redux-form-validators';
 import { SubmissionError } from 'redux-form';
+import { getAuthHeaders } from '../../listing/apis';
 
 
 const messages = defineMessages({
@@ -67,6 +68,7 @@ export function* subscriber() {
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
     takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
     takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
+    takeEvery('GET_IDENTITY_VERIFICATION_STATUS', getIdentityVerificationStatus),
     takeEvery('REQUEST_REFERRER', requestReferrer)
   ]);
 }
@@ -91,6 +93,10 @@ export function* login(action) {
     if (isAuthorized) {
       yield put(getAccountAction(username));
       yield put({ type: 'DHT_CONNECT' });
+
+      //call this to cache listing request auth header, because it's a heavy operation
+      yield call(getAuthHeaders, { username, password });
+
       yield put({
         type: 'LOGIN_SUCCEEDED',
         user: {
@@ -162,6 +168,7 @@ export function* signup(action) {
       });
       yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
+      yield put(welcomeBonusAction(username, referrer, macAddress, harddriveId));
     } else {
       const { error } = resJson;
       let e;
@@ -251,6 +258,28 @@ export function* getIdentityVerificationToken({ payload: { username } }) {
   try {
     const resp = yield call(AuthApi.getIdentityVerificationToken, username);
     yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token: resp.token });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* getIdentityVerificationStatus({ payload: { data } }) {
+  try {
+    const res = yield call(AuthApi.getApplicantInformation, data);
+    const applicantId = res.list.items[0].id;
+    const response = yield call(AuthApi.getIdentityVerificationStatus, applicantId);
+    const { reviewStatus, reviewResult } = response;
+    let status;  
+    if (reviewStatus === 'pending') {
+      status = 'Pending';
+    } else if (reviewResult.reviewAnswer === 'GREEN') {
+      status = 'Accepted';
+    } else if (reviewResult.reviewAnswer === 'RED') {
+      status = 'Rejected';
+    } else {
+      status = 'Pending';
+    }
+    yield put({ type: 'GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED', status });
   } catch (error) {
     console.log(error);
   }

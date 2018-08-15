@@ -38,7 +38,15 @@ $closed-side-bar-size: 70px;
           color: $primary-white;
           margin-left: 15px;
         }
+        &.identity-verification {
+          padding: 8px 10px 25px 10px;
+        }
+        .identity-verification-status {
+          position: absolute;
+          margin-top: 20px;
+          margin-left: 38px;
 
+        }
         &.has-notifications {
           background-color: $secondary-red;
 
@@ -127,3 +135,4 @@ h1, h2, h3 {
   justify-content: center;
   color: #f0f0f0;
 }
+

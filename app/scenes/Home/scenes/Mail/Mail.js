@@ -158,7 +158,7 @@ class Mail extends Component {
           number: body.listingCount,
           listing: body.listingTitle,
           listingId: body.listingId,
-          price: body.price,
+          price: body.amount,
           currency: getCurrencyAbbreviation(body.currency)
         });
       }

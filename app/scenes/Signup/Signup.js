@@ -18,11 +18,7 @@ class Signup extends Component {
         nextProps.auth.currentUser !== this.props.auth.currentUser
       )
     ) {
-      if (nextProps.auth.isWelcomeBonusAvailable) {
-        this.props.history.push('/air-drop');
-      } else {
-        this.props.history.push('/');    
-      }
+      this.props.history.push('/login');
     }
   }
 

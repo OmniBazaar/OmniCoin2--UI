@@ -124,8 +124,11 @@ const runNode = async () => {
   let nodePath = `${path}/witness_node`;
   if (process.platform === 'win32') {
     nodePath = `${path}/witness_node.exe`;
+    exec(`taskkill /F /IM witness_node.exe`);
+    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+  } else {
+    await kill(nodePort);
   }
-  await kill(nodePort);
   const nodeProcess = spawn(nodePath);
   nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
@@ -175,7 +178,7 @@ const launchNodeDaemon = () => {
         case 'win32':
           const userName = process.env.USERPROFILE.split(path.sep)[2];
           const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-          return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath}`);
+          return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath} & start ${nodePath}`);
         case 'linux':
           return sudo.exec('systemctl daemon-reload' +
             'systemctl enable omnibazaar-publisher.service' +
@@ -324,6 +327,7 @@ app.on('ready', async () => {
   });
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
+  ipcMain.on('exit', () => app.quit());
 
   mainWindow = new BrowserWindow({
     show: false,
