@@ -26,7 +26,7 @@ let mainWindow = null;
 const nodePort = 8099;
 
 const nodeDaemonWinOptions = {
-  name: 'Omninabazaar',
+  name: 'OmniBazaar',
 };
 
 const isProd = () => process.env.NODE_ENV === 'production';
