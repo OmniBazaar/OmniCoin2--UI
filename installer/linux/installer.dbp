@@ -83,7 +83,7 @@ rm -rf ~/.OmniBazaar
 1
 Name=OmniBazaar
 Version=1.0
-Exec=/usr/local/bin/linux-unpacked/omninazaar
+Exec=/usr/local/bin/linux-unpacked/omnibazaar
 Comment=OmniBazaar Wallet
 Icon=/usr/share/OmniBazaar/icon.ico
 Type=Application
