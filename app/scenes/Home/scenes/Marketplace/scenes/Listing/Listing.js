@@ -541,7 +541,7 @@ class Listing extends Component {
           this.renderUserButtons(listingDetail.quantity)
         }
         <div className="availability">
-          <span>{formatMessage(messages.available)}</span>
+          <span>{`${formatMessage(messages.available)} `}</span>
           <span>{`${listingDetail.quantity} ${listingDetail.units}`}</span>
         </div>
       </div>
