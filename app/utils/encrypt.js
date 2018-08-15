@@ -1,16 +1,14 @@
 import { createCipher, createDecipher } from 'crypto';
 
 const ENCRYPTION_PASS = 'omnicoin_omnibazaar';
+const ALGORITHM = 'aes-256-cbc';
 
 const encryptDataInStorage = (data, dataIndex) => {
   try {
-    const cipher = createCipher('aes-256-cbc', ENCRYPTION_PASS);
-    const encrypted = Buffer.concat([
-      cipher.update(Buffer.from(JSON.stringify(data), 'utf8')),
-      cipher.final()
-    ]);
+    const cipher = createCipher(ALGORITHM, ENCRYPTION_PASS);
+    const encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
 
-    localStorage.setItem(dataIndex, encrypted);
+    localStorage.setItem(dataIndex, `${encrypted}${cipher.final('hex')}`);
 
     return true;
   } catch (exception) {
@@ -21,10 +19,15 @@ const encryptDataInStorage = (data, dataIndex) => {
 const decryptDataFromStorage = (dataIndex) => {
   try {
     const data = localStorage.getItem(dataIndex);
-    const decipher = createDecipher('aes-256-cbc', ENCRYPTION_PASS);
-    const decrypted = Buffer.concat([decipher.update(data), decipher.final()]);
 
-    return JSON.parse(decrypted.toString());
+    if (!data) {
+      return null;
+    }
+
+    const decipher = createDecipher(ALGORITHM, ENCRYPTION_PASS);
+    const decrypted = decipher.update(data, 'hex', 'utf8');
+
+    return JSON.parse(`${decrypted}${decipher.final('utf8')}`);
   } catch (exception) {
     throw new Error(exception.message);
   }
