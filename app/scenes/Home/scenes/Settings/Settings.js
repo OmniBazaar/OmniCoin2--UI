@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Modal, Tab, Image } from 'semantic-ui-react';
+import { Modal, Tab, Image, Loader } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
@@ -16,7 +16,7 @@ import AccountVesting from './scenes/AccountVesting/AccountVesting';
 import AccountBalance from '../../components/AccountBalance/AccountBalance';
 import './settings.scss';
 
-import { getCurrentUser } from '../../../../services/blockchain/auth/authActions';
+import { getCurrentUser, getAccount } from '../../../../services/blockchain/auth/authActions';
 import {
   getPrivateData,
   getPublisherData
@@ -31,9 +31,11 @@ class Settings extends Component {
     super(props);
   }
 
+
   componentWillMount() {
     this.props.accountSettingsActions.getPrivateData();
     this.props.accountSettingsActions.getPublisherData();
+    this.props.authActions.getAccount(this.props.auth.currentUser.username);
   }
 
   close = () => {
@@ -102,7 +104,14 @@ class Settings extends Component {
       panes={[
           {
             menuItem: formatMessage(messages.publicData),
-            render: () => <Tab.Pane><PublicData /></Tab.Pane>,
+            render: () => (
+              <Tab.Pane>
+                {this.props.auth.isAccountLoading
+                  ? <Loader inline='centered' active />
+                  : <PublicData/>
+                }
+              </Tab.Pane>
+            ),
           },
           {
             menuItem: formatMessage(messages.privateData),
@@ -190,9 +199,12 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     accountSettingsActions: bindActionCreators({
-      getCurrentUser,
       getPrivateData,
-      getPublisherData
+      getPublisherData,
+    }, dispatch),
+    authActions: bindActionCreators({
+      getCurrentUser,
+      getAccount
     }, dispatch)
   }),
 )(injectIntl(Settings));

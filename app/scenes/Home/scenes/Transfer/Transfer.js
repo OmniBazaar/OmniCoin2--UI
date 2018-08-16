@@ -61,6 +61,12 @@ const walletOptions = [
 
 const currencyOptions = [
   {
+    key: 'omnicoin',
+    value: 'omnicoin',
+    text: 'OmniCoin',
+    description: 'OmniCoin Currency'
+  },
+  {
     key: 'bitcoin',
     value: 'bitcoin',
     text: 'BitCoin',
@@ -71,12 +77,6 @@ const currencyOptions = [
     value: 'ethereum',
     text: 'Ethereum',
     description: 'Ethereum Currency'
-  },
-  {
-    key: 'omnicoin',
-    value: 'omnicoin',
-    text: 'OmniCoin',
-    description: 'OmniCoin Currency'
   }
 ];
 
@@ -248,7 +248,7 @@ class Transfer extends Component {
   }
 
   componentWillUnmount() {
-    this.props.transferActions.setCurrency(undefined);
+    //this.props.transferActions.setCurrency(undefined);
   }
 
   handleInitialize(price) {
@@ -394,7 +394,7 @@ class Transfer extends Component {
     input, options
   }) => (
       <Select
-        className="textfield"
+        className="textfield currency-dropdown-cont"
         value={this.props.transfer.transferCurrency}
         options={options}
         onChange={(param, data) => {
@@ -659,7 +659,7 @@ class Transfer extends Component {
               name="toAddress"
               placeholder={formatMessage(messages.pleaseEnter)}
               component="input"
-              className="textfield"
+              className="textfield currency-dropdown-cont"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -727,7 +727,7 @@ class Transfer extends Component {
               name="toAddress"
               placeholder={formatMessage(messages.pleaseEnter)}
               component="input"
-              className="textfield"
+              className="textfield transfer-input-cont"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -784,7 +784,7 @@ class Transfer extends Component {
       case 'ethereum':
         return this.renderEthereumForm();
       default:
-        return this.renderBitCoinForm();
+        return this.renderOmniCoinForm();
     }
   }
 

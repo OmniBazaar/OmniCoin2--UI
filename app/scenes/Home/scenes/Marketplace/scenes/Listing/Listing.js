@@ -413,7 +413,7 @@ class Listing extends Component {
 
   getLocation(listingDetail) {
     const locations = [];
-    const keys = ['city', 'state', 'country'];
+    const keys = ['city', 'state', 'country', 'address'];
     keys.forEach(k => {
       if (listingDetail[k]) {
         locations.push(listingDetail[k]);
@@ -541,7 +541,7 @@ class Listing extends Component {
           this.renderUserButtons(listingDetail.quantity)
         }
         <div className="availability">
-          <span>{formatMessage(messages.available)}</span>
+          <span>{`${formatMessage(messages.available)} `}</span>
           <span>{`${listingDetail.quantity} ${listingDetail.units}`}</span>
         </div>
       </div>

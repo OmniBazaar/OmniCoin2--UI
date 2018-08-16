@@ -117,7 +117,7 @@ const messages = defineMessages({
   },
   [ChainTypes.operations.witness_bonus_operation]: {
     id: 'RecentTransactions.witnessBonus',
-    defaultMessage: 'WITNESS BONUS'
+    defaultMessage: 'PROCESSOR BONUS'
   },
   [ChainTypes.operations.founder_bonus_operation]: {
     id: 'RecentTransactions.developerBonus',

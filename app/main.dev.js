@@ -25,6 +25,10 @@ let mainWindow = null;
 
 const nodePort = 8099;
 
+const nodeDaemonWinOptions = {
+  name: 'OmniBazaar',
+};
+
 const isProd = () => process.env.NODE_ENV === 'production';
 
 if (isProd()) {
@@ -115,6 +119,14 @@ const getNodeDirDevPath = () =>
   // return getDevBasePath() + '/witness_node';
 ;
 
+const killNode = async () => {
+  if (process.platform === 'win32') {
+    exec(`taskkill /F /IM witness_node.exe`);
+    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+  } else {
+    await kill(nodePort);
+  }
+};
 
 const runNode = async () => {
   let path = getNodeDirDevPath();
@@ -124,11 +136,9 @@ const runNode = async () => {
   let nodePath = `${path}/witness_node`;
   if (process.platform === 'win32') {
     nodePath = `${path}/witness_node.exe`;
-    exec(`taskkill /F /IM witness_node.exe`);
-    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-  } else {
-    await kill(nodePort);
   }
+  await killNode();
+
   const nodeProcess = spawn(nodePath);
   nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
@@ -165,50 +175,33 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   });
 };
 
-const options = {
-  name: 'Omninazaar',
-  //icns: '/Applications/Omninazaar.app/Contents/Resources/Electron.icns', // (optional)
-};
 
-const launchNodeDaemon = () => {
-  sudo.exec('echo hello', options,
-    function(error, stdout, stderr) {
-      if (error) throw error;
-      switch (process.platform) {
-        case 'win32':
-          const userName = process.env.USERPROFILE.split(path.sep)[2];
-          const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-          return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath} & start ${nodePath}`);
-        case 'linux':
-          return sudo.exec('systemctl daemon-reload' +
-            'systemctl enable omnibazaar-publisher.service' +
-            'systemctl start omnibazaar-publisher.service');
-        case 'darwin':
-          return exec('launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && ' +
-            'launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist');
-      }
-      console.log('stdout: ' + stdout);
-    }
-  );
+const launchNodeDaemon = async () => {
+  switch (process.platform) {
+    case 'win32':
+      await killNode();
+      const userName = process.env.USERPROFILE.split(path.sep)[2];
+      const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
+      return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath} & start ${nodePath}`, nodeDaemonWinOptions);
+    case 'linux':
+      return sudo.exec('systemctl daemon-reload' +
+        'systemctl enable omnibazaar-publisher.service' +
+        'systemctl start omnibazaar-publisher.service');
+    case 'darwin':
+      return exec('launchctl load -w /Library/LaunchAgents/omnibazaar.witness_node.plist && ' +
+        'launchctl start -w /Library/LaunchAgents/omnibazaar.witness_node.plist');
+  }
 };
 
 const stopNodeDaemon = () => {
-  sudo.exec('echo hello', options,
-    function(error, stdout, stderr) {
-      if (error) throw error;
-      switch (process.platform) {
-        case 'win32':
-          const userName = process.env.USERPROFILE.split(path.sep)[2];
-          const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-          return sudo.exec('reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /f ');
-        case 'linux':
-          return sudo.exec('systemctl stop omnibazaar-publisher.service');
-        case 'darwin':
-          return exec('launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist');
-      }
-      console.log('stdout: ' + stdout);
-    }
-  );
+  switch (process.platform) {
+    case 'win32':
+      return sudo.exec('reg delete HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /f ', nodeDaemonWinOptions);
+    case 'linux':
+      return sudo.exec('systemctl stop omnibazaar-publisher.service');
+    case 'darwin':
+      return exec('launchctl unload /Library/LaunchAgents/omnibazaar.witness_node.plist');
+  }
 };
 
 const runOb2 = async () => {

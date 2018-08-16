@@ -323,12 +323,12 @@ class PreferencesTab extends Component {
                   {formatMessage(messages.autoRun)}
                 </Grid.Column>
 
-                <Grid.Column width={4}>
+                <Grid.Column width={3}>
                   <div className="autorun">
-                    <Field
-                      name="autorun"
-                      component={Checkbox}
-                    />
+                      <Field
+                        name="autorun"
+                        component={Checkbox}
+                      />
                   </div>
                   <div className="autorun-note">
                     {formatMessage(messages.autoRunNote)}

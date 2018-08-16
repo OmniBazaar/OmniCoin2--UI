@@ -366,6 +366,10 @@ class OmnicoinHistory extends BaseStorage {
               && el.op[1].seller !== account.get('id')) {
             continue;
           }
+          if (operation.operationType === ChainTypes.operations.founder_bonus_operation
+              && this.currentUser.username !== 'omnibazaar') {
+            continue;
+          }
           this.addOperation(operation);
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {

@@ -147,7 +147,7 @@ class PublicData extends Component {
   }
 
   componentWillMount() {
-    const account = this.props.auth.account || {};
+    const { account } = this.props.auth;
     if (account.is_referrer !== this.props.account.referrer) {
       this.toggleReferrer();
     }
@@ -230,13 +230,12 @@ class PublicData extends Component {
   }
 
   toggleTransactionProcessor() {
-    const account = this.props.auth.account || {};
-    const { is_a_processor } = account;
+    const { is_a_processor } = this.props.auth.account;
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     } else if (!is_a_processor && !transactionProcessor) {
-      //this.toggleConfirmationModal();
+      this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
@@ -373,7 +372,7 @@ class PublicData extends Component {
               src={this.getTransactionIcon()}
               width={iconSize}
               height={iconSize}
-              className={cn('checkbox', this.props.auth.account && this.props.auth.account.is_a_processor ? 'disabled' : '')}
+              className={cn('checkbox', this.props.auth.account.is_a_processor ? 'disabled' : '')}
               onClick={this.toggleTransactionProcessor}
             />
           </div>

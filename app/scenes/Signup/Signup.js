@@ -19,7 +19,7 @@ class Signup extends Component {
       )
     ) {
       if (nextProps.auth.isWelcomeBonusAvailable) {
-        this.props.history.push('/');
+        this.props.history.push('/air-drop');
       } else {
         this.props.history.push('/');   
       }
@@ -44,6 +44,7 @@ export default connect(
 
 Signup.propTypes = {
   auth: PropTypes.shape({
+    isWelcomeBonusAvailable: PropTypes.bool,
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string

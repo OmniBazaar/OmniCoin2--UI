@@ -29,7 +29,7 @@ const listingProps = [
 ];
 
 
-const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
+export const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => {
   // let user = getStoredCurrentUser();
   const user = currentUser;
 
@@ -277,12 +277,12 @@ export const checkPublisherAliveStatus = async (user, publisher) => {
   try {
     const options = {
       method: 'GET',
-      json: true
+      json: true,
+      timeout: 6000
     };
     const alive = await makeRequest(user, publisher, 'alive/status', options);
     return alive.ok;
   } catch (err) {
-    console.log('Check publisher alive error', err);
     return false;
   }
 };

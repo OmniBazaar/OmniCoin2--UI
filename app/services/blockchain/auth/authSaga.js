@@ -24,6 +24,7 @@ import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
 import { email } from 'redux-form-validators';
 import { SubmissionError } from 'redux-form';
+import { getAuthHeaders } from '../../listing/apis';
 
 
 const messages = defineMessages({
@@ -92,6 +93,10 @@ export function* login(action) {
     if (isAuthorized) {
       yield put(getAccountAction(username));
       yield put({ type: 'DHT_CONNECT' });
+
+      //call this to cache listing request auth header, because it's a heavy operation
+      yield call(getAuthHeaders, { username, password });
+
       yield put({
         type: 'LOGIN_SUCCEEDED',
         user: {

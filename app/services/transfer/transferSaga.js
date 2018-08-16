@@ -82,6 +82,7 @@ function* omnicoinTransfer({payload: {
     yield put(getAccountBalance(fromAcc.toJS()));
     if (listingId) {
       const purchaseObject = {
+        date: new Date(),
         seller: to,
         buyer: currentUser.username,
         amount,
@@ -114,6 +115,7 @@ function* bitcoinTransfer({ payload: {
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
       const purchaseObject = {
+        date: new Date(),
         seller: toName,
         buyer: currentUser.username,
         amount,
@@ -140,6 +142,7 @@ function* ethereumTransfer({payload: {
     const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
     if (listingId) {
       const purchaseObject = {
+        date: new Date(),
         seller: toName,
         buyer: currentUser.username,
         amount,
