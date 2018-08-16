@@ -52,7 +52,7 @@ const getEthereumBalance = function (privateKey) {
   });
 };
 
-const makeEthereumPayment = function (privateKey, to, amount) {
+const makeEthereumPayment = async function (privateKey, to, amount) {
   var provider = null;
 
   if (isProd()) {
@@ -61,14 +61,14 @@ const makeEthereumPayment = function (privateKey, to, amount) {
     provider = ethers.providers.getDefaultProvider('ropsten');
   }
 
-  validateEthereumAddress(to)
+  await validateEthereumAddress(to)
   var wallet = new Wallet(privateKey, provider);
   var amount = ethers.utils.parseEther(amount + ''); //accept string only
   var sendPromise = wallet.send(to, amount);
 
   return sendPromise.then(function (transactionHash) {
     console.log(transactionHash);
-    return transactionHash;
+    // return transactionHash;
   });
 };
 
@@ -96,7 +96,7 @@ const getEthereumTransactions = wrapRequest(async (address) => fetch(`${ApiAddre
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
-const validateEthereumAddress = function (address) {
+const validateEthereumAddress = async function (address) {
   if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
     // check if it has the basic requirements of an address
     throw "Invalid Ethereum Address";

@@ -139,7 +139,8 @@ function* ethereumTransfer({payload: {
 } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const res = yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
+    yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
+    yield put(ethereumTransferSucceeded());
     if (listingId) {
       const purchaseObject = {
         date: new Date(),
@@ -157,10 +158,13 @@ function* ethereumTransfer({payload: {
       yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
     }
     console.log("Ether res", res);
-    yield put(ethereumTransferSucceeded());
   } catch (error) {
     console.log('ERROR', error);
-    yield put(ethereumTransferFailed(error));
+    if (error.message) {
+      yield put(ethereumTransferFailed(error.message));
+    } else {
+      yield put(ethereumTransferFailed(error));
+    }
   }
 }
 
