@@ -67,6 +67,8 @@ import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
 import { checkPublishersAlive } from '../../services/listing/listingActions'
+import { subscribeForMail, mailReceived, loadFolder } from "../../services/mail/mailActions";
+import MailTypes from "../../services/mail/mailTypes";
 
 const iconSize = 20;
 
@@ -74,18 +76,25 @@ class Home extends Component {
   state = {
     visible: true
   };
+
   componentDidMount() {
-    this.init();
+    const { currentUser } = this.props.auth;
+    if (currentUser) {
+      this.init(currentUser);
+    }
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.connection.node && !this.props.connection.node) {
       this.props.authActions.getAccount(this.props.auth.currentUser.username);
     }
     if (nextProps.auth.currentUser && !this.props.auth.currentUser) {
       this.props.listingActions.checkPublishersAlive();
+      this.init(nextProps.auth.currentUser);
     }
   }
-  init() {
+
+  init(currentUser) {
     this.props.preferencesActions.loadLocalPreferences();
     this.props.bitcoinActions.getWallets();
     this.props.ethereumActions.getEthereumWallets();
@@ -93,13 +102,19 @@ class Home extends Component {
     this.props.connectionActions.restartNodeIfExists();
     this.props.dhtActions.dhtReconnect();
     this.props.authActions.requestAppVersion();
-    const { currentUser } = this.props.auth;
-    if (currentUser) {
-      this.props.authActions.getIdentityVerificationStatus(currentUser.username);
-    }
-    if (this.props.auth.currentUser) {
-      this.props.listingActions.checkPublishersAlive();
-    }
+    this.props.authActions.getIdentityVerificationStatus(currentUser.username);
+    this.props.listingActions.checkPublishersAlive();
+    this.mailSubscribe(currentUser);
+  }
+
+  mailSubscribe(currentUser) {
+    const { username } = currentUser;
+    this.props.mailActions.subscribeForMail(username, (recievedMailObjects) => {
+      recievedMailObjects.forEach((mailObject) => {
+        this.props.mailActions.mailReceived(mailObject.uuid);
+      });
+      this.props.mailActions.loadFolder(username, MailTypes.INBOX);
+    });
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -331,6 +346,11 @@ export default connect(
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
     ethereumActions: bindActionCreators({ getEthereumWallets }, dispatch),
+    mailActions: bindActionCreators({
+      subscribeForMail,
+      mailReceived,
+      loadFolder
+    }, dispatch)
   })
 )(Home);
 

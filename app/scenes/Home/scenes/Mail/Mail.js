@@ -20,8 +20,6 @@ import MailTypes from '../../../../services/mail/mailTypes';
 import {
   showComposeModal,
   setActiveFolder,
-  subscribeForMail,
-  mailReceived,
   deleteMail,
   loadFolder,
   mailSetRead,
@@ -105,7 +103,6 @@ class Mail extends Component {
     if (username) {
       this.props.mailActions.showComposeModal(null, username);
     }
-    this.subscribe();
   }
 
   componentDidMount() {
@@ -167,15 +164,6 @@ class Mail extends Component {
     }
   }
 
-  subscribe() {
-    const { username } = this.props.auth.currentUser;
-    this.props.mailActions.subscribeForMail(username, (recievedMailObjects) => {
-      recievedMailObjects.forEach((mailObject) => {
-        this.props.mailActions.mailReceived(mailObject.uuid);
-      });
-      this.props.mailActions.loadFolder(username, MailTypes.INBOX);
-    });
-  }
 
   changeFolder(activeFolder) {
     const { username } = this.props.auth.currentUser;
@@ -393,8 +381,6 @@ Mail.propTypes = {
   }),
   mailActions: PropTypes.shape({
     showComposeModal: PropTypes.func,
-    subscribeForMail: PropTypes.func,
-    mailReceived: PropTypes.func,
     deleteMail: PropTypes.func,
     loadFolder: PropTypes.func,
     mailSetRead: PropTypes.func,
@@ -420,8 +406,6 @@ export default connect(
   (dispatch) => ({
     mailActions: bindActionCreators({
       showComposeModal,
-      subscribeForMail,
-      mailReceived,
       deleteMail,
       loadFolder,
       mailSetRead,

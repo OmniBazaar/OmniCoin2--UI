@@ -161,15 +161,13 @@ class PurchasesTable extends Component {
                     >
                       {formatMessage(messages.id)}
                     </TableHeaderCell>
-                    {this.props.type === 'buy' &&
-                      <TableHeaderCell
-                        key="title"
-                        sorted={sortColumn === 'title' ? sortDirection : null}
-                        onClick={this.sortData('title')}
-                      >
-                        {formatMessage(messages.title)}
-                      </TableHeaderCell>
-                    }
+                    <TableHeaderCell
+                      key="title"
+                      sorted={sortColumn === 'title' ? sortDirection : null}
+                      onClick={this.sortData('title')}
+                    >
+                      {formatMessage(messages.title)}
+                    </TableHeaderCell>
                     <TableHeaderCell
                       key="id"
                       sorted={sortColumn === 'date' ? sortDirection : null}
@@ -226,9 +224,7 @@ class PurchasesTable extends Component {
                             {row.listingId}
                           </NavLink>
                         </TableCell>
-                        {this.props.type === 'buy' &&
-                          <TableCell>{row.title}</TableCell>
-                        }
+                        <TableCell>{row.title}</TableCell>
                         <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                         <TableCell>{row.count}</TableCell>
                         <TableCell>{row.price} {getCurrencyAbbreviation(row.currency)}</TableCell>
