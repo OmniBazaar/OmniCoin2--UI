@@ -29,6 +29,8 @@
       border-bottom: 1px solid $border-gray;
 
       .listing-body {
+        height: 295px;
+        overflow: auto;
 
         .import-listing-form {
           width: 80%;
@@ -99,7 +101,7 @@ p.modal-content {
   padding: 20px;
 }
 
-.publishers-dropdown {
+.publishers-dropdown, .import-config {
   margin-top: 12px!important;
 }
 

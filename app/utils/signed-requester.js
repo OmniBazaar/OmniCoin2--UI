@@ -1,8 +1,6 @@
 import moment from 'moment';
 import cryptoJs from 'crypto-js';
 
-import { AWS_ACCESS_KEY, AWS_SECRET_KEY } from './constants';
-
 const REQUEST_METHOD = 'GET';
 const REQUEST_URI = '/onca/xml';
 const ENDPOINT = 'webservices.amazon.com';
@@ -30,10 +28,9 @@ export const canonicalize = (queryObject = {}) => {
   }, '');
 };
 
-export const getSignedUrl = (params) => {
-  const AWSAccessKeyId = AWS_ACCESS_KEY;
+export const getSignedUrl = (params, { accessKey, secret }) => {
   const Timestamp = `${moment.utc().format(TIMESTAMP_FORMAT)}Z`;
-  const newParams = { ...params, AWSAccessKeyId, Timestamp };
+  const newParams = { ...params, accessKey, Timestamp };
 
   const urlParams = Object.keys(newParams)
     .sort((a, b) => (a > b) - (a < b))
@@ -48,7 +45,7 @@ export const getSignedUrl = (params) => {
     .replace('%7E', '~');
 
   const toSign = `${REQUEST_METHOD}\n${ENDPOINT}\n${REQUEST_URI}\n${canonicalQS}`;
-  const hmac = toSha256(toSign, AWS_SECRET_KEY);
+  const hmac = toSha256(toSign, secret);
   const sign = encodeURIComponent(hmac);
 
   return `https://${ENDPOINT}${REQUEST_URI}?${canonicalQS}&Signature=${sign}`;

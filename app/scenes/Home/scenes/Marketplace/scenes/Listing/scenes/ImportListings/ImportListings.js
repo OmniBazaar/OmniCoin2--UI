@@ -25,6 +25,7 @@ import { getFileExtension } from '../../../../../../../../utils/file';
 import './import-listings.scss';
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
+import AmazonListingsConfig from './components/AmazonListingsConfig/AmazonListingsConfig';
 
 const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
 
@@ -129,6 +130,7 @@ class ImportListings extends Component {
       selectedPublisher: null,
       selectedVendor: null,
       validatingPublisher: false,
+      configValid: false,
     };
   }
 
@@ -152,6 +154,24 @@ class ImportListings extends Component {
         formatMessage(messages.importationSuccess)
       );
     }
+  }
+
+  vendorsConfigs = {
+    amazon: () => (
+      <AmazonListingsConfig
+        onConfigUpdate={() => this.setState({ configValid: true })}
+        onConfigValid={() => {
+          if (!this.state.configValid) {
+            this.setState({ configValid: true });
+          }
+        }}
+        onConfigInvalid={() => {
+          if (this.state.configValid) {
+            this.setState({ configValid: false });
+          }
+        }}
+      />
+    )
   }
 
   removeFile(index) {
@@ -275,10 +295,14 @@ class ImportListings extends Component {
     this.inputElement.value = '';
   }
 
+  onVendorChange(selectedVendor) {
+    this.setState({ selectedVendor, configValid: selectedVendor === 'all' });
+  }
+
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
-    const { validatingPublisher } = this.state;
+    const { validatingPublisher, configValid, selectedVendor } = this.state;
 
     return (
       <Form className="import-listing-form">
@@ -299,9 +323,11 @@ class ImportListings extends Component {
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
                 value={this.state.selectedVendor}
-                onChange={(e, { value }) => this.setState({ selectedVendor: value })}
+                onChange={(e, { value }) => this.onVendorChange(value)}
               />
             </Grid.Column>
+            {this.state.selectedVendor && this.vendorsConfigs[this.state.selectedVendor] &&
+              this.vendorsConfigs[this.state.selectedVendor]()}
             <Grid.Column width={4}>
               <span>{formatMessage(messages.selectPublisher)}*</span>
             </Grid.Column>
@@ -333,6 +359,7 @@ class ImportListings extends Component {
                   className="button--primary"
                   loading={validatingPublisher}
                   content={formatMessage(messages.addFiles)}
+                  disabled={!selectedVendor || (selectedVendor !== 'all' && !configValid)}
                   onClick={() => this.onClickImportFile()}
                 />
                 <Button content={formatMessage(messages.removeAll)} className="button--blue removeAll" onClick={() => this.onClickRemoveAll()} />
@@ -401,9 +428,9 @@ class ImportListings extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
-    const { selectedVendor, selectedPublisher } = this.state;
+    const { selectedVendor, selectedPublisher, configValid } = this.state;
     let isDisabled = false;
-    if (!selectedVendor || !selectedPublisher || !importedFiles.length) {
+    if (!selectedVendor || (selectedVendor !== 'all' && !configValid) || !selectedPublisher || !importedFiles.length) {
       isDisabled = true;
     }
 
