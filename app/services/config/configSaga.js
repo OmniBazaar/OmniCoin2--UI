@@ -9,7 +9,7 @@ import {
 import { getConfigFailed, getConfigSucceeded } from './configActions';
 import { wrapRequest } from '../utils';
 
-const url = 'https://api.myjson.com/bins/lezxy';
+const url = 'https://omnibazaar.com/config.json';
 
 export function* configSubscriber() {
   yield all([
