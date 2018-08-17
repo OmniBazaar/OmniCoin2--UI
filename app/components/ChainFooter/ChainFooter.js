@@ -9,7 +9,12 @@ import './chain-footer.scss';
 
 class ChainFooter extends Component {
   render() {
-    const { latency, isConnected, block } = this.props;
+    const {
+      latency,
+      isConnected,
+      isConnecting,
+      block
+    } = this.props;
     const color = getColor(latency);
     return (
       <div
@@ -18,11 +23,19 @@ class ChainFooter extends Component {
           backgroundColor: isConnected ? color : 'red',
         }}
       >
-        {isConnected ?
+        {isConnected &&
           <span>
-            <Latency latency={latency} /> | <FormattedMessage id="ChainFooter.block" defaultMessage="Block" /> : #{block}
+            <Latency latency={latency}/> | <FormattedMessage id="ChainFooter.block" defaultMessage="Block"/> : #{block}
           </span>
-          : <FormattedMessage
+        }
+        {!isConnected && isConnecting &&
+          <FormattedMessage
+            id="ChainFooter.connecting"
+            defaultMessage="Connecting..."
+          />
+        }
+        {!isConnected && !isConnecting &&
+          <FormattedMessage
             id="ChainFooter.noConnection"
             defaultMessage="No connection"
           />
@@ -38,6 +51,7 @@ export default connect((state) => {
   } = state.default.connection;
   return {
     isConnected: !error && !isLoading,
+    isConnecting: isLoading,
     block: dynGlobalObject ? dynGlobalObject.head_block_number : null,
     latency
   };

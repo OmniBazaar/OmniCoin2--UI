@@ -1,4 +1,5 @@
 {
   "ChainFooter.noConnection": "No connection",
-  "ChainFooter.block": "Block"
+  "ChainFooter.block": "Block",
+  "ChainFooter.connecting": "Connecting..."
 }

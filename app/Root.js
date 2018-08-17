@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
+import { Loader } from 'semantic-ui-react';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
@@ -22,6 +23,8 @@ import { loadLocalPreferences } from './services/preferences/preferencesActions'
 import { getConfig } from './services/config/configActions';
 import { checkUpdate } from './services/updateNotification/updateNotificationActions';
 import localeData from './../app/dist/i18n/data.json';
+import Background from "./components/Background/Background";
+
 
 class Root extends Component {
   componentWillMount() {
@@ -54,22 +57,38 @@ class Root extends Component {
     return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
   }
 
+  renderContent() {
+    return (
+      <div>
+        <Router>
+          <Switch>
+            <Route path="/signup" render={(props) => <Signup {...props} />} />
+            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
+            <Route path="/login" render={(props) => <Login {...props} />} />
+            <Route path="/" render={(props) => <Home {...props} />} />
+          </Switch>
+        </Router>
+        <UpdateForcer />
+      </div>
+    );
+  }
+
+  renderLoader() {
+    return (
+      <Background>
+        <Loader inline="centered" active />
+      </Background>
+    );
+  }
+
   render() {
+
     const { language } = this.props.preferences.preferences;
+    const { isLoading } = this.props.connection;
     const messages = this.getLocaleMessages(language);
     return (
       <IntlProvider locale={language} messages={messages} key={language}>
-        <div>
-          <Router>
-            <Switch>
-              <Route path="/signup" render={(props) => <Signup {...props} />} />
-              <Route path="/air-drop" render={props => <AirDrop {...props} />} />
-              <Route path="/login" render={(props) => <Login {...props} />} />
-              <Route path="/" render={(props) => <Home {...props} />} />
-            </Switch>
-          </Router>
-          <UpdateForcer />
-        </div>
+        {isLoading ? this.renderLoader() : this.renderContent()}
       </IntlProvider>
     );
   }
