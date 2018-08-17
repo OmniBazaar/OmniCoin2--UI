@@ -122,12 +122,10 @@ export function* searchListingsByPeersMap({
   }
 
   if (searchByAllKeywords) {
-    const keywords = [];
-    peersMap.forEach(item => {
-      if (item.keyword) {
-        keywords.push(item.keyword);
-      }
-    });
+    let keywords = [];
+    if (searchTerm) {
+      keywords = searchTerm.split(' ');
+    }
     message = {
       id,
       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
