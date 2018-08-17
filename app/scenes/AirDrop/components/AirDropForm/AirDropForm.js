@@ -38,11 +38,15 @@ const messages = defineMessages({
   },
   joinTelegramBotSuggestion: {
     id: 'AirDropForm.joinTelegramBotSuggestion',
-    defaultMessage: 'Search omnicoin_verification_bot and start the Bot:'
+    defaultMessage: 'Start the Bot here:'
+  },
+  omnicoinVerificationBotLink: {
+    id: 'AirDropForm.omnicoinVerificationBotLink',
+    defaultMessage: 'Omnicoin verification bot'
   },
   joinTelegramBotConfirmation: {
     id: 'AirDropForm.joinTelegramBotConfirmation',
-    defaultMessage: 'I joined the omnicoin_verification_bot.'
+    defaultMessage: 'I joined the omnicoin verification bot.'
   },
   telegramPhoneNumber: {
     id: 'AirDropForm.telegramPhoneNumber',
@@ -195,7 +199,9 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinTelegramBotSuggestion)}&nbsp;
-            <a className="link" href="https://web.telegram.org/#/im?p=@omnicoin_verification_bot" target="_blank" />
+            <a className="link" href="https://t.me/omnicoin_verification_bot" target="_blank">
+              {formatMessage(messages.omnicoinVerificationBotLink)}
+            </a>
           </p>
         </div>
         <div className="joined-channel">

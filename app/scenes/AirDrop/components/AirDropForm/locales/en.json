@@ -5,8 +5,9 @@
 
   "AirDropForm.joinTelegramChannelConfirmation":
   "I joined the OmniBazaar/OmniCoin channel. My Telegram phone number is",
-  "AirDropForm.joinTelegramBotSuggestion": "Search omnicoin_verification_bot and start the Bot:",
-  "AirDropForm.joinTelegramBotConfirmation": "I joined the omnicoin_verification_bot.",
+  "AirDropForm.joinTelegramBotSuggestion": "Start the Bot here:",
+  "AirDropForm.omnicoinVerificationBotLink": "Omnicoin verification bot",
+  "AirDropForm.joinTelegramBotConfirmation": "I joined the omnicoin verification bot.",
   "AirDropForm.telegramPhoneNumber": "Phone Number",
   "AirDropForm.telegramUserName": "User name",
   "AirDropForm.joinTwitterChannelSuggestion": "Join our Twitter channel here:",
