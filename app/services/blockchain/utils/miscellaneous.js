@@ -19,7 +19,6 @@ async function fetchAccount(username) {
 }
 
 async function createConnection(nodes) {
-  console.log('CREATING CONNECTION ', nodes);
   const urls = nodes.map(item => item.url);
   const connectionManager = new Manager({ url: nodes[0].url, urls });
   const connectionStart = new Date().getTime();

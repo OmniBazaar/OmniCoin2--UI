@@ -95,9 +95,10 @@ class Marketplace extends Component {
   fetchListings({
     country, state, city, keywords
   }) {
+    const searchTerm = keywords.join(' ');
     const searchListings = () => {
       if (!this.props.dht.isConnecting && this.props.dht.connector) {
-        this.props.searchActions.searchListings(keywords, 'All', country, state, city, true, null);
+        this.props.searchActions.searchListings(searchTerm, 'All', country, state, city, true, null);
       } else {
         setTimeout(searchListings, 500);
       }
@@ -415,7 +416,7 @@ class Marketplace extends Component {
     if (categoryId !== 'featuredListings') {
       this.props.searchActions.searchListings(null, category, country, state, city, true, subCategory);
     } else {
-      this.props.searchActions.searchListings(this.props.account.publisherData.keywords, 'All', country, state, city, true, null);
+      this.props.searchActions.searchListings(this.props.account.publisherData.keywords.join(' '), 'All', country, state, city, true, null);
     }
   };
 

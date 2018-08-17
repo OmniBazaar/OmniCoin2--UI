@@ -5,10 +5,16 @@ import fs from 'fs';
 import { getListings } from './../../utils/listings';
 import { createListing, saveImage } from './apis';
 import { getImageFromAmazon } from './../../utils/images';
+import { encryptDataInStorage, decryptDataFromStorage } from './../../utils/encrypt';
 
 const listingHandlersByVendor = {
   amazon: getListings,
   all: getListings,
+};
+
+const listingImageGetters = {
+  amazon: getImageFromAmazon,
+  default: getImageFromAmazon,
 };
 
 const imagesDevPath = {
@@ -40,6 +46,8 @@ export function* importSubscriber() {
   yield all([
     takeLatest('STAGE_FILE', importListingsFromFile),
     takeLatest('IMPORT_FILES', saveFiles),
+    takeLatest('UPDATE_IMPORT_CONFIG', updateImportConfig),
+    takeLatest('LOAD_IMPORT_CONFIG', loadImportConfig),
   ]);
 }
 
@@ -48,6 +56,11 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
     const { content, name } = file;
     const listings = yield call(listingHandlersByVendor[vendor] || getListings, content);
     const { currentUser } = (yield select()).default.auth;
+    const { importConfig } = (yield select()).default.listingImport;
+
+    if (!vendor || (!importConfig[vendor] && vendor !== 'all')) {
+      throw new Error(`Missing import configuration for ${vendor}`);
+    }
 
     const items = yield listings.map(async (item) => {
       let imageToSave;
@@ -59,7 +72,14 @@ export function* importListingsFromFile({ payload: { file, defaultValues, vendor
       };
 
       if (!itemToSave.imageURL) {
-        imageToSave = await getImageFromAmazon(itemToSave.productId);
+        if (listingImageGetters[vendor]) {
+          imageToSave = await listingImageGetters[vendor](
+            itemToSave.productId,
+            importConfig[vendor].data
+          );
+        } else {
+          imageToSave = await listingImageGetters.default(itemToSave.productId);
+        }
       } else {
         imageToSave = (await fetch(itemToSave.imageURL)).blob();
       }
@@ -162,5 +182,27 @@ export function* saveFiles({ payload: { publisher, filesToImport } }) {
     yield put({ type: 'IMPORT_FILES_SUCCEEDED' });
   } catch (e) {
     yield put({ type: 'IMPORT_FILES_FAILED', error: e.message });
+  }
+}
+
+export function* updateImportConfig({ payload: { data, provider, remember } }) {
+  try {
+    const { currentUser: { username } } = (yield select()).default.auth;
+
+    encryptDataInStorage({ data, provider, remember }, `${provider}-${username}-import-config`);
+    yield put({ type: 'IMPORT_CONFIG_UPDATE_SUCCEEDED' });
+  } catch (e) {
+    yield put({ type: 'IMPORT_CONFIG_UPDATE_FAILED', error: e.message });
+  }
+}
+
+export function* loadImportConfig({ payload: { provider } }) {
+  try {
+    const { currentUser: { username } } = (yield select()).default.auth;
+    const config = decryptDataFromStorage(`${provider}-${username}-import-config`);
+
+    yield put({ type: 'LOAD_IMPORT_CONFIG_SUCCEEDED', importConfig: { config, provider } });
+  } catch (e) {
+    yield put({ type: 'LOAD_IMPORT_CONFIG_FAILED', error: e.message });
   }
 }

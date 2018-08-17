@@ -11,6 +11,7 @@ import {
   updateFileItemCategory,
   updateFileItemTitle,
   updateFileItemDescription,
+  updateImportConfig,
 } from './importActions';
 
 const defaultState = {
@@ -20,6 +21,8 @@ const defaultState = {
   importingFile: false,
   stagingFile: false,
   error: null,
+  importConfig: {},
+  updatingConfig: false,
 };
 
 const updateFileItemProp = ({
@@ -144,6 +147,20 @@ const reducer = handleActions({
     };
   },
 
+  [updateImportConfig](state, { payload: { data, provider, remember } }) {
+    return {
+      ...state,
+      updatingConfig: true,
+      importConfig: {
+        ...state.importConfig,
+        [provider]: {
+          data,
+          remember,
+        },
+      }
+    };
+  },
+
   IMPORT_FILES_SUCCEEDED: (state) => ({
     ...state,
     importedFiles: [],
@@ -168,6 +185,51 @@ const reducer = handleActions({
     ...state,
     error,
     stagingFile: false,
+  }),
+
+  IMPORT_CONFIG_UPDATE_SUCCEEDED: (state) => ({
+    ...state,
+    updatingConfig: false,
+    error: null
+  }),
+
+  IMPORT_CONFIG_UPDATE_FAILED: (state, { error }) => ({
+    ...state,
+    error,
+    updatingConfig: false,
+  }),
+
+  LOAD_IMPORT_CONFIG_SUCCEEDED: (state, { importConfig: { config, provider } }) => {
+    const newState = {
+      ...state,
+      error: null,
+      importConfig: {
+        ...state.importConfig,
+        [provider]: null,
+      }
+    };
+
+    if (config) {
+      const { data, remember } = config;
+
+      return {
+        ...newState,
+        importConfig: {
+          ...state.importConfig,
+          [provider]: {
+            data,
+            remember,
+          },
+        }
+      };
+    }
+
+    return newState;
+  },
+
+  LOAD_IMPORT_CONFIG_FAILED: (state, { error }) => ({
+    ...state,
+    error,
   }),
 }, defaultState);
 
