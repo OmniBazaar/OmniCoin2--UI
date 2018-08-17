@@ -7,8 +7,10 @@ import _ from 'lodash';
 import { getObjectById } from "../../listing/apis";
 import { getUserDataFolder, checkDir, writeFile, isExist, readFile } from '../../fileUtils';
 import * as BitcoinApi from './BitcoinApi';
-import {SATOSHI_IN_BTC} from "../../../utils/constants";
-
+import { OB_FEE_MAIL_SUBJECT } from "../../../utils/constants";
+import { sendMail } from "../../mail/utils";
+import {getStoredCurrentUser} from "../auth/services";
+import BitcoinObFeesHistory from "../../accountSettings/bitcoinHistory";
 
 const algorithm = 'aes-256-ctr';
 
@@ -58,6 +60,11 @@ export const getBitcoinWalletData = async (account) => {
 
 
 export const sendOBFees = async (purchase, guid, password) => {
+  const recipients = {};
+  const mailList = {};
+  const txHistoryItem = {
+    obFee: { }
+  };
   const [omnibazaar, buyer, seller, listing] = await Promise.all([
     FetchChain('getAccount', 'omnibazaar'),
     FetchChain('getAccount', purchase.buyer),
@@ -68,23 +75,58 @@ export const sendOBFees = async (purchase, guid, password) => {
     FetchChain('getAccount', buyer.get('referrer')),
     FetchChain('getAccount', seller.get('referrer'))
   ]);
-  const recipients = {};
   const omnibazaarFee = purchase.amount * listing.priority_fee / 10000 * SATOSHI_IN_BTC;
-  if (omnibazaarFee > 1000) {
+  if (omnibazaarFee >= 1000) {
     recipients[omnibazaar.get('btc_address')] = omnibazaarFee;
+    mailList[omnibazaar.get('name')] = {
+      obFee: {
+        omnibazaar_fee: omnibazaarFee
+      }
+    };
+    txHistoryItem.obFee.omnibazaar_fee = omnibazaarFee;
   }
   const referrerFee = purchase.amount * 0.0025 * SATOSHI_IN_BTC;
   if (seller.get('is_referrer') && referrerFee >= 1000) {
     if (buyerReferrer.get('is_referrer') && buyerReferrer.get('btc_address')) {
       recipients[buyerReferrer.get('btc_address')] = referrerFee;
+      mailList[buyerReferrer.get('name')] = {
+        obFee: {
+          referrer_buyer_fee: referrerFee
+        }
+      };
+      txHistoryItem.obFee.referrer_buyer_fee = referrerFee;
     }
     if (sellerReferrer.get('is_referrer') && sellerReferrer.get('btc_address')) {
       recipients[sellerReferrer.get('btc_address')] = referrerFee;
+      mailList[sellerReferrer.get('name')] = {
+        obFee: {
+          referrer_seller_fee: referrerFee
+        }
+      };
+      txHistoryItem.obFee.referrer_seller_fee = referrerFee;
     }
   }
-  console.log('RECIPIENTS ', recipients);
   if (!_.isEmpty(recipients)) {
     const result =  await BitcoinApi.sendToMany(guid, password, recipients, 1);
-    console.log('result trx ', result);
+    Object.keys(mailList).forEach(key => {
+      mailList[key].hash = result.tx_hash;
+      mailList[key].currency = 'BTC';
+    });
+    txHistoryItem.hash = result.tx_hash;
+    txHistoryItem.currency = 'BTC';
+    saveTxHistoryItem(txHistoryItem);
+    sendObFeeMails(seller.get('name'), mailList);
   }
+};
+
+const saveTxHistoryItem = (txHistoryItem) => {
+  const currentUser = getStoredCurrentUser();
+  const bitcoinHistory = new BitcoinObFeesHistory(currentUser.username);
+  bitcoinHistory.add(txHistoryItem);
+};
+
+const sendObFeeMails = (from, mailList) => {
+  Object.keys(mailList).forEach(recipient => {
+    sendMail(from, recipient, OB_FEE_MAIL_SUBJECT, JSON.stringify(mailList[recipient]));
+  });
 };

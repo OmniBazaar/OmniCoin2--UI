@@ -19,16 +19,33 @@ import { voteForProcessors } from '../processors/utils';
 import EthereumHistory from './ethereumHistory';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
 import {SATOSHI_IN_BTC} from "../../utils/constants";
+import BitcoinObFeesHistory from "./bitcoinHistory";
 
 const processBitcoinTransactions = (txs) => {
-    return txs.map(tx => ({
+  const currentUser = getStoredCurrentUser();
+  const obHistory = new BitcoinObFeesHistory(currentUser.username);
+  return txs.map(tx => {
+      const info = obHistory.getTxInfo(tx.hash);
+      if (info && info.obFee) {
+        Object.keys(info.obFee).forEach(key => {
+          info.obFee[key] /=  SATOSHI_IN_BTC;
+        });
+      }
+      return {
+        id: tx.tx_index,
+        isBtc: true,
+        hash: tx.hash,
         date: tx.time * 1000,
+        vin_sz: tx.vin_sz,
+        vout_sz: tx.vout_sz,
         fromTo: tx.out[0].addr,
         amount: tx.out[0].value / SATOSHI_IN_BTC,
         fee: tx.fee / SATOSHI_IN_BTC,
         isIncoming: tx.result > 0,
-      })
-    );
+        obFee: info ? info.obFee : {}
+      }
+    }
+  );
 };
 
 export function* accountSubscriber() {

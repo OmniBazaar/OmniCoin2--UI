@@ -306,7 +306,7 @@ class RecentTransactions extends Component {
                           {/* <TableCell className="balance"> */}
                           {/* {row.balance} */}
                           {/* </TableCell> */}
-                          {coinType === CoinTypes.OMNI_COIN &&
+                          {(coinType === CoinTypes.OMNI_COIN || coinType === CoinTypes.BIT_COIN) &&
                             <TableCell>
                               <span
                                 className="link"

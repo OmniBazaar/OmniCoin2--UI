@@ -137,9 +137,9 @@ class OmnicoinHistory extends BaseStorage {
         transactions[trxKey] = {
           amount: 0,
           fee: 0,
-          //   balance: 0,
           operations: [],
-          type: op.operationType
+          type: op.operationType,
+          isXom: true
         };
       }
       if (op.opInTrx === 0) {
