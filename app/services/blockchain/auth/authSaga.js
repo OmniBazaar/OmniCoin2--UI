@@ -239,7 +239,6 @@ function* welcomeBonus({
       yield put(welcomeBonusSucceeded());
     }
   } catch (error) {
-    console.log('ERROR ', error);
     yield put(welcomeBonusFailed(error));
   }
 }
