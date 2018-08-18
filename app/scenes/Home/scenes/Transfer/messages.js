@@ -129,6 +129,10 @@ export default defineMessages({
     id: 'Transfer.numberExceedsDecimalsLimit',
     defaultMessage: 'Amount cannot have more than {limit} numbers after decimal'
   },
+  numberCannotBeNegative: {
+    id: 'Transfer.numberCannotBeNegative',
+    defaultMessage: 'Amount cannot be a negative value'
+  },
   currency: {
     id: 'Transfer.currency',
     defaultMessage: 'Select Currency'
