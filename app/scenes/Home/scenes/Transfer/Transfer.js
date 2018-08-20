@@ -748,7 +748,7 @@ class Transfer extends Component {
               buttonText="ETH"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) })
+                numericality({'>': 0, message: formatMessage(messages.numberRequired) })
               ]}
               disabled={listingId}
             />
