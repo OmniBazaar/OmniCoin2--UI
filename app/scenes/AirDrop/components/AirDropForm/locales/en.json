@@ -2,9 +2,7 @@
   "AirDropForm.receiveOmnicoinsByFollowingActions": "You can receive {current_bonus_amount} OmniCoins just for doing the following actions:",
   "AirDropForm.joinTelegramChannelSuggestion": "Join our Telegram channel here:",
   "AirDropForm.telegramLink": "OmniBazaar on Telegram",
-
-  "AirDropForm.joinTelegramChannelConfirmation":
-  "I joined the OmniBazaar/OmniCoin channel. My Telegram phone number is",
+  "AirDropForm.joinTelegramChannelConfirmation": "I joined the OmniBazaar/OmniCoin channel. My Telegram phone number is",
   "AirDropForm.joinTelegramBotSuggestion": "Search omnicoin_verification_bot and start the Bot:",
   "AirDropForm.joinTelegramBotConfirmation": "I joined the omnicoin_verification_bot.",
   "AirDropForm.telegramPhoneNumber": "Phone Number",
@@ -23,4 +21,3 @@
   "AirDropForm.invalidEmail": "Email is invalid",
   "AirDropForm.getWhiteListedForTokenSale": "Get white-listed for our token sale"
 }
-

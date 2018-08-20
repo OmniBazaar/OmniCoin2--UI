@@ -7,7 +7,7 @@
   "TransactionDetails.transactionDetails": "Transaction Details",
   "TransactionDetails.withdraw": "Withdraw",
   "TransactionDetails.deposit": "Deposit",
-  "TransactionDetails.amountOfAsset": "Amount of asset",
+  "TransactionDetails.amountOfAsset": "Amount of asset,",
   "TransactionDetails.next": "Next",
   "TransactionDetails.feeDetail": "Fee: {fee} XOM",
   "TransactionDetails.omnibazaarFeeDetail": "OmniBazaar fee: {fee} XOM",

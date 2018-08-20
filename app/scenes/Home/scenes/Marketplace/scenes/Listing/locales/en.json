@@ -45,7 +45,7 @@
   "Listing.notInBlockchain": "The listing was deleted from the blockchain.",
   "Listing.reportDeleteQuestion": "Are you sure you want to delete this listing?",
   "Listing.reportConfirmationQuestion": "Are you sure you want to report this listing?",
-  "Listing.reportListingErrorPopScore": "Your PoP score is not high enough to be able to report a listing.",
+  "Listing.reportListingErrorPopScore": "Your PoP score is not high enough to remove this listing by yourself. Your report will be combined with reports of others to remove the listing.",
   "Listing.reportListingError": "An error occurred with your report of this listing.",
   "Listing.reportListingSuccess": "Listing was reported successfully.",
   "Listing.contactSeller": "Contact Seller"
