@@ -9,10 +9,11 @@
   "TransactionDetails.deposit": "Deposit",
   "TransactionDetails.amountOfAsset": "Amount of asset,",
   "TransactionDetails.next": "Next",
-  "TransactionDetails.feeDetail": "Fee: {fee} XOM",
-  "TransactionDetails.omnibazaarFeeDetail": "OmniBazaar fee: {fee} XOM",
-  "TransactionDetails.escrowFeeDetail": "Escrow fee: {fee} XOM",
-  "TransactionDetails.referrerBuyerFee": "Buyer's Referrer fee: {fee} XOM",
-  "TransactionDetails.referrerSellerFee": "Sellers's Referrer fee: {fee} XOM",
-  "TransactionDetails.publisherFee": "Publisher fee: {fee} XOM"
+  "TransactionDetails.feeDetail": "Fee: {fee} {currency}",
+  "TransactionDetails.omnibazaarFeeDetail": "OmniBazaar fee: {fee} {currency}",
+  "TransactionDetails.escrowFeeDetail": "Escrow fee: {fee} {currency}",
+  "TransactionDetails.referrerBuyerFee": "Buyer's Referrer fee: {fee} {currency}",
+  "TransactionDetails.referrerSellerFee": "Sellers's Referrer fee: {fee} {currency}",
+  "TransactionDetails.publisherFee": "Publisher fee: {fee} {currency}",
+  "TransactionDetails.transactionHash": "Transaction hash"
 }

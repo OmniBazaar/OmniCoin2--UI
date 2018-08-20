@@ -6,7 +6,6 @@ import {
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
-import { FetchChain } from 'omnibazaarjs/es';
 import _ from 'lodash';
 
 import {
@@ -16,6 +15,7 @@ import {
   deleteMessage,
   generateMailUUID
 } from './mailStorage';
+import { sendMail as sendMailUtil } from "./utils";
 
 import MailTypes from './mailTypes';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
@@ -40,42 +40,8 @@ export function* mailSubscriber() {
 
 
 function* sendMail({payload: {sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback } }) {
-  const currentTimeMil = (new Date()).getTime();
-  const uuid = generateMailUUID(sender, currentTimeMil);
-  const currentTimeSec = Math.floor(currentTimeMil / 1000);
-
-  const mailObject = {
-    sender,
-    recipient,
-    subject,
-    body,
-    read_status: false,
-    creation_time: currentTimeSec,
-    uuid
-  };
-
-  /* afterDeliveredCallback happens to be triggered multiple times
-    by the backend, so this will ensure that action is handle only once */
-  let mailDeliveredOnce = false;
-
-  const afterDeliveredCallback = () => {
-    if (!mailDeliveredOnce) {
-      console.log('Mail is delivered:', mailObject);
-      mailObject.read_status = true;
-      deleteMessage(mailObject.sender, MailTypes.OUTBOX, mailObject.uuid);
-      storeMessage(mailObject, mailObject.sender, MailTypes.SENT);
-      mailDeliveredCallback(mailObject);
-    }
-    mailDeliveredOnce = true;
-  };
-
   try {
-    yield FetchChain('getAccount', recipient);
-    yield (Apis.instance().network_api().exec('mail_send', [afterDeliveredCallback, mailObject]).then(() => {
-      console.log('Mail is in the outbox:', mailObject);
-      storeMessage(mailObject, mailObject.sender, MailTypes.OUTBOX);
-      mailSentCallback();
-    }));
+    sendMailUtil(sender, recipient, subject, body, mailSentCallback, mailDeliveredCallback);
     yield put({ type: 'EMAIL_SENT_SUCCEEDED' });
   } catch (error) {
     yield put({ type: 'EMAIL_SENT_FAILED', error });
