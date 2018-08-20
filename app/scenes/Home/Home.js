@@ -92,6 +92,10 @@ class Home extends Component {
       this.props.listingActions.checkPublishersAlive();
       this.init(nextProps.auth.currentUser);
     }
+
+    if (this.props.dht.error) {
+      this.props.dhtActions.dhtReconnect();
+    }
   }
 
   init(currentUser) {

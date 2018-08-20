@@ -17,7 +17,6 @@ class Login extends Component {
     }
   }
 
-
   render() {
     if (this.props.auth.currentUser) {
       return (<Redirect
