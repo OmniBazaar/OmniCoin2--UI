@@ -93,7 +93,7 @@ class Home extends Component {
       this.init(nextProps.auth.currentUser);
     }
 
-    if (this.props.dht.error) {
+    if (nextProps.dht.error) {
       this.props.dhtActions.dhtReconnect();
     }
   }
