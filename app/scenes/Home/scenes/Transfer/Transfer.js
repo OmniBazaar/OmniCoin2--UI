@@ -95,17 +95,6 @@ const amountDecimalsValidator = addValidator({
   },
 });
 
-const amountNoNegativesValidator = addValidator({
-  validator(options, value) {
-    if (+value <= 0) {
-      return {
-        id: 'form.errors.custom',
-        defaultMessage: options.message,
-      };
-    }
-  },
-});
-
 class Transfer extends Component {
 
   static escrowOptions(escrows) {
@@ -521,15 +510,13 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) }),
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
                 amountDecimalsValidator({
                   message: formatMessage(messages.numberExceedsDecimalsLimit, {
                     limit: XOM_DECIMALS_LIMIT
                   }),
                 }),
-                amountNoNegativesValidator({
-                  message: formatMessage(messages.numberCannotBeNegative)
-                })
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={!!listingId}
             />
@@ -694,10 +681,8 @@ class Transfer extends Component {
               buttonText="BTC"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) }),
-                amountNoNegativesValidator({
-                  message: formatMessage(messages.numberCannotBeNegative)
-                })
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={listingId}
             />
