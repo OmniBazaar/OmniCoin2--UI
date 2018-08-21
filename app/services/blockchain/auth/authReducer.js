@@ -183,7 +183,8 @@ const reducer = handleActions({
   [welcomeBonusSucceeded](state) {
     return ({
       ...state,
-      isWelcomeBonusAvailable: false
+      isWelcomeBonusAvailable: false,
+      loading: false
     });
   },
 }, defaultState);

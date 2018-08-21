@@ -22,7 +22,6 @@ import {
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
-import { email } from 'redux-form-validators';
 import { SubmissionError } from 'redux-form';
 import { getAuthHeaders } from '../../listing/apis';
 
@@ -239,7 +238,6 @@ function* welcomeBonus({
       yield put(welcomeBonusSucceeded());
     }
   } catch (error) {
-    console.log('ERROR ', error);
     yield put(welcomeBonusFailed(error));
   }
 }
@@ -268,7 +266,7 @@ export function* getIdentityVerificationStatus({ payload: { data } }) {
     const applicantId = res.list.items[0].id;
     const response = yield call(AuthApi.getIdentityVerificationStatus, applicantId);
     const { reviewStatus, reviewResult } = response;
-    let status;  
+    let status;
     if (reviewStatus === 'pending') {
       status = 'Pending';
     } else if (reviewResult.reviewAnswer === 'GREEN') {

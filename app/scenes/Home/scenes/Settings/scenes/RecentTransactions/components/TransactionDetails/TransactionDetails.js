@@ -52,27 +52,31 @@ const messages = defineMessages({
   },
   feeDetail: {
     id: 'TransactionDetails.feeDetail',
-    defaultMessage: 'Fee: {fee} XOM'
+    defaultMessage: 'Fee: {fee} {currency}'
   },
   omnibazaarFeeDetail: {
     id: 'TransactionDetails.omnibazaarFeeDetail',
-    defaultMessage: 'OmniBazaar fee: {fee} XOM'
+    defaultMessage: 'OmniBazaar fee: {fee} {currency}'
   },
   escrowFeeDetail: {
     id: 'TransactionDetails.escrowFeeDetail',
-    defaultMessage: 'Escrow fee: {fee} XOM'
+    defaultMessage: 'Escrow fee: {fee} {currency}'
   },
   referrerBuyerFee: {
     id: 'TransactionDetails.referrerBuyerFee',
-    defaultMessage: 'Buyer\'s Referrer fee: {fee} XOM'
+    defaultMessage: 'Buyer\'s Referrer fee: {fee} {currency}'
   },
   referrerSellerFee: {
     id: 'TransactionDetails.referrerSellerFee',
-    defaultMessage: 'Sellers\'s Referrer fee: {fee} XOM'
+    defaultMessage: 'Sellers\'s Referrer fee: {fee} {currency}'
   },
   publisherFee: {
     id: 'TransactionDetails.publisherFee',
-    defaultMessage: 'Publisher fee: {fee} XOM'
+    defaultMessage: 'Publisher fee: {fee} {currency}'
+  },
+  transactionHash: {
+    id: 'TransactionDetails.transactionHash',
+    defaultMessage: 'Transaction hash'
   },
   from: {
     id: 'Settings.from',
@@ -97,26 +101,57 @@ class TransactionDetails extends Component {
     }
   }
 
+  getCurrency(op) {
+    if (op.isBtc) {
+      return 'BTC'
+    }
+    if (op.isEther) {
+      return 'ETH';
+    }
+    if (op.isXom) {
+      return 'XOM';
+    }
+  }
+
   getFeeDetail(op) {
     const { formatMessage } = this.props.intl;
-    let feeDetail = formatMessage(messages.feeDetail, { fee: op.isIncoming ? 0 : op.fee });
+    const currency = this.getCurrency(op);
+    let feeDetail = formatMessage(messages.feeDetail, {
+      fee: op.isIncoming ? 0 : op.fee,
+      currency
+    });
     if (op.obFee) {
-      if (op.isIncoming) {
+      if (op.isIncoming || op.isBtc) {
         if (op.obFee.omnibazaar_fee) {
-          feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, {fee: op.obFee.omnibazaar_fee})}`;
+          feeDetail += `, ${formatMessage(messages.omnibazaarFeeDetail, {
+            fee: op.obFee.omnibazaar_fee,
+            currency
+          })}`;
         }
         if (op.obFee.escrow_fee) {
-          feeDetail += `, ${formatMessage(messages.escrowFeeDetail, {fee: op.obFee.escrow_fee})}`;
+          feeDetail += `, ${formatMessage(messages.escrowFeeDetail, {
+            fee: op.obFee.escrow_fee,
+            currency
+          })}`;
         }
         if (op.obFee.referrer_buyer_fee) {
-          feeDetail += `, ${formatMessage(messages.referrerBuyerFee, {fee: op.obFee.referrer_buyer_fee})}`;
+          feeDetail += `, ${formatMessage(messages.referrerBuyerFee, {
+            fee: op.obFee.referrer_buyer_fee,
+            currency
+          })}`;
         }
         if (op.obFee.referrer_seller_fee) {
-          feeDetail += `, ${formatMessage(messages.referrerSellerFee, {fee: op.obFee.referrer_seller_fee})}`;
+          feeDetail += `, ${formatMessage(messages.referrerSellerFee, {
+            fee: op.obFee.referrer_seller_fee,
+            currency
+          })}`;
         }
       } else {
         if (op.obFee.publisher_fee) {
-          feeDetail += `, ${formatMessage(messages.publisherFee, {fee: op.obFee.publisher_fee})}`;
+          feeDetail += `, ${formatMessage(messages.publisherFee, {
+            fee: op.obFee.publisher_fee,
+            currency
+          })}`;
         }
       }
       return feeDetail;
@@ -126,7 +161,7 @@ class TransactionDetails extends Component {
 
   getEtherDetail(detailSelected) {
     const { formatMessage } = this.props.intl;
-    const { from, to } = detailSelected
+    const { from, to } = detailSelected;
 
     return (
       <div>
@@ -135,6 +170,16 @@ class TransactionDetails extends Component {
         <div className="withdraw">{formatMessage(messages.from)}: {from}</div>
       </div>
     );
+  }
+
+  getBtcDetail(detailSelected) {
+    const { isIncoming } = detailSelected;
+    const obFee = this.getFeeDetail(detailSelected);
+    if (isIncoming) {
+      return <div className="deposit"> {obFee} </div>
+    } else {
+      return <div className="withdraw"> {obFee} </div>;
+    }
   }
 
   renderOperations(detailSelected) {
@@ -185,16 +230,26 @@ class TransactionDetails extends Component {
           <span className="main code">
             #{detailSelected ? detailSelected.id : ''}
           </span>
-          <div className="top-container">
-            <div className="item">
-              <span>{formatMessage(messages.block)}</span>
-              <span className="code primary-blue">{detailSelected.blockNum}</span>
+          {detailSelected.isBtc ?
+            <div className="top-container">
+              <div className="item">
+                <span>{formatMessage(messages.transactionHash)}</span>
+                <span className="code primary-blue">{detailSelected.hash}</span>
+              </div>
             </div>
-            <div className="item">
-              <span>{formatMessage(messages.transaction)}</span>
-              <span className="code">{detailSelected.trxInBlock}</span>
+            :
+            <div className="top-container">
+              <div className="item">
+                <span>{formatMessage(messages.block)}</span>
+                <span className="code primary-blue">{detailSelected.blockNum}</span>
+              </div>
+              <div className="item">
+                <span>{formatMessage(messages.transaction)}</span>
+                <span className="code">{detailSelected.trxInBlock}</span>
+              </div>
             </div>
-          </div>
+          }
+
           <div className="item">
             <span>
               {formatMessage(messages.timeStamp)}
@@ -206,10 +261,9 @@ class TransactionDetails extends Component {
         </div>
         <div className="separator" />
           <div className="operations">
-            {detailSelected.isEther ?
-              this.getEtherDetail(detailSelected)
-              : this.renderOperations(detailSelected)
-            }
+            { detailSelected.isEther && this.getEtherDetail(detailSelected) }
+            { detailSelected.isXom && this.renderOperations(detailSelected) }
+            { detailSelected.isBtc && this.getBtcDetail(detailSelected)}
           </div>
       </div>
     );
