@@ -724,19 +724,21 @@ class TermsAndConditions extends Component {
         
         <h3>{formatMessage(messages.conductPoliciesTitle)}</h3>
         <p>{formatMessage(messages.conductPolicies1)}</p>
-        <p>{formatMessage(messages.conductPolicies2)}</p>
-        <p>{formatMessage(messages.conductPolicies3)}</p>
-        <p>{formatMessage(messages.conductPolicies4)}</p>
-        <p>{formatMessage(messages.conductPolicies5)}</p>
-        <p>{formatMessage(messages.conductPolicies6)}</p>
-        <p>{formatMessage(messages.conductPolicies7)}</p>
-        <p>{formatMessage(messages.conductPolicies8)}</p>
-        <p>{formatMessage(messages.conductPolicies9)}</p>
-        <p>{formatMessage(messages.conductPolicies10)}</p>
-        <p>{formatMessage(messages.conductPolicies11)}</p>
-        <p>{formatMessage(messages.conductPolicies12)}</p>
-        <p>{formatMessage(messages.conductPolicies13)}</p>
-        <p>{formatMessage(messages.conductPolicies14)}</p>
+        <ul className="conduct">
+          <li>{formatMessage(messages.conductPolicies2)}</li>
+          <li>{formatMessage(messages.conductPolicies3)}</li>
+          <li>{formatMessage(messages.conductPolicies4)}</li>
+          <li>{formatMessage(messages.conductPolicies5)}</li>
+          <li>{formatMessage(messages.conductPolicies6)}</li>
+          <li>{formatMessage(messages.conductPolicies7)}</li>
+          <li>{formatMessage(messages.conductPolicies8)}</li>
+          <li>{formatMessage(messages.conductPolicies9)}</li>
+          <li>{formatMessage(messages.conductPolicies10)}</li>
+          <li>{formatMessage(messages.conductPolicies11)}</li>
+          <li>{formatMessage(messages.conductPolicies12)}</li>
+          <li>{formatMessage(messages.conductPolicies13)}</li>
+          <li>{formatMessage(messages.conductPolicies14)}</li>
+        </ul>
         
         <h3><u>{formatMessage(messages.importantNoticesTitle)}</u></h3>
         
@@ -771,12 +773,14 @@ class TermsAndConditions extends Component {
         
         <h3>{formatMessage(messages.representationAndWarrantyTitle)}</h3>
         <p>{formatMessage(messages.representationAndWarranty1)}</p>
-        <p>
-          {formatMessage(messages.representationAndWarranty2)}
-          <a href={formatMessage(messages.privacyPolicyLink)}>{` ${formatMessage(messages.privacyPolicy)}`}</a>
-          {formatMessage(messages.representationAndWarranty2_1)}
-        </p>
-        <p>{formatMessage(messages.representationAndWarranty3)}</p>
+        <ul className="conduct">
+          <li>
+            {formatMessage(messages.representationAndWarranty2)}
+            <a href={formatMessage(messages.privacyPolicyLink)}>{` ${formatMessage(messages.privacyPolicy)}`}</a>
+            {formatMessage(messages.representationAndWarranty2_1)}
+          </li>
+          <li>{formatMessage(messages.representationAndWarranty3)}</li>
+        </ul>
         
         <h3>{formatMessage(messages.otherTermsTitle)}</h3>
         <p>{formatMessage(messages.otherTerms1)}</p>
