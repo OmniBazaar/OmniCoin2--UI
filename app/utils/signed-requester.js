@@ -28,9 +28,12 @@ export const canonicalize = (queryObject = {}) => {
   }, '');
 };
 
-export const getSignedUrl = (params, { accessKey, secret }) => {
+export const getSignedUrl = (params, secret) => {
   const Timestamp = `${moment.utc().format(TIMESTAMP_FORMAT)}Z`;
-  const newParams = { ...params, accessKey, Timestamp };
+  const newParams = {
+    ...params,
+    Timestamp,
+  };
 
   const urlParams = Object.keys(newParams)
     .sort((a, b) => (a > b) - (a < b))

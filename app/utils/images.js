@@ -8,16 +8,16 @@ export default {
    */
   async getImageFromAmazon(productId, { accessKey, secret, assocTag }) {
     const params = {
-      AssociateTag: assocTag,
-      AWSAccessKeyId: accessKey,
       Service: 'AWSECommerceService',
       Operation: 'ItemLookup',
+      AWSAccessKeyId: accessKey,
+      AssociateTag: assocTag,
       ItemId: productId,
       IdType: 'ASIN',
       ResponseGroup: 'Images',
     };
 
-    const url = getSignedUrl(params, { accessKey, secret });
+    const url = getSignedUrl(params, secret);
     const amazonResponse = await fetch(url);
     const doc = (new DOMParser()).parseFromString(await amazonResponse.text(), 'application/xml');
     const imageURL = doc.querySelector('LargeImage URL').innerHTML;
