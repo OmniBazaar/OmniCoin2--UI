@@ -91,7 +91,6 @@ export function* login(action) {
     });
     if (isAuthorized) {
       yield put(getAccountAction(username));
-      yield put({ type: 'DHT_CONNECT' });
 
       //call this to cache listing request auth header, because it's a heavy operation
       yield call(getAuthHeaders, { username, password });
@@ -165,7 +164,6 @@ export function* signup(action) {
         },
         isWelcomeBonusAvailable: isAvailable
       });
-      yield put({ type: 'DHT_CONNECT' });
       yield put(changeSearchPriorityData(searchPriorityData));
     } else {
       const { error } = resJson;
