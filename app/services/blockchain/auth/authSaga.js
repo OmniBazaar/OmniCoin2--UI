@@ -20,7 +20,8 @@ import {
   welcomeBonusFailed,
   referralBonusSucceeded,
   referralBonusFailed,
-  requestReferrerFinish
+  requestReferrerFinish,
+  getLastLoginUserName
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
@@ -71,7 +72,8 @@ export function* subscriber() {
     takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
     takeEvery('GET_IDENTITY_VERIFICATION_STATUS', getIdentityVerificationStatus),
     takeEvery('REQUEST_REFERRER', requestReferrer),
-    takeEvery('REFERRAL_BONUS', referralBonus)
+    takeEvery('REFERRAL_BONUS', referralBonus),
+    takeEvery('LOGOUT', logout)
   ]);
 }
 
@@ -328,7 +330,11 @@ function* requestReferrer() {
   yield put(requestReferrerFinish(referrer));
 }
 
-
+function* logout() {
+  // reseting redux store
+  yield put({ type: 'RESET' });
+  yield put(getLastLoginUserName());
+}
 
 const getDefaultReferrer = () => new Promise((resolve, reject) => {
   ipcRenderer.once('receive-referrer', (event, arg) => {

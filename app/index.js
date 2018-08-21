@@ -8,6 +8,7 @@ import { reducer as toastrReducer } from 'react-redux-toastr';
 import { AppContainer } from 'react-hot-loader';
 import { addLocaleData } from 'react-intl';
 import { ChainConfig } from 'omnibazaarjs-ws';
+import reduxReset from 'redux-reset'
 import en from 'react-intl/locale-data/en';
 import es from 'react-intl/locale-data/es';
 import fr from 'react-intl/locale-data/fr';
@@ -68,7 +69,8 @@ if (localStorage.getItem('currentUser')) {
 
 const store = createStore(
   reducer,
-  applyMiddleware(...middleware)
+  applyMiddleware(...middleware),
+  reduxReset()
 );
 
 sagaMiddleware.run(connectionSubscriber);
