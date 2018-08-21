@@ -5,7 +5,6 @@ import { Apis } from 'omnibazaarjs-ws';
 import BaseStorage from '../../utils/baseStorage';
 import { decodeMemo, generateKeyFromPassword } from '../blockchain/utils/wallet';
 import { calcBlockTime, getDynGlobalObject, getGlobalObject } from '../blockchain/utils/miscellaneous';
-import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { TOKENS_IN_XOM } from '../../utils/constants';
 
 
@@ -138,9 +137,9 @@ class OmnicoinHistory extends BaseStorage {
         transactions[trxKey] = {
           amount: 0,
           fee: 0,
-          //   balance: 0,
           operations: [],
-          type: op.operationType
+          type: op.operationType,
+          isXom: true
         };
       }
       if (op.opInTrx === 0) {

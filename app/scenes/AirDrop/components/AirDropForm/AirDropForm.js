@@ -11,7 +11,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
 import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
-import { ipcRenderer } from 'electron';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
