@@ -59,7 +59,13 @@ import UserIcon from './images/th-user-white.svg';
 
 import { showSettingsModal, showPreferencesModal } from '../../services/menu/menuActions';
 import { setActiveCategory } from '../../services/marketplace/marketplaceActions';
-import { getAccount, logout, requestAppVersion, getIdentityVerificationStatus } from '../../services/blockchain/auth/authActions';
+import {
+  getAccount,
+  logout,
+  requestAppVersion,
+  getIdentityVerificationStatus,
+  referralBonus
+} from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
 import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
@@ -108,6 +114,7 @@ class Home extends Component {
     this.props.authActions.requestAppVersion();
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);
     this.props.listingActions.checkPublishersAlive();
+    this.props.authActions.referralBonus();
     this.mailSubscribe(currentUser);
   }
 
@@ -338,7 +345,13 @@ export default connect(
       showPreferencesModal,
       setActiveCategory
     }, dispatch),
-    authActions: bindActionCreators({ getAccount, logout, requestAppVersion, getIdentityVerificationStatus }, dispatch),
+    authActions: bindActionCreators({
+      getAccount,
+      logout,
+      requestAppVersion,
+      getIdentityVerificationStatus,
+      referralBonus
+    }, dispatch),
     listingActions: bindActionCreators({
       loadListingDefault,
       checkPublishersAlive

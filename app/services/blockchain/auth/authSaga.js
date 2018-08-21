@@ -18,6 +18,8 @@ import {
   welcomeBonus as welcomeBonusAction,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
+  referralBonusSucceeded,
+  referralBonusFailed,
   requestReferrerFinish
 } from './authActions';
 import { getFirstReachable } from './services';
@@ -68,11 +70,12 @@ export function* subscriber() {
     takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
     takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
     takeEvery('GET_IDENTITY_VERIFICATION_STATUS', getIdentityVerificationStatus),
-    takeEvery('REQUEST_REFERRER', requestReferrer)
+    takeEvery('REQUEST_REFERRER', requestReferrer),
+    takeEvery('REFERRAL_BONUS', referralBonus)
   ]);
 }
 
-export function* login(action) {
+function* login(action) {
   const {
     username,
     password
@@ -111,7 +114,7 @@ export function* login(action) {
   }
 }
 
-export function* signup(action) {
+function* signup(action) {
   const {
     username,
     password,
@@ -187,7 +190,7 @@ export function* signup(action) {
 }
 
 
-export function* getAccount({ payload: { username } }) {
+function* getAccount({ payload: { username } }) {
   try {
     const account = yield call(fetchAccount, username);
     const isProcessor = yield Apis.instance().db_api().exec('lookup_witness_accounts', [username, 1]);
@@ -240,7 +243,7 @@ function* welcomeBonus({
   }
 }
 
-export function* getWelcomeBonusAmount() {
+function* getWelcomeBonusAmount() {
   try {
     const amount = yield Apis.instance().db_api().exec('get_welcome_bonus_amount', []);
     yield put({ type: 'GET_WELCOME_BONUS_AMOUNT_SUCCEEDED', amount });
@@ -249,7 +252,7 @@ export function* getWelcomeBonusAmount() {
   }
 }
 
-export function* getIdentityVerificationToken({ payload: { username } }) {
+function* getIdentityVerificationToken({ payload: { username } }) {
   try {
     const resp = yield call(AuthApi.getIdentityVerificationToken, username);
     yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token: resp.token });
@@ -258,7 +261,7 @@ export function* getIdentityVerificationToken({ payload: { username } }) {
   }
 }
 
-export function* getIdentityVerificationStatus({ payload: { data } }) {
+function* getIdentityVerificationStatus({ payload: { data } }) {
   try {
     const res = yield call(AuthApi.getApplicantInformation, data);
     const applicantId = res.list.items[0].id;
@@ -280,7 +283,7 @@ export function* getIdentityVerificationStatus({ payload: { data } }) {
   }
 }
 
-export function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
+function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
   try {
     // Check if the user is connected to all 3 OmnibaZaar social media channels
     yield call(AuthApi.checkBonus, values);
@@ -295,17 +298,46 @@ export function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) 
   }
 }
 
-  const getDefaultReferrer = () => new Promise((resolve, reject) => {
-    ipcRenderer.once('receive-referrer', (event, arg) => {
-      const referrer = arg.referrer;
-      localStorage.setItem('referrer', referrer);
-      resolve(referrer);
-    });
-    ipcRenderer.send('get-referrer', null);
-  });
-
+function* referralBonus() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const account = yield FetchChain('getAccount', currentUser.username);
+    const isBonusAvailable = yield Apis.instance().db_api().exec('is_referral_bonus_available', []);
+    if (isBonusAvailable
+        && account.get('received_welcome_bonus')
+        && !account.get('sent_referral_bonus')) {
+      const tr = new TransactionBuilder();
+      tr.add_type_operation('referral_bonus_operation', {
+        referred_account: account.get('id'),
+        referrer_account: account.get('referrer')
+      });
+      const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
+      yield tr.set_required_fees();
+      yield tr.add_signer(key.privKey, key.pubKey);
+      yield tr.broadcast();
+    }
+    yield put(referralBonusSucceeded());
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(referralBonusFailed(error));
+  }
+}
 
 function* requestReferrer() {
   const referrer = yield call(getDefaultReferrer);
   yield put(requestReferrerFinish(referrer));
 }
+
+
+
+const getDefaultReferrer = () => new Promise((resolve, reject) => {
+  ipcRenderer.once('receive-referrer', (event, arg) => {
+    const referrer = arg.referrer;
+    localStorage.setItem('referrer', referrer);
+    resolve(referrer);
+  });
+  ipcRenderer.send('get-referrer', null);
+});
+
+
+

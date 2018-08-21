@@ -11,6 +11,9 @@ const {
   welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
+  referralBonus,
+  referralBonusSucceeded,
+  referralBonusFailed,
   getWelcomeBonusAmount,
   getWelcomeBonusAmountSucceeded,
   getWelcomeBonusAmountFailed,
@@ -38,6 +41,9 @@ const {
   WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({
     username, referrer, macAddress, harddriveId
   }),
+  REFERRAL_BONUS: () => ({ }),
+  REFERRAL_BONUS_SUCCEEDED: () => ({ }),
+  REFERRAL_BONUS_FAILED: (error) => ({ error }),
   WELCOME_BONUS_SUCCEEDED: () => ({ }),
   WELCOME_BONUS_FAILED: (error) => ({ error }),
   GET_WELCOME_BONUS_AMOUNT: () => {},
@@ -55,6 +61,7 @@ const {
   GET_ACCOUNT: (username) => ({ username }),
   GET_LAST_LOGIN_USER_NAME: () => ({}),
   SHOW_TERMS_MODAL: () => ({}),
+
 });
 
 export {
@@ -65,6 +72,9 @@ export {
   welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
+  referralBonus,
+  referralBonusSucceeded,
+  referralBonusFailed,
   getWelcomeBonusAmount,
   getWelcomeBonusAmountSucceeded,
   getWelcomeBonusAmountFailed,
