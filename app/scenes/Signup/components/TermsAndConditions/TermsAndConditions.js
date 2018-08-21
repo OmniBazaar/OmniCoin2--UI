@@ -603,7 +603,7 @@ class TermsAndConditions extends Component {
       <div className="terms-conditions">
         <div className="title"><h2>{formatMessage(messages.termsIntroTitle)}</h2></div>
         <p>{formatMessage(messages.termsIntro)}</p>
-        <div className="important">{formatMessage(messages.termsIntroNotice)}</div>
+        <h4>{formatMessage(messages.termsIntroNotice)}</h4>
         
         <h3><u>{formatMessage(messages.omniBazaarSoftwareTitle)}</u></h3>
         <p>{formatMessage(messages.omniBazaarSoftware)}</p>
@@ -669,7 +669,7 @@ class TermsAndConditions extends Component {
         
         <h3><u>{formatMessage(messages.useOfTheSoftwareTitle)}</u></h3>
         
-        <p>{formatMessage(messages.registrationAndAccountTitle)}</p>
+        <h3>{formatMessage(messages.registrationAndAccountTitle)}</h3>
         <p>{formatMessage(messages.registrationAndAccountStart)}</p>
         <p>{formatMessage(messages.registrationAndAccount1)}</p>
         <p>{formatMessage(messages.registrationAndAccount2)}</p>
