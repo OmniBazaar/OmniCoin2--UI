@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { getObjectById } from "../../listing/apis";
 import { getUserDataFolder, checkDir, writeFile, isExist, readFile } from '../../fileUtils';
 import * as BitcoinApi from './BitcoinApi';
-import { OB_FEE_MAIL_SUBJECT } from "../../../utils/constants";
+import { OB_FEE_MAIL_SUBJECT, SATOSHI_IN_BTC } from "../../../utils/constants";
 import { sendMail } from "../../mail/utils";
 import {getStoredCurrentUser} from "../auth/services";
 import BitcoinObFeesHistory from "../../accountSettings/bitcoinHistory";

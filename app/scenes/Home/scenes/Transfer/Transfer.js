@@ -155,7 +155,6 @@ class Transfer extends Component {
     };
   }
 
-
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const type = purchaseParams.get('type');
@@ -167,8 +166,7 @@ class Transfer extends Component {
     const ethereumAddress = purchaseParams.get('ethereum_address');
     const listingCurrency = purchaseParams.get('currency');
     const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
-    this.handleInitialize(amount);
-    this.props.change('amount', convertedAmount);
+    this.handleInitialize(convertedAmount);
 
     if (type === CoinTypes.BIT_COIN) {
       this.props.transferActions.setCurrency('bitcoin');
@@ -192,7 +190,7 @@ class Transfer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const purchaseParams = new URLSearchParams(this.props.location.search)
+    const purchaseParams = new URLSearchParams(this.props.location.search);
     const price = purchaseParams.get('price');
     const currency = purchaseParams.get('currency');
     const { formatMessage } = this.props.intl;
