@@ -409,19 +409,19 @@ class SignupForm extends Component {
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
     return (
-      [
-        <div className="agreement-terms">
+      <div className="agreement-terms">
+        <div>
           <Checkbox
             width={inputCustomSize}
             height={inputCustomSize}
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
-          <span className="link" onClick={this.toggleTermsModal}>
-            {formatMessage(messages.termsAndCond)}
-          </span>
         </div>
-      ]
+          <div className="link terms" onClick={this.toggleTermsModal}>
+            {formatMessage(messages.termsAndCond)}
+          </div>
+      </div>
     );
   };
 
