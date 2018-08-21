@@ -510,12 +510,13 @@ class Transfer extends Component {
               buttonText="XOM"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) }),
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
                 amountDecimalsValidator({
                   message: formatMessage(messages.numberExceedsDecimalsLimit, {
                     limit: XOM_DECIMALS_LIMIT
                   }),
-                })
+                }),
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={!!listingId}
             />
@@ -680,7 +681,8 @@ class Transfer extends Component {
               buttonText="BTC"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) })
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={listingId}
             />
@@ -748,7 +750,8 @@ class Transfer extends Component {
               buttonText="ETH"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({'>': 0, message: formatMessage(messages.numberRequired) })
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={listingId}
             />

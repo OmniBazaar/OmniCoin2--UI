@@ -30,6 +30,7 @@
   "Transfer.escrowNotFound": "You don't any have any approved escrow agents in common with the specified account. Go to the \"Escrow\" tab and approve some additional escrow agents.",
   "Transfer.numberRequired": "Number required",
   "Transfer.numberExceedsDecimalsLimit": "Amount cannot have more than {limit} numbers after decimal",
+  "Transfer.numberCannotBeNegative": "Amount cannot be a negative value",
   "Transfer.currency": "Select Currency",
   "Transfer.selectWallet": "Select Wallet",
   "Transfer.transactionID": "Transaction ID",
