@@ -189,7 +189,8 @@ class RecentTransactions extends Component {
       sortColumn,
       recentTransactionsVisible,
       loadingRecentTransactions,
-      showDetails
+      showDetails,
+      detailSelected
     } = this.props.account;
     const { coinType } = this.props;
     const { formatMessage } = this.props.intl;
@@ -337,7 +338,7 @@ class RecentTransactions extends Component {
             </div>
           </div>
         </div>
-        {showDetails &&
+        {showDetails && detailSelected &&
           <TransactionDetails
             showCompose={showDetails}
             onClose={this.onCloseDetails}
