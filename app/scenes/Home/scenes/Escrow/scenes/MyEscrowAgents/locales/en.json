@@ -6,5 +6,5 @@
   "MyEscrowAgents.approve": "Approve",
   "MyEscrowAgents.agentsApproved": "Agents successfully approved",
   "MyEscrowAgents.error": "Error",
-  "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
+  "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
 }

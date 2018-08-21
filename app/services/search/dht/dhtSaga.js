@@ -28,6 +28,8 @@ export function* dhtSubscriber() {
 }
 
 export function* connect() {
+  let getAccountErrorHappened = false;
+
   try {
     const { priority, publisherName } = AccountSettingsStorage.getPublisherData();
     let ips = [];
@@ -38,7 +40,9 @@ export function* connect() {
       const publishers = yield Apis.instance()
         .db_api()
         .exec('get_publisher_nodes_names', []);
-      ips = (yield Promise.all(publishers.map(publisher => FetchChain('getAccount', publisher))))
+      const publishersAccounts = yield Promise.all(publishers.map(publisher => FetchChain('getAccount', publisher)))
+        .catch(() => { getAccountErrorHappened = true; });
+      ips = (publishersAccounts || [])
         .filter(publisher => !!publisher.get('publisher_ip'))
         .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
     }
@@ -50,7 +54,12 @@ export function* connect() {
     yield put({ type: 'DHT_CONNECT_SUCCEEDED', connector });
   } catch (e) {
     console.log('ERROR ', e);
-    yield put({ type: 'DHT_CONNECT_FAILED', error: e.message });
+
+    if (getAccountErrorHappened) {
+      yield connect();
+    } else {
+      yield put({ type: 'DHT_CONNECT_FAILED', error: e.message });
+    }
   }
 }
 
@@ -215,7 +224,7 @@ export function* getPeersFor({
         publishers: isPublisherSelected ?
           [{ host: publisherData.publisherName.publisher_ip }] :
           (response.peers || []).filter(keyPeer => (
-              publisherIps[keyPeer.host] && 
+              publisherIps[keyPeer.host] &&
               includes(extraKeywordsPeerHosts, keyPeer.host)
           )),
         })).filter(el => el.publishers.length);

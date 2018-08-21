@@ -90,6 +90,10 @@ class Marketplace extends Component {
     if (this.props.listing.saveListing.saving && !nextProps.listing.saveListing.saving) {
       this.fetchListings(this.props.account.publisherData);
     }
+
+    if (this.props.dht.isConnecting && !nextProps.dht.isConnecting) {
+      this.fetchListings(this.props.account.publisherData);
+    }
   }
 
   fetchListings({

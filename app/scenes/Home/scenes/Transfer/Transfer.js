@@ -176,7 +176,7 @@ class Transfer extends Component {
     const to = purchaseParams.get('seller_name');
     const bitcoinAddress = purchaseParams.get('bitcoin_address');
     const ethereumAddress = purchaseParams.get('ethereum_address');
-    const listingCurrency = purchaseParams.get('currency')
+    const listingCurrency = purchaseParams.get('currency');
     const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
     this.handleInitialize(amount);
     this.props.change('amount', convertedAmount);
@@ -199,7 +199,7 @@ class Transfer extends Component {
   }
 
   componentWillMount() {
-    this.props.ethereumActions.getEthereumWallets()
+    this.props.ethereumActions.getEthereumWallets();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -765,10 +765,8 @@ class Transfer extends Component {
               buttonText="ETH"
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ message: formatMessage(messages.numberRequired) }),
-                amountNoNegativesValidator({
-                  message: formatMessage(messages.numberCannotBeNegative)
-                })
+                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
+                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
               ]}
               disabled={listingId}
             />

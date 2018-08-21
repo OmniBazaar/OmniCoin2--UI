@@ -10,3 +10,25 @@
     overflow-y: auto;
   }
 }
+
+.important {
+  font-weight: bolder;
+  font-size: 18px;
+}
+
+.title {
+  text-align: center;
+  margin: 15px 0 10px 0;
+}
+
+.terms-conditions p {
+  font-size: 16px;
+}
+
+.terms-conditions li {
+  font-size: 16px;
+}
+
+.conduct {
+  list-style-type: circle;
+}
