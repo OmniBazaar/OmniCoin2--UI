@@ -601,7 +601,7 @@ class TermsAndConditions extends Component {
     
     return (
       <div className="terms-conditions">
-        <div className="title"><h2>{formatMessage(messages.termsIntroTitle)}</h2></div>
+        <div className="terms-title"><h2>{formatMessage(messages.termsIntroTitle)}</h2></div>
         <p>{formatMessage(messages.termsIntro)}</p>
         <h4>{formatMessage(messages.termsIntroNotice)}</h4>
         
