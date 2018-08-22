@@ -4,5 +4,6 @@
   "ListingsDefaults.listingDefaults": "Listing Defaults",
   "ListingsDefaults.saveDefaults": "SAVE DEFAULTS",
   "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.",
-  "ListingsDefaults.success": "Success"
+  "ListingsDefaults.success": "Success",
+  "ListingsDefaults.confirmationMessage": "If you close this page, the changes you made will not be saved unless you \"Update\" (save) your changes"
 }
