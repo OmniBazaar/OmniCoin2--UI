@@ -18,7 +18,7 @@ import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { voteForProcessors } from '../processors/utils';
 import EthereumHistory from './ethereumHistory';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
-import {SATOSHI_IN_BTC} from "../../utils/constants";
+import { SATOSHI_IN_BTC } from "../../utils/constants";
 import BitcoinObFeesHistory from "./bitcoinHistory";
 
 const processBitcoinTransactions = (txs) => {

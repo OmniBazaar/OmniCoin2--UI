@@ -22,6 +22,8 @@ import StateDropdown from './components/StateDropdown/StateDropdown';
 import Checkbox from './components/Checkbox/Checkbox';
 import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
+import BitcoinWalletDropdown from './components/BitcoinWalletDropdown/BitcoinWalletDropdown';
+
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
 import priorityFees from './priorityFees';
@@ -45,8 +47,7 @@ import cn from 'classnames';
 import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import './add-listing.scss';
-import { FetchChain } from 'omnibazaarjs';
-import {SATOSHI_IN_BTC, TOKENS_IN_XOM, WEI_IN_ETH} from "../../../../../../../../utils/constants";
+import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -63,12 +64,24 @@ const MAX_IMAGE_SIZE = '1mb';
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
     try {
-      const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
-      if (price_using_btc && bitcoin_address) {
-        await BitcoinApi.validateAddress(bitcoin_address);
+      const {
+        price_using_btc,
+        bitcoin_address,
+        price_using_eth,
+        ethereum_address,
+        manual_bitcoin_address,
+        manual_ethereum_address
+      } = values;
+      if (price_using_btc) {
+        if (bitcoin_address) {
+          await BitcoinApi.validateAddress(bitcoin_address);
+        }
+        if (manual_bitcoin_address) {
+          await BitcoinApi.validateAddress(manual_bitcoin_address);
+        }
       }
       if (price_using_eth && ethereum_address) {
-        await EthereumApi.validateEthereumAddress(ethereum_address);
+          await EthereumApi.validateEthereumAddress(ethereum_address);
       }
     } catch (e) {
       if (e === "Invalid Ethereum Address") {
@@ -93,6 +106,7 @@ class ListingForm extends Component {
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.Calendar = makeValidatableField(Calendar);
     this.PublishersDropdown = makeValidatableField(PublishersDropdown);
+    this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
 
@@ -123,7 +137,12 @@ class ListingForm extends Component {
   }
 
   initFormData() {
-    const { editingListing } = this.props;
+    const {
+      editingListing,
+      auth,
+      account,
+      ethereum
+    } = this.props;
     let data;
     if (editingListing) {
       data = {
@@ -152,6 +171,8 @@ class ListingForm extends Component {
       }
       if (eth_address) {
         data.ethereum_address = eth_address;
+      } else {
+        data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
       }
     }
 
@@ -356,11 +377,17 @@ class ListingForm extends Component {
       listing_id, publisher, keywords, ...data
     } = values;
 
-    saveListing(publisher, {
+    const obj = {
       ...data,
       images: this.getImagesData(),
       keywords: keywords.split(',').map(el => el.trim())
-    }, listing_id);
+    };
+    if (obj.bitcoin_address === MANUAL_INPUT_VALUE) {
+      obj.bitcoin_address = obj.manual_bitcoin_address;
+      delete obj.manual_bitcoin_address;
+    }
+    saveListing(publisher, obj, listing_id);
+
     this.setState({
       isPromptVisible: false
     })
@@ -386,7 +413,7 @@ class ListingForm extends Component {
       </div>
     );
   }
-  
+
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -552,13 +579,21 @@ class ListingForm extends Component {
             <Grid.Column width={8}>
               <Field
                 name="bitcoin_address"
-                component={InputField}
+                component={this.BitcoinWalletDropdown}
                 className="textfield"
                 validate={[requiredFieldValidator]}
-                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
-                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
               />
             </Grid.Column>
+            {this.props.formValues.bitcoin_address === MANUAL_INPUT_VALUE &&
+              <Grid.Column width={4}>
+                <Field
+                  name="manual_bitcoin_address"
+                  component={InputField}
+                  className="textfield"
+                  validate={[requiredFieldValidator]}
+                />
+              </Grid.Column>
+            }
           </Grid.Row>
           }
           {(price_using_eth || currency === 'ETHEREUM') &&
