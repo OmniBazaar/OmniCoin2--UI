@@ -389,12 +389,13 @@ class Transfer extends Component {
   };
 
   renderCurrencyField = ({
-    input, options
+    input, options, disabled
   }) => (
       <Select
         className="textfield currency-dropdown-cont"
         value={this.props.transfer.transferCurrency}
         options={options}
+        disabled={disabled}
         onChange={(param, data) => {
           input.onChange(data.value);
           this.onChangeCurrency(data);
@@ -797,7 +798,8 @@ class Transfer extends Component {
   transferForm() {
     const { formatMessage } = this.props.intl;
     const { handleSubmit } = this.props;
-
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
     return (
       <div className="transfer-form">
         <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
@@ -806,6 +808,7 @@ class Transfer extends Component {
             <Field
               type="text"
               name="currencySelected"
+              disabled={!!listingId}
               options={currencyOptions}
               component={this.renderCurrencyField}
             />
