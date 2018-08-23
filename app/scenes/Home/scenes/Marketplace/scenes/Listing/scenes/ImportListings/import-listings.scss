@@ -71,6 +71,7 @@
     }
 
     .bottom-section {
+      min-height: 300px;
       flex: 1;
       overflow: auto;
 
@@ -80,6 +81,7 @@
     }
 
     .footer-section {
+      min-height: 40px;
       display: flex;
       justify-content: center;
       margin-bottom: 15px;
