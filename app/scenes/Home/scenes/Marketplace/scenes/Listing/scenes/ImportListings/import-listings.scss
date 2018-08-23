@@ -25,11 +25,9 @@
     }
 
     .top-section {
-      flex: 1;
       border-bottom: 1px solid $border-gray;
 
       .listing-body {
-        height: 295px;
         overflow: auto;
 
         .import-listing-form {
@@ -82,7 +80,6 @@
     }
 
     .footer-section {
-      flex: 0.1;
       display: flex;
       justify-content: center;
       margin-bottom: 15px;
