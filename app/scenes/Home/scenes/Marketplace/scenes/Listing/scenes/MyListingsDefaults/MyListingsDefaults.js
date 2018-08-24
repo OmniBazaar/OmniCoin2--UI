@@ -114,6 +114,9 @@ class MyListingsDefaults extends Component {
     const { formatMessage } = this.props.intl;
 
     this.props.accountActions.updatePublicData();
+    this.setState({
+      isPromptVisible: false
+    })
 
     try {
       saveListingDefault({

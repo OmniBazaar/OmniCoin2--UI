@@ -41,6 +41,7 @@ import { reputationOptions } from '../../../../services/utils';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
+import { Prompt } from 'react-router-dom';
 
 import messages from './messages';
 
@@ -152,9 +153,10 @@ class Transfer extends Component {
 
     this.state = {
       isModalOpen: false,
+      isPromptVisible: false
     };
   }
-
+  
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const type = purchaseParams.get('type');
@@ -791,6 +793,7 @@ class Transfer extends Component {
   }
 
   onChangeCurrency = (data) => {
+    this.setState({ isPromptVisible: true });
     const { formatMessage } = this.props.intl;
     this.props.transferActions.setCurrency(data.value);
   };
@@ -802,7 +805,11 @@ class Transfer extends Component {
     const listingId = purchaseParams.get('listing_id');
     return (
       <div className="transfer-form">
-        <Form onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
+        <Form onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
+          <Prompt
+            when={this.state.isPromptVisible}
+            message={location => formatMessage(messages.confirmationMessage)}
+          />
           <div className="form-group">
             <span>{formatMessage(messages.currency)}</span>
             <Field
