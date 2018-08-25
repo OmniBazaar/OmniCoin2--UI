@@ -36,6 +36,7 @@ import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin
 import * as EthereumApi from '../../../../../../../../services/blockchain/ethereum/EthereumApi';
 
 import '../AddListing/add-listing.scss';
+import UnitDropdown from '../AddListing/components/UnitDropdown/UnitDropdown';
 
 const iconSize = 42;
 
@@ -71,6 +72,7 @@ class MyListingsDefaults extends Component {
     this.CountryDropdown = makeValidatableField(CountryDropdown);
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.DescriptionInput = makeValidatableField(allProps => (<textarea {...allProps} />));
+    this.UnitDropdown = makeValidatableField(UnitDropdown);
   }
 
   componentWillMount() {
@@ -189,6 +191,20 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.currency),
                   disableAllOption: true
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(addListingMessages.additionalInfo)}*</span>
+            </Grid.Column>
+            <Grid.Column width={6} className="align-top">
+              <Field
+                name="units"
+                component={this.UnitDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.unitsOfMeasure)
                 }}
               />
             </Grid.Column>
