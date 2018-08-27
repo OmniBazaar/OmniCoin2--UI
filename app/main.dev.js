@@ -182,7 +182,8 @@ const launchNodeDaemon = async () => {
       await killNode();
       const userName = process.env.USERPROFILE.split(path.sep)[2];
       const nodePath = `C:\\Users\\${userName}\\AppData\\Local\\OmniBazaar\\witness_node\\witness_node`;
-      return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath} & start ${nodePath}`, nodeDaemonWinOptions);
+      await runNode();
+      return sudo.exec(`reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "OmniBazaar Witness Node" /d ${nodePath}`, nodeDaemonWinOptions);
     case 'linux':
       return sudo.exec('systemctl daemon-reload' +
         'systemctl enable omnibazaar-publisher.service' +
