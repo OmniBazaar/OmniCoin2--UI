@@ -59,12 +59,11 @@ const messages = defineMessages({
 
 class LoginForm extends Component {
   static asyncValidate = async (values) => {
-    let online;
     try {
-      online = await isOnline();
       const account = await FetchChain('getAccount', values.username);
     } catch (e) {
       console.log('ERR', e);
+      let online = await isOnline();
       if(online){
         throw { username: messages.accountDoesntExist };
       } else {
