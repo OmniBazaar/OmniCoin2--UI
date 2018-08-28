@@ -21,7 +21,7 @@ export function* updateNotificationSubscriber() {
 }
 
 const checkInterval = 3600000;
-const updateServerUrl = 'http://35.171.116.3/updates';
+const updateServerUrl = 'http://74.208.211.227/updates';
 
 const isProd = () => process.env.NODE_ENV === 'production';
 
