@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom';
 import { FetchChain } from 'omnibazaarjs/es';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+const isOnline = require('is-online');
 
 import { login } from '../../../../services/blockchain/auth/authActions';
 
@@ -62,13 +63,14 @@ class LoginForm extends Component {
       const account = await FetchChain('getAccount', values.username);
     } catch (e) {
       console.log('ERR', e);
-      if(!navigator.onLine){
-        throw { username: messages.connectionDoesntExist };
-      } else {
+      let online = await isOnline();
+      if(online){
         throw { username: messages.accountDoesntExist };
+      } else {
+        throw { username: messages.connectionDoesntExist };
       }
     }
-  };
+  }
 
   constructor(props) {
     super(props);
