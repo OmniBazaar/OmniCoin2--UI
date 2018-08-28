@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import { Icon, Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
+import { Prompt } from 'react-router-dom';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import CategoryDropdown from '../AddListing/components/CategoryDropdown/CategoryDropdown';
@@ -73,6 +74,10 @@ class MyListingsDefaults extends Component {
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.DescriptionInput = makeValidatableField(allProps => (<textarea {...allProps} />));
     this.UnitDropdown = makeValidatableField(UnitDropdown);
+    this.state = {
+      keywords: '',
+      isPromptVisible: false
+    };
   }
 
   componentWillMount() {
@@ -110,6 +115,9 @@ class MyListingsDefaults extends Component {
     const { formatMessage } = this.props.intl;
 
     this.props.accountActions.updatePublicData();
+    this.setState({
+      isPromptVisible: false
+    })
 
     try {
       saveListingDefault({
@@ -128,6 +136,10 @@ class MyListingsDefaults extends Component {
       );
     }
   }
+  
+  onChange = () => {
+    this.setState({ isPromptVisible: true })
+  };
 
   defaultsForm() {
     const { formatMessage } = this.props.intl;
@@ -145,7 +157,11 @@ class MyListingsDefaults extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
+      <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
+        <Prompt
+          when={this.state.isPromptVisible}
+          message={location => formatMessage(listingDefaultMessages.confirmationMessage)}
+        />
         <Grid>
           <Grid.Row>
             <Grid.Column width={16}>
@@ -166,6 +182,9 @@ class MyListingsDefaults extends Component {
                   placeholder: formatMessage(addListingMessages.category),
                   disableAllOption: true
                 }}
+                input={{
+                  onChange: this.onChange
+                }}
               />
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
@@ -176,6 +195,9 @@ class MyListingsDefaults extends Component {
                   placeholder: formatMessage(addListingMessages.subCategory),
                   parentCategory: category,
                   disableAllOption: true
+                }}
+                input={{
+                  onChange: this.onChange
                 }}
               />
             </Grid.Column>
@@ -191,6 +213,9 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.currency),
                   disableAllOption: true
+                }}
+                input={{
+                  onChange: this.onChange
                 }}
               />
             </Grid.Column>
@@ -218,6 +243,9 @@ class MyListingsDefaults extends Component {
                 props={{
                   label: formatMessage(addListingMessages.bitcoinPrice)
                 }}
+                input={{
+                  onChange: this.onChange
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -227,6 +255,9 @@ class MyListingsDefaults extends Component {
                 props={{
                   label: formatMessage(addListingMessages.ethereumPrice)
                 }}
+                input={{
+                  onChange: this.onChange
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -235,6 +266,9 @@ class MyListingsDefaults extends Component {
                 component={Checkbox}
                 props={{
                   label: formatMessage(addListingMessages.omnicoinPrice)
+                }}
+                input={{
+                  onChange: this.onChange
                 }}
               />
             </Grid.Column>
@@ -322,6 +356,9 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.country)
                 }}
+                input={{
+                  onChange: this.onChange
+                }}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -352,6 +389,9 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.state),
                   country
+                }}
+                input={{
+                  onChange: this.onChange
                 }}
               />
             </Grid.Column>

@@ -33,4 +33,8 @@ export default defineMessages({
     id: 'ListingsDefaults.invalidAddress',
     defaultMessage: 'Invalid address'
   },
+  confirmationMessage: {
+    id: 'ListingsDefaults.confirmationMessage',
+    defaultMessage: 'If you close this page, the changes you made will not be saved unless you "Update" (save) your changes'
+  }
 });
