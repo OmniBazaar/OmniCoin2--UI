@@ -16,9 +16,9 @@ AppUpdatesURL={#APP_URL}
 AppCopyright=© {#GetDateTimeString('yyyy', '', '')} {#APP_PUBLISHER}
 DefaultDirName={pf}\{#APP_NAME}
 DefaultGroupName={#APP_NAME}
-AllowNoIcons=yes
 OutputBaseFilename={#APP_NAME}_setup_{#APP_VERSION}
-SetupIconFile=icon.ico
+SetupIconFile=icon.ico  
+UninstallDisplayIcon={uninstallexe}
 Compression=lzma/Ultra
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
@@ -37,6 +37,7 @@ Source: "..\..\app\ob2\windows\ob2.exe"; DestDir: {localappdata}\{#APPDATA_DIR};
 Source: ".\witness_node\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node; Flags: ignoreversion
 Source: ".\witness_node\witness_node_data_dir\*"; DestDir: {localappdata}\{#APPDATA_DIR}\witness_node\witness_node_data_dir; Flags: ignoreversion onlyifdoesntexist
 Source: ".\vc_redist.x64.exe"; DestDir: {app}; Flags: ignoreversion 
+Source: ".\icon.ico"; DestDir: {app}; Flags: ignoreversion 
 
 [UninstallRun]
 Filename: "{cmd}"; Parameters: "/C taskkill /im Omnibazaar.exe /f /t 1> NUL 2> NUL && timeout 5 > NUL"
@@ -47,8 +48,9 @@ Type: filesandordirs; Name: "{localappdata}\{#APPDATA_DIR}"
 Type: filesandordirs; Name: "{userappdata}\{#APPDATA_DIR}"
 
 [Icons]
-Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
-Name: {group}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app}
+Name: {userdesktop}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app};IconFilename:"{app}\icon.ico"
+Name: {group}\{#APP_NAME}; Filename: {app}\Omnibazaar.exe; WorkingDir: {app};IconFilename:"{app}\icon.ico"
+Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\icon.ico"
 
 [Run]
 Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";

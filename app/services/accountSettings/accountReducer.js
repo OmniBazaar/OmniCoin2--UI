@@ -37,6 +37,9 @@ import {
   changeSearchPriorityData,
   setBtcAddress,
   setEthAddress,
+  setup,
+  setupSucceeded,
+  setupFailed
 } from './accountActions';
 
 const defaultState = {
@@ -88,6 +91,10 @@ const defaultState = {
     error: null
   },
   ipAddress: '',
+  setup: {
+    loading: false,
+    error: null
+  }
 };
 
 const sliceData = (data, activePage, rowsPerPage) => (
@@ -576,6 +583,33 @@ const reducer = handleActions({
     ...state,
     ...defaultState,
   }),
+  [setup](state) {
+    return {
+      ...state,
+      setup: {
+        loading: true,
+        error: null
+      }
+    }
+  },
+  [setupSucceeded](state) {
+    return {
+      ...state,
+      setup: {
+        loading: false,
+        error: null
+      }
+    }
+  },
+  [setupFailed](state, { payload: { error }}) {
+    return {
+      ...state,
+      setup: {
+        loading: false,
+        error
+      }
+    }
+  }
 }, defaultState);
 
 export default reducer;

@@ -15,6 +15,7 @@ import {
 
 import {
   storePreferences,
+  getPreferences,
   getuserPrefereneces
 } from './services';
 import {
@@ -30,10 +31,13 @@ export function* preferencesSubscriber() {
 
 function* savePreferences({ payload: { preferences } }) {
   try {
+    const currentReferences = yield call(getPreferences);
+
     yield call(storePreferences, preferences);
-    if (preferences.autorun) {
+    if (!currentReferences.autorun && preferences.autorun) {
       ipcRenderer.send('launch-node-daemon');
-    } else {
+    } 
+    if (currentReferences.autorun && !preferences.autorun) {
       ipcRenderer.send('stop-node-daemon');
     }
     yield put(savePreferencesSuccess(preferences));

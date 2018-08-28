@@ -47,6 +47,10 @@ class MyEscrowSettings extends Component {
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.save = this.save.bind(this);
     this.checkboxes = {};
+    
+    this.state = {
+      isSaveSettings: false
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +63,12 @@ class MyEscrowSettings extends Component {
       }
     }
   }
+  
+  onItemClick = () => {
+    this.setState({
+      isSaveSettings: true
+    })
+  };
 
   renderMenuItem(text, id, value) {
     return (
@@ -66,6 +76,7 @@ class MyEscrowSettings extends Component {
         <Checkbox
           ref={(checkbox) => { this.checkboxes[id] = checkbox; }}
           value={value}
+          onChecked={this.onItemClick}
         />
         <span>{text}</span>
       </div>
@@ -103,6 +114,7 @@ class MyEscrowSettings extends Component {
         {this.renderMenuItem(formatMessage(messages.secondCategory), 'second', transactionProcessor)}
         {this.renderMenuItem(formatMessage(messages.thirdCategory), 'third', activeTransactionProcessor)}
         <Button
+          disabled={!this.state.isSaveSettings}
           content={formatMessage(messages.save)}
           onClick={this.save}
           loading={updatingSettings}

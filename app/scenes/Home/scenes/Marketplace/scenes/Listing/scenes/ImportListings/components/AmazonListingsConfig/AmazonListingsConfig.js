@@ -177,7 +177,7 @@ class AmazonListingsConfig extends Component {
   }
 
   render() {
-    const { updatingConfig } = this.state;
+    const { updatingConfig, accessKey, secret, assocTag } = this.state;
     const { intl: { formatMessage } } = this.props;
 
     return ([
@@ -233,7 +233,7 @@ class AmazonListingsConfig extends Component {
         <Button
           className="button--primary"
           loading={updatingConfig}
-          disabled={updatingConfig}
+          disabled={updatingConfig || !accessKey || !secret || !assocTag}
           content={formatMessage(messages.updateConfig)}
           onClick={() => this.updateConfig()}
         />

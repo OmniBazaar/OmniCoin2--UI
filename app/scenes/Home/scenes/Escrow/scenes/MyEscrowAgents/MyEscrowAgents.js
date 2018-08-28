@@ -75,7 +75,8 @@ class MyEscrowAgents extends Component {
   state = {
     searchTerm: '',
     totalPages: Math.ceil(this.props.escrow.agentsCount / limit),
-    activePage: 1
+    activePage: 1,
+    isApproveChanges: false
   };
 
   componentWillMount() {
@@ -178,6 +179,9 @@ class MyEscrowAgents extends Component {
   }
 
   toggleSelectAgent(agent) {
+    this.setState({
+      isApproveChanges: true
+    });
     if (this.props.escrow.myAgents.find(item => item.id === agent.id)) {
       this.props.escrowActions.removeMyEscrowAgents([agent]);
     } else {
@@ -226,6 +230,7 @@ class MyEscrowAgents extends Component {
             />
           </div>
           <Button
+            disabled={!this.state.isApproveChanges}
             content={formatMessage(messages.approveChanges)}
             className={cn('button--green-bg', updating ? 'loading' : '')}
             onClick={this.handleApproveClick}

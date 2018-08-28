@@ -12,29 +12,15 @@ import Home from './scenes/Home/Home';
 import AirDrop from './scenes/AirDrop/AirDrop';
 import UpdateForcer from './components/UpdateForcer/UpdateForcer';
 import { connect as connectToNode, getDynGlobalObject } from './services/blockchain/connection/connectionActions';
-import {
-  getCurrentUser,
-  getLastLoginUserName,
-  requestPcIds,
-  requestReferrer
-} from './services/blockchain/auth/authActions';
-import { loadListingDefault } from './services/listing/listingDefaultsActions';
-import { loadLocalPreferences } from './services/preferences/preferencesActions';
-import { getConfig } from './services/config/configActions';
-import { checkUpdate } from './services/updateNotification/updateNotificationActions';
+import { setup } from "./services/accountSettings/accountActions";
 import localeData from './../app/dist/i18n/data.json';
 import Background from "./components/Background/Background";
 
 
 class Root extends Component {
+
   componentWillMount() {
-    this.props.configActions.getConfig();
-    this.props.authActions.requestPcIds();
-    this.props.authActions.requestReferrer();
-    this.props.authActions.getLastLoginUserName();
-    this.props.listingDefaultsActions.loadListingDefault();
-    this.props.preferencesActions.loadLocalPreferences();
-    this.props.updateNotificationActions.checkUpdate();
+    this.props.accountActions.setup();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -126,20 +112,8 @@ export default connect(
     connectionActions: bindActionCreators({
       connectToNode, getDynGlobalObject
     }, dispatch),
-    authActions: bindActionCreators({
-      requestPcIds, getCurrentUser, getLastLoginUserName, requestReferrer
-    }, dispatch),
-    listingDefaultsActions: bindActionCreators({
-      loadListingDefault
-    }, dispatch),
-    preferencesActions: bindActionCreators({
-      loadLocalPreferences
-    }, dispatch),
-    configActions: bindActionCreators({
-      getConfig
-    }, dispatch),
-    updateNotificationActions: bindActionCreators({
-      checkUpdate
+    accountActions: bindActionCreators({
+      setup
     }, dispatch)
   })
 )(Root);
