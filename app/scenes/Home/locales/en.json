@@ -8,5 +8,7 @@
   "Home.support": "Support",
   "Home.newVersionAvailable": "A new version is available",
   "Home.updateMessage": "Before installing the new version, please close the OmniBazaar application.",
-  "Home.updatesAvailable": "Updates available"
+  "Home.updatesAvailable": "Updates available",
+  "Home.publisherUpdatesAvailable": "Publisher Updates",
+  "Home.publisherUpdateMessage": "New version of publisher is available, please read README from new package carefully before install new version"
 }

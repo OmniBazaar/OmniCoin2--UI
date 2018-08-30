@@ -9,6 +9,8 @@ import { delay } from 'redux-saga';
 import electron from 'electron';
 import request from 'request-promise-native';
 
+import config from '../../config/config';
+
 import {
   checkUpdate,
   checkUpdateFinish
@@ -21,13 +23,13 @@ export function* updateNotificationSubscriber() {
 }
 
 const checkInterval = 3600000;
-const updateServerUrl = 'http://35.171.116.3/updates';
+const updateServerUrl = config.updateServer;
 
 const isProd = () => process.env.NODE_ENV === 'production';
 
 const checkNewVersion = async (version, platform) => {
   const opts = {
-    uri: `${updateServerUrl}/update/check`,
+    uri: `${updateServerUrl}/update/wallet/check`,
     qs: {
     	version,
     	platform
