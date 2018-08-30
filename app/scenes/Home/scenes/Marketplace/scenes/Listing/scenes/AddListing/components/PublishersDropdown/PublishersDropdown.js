@@ -53,7 +53,9 @@ class PublishersDropdown extends Component {
 
         if (value && typeof value === 'string') {
           const publisher = options.find(el => el.value.publisher_ip === value);
-          this.props.input.onChange(publisher.value);
+          if (publisher) {
+            this.props.input.onChange(publisher.value);
+          }
         }
       } else {
         const { formatMessage } = this.props.intl;
