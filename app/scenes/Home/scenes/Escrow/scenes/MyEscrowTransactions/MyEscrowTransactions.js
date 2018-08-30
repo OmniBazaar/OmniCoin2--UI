@@ -363,7 +363,7 @@ class MyEscrowTransactions extends Component {
       this.toggleCalendar(this.toggleProposalConfirmationModal);
     });
   }
-  
+
   onClickOutside = () => {
     this.toggleCalendar()
   }
@@ -501,11 +501,11 @@ class MyEscrowTransactions extends Component {
               </Table>
           }
         </div>
-        <RateModal
+        {this.state.rateModal.isOpen && <RateModal
           {...this.state.rateModal}
           onCancel={this.closeModal}
           loading={finalizing}
-        />
+        />}
         {
           this.state.proposal.isCalendarOpen && (
             <DatePicker

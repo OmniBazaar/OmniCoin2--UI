@@ -72,7 +72,7 @@ export function* accountSubscriber() {
   ]);
 }
 
-function* updatePublicData() {
+export function* updatePublicData() {
   const { account } = (yield select()).default;
   const { is_a_processor } = (yield select()).default.auth.account;
   try {
@@ -93,7 +93,7 @@ function* updatePublicData() {
   }
 }
 
-function* getPublishers() {
+export function* getPublishers() {
   try {
     const publishers = yield call(getAllPublishers);
     yield put({ type: 'GET_PUBLISHERS_SUCCEEDED', publishers });
@@ -104,7 +104,7 @@ function* getPublishers() {
 }
 
 
-function* updateAccount(payload) {
+export function* updateAccount(payload) {
   const { currentUser, account } = (yield select()).default.auth;
   const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   const tr = new TransactionBuilder();
@@ -160,7 +160,7 @@ function* updateAccount(payload) {
 }
 
 
-function* getRecentTransactions({ payload: { coinType } }) {
+export function* getRecentTransactions({ payload: { coinType } }) {
   const { auth: { currentUser }, ethereum } = (yield select()).default;
   try {
     if (coinType === CoinTypes.OMNI_COIN) {
@@ -183,11 +183,11 @@ function* getRecentTransactions({ payload: { coinType } }) {
   }
 }
 
-function* updatePublisherData() {
+export function* updatePublisherData() {
   yield put({ type: 'DHT_RECONNECT' });
 }
 
-function* setup() {
+export function* setup() {
   try {
     yield put(getConfig());
     yield put(requestPcIds());
