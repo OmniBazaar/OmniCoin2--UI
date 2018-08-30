@@ -12,14 +12,28 @@ import _ from 'lodash';
 
 import { CoinTypes } from '../../scenes/Home/scenes/Wallet/constants';
 import {getAllPublishers, getPublisherByIp} from './services';
-import { generateKeyFromPassword, } from '../blockchain/utils/wallet';
+import { generateKeyFromPassword } from '../blockchain/utils/wallet';
 import OmnicoinHistory from './omnicoinHistory';
 import { getStoredCurrentUser } from '../blockchain/auth/services';
 import { voteForProcessors } from '../processors/utils';
 import EthereumHistory from './ethereumHistory';
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
-import {SATOSHI_IN_BTC} from "../../utils/constants";
+import { SATOSHI_IN_BTC } from "../../utils/constants";
 import BitcoinObFeesHistory from "./bitcoinHistory";
+import {
+  setupFailed,
+  setupSucceeded
+} from "./accountActions";
+import { getConfig } from "../config/configActions";
+import {
+  requestPcIds,
+  requestReferrer,
+  getLastLoginUserName
+} from "../blockchain/auth/authActions";
+import { loadListingDefault } from "../listing/listingDefaultsActions";
+import { loadLocalPreferences } from "../preferences/preferencesActions";
+import { checkUpdate } from "../updateNotification/updateNotificationActions";
+import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -55,6 +69,7 @@ export function* accountSubscriber() {
     takeLatest('GET_RECENT_TRANSACTIONS', getRecentTransactions),
     takeLatest('CHANGE_SEARCH_PRIORITY_DATA', updatePublisherData),
     takeLatest('UPDATE_PUBLISHER_DATA', updatePublisherData),
+    takeLatest('SETUP', setup)
   ]);
 }
 
@@ -171,4 +186,21 @@ export function* getRecentTransactions({ payload: { coinType } }) {
 
 export function* updatePublisherData() {
   yield put({ type: 'DHT_RECONNECT' });
+}
+
+export function* setup() {
+  try {
+    yield put(getConfig());
+    yield put(requestPcIds());
+    yield put(requestReferrer());
+    yield put(getLastLoginUserName());
+    yield put(loadListingDefault());
+    yield put(loadLocalPreferences());
+    yield put(checkUpdate());
+    yield put(publisherCheckUpdate());
+    yield put(setupSucceeded());
+  } catch (error) {
+    yield put(setupFailed(error));
+    console.log('ERROR ', error);
+  }
 }

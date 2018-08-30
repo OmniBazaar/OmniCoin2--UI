@@ -31,6 +31,9 @@ const {
   changeIpAddress,
   setBtcAddress,
   setEthAddress,
+  setup,
+  setupSucceeded,
+  setupFailed
 } = createActions({
   SET_REFERRER: () => ({}),
   SET_PUBLISHER: () => ({}),
@@ -62,6 +65,9 @@ const {
   CHANGE_IP_ADDRESS: (ip) => ({ ip }),
   SET_BTC_ADDRESS: (address) => ({ address }),
   SET_ETH_ADDRESS: (address) => ({ address }),
+  SETUP: () => ({ }),
+  SETUP_SUCCEEDED: () => ({ }),
+  SETUP_FAILED: (error) => ({ error })
 });
 
 export {
@@ -95,4 +101,7 @@ export {
   changeIpAddress,
   setBtcAddress,
   setEthAddress,
+  setup,
+  setupSucceeded,
+  setupFailed
 };

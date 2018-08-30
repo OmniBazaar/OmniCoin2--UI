@@ -21,12 +21,12 @@ import {
   referralBonusSucceeded,
   referralBonusFailed,
   requestReferrerFinish,
-  getLastLoginUserName
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
 import { SubmissionError } from 'redux-form';
 import { getAuthHeaders } from '../../listing/apis';
+import { setup } from "../../accountSettings/accountActions";
 
 
 const messages = defineMessages({
@@ -333,7 +333,7 @@ function* requestReferrer() {
 function* logout() {
   // reseting redux store
   yield put({ type: 'RESET' });
-  yield put(getLastLoginUserName());
+  yield put(setup());
 }
 
 const getDefaultReferrer = () => new Promise((resolve, reject) => {
