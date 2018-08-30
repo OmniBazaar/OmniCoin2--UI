@@ -52,7 +52,8 @@ export const getAuthHeaders = (currentUser) => new Promise((resolve, reject) => 
 });
 
 
-const makeRequest = async (user, publisher, url, options) => {
+export const makeRequest = async (user, publisher, url, options) => {
+  if (!options) options = {} ;
   const authHeaders = await getAuthHeaders(user);
   const opts = {
     uri: `http://${publisher.publisher_ip}/pub-api/${url}`,

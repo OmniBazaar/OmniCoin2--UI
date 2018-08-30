@@ -24,6 +24,7 @@ import myPurchasesReducer from './marketplace/myPurchases/myPurchasesReducer';
 import configReducer from './config/configReducer';
 import vestingBalancesReducer from './accountSettings/vestingBalances/vestingBalancesReducer';
 import updateNotificationReducer from './updateNotification/updateNotificationReducer';
+import publisherUpdateNotificationReducer from './publisherUpdateNotification/publisherUpdateNotificationReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -50,5 +51,6 @@ export default combineReducers({
   data: myPurchasesReducer,
   config: configReducer,
   vestingBalances: vestingBalancesReducer,
-  updateNotification: updateNotificationReducer
+  updateNotification: updateNotificationReducer,
+  publisherUpdateNotification: publisherUpdateNotificationReducer
 });

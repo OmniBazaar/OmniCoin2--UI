@@ -41,6 +41,7 @@ import MyPurchases from './scenes/Marketplace/scenes/MyPurchases/MyPurchases';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
 import UpdateNotification from './components/UpdateNotification/UpdateNotification';
+import PublisherUpdateNotification from './components/PublisherUpdateNotification/PublisherUpdateNotification';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -286,6 +287,7 @@ class Home extends Component {
                   <span className="identity-verification-status">{identityVerificationStatus}</span>
                 </NavLink>
                 <UpdateNotification />
+                <PublisherUpdateNotification />
                 {this.renderAccountSettings()}
                 {this.renderPreferences()}
               </div>
