@@ -21,9 +21,9 @@ const dhtConnector = new DHTConnector();
 
 export function* dhtSubscriber() {
   yield all([
-    takeEvery('DHT_CONNECT', connect),
+    takeLatest('DHT_CONNECT', connect),
     takeLatest('DHT_RECONNECT', reconnect),
-    takeEvery('DHT_GET_PEERS_FOR', getPeersFor),
+    takeLatest('DHT_GET_PEERS_FOR', getPeersFor),
   ]);
 }
 
