@@ -227,7 +227,7 @@ class ListingForm extends Component {
       this.resetForm();
     }
 
-    this.setState({ keywords: nextProps.formValues.keywords });
+    this.setState({ keywords: nextProps.formValues && nextProps.formValues.keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
 
