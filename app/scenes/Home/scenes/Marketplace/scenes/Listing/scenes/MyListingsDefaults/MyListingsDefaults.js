@@ -136,9 +136,9 @@ class MyListingsDefaults extends Component {
       );
     }
   }
-  
+
   onChange = () => {
-    this.setState({ isPromptVisible: true })
+    this.setState({ isPromptVisible: true });
   };
 
   defaultsForm() {
@@ -182,9 +182,7 @@ class MyListingsDefaults extends Component {
                   placeholder: formatMessage(addListingMessages.category),
                   disableAllOption: true
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
@@ -196,9 +194,7 @@ class MyListingsDefaults extends Component {
                   parentCategory: category,
                   disableAllOption: true
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -214,9 +210,7 @@ class MyListingsDefaults extends Component {
                   placeholder: formatMessage(addListingMessages.currency),
                   disableAllOption: true
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -231,6 +225,7 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.unitsOfMeasure)
                 }}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -243,9 +238,7 @@ class MyListingsDefaults extends Component {
                 props={{
                   label: formatMessage(addListingMessages.bitcoinPrice)
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -255,9 +248,7 @@ class MyListingsDefaults extends Component {
                 props={{
                   label: formatMessage(addListingMessages.ethereumPrice)
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -267,9 +258,7 @@ class MyListingsDefaults extends Component {
                 props={{
                   label: formatMessage(addListingMessages.omnicoinPrice)
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -284,7 +273,11 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
-                onChange={({ target: { value } }) => this.props.accountActions.setBtcAddress(value)}
+                onChange={({target: {value}}) => {
+                    this.props.accountActions.setBtcAddress(value);
+                    this.onChange();
+                  }
+                }
               />
             </Grid.Column>
           </Grid.Row>
@@ -300,7 +293,10 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
-                onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
+                onChange={({ target: { value } }) => {
+                  this.props.accountActions.setEthAddress(value);
+                  this.onChange();
+                }}
               />
             </Grid.Column>
           </Grid.Row>
@@ -318,6 +314,7 @@ class MyListingsDefaults extends Component {
                 component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.pleaseEnter)}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -342,6 +339,7 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.ownerName)}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -356,9 +354,7 @@ class MyListingsDefaults extends Component {
                 props={{
                   placeholder: formatMessage(addListingMessages.country)
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -368,6 +364,7 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.address)}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -377,6 +374,7 @@ class MyListingsDefaults extends Component {
                 component={InputField}
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.city)}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
@@ -390,9 +388,7 @@ class MyListingsDefaults extends Component {
                   placeholder: formatMessage(addListingMessages.state),
                   country
                 }}
-                input={{
-                  onChange: this.onChange
-                }}
+                onChange={this.onChange}
               />
             </Grid.Column>
             <Grid.Column width={4} className="align-top">
@@ -402,6 +398,7 @@ class MyListingsDefaults extends Component {
                 component="input"
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.postalCode)}
+                onChange={this.onChange}
               />
             </Grid.Column>
           </Grid.Row>
