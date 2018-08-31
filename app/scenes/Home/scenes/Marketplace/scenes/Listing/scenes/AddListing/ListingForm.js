@@ -70,12 +70,8 @@ class ListingForm extends Component {
         price_using_eth,
         ethereum_address,
         manual_bitcoin_address,
-        manual_ethereum_address
       } = values;
-      if (price_using_btc) {
-        if (bitcoin_address) {
-          await BitcoinApi.validateAddress(bitcoin_address);
-        }
+      if (price_using_btc && manual_bitcoin_address) {
         if (manual_bitcoin_address) {
           await BitcoinApi.validateAddress(manual_bitcoin_address);
         }
@@ -87,7 +83,7 @@ class ListingForm extends Component {
       if (e === "Invalid Ethereum Address") {
         throw { ethereum_address: messages.invalidAddress };
       } else {
-        throw { bitcoin_address: messages.invalidAddress };
+        throw { manual_bitcoin_address: messages.invalidAddress };
       }
     }
   };
@@ -949,7 +945,7 @@ export default compose(
     form: 'listingForm',
     destroyOnUnmount: true,
     asyncValidate: ListingForm.asyncValidate,
-    asyncBlurFields: ['bitcoin_address', 'ethereum_address'],
+    asyncBlurFields: ['bitcoin_address', 'ethereum_address', 'manual_bitcoin_address'],
   }),
   connect(
     state => ({
