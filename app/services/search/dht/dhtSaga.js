@@ -4,8 +4,10 @@ import {
   put,
   takeEvery,
   takeLatest,
-  fork
+  fork,
+  select
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { includes, uniqBy } from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
@@ -15,6 +17,7 @@ import { searchListingsByPeersMap } from '../searchSaga';
 import AccountSettingsStorage from '../../accountSettings/accountStorage';
 import { getPreferences } from '../../preferences/services';
 import { getAllPublishers } from '../../accountSettings/services';
+import { checkAndUpdatePublishersAliveStatus } from '../../listing/listingSaga';
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -126,6 +129,28 @@ function isPresentInFilters(
   )
 }
 
+export function* getAlivePublisherIps() {
+  while (true) {
+    const isCheckingPublishersStatus = (yield select()).default.listing.allPublishers.loading;
+    if (!isCheckingPublishersStatus) {
+      break;
+    }
+    yield delay(200);
+  }
+
+  let publishers = yield checkAndUpdatePublishersAliveStatus();
+  publishers = publishers.filter(pub => pub.alive);
+
+  const publisherIps = {};
+  publishers.forEach((publisher) => {
+    if (!publisherIps[publisher.publisher_ip]) {
+      publisherIps[publisher.publisher_ip] = true;
+    }
+  });
+
+  return publisherIps;
+}
+
 export function* getPeersFor({
   payload: {
     searchTerm, category, country, state, city, searchListings, subCategory, fromSearchMenu
@@ -191,13 +216,7 @@ export function* getPeersFor({
 
     const extraKeywordsPeerHosts = extraKeywordsPeers.map(i => i.host);
 
-    const publishers = yield getAllPublishers();
-    const publisherIps = {};
-    publishers.forEach((publisher) => {
-      if (!publisherIps[publisher.publisher_ip]) {
-        publisherIps[publisher.publisher_ip] = true;
-      }
-    });
+    const publisherIps = yield getAlivePublisherIps();
 
     if (keywords.length) {
       const isExtraFilter = (
