@@ -923,6 +923,7 @@ class Transfer extends Component {
         this.submitOmnicoinTransfer(paramValues);
         break;
     }
+    this.setState({ isPromptVisible: false });
   }
 
   onApprove() {
