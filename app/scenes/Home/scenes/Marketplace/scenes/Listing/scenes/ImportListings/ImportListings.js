@@ -22,10 +22,14 @@ import {
   updateFileItemDescription,
 } from '../../../../../../../../services/listing/importActions';
 import { getFileExtension } from '../../../../../../../../utils/file';
-import './import-listings.scss';
-import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import { checkPublisherAliveStatus } from '../../../../../../../../services/listing/apis';
+
+import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import AmazonListingsConfig from './components/AmazonListingsConfig/AmazonListingsConfig';
+import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
+
+import './import-listings.scss';
+
 
 const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
 
@@ -131,6 +135,7 @@ class ImportListings extends Component {
       selectedVendor: null,
       validatingPublisher: false,
       configValid: false,
+      isPromptVisible: false
     };
   }
 
@@ -266,6 +271,10 @@ class ImportListings extends Component {
     }
   }
 
+  setPromptVisible() {
+    this.setState({ isPromptVisible: true });
+  }
+
   onClickRemoveAll() {
     this.removeAllFiles();
     this.props.listingActions.removeAllFiles();
@@ -323,7 +332,10 @@ class ImportListings extends Component {
                 placeholder={formatMessage(messages.listingsVendor)}
                 options={options}
                 value={this.state.selectedVendor}
-                onChange={(e, { value }) => this.onVendorChange(value)}
+                onChange={(e, { value }) => {
+                  this.onVendorChange(value);
+                  this.setPromptVisible();
+                }}
               />
             </Grid.Column>
             {this.state.selectedVendor && this.vendorsConfigs[this.state.selectedVendor] &&
@@ -336,7 +348,10 @@ class ImportListings extends Component {
                 <PublishersDropdown
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}
-                  onChange={selectedPublisher => this.setState({ selectedPublisher })}
+                  onChange={selectedPublisher => {
+                    this.setState({selectedPublisher});
+                    this.setPromptVisible();
+                  }}
                 />
               </Input>
             </Grid.Column>
@@ -437,6 +452,7 @@ class ImportListings extends Component {
 
     return (
       <div className="marketplace-container category-listing import-listings">
+        <FormPrompt isVisible={this.state.isPromptVisible}/>
         <div className="header">
           <Menu />
         </div>

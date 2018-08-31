@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import { updateImportConfig, loadImportConfig } from '../../../../../../../../../../services/listing/importActions';
 import Checkbox from '../../../../../../../../../../components/Checkbox/Checkbox';
+import FormPrompt from '../../../../../../../../../../components/FormPrompt/FormPrompt';
+
 
 const AMAZON_PROVIDER = 'amazon';
 const REQUIRED_VALUES = ['accessKey', 'secret', 'assocTag'];
@@ -80,6 +82,7 @@ class AmazonListingsConfig extends Component {
       assocTag: '',
       rememberConfig: false,
       updatingConfig: false,
+      isPromptVisible: false
     };
   }
 
@@ -176,11 +179,16 @@ class AmazonListingsConfig extends Component {
     });
   }
 
+  setPromptVisible() {
+    this.setState({ isPromptVisible: true });
+  }
+
   render() {
     const { updatingConfig, accessKey, secret, assocTag } = this.state;
     const { intl: { formatMessage } } = this.props;
 
     return ([
+      <FormPrompt isVisible={this.state.isPromptVisible}/>,
       <Grid.Column width={4}>
         {formatMessage(messages.accessKeyTitle)}
       </Grid.Column>,
@@ -191,7 +199,10 @@ class AmazonListingsConfig extends Component {
           name="awsAccessKey"
           placeholder={formatMessage(messages.accessKey)}
           value={this.state.accessKey}
-          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'accessKey' })}
+          onChange={e =>  {
+            this.onRequiredValueChange({ value: e.target.value, field: 'accessKey' });
+            this.setPromptVisible();
+          }}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
@@ -204,7 +215,10 @@ class AmazonListingsConfig extends Component {
           name="awsSecretKey"
           placeholder={formatMessage(messages.secretKey)}
           value={this.state.secret}
-          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'secret' })}
+          onChange={e => {
+            this.onRequiredValueChange({ value: e.target.value, field: 'secret' });
+            this.setPromptVisible();
+          }}
         />
       </Grid.Column>,
       <Grid.Column width={4}>
@@ -217,14 +231,20 @@ class AmazonListingsConfig extends Component {
           name="awsAssocTag"
           placeholder={formatMessage(messages.assocTag)}
           value={this.state.assocTag}
-          onChange={e => this.onRequiredValueChange({ value: e.target.value, field: 'assocTag' })}
+          onChange={e => {
+            this.onRequiredValueChange({ value: e.target.value, field: 'assocTag' });
+            this.setPromptVisible();
+          }}
         />
       </Grid.Column>,
       <Grid.Column width={4} />,
       <Grid.Column width={12} className="import-config">
         <Checkbox
           value={this.state.rememberConfig}
-          onChecked={rememberConfig => this.setState({ rememberConfig })}
+          onChecked={rememberConfig => {
+            this.setState({ rememberConfig });
+            this.setPromptVisible();
+          }}
         />
         <span style={{ marginLeft: '3px' }}>{formatMessage(messages.rememberConfig)}</span>
       </Grid.Column>,

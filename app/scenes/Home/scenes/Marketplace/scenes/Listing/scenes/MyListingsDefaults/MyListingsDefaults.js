@@ -16,6 +16,8 @@ import StateDropdown from '../AddListing/components/StateDropdown/StateDropdown'
 import CountryDropdown from '../AddListing/components/CountryDropdown/CountryDropdown';
 import Checkbox from '../AddListing/components/Checkbox/Checkbox';
 import Images from '../AddListing/components/Images/Images';
+import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
+
 import addListingMessages from '../AddListing/messages';
 import listingDefaultMessages from './messages';
 
@@ -158,10 +160,7 @@ class MyListingsDefaults extends Component {
 
     return (
       <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
-        <Prompt
-          when={this.state.isPromptVisible}
-          message={location => formatMessage(listingDefaultMessages.confirmationMessage)}
-        />
+        <FormPrompt isVisible={this.state.isPromptVisible}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={16}>
