@@ -41,7 +41,7 @@ import {
   checkPublishersAliveFinish
 } from './listingActions';
 import { clearSearchResults } from '../search/searchActions';
-import { countPeersForKeywords } from '../search/dht/dhtSaga';
+import { countPeersForKeywords, getAlivePublisherIps } from '../search/dht/dhtSaga';
 import { getAllPublishers, getPublisherByIp } from '../accountSettings/services';
 import {
   saveImage,
@@ -269,12 +269,17 @@ export function* requestMyListings() {
 
     const { currentUser } = (yield select()).default.auth;
     const myListings = yield Apis.instance().db_api().exec('get_listings_by_seller', [currentUser.username]);
-    const getListingCommands = (yield Promise.all(myListings.map(listing => FetchChain('getAccount', listing.publisher))))
-      .map((account, idx) => ({
+    const taskResults = yield all([
+      getAlivePublisherIps(),
+      Promise.all(myListings.map(listing => FetchChain('getAccount', listing.publisher)))
+    ]);
+    const alivePublishers = taskResults[0];
+    const publishers = taskResults[1];
+    const getListingCommands = publishers.map((account, idx) => ({
         listing_id: myListings[idx].id,
         address: account.get('publisher_ip')
       }))
-      .filter(el => !!el.address)
+      .filter(el => !!el.address && alivePublishers[el.address])
       .reduce((arr, curr) => {
         const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
         if (!val) {
@@ -337,30 +342,35 @@ export function* checkListingHash({ payload: { listing } }) {
   }
 }
 
+export function* checkAndUpdatePublishersAliveStatus() {
+  const publisherResults = yield call(getAllPublishers);
+  const allPublishers = (yield select()).default.listing.allPublishers.publishers;
+  let publishers = [...allPublishers];
+  const existPublishers = {};
+  publishers.forEach(pub => {
+    existPublishers[pub.publisher_ip] = true;
+  });
+  const tasks = [];
+  const { currentUser } = (yield select()).default.auth;
+  const user = { ...currentUser }; 
+  publisherResults.forEach(pub => {
+    if (!existPublishers[pub.publisher_ip]) {
+      pub.alive = true;
+      publishers.push(pub);
+      tasks.push(call(checkPublisherAlive, user, pub));
+    }
+  });
+  if (tasks.length) {
+    yield all(tasks);
+    yield put(checkPublishersAliveFinish(null, publishers));
+  }
+
+  return publishers;
+}
+
 export function* searchPublishers({ payload: { keywords } }) {
   try {
-    const publisherResults = yield call(getAllPublishers);
-    const allPublishers = (yield select()).default.listing.allPublishers.publishers;
-    let publishers = [...allPublishers];
-    const existPublishers = {};
-    publishers.forEach(pub => {
-      existPublishers[pub.publisher_ip] = true;
-    });
-    const tasks = [];
-    const { currentUser } = (yield select()).default.auth;
-    const user = { ...currentUser }; 
-    publisherResults.forEach(pub => {
-      if (!existPublishers[pub.publisher_ip]) {
-        pub.alive = true;
-        publishers.push(pub);
-        tasks.push(call(checkPublisherAlive, user, pub));
-      }
-    });
-    if (tasks.length) {
-      yield all(tasks);
-      yield put(checkPublishersAliveFinish(null, publishers));
-    }
-
+    let publishers = yield checkAndUpdatePublishersAliveStatus();
     publishers = publishers.filter(pub => pub.alive);
 
     if (!keywords || !keywords.length) {
