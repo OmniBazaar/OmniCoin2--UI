@@ -23,6 +23,4 @@ const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${iden
 
 const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
 
-const getIdentityVerificationStatus = wrapRequest(async (applicantId) => fetch(`${identityVerificationBaseURL}/resources/applicants/${applicantId}/status?key=${identityVerificationApiKey}`));
-
-export { getIdentityVerificationToken, getApplicantInformation, getIdentityVerificationStatus };
+export { getIdentityVerificationToken, getApplicantInformation };

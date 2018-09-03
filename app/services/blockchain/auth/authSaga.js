@@ -263,22 +263,10 @@ function* getIdentityVerificationToken({ payload: { username } }) {
   }
 }
 
-function* getIdentityVerificationStatus({ payload: { data } }) {
+function* getIdentityVerificationStatus({ payload: { data: username } }) {
   try {
-    const res = yield call(AuthApi.getApplicantInformation, data);
-    const applicantId = res.list.items[0].id;
-    const response = yield call(AuthApi.getIdentityVerificationStatus, applicantId);
-    const { reviewStatus, reviewResult } = response;
-    let status;
-    if (reviewStatus === 'pending') {
-      status = 'Pending';
-    } else if (reviewResult.reviewAnswer === 'GREEN') {
-      status = 'Accepted';
-    } else if (reviewResult.reviewAnswer === 'RED') {
-      status = 'Rejected';
-    } else {
-      status = 'Pending';
-    }
+    const response = yield (Apis.instance().db_api().exec('get_account_by_name', [username]));
+    const { verified: status } = response;
     yield put({ type: 'GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED', status });
   } catch (error) {
     console.log(error);
@@ -344,6 +332,3 @@ const getDefaultReferrer = () => new Promise((resolve, reject) => {
   });
   ipcRenderer.send('get-referrer', null);
 });
-
-
-
