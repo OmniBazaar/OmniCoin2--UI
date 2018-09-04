@@ -42,6 +42,8 @@ import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
 import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 import PublisherUpdateNotification from './components/PublisherUpdateNotification/PublisherUpdateNotification';
+import AccountSettingsStorage from "../../services/accountSettings/accountStorage";
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -79,14 +81,19 @@ import MailTypes from "../../services/mail/mailTypes";
 
 const iconSize = 20;
 
+
 class Home extends Component {
   state = {
-    visible: true
+    visible: true,
+    isSPVisible: false
   };
 
   componentDidMount() {
     const { currentUser } = this.props.auth;
     if (currentUser) {
+      this.setState({
+        isSPVisible: AccountSettingsStorage.isPublisherDataEmpty()
+      });
       this.init(currentUser);
     }
   }
@@ -174,6 +181,7 @@ class Home extends Component {
     logoutTimeout *= 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
+
     if (!this.props.auth.currentUser) {
       if (!this.props.auth.lastLoginUserName) {
         return (<Redirect
@@ -203,6 +211,21 @@ class Home extends Component {
 
     return (
       <div className="home-container">
+        <ConfirmationModal
+          isOpen={this.state.isSPVisible}
+          onApprove={() => {
+            this.setState({ isSPVisible: false });
+            this.props.history.push('/search-priority');
+          }}
+          onCancel={() => {
+            this.setState({ isSPVisible: false });
+          }}
+        >
+          <FormattedMessage
+            id="Home.publisherDataIsEmpty"
+            defaultMessage="You didn't specify your search priority criteria. Do you wish to specify it now?"
+          />
+        </ConfirmationModal>
         <div className={sideBarClass} style={{ backgroundImage: `url(${BackgroundImage})` }}>
           <div className="top">
             <div className="header">

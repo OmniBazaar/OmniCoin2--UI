@@ -36,6 +36,11 @@ class AccountSettingsStorage {
   static getPublisherData() {
     return AccountSettingsStorage.get(publisherDataKey);
   }
+
+  static isPublisherDataEmpty() {
+    const publisherData = AccountSettingsStorage.getPublisherData();
+    return (!publisherData.keywords || !publisherData.keywords.length) && !publisherData.publisherName && !publisherData.country;
+  }
 }
 
 export default AccountSettingsStorage;
