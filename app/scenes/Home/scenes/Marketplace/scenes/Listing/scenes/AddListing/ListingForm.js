@@ -73,9 +73,7 @@ class ListingForm extends Component {
         manual_bitcoin_address,
       } = values;
       if (price_using_btc && manual_bitcoin_address) {
-        if (manual_bitcoin_address) {
-          await BitcoinApi.validateAddress(manual_bitcoin_address);
-        }
+        await BitcoinApi.validateAddress(manual_bitcoin_address);
       }
       if (price_using_eth && ethereum_address) {
           await EthereumApi.validateEthereumAddress(ethereum_address);
@@ -149,7 +147,6 @@ class ListingForm extends Component {
       };
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
-      const { btc_address, eth_address } = this.props.auth.account;
       const listingPriority = this.getDefaultListingPriority();
       data = {
         contact_type: contactOmniMessage,
@@ -163,17 +160,27 @@ class ListingForm extends Component {
         start_date: moment().format('YYYY-MM-DD HH:mm:ss')
       };
 
-      if (btc_address) {
-        data.bitcoin_address = btc_address;
+      if (defaultData.bitcoin_address) {
+        if (this.isBtcAddressInWallet(defaultData.bitcoin_address)) {
+          data.bitcoin_address = defaultData.bitcoin_address;
+        } else {
+          data.bitcoin_address = MANUAL_INPUT_VALUE;
+          data.manual_bitcoin_address = defaultData.bitcoin_address;
+        }
       }
-      if (eth_address) {
-        data.ethereum_address = eth_address;
+      if (defaultData.ethereum_address) {
+        data.ethereum_address = defaultData.ethereum_address;
       } else {
         data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
       }
     }
 
     this.props.initialize(data);
+  }
+
+  isBtcAddressInWallet(btc_address) {
+    const { wallets } = this.props.bitcoin;
+    return !!wallets.find(wallet => wallet.receiveAddress === btc_address);
   }
 
   getDefaultListingPriority() {
