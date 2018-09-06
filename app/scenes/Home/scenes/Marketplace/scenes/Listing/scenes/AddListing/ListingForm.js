@@ -145,6 +145,12 @@ class ListingForm extends Component {
         keywords: editingListing.keywords ? editingListing.keywords.join(', ') : '',
         publisher: editingListing.ip
       };
+      if (editingListing.bitcoin_address) {
+        if (!this.isBtcAddressInWallet(editingListing.bitcoin_address)) {
+          data.bitcoin_address = MANUAL_INPUT_VALUE;
+          data.manual_bitcoin_address = editingListing.bitcoin_address;
+        }
+      }
     } else {
       const { images, ...defaultData } = this.props.listingDefaults;
       const listingPriority = this.getDefaultListingPriority();
