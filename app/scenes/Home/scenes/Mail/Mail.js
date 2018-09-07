@@ -27,13 +27,9 @@ import {
   showReplyModal
 } from '../../../../services/mail/mailActions';
 import Header from '../../../../components/Header';
-import { getCurrencyAbbreviation } from "../../../../utils/listings";
-
-import { purchaseInfoSubject } from "../../../../services/mail/mailSaga";
-
-import mailMessages from './messages';
 
 import './mail.scss';
+import {getBodyFromMessage, getSubjectFromMessage} from "./utils";
 
 const folders = [
   {
@@ -114,56 +110,6 @@ class Mail extends Component {
     this.changeFolder(MailTypes.INBOX);
   }
 
-  getSubject(message) {
-    const { formatMessage } = this.props.intl;
-    const { username } = this.props.auth.currentUser;
-    if (message.subject === purchaseInfoSubject) {
-      const body = JSON.parse(message.body);
-      if (username === message.sender) {
-        return formatMessage(mailMessages.buyPurchaseSubject, {
-          seller: body.seller,
-          listing: body.listingTitle
-        })
-      } else {
-        return formatMessage(mailMessages.sellPurchaseSubject, {
-          buyer: body.buyer,
-          listing: body.listingTitle
-        });
-      }
-    } else {
-      return message.subject;
-    }
-  }
-
-  getBody(message) {
-    const { formatMessage } = this.props.intl;
-    const { username } = this.props.auth.currentUser;
-    if (message.subject === purchaseInfoSubject) {
-      const body = JSON.parse(message.body);
-      if (username === message.sender) {
-        return formatMessage(mailMessages.buyPurchaseBody, {
-          seller: body.seller,
-          number: body.listingCount,
-          listing: body.listingTitle,
-          listingId: body.listingId,
-          price: body.amount,
-          currency: getCurrencyAbbreviation(body.currency)
-        });
-      } else {
-        return formatMessage(mailMessages.sellPurchaseBody, {
-          buyer: message.user,
-          number: body.listingCount,
-          listing: body.listingTitle,
-          listingId: body.listingId,
-          price: body.amount,
-          currency: getCurrencyAbbreviation(body.currency)
-        });
-      }
-    } else {
-      return message.body;
-    }
-  }
-
 
   changeFolder(activeFolder) {
     const { username } = this.props.auth.currentUser;
@@ -229,6 +175,7 @@ class Mail extends Component {
     const { props } = this;
     const self = this;
     const emailData = props.mail.messages[props.mail.activeFolder];
+    const { formatMessage } = this.props.intl;
 
     if (emailData.length > 0) {
       return emailData.map((message, index) => {
@@ -254,7 +201,7 @@ class Mail extends Component {
               <div className="date">{creationTime}</div>
             </div>
             <div className="title">
-              {this.getSubject(message)}
+              {getSubjectFromMessage(message, formatMessage)}
             </div>
           </div>
         );
@@ -273,6 +220,7 @@ class Mail extends Component {
 
   renderMessage() {
     const message = this.getMessage();
+    const { formatMessage } = this.props.intl;
 
     if (!message) {
       return <div />;
@@ -289,7 +237,7 @@ class Mail extends Component {
           </div>
           <div className="mail-title">
             <div className="title">
-              {this.getSubject(message)}
+              {getSubjectFromMessage(message, formatMessage)}
             </div>
             <div>
               { this.props.mail.activeFolder === MailTypes.INBOX &&
@@ -300,7 +248,7 @@ class Mail extends Component {
           </div>
         </div>
         <div className="message-body">
-          {this.getBody(message)}
+          {getBodyFromMessage(message, formatMessage)}
         </div>
       </div>
     );
