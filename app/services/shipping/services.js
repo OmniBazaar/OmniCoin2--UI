@@ -57,7 +57,7 @@ const findCountryStateCode = (shipAddress) => {
 	};
 }
 
-export const getShippingRates = async (shipFrom, shipTo, weight) => {
+export const getShippingRates = async (shipFrom, shipTo, packageData) => {
 	const carriers = await getCarriers();
 	if (carriers.length === 0) {
 		return [];
@@ -69,7 +69,7 @@ export const getShippingRates = async (shipFrom, shipTo, weight) => {
 	const shipFromData = {
 		name: shipFrom.name,
 		phone: '11111111',
-    address_line1: shipFrom.address,
+    address_line1: shipFrom.address ? shipFrom.address : shipFrom.city,
     city_locality: shipFrom.city,
     state_province: shipFromCountryState.stateCode,
     postal_code: shipFrom.postalCode,
@@ -79,7 +79,7 @@ export const getShippingRates = async (shipFrom, shipTo, weight) => {
 	const shipToData = {
 		name: shipTo.name,
 		phone: '11111111',
-    address_line1: shipTo.address,
+    address_line1: shipTo.address ? shipTo.address : shipTo.city,
     city_locality: shipTo.city,
     state_province: shipToCountryState.stateCode,
     postal_code: shipTo.postalCode,
@@ -92,9 +92,7 @@ export const getShippingRates = async (shipFrom, shipTo, weight) => {
 			ship_to: shipToData,
 			ship_from: shipFromData,
 			packages: [
-				{
-					weight
-				}
+				{ ...packageData }
 			],
 			"customs": {
 	      "contents": "merchandise",

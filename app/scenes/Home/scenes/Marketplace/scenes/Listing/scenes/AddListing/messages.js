@@ -360,6 +360,22 @@ const messages = defineMessages({
   fiatFieldValidator: {
     id: 'AddListing.fiatFieldValidator',
     defaultMessage: 'Should be greater or equal to 0.01'
+  },
+  weight: {
+    id: 'AddListing.weight',
+    defaultMessage: 'Weight'
+  },
+  ounce: {
+    id: 'AddListing.ounce',
+    defaultMessage: 'Ounce'
+  },
+  pound: {
+    id: 'AddListing.pound',
+    defaultMessage: 'Pound'
+  },
+  gram: {
+    id: 'AddListing.gram',
+    defaultMessage: 'Gram'
   }
 });
 
