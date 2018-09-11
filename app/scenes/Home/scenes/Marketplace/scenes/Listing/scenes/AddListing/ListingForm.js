@@ -23,6 +23,7 @@ import Checkbox from './components/Checkbox/Checkbox';
 import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import BitcoinWalletDropdown from './components/BitcoinWalletDropdown/BitcoinWalletDropdown';
+import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
 
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
@@ -441,10 +442,7 @@ class ListingForm extends Component {
 
     return (
       <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
-        <Prompt
-          when={this.state.isPromptVisible}
-          message={location => formatMessage(messages.confirmationMessage)}
-        />
+        <FormPrompt isVisible={this.state.isPromptVisible}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>

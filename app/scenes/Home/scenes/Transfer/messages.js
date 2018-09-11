@@ -156,9 +156,5 @@ export default defineMessages({
   confirmEthereumCurrency: {
     id: 'Transfer.confirmEthereumCurrency',
     defaultMessage: 'Are you sure you want to pay in Ethereum?'
-  },
-  confirmationMessage: {
-    id: 'ListingsDefaults.confirmationMessage',
-    defaultMessage: 'If you close this page, the changes you made will not be saved unless you "Update" (save) your changes'
   }
 });

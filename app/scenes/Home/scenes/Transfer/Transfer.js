@@ -26,6 +26,8 @@ import ConfirmationModal from '../../../../components/ConfirmationModal/Confirma
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
+import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
+
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
 import {
@@ -156,7 +158,7 @@ class Transfer extends Component {
       isPromptVisible: false
     };
   }
-  
+
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const type = purchaseParams.get('type');
@@ -806,10 +808,7 @@ class Transfer extends Component {
     return (
       <div className="transfer-form">
         <Form onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submitTransfer)} className="transfer-form-container">
-          <Prompt
-            when={this.state.isPromptVisible}
-            message={location => formatMessage(messages.confirmationMessage)}
-          />
+          <FormPrompt isVisible={this.state.isPromptVisible}/>
           <div className="form-group">
             <span>{formatMessage(messages.currency)}</span>
             <Field
