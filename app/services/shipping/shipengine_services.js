@@ -25,6 +25,8 @@ const makeRequest = async (api, options) => {
 const getCarriers = async () => {
 	const response = await makeRequest('carriers', { method: 'GET' });
 
+	console.log({carriers: response})
+
 	if (!response.carriers) {
 		return [];
 	}
@@ -71,7 +73,7 @@ export const getShippingRates = async (shipFrom, shipTo, packageData) => {
 		phone: '11111111',
     address_line1: shipFrom.address ? shipFrom.address : shipFrom.city,
     city_locality: shipFrom.city,
-    state_province: shipFromCountryState.stateCode,
+    state_province: shipFrom.state,//shipFromCountryState.stateCode,
     postal_code: shipFrom.postalCode,
     country_code: shipFromCountryState.countryCode
 	};
@@ -94,23 +96,25 @@ export const getShippingRates = async (shipFrom, shipTo, packageData) => {
 			packages: [
 				{ ...packageData }
 			],
-			"customs": {
-	      "contents": "merchandise",
-	      "customs_items": [
+			customs: {
+	      contents: "merchandise",
+	      customs_items: [
 	        {
-	          "description": "merchandise",
-	          "quantity": 1,
-	          "value": 1.0,
-	          "country_of_origin": shipFromCountryState.countryCode
+          	description: "merchandise",
+	          quantity: 1,
+	          value: 1.0,
+	          country_of_origin: shipFromCountryState.countryCode
 	        }
 	      ],
-	      "non_delivery": "treat_as_abandoned"
-	    },
-			rate_options: {
-				carrier_ids: carriers
-			}
+	      non_delivery: "treat_as_abandoned"
+	    }
+		},
+		rate_options: {
+			carrier_ids: carriers
 		}
 	};
+
+	console.log({data})
 
 	const response = await makeRequest('rates', {
 		method: 'POST',

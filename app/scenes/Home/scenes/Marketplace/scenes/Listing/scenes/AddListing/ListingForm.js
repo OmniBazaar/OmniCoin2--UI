@@ -911,15 +911,8 @@ class ListingForm extends Component {
                 validate={[requiredFieldValidator, numericFieldValidator]}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top">
-              <Field
-                name="weightUnit"
-                component={this.GeneralDropdown}
-                props={{
-                  data: weightUnits
-                }}
-                validate={[requiredFieldValidator]}
-              />
+            <Grid.Column width={4} className="align-top weight-unit">
+              <span>{formatMessage(messages.ounce)}</span>
             </Grid.Column>
           </Grid.Row>
 
