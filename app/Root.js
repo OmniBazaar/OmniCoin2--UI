@@ -15,6 +15,8 @@ import { connect as connectToNode, getDynGlobalObject } from './services/blockch
 import { setup } from "./services/accountSettings/accountActions";
 import localeData from './../app/dist/i18n/data.json';
 import Background from "./components/Background/Background";
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+
 
 
 class Root extends Component {
@@ -45,7 +47,7 @@ class Root extends Component {
 
   renderContent() {
     return (
-      <div>
+      <ErrorBoundary>
         <Router>
           <Switch>
             <Route path="/signup" render={(props) => <Signup {...props} />} />
@@ -55,7 +57,7 @@ class Root extends Component {
           </Switch>
         </Router>
         <UpdateForcer />
-      </div>
+      </ErrorBoundary>
     );
   }
 
