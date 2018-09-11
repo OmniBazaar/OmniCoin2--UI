@@ -76,6 +76,8 @@ function* subscribeForMail(action) {
             addPurchase(purchase, Types.selling);
             sendOBFees(purchase, walletData.guid, walletData.password);
           }
+        } else {
+          Apis.instance().network_api().exec('mail_set_received', [mailObject.uuid]);
         }
       });
     if (mailsToSetRead.length !== 0) {
