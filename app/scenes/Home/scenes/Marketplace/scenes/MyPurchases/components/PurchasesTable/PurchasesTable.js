@@ -220,7 +220,7 @@ class PurchasesTable extends Component {
                     (
                       <TableRow key={hash(row)}>
                         <TableCell>
-                          <NavLink to={`/listing/${row.id}`}>
+                          <NavLink to={`/listing/${row.listingId}`}>
                             {row.listingId}
                           </NavLink>
                         </TableCell>
