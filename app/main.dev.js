@@ -282,11 +282,9 @@ const runBitcoinCli = async () => {
  */
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
+ // if (process.platform !== 'darwin') {
     app.quit();
-  }
+ // }
 });
 
 // shouldQuit will be truthy if another instance of this app attempts to start
