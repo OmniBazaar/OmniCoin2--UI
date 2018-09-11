@@ -195,7 +195,6 @@ class Marketplace extends Component {
           className="title"
           onClick={() => this.viewCategory(mainCategories.forSale.id)}
           onKeyDown={() => this.viewCategory(mainCategories.forSale.id)}
-          tabIndex={0}
           role="link"
         >
           {formatMessage(mainCategories.forSale)}
@@ -223,7 +222,14 @@ class Marketplace extends Component {
 
     return (
       <div className="item" style={style}>
-        <span className="title">{formatMessage(mainCategories.services)}</span>
+        <span
+          className="title"
+          onClick={() => this.viewCategory(mainCategories.services.id)}
+          onKeyDown={() => this.viewCategory(mainCategories.services.id)}
+          role="link"
+        >
+          {formatMessage(mainCategories.services)}
+        </span>
         <div className="sub-categories">
           {Object.keys(servicesCategories).map(key => this.renderOption(servicesCategories[key], mainCategories.services))}
           <div
@@ -247,7 +253,14 @@ class Marketplace extends Component {
 
     return (
       <div className="item" style={style}>
-        <span className="title">{formatMessage(mainCategories.jobs)}</span>
+        <span
+          className="title"
+          onClick={() => this.viewCategory(mainCategories.jobs.id)}
+          onKeyDown={() => this.viewCategory(mainCategories.jobs.id)}
+          role="link"
+        >
+          {formatMessage(mainCategories.jobs)}
+        </span>
         <div className="sub-categories">
           {Object.keys(jobsCategories).map(key => this.renderOption(jobsCategories[key], mainCategories.jobs))}
           <div
@@ -271,7 +284,14 @@ class Marketplace extends Component {
 
     return (
       <div className="item" style={style}>
-        <span className="title">{formatMessage(mainCategories.cryptoBazaar)}</span>
+        <span
+          className="title"
+          onClick={() => this.viewCategory(mainCategories.cryptoBazaar.id)}
+          onKeyDown={() => this.viewCategory(mainCategories.cryptoBazaar.id)}
+          role="link"
+        >
+          {formatMessage(mainCategories.cryptoBazaar)}
+        </span>
         <div className="sub-categories">
           {Object.keys(cryptoCategories).map(key => this.renderOption(cryptoCategories[key], mainCategories.cryptoBazaar))}
           <div
