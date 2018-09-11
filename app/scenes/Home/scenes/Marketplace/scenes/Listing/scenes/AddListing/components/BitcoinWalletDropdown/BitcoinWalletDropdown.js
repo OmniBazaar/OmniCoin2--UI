@@ -32,7 +32,6 @@ class BitcoinWalletDropdown extends Component {
     const { formatMessage } = this.props.intl;
     const { value } = this.props.input || this.props;
     const { isGettingWallets, wallets } = this.props.bitcoin;
-    console.log('Wallets ', wallets);
     const options = wallets.map(wallet => ({
       value: wallet.receiveAddress,
       text: wallet.label || formatMessage(messages.defaultWalletLabel),

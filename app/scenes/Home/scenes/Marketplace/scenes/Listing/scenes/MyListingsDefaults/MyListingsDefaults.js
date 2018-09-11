@@ -16,6 +16,8 @@ import StateDropdown from '../AddListing/components/StateDropdown/StateDropdown'
 import CountryDropdown from '../AddListing/components/CountryDropdown/CountryDropdown';
 import Checkbox from '../AddListing/components/Checkbox/Checkbox';
 import Images from '../AddListing/components/Images/Images';
+import BitcoinWalletDropdown from '../AddListing/components/BitcoinWalletDropdown/BitcoinWalletDropdown';
+
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
 
 import addListingMessages from '../AddListing/messages';
@@ -40,15 +42,22 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 
 import '../AddListing/add-listing.scss';
 import UnitDropdown from '../AddListing/components/UnitDropdown/UnitDropdown';
+import {MANUAL_INPUT_VALUE} from "../../../../../../../../utils/constants";
 
 const iconSize = 42;
 
 class MyListingsDefaults extends Component {
   static asyncValidate = async (values) => {
     try {
-      const { price_using_btc, bitcoin_address, price_using_eth, ethereum_address } = values;
-      if (price_using_btc && bitcoin_address) {
-        await BitcoinApi.validateAddress(bitcoin_address);
+      const {
+        price_using_btc,
+        bitcoin_address,
+        manual_bitcoin_address,
+        price_using_eth,
+        ethereum_address
+      } = values;
+      if (price_using_btc && manual_bitcoin_address) {
+        await BitcoinApi.validateAddress(manual_bitcoin_address);
       }
       if (price_using_eth && ethereum_address) {
         await EthereumApi.validateEthereumAddress(ethereum_address);
@@ -76,6 +85,7 @@ class MyListingsDefaults extends Component {
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.DescriptionInput = makeValidatableField(allProps => (<textarea {...allProps} />));
     this.UnitDropdown = makeValidatableField(UnitDropdown);
+    this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
     this.state = {
       keywords: '',
       isPromptVisible: false
@@ -83,9 +93,36 @@ class MyListingsDefaults extends Component {
   }
 
   componentWillMount() {
-    const { listingDefaults } = this.props;
-    this.props.initialize(listingDefaults);
+    const {
+      auth,
+      account,
+      ethereum,
+      listingDefaults
+    } = this.props;
+
+    const data = {
+      ...listingDefaults
+    };
+    if (listingDefaults.bitcoin_address) {
+      if (this.isBtcAddressInWallet(listingDefaults.bitcoin_address)) {
+        data.bitcoin_address = listingDefaults.bitcoin_address;
+      } else {
+        data.bitcoin_address = MANUAL_INPUT_VALUE;
+        data.manual_bitcoin_address = listingDefaults.bitcoin_address;
+      }
+    }
+    if (listingDefaults.ethereum_address) {
+      data.ethereum_address = listingDefaults.ethereum_address;
+    } else {
+      data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
+    }
+    this.props.initialize(data);
     this.props.listingDefaultsActions.loadListingDefault();
+  }
+
+  isBtcAddressInWallet(btc_address) {
+    const { wallets } = this.props.bitcoin;
+    return !!wallets.find(wallet => wallet.receiveAddress === btc_address);
   }
 
   componentWillReceiveProps(newProps) {
@@ -269,16 +306,19 @@ class MyListingsDefaults extends Component {
             <Grid.Column width={8}>
               <Field
                 name="bitcoin_address"
-                component={InputField}
+                component={this.BitcoinWalletDropdown}
                 className="textfield"
-                value={account.btcAddress || auth.account.btc_address || btcWalletAddress}
-                onChange={({target: {value}}) => {
-                    this.props.accountActions.setBtcAddress(value);
-                    this.onChange();
-                  }
-                }
               />
             </Grid.Column>
+            {this.props.formValues.bitcoin_address === MANUAL_INPUT_VALUE &&
+            <Grid.Column width={4}>
+              <Field
+                name="manual_bitcoin_address"
+                component={InputField}
+                className="textfield"
+              />
+            </Grid.Column>
+            }
           </Grid.Row>
           }
           {(price_using_eth || currency === 'ETHEREUM') &&
@@ -518,6 +558,6 @@ export default compose(
     form: 'listingDefaultsForm',
     destroyOnUnmount: true,
     asyncValidate: MyListingsDefaults.asyncValidate,
-    asyncBlurFields: ['bitcoin_address', 'ethereum_address']
+    asyncBlurFields: ['manual_bitcoin_address', 'ethereum_address']
   })
 )(injectIntl(MyListingsDefaults));
