@@ -10,5 +10,6 @@
   "Home.updateMessage": "Before installing the new version, please close the OmniBazaar application.",
   "Home.updatesAvailable": "Updates available",
   "Home.publisherUpdatesAvailable": "Publisher Updates",
-  "Home.publisherUpdateMessage": "New version of publisher is available, please read README from new package carefully before install new version"
+  "Home.publisherUpdateMessage": "New version of publisher is available, please read README from new package carefully before install new version",
+  "Home.publisherDataIsEmpty": "You didn't specify your search priority criteria. Do you wish to do it now?"
 }

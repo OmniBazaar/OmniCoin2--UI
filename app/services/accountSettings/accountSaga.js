@@ -54,7 +54,7 @@ const processBitcoinTransactions = (txs) => {
         vout_sz: tx.vout_sz,
         fromTo: tx.out[0].addr,
         amount: tx.out[0].value / SATOSHI_IN_BTC,
-        fee: tx.fee / SATOSHI_IN_BTC,
+        fee: tx.result > 0 ? 0 : tx.fee / SATOSHI_IN_BTC,
         isIncoming: tx.result > 0,
         obFee: info ? info.obFee : {}
       }
