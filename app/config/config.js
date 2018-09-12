@@ -1,4 +1,4 @@
 export default {
 	updateServer: "http://35.171.116.3/updates",
-	shipEngineApiKey: "uKpW2rIeivIE76CbtEL2ogOq5oPryvTC2kanoTO0Pbs"
+	easypostApiKey: "EZTK798edec1e9ea4d66ad5960ee102d1430Xf0tmw9Bu4OIpsFeVaC7lA"
 };
