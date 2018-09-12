@@ -18,6 +18,7 @@ import AccountSettingsStorage from '../../accountSettings/accountStorage';
 import { getPreferences } from '../../preferences/services';
 import { getAllPublishers } from '../../accountSettings/services';
 import { checkAndUpdatePublishersAliveStatus } from '../../listing/listingSaga';
+import { searchListings as searchListingsAction} from "../searchActions";
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -273,6 +274,10 @@ export function* getPeersFor({
           fromSearchMenu
         }
       });
+    }
+    // search for "test" keyword when there is no results at all
+    if (peersMap.length === 0) {
+      yield put(searchListingsAction("test", 'All', country, state, city, true, null));
     }
   } catch (e) {
     console.log('ERROR ', e);
