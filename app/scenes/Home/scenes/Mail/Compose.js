@@ -18,6 +18,7 @@ import MailTypes from '../../../../services/mail/mailTypes';
 import './mail.scss';
 
 import mailMessages from './messages';
+import {getBodyFromMessage, getSubjectFromMessage} from "./utils";
 
 class Compose extends Component {
   static asyncValidate = async (values, dispatch, props, field) => {
@@ -45,16 +46,21 @@ class Compose extends Component {
 
   componentWillMount() {
     const { reply, to } = this.props.mail;
+    const { formatMessage } = this.props.intl;
 
     if (reply) {
       const message = this.getActiveMessage();
-      const creationTime = new Date(message.creation_time * 1000).toLocaleString();
+      const creationTime = new Date(message.creation_time * 1000);
       const date = dateformat(creationTime, 'dddd, mmmm dS, yyyy "at" h:MM:ss TT');
 
       this.props.initialize({
         recipient: message.sender,
-        subject: `RE: ${message.subject}`,
-        body: `\n\nOn ${date} <${message.sender}> wrote:\n\n${message.body}`
+        subject: `RE: ${getSubjectFromMessage(message, formatMessage)}`,
+        body: formatMessage(mailMessages.replyBody, {
+          date: date,
+          sender: message.sender,
+          body: getBodyFromMessage(message, formatMessage)
+        })
       });
     }
 

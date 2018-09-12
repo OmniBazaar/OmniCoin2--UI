@@ -88,5 +88,9 @@ export default defineMessages({
   buyPurchaseBody: {
     id: 'Mail.buyPurchaseBody',
     defaultMessage: 'You bought {number} {listing} from {seller}\nListing id: {listingId}\nPrice: {price}{currency}'
+  },
+  replyBody: {
+    id: 'Mail.replyBody',
+    defaultMessage: '\n\nOn {date} <{sender}> wrote:\n\n{body}'
   }
 });
