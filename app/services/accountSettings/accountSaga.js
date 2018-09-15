@@ -7,6 +7,8 @@ import {
 } from 'redux-saga/effects';
 import { TransactionBuilder, FetchChain } from 'omnibazaarjs/es';
 import { ipcRenderer } from 'electron';
+import dns from 'dns';
+import net from 'net';
 import { Apis } from 'omnibazaarjs-ws';
 import _ from 'lodash';
 
@@ -34,6 +36,23 @@ import { loadListingDefault } from "../listing/listingDefaultsActions";
 import { loadLocalPreferences } from "../preferences/preferencesActions";
 import { checkUpdate } from "../updateNotification/updateNotificationActions";
 import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
+
+
+const lookupIp = async (address) => {
+  return new Promise(function(resolve, reject) {
+    if (net.isIP(address)) {
+      resolve(address);
+    } else {
+      dns.lookup(address, (err, ip) => {
+        if (!err) {
+          resolve(ip);
+        } else {
+          reject(err);
+        }
+      });
+    }
+  })
+};
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -76,6 +95,7 @@ export function* accountSubscriber() {
 export function* updatePublicData() {
   const { account } = (yield select()).default;
   const { is_a_processor } = (yield select()).default.auth.account;
+  const ip = yield lookupIp(account.ipAddress);
   try {
     yield updateAccount({
       transactionProcessor: is_a_processor ? false : account.transactionProcessor,
@@ -83,7 +103,7 @@ export function* updatePublicData() {
       is_a_publisher: account.publisher,
       is_referrer: account.referrer,
       is_an_escrow: account.escrow,
-      publisher_ip: account.ipAddress,
+      publisher_ip: ip,
       btc_address: account.btcAddress,
       eth_address: account.ethAddress,
     });
@@ -110,14 +130,13 @@ export function* updateAccount(payload) {
   const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   const tr = new TransactionBuilder();
   const trObj = { ...payload };
-
   if (!trObj.is_a_publisher) {
     delete trObj.publisher_ip;
   } else {
     const publisherAcc = yield call(getPublisherByIp, trObj.publisher_ip);
-    if (publisherAcc['name'] !== currentUser.username) {
+    if (!!publisherAcc && publisherAcc['name'] !== currentUser.username) {
       throw {message: "is already registered"};
-    } else {
+    } else if (publisherAcc) {
       delete trObj.publisher_ip;
     }
   }
