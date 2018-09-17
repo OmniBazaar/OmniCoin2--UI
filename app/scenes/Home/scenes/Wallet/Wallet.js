@@ -68,7 +68,7 @@ class Wallet extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.bitcoin.error && !this.props.bitcoin.error) {
-      if (nextProps.bitcoin.error.indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
+      if (nextProps.bitcoin.error.toString().indexOf("Wallets that require email authorization are currently not supported in the Wallet API. Please disable this in your wallet settings, or add the IP address of this server to your wallet IP whitelist.") !== -1) {
         publicIp.v4().then(ip => {
           toastr.error(
             formatMessage(messages.error),
