@@ -143,7 +143,7 @@ const reducer = handleActions({
   }),
   GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED: (state, action) => ({
     ...state,
-    identityVerificationStatus: action.status ? 'verified' : 'not verified'
+    identityVerificationStatus: action.response
   }),
   SIGNUP_FAILED: (state, action) => ({
     ...state,

@@ -265,9 +265,8 @@ function* getIdentityVerificationToken({ payload: { username } }) {
 
 function* getIdentityVerificationStatus({ payload: { data: username } }) {
   try {
-    const response = yield (Apis.instance().db_api().exec('get_account_by_name', [username]));
-    const { verified: status } = response;
-    yield put({ type: 'GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED', status });
+    const response = yield call(AuthApi.getIdentityVerificationStatus, username);
+    yield put({ type: 'GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED', response });
   } catch (error) {
     console.log(error);
   }
