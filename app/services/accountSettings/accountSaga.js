@@ -111,12 +111,13 @@ export function* updateAccount(payload) {
   const tr = new TransactionBuilder();
   const trObj = { ...payload };
 
-  const publisherAcc = yield call(getPublisherByIp, trObj.publisher_ip);
-  if (!!publisherAcc && trObj.publisher_ip) {
-    throw { message: "is already registered" };
-  }
   if (!trObj.is_a_publisher) {
     delete trObj.publisher_ip;
+  } else {
+    const publisherAcc = yield call(getPublisherByIp, trObj.publisher_ip);
+    if (!!publisherAcc && publisherAcc['name'] !== currentUser.username) {
+      throw {message: "is already registered"};
+    }
   }
 
   if (trObj.transactionProcessor) {

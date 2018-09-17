@@ -40,6 +40,9 @@ import {
   awaitListingDetail,
   checkPublishersAliveFinish
 } from './listingActions';
+import {
+  lookupIp
+} from "../accountSettings/services";
 import { clearSearchResults } from '../search/searchActions';
 import { countPeersForKeywords, getAlivePublisherIps } from '../search/dht/dhtSaga';
 import { getAllPublishers, getPublisherByIp } from '../accountSettings/services';
@@ -250,7 +253,7 @@ export function* getListingDetail({ payload: { listingId } }) {
       type: messageTypes.MARKETPLACE_GET_LISTING,
       command: {
         publishers: [{
-          address: publisherAcc.get('publisher_ip'),
+          address: yield lookupIp(publisherAcc.get('publisher_ip')),
           listing_ids: [listingId]
         }]
       }
@@ -275,10 +278,14 @@ export function* requestMyListings() {
     ]);
     const alivePublishers = taskResults[0];
     const publishers = taskResults[1];
-    const getListingCommands = publishers.map((account, idx) => ({
-        listing_id: myListings[idx].id,
-        address: account.get('publisher_ip')
-      }))
+    const getListingCommands = (yield Promise.all(publishers.map((account, idx) => lookupIp(account.get('publisher_ip'))
+      .then(address => {
+          return {
+            listing_id: myListings[idx].id,
+            address
+          }
+        }
+      ))))
       .filter(el => !!el.address && alivePublishers[el.address])
       .reduce((arr, curr) => {
         const val = arr.find(el => el.address === curr.address && el.listing_ids.length < 10);
