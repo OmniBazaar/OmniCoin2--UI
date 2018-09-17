@@ -115,10 +115,8 @@ export function* updateAccount(payload) {
     delete trObj.publisher_ip;
   } else {
     const publisherAcc = yield call(getPublisherByIp, trObj.publisher_ip);
-    if (publisherAcc['name'] !== currentUser.username) {
+    if (!!publisherAcc && publisherAcc['name'] !== currentUser.username) {
       throw {message: "is already registered"};
-    } else {
-      delete trObj.publisher_ip;
     }
   }
 
