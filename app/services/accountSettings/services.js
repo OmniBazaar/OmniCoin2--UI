@@ -3,7 +3,7 @@ import { FetchChain } from 'omnibazaarjs/es';
 import dns from 'dns';
 import net from 'net';
 
-const lookupIp = async (address) => {
+export const lookupIp = async (address) => {
   return new Promise(function(resolve, reject) {
     dns.lookup(address, (err, address) => {
       if (!err) {
