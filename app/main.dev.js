@@ -20,6 +20,7 @@ import fs from 'fs';
 import path from 'path';
 import sudo from 'sudo-prompt';
 import kill from 'kill-port';
+import log from 'electron-log'; // do not remove
 
 let mainWindow = null;
 
