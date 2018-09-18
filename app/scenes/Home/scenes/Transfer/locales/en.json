@@ -39,6 +39,6 @@
   "Transfer.confirmEthereumCurrency": "Are you sure you want to pay in Ether?",
   "Transfer.shipping": "Shipping",
   "Transfer.shippingCost": "Shipping cost",
-  "Transfer.shippingCostIsIncluded": "Shipping cost is included in listing price'",
+  "Transfer.shippingCostIsIncluded": "Shipping cost is included in listing price",
   "Transfer.contactSellerForShippingCosts": "Contact seller for shipping costs"
 }

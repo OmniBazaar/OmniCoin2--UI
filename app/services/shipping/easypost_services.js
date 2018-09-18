@@ -72,7 +72,14 @@ export const getShippingRates = async (fromAddress, toAddress, parcel) => {
   return shipData.rates.map(r => ({
     service: r.service,
     carrier: r.carrier,
-    rate: r.rate,
+    rate: parseFloat(r.rate),
     currency: r.currency
-  }));
+  })).sort((a, b) => {
+    if (a.rate < b.rate) {
+      return -1;
+    } else if (a.rate > b.rate) {
+      return 1;
+    }
+    return 0;
+  });
 }

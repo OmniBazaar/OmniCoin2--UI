@@ -27,6 +27,7 @@ import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
+import ShippingRate from './component/ShippingRate/ShippingRate';
 
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
@@ -102,7 +103,6 @@ const amountDecimalsValidator = addValidator({
 });
 
 class Transfer extends Component {
-
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
       key: escrow.id,
@@ -173,6 +173,9 @@ class Transfer extends Component {
     const ethereumAddress = purchaseParams.get('ethereum_address');
     const listingCurrency = purchaseParams.get('currency');
     const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
+
+    this.initialAmount = convertedAmount;
+
     this.handleInitialize(convertedAmount);
 
     if (type === CoinTypes.BIT_COIN) {
@@ -263,14 +266,17 @@ class Transfer extends Component {
     const listingId = this.getListingId();
     if (listingId) {
       const { listingDetail } = this.props.listing;
+      if (listingDetail.shipping_price_included) {
+        return;
+      }
+
       const listing = {...listingDetail};
-      listing.weight = 5.8;
-      listing.weightUnit = 'pound';
       const buyerAddress = {
-        city: 'Volynska',
-        country: 'Ukraine',
-        state: '',
-        postalCode: '45030'
+        address: '1 New York',
+        city: 'New York',
+        country: listing.country,
+        state: 'New York',
+        postalCode: '10002'
       };
       this.props.shippingActions.getShippingRates(listing, buyerAddress);
     }
@@ -490,21 +496,43 @@ class Transfer extends Component {
     </div>
   );
 
+  onShippingRateChange(shippingRate) {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const price = purchaseParams.get('price');
+    const currency = purchaseParams.get('currency');
+    const type = purchaseParams.get('type');
+
+  }
+
   renderShippingContent() {
     const { listingDetail } = this.props.listing;
     const { shipping } = this.props;
 
     if (shipping.loading) {
-      return (<Loader active inline="centered" />);
+      return (<div className='transfer-input'><Loader active inline="centered" /></div>);
     }
+
+    const { formatMessage } = this.props.intl;
 
     if (listingDetail.shipping_price_included) {
-      return (<div>{formatMessage(messages.shippingCostIsIncluded)}</div>);
+      return (<div className='transfer-input'>{formatMessage(messages.shippingCostIsIncluded)}</div>);
     }
 
-    if (shipping.error) {
-      return (<div>{formatMessage(messages.contactSellerForShippingCosts)}</div>);
+    if (shipping.error || !shipping.shippingRates.length) {
+      return (<div className='transfer-input'>{formatMessage(messages.contactSellerForShippingCosts)}</div>);
     }
+
+    return (
+      <div className='transfer-input rates'>
+        {
+          shipping.shippingRates.map((shipRate, index) => {
+            return (
+              <ShippingRate key={index} index={index} onSelect={this.onShippingRateChange.bind(this)} />
+            );
+          })
+        }
+      </div>
+    );
   }
 
   renderShipping() {
@@ -513,12 +541,15 @@ class Transfer extends Component {
       return null;
     }
 
+    const { formatMessage } = this.props.intl;
+
     return (
       <div className="section">
         <p className="title">{formatMessage(messages.shipping)}</p>
-        <div className="form-group">
-          <span>{formatMessage(messages.shippingCost)}*</span>
+        <div className="form-group shipping-cost">
+          <span>{formatMessage(messages.shippingCost)}</span>
           { this.renderShippingContent() }
+          <div className="col-1" />
         </div>
       </div>
     );

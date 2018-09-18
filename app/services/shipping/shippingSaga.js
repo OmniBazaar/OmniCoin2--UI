@@ -7,7 +7,8 @@ import {
 } from 'redux-saga/effects';
 
 import {
-  getShippingRatesFinish
+  getShippingRatesSuccess,
+  getShippingRatesError
 } from './shippingActions';
 
 import {
@@ -27,19 +28,28 @@ function* requestShippingRates({ payload: { listing, buyerAddress } }) {
       city: listing.city,
       country: listing.country,
       state: listing.state,
-      postalCode: listing.postalCode
+      postalCode: listing.post_code
     };
     const shipTo = {
       ...buyerAddress
     };
     const parcel = {
-      weight: listing.weight //ounces
+      weight: parseFloat(listing.weight) //ounces
+    }
+    if (listing.width) {
+      parcel.width = parseFloat(listing.width);
+    }
+    if (listing.height) {
+      parcel.height = parseFloat(listing.height);
+    }
+    if (listing.length) {
+      parcel.length = parseFloat(listing.length);
     }
     
     const rates = yield call(getShippingRates, shipFrom, shipTo, parcel);
-    yield put(getShippingRatesFinish(null, rates));
+    yield put(getShippingRatesSuccess(rates));
   } catch(err) {
     console.log("ERROR", err)
-    yield put(getShippingRatesFinish(err));
+    yield put(getShippingRatesError(err.message));
   }
 }

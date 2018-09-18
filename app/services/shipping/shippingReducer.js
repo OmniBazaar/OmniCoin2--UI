@@ -1,13 +1,16 @@
 import { handleActions } from 'redux-actions';
 import {
   getShippingRates,
-  getShippingRatesFinish
+  getShippingRatesSuccess,
+  getShippingRatesError,
+  selectShippingRate
 } from './shippingActions';
 
 const defaultState = {
   shippingRates: [],
   loading: false,
-  error: null
+  error: null,
+  selectedShippingRateIndex: -1
 };
 
 const reducer = handleActions({
@@ -16,15 +19,31 @@ const reducer = handleActions({
       ...state,
       loading: true,
       error: null,
-      shippingRates: []
+      shippingRates: [],
+      selectedShippingRateIndex: -1
     };
   },
-  [getShippingRatesFinish](state, { payload: { error, shippingRates } }) {
+  [getShippingRatesSuccess](state, { payload: { shippingRates } }) {
+    return {
+      ...state,
+      loading: false,
+      error: false,
+      shippingRates,
+      selectedShippingRateIndex: 0
+    };
+  },
+  [getShippingRatesError](state, { payload: { error } }) {
     return {
       ...state,
       loading: false,
       error,
-      shippingRates: error ? [] : shippingRates
+      shippingRates: []
+    };
+  },
+  [selectShippingRate](state, { payload: { index } }) {
+    return {
+      ...state,
+      selectedShippingRateIndex: index
     };
   }
 }, defaultState);
