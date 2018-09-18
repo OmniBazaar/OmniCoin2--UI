@@ -45,8 +45,25 @@ $closed-side-bar-size: 70px;
           position: absolute;
           margin-top: 20px;
           margin-left: 38px;
-
         }
+        .identity-verification-status:hover .tooltiptext {
+          visibility: visible;
+        }
+        .tooltiptext {
+          visibility: hidden;
+          left: 0;
+          width: 160px;
+          background-color: #fff;
+          color: black;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+      
+          /* Position the tooltip */
+          position: absolute;
+          z-index: 1;
+        }
+
         &.has-notifications {
           background-color: $secondary-red;
 
