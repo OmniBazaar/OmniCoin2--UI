@@ -25,7 +25,7 @@ const listingProps = [
   'quantity', 'units', 'start_date', 'end_date', 'continuous',
   'images', 'description', 'keywords', 'name', 'contact_type',
   'contact_info', 'country', 'address', 'city', 'post_code',
-  'state', 'owner', "priority_fee"
+  'state', 'owner', "priority_fee", "weight", "width", "height", "length", "shipping_price_included"
 ];
 
 

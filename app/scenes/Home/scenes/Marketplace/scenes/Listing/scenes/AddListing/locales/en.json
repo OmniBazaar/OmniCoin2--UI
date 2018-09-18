@@ -75,5 +75,11 @@
   "AddListing.weight": "Weight",
   "AddListing.ounce": "Ounce",
   "AddListing.pound": "Pound",
-  "AddListing.gram": "Gram"
+  "AddListing.gram": "Gram",
+  "AddListing.weightAndSize": "Weight and Size",
+  "AddListing.width": "Width",
+  "AddListing.height": "Height",
+  "AddListing.length": "Length",
+  "AddListing.inches": "Inches",
+  "AddListing.shippingPriceIncluded": "Shipping Price Included"
 }

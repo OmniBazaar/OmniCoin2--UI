@@ -41,6 +41,9 @@ import {
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
+import {
+  getShippingRates
+} from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
 import { Prompt } from 'react-router-dom';
@@ -191,6 +194,8 @@ class Transfer extends Component {
 
   componentWillMount() {
     this.props.ethereumActions.getEthereumWallets();
+
+    this.checkRequestShippingRates();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -249,8 +254,26 @@ class Transfer extends Component {
     }
   }
 
-  componentWillUnmount() {
-    //this.props.transferActions.setCurrency(undefined);
+  getListingId() {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    return purchaseParams.get('listing_id');
+  }
+
+  checkRequestShippingRates() {
+    const listingId = this.getListingId();
+    if (listingId) {
+      const { listingDetail } = this.props.listing;
+      const listing = {...listingDetail};
+      listing.weight = 5.8;
+      listing.weightUnit = 'pound';
+      const buyerAddress = {
+        city: 'Volynska',
+        country: 'Ukraine',
+        state: '',
+        postalCode: '45030'
+      };
+      this.props.shippingActions.getShippingRates(listing, buyerAddress);
+    }
   }
 
   handleInitialize(price) {
@@ -467,6 +490,40 @@ class Transfer extends Component {
     </div>
   );
 
+  renderShippingContent() {
+    const { listingDetail } = this.props.listing;
+    const { shipping } = this.props;
+
+    if (shipping.loading) {
+      return (<Loader active inline="centered" />);
+    }
+
+    if (listingDetail.shipping_price_included) {
+      return (<div>{formatMessage(messages.shippingCostIsIncluded)}</div>);
+    }
+
+    if (shipping.error) {
+      return (<div>{formatMessage(messages.contactSellerForShippingCosts)}</div>);
+    }
+  }
+
+  renderShipping() {
+    const listingId = this.getListingId();
+    if (!listingId) {
+      return null;
+    }
+
+    return (
+      <div className="section">
+        <p className="title">{formatMessage(messages.shipping)}</p>
+        <div className="form-group">
+          <span>{formatMessage(messages.shippingCost)}*</span>
+          { this.renderShippingContent() }
+        </div>
+      </div>
+    );
+  }
+
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer, transferForm } = this.props;
@@ -612,6 +669,7 @@ class Transfer extends Component {
             </div>
           }
         </div>
+        { this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -697,6 +755,7 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
         </div>
+        { this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -762,6 +821,7 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
         </div>
+        { this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -993,6 +1053,9 @@ Transfer.propTypes = {
       balance: PropTypes.string,
     }),
   }),
+  shippingActions: PropTypes.shape({
+    getShippingRates: PropTypes.func
+  })
 };
 
 Transfer.defaultProps = {
@@ -1033,6 +1096,9 @@ export default compose(
         getCommonEscrows,
         createEscrowTransaction,
         saleBonus
+      }, dispatch),
+      shippingActions: bindActionCreators({
+        getShippingRates
       }, dispatch),
       initialize,
       changeFieldValue: (field, value) => {
