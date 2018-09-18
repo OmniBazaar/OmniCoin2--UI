@@ -21,7 +21,7 @@ export function* shippingSubscriber() {
   ]);
 }
 
-function* requestShippingRates({ payload: { listing, buyerAddress } }) {
+function* requestShippingRates({ payload: { listing, buyerAddress, quantity } }) {
   try {
     const shipFrom = {
       address: listing.address,
@@ -46,7 +46,7 @@ function* requestShippingRates({ payload: { listing, buyerAddress } }) {
       parcel.length = parseFloat(listing.length);
     }
     
-    const rates = yield call(getShippingRates, shipFrom, shipTo, parcel);
+    const rates = yield call(getShippingRates, shipFrom, shipTo, parcel, quantity);
     yield put(getShippingRatesSuccess(rates));
   } catch(err) {
     console.log("ERROR", err)

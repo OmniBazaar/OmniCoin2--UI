@@ -16,7 +16,8 @@ const findCountryCode = (country) => {
   return countryData.countryShortCode;
 }
 
-export const getShippingRates = async (fromAddress, toAddress, parcel) => {
+export const getShippingRates = async (fromAddress, toAddress, parcel, quantity) => {
+  console.log(fromAddress, toAddress)
   const fromAddr = new api.Address({
     street1: fromAddress.address ? fromAddress.address : fromAddress.city,
     city: fromAddress.city,
@@ -55,15 +56,29 @@ export const getShippingRates = async (fromAddress, toAddress, parcel) => {
     ]
   });
 
-  const shipment = new api.Shipment({
+  const shipments = [];
+  const p = 1;
+  if (quantity > 100) {
+    p = quantity / 100.0;
+    quantity = 100;
+  }
+
+  for (let i = 0; i < quantity; i++) {
+    shipments.push(
+      new api.Shipment({
+        parcel: parcelObject,
+        customs_info: customsInfo
+      })
+    );
+  }
+
+  const order = new api.Order({
     to_address: toAddr,
     from_address: fromAddr,
-    parcel: parcelObject,
-    customs_info: customsInfo
+    shipments
   });
 
-  const shipData = await shipment.save();
-  console.log(shipData);
+  const shipData = await order.save();
 
   if (!shipData.rates || !shipData.rates.length) {
     throw new Error(shipData.messages[0].message);
@@ -72,7 +87,7 @@ export const getShippingRates = async (fromAddress, toAddress, parcel) => {
   return shipData.rates.map(r => ({
     service: r.service,
     carrier: r.carrier,
-    rate: parseFloat(r.rate),
+    rate: parseFloat((parseFloat(r.rate) * p).toFixed(2)),
     currency: r.currency
   })).sort((a, b) => {
     if (a.rate < b.rate) {

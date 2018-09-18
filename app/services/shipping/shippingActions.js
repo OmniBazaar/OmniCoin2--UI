@@ -6,7 +6,7 @@ const {
   getShippingRatesError,
   selectShippingRate
 } = createActions({
-  GET_SHIPPING_RATES: (listing, buyerAddress) => ({ listing, buyerAddress }),
+  GET_SHIPPING_RATES: (listing, buyerAddress, quantity) => ({ listing, buyerAddress, quantity }),
   GET_SHIPPING_RATES_SUCCESS: (shippingRates) => ({ shippingRates }),
   GET_SHIPPING_RATES_ERROR: (error) => ({ error }),
   SELECT_SHIPPING_RATE: (index) => ({ index })

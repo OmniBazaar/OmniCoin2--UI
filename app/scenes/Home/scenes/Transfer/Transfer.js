@@ -174,7 +174,7 @@ class Transfer extends Component {
     const listingCurrency = purchaseParams.get('currency');
     const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
 
-    this.initialAmount = convertedAmount;
+    this.initialAmount = parseFloat(convertedAmount);
 
     this.handleInitialize(convertedAmount);
 
@@ -255,6 +255,13 @@ class Transfer extends Component {
         this.props.change('amount', convertedAmount);
       }
     }
+
+    if (this.props.shipping.selectedShippingRateIndex !== nextProps.shipping.selectedShippingRateIndex) {
+      const rate = nextProps.shipping.shippingRates[nextProps.shipping.selectedShippingRateIndex];
+      if (rate) {
+        this.onShippingRateChange(rate);
+      }
+    }
   }
 
   getListingId() {
@@ -270,6 +277,9 @@ class Transfer extends Component {
         return;
       }
 
+      const purchaseParams = new URLSearchParams(this.props.location.search);
+      const number = purchaseParams.get('number');
+
       const listing = {...listingDetail};
       const buyerAddress = {
         address: '1 New York',
@@ -278,7 +288,7 @@ class Transfer extends Component {
         state: 'New York',
         postalCode: '10002'
       };
-      this.props.shippingActions.getShippingRates(listing, buyerAddress);
+      this.props.shippingActions.getShippingRates(listing, buyerAddress, number);
     }
   }
 
@@ -498,10 +508,16 @@ class Transfer extends Component {
 
   onShippingRateChange(shippingRate) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
-    const price = purchaseParams.get('price');
-    const currency = purchaseParams.get('currency');
     const type = purchaseParams.get('type');
 
+    const shippingAmount = currencyConverter(shippingRate.rate, 'USD', type.toUpperCase());
+    let newAmount = this.initialAmount + parseFloat(shippingAmount);
+    if (type === CoinTypes.BIT_COIN) {
+      newAmount = parseFloat(newAmount.toFixed(8));
+    } else if (type === CoinTypes.OMNI_COIN) {
+      newAmount = parseFloat(newAmount.toFixed(5));
+    }
+    this.props.change('amount', newAmount);
   }
 
   renderShippingContent() {
@@ -527,7 +543,7 @@ class Transfer extends Component {
         {
           shipping.shippingRates.map((shipRate, index) => {
             return (
-              <ShippingRate key={index} index={index} onSelect={this.onShippingRateChange.bind(this)} />
+              <ShippingRate key={index} index={index} />
             );
           })
         }
