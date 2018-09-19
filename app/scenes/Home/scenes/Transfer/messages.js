@@ -156,5 +156,21 @@ export default defineMessages({
   confirmEthereumCurrency: {
     id: 'Transfer.confirmEthereumCurrency',
     defaultMessage: 'Are you sure you want to pay in Ethereum?'
+  },
+  shipping: {
+    id: 'Transfer.shipping',
+    defaultMessage: 'Shipping'
+  },
+  shippingCost: {
+    id: 'Transfer.shippingCost',
+    defaultMessage: 'Shipping cost'
+  },
+  shippingCostIsIncluded: {
+    id: 'Transfer.shippingCostIsIncluded',
+    defaultMessage: 'Shipping cost is included in listing price'
+  },
+  contactSellerForShippingCosts: {
+    id: 'Transfer.contactSellerForShippingCosts',
+    defaultMessage: 'Contact seller for shipping costs'
   }
 });

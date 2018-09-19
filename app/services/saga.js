@@ -20,6 +20,7 @@ import { configSubscriber } from './config/configSaga';
 import { vestingBalancesSubscriber } from './accountSettings/vestingBalances/vestingBalanacesSaga';
 import { updateNotificationSubscriber } from './updateNotification/updateNotificationSaga';
 import { publisherUpdateNotificationSubscriber } from './publisherUpdateNotification/publisherUpdateNotificationSaga';
+import { shippingSubscriber } from './shipping/shippingSaga';
 import { exchangeSubscriber } from "./exchange/exchangeSaga";
 
 export {
@@ -45,5 +46,6 @@ export {
   vestingBalancesSubscriber,
   updateNotificationSubscriber,
   publisherUpdateNotificationSubscriber,
+  shippingSubscriber,
   exchangeSubscriber
 };

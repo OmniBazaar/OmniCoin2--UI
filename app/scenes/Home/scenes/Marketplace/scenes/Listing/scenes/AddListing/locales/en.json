@@ -71,5 +71,15 @@
   "AddListing.priorityNormal": "Normal (0.50% Fee)",
   "AddListing.priorityLow": "Low (0.00% Fee)",
   "AddListing.loadListing": "Load listing",
-  "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01"
+  "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01",
+  "AddListing.weight": "Weight",
+  "AddListing.ounce": "Ounce",
+  "AddListing.pound": "Pound",
+  "AddListing.gram": "Gram",
+  "AddListing.weightAndSize": "Weight and Size",
+  "AddListing.width": "Width",
+  "AddListing.height": "Height",
+  "AddListing.length": "Length",
+  "AddListing.inches": "Inches",
+  "AddListing.shippingPriceIncluded": "Shipping Price Included"
 }

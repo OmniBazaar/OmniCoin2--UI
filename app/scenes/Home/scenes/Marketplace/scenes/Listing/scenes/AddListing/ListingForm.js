@@ -24,6 +24,7 @@ import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import BitcoinWalletDropdown from './components/BitcoinWalletDropdown/BitcoinWalletDropdown';
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
+import GeneralDropdown from './components/GeneralDropdown/GeneralDropdown';
 
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
@@ -54,6 +55,10 @@ const contactOmniMessage = 'OmniMessage';
 
 const requiredFieldValidator = required({ message: messages.fieldRequired });
 const numericFieldValidator = numericality({ message: messages.fieldNumeric });
+const allowBlankNumericFieldValidator = numericality({
+  allowBlank: true,
+  message: messages.fieldNumeric
+});
 const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
 const bitcoinFieldValidator = numericality({ '>=': 0.00001, msg: messages.bitcoinFieldValidator });
 const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
@@ -61,6 +66,12 @@ const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldVal
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
+
+const weightUnits = {
+  ounce: messages.ounce,
+  pound: messages.pound,
+  gram: messages.gram
+};
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
@@ -104,6 +115,7 @@ class ListingForm extends Component {
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
+    this.GeneralDropdown = makeValidatableField(GeneralDropdown);
 
     this.state = {
       keywords: '',
@@ -163,7 +175,8 @@ class ListingForm extends Component {
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
-        start_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        shipping_price_included: false
       };
 
       if (defaultData.bitcoin_address) {
@@ -547,6 +560,15 @@ class ListingForm extends Component {
                 validate={this.getPriceValidators(currency)}
               />
             </Grid.Column>
+            <Grid.Column width={4}>
+              <Field
+                name="shipping_price_included"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.shippingPriceIncluded)
+                }}
+              />
+            </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} />
@@ -881,6 +903,89 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+
+          <Grid.Row className="row-section">
+            <Grid.Column width={16}>
+              <span className="title">{formatMessage(messages.weightAndSize)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.weight)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="weight"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.weight)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top measure-unit">
+              <span>{formatMessage(messages.ounce)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.width)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="width"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.width)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top measure-unit">
+              <span>{formatMessage(messages.inches)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.height)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="height"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.height)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top measure-unit">
+              <span>{formatMessage(messages.inches)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.length)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="length"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.length)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top measure-unit">
+              <span>{formatMessage(messages.inches)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>

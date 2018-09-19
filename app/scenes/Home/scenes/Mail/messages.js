@@ -92,5 +92,13 @@ export default defineMessages({
   replyBody: {
     id: 'Mail.replyBody',
     defaultMessage: '\n\nOn {date} <{sender}> wrote:\n\n{body}'
+  },
+  shipmentAddress: {
+    id: 'Mail.shipmentAddress',
+    defaultMessage: 'Shipment address:\n  Country: {country}\n  State: {state}\n  City: {city}\n  Address: {address}\n  Postal code: {postalCode}'
+  },
+  shippingCost: {
+    id: 'Mail.shippingCost',
+    defaultMessage: 'Shipping cost: {carrier} - {service}    {rate} USD'
   }
 });

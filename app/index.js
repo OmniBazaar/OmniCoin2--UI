@@ -41,6 +41,7 @@ import {
   vestingBalancesSubscriber,
   updateNotificationSubscriber,
   publisherUpdateNotificationSubscriber,
+  shippingSubscriber,
   exchangeSubscriber
 } from './services/saga';
 
@@ -97,6 +98,7 @@ sagaMiddleware.run(configSubscriber);
 sagaMiddleware.run(vestingBalancesSubscriber);
 sagaMiddleware.run(updateNotificationSubscriber);
 sagaMiddleware.run(publisherUpdateNotificationSubscriber);
+sagaMiddleware.run(shippingSubscriber);
 sagaMiddleware.run(exchangeSubscriber);
 
 ReactDOM.render(

@@ -81,8 +81,7 @@ function* omnicoinTransfer({payload: {
     yield put(omnicoinTransferSucceeded());
     yield put(getAccountBalance(fromAcc.toJS()));
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
+      yield addPurchaseAndSendMails({
         seller: to,
         buyer: currentUser.username,
         amount,
@@ -90,10 +89,7 @@ function* omnicoinTransfer({payload: {
         listingCount,
         listingTitle,
         currency: 'omnicoin'
-      };
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, to, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
     }
   } catch (error) {
     let e = JSON.stringify(error);
@@ -114,8 +110,7 @@ function* bitcoinTransfer({ payload: {
     yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
+      yield addPurchaseAndSendMails({
         seller: toName,
         buyer: currentUser.username,
         amount,
@@ -123,10 +118,7 @@ function* bitcoinTransfer({ payload: {
         listingCount,
         listingTitle,
         currency: 'bitcoin'
-      };
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
     }
   } catch (error) {
     console.log('ERROR', error);
@@ -142,8 +134,9 @@ function* ethereumTransfer({payload: {
     yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
     yield put(ethereumTransferSucceeded());
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
+      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
+
+      yield addPurchaseAndSendMails({
         seller: toName,
         buyer: currentUser.username,
         amount,
@@ -151,11 +144,7 @@ function* ethereumTransfer({payload: {
         listingCount,
         listingTitle,
         currency: 'ethereum'
-      };
-      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
     }
     console.log("Ether res", res);
   } catch (error) {
@@ -166,6 +155,35 @@ function* ethereumTransfer({payload: {
       yield put(ethereumTransferFailed(error));
     }
   }
+}
+
+function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCount, listingTitle, currency}) {
+  const purchaseObject = {
+    date: new Date(),
+    seller,
+    buyer,
+    amount,
+    listingId,
+    listingCount,
+    listingTitle,
+    currency
+  };
+  const { buyerAddress } = (yield select()).default.transfer;
+  const shipment = {
+    buyerAddress
+  };
+  const { shippingRates, selectedShippingRateIndex } = (yield select()).default.shipping;
+  if (shippingRates && shippingRates.length && selectedShippingRateIndex > -1) {
+    const rate = shippingRates[selectedShippingRateIndex];
+    if (rate) {
+      shipment.shippingCost = {...rate};
+    }
+  }
+  purchaseObject.shipment = shipment;
+
+  yield put(addPurchase(purchaseObject));
+  yield put(sendPurchaseInfoMail(buyer, seller, JSON.stringify(purchaseObject)));
+  yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
 }
 
 

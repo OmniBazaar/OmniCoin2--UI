@@ -144,5 +144,17 @@ export default defineMessages({
   contactSeller: {
     id: 'Listing.contactSeller',
     defaultMessage: 'Contact Seller'
+  },
+  yourAddress: {
+    id: 'Listing.yourAddress',
+    defaultMessage: 'Your Address'
+  },
+  save: {
+    id: 'Listing.save',
+    defaultMessage: 'Save'
+  },
+  cancel: {
+    id: 'Listing.cancel',
+    defaultMessage: 'Cancel'
   }
 });

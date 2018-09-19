@@ -36,5 +36,9 @@
   "Transfer.transactionID": "Transaction ID",
   "Transfer.maxLength": "Memo must be less than 150 characters.",
   "Transfer.defaultWalletLabel": "Wallet",
-  "Transfer.confirmEthereumCurrency": "Are you sure you want to pay in Ether?"
+  "Transfer.confirmEthereumCurrency": "Are you sure you want to pay in Ether?",
+  "Transfer.shipping": "Shipping",
+  "Transfer.shippingCost": "Shipping cost",
+  "Transfer.shippingCostIsIncluded": "Shipping cost is included in listing price",
+  "Transfer.contactSellerForShippingCosts": "Contact seller for shipping costs"
 }

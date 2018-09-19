@@ -360,6 +360,46 @@ const messages = defineMessages({
   fiatFieldValidator: {
     id: 'AddListing.fiatFieldValidator',
     defaultMessage: 'Should be greater or equal to 0.01'
+  },
+  weightAndSize: {
+    id: 'AddListing.weightAndSize',
+    defaultMessage: 'Weight and Size'
+  },
+  weight: {
+    id: 'AddListing.weight',
+    defaultMessage: 'Weight'
+  },
+  ounce: {
+    id: 'AddListing.ounce',
+    defaultMessage: 'Ounce'
+  },
+  pound: {
+    id: 'AddListing.pound',
+    defaultMessage: 'Pound'
+  },
+  gram: {
+    id: 'AddListing.gram',
+    defaultMessage: 'Gram'
+  },
+  width: {
+    id: 'AddListing.width',
+    defaultMessage: 'Width'
+  },
+  height: {
+    id: 'AddListing.height',
+    defaultMessage: 'Height'
+  },
+  length: {
+    id: 'AddListing.length',
+    defaultMessage: 'Length'
+  },
+  inches: {
+    id: 'AddListing.inches',
+    defaultMessage: 'Inches'
+  },
+  shippingPriceIncluded: {
+    id: 'AddListing.shippingPriceIncluded',
+    defaultMessage: 'Shipping Price Included'
   }
 });
 
