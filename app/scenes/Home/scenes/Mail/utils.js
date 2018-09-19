@@ -27,8 +27,9 @@ export function getBodyFromMessage(message, formatMessage) {
   const { username } = getStoredCurrentUser();
   if (message.subject === purchaseInfoSubject) {
     const body = JSON.parse(message.body);
+    let result;
     if (username === message.sender) {
-      return formatMessage(mailMessages.buyPurchaseBody, {
+      result = formatMessage(mailMessages.buyPurchaseBody, {
         seller: body.seller,
         number: body.listingCount,
         listing: body.listingTitle,
@@ -37,7 +38,7 @@ export function getBodyFromMessage(message, formatMessage) {
         currency: getCurrencyAbbreviation(body.currency)
       });
     } else {
-      return formatMessage(mailMessages.sellPurchaseBody, {
+      result = formatMessage(mailMessages.sellPurchaseBody, {
         buyer: message.user,
         number: body.listingCount,
         listing: body.listingTitle,
@@ -46,6 +47,18 @@ export function getBodyFromMessage(message, formatMessage) {
         currency: getCurrencyAbbreviation(body.currency)
       });
     }
+    if (body.shipment) {
+      if (body.shipment.buyerAddress) {
+        result += '\n' + formatMessage(mailMessages.shipmentAddress, body.shipment.buyerAddress);
+      }
+      
+      if (body.shipment.shippingCost) {
+        console.log({cost: body.shipment.shippingCost})
+        result += '\n' + formatMessage(mailMessages.shippingCost, body.shipment.shippingCost);
+      }
+    }
+
+    return result;
   } else {
     return message.body;
   }

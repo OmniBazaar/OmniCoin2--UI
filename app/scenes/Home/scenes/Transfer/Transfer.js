@@ -273,7 +273,7 @@ class Transfer extends Component {
     const listingId = this.getListingId();
     if (listingId) {
       const { listingDetail } = this.props.listing;
-      if (listingDetail.shipping_price_included) {
+      if (listingDetail.shipping_price_included || !listingDetail.weight) {
         return;
       }
 
@@ -281,13 +281,7 @@ class Transfer extends Component {
       const number = purchaseParams.get('number');
 
       const listing = {...listingDetail};
-      const buyerAddress = {
-        address: '1 New York',
-        city: 'New York',
-        country: listing.country,
-        state: 'New York',
-        postalCode: '10002'
-      };
+      const { buyerAddress } = this.props.transfer;
       this.props.shippingActions.getShippingRates(listing, buyerAddress, number);
     }
   }
@@ -534,7 +528,7 @@ class Transfer extends Component {
       return (<div className='transfer-input'>{formatMessage(messages.shippingCostIsIncluded)}</div>);
     }
 
-    if (shipping.error || !shipping.shippingRates.length) {
+    if (!listingDetail.weight || shipping.error || !shipping.shippingRates.length) {
       return (<div className='transfer-input'>{formatMessage(messages.contactSellerForShippingCosts)}</div>);
     }
 

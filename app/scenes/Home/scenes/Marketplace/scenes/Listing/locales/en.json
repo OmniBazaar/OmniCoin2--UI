@@ -48,5 +48,8 @@
   "Listing.reportListingErrorPopScore": "Your PoP score is not high enough to remove this listing by yourself. Your report will be combined with reports of others to remove the listing.",
   "Listing.reportListingError": "An error occurred with your report of this listing.",
   "Listing.reportListingSuccess": "Listing was reported successfully.",
-  "Listing.contactSeller": "Contact Seller"
+  "Listing.contactSeller": "Contact Seller",
+  "Listing.yourAddress": "Your Address",
+  "Listing.save": "Save",
+  "Listing.cancel": "Cancel"
 }

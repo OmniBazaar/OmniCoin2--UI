@@ -22,6 +22,7 @@ import ConfirmationModal from '../../../../../../components/ConfirmationModal/Co
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import Breadcrumb from '../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 import PriceItem from './components/PriceItem';
+import AddressModal from './components/AddressModal/AddressModal';
 import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
@@ -44,12 +45,15 @@ import {
   reportListing
 } from '../../../../../../services/listing/listingActions';
 
+import { setBuyerAddress } from '../../../../../../services/transfer/transferActions';
+
 const iconSizeSmall = 12;
 
 class Listing extends Component {
   state = {
     confirmDeleteOpen: false,
     confirmReportOpen: false,
+    addressModalOpen: false
   };
 
   componentWillMount() {
@@ -339,6 +343,19 @@ class Listing extends Component {
     this.props.listingActions.setNumberToBuy(v);
   };
 
+  onBuyClick() {
+    this.setState({addressModalOpen: true});
+  }
+
+  onCancelBuyerAddress() {
+    this.setState({addressModalOpen: false});
+  }
+
+  onSaveBuyerAddress(address) {
+    this.props.transferActions.setBuyerAddress(address);
+    this.buyItem();
+  }
+
   renderUserButtons(maxQuantity) {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
@@ -351,7 +368,7 @@ class Listing extends Component {
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
           <Button
-            onClick={() => this.buyItem()}
+            onClick={this.onBuyClick.bind(this)}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
             loading={loading}
@@ -606,6 +623,11 @@ class Listing extends Component {
           >
             {formatMessage(messages.reportConfirmationQuestion)}
           </ConfirmationModal>
+          <AddressModal
+            isOpen={this.state.addressModalOpen}
+            onCancel={this.onCancelBuyerAddress.bind(this)}
+            onSave={this.onSaveBuyerAddress.bind(this)}
+          />
         </div>
       </div>
     );
@@ -640,6 +662,9 @@ Listing.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  transferActions: PropTypes.shape({
+    setBuyerAddress: PropTypes.func
+  }).isRequired
 };
 
 
@@ -660,5 +685,8 @@ export default connect(
       deleteListing,
       reportListing
     }, dispatch),
+    transferActions: bindActionCreators({
+      setBuyerAddress
+    }, dispatch)
   }),
 )(injectIntl(Listing));
