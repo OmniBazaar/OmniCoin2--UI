@@ -25,6 +25,7 @@ import configReducer from './config/configReducer';
 import vestingBalancesReducer from './accountSettings/vestingBalances/vestingBalancesReducer';
 import updateNotificationReducer from './updateNotification/updateNotificationReducer';
 import publisherUpdateNotificationReducer from './publisherUpdateNotification/publisherUpdateNotificationReducer';
+import exchangeReducer from './exchange/exchangeReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -52,5 +53,6 @@ export default combineReducers({
   config: configReducer,
   vestingBalances: vestingBalancesReducer,
   updateNotification: updateNotificationReducer,
-  publisherUpdateNotification: publisherUpdateNotificationReducer
+  publisherUpdateNotification: publisherUpdateNotificationReducer,
+  exchange: exchangeReducer
 });
