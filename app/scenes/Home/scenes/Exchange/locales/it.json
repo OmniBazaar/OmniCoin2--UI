@@ -1,0 +1,15 @@
+{
+  "Exchange.currency": "Currency",
+  "Exchange.amount": "Amount",
+  "Exchange.numberRequired": "Number required",
+  "Exchange.numberExceedsDecimalsLimit": "Amount cannot have more than {limit} numbers after decimal",
+  "Exchange.numberCannotBeNegative": "Amount cannot be a negative value",
+  "Exchange.youWillReceive": "You will receive",
+  "Exchange.selectWallet": "Select wallet",
+  "Exchange.exchange": "Exchange",
+  "Exchange.from": "From",
+  "Exchange.fieldRequired": "This field is required.",
+  "Exchange.error": "Error",
+  "Exchange.success": "Success",
+  "Exchange.successExchange": "You will receive the funds as soon as the payment will be confirmed by the network"
+}

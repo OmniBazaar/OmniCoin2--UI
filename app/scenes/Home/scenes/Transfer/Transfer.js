@@ -47,7 +47,6 @@ import {
 } from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
-import { Prompt } from 'react-router-dom';
 
 import messages from './messages';
 

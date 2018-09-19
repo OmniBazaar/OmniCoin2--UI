@@ -22,6 +22,7 @@ import Support from './scenes/Support/Support';
 import IdentityVerificationForm from './scenes/IdentityVerification/IdentityVerificationForm';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
+import Exchange from './scenes/Exchange/Exchange';
 import Listing from './scenes/Marketplace/scenes/Listing/Listing';
 import MyListings from './scenes/Marketplace/scenes/Listing/scenes/MyListings/MyListings';
 import FavoriteListings from './scenes/Marketplace/scenes/Listing/scenes/FavoriteListings/FavoriteListings';
@@ -182,6 +183,7 @@ class Home extends Component {
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
 
+
     if (!this.props.auth.currentUser) {
       if (!this.props.auth.lastLoginUserName) {
         return (<Redirect
@@ -266,6 +268,15 @@ class Home extends Component {
                     defaultMessage="Transfer"
                   />
                 </NavLink>
+                {identityVerificationStatus && identityVerificationStatus.verified &&
+                  <NavLink to="/exchange" activeClassName="active" className="menu-item">
+                    <Image src={TransferIcon} height={iconSize} width={iconSize}/>
+                    <FormattedMessage
+                      id="Home.exchange"
+                      defaultMessage="Exchange"
+                    />
+                  </NavLink>
+                }
                 <NavLink to="/escrow" activeClassName="active" className="menu-item">
                   <Image src={EscrowIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -331,6 +342,7 @@ class Home extends Component {
             <Route path="/start-guide" render={(props) => <StartGuide {...props} />} />
             <Route path="/escrow" render={(props) => <Escrow {...props} />} />
             <Route path="/mail" render={(props) => <Mail {...props} />} />
+            <Route path="/exchange" render={(props) => <Exchange {...props} />} />
             <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
             <Route path="/processors" render={(props) => <Processors {...props} />} />
             <Route path="/settings" render={(props) => <Settings {...props} />} />

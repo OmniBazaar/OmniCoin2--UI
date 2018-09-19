@@ -21,6 +21,7 @@ import { vestingBalancesSubscriber } from './accountSettings/vestingBalances/ves
 import { updateNotificationSubscriber } from './updateNotification/updateNotificationSaga';
 import { publisherUpdateNotificationSubscriber } from './publisherUpdateNotification/publisherUpdateNotificationSaga';
 import { shippingSubscriber } from './shipping/shippingSaga';
+import { exchangeSubscriber } from "./exchange/exchangeSaga";
 
 export {
   connectionSubscriber,
@@ -45,5 +46,6 @@ export {
   vestingBalancesSubscriber,
   updateNotificationSubscriber,
   publisherUpdateNotificationSubscriber,
-  shippingSubscriber
+  shippingSubscriber,
+  exchangeSubscriber
 };
