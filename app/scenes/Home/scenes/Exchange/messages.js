@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   successExchange: {
     id: "Exchange.successExchange",
-    defaultMessage: "You will receive the funds as soon as the payment will be confirmed by the network"
+    defaultMessage: "You will receive funds as soon as the payment will be confirmed by the network"
   }
 });
 

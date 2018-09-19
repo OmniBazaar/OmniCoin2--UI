@@ -268,7 +268,7 @@ class Home extends Component {
                     defaultMessage="Transfer"
                   />
                 </NavLink>
-                {identityVerificationStatus === 'verified' &&
+                {identityVerificationStatus && identityVerificationStatus.verified &&
                   <NavLink to="/exchange" activeClassName="active" className="menu-item">
                     <Image src={TransferIcon} height={iconSize} width={iconSize}/>
                     <FormattedMessage

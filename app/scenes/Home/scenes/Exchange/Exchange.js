@@ -76,8 +76,9 @@ class Exchange extends Component {
       if (nextProps.exchange.error) {
         toastr.error(formatMessage(messages.error), nextProps.exchange.error);
       } else {
-        toastr.success(formatMessage(messages.success), nextProps.exchange.successExchange);
+        toastr.success(formatMessage(messages.success), formatMessage(messages.successExchange));
       }
+      this.props.reset();
     }
   }
 
