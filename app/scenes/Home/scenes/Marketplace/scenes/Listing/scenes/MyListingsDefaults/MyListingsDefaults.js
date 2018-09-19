@@ -63,7 +63,7 @@ class MyListingsDefaults extends Component {
         await EthereumApi.validateEthereumAddress(ethereum_address);
       }
     } catch (e) {
-      if (e === "Invalid Ethereum Address") {
+      if (e === 'Invalid Ethereum Address') {
         throw Object.create({ ethereum_address: listingDefaultMessages.invalidAddress });
       } else {
         throw Object.create({ bitcoin_address: listingDefaultMessages.invalidAddress });
@@ -156,7 +156,7 @@ class MyListingsDefaults extends Component {
     this.props.accountActions.updatePublicData();
     this.setState({
       isPromptVisible: false
-    })
+    });
 
     try {
       saveListingDefault({
@@ -252,7 +252,7 @@ class MyListingsDefaults extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(addListingMessages.additionalInfo)}*</span>
+              <span>{formatMessage(addListingMessages.additionalInfo)}</span>
             </Grid.Column>
             <Grid.Column width={6} className="align-top">
               <Field
