@@ -42,7 +42,7 @@ import AccountBalance from './components/AccountBalance/AccountBalance';
 import BalanceUpdateBackground from './components/AccountBalance/BalanceUpdateBackground';
 import UpdateNotification from './components/UpdateNotification/UpdateNotification';
 import PublisherUpdateNotification from './components/PublisherUpdateNotification/PublisherUpdateNotification';
-import AccountSettingsStorage from "../../services/accountSettings/accountStorage";
+import AccountSettingsStorage from '../../services/accountSettings/accountStorage';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 
 import './home.scss';
@@ -75,9 +75,9 @@ import { loadLocalPreferences } from '../../services/preferences/preferencesActi
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
 import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
-import { checkPublishersAlive } from '../../services/listing/listingActions'
-import { subscribeForMail, mailReceived, loadFolder } from "../../services/mail/mailActions";
-import MailTypes from "../../services/mail/mailTypes";
+import { checkPublishersAlive } from '../../services/listing/listingActions';
+import { subscribeForMail, mailReceived, loadFolder } from '../../services/mail/mailActions';
+import MailTypes from '../../services/mail/mailTypes';
 
 const iconSize = 20;
 
@@ -302,12 +302,15 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
-                <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', identityVerificationStatus ? 'identity-verification' : '')}>
+                <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', 'identity-verification')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
                     defaultMessage="Identity Verification"
                   />
-                  <span className="identity-verification-status">{identityVerificationStatus}</span>
+                  <span className="identity-verification-status">
+                    {identityVerificationStatus && identityVerificationStatus.verified ? 'verified' : 'not verified'}
+                    {identityVerificationStatus && identityVerificationStatus.comment && <span className="tooltiptext">{ identityVerificationStatus.comment}</span>}
+                  </span>
                 </NavLink>
                 <UpdateNotification />
                 <PublisherUpdateNotification />
