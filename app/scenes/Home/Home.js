@@ -319,7 +319,7 @@ class Home extends Component {
                     defaultMessage="Identity Verification"
                   />
                   <span className="identity-verification-status">
-                    {identityVerificationStatus && identityVerificationStatus.verified ? 'verified' : 'not verified'}
+                    {identityVerificationStatus && identityVerificationStatus.verified ? 'Verified' : 'Not Verified'}
                     {identityVerificationStatus && identityVerificationStatus.comment && <span className="tooltiptext">{ identityVerificationStatus.comment}</span>}
                   </span>
                 </NavLink>
