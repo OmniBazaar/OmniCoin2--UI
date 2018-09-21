@@ -52,7 +52,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount }}) {
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
-    yield broadcastExchange(result.txid, 'bitcoin');
+    yield broadcastExchange(result.txid, 'BTC');
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log("ERROR ", error)
@@ -64,7 +64,7 @@ function* exchangeEth({ payload: { privateKey, amount }}) {
   try {
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar.get('eth_address'), amount * 0.99);
-    yield broadcastExchange(result, 'ethereum');
+    yield broadcastExchange(result, 'ETH');
     yield put(exchangeEthSucceeded());
   } catch (error) {
     yield put(exchangeEthFailed(error));
