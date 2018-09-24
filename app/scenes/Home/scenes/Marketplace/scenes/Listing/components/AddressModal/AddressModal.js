@@ -30,6 +30,12 @@ class AddressModal extends Component {
     this.StateDropdown = makeValidatableField(StateDropdown);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen && !this.props.isOpen) {
+      this.props.reset();
+    }
+  }
+
   onCountryChange() {
     this.props.formActions.change('state', '');
   }
