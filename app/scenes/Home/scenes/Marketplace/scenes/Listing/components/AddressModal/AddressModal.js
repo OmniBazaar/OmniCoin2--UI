@@ -58,11 +58,15 @@ class AddressModal extends Component {
     } = this.props.formValues ? this.props.formValues : {};
 
     return (
-      <Modal open={isOpen} onClose={onCancel} className="confirmation-modal" closeIcon>
+      <Modal open={isOpen} onClose={onCancel} className="confirmation-modal address-confirm-modal" closeIcon>
         <Modal.Header>
           {formatMessage(listingMessages.yourAddress)}
         </Modal.Header>
         <Modal.Content>
+          <div className='head-msg'>
+            <div>{formatMessage(listingMessages.enterShippingAddress)}</div>
+            <div>{formatMessage(listingMessages.shippingAddressNote)}</div>
+          </div>
           <Form className="address-form" onSubmit={handleSubmit(this.submit.bind(this))}>
             <Grid>
               <Grid.Row>

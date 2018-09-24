@@ -53,7 +53,6 @@ export function getBodyFromMessage(message, formatMessage) {
       }
       
       if (body.shipment.shippingCost) {
-        console.log({cost: body.shipment.shippingCost})
         result += '\n' + formatMessage(mailMessages.shippingCost, body.shipment.shippingCost);
       }
     }

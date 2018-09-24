@@ -49,7 +49,9 @@
   "Listing.reportListingError": "An error occurred with your report of this listing.",
   "Listing.reportListingSuccess": "Listing was reported successfully.",
   "Listing.contactSeller": "Contact Seller",
-  "Listing.yourAddress": "Your Address",
+  "Listing.yourAddress": "Shipping Address Confirmation",
   "Listing.save": "Save",
-  "Listing.cancel": "Cancel"
+  "Listing.cancel": "Cancel",
+  "Listing.enterShippingAddress": "Please enter your shipping address",
+  "Listing.shippingAddressNote": "NOTE: if your shipping address will change, please contact seller"
 }
