@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Modal, Form, Button, Grid } from 'semantic-ui-react';
-import { Field, reduxForm, getFormValues } from 'redux-form';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required } from 'redux-form-validators';
 import ConfirmationModal from '../../../../../../../../components/ConfirmationModal/ConfirmationModal';
 
@@ -28,6 +28,10 @@ class AddressModal extends Component {
     super(props);
     this.CountryDropdown = makeValidatableField(CountryDropdown);
     this.StateDropdown = makeValidatableField(StateDropdown);
+  }
+
+  onCountryChange() {
+    this.props.formActions.change('state', '');
   }
 
   submit(values) {
@@ -66,6 +70,7 @@ class AddressModal extends Component {
                     props={{
                       placeholder: formatMessage(messages.country)
                     }}
+                    onChange={this.onCountryChange.bind(this)}
                     validate={[requiredFieldValidator]}
                   />
                 </Grid.Column>
@@ -162,6 +167,11 @@ export default compose(
   connect(
     state => ({
       formValues: getFormValues('addressForm')(state),
+    }),
+    dispatch => ({
+      formActions: bindActionCreators({
+        change: (field, value) => change('addressForm', field, value)
+      }, dispatch)
     })
   )
 )(injectIntl(AddressModal));
