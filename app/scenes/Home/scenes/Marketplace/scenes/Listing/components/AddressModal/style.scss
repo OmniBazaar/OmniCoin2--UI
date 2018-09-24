@@ -1,11 +1,16 @@
-.address-form {
-	margin: 20px;
-
-	.dropdown {
-		width: 100%;
+.address-confirm-modal {
+	.head-msg {
+		margin: 20px;
 	}
+	.address-form {
+		margin: 20px;
 
-	.actions {
-		float: right;
+		.dropdown {
+			width: 100%;
+		}
+
+		.actions {
+			float: right;
+		}
 	}
 }

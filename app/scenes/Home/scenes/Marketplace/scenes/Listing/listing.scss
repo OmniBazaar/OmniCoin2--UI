@@ -186,13 +186,29 @@
     }
   }
 
-  .listing-description {
+  .listing-description, .listing-weight-size {
     flex: 1 1 auto;
     padding: 20px;
     background-color: $background-gray;
 
     .description {
       margin-top: 12px;
+    }
+  }
+
+  .listing-weight-size {
+    padding-top: 0;
+
+    .title {
+      margin-bottom: 2px;
+    }
+
+    >div {
+      margin-top: 10px;
+      >span {
+        display: inline-block;
+        min-width: 60px;
+      }
     }
   }
 

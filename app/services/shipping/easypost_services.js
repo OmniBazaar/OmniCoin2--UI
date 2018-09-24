@@ -17,7 +17,6 @@ const findCountryCode = (country) => {
 }
 
 export const getShippingRates = async (fromAddress, toAddress, parcel, quantity) => {
-  console.log(fromAddress, toAddress)
   const fromAddr = new api.Address({
     street1: fromAddress.address ? fromAddress.address : fromAddress.city,
     city: fromAddress.city,

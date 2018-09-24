@@ -3,7 +3,8 @@ import {
   getShippingRates,
   getShippingRatesSuccess,
   getShippingRatesError,
-  selectShippingRate
+  selectShippingRate,
+  resetShipping
 } from './shippingActions';
 
 const defaultState = {
@@ -44,6 +45,11 @@ const reducer = handleActions({
     return {
       ...state,
       selectedShippingRateIndex: index
+    };
+  },
+  [resetShipping](state) {
+    return {
+      ...defaultState
     };
   }
 }, defaultState);

@@ -371,7 +371,7 @@ const messages = defineMessages({
   },
   ounce: {
     id: 'AddListing.ounce',
-    defaultMessage: 'Ounce'
+    defaultMessage: 'Ounces'
   },
   pound: {
     id: 'AddListing.pound',

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Modal, Form, Button, Grid } from 'semantic-ui-react';
-import { Field, reduxForm, getFormValues } from 'redux-form';
+import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { required } from 'redux-form-validators';
 import ConfirmationModal from '../../../../../../../../components/ConfirmationModal/ConfirmationModal';
 
@@ -30,6 +30,16 @@ class AddressModal extends Component {
     this.StateDropdown = makeValidatableField(StateDropdown);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen && !this.props.isOpen) {
+      this.props.reset();
+    }
+  }
+
+  onCountryChange() {
+    this.props.formActions.change('state', '');
+  }
+
   submit(values) {
     this.props.onSave(values);
   }
@@ -48,11 +58,15 @@ class AddressModal extends Component {
     } = this.props.formValues ? this.props.formValues : {};
 
     return (
-      <Modal open={isOpen} onClose={onCancel} className="confirmation-modal" closeIcon>
+      <Modal open={isOpen} onClose={onCancel} className="confirmation-modal address-confirm-modal" closeIcon>
         <Modal.Header>
           {formatMessage(listingMessages.yourAddress)}
         </Modal.Header>
         <Modal.Content>
+          <div className='head-msg'>
+            <div>{formatMessage(listingMessages.enterShippingAddress)}</div>
+            <div>{formatMessage(listingMessages.shippingAddressNote)}</div>
+          </div>
           <Form className="address-form" onSubmit={handleSubmit(this.submit.bind(this))}>
             <Grid>
               <Grid.Row>
@@ -66,6 +80,7 @@ class AddressModal extends Component {
                     props={{
                       placeholder: formatMessage(messages.country)
                     }}
+                    onChange={this.onCountryChange.bind(this)}
                     validate={[requiredFieldValidator]}
                   />
                 </Grid.Column>
@@ -162,6 +177,11 @@ export default compose(
   connect(
     state => ({
       formValues: getFormValues('addressForm')(state),
+    }),
+    dispatch => ({
+      formActions: bindActionCreators({
+        change: (field, value) => change('addressForm', field, value)
+      }, dispatch)
     })
   )
 )(injectIntl(AddressModal));

@@ -73,7 +73,7 @@
   "AddListing.loadListing": "Load listing",
   "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01",
   "AddListing.weight": "Weight",
-  "AddListing.ounce": "Ounce",
+  "AddListing.ounce": "Ounces",
   "AddListing.pound": "Pound",
   "AddListing.gram": "Gram",
   "AddListing.weightAndSize": "Weight and Size",
