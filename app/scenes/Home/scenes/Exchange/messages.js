@@ -52,6 +52,10 @@ const messages = defineMessages({
   successExchange: {
     id: "Exchange.successExchange",
     defaultMessage: "You will receive funds as soon as the payment will be confirmed by the network"
+  },
+  exchangeError: {
+    id: 'Exchange.exchangeError',
+    defaultMessage: 'Having error when exchange'
   }
 });
 
