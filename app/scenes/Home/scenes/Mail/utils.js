@@ -1,6 +1,7 @@
 import { getCurrencyAbbreviation } from "../../../../utils/listings";
 import {purchaseInfoSubject} from "../../../../services/mail/mailSaga";
 import mailMessages from "./messages";
+import listingFormMessages from '../Marketplace/scenes/Listing/scenes/AddListing/messages';
 import { getStoredCurrentUser } from "../../../../services/blockchain/auth/services";
 
 export function getSubjectFromMessage(message, formatMessage) {
@@ -54,6 +55,22 @@ export function getBodyFromMessage(message, formatMessage) {
       
       if (body.shipment.shippingCost) {
         result += '\n' + formatMessage(mailMessages.shippingCost, body.shipment.shippingCost);
+      }
+    }
+
+    if (body.weightAndSize) {
+      result += `\n${formatMessage(listingFormMessages.weightAndSize)}:`;
+      if (body.weightAndSize.weight) {
+        result += `\n  ${formatMessage(listingFormMessages.weight)}: ${body.weightAndSize.weight} ${formatMessage(listingFormMessages.ounce).toLowerCase()}`;
+      }
+      if (body.weightAndSize.width) {
+        result += `\n  ${formatMessage(listingFormMessages.width)}: ${body.weightAndSize.width} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
+      }
+      if (body.weightAndSize.height) {
+        result += `\n  ${formatMessage(listingFormMessages.height)}: ${body.weightAndSize.height} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
+      }
+      if (body.weightAndSize.length) {
+        result += `\n  ${formatMessage(listingFormMessages.length)}: ${body.weightAndSize.length} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
       }
     }
 

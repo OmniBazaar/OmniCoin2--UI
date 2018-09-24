@@ -43,7 +43,8 @@ import {
 import { reputationOptions } from '../../../../services/utils';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
 import {
-  getShippingRates
+  getShippingRates,
+  resetShipping
 } from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
@@ -269,6 +270,8 @@ class Transfer extends Component {
   }
 
   checkRequestShippingRates() {
+    this.props.shippingActions.resetShipping();
+
     const listingId = this.getListingId();
     if (listingId) {
       const { listingDetail } = this.props.listing;
@@ -1138,7 +1141,8 @@ export default compose(
         saleBonus
       }, dispatch),
       shippingActions: bindActionCreators({
-        getShippingRates
+        getShippingRates,
+        resetShipping
       }, dispatch),
       initialize,
       changeFieldValue: (field, value) => {

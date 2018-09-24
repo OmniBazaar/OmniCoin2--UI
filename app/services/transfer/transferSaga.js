@@ -157,7 +157,9 @@ function* ethereumTransfer({payload: {
   }
 }
 
+const weightAndSizeKeys = ['weight', 'width', 'height', 'length'];
 function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCount, listingTitle, currency}) {
+  const { listingDetail } = (yield select()).default.listing;
   const purchaseObject = {
     date: new Date(),
     seller,
@@ -180,6 +182,15 @@ function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCoun
     }
   }
   purchaseObject.shipment = shipment;
+
+  weightAndSizeKeys.forEach(key => {
+    if (listingDetail[key]) {
+      purchaseObject.weightAndSize = {
+        ...purchaseObject.weightAndSize,
+        [key]: listingDetail[key]
+      };
+    }
+  });
 
   yield put(addPurchase(purchaseObject));
   yield put(sendPurchaseInfoMail(buyer, seller, JSON.stringify(purchaseObject)));
