@@ -30,6 +30,7 @@ import { currencyConverter } from '../../../../../../services/utils';
 import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
+import listingFormMessages from './scenes/AddListing/messages';
 import './listing.scss';
 
 import {
@@ -571,6 +572,54 @@ class Listing extends Component {
     );
   }
 
+  renderWeightAndSize() {
+    const { listingDetail } = this.props.listing;
+    const { formatMessage } = this.props.intl;
+
+    if (
+      !listingDetail.weight && 
+      !listingDetail.width && 
+      !listingDetail.height && 
+      !listingDetail.length
+    ) {
+      return null;
+    }
+
+    return (
+      <div className="listing-weight-size">
+        <span className="title">{formatMessage(listingFormMessages.weightAndSize)}</span>
+        {
+          listingDetail.weight &&
+          <div>
+            <span>{formatMessage(listingFormMessages.weight)}:</span>
+            {listingDetail.weight} {formatMessage(listingFormMessages.ounce).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.width &&
+          <div>
+            <span>{formatMessage(listingFormMessages.width)}:</span>
+            {listingDetail.width} {formatMessage(listingFormMessages.inches).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.height &&
+          <div>
+            <span>{formatMessage(listingFormMessages.height)}:</span>
+            {listingDetail.height} {formatMessage(listingFormMessages.inches).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.length &&
+          <div>
+            <span>{formatMessage(listingFormMessages.length)}:</span>
+            {listingDetail.length} {formatMessage(listingFormMessages.inches).toLowerCase()}
+          </div>
+        }
+      </div>
+    );
+  }
+
   renderDetail() {
     const { listingDetail } = this.props.listing;
     const { formatMessage } = this.props.intl;
@@ -588,7 +637,8 @@ class Listing extends Component {
       <div className="listing-description">
         <span className="title">{formatMessage(messages.itemDescription)}</span>
         <p className="description">{listingDetail.description}</p>
-      </div>
+      </div>,
+      this.renderWeightAndSize()
     ];
   }
 
