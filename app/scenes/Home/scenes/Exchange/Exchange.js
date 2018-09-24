@@ -74,7 +74,7 @@ class Exchange extends Component {
     const { formatMessage } = this.props.intl;
     if (this.props.exchange.loading && !nextProps.exchange.loading) {
       if (nextProps.exchange.error) {
-        toastr.error(formatMessage(messages.error), nextProps.exchange.error);
+        toastr.error(formatMessage(messages.error), formatMessage(messages.exchangeError));
       } else {
         toastr.success(formatMessage(messages.success), formatMessage(messages.successExchange));
       }

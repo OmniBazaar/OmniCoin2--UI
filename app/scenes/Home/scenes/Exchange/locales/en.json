@@ -11,5 +11,6 @@
   "Exchange.fieldRequired": "This field is required.",
   "Exchange.error": "Error",
   "Exchange.success": "Success",
-  "Exchange.successExchange": "You will receive the funds as soon as the payment will be confirmed by the network"
+  "Exchange.successExchange": "You will receive the funds as soon as the payment will be confirmed by the network",
+  "Exchange.exchangeError": "Having error when exchange"
 }
