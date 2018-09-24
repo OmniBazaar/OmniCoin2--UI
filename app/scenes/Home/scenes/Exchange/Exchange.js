@@ -74,7 +74,11 @@ class Exchange extends Component {
     const { formatMessage } = this.props.intl;
     if (this.props.exchange.loading && !nextProps.exchange.loading) {
       if (nextProps.exchange.error) {
-        toastr.error(formatMessage(messages.error), formatMessage(messages.exchangeError));
+        if (nextProps.exchange.error.arg === 'privateKey') {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.walletNotConnected));
+        } else {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.errorExchange));
+        }
       } else {
         toastr.success(formatMessage(messages.success), formatMessage(messages.successExchange));
       }

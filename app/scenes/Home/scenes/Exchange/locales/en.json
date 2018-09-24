@@ -12,5 +12,6 @@
   "Exchange.error": "Error",
   "Exchange.success": "Success",
   "Exchange.successExchange": "You will receive the funds as soon as the payment will be confirmed by the network",
-  "Exchange.exchangeError": "Having error when exchange"
+  "Exchange.errorExchange": "An error occured",
+  "Exchange.walletNotConnected": "You haven't connected a wallet yet"
 }

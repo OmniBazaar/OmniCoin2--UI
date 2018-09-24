@@ -53,9 +53,13 @@ const messages = defineMessages({
     id: "Exchange.successExchange",
     defaultMessage: "You will receive funds as soon as the payment will be confirmed by the network"
   },
-  exchangeError: {
-    id: 'Exchange.exchangeError',
-    defaultMessage: 'Having error when exchange'
+  errorExchange: {
+    id: 'Exchange.errorExchange',
+    defaultMessage: 'An error occured'
+  },
+  walletNotConnected: {
+    id: 'Exchange.walletNotConnected',
+    defaultMessage: 'You haven\'t connected a wallet yet'
   }
 });
 
