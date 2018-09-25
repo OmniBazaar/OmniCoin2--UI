@@ -216,7 +216,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span>{amount ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN') : 0} XOM</span>
+            <span>{!isNaN(amount) ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN') : 0} XOM</span>
             <div className="col-2" />
           </div>
         </div>
