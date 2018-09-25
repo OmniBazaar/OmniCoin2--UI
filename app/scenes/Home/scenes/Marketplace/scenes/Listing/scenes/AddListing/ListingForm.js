@@ -493,7 +493,7 @@ class ListingForm extends Component {
                 name="listing_title"
                 component={InputField}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnter)}
+                placeholder={formatMessage(messages.pleaseEnterTitle)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -795,7 +795,7 @@ class ListingForm extends Component {
                 name="description"
                 component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnter)}
+                placeholder={formatMessage(messages.pleaseEnterDescription)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>

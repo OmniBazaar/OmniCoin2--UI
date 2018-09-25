@@ -5,6 +5,8 @@
   "AddListing.importListings": "IMPORT LISTINGS",
   "AddListing.listingTitle": "Listing Title",
   "AddListing.pleaseEnter": "Please enter",
+  "AddListing.pleaseEnterTitle": "Please enter title",
+  "AddListing.pleaseEnterDescription": "Please enter description",
   "AddListing.placing": "Placing",
   "AddListing.type": "Type",
   "AddListing.category": "Category",

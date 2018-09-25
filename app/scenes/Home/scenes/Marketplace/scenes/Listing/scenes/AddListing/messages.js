@@ -29,6 +29,14 @@ const messages = defineMessages({
     id: 'AddListing.pleaseEnter',
     defaultMessage: 'Please enter'
   },
+  pleaseEnterTitle: {
+    id: 'AddListing.pleaseEnterTitle',
+    defaultMessage: 'Please enter title'
+  },
+  pleaseEnterDescription: {
+    id: 'AddListing.pleaseEnterDescription',
+    defaultMessage: 'Please enter description'
+  },
   placing: {
     id: 'AddListing.placing',
     defaultMessage: 'Placing'
