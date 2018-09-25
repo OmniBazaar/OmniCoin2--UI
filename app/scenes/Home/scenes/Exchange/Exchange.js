@@ -80,6 +80,7 @@ class Exchange extends Component {
       } else {
         toastr.success(formatMessage(messages.success), formatMessage(messages.successExchange));
       }
+      this.setState({ isPromptVisible: false });
       this.props.reset();
     }
   }
