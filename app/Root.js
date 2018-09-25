@@ -47,17 +47,19 @@ class Root extends Component {
 
   renderContent() {
     return (
-      <ErrorBoundary>
-        <Router>
-          <Switch>
-            <Route path="/signup" render={(props) => <Signup {...props} />} />
-            <Route path="/air-drop" render={props => <AirDrop {...props} />} />
-            <Route path="/login" render={(props) => <Login {...props} />} />
-            <Route path="/" render={(props) => <Home {...props} />} />
-          </Switch>
-        </Router>
-        <UpdateForcer />
-      </ErrorBoundary>
+        <div>
+          <Router>
+            <ErrorBoundary>
+              <Switch>
+                <Route path="/signup" render={(props) => <Signup {...props} />} />
+                <Route path="/air-drop" render={props => <AirDrop {...props} />} />
+                <Route path="/login" render={(props) => <Login {...props} />} />
+                <Route path="/" render={(props) => <Home {...props} />} />
+              </Switch>
+            </ErrorBoundary>
+          </Router>
+          <UpdateForcer />
+        </div>
     );
   }
 

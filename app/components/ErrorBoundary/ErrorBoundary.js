@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Button } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { withRouter } from 'react-router';
 import log from 'electron-log';
 
 import Background from '../Background/Background';
@@ -10,6 +12,10 @@ const messages = defineMessages({
   errorOccured: {
     id: "ErrorBoundary.errorOccured",
     defaultMessage: "An unexpeceted error occured."
+  },
+  reload: {
+    id: "ErrorBoundary.reload",
+    defaultMessage: "RELOAD"
   }
 });
 
@@ -18,8 +24,20 @@ class ErrorBoundary extends Component {
     hasError: false
   };
 
+  onClick = () => {
+    this.props.history.push('/signup');
+  };
+
   componentDidCatch(error, info) {
     this.setState({ hasError: true });
+    const { history } = this.props;
+    history.listen((location, action) => {
+      if (this.state.hasError) {
+        this.setState({
+          hasError: false,
+        });
+      }
+    });
     log.warn(error, info);
   }
 
@@ -28,9 +46,16 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <Background>
-          <span className="error-boundary">
-            {formatMessage(messages.errorOccured)}
-          </span>
+          <div className="boundary-content">
+            <span className="message">
+              {formatMessage(messages.errorOccured)}
+            </span>
+            <Button
+               content={formatMessage(messages.reload)}
+               className="button--green-bg"
+               onClick={this.onClick}
+            />
+          </div>
         </Background>
       )
     }
@@ -38,4 +63,4 @@ class ErrorBoundary extends Component {
   }
 }
 
-export default injectIntl(ErrorBoundary);
+export default injectIntl(withRouter(ErrorBoundary));
