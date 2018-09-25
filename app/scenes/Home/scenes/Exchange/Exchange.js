@@ -39,6 +39,7 @@ import {
   ethereumFieldValidator,
   bitcoinFieldValidator
 } from "../Marketplace/scenes/Listing/scenes/AddListing/validators";
+import { getWallets } from "../../../../services/blockchain/bitcoin/bitcoinActions";
 import {SATOSHI_IN_BTC, WEI_IN_ETH} from "../../../../utils/constants";
 
 const currencyOptions = [
@@ -78,6 +79,7 @@ class Exchange extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (this.props.exchange.loading && !nextProps.exchange.loading) {
+      this.props.bitcoinActions.getWallets();
       if (nextProps.exchange.error) {
         if (nextProps.exchange.error.arg === 'privateKey') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.walletNotConnected));
@@ -327,6 +329,9 @@ export default compose(
         exchangeEth,
         exchangeBtc
       }, dispatch),
+      bitcoinActions: bindActionCreators({
+        getWallets
+      }, dispatch)
     })
   ),
   reduxForm({
