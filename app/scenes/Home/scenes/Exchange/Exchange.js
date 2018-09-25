@@ -33,6 +33,13 @@ import {
   exchangeBtc,
   exchangeEth
 } from "../../../../services/exchange/exchangeActions";
+import {
+  numericFieldValidator,
+  requiredFieldValidator,
+  ethereumFieldValidator,
+  bitcoinFieldValidator
+} from "../Marketplace/scenes/Listing/scenes/AddListing/validators";
+import {SATOSHI_IN_BTC, WEI_IN_ETH} from "../../../../utils/constants";
 
 const currencyOptions = [
   {
@@ -129,6 +136,28 @@ class Exchange extends Component {
     />
   );
 
+  getBtcMaxValidator = () => {
+    const { formatMessage } = this.props.intl;
+    const { wallet } = this.props.exchangeForm;
+    if (wallet >= 0) {
+      const w = this.props.bitcoin.wallets[wallet];
+      return numericality({ '<': w.balance / SATOSHI_IN_BTC, msg: formatMessage(messages.maximumAmountAvailable, {
+          amount: w.balance / SATOSHI_IN_BTC
+      })});
+    } else {
+      return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+          amount: 0
+      })});
+    }
+  };
+
+  getETHMaxValidator = () => {
+    const { formatMessage } = this.props.intl;
+    return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+        amount: this.props.ethereum.balance / WEI_IN_ETH
+    })});
+  };
+
   submitTransfer(values) {
     const { currency } = this.props.exchangeForm;
     const { formatMessage } = this.props.intl;
@@ -155,7 +184,7 @@ class Exchange extends Component {
                 name="wallet"
                 component={this.BitcoinWalletDropdown}
                 validate={[
-                  required({ message: formatMessage(messages.fieldRequired) })
+                  required({ msg: formatMessage(messages.fieldRequired) })
                 ]}
               />
             </div>
@@ -173,9 +202,10 @@ class Exchange extends Component {
               className="textfield1"
               buttonText="BTC"
               validate={[
-                required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
-                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
+                requiredFieldValidator,
+                numericFieldValidator,
+                bitcoinFieldValidator,
+                this.getBtcMaxValidator()
               ]}
             />
             <div className="col-1" />
@@ -208,9 +238,10 @@ class Exchange extends Component {
               className="textfield1"
               buttonText="ETH"
               validate={[
-                required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
-                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
+                requiredFieldValidator,
+                numericFieldValidator,
+                ethereumFieldValidator,
+                this.getETHMaxValidator()
               ]}
             />
             <div className="col-1" />
@@ -231,7 +262,7 @@ class Exchange extends Component {
   render() {
       const { formatMessage } = this.props.intl;
       const { handleSubmit } = this.props;
-      const { currency } = this.props.exchangeForm;
+      const { currency, wallet } = this.props.exchangeForm;
       return (
         <div className="container">
           <Header className="button--green-bg" title={formatMessage(messages.exchange)} />
@@ -283,7 +314,8 @@ export default compose(
       ...state.default,
       exchangeForm: {
         currency: selector(state, 'currency'),
-        amount: selector(state, 'amount')
+        amount: selector(state, 'amount'),
+        wallet: selector(state, 'wallet')
       }
     }),
     (dispatch) => ({

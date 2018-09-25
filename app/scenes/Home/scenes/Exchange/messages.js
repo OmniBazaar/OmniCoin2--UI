@@ -60,6 +60,10 @@ const messages = defineMessages({
   walletNotConnected: {
     id: 'Exchange.walletNotConnected',
     defaultMessage: 'You haven\'t connected a wallet yet'
+  },
+  maximumAmountAvailable: {
+    id: 'Exchange.maximumAmountAvailable',
+    defaultMessage: 'Maximum amount available is {amount}'
   }
 });
 
