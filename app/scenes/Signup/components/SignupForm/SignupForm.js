@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Form, Divider, Icon, Popup, Modal } from 'semantic-ui-react';
+import { Button, Form, Divider, Icon, Modal } from 'semantic-ui-react';
 import { required } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import cn from 'classnames';
 import { withRouter } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { defineMessages, injectIntl } from 'react-intl';
-import { key, FetchChain } from 'omnibazaarjs/es';
+import { key } from 'omnibazaarjs/es';
+import { Apis } from 'omnibazaarjs-ws';
 import PropTypes from 'prop-types';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Radio from '../../../../components/Radio/Radio';
@@ -135,25 +136,34 @@ const messages = defineMessages({
 class SignupForm extends Component {
   static validate = (values) => {
     const errors = {};
-
     if (!values.username) {
       errors.username = messages.fieldRequired;
     }
-
     if (!values.agreementTerms) {
       errors.agreementTerms = messages.fieldRequired;
     }
-
     if (values.password !== values.passwordConfirmation) {
       errors.passwordConfirmation = messages.passwordDoesntMatch;
     }
-
     if (!values.country) {
       errors.country = messages.fieldRequired;
     }
-
+    if (!values.state) {
+      errors.state = messages.fieldRequired;
+    }
     return errors;
   };
+
+  static asyncValidate = async (values) => {
+    const { referrer } = values;
+
+    if (referrer) {
+      const referrerAccount = await Apis.instance().db_api().exec('get_account_by_name', [referrer]);
+      if (referrerAccount == null || !referrerAccount.is_referrer) {
+        throw { referrer: 'Referrer account not found' };
+      }
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -274,7 +284,7 @@ class SignupForm extends Component {
           className="field"
         />
         <CopyToClipboard text={input.value}>
-          <Button className='copy-password-btn' onClick={this.showSuccessCopy.bind(this)}>
+          <Button onClick={this.showSuccessCopy.bind(this)}>
             {formatMessage(messages.copy)}
           </Button>
         </CopyToClipboard>
@@ -284,7 +294,7 @@ class SignupForm extends Component {
 
   renderReferrerField = ({
     input, meta: {
-      asyncValidating, touched, error, warning, active
+      asyncValidating, touched, error, active
     }
   }) => {
     const { formatMessage } = this.props.intl;
@@ -317,7 +327,7 @@ class SignupForm extends Component {
 
   renderCountryField = ({
     input, meta: {
-      asyncValidating, touched, error, placeholder
+      touched, error, placeholder
     }
   }) => {
     const { formatMessage } = this.props.intl;
@@ -343,7 +353,7 @@ class SignupForm extends Component {
 
   renderStateField = ({
     input, meta: {
-      asyncValidating, touched, error
+      touched, error
     }
   }) => {
     const { formatMessage } = this.props.intl;
@@ -409,19 +419,19 @@ class SignupForm extends Component {
   renderTermField = () => {
     const { formatMessage } = this.props.intl;
     return (
-      <div className="agreement-terms">
-        <div>
+      [
+        <div className="agreement-terms">
           <Checkbox
             width={inputCustomSize}
             height={inputCustomSize}
             onChecked={this.onTermAndConditionCheck.bind(this)}
           />
           <span>{formatMessage(messages.agree)}</span>
-        </div>
-          <div className="link terms" onClick={this.toggleTermsModal}>
+          <span className="link" onClick={this.toggleTermsModal}>
             {formatMessage(messages.termsAndCond)}
-          </div>
-      </div>
+          </span>
+        </div>
+      ]
     );
   };
 
@@ -489,6 +499,7 @@ class SignupForm extends Component {
               country={country}
               state={state}
               component={this.renderStateField}
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
             <Field
               type="text"
@@ -635,6 +646,7 @@ SignupForm.defaultProps = {
 
 SignupForm.propTypes = {
   auth: PropTypes.shape({
+    defaultReferrer: PropTypes.string,
     currentUser: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string
@@ -668,7 +680,8 @@ SignupForm = withRouter(SignupForm);
 SignupForm = reduxForm({
   form: 'signupForm',
   validate: SignupForm.validate,
-  asyncBlurFields: [],
+  asyncValidate: SignupForm.asyncValidate,
+  asyncBlurFields: ['referrer'],
   destroyOnUnmount: true
 })(SignupForm);
 
