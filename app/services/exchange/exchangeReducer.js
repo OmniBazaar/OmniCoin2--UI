@@ -11,7 +11,8 @@ import {
 
 const defaultState = {
   loading: false,
-  error: null
+  error: null,
+  txid: null
 };
 
 const reducer = handleActions({
@@ -22,11 +23,12 @@ const reducer = handleActions({
       error: null
     }
   },
-  [exchangeBtcSucceeded](state) {
+  [exchangeBtcSucceeded](state, { payload: { txid }}) {
     return {
       ...state,
       loading: false,
-      error: null
+      error: null,
+      txid
     }
   },
   [exchangeBtcFailed](state, { payload: { error } }) {
@@ -43,11 +45,12 @@ const reducer = handleActions({
       error: null
     }
   },
-  [exchangeEthSucceeded](state) {
+  [exchangeEthSucceeded](state, { payload: { txid }}) {
     return {
       ...state,
       loading: false,
-      error: null
+      error: null,
+      txid
     }
   },
   [exchangeEthFailed](state, { payload: { error } }) {

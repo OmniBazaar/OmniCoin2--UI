@@ -33,8 +33,6 @@ import {
   exchangeBtc,
   exchangeEth
 } from "../../../../services/exchange/exchangeActions";
-import {getEthereumWallets} from "../../../../services/blockchain/ethereum/EthereumActions";
-
 
 const currencyOptions = [
   {
@@ -132,12 +130,13 @@ class Exchange extends Component {
 
   submitTransfer(values) {
     const { currency } = this.props.exchangeForm;
+    const { formatMessage } = this.props.intl;
     if (currency === 'bitcoin') {
       const { guid, password } = this.props.bitcoin;
-      this.props.exchangeActions.exchangeBtc(guid, password, values.wallet, values.amount);
+      this.props.exchangeActions.exchangeBtc(guid, password, values.wallet, values.amount, formatMessage);
     } else {
       const { privateKey } = this.props.ethereum;
-      this.props.exchangeActions.exchangeEth(privateKey, values.amount);
+      this.props.exchangeActions.exchangeEth(privateKey, values.amount, formatMessage);
     }
   }
 
