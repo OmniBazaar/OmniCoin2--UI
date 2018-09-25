@@ -50,6 +50,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
+import { weightUnits, sizeUnits } from  './constants'; 
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -67,11 +68,7 @@ const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldVal
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
 
-const weightUnits = {
-  ounce: messages.ounce,
-  pound: messages.pound,
-  gram: messages.gram
-};
+const unitKeys = ['weight_unit', 'width_unit', 'height_unit', 'length_unit'];
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
@@ -193,6 +190,12 @@ class ListingForm extends Component {
         data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
       }
     }
+
+    unitKeys.forEach(key => {
+      if (!data[key]) {
+        data[key] = key === 'weight_unit' ? 'oz' : 'in';
+      }
+    });
 
     this.props.initialize(data);
   }
@@ -399,6 +402,19 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
+
+    if (!data.weight) {
+      delete data.weight_unit;
+    }
+    if (!data.width) {
+      delete data.width_unit;
+    }
+    if (!data.height) {
+      delete data.height_unit;
+    }
+    if (!data.length) {
+      delete data.length_unit;
+    }
 
     const obj = {
       ...data,
@@ -906,6 +922,47 @@ class ListingForm extends Component {
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
+              <span className="title">{formatMessage(messages.shipping)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4} className="top-align">
+              <span>{formatMessage(messages.shipping)}*</span>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                type="textarea"
+                name="shipping_description"
+                component={this.DescriptionInput}
+                className="textfield"
+                placeholder={formatMessage(messages.pleaseEnterShipping)}
+                validate={[requiredFieldValidator]}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}></Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                name="no_shipping_address_required"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.noShippingAddressRequired)
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row className="row-section">
+            <Grid.Column width={16}>
+              <span className="title">{formatMessage(messages.weightAndSize)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row className="row-section">
+            <Grid.Column width={16}>
               <span className="title">{formatMessage(messages.weightAndSize)}</span>
             </Grid.Column>
           </Grid.Row>
@@ -924,8 +981,14 @@ class ListingForm extends Component {
                 validate={[allowBlankNumericFieldValidator]}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top measure-unit">
-              <span>{formatMessage(messages.ounce)}</span>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="weight_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: weightUnits
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 
@@ -943,8 +1006,14 @@ class ListingForm extends Component {
                 validate={[allowBlankNumericFieldValidator]}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top measure-unit">
-              <span>{formatMessage(messages.inches)}</span>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="width_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 
@@ -962,8 +1031,14 @@ class ListingForm extends Component {
                 validate={[allowBlankNumericFieldValidator]}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top measure-unit">
-              <span>{formatMessage(messages.inches)}</span>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="height_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 
@@ -981,8 +1056,14 @@ class ListingForm extends Component {
                 validate={[allowBlankNumericFieldValidator]}
               />
             </Grid.Column>
-            <Grid.Column width={4} className="align-top measure-unit">
-              <span>{formatMessage(messages.inches)}</span>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="length_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
             </Grid.Column>
           </Grid.Row>
 

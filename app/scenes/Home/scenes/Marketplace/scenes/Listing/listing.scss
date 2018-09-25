@@ -186,7 +186,7 @@
     }
   }
 
-  .listing-description, .listing-weight-size {
+  .listing-description, .listing-weight-size, .shipping {
     flex: 1 1 auto;
     padding: 20px;
     background-color: $background-gray;
@@ -194,6 +194,10 @@
     .description {
       margin-top: 12px;
     }
+  }
+
+  .shipping {
+    padding-top: 0;
   }
 
   .listing-weight-size {

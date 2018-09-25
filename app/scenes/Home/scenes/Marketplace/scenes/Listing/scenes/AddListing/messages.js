@@ -408,6 +408,26 @@ const messages = defineMessages({
   shippingPriceIncluded: {
     id: 'AddListing.shippingPriceIncluded',
     defaultMessage: 'Shipping Price Included'
+  },
+  shipping: {
+    id: 'AddListing.shipping',
+    defaultMessage: 'Shipping'
+  },
+  noShippingAddressRequired: {
+    id: 'AddListing.noShippingAddressRequired',
+    defaultMessage: 'No shipping address required'
+  },
+  kilograms: {
+    id: 'AddListing.kilograms',
+    defaultMessage: 'Kilograms'
+  },
+  centimeters: {
+    id: 'AddListing.centimeters',
+    defaultMessage: 'Centimeters'
+  },
+  pleaseEnterShipping: {
+    id: 'AddListing.pleaseEnterShipping',
+    defaultMessage: 'Please enter shipping'
   }
 });
 
