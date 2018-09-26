@@ -122,8 +122,11 @@ const messages = defineMessages({
   [ChainTypes.operations.founder_bonus_operation]: {
     id: 'RecentTransactions.developerBonus',
     defaultMessage: 'DEVELOPER BONUS'
+  },
+  [ChainTypes.operations.vesting_balance_withdraw]: {
+    id: 'RecentTransaction.vestingWithdraw',
+    defaultMessage: 'VESTING WITHDRAW'
   }
-
 });
 
 
