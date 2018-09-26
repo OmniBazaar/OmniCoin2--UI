@@ -151,7 +151,7 @@ class Exchange extends Component {
   getBtcMaxValidator = () => {
     const { formatMessage } = this.props.intl;
     const { wallet } = this.props.exchangeForm;
-    return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+    return numericality({ '<': 20000, msg: formatMessage(messages.maximumAmountAvailable, {
         amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
     })});
     // if (wallet >= 0) {
@@ -168,7 +168,7 @@ class Exchange extends Component {
 
   getETHMaxValidator = () => {
     const { formatMessage } = this.props.intl;
-    return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+    return numericality({ '<': 20000, msg: formatMessage(messages.maximumAmountAvailable, {
         amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
     })});
   };
