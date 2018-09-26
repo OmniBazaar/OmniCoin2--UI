@@ -70,6 +70,7 @@ class Listing extends Component {
     }, 100);
     this.props.listingActions.getFavorites();
     this.props.listingActions.isFavorite(this.props.match.params.id);
+    this.props.transferActions.setBuyerAddress(null);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -358,8 +359,8 @@ class Listing extends Component {
     this.setState({addressModalOpen: false});
   }
 
-  onSaveBuyerAddress(address) {
-    this.props.transferActions.setBuyerAddress(address);
+  onSaveBuyerAddress(address, saveAsDefault) {
+    this.props.transferActions.setBuyerAddress(address, saveAsDefault);
     this.buyItem();
   }
 

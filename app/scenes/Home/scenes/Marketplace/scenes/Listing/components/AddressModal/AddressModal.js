@@ -11,6 +11,7 @@ import ConfirmationModal from '../../../../../../../../components/ConfirmationMo
 
 import CountryDropdown from '../../scenes/AddListing/components/CountryDropdown/CountryDropdown';
 import StateDropdown from '../../scenes/AddListing/components/StateDropdown/StateDropdown';
+import Checkbox from '../../scenes/AddListing/components/Checkbox/Checkbox';
 import {
   InputField,
   makeValidatableField
@@ -33,6 +34,7 @@ class AddressModal extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.isOpen && !this.props.isOpen) {
       this.props.reset();
+      this.props.initialize(nextProps.transfer.defaultShippingAddress);
     }
   }
 
@@ -41,7 +43,8 @@ class AddressModal extends Component {
   }
 
   submit(values) {
-    this.props.onSave(values);
+    const { saveAsDefault, ...data } = values; 
+    this.props.onSave(data, saveAsDefault);
   }
 
   render() {
@@ -129,6 +132,15 @@ class AddressModal extends Component {
                     validate={[requiredFieldValidator]}
                   />
                 </Grid.Column>
+                <Grid.Column width={5} className='default-check'>
+                  <Field
+                    name="saveAsDefault"
+                    component={Checkbox}
+                    props={{
+                      label: formatMessage(messages.saveAsDefault)
+                    }}
+                  />
+                </Grid.Column>
               </Grid.Row>
 
               <Grid.Row>
@@ -177,6 +189,7 @@ export default compose(
   connect(
     state => ({
       formValues: getFormValues('addressForm')(state),
+      transfer: state.default.transfer
     }),
     dispatch => ({
       formActions: bindActionCreators({
