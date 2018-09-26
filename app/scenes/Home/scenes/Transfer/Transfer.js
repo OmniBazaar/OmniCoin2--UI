@@ -430,16 +430,18 @@ class Transfer extends Component {
   renderCurrencyField = ({
     input, options, disabled
   }) => (
+    <div className="transfer-input">
       <Select
-        className="textfield currency-dropdown-cont"
-        value={this.props.transfer.transferCurrency}
-        options={options}
-        disabled={disabled}
-        onChange={(param, data) => {
-          input.onChange(data.value);
-          this.onChangeCurrency(data);
-        }}
-      />
+          className="textfield"
+          value={this.props.transfer.transferCurrency}
+          options={options}
+          disabled={disabled}
+          onChange={(param, data) => {
+            input.onChange(data.value);
+            this.onChangeCurrency(data);
+          }}
+        />
+    </div>
     );
 
   renderDealRatingField = ({
