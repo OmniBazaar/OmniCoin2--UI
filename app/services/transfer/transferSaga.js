@@ -187,7 +187,8 @@ function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCoun
     if (listingDetail[key]) {
       purchaseObject.weightAndSize = {
         ...purchaseObject.weightAndSize,
-        [key]: listingDetail[key]
+        [key]: listingDetail[key],
+        [`${key}_unit`]: listingDetail[`${key}_unit`]
       };
     }
   });

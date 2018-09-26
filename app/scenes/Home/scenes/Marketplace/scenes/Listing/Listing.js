@@ -27,6 +27,7 @@ import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from '../../../../../../services/utils';
+import { getWeightUnit, getSizeUnit } from './utils';
 import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
@@ -345,7 +346,12 @@ class Listing extends Component {
   };
 
   onBuyClick() {
-    this.setState({addressModalOpen: true});
+    const { listingDetail } = this.props.listing;
+    if (listingDetail.no_shipping_address_required) {
+      this.buyItem();
+    } else {
+      this.setState({addressModalOpen: true});
+    }
   }
 
   onCancelBuyerAddress() {
@@ -592,30 +598,54 @@ class Listing extends Component {
           listingDetail.weight &&
           <div>
             <span>{formatMessage(listingFormMessages.weight)}:</span>
-            {listingDetail.weight} {formatMessage(listingFormMessages.ounce).toLowerCase()}
+            {listingDetail.weight} {formatMessage(getWeightUnit(listingDetail)).toLowerCase()}
           </div>
         }
         {
           listingDetail.width &&
           <div>
             <span>{formatMessage(listingFormMessages.width)}:</span>
-            {listingDetail.width} {formatMessage(listingFormMessages.inches).toLowerCase()}
+            {listingDetail.width} {formatMessage(getSizeUnit(listingDetail, 'width_unit')).toLowerCase()}
           </div>
         }
         {
           listingDetail.height &&
           <div>
             <span>{formatMessage(listingFormMessages.height)}:</span>
-            {listingDetail.height} {formatMessage(listingFormMessages.inches).toLowerCase()}
+            {listingDetail.height} {formatMessage(getSizeUnit(listingDetail, 'height_unit')).toLowerCase()}
           </div>
         }
         {
           listingDetail.length &&
           <div>
             <span>{formatMessage(listingFormMessages.length)}:</span>
-            {listingDetail.length} {formatMessage(listingFormMessages.inches).toLowerCase()}
+            {listingDetail.length} {formatMessage(getSizeUnit(listingDetail, 'length_unit')).toLowerCase()}
           </div>
         }
+      </div>
+    );
+  }
+
+  renderShipping() {
+    const { listingDetail } = this.props.listing;
+    const { formatMessage } = this.props.intl;
+
+    if (!listingDetail || !listingDetail.shipping_description) {
+      return null;
+    }
+
+    const contents = [];
+    listingDetail.shipping_description.split("\n").forEach((line, i) => {
+      if (i > 0) {
+        contents.push(<br/>);
+      }
+      contents.push(line);
+    });
+
+    return (
+      <div className="shipping">
+        <span className="title">{formatMessage(listingFormMessages.shipping)}</span>
+        <p className="description">{contents}</p>
       </div>
     );
   }
@@ -628,6 +658,14 @@ class Listing extends Component {
       return null;
     }
 
+    const descriptionContents = [];
+    listingDetail.description.split("\n").forEach((line, i) => {
+      if (i > 0) {
+        descriptionContents.push(<br/>);
+      }
+      descriptionContents.push(line);
+    });
+
     return [
       <Breadcrumb category={listingDetail.category} subCategory={listingDetail.subcategory} />,
       <div className="listing-body detail">
@@ -636,8 +674,9 @@ class Listing extends Component {
       </div>,
       <div className="listing-description">
         <span className="title">{formatMessage(messages.itemDescription)}</span>
-        <p className="description">{listingDetail.description}</p>
+        <p className="description">{descriptionContents}</p>
       </div>,
+      this.renderShipping(),
       this.renderWeightAndSize()
     ];
   }
