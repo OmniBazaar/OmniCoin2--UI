@@ -3,6 +3,7 @@ import {purchaseInfoSubject} from "../../../../services/mail/mailSaga";
 import mailMessages from "./messages";
 import listingFormMessages from '../Marketplace/scenes/Listing/scenes/AddListing/messages';
 import { getStoredCurrentUser } from "../../../../services/blockchain/auth/services";
+import { getWeightUnit, getSizeUnit } from '../Marketplace/scenes/Listing/utils';
 
 export function getSubjectFromMessage(message, formatMessage) {
   const { username } = getStoredCurrentUser();
@@ -61,16 +62,16 @@ export function getBodyFromMessage(message, formatMessage) {
     if (body.weightAndSize) {
       result += `\n${formatMessage(listingFormMessages.weightAndSize)}:`;
       if (body.weightAndSize.weight) {
-        result += `\n  ${formatMessage(listingFormMessages.weight)}: ${body.weightAndSize.weight} ${formatMessage(listingFormMessages.ounce).toLowerCase()}`;
+        result += `\n  ${formatMessage(listingFormMessages.weight)}: ${body.weightAndSize.weight} ${formatMessage(getWeightUnit(body.weightAndSize)).toLowerCase()}`;
       }
       if (body.weightAndSize.width) {
-        result += `\n  ${formatMessage(listingFormMessages.width)}: ${body.weightAndSize.width} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
+        result += `\n  ${formatMessage(listingFormMessages.width)}: ${body.weightAndSize.width} ${formatMessage(getSizeUnit(body.weightAndSize, 'width_unit')).toLowerCase()}`;
       }
       if (body.weightAndSize.height) {
-        result += `\n  ${formatMessage(listingFormMessages.height)}: ${body.weightAndSize.height} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
+        result += `\n  ${formatMessage(listingFormMessages.height)}: ${body.weightAndSize.height} ${formatMessage(getSizeUnit(body.weightAndSize, 'height_unit')).toLowerCase()}`;
       }
       if (body.weightAndSize.length) {
-        result += `\n  ${formatMessage(listingFormMessages.length)}: ${body.weightAndSize.length} ${formatMessage(listingFormMessages.inches).toLowerCase()}`;
+        result += `\n  ${formatMessage(listingFormMessages.length)}: ${body.weightAndSize.length} ${formatMessage(getSizeUnit(body.weightAndSize, 'length_unit')).toLowerCase()}`;
       }
     }
 
