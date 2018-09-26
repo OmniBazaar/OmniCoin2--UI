@@ -428,6 +428,10 @@ const messages = defineMessages({
   pleaseEnterShipping: {
     id: 'AddListing.pleaseEnterShipping',
     defaultMessage: 'Please enter shipping'
+  },
+  saveAsDefault: {
+    id: 'AddListing.saveAsDefault',
+    defaultMessage: 'Save as default'
   }
 });
 

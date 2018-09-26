@@ -275,7 +275,7 @@ class Transfer extends Component {
     const listingId = this.getListingId();
     if (listingId) {
       const { listingDetail } = this.props.listing;
-      if (listingDetail.shipping_price_included || !listingDetail.weight) {
+      if (listingDetail.shipping_price_included || listingDetail.no_shipping_address_required || !listingDetail.weight) {
         return;
       }
 
@@ -518,6 +518,7 @@ class Transfer extends Component {
 
   renderShippingContent() {
     const { listingDetail } = this.props.listing;
+
     const { shipping } = this.props;
 
     if (shipping.loading) {
@@ -550,6 +551,11 @@ class Transfer extends Component {
   renderShipping() {
     const listingId = this.getListingId();
     if (!listingId) {
+      return null;
+    }
+
+    const { listingDetail } = this.props.listing;
+    if (listingDetail.no_shipping_address_required) {
       return null;
     }
 

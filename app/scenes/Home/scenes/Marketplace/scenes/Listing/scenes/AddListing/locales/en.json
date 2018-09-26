@@ -88,5 +88,6 @@
   "AddListing.shipping": "Shipping",
   "AddListing.noShippingAddressRequired": "No shipping address required",
   "AddListing.kilograms": "Kilograms",
-  "AddListing.centimeters": "Centimeters"
+  "AddListing.centimeters": "Centimeters",
+  "AddListing.saveAsDefault": "Save as default"
 }
