@@ -43,6 +43,15 @@ import {
   setBtcAddress,
   setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
+import {
+  requiredFieldValidator,
+  numericFieldValidator,
+  allowBlankNumericFieldValidator,
+  omnicoinFieldValidator,
+  bitcoinFieldValidator,
+  ethereumFieldValidator,
+  fiatFieldValidator
+} from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
 import cn from 'classnames';
@@ -54,16 +63,7 @@ import { weightUnits, sizeUnits } from  './constants';
 
 const contactOmniMessage = 'OmniMessage';
 
-const requiredFieldValidator = required({ message: messages.fieldRequired });
-const numericFieldValidator = numericality({ message: messages.fieldNumeric });
-const allowBlankNumericFieldValidator = numericality({
-  allowBlank: true,
-  message: messages.fieldNumeric
-});
-const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
-const bitcoinFieldValidator = numericality({ '>=': 0.00001, msg: messages.bitcoinFieldValidator });
-const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
-const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldValidator });
+
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
