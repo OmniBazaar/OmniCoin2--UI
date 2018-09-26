@@ -73,7 +73,8 @@ class Exchange extends Component {
     this.props.initialize({
       currency: currencyOptions[0].value,
       amount: 0
-    })
+    });
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -102,6 +103,12 @@ class Exchange extends Component {
       options={options}
       onChange={(param, data) => {
         input.onChange(data.value);
+        if (data.value === 'ethereum') {
+          if (!this.props.ethereum.privateKey) {
+            const { formatMessage } = this.props.intl;
+            toastr.warning(formatMessage(messages.warning), formatMessage(messages.walletNotConnected));
+          }
+        }
       }}
     />
   );
