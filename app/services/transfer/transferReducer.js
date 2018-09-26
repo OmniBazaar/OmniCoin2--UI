@@ -13,8 +13,11 @@ import {
   ethereumTransfer,
   ethereumTransferSucceeded,
   ethereumTransferFailed,
-  setBuyerAddress
+  setBuyerAddress,
+  loadDefaultShippingAddress
 } from './transferActions';
+
+import { getStoredShippingAddress, storeShippingAddress } from './services'
 
 const defaultState = {
   from_name: '',
@@ -32,7 +35,8 @@ const defaultState = {
   gettingCommonEscrows: false,
   commonEscrows: [],
   transferCurrency: 'omnicoin',
-  buyerAddress: null
+  buyerAddress: null,
+  defaultShippingAddress: {}
 };
 
 const reducer = handleActions({
@@ -137,10 +141,26 @@ const reducer = handleActions({
     gettingCommonEscrows: false,
     error
   }),
-  [setBuyerAddress](state, { payload: { address } }) {
+  [setBuyerAddress](state, { payload: { address, saveAsDefault } }) {
+    if (saveAsDefault) {
+      storeShippingAddress(address);
+      return {
+        ...state,
+        buyerAddress: address,
+        defaultShippingAddress: address
+      };
+    }
+
     return {
       ...state,
       buyerAddress: address
+    };
+  },
+  [loadDefaultShippingAddress](state) {
+    const defaultShippingAddress = getStoredShippingAddress();
+    return {
+      ...state,
+      defaultShippingAddress
     };
   }
 }, defaultState);
