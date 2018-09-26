@@ -15,7 +15,9 @@
       }
 
       .exchange-input {
-        display: flex;
+        &.currency {
+          display: flex;
+        }
         flex: 3;
         position: relative;
 
