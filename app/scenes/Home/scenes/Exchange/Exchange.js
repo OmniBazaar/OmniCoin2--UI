@@ -108,6 +108,9 @@ class Exchange extends Component {
             const { formatMessage } = this.props.intl;
             toastr.warning(formatMessage(messages.warning), formatMessage(messages.walletNotConnected));
           }
+        } else if (this.props.bitcoin.wallets.length === 0) {
+            const { formatMessage } = this.props.intl;
+            toastr.warning(formatMessage(messages.warning), formatMessage(messages.walletNotConnected));
         }
       }}
     />
@@ -148,22 +151,25 @@ class Exchange extends Component {
   getBtcMaxValidator = () => {
     const { formatMessage } = this.props.intl;
     const { wallet } = this.props.exchangeForm;
-    if (wallet >= 0) {
-      const w = this.props.bitcoin.wallets[wallet];
-      return numericality({ '<': w.balance / SATOSHI_IN_BTC, msg: formatMessage(messages.maximumAmountAvailable, {
-          amount: w.balance / SATOSHI_IN_BTC
-      })});
-    } else {
-      return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
-          amount: 0
-      })});
-    }
+    return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+        amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
+    })});
+    // if (wallet >= 0) {
+    //   const w = this.props.bitcoin.wallets[wallet];
+    //   return numericality({ '<': w.balance / SATOSHI_IN_BTC, msg: formatMessage(messages.maximumAmountAvailable, {
+    //       amount: w.balance / SATOSHI_IN_BTC
+    //   })});
+    // } else {
+    //   return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
+    //       amount: 0
+    //   })});
+    // }
   };
 
   getETHMaxValidator = () => {
     const { formatMessage } = this.props.intl;
     return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
-        amount: this.props.ethereum.balance / WEI_IN_ETH
+        amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
     })});
   };
 
