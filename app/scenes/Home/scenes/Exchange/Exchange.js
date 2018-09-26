@@ -12,7 +12,7 @@ import {
 import {
   Button,
   Form,
-  Select
+  Select,
 } from 'semantic-ui-react';
 import {
   required,
@@ -189,7 +189,7 @@ class Exchange extends Component {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
     return (
-      <div>
+      [
         <div className="section">
           <p className="title">{formatMessage(messages.from)}</p>
           <div className="form-group">
@@ -205,7 +205,7 @@ class Exchange extends Component {
             </div>
             <div className="col-1" />
           </div>
-        </div>
+        </div>,
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.amount)}*</span>
@@ -225,7 +225,7 @@ class Exchange extends Component {
             />
             <div className="col-1" />
           </div>
-        </div>
+        </div>,
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
@@ -233,7 +233,7 @@ class Exchange extends Component {
             <div className="col-2" />
           </div>
         </div>
-      </div>
+      ]
     );
   }
 
@@ -290,12 +290,15 @@ class Exchange extends Component {
               <div className="section">
                 <div className="form-group">
                   <span>{formatMessage(messages.currency)}</span>
-                  <Field
-                    type="text"
-                    name="currency"
-                    options={currencyOptions}
-                    component={this.renderCurrencyField}
-                  />
+                  <div className="exchange-input">
+                    <Field
+                      type="text"
+                      name="currency"
+                      className="textfield1"
+                      options={currencyOptions}
+                      component={this.renderCurrencyField}
+                    />
+                  </div>
                   <div className="col-1" />
                 </div>
               </div>
