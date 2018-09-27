@@ -767,16 +767,18 @@ class Transfer extends Component {
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
             <span>{formatMessage(messages.bitcoinAddress)}*</span>
-            <Field
-              type="text"
-              name="toAddress"
-              placeholder={formatMessage(messages.pleaseEnter)}
-              component="input"
-              className="textfield currency-dropdown-cont"
-              validate={[
-                required({ message: formatMessage(messages.fieldRequired) })
-              ]}
-            />
+            <div className="transfer-input">
+              <Field
+                type="text"
+                name="toAddress"
+                placeholder={formatMessage(messages.pleaseEnter)}
+                component="input"
+                className="textfield currency-dropdown-cont"
+                validate={[
+                  required({ message: formatMessage(messages.fieldRequired) })
+                ]}
+              />
+            </div>
             <div className="col-1" />
           </div>
         </div>
