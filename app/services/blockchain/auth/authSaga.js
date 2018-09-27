@@ -27,6 +27,7 @@ import * as AuthApi from './AuthApi';
 import { SubmissionError } from 'redux-form';
 import { getAuthHeaders } from '../../listing/apis';
 import { setup } from "../../accountSettings/accountActions";
+import isOnline from 'is-online';
 
 
 const messages = defineMessages({
@@ -130,6 +131,10 @@ function* signup(action) {
   const macAddress = localStorage.getItem('macAddress');
   const harddriveId = localStorage.getItem('hardDriveId');
   try {
+    let online = yield isOnline();
+    if (!online) {
+      throw new Error("There is not internet connection. Please try again.")
+    }
     const referrerAccount = yield Apis.instance().db_api().exec('get_account_by_name', [referrer]);
 
     if (referrer) {
