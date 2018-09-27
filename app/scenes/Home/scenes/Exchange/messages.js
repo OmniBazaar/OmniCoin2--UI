@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   errorExchange: {
     id: 'Exchange.errorExchange',
-    defaultMessage: 'An error occured'
+    defaultMessage: 'Not enough funds'
   },
   walletNotConnected: {
     id: 'Exchange.walletNotConnected',
