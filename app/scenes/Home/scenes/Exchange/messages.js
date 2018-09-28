@@ -65,6 +65,10 @@ const messages = defineMessages({
     id: 'Exchange.maximumAmountAvailable',
     defaultMessage: 'Maximum amount available is {amount}'
   },
+  minimumAmount: {
+    id: 'Exchange.minimumAmount',
+    defaultMessage: 'Minimum amount is {amount}'
+  },
   warning: {
     id: 'Exchange.warning',
     defaultMessage: 'Warning'

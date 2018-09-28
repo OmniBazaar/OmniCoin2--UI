@@ -8,6 +8,9 @@ import {
   formValueSelector,
   change,
   initialize,
+  touch,
+  blur,
+  submit
 } from 'redux-form';
 import {
   Button,
@@ -16,10 +19,12 @@ import {
 } from 'semantic-ui-react';
 import {
   required,
-  numericality
+  numericality,
+  addValidator
 } from 'redux-form-validators';
 import cn from 'classnames';
 import { toastr } from 'react-redux-toastr';
+import ethers from 'ethers';
 
 import './exchange.scss';
 
@@ -57,6 +62,76 @@ const currencyOptions = [
   }
 ];
 
+const ethAmountValidator = addValidator({
+  validator: (option, value, allValues) => {
+    const max = ethers.utils.parseEther(option.max + '');
+    let eth;
+    try {
+      eth = ethers.utils.parseEther(value + '')
+    } catch (err) {
+      return {
+        ...messages.minimumAmount,
+        values: {
+          amount: '0.000000000000000001'
+        }
+      }
+    }
+    
+    if (eth.gte(max)) {
+      return {
+        ...messages.maximumAmountAvailable,
+        values: {
+          amount: option.max
+        }
+      }
+    }
+  }
+});
+
+const validate = values => {
+  const { currency, wallet, amount } = values;
+  const errors = {};
+
+  if (currency === 'bitcoin') {
+    const validators = [
+      requiredFieldValidator,
+      numericFieldValidator,
+      bitcoinFieldValidator
+    ];
+
+    for (let i = 0; i < validators.length; i++) {
+      const err = validators[i](amount);
+      if (err) {
+        errors.amount = err;
+        return errors;
+      }
+    }
+
+    if (typeof wallet === 'undefined' || wallet === null || wallet < 0) {
+      return;
+    }
+
+    const walletData = wallets.filter(w => w.index === wallet)[0];
+    if (!walletData) {
+      return;
+    }
+
+    const max = walletData.balance / SATOSHI_IN_BTC;
+    const maxValueValidator = numericality({ '<': max, msg: formatMessage(messages.maximumAmountAvailable, {
+        amount: max 
+    })});
+    const maxErr = maxValueValidator(amount);
+    if (maxErr) {
+      errors.amount = maxErr;
+    }
+  }
+
+  return errors
+}
+
+let wallets = [];
+let formatMessage;
+
 class Exchange extends Component {
 
   state = {
@@ -74,7 +149,8 @@ class Exchange extends Component {
       currency: currencyOptions[0].value,
       amount: 0
     });
-
+    wallets = this.props.bitcoin.wallets;
+    formatMessage = this.props.intl.formatMessage;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -92,6 +168,10 @@ class Exchange extends Component {
       }
       this.setState({ isPromptVisible: false });
       this.props.reset();
+    }
+
+    if (nextProps.bitcoin.wallets !== wallets) {
+      wallets = nextProps.bitcoin.wallets;
     }
   }
 
@@ -148,31 +228,6 @@ class Exchange extends Component {
     />
   );
 
-  getBtcMaxValidator = () => {
-    const { formatMessage } = this.props.intl;
-    const { wallet } = this.props.exchangeForm;
-    return numericality({ '<': 20000, msg: formatMessage(messages.maximumAmountAvailable, {
-        amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
-    })});
-    // if (wallet >= 0) {
-    //   const w = this.props.bitcoin.wallets[wallet];
-    //   return numericality({ '<': w.balance / SATOSHI_IN_BTC, msg: formatMessage(messages.maximumAmountAvailable, {
-    //       amount: w.balance / SATOSHI_IN_BTC
-    //   })});
-    // } else {
-    //   return numericality({ '<': 0, msg: formatMessage(messages.maximumAmountAvailable, {
-    //       amount: 0
-    //   })});
-    // }
-  };
-
-  getETHMaxValidator = () => {
-    const { formatMessage } = this.props.intl;
-    return numericality({ '<': 20000, msg: formatMessage(messages.maximumAmountAvailable, {
-        amount: 20000 // this.props.ethereum.balance / WEI_IN_ETH
-    })});
-  };
-
   submitTransfer(values) {
     const { currency } = this.props.exchangeForm;
     const { formatMessage } = this.props.intl;
@@ -184,6 +239,7 @@ class Exchange extends Component {
       this.props.exchangeActions.exchangeEth(privateKey, values.amount, formatMessage);
     }
   }
+
 
   renderBitcoinForm() {
     const { formatMessage } = this.props.intl;
@@ -216,12 +272,6 @@ class Exchange extends Component {
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="BTC"
-              validate={[
-                requiredFieldValidator,
-                numericFieldValidator,
-                bitcoinFieldValidator,
-                this.getBtcMaxValidator()
-              ]}
             />
             <div className="col-1" />
           </div>
@@ -256,7 +306,7 @@ class Exchange extends Component {
                 requiredFieldValidator,
                 numericFieldValidator,
                 ethereumFieldValidator,
-                this.getETHMaxValidator()
+                ethAmountValidator({max: this.props.ethereum.balance})
               ]}
             />
             <div className="col-1" />
@@ -341,6 +391,15 @@ export default compose(
       changeFieldValue: (field, value) => {
         dispatch(change('exchangeForm', field, value));
       },
+      blurField: (field, value) => {
+        dispatch(blur('exchangeForm', field, value));
+      },
+      touch: (field)=>{
+        dispatch(touch('exchangeForm', field));
+      },
+      submit: () => {
+        dispatch(submit('exchangeForm'));
+      },
       exchangeActions: bindActionCreators({
         exchangeEth,
         exchangeBtc
@@ -353,7 +412,8 @@ export default compose(
   reduxForm({
     form: 'exchangeForm',
     keepDirtyOnReinitialize: true,
-    enableReinitialize: true,
+    enableReinitialize: false,
     destroyOnUnmount: true,
+    validate
   })
 )(injectIntl(Exchange));
