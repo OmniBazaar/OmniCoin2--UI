@@ -21,6 +21,16 @@ import path from 'path';
 import sudo from 'sudo-prompt';
 import kill from 'kill-port';
 import log from 'electron-log'; // do not remove
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: "omnibazaarerror@gmail.com",
+    pass: "klRtm45Js"
+  }
+});
+
 
 let mainWindow = null;
 
@@ -128,6 +138,7 @@ const killNode = async () => {
     await kill(nodePort);
   }
 };
+
 
 const runNode = async () => {
   let path = getNodeDirDevPath();
@@ -321,6 +332,21 @@ app.on('ready', async () => {
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
   ipcMain.on('exit', () => app.quit());
+  ipcMain.on('report-error', (event, errorLog, username) => {
+    const mailOptions = {
+      from: 'sender@email.com',
+      to: 'swoopyyy@gmail.com',
+      subject: 'Omnibazar error report - ' + username,
+      html: errorLog
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+      if(err)
+        console.log(err);
+      else
+        console.log(info);
+    });
+  });
 
   mainWindow = new BrowserWindow({
     show: false,

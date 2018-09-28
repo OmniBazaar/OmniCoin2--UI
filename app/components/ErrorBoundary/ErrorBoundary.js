@@ -3,9 +3,11 @@ import { Button } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import log from 'electron-log';
+import { ipcRenderer } from 'electron';
 
 import Background from '../Background/Background';
 import './error-boundary.scss';
+import {getStoredCurrentUser} from "../../services/blockchain/auth/services";
 
 
 const messages = defineMessages({
@@ -29,6 +31,7 @@ class ErrorBoundary extends Component {
   };
 
   componentDidCatch(error, info) {
+
     this.setState({ hasError: true });
     const { history } = this.props;
     history.listen((location, action) => {
@@ -38,6 +41,9 @@ class ErrorBoundary extends Component {
         });
       }
     });
+
+    const user = getStoredCurrentUser();
+    ipcRenderer.send('report-error', error.stack, user.username);
     log.warn(error, info);
   }
 
