@@ -908,7 +908,9 @@ class Transfer extends Component {
   }
 
   onChangeCurrency = (data) => {
-    this.setState({ isPromptVisible: true });
+    if (this.props.transfer.amount) {
+      this.setState({ isPromptVisible: true });
+    }
     const { formatMessage } = this.props.intl;
     this.props.transferActions.setCurrency(data.value);
   };
