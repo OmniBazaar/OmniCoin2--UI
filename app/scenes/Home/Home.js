@@ -124,6 +124,7 @@ class Home extends Component {
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);
     this.props.listingActions.checkPublishersAlive();
     this.props.authActions.referralBonus();
+    this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
     this.mailSubscribe(currentUser);
   }
 
@@ -437,10 +438,23 @@ Home.propTypes = {
     getIdentityVerificationStatus: PropTypes.func,
     getAccount: PropTypes.func,
     logout: PropTypes.func,
-    requestAppVersion: PropTypes.func
+    requestAppVersion: PropTypes.func,
+    referralBonus: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func
+  }).isRequired,
+  bitcoinActions: PropTypes.shape({
+    getWallets: PropTypes.func
+  }).isRequired,
+  ethereumActions: PropTypes.shape({
+    getEthereumWallets: PropTypes.func
+  }).isRequired,
+  listingActions: PropTypes.shape({
+    loadListingDefault: PropTypes.func
+  }).isRequired,
+  connectionActions: PropTypes.shape({
+    restartNodeIfExists: PropTypes.func
   }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
