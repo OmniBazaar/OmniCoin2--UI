@@ -391,15 +391,6 @@ export default compose(
       changeFieldValue: (field, value) => {
         dispatch(change('exchangeForm', field, value));
       },
-      blurField: (field, value) => {
-        dispatch(blur('exchangeForm', field, value));
-      },
-      touch: (field)=>{
-        dispatch(touch('exchangeForm', field));
-      },
-      submit: () => {
-        dispatch(submit('exchangeForm'));
-      },
       exchangeActions: bindActionCreators({
         exchangeEth,
         exchangeBtc

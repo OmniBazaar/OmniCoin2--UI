@@ -32,7 +32,6 @@ export const sendBTCMail = (xomAmount, btcAmount, txid, formatMessage) => {
 };
 
 export const sendETHMail = (xomAmount, ethAmount, txid, formatMessage) => {
-  console.log({xomAmount, ethAmount, txid, formatMessage});
   const currentUser = getStoredCurrentUser();
   sendMail(
     currentUser.username,
