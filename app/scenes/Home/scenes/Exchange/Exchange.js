@@ -7,10 +7,7 @@ import {
   reduxForm,
   formValueSelector,
   change,
-  initialize,
-  touch,
-  blur,
-  submit
+  initialize
 } from 'redux-form';
 import {
   Button,
