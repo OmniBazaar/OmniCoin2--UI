@@ -198,6 +198,11 @@
 
   .shipping {
     padding-top: 0;
+
+    .no-address-required {
+      margin-top: 10px;
+      font-weight: bold;
+    }
   }
 
   .listing-weight-size {

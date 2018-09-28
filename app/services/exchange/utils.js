@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   exchangeBodyETH: {
     id: 'ExchangeService.exchangeBodyETH',
-    defaultMessage: 'You requested {xomAmount} XOM for {cryptoAmount} ETH.\n Transaction hash: {txhash}'
+    defaultMessage: 'You requested {xomAmount} XOM for {cryptoAmount} ETH.\n Transaction hash: {txid}'
   }
 });
 

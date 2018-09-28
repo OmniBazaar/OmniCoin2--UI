@@ -647,6 +647,12 @@ class Listing extends Component {
       <div className="shipping">
         <span className="title">{formatMessage(listingFormMessages.shipping)}</span>
         <p className="description">{contents}</p>
+        { 
+          listingDetail.no_shipping_address_required && 
+          <div className='no-address-required'>
+            {formatMessage(listingFormMessages.noShippingAddressRequired)}
+          </div>
+        }
       </div>
     );
   }
