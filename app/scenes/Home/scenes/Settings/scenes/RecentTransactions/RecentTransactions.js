@@ -310,19 +310,17 @@ class RecentTransactions extends Component {
                           {/* <TableCell className="balance"> */}
                           {/* {row.balance} */}
                           {/* </TableCell> */}
-                          {(coinType === CoinTypes.OMNI_COIN || coinType === CoinTypes.BIT_COIN) &&
-                            <TableCell>
-                              <span
-                                className="link"
-                                onClick={() => this.onClickDetails(row.id)}
-                                onKeyDown={() => this.onClickDetails(row.id)}
-                                role="link"
-                                tabIndex={0}
-                              >
-                                {formatMessage(messages.details)}
-                              </span>
-                            </TableCell>
-                          }
+                          <TableCell>
+                            <span
+                              className="link"
+                              onClick={() => this.onClickDetails(row.id)}
+                              onKeyDown={() => this.onClickDetails(row.id)}
+                              role="link"
+                              tabIndex={0}
+                            >
+                              {formatMessage(messages.details)}
+                            </span>
+                          </TableCell>
                         </TableRow>
                       ))
                     }
