@@ -412,7 +412,7 @@ export default compose(
   reduxForm({
     form: 'exchangeForm',
     keepDirtyOnReinitialize: true,
-    enableReinitialize: false,
+    enableReinitialize: true,
     destroyOnUnmount: true,
     validate
   })
