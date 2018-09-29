@@ -14,8 +14,6 @@ npm run package
 │   setup.iss
 │
 └───witness_node
-    │   genesis.json
-    │   libcurl.dll
     │   libeay32.dll
     │   README.txt
     │   ssleay32.dll
