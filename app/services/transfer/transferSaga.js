@@ -93,7 +93,6 @@ function* omnicoinTransfer({payload: {
     }
   } catch (error) {
     let e = JSON.stringify(error);
-    console.log('ERROR', error);
     if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
       e = 'Not enough funds';
     }
@@ -121,7 +120,6 @@ function* bitcoinTransfer({ payload: {
       });
     }
   } catch (error) {
-    console.log('ERROR', error);
     yield put(bitcoinTransferFailed(error));
   }
 }
@@ -194,9 +192,8 @@ function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCoun
   });
 
   yield put(addPurchase(purchaseObject));
-  yield put(sendPurchaseInfoMail(buyer, seller, JSON.stringify(purchaseObject)));
-  yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
-}
+    yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  }
 
 
 function* createEscrowTransaction({ payload: {
@@ -239,7 +236,6 @@ function* createEscrowTransaction({ payload: {
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
     const errorMsg = error.message.indexOf('Insufficient Balance') !== -1 ? 'Not enough funds' : error.message;
-    console.log('ERROR', error);
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
 }
@@ -263,7 +259,6 @@ function* getCommonEscrows({ payload: { from, to } }) {
     toEscrows = yield Promise.all(toEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id') });
   } catch (error) {
-    console.log('ERROR ', error);
     yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message });
   }
 }
