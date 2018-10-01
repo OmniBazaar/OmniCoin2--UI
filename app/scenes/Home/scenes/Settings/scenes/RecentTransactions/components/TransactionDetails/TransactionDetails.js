@@ -243,10 +243,12 @@ class TransactionDetails extends Component {
                 <span>{formatMessage(messages.block)}</span>
                 <span className="code primary-blue">{detailSelected.blockNum}</span>
               </div>
-              <div className="item">
-                <span>{formatMessage(messages.transaction)}</span>
-                <span className="code">{detailSelected.trxInBlock}</span>
-              </div>
+              {!detailSelected.isEther &&
+                <div className="item">
+                  <span>{formatMessage(messages.transaction)}</span>
+                  <span className="code">{detailSelected.trxInBlock}</span>
+                </div>
+              }
             </div>
           }
 
