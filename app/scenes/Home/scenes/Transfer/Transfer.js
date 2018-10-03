@@ -164,6 +164,13 @@ class Transfer extends Component {
 
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
+    if (listingId) {
+      this.setState({
+        isPromptVisible: true
+      });
+    }
+
     const type = purchaseParams.get('type');
     const price = purchaseParams.get('price');
     const number = purchaseParams.get('number');
