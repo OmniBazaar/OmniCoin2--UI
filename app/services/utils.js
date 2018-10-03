@@ -70,7 +70,7 @@ const coefficients = {
   USDtoAUD: 0.75,
   USDtoJPY: 108.5
 };
-const MINIMUN_AMOUNT = 0.00001;
+const MINIMUN_AMOUNT = 0;
 
 const getAllowedAmount = (amount) => {
   if (amount >= MINIMUN_AMOUNT) {
