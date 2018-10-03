@@ -286,6 +286,14 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     const referrer = localStorage.getItem('referrer');
     const { currentUser } = (yield select()).default.auth;
     yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
+    const { telegramPhoneNumber, email, twitterUsername } = values;
+    const data = {
+      harddriveId,
+      email,
+      telegramPhoneNumber,
+      twitterUsername
+    };
+    yield call(AuthApi.welcomeBonusReceivedUsers, data);
   } catch (error) {
     yield call(reject, new SubmissionError(error.messages));
     yield put(welcomeBonusFailed());

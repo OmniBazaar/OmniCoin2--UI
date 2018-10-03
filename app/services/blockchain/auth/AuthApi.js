@@ -5,6 +5,8 @@ import { wrapRequest } from '../../utils';
 
 const apiURL = 'http://199.250.203.82:5000/api';
 
+// const apiURL = 'http://localhost:5000/api';
+
 const KYCApiURL = 'http://35.171.116.3:5050/api';
 
 
@@ -15,6 +17,15 @@ export const checkBonus = wrapRequest(async (data) => fetch(`${apiURL}/bonus-che
   },
   body: JSON.stringify(data)
 }));
+
+export const welcomeBonusReceivedUsers = wrapRequest(async (data) => fetch(`${apiURL}/welcome-bonus-received-users`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data)
+}));
+
 
 export const getIdentityVerificationStatus = wrapRequest(async (username) => fetch(`${KYCApiURL}/identity-verification-status/${username}`));
 
