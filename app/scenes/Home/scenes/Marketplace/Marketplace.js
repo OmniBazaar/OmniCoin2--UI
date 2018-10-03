@@ -487,7 +487,7 @@ class Marketplace extends Component {
       <div className="market-footer">
         <span className="title">{formatMessage(messages.getOmniCoins)}</span>
         <span className="description">{formatMessage(messages.getOmniCoinsText)}</span>
-        <div>
+        {/* <div>
           <Button
             content={formatMessage(messages.exchangeOne)}
             className="button--secondary"
@@ -498,7 +498,7 @@ class Marketplace extends Component {
             className="button--secondary"
             onClick={() => this.onClickExchangeTwo()}
           />
-        </div>
+        </div> */}
       </div>
     );
   }
