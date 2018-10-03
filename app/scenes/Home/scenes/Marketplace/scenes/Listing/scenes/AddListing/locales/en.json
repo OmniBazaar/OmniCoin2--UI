@@ -89,5 +89,6 @@
   "AddListing.noShippingAddressRequired": "No shipping address required",
   "AddListing.kilograms": "Kilograms",
   "AddListing.centimeters": "Centimeters",
-  "AddListing.saveAsDefault": "Save as default"
+  "AddListing.saveAsDefault": "Save as default",
+  "AddListing.ethereumPriceFieldValidator": "Should be greater or equal to 0.000001"
 }

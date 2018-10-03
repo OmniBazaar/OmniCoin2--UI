@@ -50,7 +50,8 @@ import {
   omnicoinFieldValidator,
   bitcoinFieldValidator,
   ethereumFieldValidator,
-  fiatFieldValidator
+  fiatFieldValidator,
+  ethereumPriceFieldValidator
 } from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
@@ -393,7 +394,7 @@ class ListingForm extends Component {
     } else if (currency === 'BITCOIN') {
       priceValidators.push(bitcoinFieldValidator);
     } else if (currency === 'ETHEREUM') {
-      priceValidators.push(ethereumFieldValidator);
+      priceValidators.push(ethereumPriceFieldValidator);
     } else {
       priceValidators.push(fiatFieldValidator);
     }
@@ -963,12 +964,6 @@ class ListingForm extends Component {
                   label: formatMessage(messages.noShippingAddressRequired)
                 }}
               />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row className="row-section">
-            <Grid.Column width={16}>
-              <span className="title">{formatMessage(messages.weightAndSize)}</span>
             </Grid.Column>
           </Grid.Row>
 

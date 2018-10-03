@@ -13,4 +13,4 @@ export const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, ms
 export const bitcoinFieldValidator = numericality({ '>=': 0.00001, msg: messages.bitcoinFieldValidator });
 export const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
 export const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldValidator });
-
+export const ethereumPriceFieldValidator = numericality({ '>=': 0.000001, msg: messages.ethereumPriceFieldValidator });
