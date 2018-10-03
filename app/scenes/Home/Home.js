@@ -317,7 +317,7 @@ class Home extends Component {
                 <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', 'identity-verification')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
-                    defaultMessage="Identity Verification"
+                    defaultMessage="Whitelist for Token Sale"
                   />
                   <span className="identity-verification-status">
                     {identityVerificationStatus && identityVerificationStatus.verified ? 'Verified' : 'Not Verified'}
