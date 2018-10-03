@@ -940,7 +940,6 @@ class ListingForm extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>{formatMessage(messages.shipping)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
