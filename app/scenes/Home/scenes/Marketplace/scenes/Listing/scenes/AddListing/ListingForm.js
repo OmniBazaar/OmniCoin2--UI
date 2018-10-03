@@ -942,13 +942,13 @@ class ListingForm extends Component {
             <Grid.Column width={4} className="top-align">
               <span>{formatMessage(messages.shipping)}*</span>
             </Grid.Column>
-            <Grid.Column width={12}>
+            <Grid.Column width={10}>
               <Field
                 type="textarea"
                 name="shipping_description"
                 component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnterShipping)}
+                placeholder={formatMessage(messages.enterShippingInformation)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
