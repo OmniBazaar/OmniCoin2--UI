@@ -316,6 +316,17 @@ class ListingForm extends Component {
     this.setState({ keywords });
   }
 
+  onShowEthPriceChange = (e, isShow) => {
+    if (isShow) {
+      const { editingListing, account, auth, ethereum } = this.props;
+      let address = editingListing.ethereum_address;
+      if (!address) {
+        address = account.ethAddress || auth.account.eth_address || ethereum.address
+      }
+      this.props.formActions.change('ethereum_address', address);
+    }
+  }
+
   getImagesData() {
     const { listingImages } = this.props.listing;
 
@@ -604,6 +615,7 @@ class ListingForm extends Component {
                 props={{
                   label: formatMessage(messages.ethereumPrice)
                 }}
+                onChange={this.onShowEthPriceChange}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -652,7 +664,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 validate={[requiredFieldValidator]}
-                value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
               />
             </Grid.Column>
