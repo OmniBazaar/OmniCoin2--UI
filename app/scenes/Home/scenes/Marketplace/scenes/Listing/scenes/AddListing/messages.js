@@ -273,6 +273,10 @@ const messages = defineMessages({
     id: 'AddListing.ethereumFieldValidator',
     defaultMessage: 'Should be greater or equal to 1 wei'
   },
+  ethereumPriceFieldValidator: {
+    id: 'AddListing.ethereumPriceFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.000001'
+  },
   ethereumAddress: {
     id: 'AddListing.ethereumAddress',
     defaultMessage: 'Ethereum address'
