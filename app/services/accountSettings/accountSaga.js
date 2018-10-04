@@ -34,7 +34,6 @@ import { loadListingDefault } from "../listing/listingDefaultsActions";
 import { loadLocalPreferences } from "../preferences/preferencesActions";
 import { checkUpdate } from "../updateNotification/updateNotificationActions";
 import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
-import { loadDefaultShippingAddress } from '../transfer/transferActions';
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -201,7 +200,6 @@ export function* setup() {
     yield put(getLastLoginUserName());
     yield put(loadListingDefault());
     yield put(loadLocalPreferences());
-    yield put(loadDefaultShippingAddress());
     yield put(checkUpdate());
     yield put(publisherCheckUpdate());
     yield put(setupSucceeded());

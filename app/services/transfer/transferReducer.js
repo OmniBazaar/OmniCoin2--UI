@@ -141,9 +141,9 @@ const reducer = handleActions({
     gettingCommonEscrows: false,
     error
   }),
-  [setBuyerAddress](state, { payload: { address, saveAsDefault } }) {
+  [setBuyerAddress](state, { payload: { address, saveAsDefault, username } }) {
     if (saveAsDefault) {
-      storeShippingAddress(address);
+      storeShippingAddress(username, address);
       return {
         ...state,
         buyerAddress: address,
@@ -156,8 +156,8 @@ const reducer = handleActions({
       buyerAddress: address
     };
   },
-  [loadDefaultShippingAddress](state) {
-    const defaultShippingAddress = getStoredShippingAddress();
+  [loadDefaultShippingAddress](state, { payload: { username } }) {
+    const defaultShippingAddress = getStoredShippingAddress(username);
     return {
       ...state,
       defaultShippingAddress

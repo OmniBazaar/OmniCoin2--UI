@@ -78,6 +78,7 @@ import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
 import { checkPublishersAlive } from '../../services/listing/listingActions';
 import { subscribeForMail, mailReceived, loadFolder } from '../../services/mail/mailActions';
+import { loadDefaultShippingAddress } from '../../services/transfer/transferActions';
 import MailTypes from '../../services/mail/mailTypes';
 
 const iconSize = 20;
@@ -125,6 +126,7 @@ class Home extends Component {
     this.props.listingActions.checkPublishersAlive();
     this.props.authActions.referralBonus();
     this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
+    this.props.transferActions.loadDefaultShippingAddress(currentUser.username);
     this.mailSubscribe(currentUser);
   }
 
@@ -404,6 +406,9 @@ export default connect(
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
     ethereumActions: bindActionCreators({ getEthereumWallets }, dispatch),
+    transferActions: bindActionCreators({
+      loadDefaultShippingAddress
+    }, dispatch),
     mailActions: bindActionCreators({
       subscribeForMail,
       mailReceived,
@@ -459,6 +464,9 @@ Home.propTypes = {
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
   }),
+  transferActions: PropTypes.shape({
+    loadDefaultShippingAddress: PropTypes.func
+  }).isRequired,
   mail: PropTypes.shape({
     messages: PropTypes.shape({
       inbox: PropTypes.array,
