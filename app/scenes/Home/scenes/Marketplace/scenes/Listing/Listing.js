@@ -360,7 +360,8 @@ class Listing extends Component {
   }
 
   onSaveBuyerAddress(address, saveAsDefault) {
-    this.props.transferActions.setBuyerAddress(address, saveAsDefault);
+    const { currentUser } = this.props.auth;
+    this.props.transferActions.setBuyerAddress(address, saveAsDefault, currentUser.username);
     this.buyItem();
   }
 

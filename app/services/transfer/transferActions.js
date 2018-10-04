@@ -35,8 +35,8 @@ const {
     ({toEthereumAddress, toName, amount, privateKey, listingId, listingTitle, listingCount }),
   ETHEREUM_TRANSFER_SUCCEEDED: () => ({ }),
   ETHEREUM_TRANSFER_FAILED: (error) => ({ error }),
-  SET_BUYER_ADDRESS: (address, saveAsDefault) => ({ address, saveAsDefault }),
-  LOAD_DEFAULT_SHIPPING_ADDRESS: () => ({})
+  SET_BUYER_ADDRESS: (address, saveAsDefault, username) => ({ address, saveAsDefault, username }),
+  LOAD_DEFAULT_SHIPPING_ADDRESS: (username) => ({ username })
 });
 
 export {
