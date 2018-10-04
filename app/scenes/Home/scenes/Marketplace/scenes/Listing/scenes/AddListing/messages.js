@@ -429,9 +429,9 @@ const messages = defineMessages({
     id: 'AddListing.centimeters',
     defaultMessage: 'Centimeters'
   },
-  pleaseEnterShipping: {
-    id: 'AddListing.pleaseEnterShipping',
-    defaultMessage: 'Please enter shipping'
+  enterShippingInformation: {
+    id: 'AddListing.enterShippingInformation',
+    defaultMessage: 'Enter additional shipping information, instructions or requirements (optional).'
   },
   saveAsDefault: {
     id: 'AddListing.saveAsDefault',
