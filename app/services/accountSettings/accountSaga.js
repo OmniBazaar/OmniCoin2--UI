@@ -75,18 +75,27 @@ export function* accountSubscriber() {
 
 export function* updatePublicData() {
   const { account } = (yield select()).default;
+  const { currentUser } = (yield select()).default.auth;
   const { is_a_processor } = (yield select()).default.auth.account;
+
+  const dbAccount = yield (Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]));
+  
+  const data = {
+    transactionProcessor: is_a_processor ? false : account.transactionProcessor,
+    wantsToVote: account.wantsToVote,
+    is_referrer: account.referrer,
+    is_an_escrow: account.escrow,
+    btc_address: account.btcAddress,
+    eth_address: account.ethAddress,
+  };
+
+  if (dbAccount.is_a_publisher !== account.publisher || dbAccount.publisher_ip !== account.ipAddress) {
+    data['is_a_publisher'] = account.publisher;
+    data['publisher_ip'] = account.publisher ? account.ipAddress : '';
+  }
+
   try {
-    yield updateAccount({
-      transactionProcessor: is_a_processor ? false : account.transactionProcessor,
-      wantsToVote: account.wantsToVote,
-      is_a_publisher: account.publisher,
-      is_referrer: account.referrer,
-      is_an_escrow: account.escrow,
-      publisher_ip: account.ipAddress,
-      btc_address: account.btcAddress,
-      eth_address: account.ethAddress,
-    });
+    yield updateAccount(data);
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
     console.log('ERR', e);
