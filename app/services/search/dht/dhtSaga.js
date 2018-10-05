@@ -276,7 +276,7 @@ export function* getPeersFor({
       });
     }
     // search for "test" keyword when there is no results at all
-    if (peersMap.length === 0) {
+    if (peersMap.length === 0 && !fromSearchMenu) {
       yield put(searchListingsAction("test", 'All', country, state, city, true, null));
     }
   } catch (e) {

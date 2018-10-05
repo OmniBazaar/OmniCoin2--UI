@@ -36,5 +36,9 @@
   "Transfer.transactionID": "Transaction ID",
   "Transfer.maxLength": "Memo must be less than 150 characters.",
   "Transfer.defaultWalletLabel": "Wallet",
-  "Transfer.confirmEthereumCurrency": "Are you sure you want to pay in Ethereum?"
+  "Transfer.confirmEthereumCurrency": "Are you sure you want to pay in Ethereum?",
+  "Transfer.enterBitcoinAddress": "Please enter Bitcoin address",
+  "Transfer.manualEnter": "Enter address manually",
+  "Transfer.privateKey": "Private key WIF",
+  "Transfer.enterPrivateKey": "Please enter private key"
 }

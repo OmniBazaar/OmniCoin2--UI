@@ -27,16 +27,16 @@ const {
     ({ to, amount, memo, reputation, listingId, listingTitle, listingCount }),
   OMNICOIN_TRANSFER_SUCCEEDED: () => ({ }),
   OMNICOIN_TRANSFER_FAILED: (error) => ({ error }),
-  BITCOIN_TRANSFER: (toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount) =>
-    ({ toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount }),
+  BITCOIN_TRANSFER: (toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey) =>
+    ({ toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey }),
   BITCOIN_TRANSFER_SUCCEEDED: () => ({ }),
   BITCOIN_TRANSFER_FAILED: (error) => ({ error }),
   ETHEREUM_TRANSFER: (toEthereumAddress, toName, privateKey, amount, listingId, listingTitle, listingCount) =>
     ({toEthereumAddress, toName, amount, privateKey, listingId, listingTitle, listingCount }),
   ETHEREUM_TRANSFER_SUCCEEDED: () => ({ }),
   ETHEREUM_TRANSFER_FAILED: (error) => ({ error }),
-  SET_BUYER_ADDRESS: (address, saveAsDefault) => ({ address, saveAsDefault }),
-  LOAD_DEFAULT_SHIPPING_ADDRESS: () => ({})
+  SET_BUYER_ADDRESS: (address, saveAsDefault, username) => ({ address, saveAsDefault, username }),
+  LOAD_DEFAULT_SHIPPING_ADDRESS: (username) => ({ username })
 });
 
 export {

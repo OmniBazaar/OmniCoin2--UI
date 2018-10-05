@@ -84,7 +84,7 @@
   "AddListing.length": "Length",
   "AddListing.inches": "Inches",
   "AddListing.shippingPriceIncluded": "Shipping Price Included",
-  "AddListing.pleaseEnterShipping": "Please enter shipping",
+  "AddListing.enterShippingInformation": "Enter additional shipping information, instructions or requirements (optional).",
   "AddListing.shipping": "Shipping",
   "AddListing.noShippingAddressRequired": "No shipping address required",
   "AddListing.kilograms": "Kilograms",

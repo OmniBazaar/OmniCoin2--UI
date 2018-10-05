@@ -21,6 +21,9 @@ import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { $ } from 'moneysafe';
 
+import {
+  InputField
+} from '../../../../components/ValidatableField/ValidatableField';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import ConfirmationModal from '../../../../components/ConfirmationModal/ConfirmationModal';
 import DealRating from '../../../../components/DealRating/DealRating';
@@ -48,6 +51,7 @@ import {
 } from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
+import { MANUAL_INPUT_VALUE } from "../../../../utils/constants";
 
 import messages from './messages';
 
@@ -748,6 +752,7 @@ class Transfer extends Component {
   renderBitCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
+    const { wallet } = this.props.transferForm || {};
 
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const listingId = purchaseParams.get('listing_id');
@@ -769,6 +774,42 @@ class Transfer extends Component {
             </div>
             <div className="col-1" />
           </div>
+          {
+            wallet === MANUAL_INPUT_VALUE && 
+            <div className="form-group">
+              <span>{formatMessage(messages.bitcoinAddress)}</span>
+              <div className="transfer-input">
+                <Field
+                  name="manualBitcoinAddress"
+                  component={InputField}
+                  placeholder={formatMessage(messages.enterBitcoinAddress)}
+                  className="textfield"
+                  validate={[
+                    required({ message: formatMessage(messages.fieldRequired) })
+                  ]}
+                />
+              </div>
+              <div className="col-1" />
+            </div>      
+          }
+          {
+            wallet === MANUAL_INPUT_VALUE && 
+            <div className="form-group">
+              <span>{formatMessage(messages.privateKey)}</span>
+              <div className="transfer-input">
+                <Field
+                  name="bitcoinPrivateKey"
+                  component={InputField}
+                  placeholder={formatMessage(messages.enterPrivateKey)}
+                  className="textfield"
+                  validate={[
+                    required({ message: formatMessage(messages.fieldRequired) })
+                  ]}
+                />
+              </div>
+              <div className="col-1" />
+            </div>      
+          }
         </div>
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
@@ -991,9 +1032,15 @@ class Transfer extends Component {
     password,
     guid,
     wallet,
-    amount
+    amount,
+    manualBitcoinAddress,
+    bitcoinPrivateKey
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
+    if (wallet === MANUAL_INPUT_VALUE) {
+      wallet = manualBitcoinAddress;
+    }
+    
     this.props.transferActions.bitcoinTransfer(
       toAddress,
       purchaseParams.get('seller_name'),
@@ -1003,7 +1050,8 @@ class Transfer extends Component {
       amount,
       purchaseParams.get('listing_id'),
       purchaseParams.get('title'),
-      purchaseParams.get('number')
+      purchaseParams.get('number'),
+      bitcoinPrivateKey
     )
   }
 
@@ -1144,6 +1192,7 @@ export default compose(
         fromName: selector(state, 'fromName'),
         useEscrow: selector(state, 'useEscrow'),
         amount: selector(state, 'amount'),
+        wallet: selector(state, 'wallet')
       }
     }),
     (dispatch) => ({

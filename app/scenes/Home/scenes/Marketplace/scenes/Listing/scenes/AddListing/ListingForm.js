@@ -319,13 +319,23 @@ class ListingForm extends Component {
 
   onShowEthPriceChange = (e, isShow) => {
     if (isShow) {
-      const { editingListing, account, auth, ethereum } = this.props;
-      let address = editingListing.ethereum_address;
-      if (!address) {
-        address = account.ethAddress || auth.account.eth_address || ethereum.address
-      }
-      this.props.formActions.change('ethereum_address', address);
+      this.populateEthAddress();
     }
+  }
+
+  onCurrencyChange = (e, currency) => {
+    if (currency === 'ETHEREUM') {
+      this.populateEthAddress();
+    }
+  }
+
+  populateEthAddress() {
+    const { editingListing, account, auth, ethereum } = this.props;
+    let address = editingListing.ethereum_address;
+    if (!address) {
+      address = account.ethAddress || auth.account.eth_address || ethereum.address
+    }
+    this.props.formActions.change('ethereum_address', address);
   }
 
   getImagesData() {
@@ -575,6 +585,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
+                onChange={this.onCurrencyChange}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -940,15 +951,14 @@ class ListingForm extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>{formatMessage(messages.shipping)}*</span>
             </Grid.Column>
-            <Grid.Column width={12}>
+            <Grid.Column width={10}>
               <Field
                 type="textarea"
                 name="shipping_description"
                 component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnterShipping)}
+                placeholder={formatMessage(messages.enterShippingInformation)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>

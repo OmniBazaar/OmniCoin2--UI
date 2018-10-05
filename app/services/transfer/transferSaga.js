@@ -20,7 +20,8 @@ import {
   bitcoinTransferSucceeded,
   bitcoinTransferFailed,
   ethereumTransferSucceeded,
-  ethereumTransferFailed
+  ethereumTransferFailed,
+  saleBonus as saleBonusAction
 } from "./transferActions";
 
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
@@ -51,6 +52,8 @@ function* omnicoinTransfer({payload: {
   to, amount, memo, reputation, listingId, listingTitle, listingCount
 }}) {
   const { currentUser } = (yield select()).default.auth;
+  let buyer = currentUser.username,
+      seller = to;
   try {
     const [fromAcc, toAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
@@ -82,14 +85,15 @@ function* omnicoinTransfer({payload: {
     yield put(getAccountBalance(fromAcc.toJS()));
     if (listingId) {
       yield addPurchaseAndSendMails({
-        seller: to,
-        buyer: currentUser.username,
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'omnicoin'
       });
+      yield put(saleBonusAction(seller, buyer))
     }
   } catch (error) {
     let e = JSON.stringify(error);
@@ -101,26 +105,35 @@ function* omnicoinTransfer({payload: {
 }
 
 function* bitcoinTransfer({ payload: {
-  toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount
+  toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey
 }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const buyer = currentUser.username,
+          seller = toName;
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
-    yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
+    if (privateKey) {
+      yield call(BitcoinApi.sendTransaction, walletIdx, toBitcoinAddress, privateKey, parseFloat(amount));
+    } else {
+      yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
+    }
+    
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
       yield addPurchaseAndSendMails({
-        seller: toName,
-        buyer: currentUser.username,
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'bitcoin'
       });
+      yield put(saleBonusAction(seller, buyer))
     }
   } catch (error) {
-    yield put(bitcoinTransferFailed(error));
+    console.log(error);
+    yield put(bitcoinTransferFailed({...error}));
   }
 }
 
@@ -129,20 +142,22 @@ function* ethereumTransfer({payload: {
 } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const buyer = currentUser.username,
+          seller = toName;
     yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
     yield put(ethereumTransferSucceeded());
     if (listingId) {
       sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
-
       yield addPurchaseAndSendMails({
-        seller: toName,
-        buyer: currentUser.username,
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'ethereum'
       });
+      yield put(saleBonusAction(seller, buyer))
     }
     console.log("Ether res", res);
   } catch (error) {
