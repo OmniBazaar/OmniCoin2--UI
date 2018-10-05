@@ -172,5 +172,21 @@ export default defineMessages({
   contactSellerForShippingCosts: {
     id: 'Transfer.contactSellerForShippingCosts',
     defaultMessage: 'Contact seller for shipping costs'
+  },
+  enterBitcoinAddress: {
+    id: 'Transfer.enterBitcoinAddress',
+    defaultMessage: 'Please enter Bitcoin address'
+  },
+  manualEnterAddress: {
+    id: 'Transfer.manualEnter',
+    defaultMessage: 'Enter address manually'
+  },
+  privateKey: {
+    id: 'Transfer.privateKey',
+    defaultMessage: 'Private key WIF'
+  },
+  enterPrivateKey: {
+    id: 'Transfer.enterPrivateKey',
+    defaultMessage: 'Please enter private key'
   }
 });
