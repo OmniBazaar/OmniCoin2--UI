@@ -3,10 +3,7 @@
  */
 import { wrapRequest } from '../../utils';
 
-const apiURL = 'http://199.250.203.82:5000/api';
-const KYCApiURL = 'http://35.171.116.3:5050/api';
-
-
+const apiURL = 'http://35.171.116.3:5050/api';
 export const checkBonus = wrapRequest(async (data) => fetch(`${apiURL}/bonus-check`, {
   method: 'POST',
   headers: {
@@ -31,7 +28,7 @@ export const isWelcomeBonusAvailable = wrapRequest(async (data) => fetch(`${apiU
   body: JSON.stringify(data)
 }));
 
-export const getIdentityVerificationStatus = wrapRequest(async (username) => fetch(`${KYCApiURL}/identity-verification-status/${username}`));
+export const getIdentityVerificationStatus = wrapRequest(async (username) => fetch(`${apiURL}/identity-verification-status/${username}`));
 
 const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
 const identityVerificationBaseURL = 'https://test-api.sumsub.com';
