@@ -40,5 +40,9 @@
   "Transfer.shipping": "Shipping",
   "Transfer.shippingCost": "Shipping cost",
   "Transfer.shippingCostIsIncluded": "Shipping cost is included in listing price",
-  "Transfer.contactSellerForShippingCosts": "Contact seller for shipping costs"
+  "Transfer.contactSellerForShippingCosts": "Contact seller for shipping costs",
+  "Transfer.enterBitcoinAddress": "Please enter Bitcoin address",
+  "Transfer.manualEnter": "Enter address manually",
+  "Transfer.privateKey": "Private key WIF",
+  "Transfer.enterPrivateKey": "Please enter private key"
 }
