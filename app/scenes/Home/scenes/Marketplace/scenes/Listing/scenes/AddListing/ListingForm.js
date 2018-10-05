@@ -319,13 +319,23 @@ class ListingForm extends Component {
 
   onShowEthPriceChange = (e, isShow) => {
     if (isShow) {
-      const { editingListing, account, auth, ethereum } = this.props;
-      let address = editingListing.ethereum_address;
-      if (!address) {
-        address = account.ethAddress || auth.account.eth_address || ethereum.address
-      }
-      this.props.formActions.change('ethereum_address', address);
+      this.populateEthAddress();
     }
+  }
+
+  onCurrencyChange = (e, currency) => {
+    if (currency === 'ETHEREUM') {
+      this.populateEthAddress();
+    }
+  }
+
+  populateEthAddress() {
+    const { editingListing, account, auth, ethereum } = this.props;
+    let address = editingListing.ethereum_address;
+    if (!address) {
+      address = account.ethAddress || auth.account.eth_address || ethereum.address
+    }
+    this.props.formActions.change('ethereum_address', address);
   }
 
   getImagesData() {
@@ -575,6 +585,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
+                onChange={this.onCurrencyChange}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
