@@ -1,4 +1,5 @@
 @import '../../styles/index';
+@import '../../styles/colors';
 
 .chain-footer {
   display: flex;
@@ -8,4 +9,13 @@
   font-family: $montserrat;
   width: 100%;
   padding-right: 0.5em;
+  .refresh {
+    color: $primary-blue;
+    margin-right: 5px;
+    :hover {
+      cursor: pointer;
+    }
+  }
 }
+
+
