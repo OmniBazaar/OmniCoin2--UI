@@ -15,7 +15,6 @@ import { fetchAccount } from '../utils/miscellaneous';
 import { changeSearchPriorityData } from '../../accountSettings/accountActions';
 import {
   getAccount as getAccountAction,
-  welcomeBonus as welcomeBonusAction,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
   referralBonusSucceeded,
@@ -67,7 +66,6 @@ export function* subscriber() {
     takeEvery('LOGIN', login),
     takeEvery('SIGNUP', signup),
     takeEvery('GET_ACCOUNT', getAccount),
-    takeEvery('WELCOME_BONUS', welcomeBonus),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
     takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
     takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
@@ -165,14 +163,15 @@ function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
-      const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
+      
+      const { isWelcomeBonusAvailable } = yield call(AuthApi.isWelcomeBonusAvailable, { harddriveId, macAddress });
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
           username,
           password
         },
-        isWelcomeBonusAvailable: isAvailable
+        isWelcomeBonusAvailable
       });
       yield put(changeSearchPriorityData(searchPriorityData));
     } else {
@@ -209,47 +208,6 @@ function* getAccount({ payload: { username } }) {
   }
 }
 
-function* welcomeBonus({
-  payload: {
-    username, referrer, macAddress, harddriveId
-  }
-}) {
-  try {
-    const { currentUser } = (yield select()).default.auth;
-    const isAvailable = yield Apis.instance().db_api().exec('is_welcome_bonus_available', [harddriveId, macAddress]);
-    const acc = yield FetchChain('getAccount', username);
-    if (isAvailable) {
-      const tr = new TransactionBuilder();
-      tr.add_type_operation('welcome_bonus_operation', {
-        receiver: acc.get('id'),
-        drive_id: harddriveId,
-        mac_address: macAddress
-      });
-      const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
-      yield tr.set_required_fees();
-      yield tr.add_signer(key.privKey, key.pubKey);
-      yield tr.broadcast(async () => {
-        try {
-          const referrerAcc = await FetchChain('getAccount', referrer);
-          const tr = new TransactionBuilder();
-          tr.add_type_operation('referral_bonus_operation', {
-            referred_account: acc.get('id'),
-            referrer_account: referrerAcc.get('id')
-          });
-          await tr.set_required_fees();
-          await tr.add_signer(key.privKey, key.pubKey);
-          await tr.broadcast();
-        } catch (error) {
-          console.log('ERROR', error);
-        }
-      });
-      yield put(welcomeBonusSucceeded());
-    }
-  } catch (error) {
-    yield put(welcomeBonusFailed(error));
-  }
-}
-
 function* getWelcomeBonusAmount() {
   try {
     const amount = yield Apis.instance().db_api().exec('get_welcome_bonus_amount', []);
@@ -283,20 +241,21 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     yield call(AuthApi.checkBonus, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
-    const referrer = localStorage.getItem('referrer');
     const { currentUser } = (yield select()).default.auth;
-    yield put(welcomeBonusAction(currentUser.username, referrer, macAddress, harddriveId));
     const { telegramPhoneNumber, email, twitterUsername } = values;
     const data = {
       harddriveId,
+      macAddress,
       email,
       telegramPhoneNumber,
-      twitterUsername
+      twitterUsername,
+      userName: currentUser.username
     };
-    yield call(AuthApi.welcomeBonusReceivedUsers, data);
+    yield call(AuthApi.receiveWelcomeBonus, data);
+    yield put(welcomeBonusSucceeded());
   } catch (error) {
     yield call(reject, new SubmissionError(error.messages));
-    yield put(welcomeBonusFailed());
+    yield put(welcomeBonusFailed(error.message));
   }
 }
 
