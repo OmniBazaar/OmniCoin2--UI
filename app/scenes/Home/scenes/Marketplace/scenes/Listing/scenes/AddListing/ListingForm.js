@@ -959,7 +959,6 @@ class ListingForm extends Component {
                 component={this.DescriptionInput}
                 className="textfield"
                 placeholder={formatMessage(messages.enterShippingInformation)}
-                validate={[requiredFieldValidator]}
               />
             </Grid.Column>
           </Grid.Row>
