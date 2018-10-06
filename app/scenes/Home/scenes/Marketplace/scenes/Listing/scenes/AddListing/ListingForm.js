@@ -821,12 +821,11 @@ class ListingForm extends Component {
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
-              <span className="title">{formatMessage(messages.description)}</span>
+              <span className="title">{formatMessage(messages.description)}*</span>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>{formatMessage(messages.description)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
