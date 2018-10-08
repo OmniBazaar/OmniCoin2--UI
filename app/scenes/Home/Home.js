@@ -274,8 +274,8 @@ class Home extends Component {
                   <NavLink to="/exchange" activeClassName="active" className="menu-item">
                     <Image src={TransferIcon} height={iconSize} width={iconSize}/>
                     <FormattedMessage
-                      id="Home.exchange"
-                      defaultMessage="Exchange"
+                      id="Home.Token Sale"
+                      defaultMessage="Token Sale"
                     />
                   </NavLink>
                 }

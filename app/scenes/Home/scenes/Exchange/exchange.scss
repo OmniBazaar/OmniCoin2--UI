@@ -1,11 +1,27 @@
 @import '../../../../styles/index';
 
+.page-description {
+  margin: -37px 4px 0 29px;
+}
+
 .exchange-form {
   .exchange-form-container {
     padding: 15px;
 
     .section {
       margin-top: 20px;
+    }
+
+    .read-omniCoin-white-paper, 
+    .read-omniCoin-information-memorandum,
+    .read-omniCoin-token-purchase-agreement {
+      display: flex;
+      margin: 20px 0 0 270px;
+
+      .check-container {
+        padding-right: 15px
+      }
+
     }
 
     .form-group {
