@@ -239,7 +239,7 @@ class TransactionDetails extends Component {
             <div className="top-container">
               <div className="item">
                 <span>{formatMessage(messages.transactionHash)}</span>
-                <span className="code primary-blue">{detailSelected.hash}</span>
+                <span className="code primary-blue hash">{detailSelected.hash}</span>
               </div>
             </div>
             :
