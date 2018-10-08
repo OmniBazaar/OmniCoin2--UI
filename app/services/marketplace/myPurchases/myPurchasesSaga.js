@@ -2,7 +2,8 @@ import {
   takeEvery,
   put,
   all,
-  call
+  call,
+  select
 } from 'redux-saga/effects';
 import path from 'path';
 import { FetchChain } from 'omnibazaarjs/es';
@@ -19,6 +20,8 @@ import {
   addSellingFailed
 } from './myPurchasesActions';
 
+import OmnicoinHistory from '../../accountSettings/omnicoinHistory';
+
 import {
   getUserDataFolder,
   checkDir,
@@ -27,7 +30,7 @@ import {
   writeFile
 } from "../../fileUtils";
 import { getStoredCurrentUser } from "../../blockchain/auth/services";
-import { getObjectById } from "../../listing/apis";
+import { getObjectById, getListing } from "../../listing/apis";
 
 export const Types = {
   selling: 'selling',
@@ -104,7 +107,43 @@ function* getPurchases() {
   }
 }
 
-function* getSellings() {
+const getListingsDetail = (user, listingObjects) => {
+  return Promise.all(listingObjects.map( async (listing) => {
+    const publisher = {
+      publisher_ip: listing.publisherIp
+    };
+
+    const listingDetail = await getListing(user, publisher, listing.id);
+    return {
+      ...listing,
+      title: listingDetail ? listingDetail.listing_title : ''
+    }
+  }));
+}
+
+function * getSellings() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const historyStorage = new OmnicoinHistory(currentUser);
+    yield historyStorage.refresh();
+    let soldOpers = historyStorage.getSellOperations();
+    const soldListings = yield historyStorage.getListingObjects(soldOpers);
+    const soldListingsMap = {};
+    soldListings.forEach(listing => soldListings[listing.id] = listing);
+    let soldItems = soldOpers.map(op => ({
+      ...op,
+      ...soldListings[op.id]
+    }));
+    soldItems = yield getListingsDetail({...currentUser}, soldItems);
+    console.log({soldItems});
+    yield put(getMySellingsSucceeded(soldItems));
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(getMySellingsFailed(error));
+  }
+}
+
+function* getSellingsOld() {
   try {
     const filePath = yield call(getFilePath, Types.selling);
     if (isExist(filePath)) {
