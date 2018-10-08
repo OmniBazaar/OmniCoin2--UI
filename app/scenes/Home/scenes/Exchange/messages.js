@@ -31,7 +31,7 @@ const messages = defineMessages({
   },
   exchange: {
     id: "Exchange.exchange",
-    defaultMessage: "Exchange"
+    defaultMessage: "OmniCoin Token Sale"
   },
   from: {
     id: "Exchange.from",
@@ -72,6 +72,26 @@ const messages = defineMessages({
   warning: {
     id: 'Exchange.warning',
     defaultMessage: 'Warning'
+  },
+  pageDescription: {
+    id: 'Exchange.pageDescription',
+    defaultMessage: 'This page will allow you to purchase OmniCoins using funds contained in your Bitcoin and Ether wallets in this OmniBazaar application. If you have not already done so, you must first transfer some bitcoins or ether into your OmniBazaar wallets.'
+  },
+  readOmniCoinWhitePaper: {
+    id: 'Exchange.readOmniCoinWhitePaper',
+    defaultMessage: 'I have read and understand the OmniBazaar/OmniCoin White Paper'
+  },
+  readOmniCoinInformationMemorandum: {
+    id: 'Exchange.readOmniCoinInformationMemorandum',
+    defaultMessage: 'I have read and understand the disclosures and warnings contained in the OmniCoin Information Memorandum'
+  },
+  readOmniCoinTokenPurchaseAgreement: {
+    id: 'Exchange.readOmniCoinTokenPurchaseAgreement',
+    defaultMessage: 'I have read, understand, and agree with the terms of the OmniCoin Token Purchase Agreement. '
+  },
+  understandOmniCoinTokenPurchaseAgreement: {
+    id: 'Exchange.understandOmniCoinTokenPurchaseAgreement',
+    defaultMessage: ' I understand that I am buying tokens for use in the OmniBazaar marketplace, and that those tokens do not represent any ownership, interest, dividends, control or other rights in OmniBazaar Inc., OmniCoin Foundation Company, or any other business entity. I understand the that the value of the tokens may go up or down in relation to products in the marketplace, other cryptocurrency tokens and my local currency.'
   }
 });
 
