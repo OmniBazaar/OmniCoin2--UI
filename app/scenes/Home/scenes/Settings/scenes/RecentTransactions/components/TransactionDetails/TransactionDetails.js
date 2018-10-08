@@ -215,6 +215,11 @@ class TransactionDetails extends Component {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const { detailSelected } = this.props.account;
+
+    if (!detailSelected) {
+      return null;
+    }
+
     const containerClass = classNames({
       'details-container': true,
       details: true,
