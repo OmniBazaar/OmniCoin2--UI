@@ -155,6 +155,10 @@ class RecentTransactions extends Component {
     }
     if (this.props.coinType !== nextProps.coinType) {
       this.fetchTransactions(nextProps.coinType);
+      
+      if (this.props.account.showDetails) {
+        this.props.accountSettingsActions.showDetailsModal();
+      }
     }
   }
 
