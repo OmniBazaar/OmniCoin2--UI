@@ -8,7 +8,6 @@ const {
   login,
   logout,
   signup,
-  welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
   referralBonus,
@@ -38,9 +37,6 @@ const {
       username, password, referrer, searchPriorityData, macAddress, harddriveId
     }
   ),
-  WELCOME_BONUS: (username, referrer, macAddress, harddriveId) => ({
-    username, referrer, macAddress, harddriveId
-  }),
   REFERRAL_BONUS: () => ({ }),
   REFERRAL_BONUS_SUCCEEDED: () => ({ }),
   REFERRAL_BONUS_FAILED: (error) => ({ error }),
@@ -69,7 +65,6 @@ export {
   login,
   logout,
   signup,
-  welcomeBonus,
   welcomeBonusSucceeded,
   welcomeBonusFailed,
   referralBonus,
