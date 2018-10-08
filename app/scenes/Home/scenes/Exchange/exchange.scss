@@ -12,16 +12,29 @@
       margin-top: 20px;
     }
 
-    .read-omniCoin-white-paper, 
-    .read-omniCoin-information-memorandum,
-    .read-omniCoin-token-purchase-agreement {
+    .omnicoin-description-links {
       display: flex;
-      margin: 20px 0 0 270px;
+      flex-direction: column;
+      margin: 15px;
+      width: 65%;      
+      float: right;
 
-      .check-container {
-        padding-right: 15px
+      .read-omniCoin-white-paper, 
+      .read-omniCoin-information-memorandum,
+      .read-omniCoin-token-purchase-agreement {
+        display: flex;
+        flex-direction: row;
+        
+        .check-container {
+          padding-right: 15px
+        }
       }
+      .form-group {
 
+        .floated {
+          position: absolute;
+        }
+      }
     }
 
     .form-group {

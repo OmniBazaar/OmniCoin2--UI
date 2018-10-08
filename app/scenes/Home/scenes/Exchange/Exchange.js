@@ -431,21 +431,24 @@ class Exchange extends Component {
             </div>
             {currency === 'bitcoin' && this.renderBitcoinForm()}
             {currency === 'ethereum' && this.renderEthereumForm()}
-            <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
-            <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
-            <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
-            <div className="form-group">
-              <span />
-              <div className="field left floated">
-                <Button
-                  type="submit"
-                  loading={this.props.exchange.loading}
-                  content={formatMessage(messages.exchange)}
-                  className="button--green-bg"
-                  disabled={this.props.invalid}
-                />
+            <div className="omnicoin-description-links">
+              <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
+              <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
+              <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
+            
+              <div className="form-group">
+                <span />
+                <div className="field left floated">
+                  <Button
+                    type="submit"
+                    loading={this.props.exchange.loading}
+                    content={formatMessage(messages.exchange)}
+                    className="button--green-bg"
+                    disabled={this.props.invalid}
+                  />
+                </div>
+                <div className="col-1" />
               </div>
-              <div className="col-1" />
             </div>
           </Form>
         </div>
