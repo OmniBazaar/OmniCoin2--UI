@@ -163,22 +163,6 @@ function * getSellings() {
   }
 }
 
-function* getSellingsOld() {
-  try {
-    const filePath = yield call(getFilePath, Types.selling);
-    if (isExist(filePath)) {
-      const content = yield readFile(filePath);
-      const sellings = JSON.parse(content);
-      yield put(getMySellingsSucceeded(sellings));
-    } else {
-      yield put(getMySellingsSucceeded([]));
-    }
-  } catch (error) {
-    console.log('ERROR ', error);
-    yield put(getMySellingsFailed(error));
-  }
-}
-
 function* addPurchase({ payload: { purchase } }) {
   try {
     yield call(add, purchase, Types.purchase);
