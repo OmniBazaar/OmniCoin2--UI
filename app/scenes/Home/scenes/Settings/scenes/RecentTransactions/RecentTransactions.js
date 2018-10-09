@@ -155,7 +155,7 @@ class RecentTransactions extends Component {
     }
     if (this.props.coinType !== nextProps.coinType) {
       this.fetchTransactions(nextProps.coinType);
-      
+
       if (this.props.account.showDetails) {
         this.props.accountSettingsActions.showDetailsModal();
       }
@@ -303,7 +303,7 @@ class RecentTransactions extends Component {
                             <TableCell>{row.memo}</TableCell>
                           }
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.fee}</TableCell>
+                          <TableCell>{row.fromTo === 'exchange' ? 1 : row.fee}</TableCell>
                           {coinType === CoinTypes.OMNI_COIN &&
                             <TableCell>
                               <div className={cn('badge-tag', row.statusText)}>
