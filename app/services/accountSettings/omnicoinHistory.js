@@ -242,6 +242,7 @@ class OmnicoinHistory extends BaseStorage {
         id: op.listingId,
         count: op.listingCount,
         date: op.date,
+        from: op.from
       }));
   }
 
@@ -257,7 +258,8 @@ class OmnicoinHistory extends BaseStorage {
       ...el,
       price: el.price.amount / TOKENS_IN_XOM,
       seller: res[0].get('name'),
-      publisher: res[1].get('name')
+      publisher: res[1].get('name'),
+      publisherIp: res[1].get('publisher_ip')
     }))));
     return listingObjects;
   }
