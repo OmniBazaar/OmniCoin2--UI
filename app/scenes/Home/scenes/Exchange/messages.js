@@ -77,17 +77,29 @@ const messages = defineMessages({
     id: 'Exchange.pageDescription',
     defaultMessage: 'This page will allow you to purchase OmniCoins using funds contained in your Bitcoin and Ether wallets in this OmniBazaar application. If you have not already done so, you must first transfer some bitcoins or ether into your OmniBazaar wallets.'
   },
-  readOmniCoinWhitePaper: {
-    id: 'Exchange.readOmniCoinWhitePaper',
-    defaultMessage: 'I have read and understand the OmniBazaar/OmniCoin White Paper'
+  readOmniCoinWhitePaperText: {
+    id: 'Exchange.readOmniCoinWhitePaperText',
+    defaultMessage: 'I have read and understand the '
   },
-  readOmniCoinInformationMemorandum: {
-    id: 'Exchange.readOmniCoinInformationMemorandum',
-    defaultMessage: 'I have read and understand the disclosures and warnings contained in the OmniCoin Information Memorandum'
+  readOmniCoinWhitePaperLink: {
+    id: 'Exchange.readOmniCoinWhitePaperLink',
+    defaultMessage: 'OmniBazaar/OmniCoin White Paper'
   },
-  readOmniCoinTokenPurchaseAgreement: {
-    id: 'Exchange.readOmniCoinTokenPurchaseAgreement',
-    defaultMessage: 'I have read, understand, and agree with the terms of the OmniCoin Token Purchase Agreement. '
+  readOmniCoinInformationMemorandumText: {
+    id: 'Exchange.readOmniCoinInformationMemorandumText',
+    defaultMessage: 'I have read and understand the disclosures and warnings contained in the'
+  },
+  readOmniCoinInformationMemorandumLink: {
+    id: 'Exchange.readOmniCoinInformationMemorandumLink',
+    defaultMessage: 'OmniCoin Information Memorandum'
+  },
+  readOmniCoinTokenPurchaseAgreementText: {
+    id: 'Exchange.readOmniCoinTokenPurchaseAgreementText',
+    defaultMessage: 'I have read, understand, and agree with the terms of the'
+  },
+  readOmniCoinTokenPurchaseAgreementLink: {
+    id: 'Exchange.readOmniCoinTokenPurchaseAgreementLink',
+    defaultMessage: 'OmniCoin Token Purchase Agreement.'
   },
   understandOmniCoinTokenPurchaseAgreement: {
     id: 'Exchange.understandOmniCoinTokenPurchaseAgreement',

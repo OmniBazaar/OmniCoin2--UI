@@ -360,8 +360,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}
           />
           <p>
+            {formatMessage(messages.readOmniCoinWhitePaperText)}
             <a className="link" href="http://whitepaper.omnibazaar.com" target="_blank">
-              {formatMessage(messages.readOmniCoinWhitePaper)}
+              {formatMessage(messages.readOmniCoinWhitePaperLink)}
             </a>
           </p>
         </div>
@@ -380,8 +381,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}          
           />
           <p>
+            {formatMessage(messages.readOmniCoinInformationMemorandumText)}
             <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
-              {formatMessage(messages.readOmniCoinInformationMemorandum)}
+              {formatMessage(messages.readOmniCoinInformationMemorandumLink)}
             </a>
           </p>
         </div>
@@ -400,8 +402,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}
           />
           <p>
+            {formatMessage(messages.readOmniCoinTokenPurchaseAgreementText)}
             <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
-              {formatMessage(messages.readOmniCoinTokenPurchaseAgreement)}
+              {formatMessage(messages.readOmniCoinTokenPurchaseAgreementLink)}
             </a>
             {formatMessage(messages.understandOmniCoinTokenPurchaseAgreement)}
           </p>
@@ -442,21 +445,24 @@ class Exchange extends Component {
             </div>
             {currency === 'bitcoin' && this.renderBitcoinForm()}
             {currency === 'ethereum' && this.renderEthereumForm()}
-            <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
-            <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
-            <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
-            <div className="form-group">
-              <span />
-              <div className="field left floated">
-                <Button
-                  type="submit"
-                  loading={this.props.exchange.loading}
-                  content={formatMessage(messages.exchange)}
-                  className="button--green-bg"
-                  disabled={this.props.invalid}
-                />
+            <div className="omnicoin-description-links">
+              <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
+              <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
+              <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
+            
+              <div className="form-group">
+                <span />
+                <div className="field left floated">
+                  <Button
+                    type="submit"
+                    loading={this.props.exchange.loading}
+                    content={formatMessage(messages.exchange)}
+                    className="button--green-bg"
+                    disabled={this.props.invalid}
+                  />
+                </div>
+                <div className="col-1" />
               </div>
-              <div className="col-1" />
             </div>
           </Form>
         </div>
