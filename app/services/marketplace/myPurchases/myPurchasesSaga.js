@@ -107,17 +107,29 @@ function* getPurchases() {
   }
 }
 
-const getListingsDetail = (user, listingObjects) => {
-  return Promise.all(listingObjects.map( async (listing) => {
+const getListingsDetail = async (user, listingObjects) => {
+  const listingsMap = {};
+  listingObjects.forEach(listing => {
+    if (!listingsMap[listing.id]) {
+      listingsMap[listing.id] = listing;
+    }
+  });
+
+  await Promise.all(Object.keys(listingsMap).map(async (listingId) => {
+    const listing = listingsMap[listingId];
     const publisher = {
       publisher_ip: listing.publisherIp
     };
-
     const listingDetail = await getListing(user, publisher, listing.id);
-    return {
+    listingsMap[listingId] = {
       ...listing,
       title: listingDetail ? listingDetail.listing_title : ''
-    }
+    };
+  }));
+
+  return listingObjects.map(listing => ({
+    ...listing,
+    title: listingsMap[listing.id].title
   }));
 }
 
