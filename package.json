@@ -168,7 +168,6 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
-    "@easypost/api": "^3.6.2",
     "bitcoin-transaction": "^1.1.1",
     "country-region-data": "^1.4.2",
     "dateformat": "^3.0.3",
