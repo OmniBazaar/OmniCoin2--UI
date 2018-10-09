@@ -25,24 +25,25 @@ import ethers from 'ethers';
 
 import './exchange.scss';
 
-import messages from "../Exchange/messages";
-import {makeValidatableField} from "../../../../components/ValidatableField/ValidatableField";
+import messages from '../Exchange/messages';
+import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import BitcoinWalletDropdown from '../../scenes/Transfer/component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
-import {currencyConverter} from "../../../../services/utils";
+import { currencyConverter } from '../../../../services/utils';
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
   exchangeEth
-} from "../../../../services/exchange/exchangeActions";
+} from '../../../../services/exchange/exchangeActions';
 import {
   numericFieldValidator,
   requiredFieldValidator,
   ethereumFieldValidator,
   bitcoinFieldValidator
-} from "../Marketplace/scenes/Listing/scenes/AddListing/validators";
-import { getWallets } from "../../../../services/blockchain/bitcoin/bitcoinActions";
-import {SATOSHI_IN_BTC, WEI_IN_ETH} from "../../../../utils/constants";
+} from '../Marketplace/scenes/Listing/scenes/AddListing/validators';
+import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
+import { SATOSHI_IN_BTC } from '../../../../utils/constants';
+import Checkbox from '../../../../components/Checkbox/Checkbox';
 
 const currencyOptions = [
   {
@@ -320,88 +321,170 @@ class Exchange extends Component {
     );
   }
 
+  renderCheckboxField = ({ input, label, onCheck }) => (
+    <div className="transfer-input" style={{ display: 'flex' }}>
+      <Checkbox
+        value={input.value}
+        onChecked={(value) => {
+            input.onChange(value);
+            if (onCheck) {
+              onCheck(value);
+            }
+          }}
+      />
+      <span className="label">
+        {label}
+      </span>
+    </div>
+  );
+
+  renderOmniCoinWhitePaper = () => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <React.Fragment>
+        <div className="read-omniCoin-white-paper">
+          <Field
+            name="omniCoinWhitePaper"
+            component={this.renderCheckboxField}
+            validate={[requiredFieldValidator]}
+          />
+          <p>
+            <a className="link" href="http://whitepaper.omnibazaar.com" target="_blank">
+              {formatMessage(messages.readOmniCoinWhitePaper)}
+            </a>
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  renderOmniCoinInformationMemorandum = () => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <React.Fragment>
+        <div className="read-omniCoin-information-memorandum">
+          <Field
+            name="omniCoinInformationMemorandum"
+            component={this.renderCheckboxField}
+            validate={[requiredFieldValidator]}          
+          />
+          <p>
+            <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
+              {formatMessage(messages.readOmniCoinInformationMemorandum)}
+            </a>
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  renderOmniCoinTokenPurchaseAgreement = () => {
+    const { formatMessage } = this.props.intl;
+    return (
+      <React.Fragment>
+        <div className="read-omniCoin-token-purchase-agreement">
+          <Field
+            name="omniCoinTokenPurchaseAgreement"
+            component={this.renderCheckboxField}
+            validate={[requiredFieldValidator]}
+          />
+          <p>
+            <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
+              {formatMessage(messages.readOmniCoinTokenPurchaseAgreement)}
+            </a>
+            {formatMessage(messages.understandOmniCoinTokenPurchaseAgreement)}
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  };
+
 
   render() {
-      const { formatMessage } = this.props.intl;
-      const { handleSubmit } = this.props;
-      const { currency, wallet } = this.props.exchangeForm;
-      return (
-        <div className="container">
-          <Header className="button--green-bg" title={formatMessage(messages.exchange)} />
-          <div className="exchange-form">
-            <Form
-              onChange={() => this.setState({ isPromptVisible: true })}
-              onSubmit={handleSubmit(this.submitTransfer)}
-              className="exchange-form-container">
-              <FormPrompt isVisible={this.state.isPromptVisible}/>
-              <div className="section">
-                <div className="form-group">
-                  <span>{formatMessage(messages.currency)}</span>
-                  <div className="exchange-input currency">
-                    <Field
-                      type="text"
-                      name="currency"
-                      className="textfield1"
-                      options={currencyOptions}
-                      component={this.renderCurrencyField}
-                    />
-                  </div>
-                  <div className="col-1" />
-                </div>
-              </div>
-              {currency === 'bitcoin' && this.renderBitcoinForm()}
-              {currency === 'ethereum' && this.renderEthereumForm()}
+    const { formatMessage } = this.props.intl;
+    const { handleSubmit } = this.props;
+    const { currency, wallet } = this.props.exchangeForm;
+    return (
+      <div className="container">
+        <Header className="button--green-bg" title={formatMessage(messages.exchange)} />
+        <span className="page-description">{formatMessage(messages.pageDescription)}</span>
+        <div className="exchange-form">
+          <Form
+            onChange={() => this.setState({ isPromptVisible: true })}
+            onSubmit={handleSubmit(this.submitTransfer)}
+            className="exchange-form-container">
+            <FormPrompt isVisible={this.state.isPromptVisible}/>
+            <div className="section">
               <div className="form-group">
-                <span />
-                <div className="field left floated">
-                  <Button
-                    type="submit"
-                    loading={this.props.exchange.loading}
-                    content={formatMessage(messages.exchange)}
-                    className="button--green-bg"
-                    disabled={this.props.invalid}
+                <span>{formatMessage(messages.currency)}</span>
+                <div className="exchange-input currency">
+                  <Field
+                    type="text"
+                    name="currency"
+                    className="textfield1"
+                    options={currencyOptions}
+                    component={this.renderCurrencyField}
                   />
                 </div>
                 <div className="col-1" />
               </div>
-            </Form>
-          </div>
+            </div>
+            {currency === 'bitcoin' && this.renderBitcoinForm()}
+            {currency === 'ethereum' && this.renderEthereumForm()}
+            <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
+            <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
+            <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
+            <div className="form-group">
+              <span />
+              <div className="field left floated">
+                <Button
+                  type="submit"
+                  loading={this.props.exchange.loading}
+                  content={formatMessage(messages.exchange)}
+                  className="button--green-bg"
+                  disabled={this.props.invalid}
+                />
+              </div>
+              <div className="col-1" />
+            </div>
+          </Form>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 }
 
 const selector = formValueSelector('exchangeForm');
 
 export default compose(
-  connect(
-    state => ({
-      ...state.default,
-      exchangeForm: {
-        currency: selector(state, 'currency'),
-        amount: selector(state, 'amount'),
-        wallet: selector(state, 'wallet')
-      }
-    }),
-    (dispatch) => ({
-      initialize,
-      changeFieldValue: (field, value) => {
-        dispatch(change('exchangeForm', field, value));
-      },
-      exchangeActions: bindActionCreators({
-        exchangeEth,
-        exchangeBtc
-      }, dispatch),
-      bitcoinActions: bindActionCreators({
-        getWallets
-      }, dispatch)
-    })
-  ),
-  reduxForm({
-    form: 'exchangeForm',
-    keepDirtyOnReinitialize: true,
-    enableReinitialize: true,
-    destroyOnUnmount: true,
-    validate
+connect(
+  state => ({
+    ...state.default,
+    exchangeForm: {
+      currency: selector(state, 'currency'),
+      amount: selector(state, 'amount'),
+      wallet: selector(state, 'wallet')
+    }
+  }),
+  (dispatch) => ({
+    initialize,
+    changeFieldValue: (field, value) => {
+      dispatch(change('exchangeForm', field, value));
+    },
+    exchangeActions: bindActionCreators({
+      exchangeEth,
+      exchangeBtc
+    }, dispatch),
+    bitcoinActions: bindActionCreators({
+      getWallets
+    }, dispatch)
   })
+),
+reduxForm({
+  form: 'exchangeForm',
+  keepDirtyOnReinitialize: true,
+  enableReinitdestroyOnUnmountialize: true,
+  destroyOnUnmount: true,
+  validate: Exchange.validate,
+})
 )(injectIntl(Exchange));

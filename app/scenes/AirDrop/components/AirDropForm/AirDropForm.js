@@ -11,6 +11,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
 import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
@@ -137,6 +138,12 @@ class AirDropForm extends Component {
 
   componentDidMount() {
     this.props.authActions.getWelcomeBonusAmount();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.error && !this.props.auth.error) {
+      toastr.error(nextProps.auth.error);
+    }
   }
 
   signUp = () => {
@@ -363,6 +370,9 @@ AirDropForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func
   }),
+  auth: PropTypes.shape({
+    error: PropTypes.string
+  }),
   authActions: PropTypes.shape({
     getWelcomeBonusAmount: PropTypes.func,
   }),
@@ -374,5 +384,6 @@ AirDropForm.defaultProps = {
   intl: {},
   AirDropForm: {},
   history: {},
-  authActions: {}
+  authActions: {},
+  auth: {}
 };

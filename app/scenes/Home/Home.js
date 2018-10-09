@@ -108,8 +108,7 @@ class Home extends Component {
       this.props.listingActions.checkPublishersAlive();
       this.init(nextProps.auth.currentUser);
     }
-
-    if (nextProps.dht.error) {
+    if (nextProps.dht.error && !this.props.dht.error) {
       this.props.dhtActions.dhtReconnect();
     }
   }
@@ -275,8 +274,8 @@ class Home extends Component {
                   <NavLink to="/exchange" activeClassName="active" className="menu-item">
                     <Image src={TransferIcon} height={iconSize} width={iconSize}/>
                     <FormattedMessage
-                      id="Home.exchange"
-                      defaultMessage="Exchange"
+                      id="Home.Token Sale"
+                      defaultMessage="Token Sale"
                     />
                   </NavLink>
                 }
@@ -319,7 +318,7 @@ class Home extends Component {
                 <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', 'identity-verification')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
-                    defaultMessage="Identity Verification"
+                    defaultMessage="Whitelist for Token Sale"
                   />
                   <span className="identity-verification-status">
                     {identityVerificationStatus && identityVerificationStatus.verified ? 'Verified' : 'Not Verified'}

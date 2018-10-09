@@ -6,7 +6,7 @@
   "Exchange.numberCannotBeNegative": "Amount cannot be a negative value",
   "Exchange.youWillReceive": "You will receive",
   "Exchange.selectWallet": "Select wallet",
-  "Exchange.exchange": "Exchange",
+  "Exchange.exchange": "OmniCoin Token Sale",
   "Exchange.from": "From",
   "Exchange.fieldRequired": "This field is required.",
   "Exchange.error": "Error",
@@ -14,5 +14,10 @@
   "Exchange.successExchange": "You will receive the funds as soon as the payment will be confirmed by the network",
   "Exchange.errorExchange": "Not enough funds",
   "Exchange.walletNotConnected": "You haven't connected a wallet yet",
-  "Exchange.minimumAmount": "Minimum amount is {amount}"
+  "Exchange.minimumAmount": "Minimum amount is {amount}",
+  "Exchange.pageDescription": "This page will allow you to purchase OmniCoins using funds contained in your Bitcoin and Ether wallets in this OmniBazaar application. If you have not already done so, you must first transfer some bitcoins or ether into your OmniBazaar wallets.",
+  "Exchange.readOmniCoinWhitePaper": "I have read and understand the OmniBazaar/OmniCoin White Paper",
+  "Exchange.readOmniCoinInformationMemorandum": "I have read and understand the disclosures and warnings contained in the OmniCoin Information Memorandum",
+  "Exchange.readOmniCoinTokenPurchaseAgreement": "I have read, understand, and agree with the terms of the OmniCoin Token Purchase Agreement. ",
+  "Exchange.understandOmniCoinTokenPurchaseAgreement": "I understand that I am buying tokens for use in the OmniBazaar marketplace, and that those tokens do not represent any ownership, interest, dividends, control or other rights in OmniBazaar Inc., OmniCoin Foundation Company, or any other business entity. I understand the that the value of the tokens may go up or down in relation to products in the marketplace, other cryptocurrency tokens and my local currency."
 }
