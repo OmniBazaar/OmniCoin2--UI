@@ -36,11 +36,6 @@ class BitcoinWalletDropdown extends Component {
       key: wallet.index,
       description: `${wallet.balance / SATOSHI_IN_BTC} BTC`
     }));
-    options.push({
-      value: MANUAL_INPUT_VALUE,
-      text: formatMessage(messages.manualEnterAddress),
-      key: MANUAL_INPUT_VALUE
-    });
 
     return (
       <Dropdown
