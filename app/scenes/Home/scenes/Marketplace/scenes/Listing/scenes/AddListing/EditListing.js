@@ -4,6 +4,7 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Icon, Loader } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 
 import Menu from '../../../../../Marketplace/scenes/Menu/Menu';
 import ListingForm from './ListingForm';
@@ -47,7 +48,7 @@ class EditListing extends Component {
             <div className="content">
               <div className="category-title">
                 <div className="parent">
-                  <span>{formatMessage(messages.myListings)}</span>
+                  <NavLink to="/listings">{formatMessage(messages.myListings)}</NavLink>
                   <Icon name="long arrow right" width={iconSize} height={iconSize} />
                 </div>
                 <span className="child">{formatMessage(messages.editListing)}</span>
