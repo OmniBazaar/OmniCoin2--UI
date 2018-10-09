@@ -349,8 +349,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}
           />
           <p>
+            {formatMessage(messages.readOmniCoinWhitePaperText)}
             <a className="link" href="http://whitepaper.omnibazaar.com" target="_blank">
-              {formatMessage(messages.readOmniCoinWhitePaper)}
+              {formatMessage(messages.readOmniCoinWhitePaperLink)}
             </a>
           </p>
         </div>
@@ -369,8 +370,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}          
           />
           <p>
+            {formatMessage(messages.readOmniCoinInformationMemorandumText)}
             <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
-              {formatMessage(messages.readOmniCoinInformationMemorandum)}
+              {formatMessage(messages.readOmniCoinInformationMemorandumLink)}
             </a>
           </p>
         </div>
@@ -389,8 +391,9 @@ class Exchange extends Component {
             validate={[requiredFieldValidator]}
           />
           <p>
+            {formatMessage(messages.readOmniCoinTokenPurchaseAgreementText)}
             <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
-              {formatMessage(messages.readOmniCoinTokenPurchaseAgreement)}
+              {formatMessage(messages.readOmniCoinTokenPurchaseAgreementLink)}
             </a>
             {formatMessage(messages.understandOmniCoinTokenPurchaseAgreement)}
           </p>
