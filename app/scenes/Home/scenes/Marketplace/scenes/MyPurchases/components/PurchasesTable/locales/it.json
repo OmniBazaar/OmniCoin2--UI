@@ -7,5 +7,6 @@
   "PurchasesTable.publisher": "Publisher",
   "PurchasesTable.seller": "Seller",
   "PurchasesTable.buyer": "Buyer",
-  "PurchasesTable.date": "Date"
+  "PurchasesTable.date": "Date",
+  "PurchasesTable.listingNotAvaiable": "Listing not available"
 }

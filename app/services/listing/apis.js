@@ -290,3 +290,10 @@ export const checkPublisherAliveStatus = async (user, publisher) => {
   }
 };
 
+export const getListing = async (user, publisher, listingId) => {
+  const options = {
+    method: 'GET',
+    json: true
+  };
+  return await makeRequest(user, publisher, `listings/${listingId}`, options);
+}
