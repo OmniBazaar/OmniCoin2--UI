@@ -135,7 +135,15 @@ function * getSellings() {
       ...soldListings[op.id]
     }));
     soldItems = yield getListingsDetail({...currentUser}, soldItems);
-    console.log({soldItems});
+    soldItems = soldItems.map(item => ({
+      listingId: item.id,
+      title: item.title,
+      date: item.date,
+      count: item.count,
+      price: item.price,
+      publisher: item.publisher,
+      buyer: item.from
+    }));
     yield put(getMySellingsSucceeded(soldItems));
   } catch (error) {
     console.log('ERROR ', error);

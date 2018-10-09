@@ -33,46 +33,8 @@ import {
 } from '../../../../../../../../services/marketplace/myPurchases/myPurchasesActions';
 import { getCurrencyAbbreviation } from "../../../../../../../../utils/listings";
 
+import messages from './messages';
 import './purchases-table.scss';
-
-const messages = defineMessages({
-  id: {
-    id: 'PurchasesTable.id',
-    defaultMessage: 'ID'
-  },
-  title: {
-    id: 'PurchasesTable.title',
-    defaultMessage: 'Title'
-  },
-  count: {
-    id: 'PurchasesTable.count',
-    defaultMessage: 'Count'
-  },
-  expirationTime: {
-    id: 'PurchasesTable.expirationTime',
-    defaultMessage: 'Exp. time'
-  },
-  price: {
-    id: 'PurchasesTable.price',
-    defaultMessage: 'Price'
-  },
-  publisher: {
-    id: 'PurchasesTable.publisher',
-    defaultMessage: 'Publisher'
-  },
-  seller: {
-    id: 'PurchasesTable.seller',
-    defaultMessage: 'Seller'
-  },
-  buyer: {
-    id: 'PurchasesTable.buyer',
-    defaultMessage: 'Buyer'
-  },
-  date: {
-    id: 'PurchasesTable.date',
-    defaultMessage: 'Date'
-  }
-});
 
 
 class PurchasesTable extends Component {
@@ -224,7 +186,9 @@ class PurchasesTable extends Component {
                             {row.listingId}
                           </NavLink>
                         </TableCell>
-                        <TableCell>{row.title}</TableCell>
+                        <TableCell>
+                          {row.title ? row.title : formatMessage(messages.listingNotAvaiable)}
+                        </TableCell>
                         <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                         <TableCell>{row.count}</TableCell>
                         <TableCell>{row.price} {getCurrencyAbbreviation(row.currency)}</TableCell>
