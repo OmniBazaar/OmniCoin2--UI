@@ -29,7 +29,7 @@ import messages from '../Exchange/messages';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import BitcoinWalletDropdown from '../../scenes/Transfer/component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
-import { currencyConverter } from '../../../../services/utils';
+import { currencyConverter, getMinEthValue } from '../../../../services/utils';
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
@@ -60,9 +60,12 @@ const currencyOptions = [
   }
 ];
 
+const minEth = getMinEthValue();
+
 const ethAmountValidator = addValidator({
   validator: (option, value, allValues) => {
     const max = ethers.utils.parseEther(option.max + '');
+    const min = ethers.utils.parseEther(minEth);
     let eth;
     try {
       eth = ethers.utils.parseEther(value + '')
@@ -70,7 +73,16 @@ const ethAmountValidator = addValidator({
       return {
         ...messages.minimumAmount,
         values: {
-          amount: '0.000000000000000001'
+          amount: minEth
+        }
+      }
+    }
+
+    if (eth.lt(min)) {
+      return {
+        ...messages.minimumAmount,
+        values: {
+          amount: minEth
         }
       }
     }
@@ -303,7 +315,6 @@ class Exchange extends Component {
               validate={[
                 requiredFieldValidator,
                 numericFieldValidator,
-                ethereumFieldValidator,
                 ethAmountValidator({max: this.props.ethereum.balance})
               ]}
             />
@@ -485,6 +496,6 @@ reduxForm({
   keepDirtyOnReinitialize: true,
   enableReinitdestroyOnUnmountialize: true,
   destroyOnUnmount: true,
-  validate: Exchange.validate,
+  validate: validate,
 })
 )(injectIntl(Exchange));

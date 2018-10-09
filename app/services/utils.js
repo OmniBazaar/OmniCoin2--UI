@@ -72,9 +72,9 @@ const coefficients = {
 };
 const MINIMUN_AMOUNT = 0;
 
-const getAllowedAmount = (amount) => {
+const getAllowedAmount = (amount, noFixedValue) => {
   if (amount >= MINIMUN_AMOUNT) {
-    return amount.toFixed(5);
+    return noFixedValue ? amount : amount.toFixed(5);
   }
 
   return MINIMUN_AMOUNT;
@@ -85,20 +85,20 @@ Object.keys(coefficients).forEach(key => {
   coefficients[`${units[1]}to${units[0]}`] = 1 / coefficients[key];
 });
 
-const currencyConverter = (amount, fromCur, toCur) => {
+const currencyConverter = (amount, fromCur, toCur, noFixedValue) => {
   if (fromCur === toCur) {
     return amount;
   }
 
   const d = `${fromCur}to${toCur}`;
   if (coefficients[d]) {
-    return getAllowedAmount(amount * coefficients[d]);
+    return getAllowedAmount(amount * coefficients[d], noFixedValue);
   }
 
   const inverD = `${toCur}to${fromCur}`;
   if (coefficients[inverD]) {
     coefficients[d] = 1/coefficients[inverD];
-    return getAllowedAmount(amount * coefficients[d]);
+    return getAllowedAmount(amount * coefficients[d], noFixedValue);
   }
 
   const toUSD = `${fromCur}toUSD`;
@@ -108,7 +108,37 @@ const currencyConverter = (amount, fromCur, toCur) => {
   }
 
   coefficients[d] = coefficients[toUSD] * coefficients[fromUSD];
-  return getAllowedAmount(amount * coefficients[d]);
+  return getAllowedAmount(amount * coefficients[d], noFixedValue);
+}
+
+
+let minEthValue;
+const getMinEthValue = () => {
+  if (minEthValue) {
+    return minEthValue;
+  }
+
+  const minEth = currencyConverter(0.00001, 'OMNICOIN', 'ETHEREUM', true).toFixed(18);
+  let min = '';
+  for (let i = 0; i < minEth.length; i++) {
+    const c = minEth.charAt(i);
+    if (c === '0' || c === '.') {
+      min += c;
+    } else {
+      const v = parseInt(c) + 1;
+      if (v < 10) {
+        min += v;
+      } else {
+        min = v.substring(0, v.length - 1);
+        min += '1';
+      }
+
+      minEthValue = min;
+      break;
+    }
+  }
+
+  return minEthValue;
 }
 /*
 function currencyConverter(amount, from, to) {
@@ -134,5 +164,6 @@ export {
   wrapRequest,
   wsWatcher,
   reputationOptions,
-  currencyConverter
+  currencyConverter,
+  getMinEthValue
 };
