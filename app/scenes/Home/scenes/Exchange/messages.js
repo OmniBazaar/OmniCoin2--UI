@@ -104,6 +104,10 @@ const messages = defineMessages({
   understandOmniCoinTokenPurchaseAgreement: {
     id: 'Exchange.understandOmniCoinTokenPurchaseAgreement',
     defaultMessage: ' I understand that I am buying tokens for use in the OmniBazaar marketplace, and that those tokens do not represent any ownership, interest, dividends, control or other rights in OmniBazaar Inc., OmniCoin Foundation Company, or any other business entity. I understand the that the value of the tokens may go up or down in relation to products in the marketplace, other cryptocurrency tokens and my local currency.'
+  },
+  exchangeRate: {
+    id: 'Exchange.exchangeRate',
+    defaultMessage: 'Exchange rate'
   }
 });
 
