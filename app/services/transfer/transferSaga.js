@@ -105,18 +105,14 @@ function* omnicoinTransfer({payload: {
 }
 
 function* bitcoinTransfer({ payload: {
-  toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey
+  toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount
 }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
     const buyer = currentUser.username,
           seller = toName;
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
-    if (privateKey) {
-      yield call(BitcoinApi.sendTransaction, walletIdx, toBitcoinAddress, privateKey, parseFloat(amount));
-    } else {
-      yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
-    }
+    yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
     
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
