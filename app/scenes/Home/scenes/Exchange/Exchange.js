@@ -44,6 +44,7 @@ import {
 import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import { SATOSHI_IN_BTC } from '../../../../utils/constants';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import ExchangeRatesTable from './components/ExchangeRatesTable/ExchangeRatesTable'; 
 
 const currencyOptions = [
   {
@@ -445,23 +446,28 @@ class Exchange extends Component {
             </div>
             {currency === 'bitcoin' && this.renderBitcoinForm()}
             {currency === 'ethereum' && this.renderEthereumForm()}
-            <div className="omnicoin-description-links">
-              <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
-              <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
-              <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
-            
-              <div className="form-group">
-                <span />
-                <div className="field left floated">
-                  <Button
-                    type="submit"
-                    loading={this.props.exchange.loading}
-                    content={formatMessage(messages.exchange)}
-                    className="button--green-bg"
-                    disabled={this.props.invalid}
-                  />
+            <div className='footer-container'>
+              <div className='exchange-rate-table'>
+                <ExchangeRatesTable />
+              </div>
+              <div className="omnicoin-description-links">
+                <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
+                <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
+                <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
+              
+                <div className="form-group">
+                  <span />
+                  <div className="field left floated">
+                    <Button
+                      type="submit"
+                      loading={this.props.exchange.loading}
+                      content={formatMessage(messages.exchange)}
+                      className="button--green-bg"
+                      disabled={this.props.invalid}
+                    />
+                  </div>
+                  <div className="col-1" />
                 </div>
-                <div className="col-1" />
               </div>
             </div>
           </Form>
