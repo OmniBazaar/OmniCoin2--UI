@@ -152,7 +152,7 @@ class ImportListings extends Component {
       }
 
       this.removeAllFiles();
-      this.setState({ selectedPublisher: null, selectedVendor: null });
+      this.setState({ selectedPublisher: null, selectedVendor: null, isPromptVisible: false });
 
       toastr.success(
         formatMessage(messages.importationSuccessTitle),
