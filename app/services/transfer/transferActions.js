@@ -27,8 +27,8 @@ const {
     ({ to, amount, memo, reputation, listingId, listingTitle, listingCount }),
   OMNICOIN_TRANSFER_SUCCEEDED: () => ({ }),
   OMNICOIN_TRANSFER_FAILED: (error) => ({ error }),
-  BITCOIN_TRANSFER: (toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey) =>
-    ({ toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount, privateKey }),
+  BITCOIN_TRANSFER: (toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount) =>
+    ({ toBitcoinAddress, toName, guid, password, walletIdx, amount, listingId, listingTitle, listingCount }),
   BITCOIN_TRANSFER_SUCCEEDED: () => ({ }),
   BITCOIN_TRANSFER_FAILED: (error) => ({ error }),
   ETHEREUM_TRANSFER: (toEthereumAddress, toName, privateKey, amount, listingId, listingTitle, listingCount) =>

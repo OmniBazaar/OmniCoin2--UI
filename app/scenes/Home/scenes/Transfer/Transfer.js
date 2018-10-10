@@ -774,42 +774,6 @@ class Transfer extends Component {
             </div>
             <div className="col-1" />
           </div>
-          {
-            wallet === MANUAL_INPUT_VALUE && 
-            <div className="form-group">
-              <span>{formatMessage(messages.bitcoinAddress)}</span>
-              <div className="transfer-input">
-                <Field
-                  name="manualBitcoinAddress"
-                  component={InputField}
-                  placeholder={formatMessage(messages.enterBitcoinAddress)}
-                  className="textfield"
-                  validate={[
-                    required({ message: formatMessage(messages.fieldRequired) })
-                  ]}
-                />
-              </div>
-              <div className="col-1" />
-            </div>      
-          }
-          {
-            wallet === MANUAL_INPUT_VALUE && 
-            <div className="form-group">
-              <span>{formatMessage(messages.privateKey)}</span>
-              <div className="transfer-input">
-                <Field
-                  name="bitcoinPrivateKey"
-                  component={InputField}
-                  placeholder={formatMessage(messages.enterPrivateKey)}
-                  className="textfield"
-                  validate={[
-                    required({ message: formatMessage(messages.fieldRequired) })
-                  ]}
-                />
-              </div>
-              <div className="col-1" />
-            </div>      
-          }
         </div>
         <div className="section">
           <p className="title">{formatMessage(messages.to)}</p>
@@ -1032,14 +996,9 @@ class Transfer extends Component {
     password,
     guid,
     wallet,
-    amount,
-    manualBitcoinAddress,
-    bitcoinPrivateKey
+    amount
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
-    if (wallet === MANUAL_INPUT_VALUE) {
-      wallet = manualBitcoinAddress;
-    }
     
     this.props.transferActions.bitcoinTransfer(
       toAddress,
@@ -1050,8 +1009,7 @@ class Transfer extends Component {
       amount,
       purchaseParams.get('listing_id'),
       purchaseParams.get('title'),
-      purchaseParams.get('number'),
-      bitcoinPrivateKey
+      purchaseParams.get('number')
     )
   }
 
