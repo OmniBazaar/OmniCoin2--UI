@@ -284,9 +284,9 @@ class RecentTransactions extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentTransactionsVisible && recentTransactionsVisible.map(row =>
+                {recentTransactionsVisible && recentTransactionsVisible.map((row, index) =>
                       (
-                        <TableRow key={hash(row)}>
+                        <TableRow key={hash(row) + index.toString()}>
                           <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
