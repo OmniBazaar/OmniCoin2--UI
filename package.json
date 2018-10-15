@@ -187,7 +187,7 @@
     "moneysafe": "^1.1.1",
     "object-hash": "^1.2.0",
     "omnibazaar-dht": "git+ssh://github.com/OmniBazaar/DHT2.git",
-    "omnibazaarjs": "^1.39.0",
+    "omnibazaarjs": "^1.40.0",
     "omnibazaarjs-ws": "^1.0.1",
     "open": "0.0.5",
     "public-ip": "^2.4.0",
