@@ -108,6 +108,10 @@ const messages = defineMessages({
   exchangeRate: {
     id: 'Exchange.exchangeRate',
     defaultMessage: 'Exchange rate'
+  },
+  accountNotVerified: {
+    id: 'Exchange.accountNotVerified',
+    defaultMessage: "Your account's not verified to do exchange"
   }
 });
 

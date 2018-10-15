@@ -6,8 +6,10 @@ import {
   put,
   takeLatest,
   all,
-  call
+  call,
+  select
 } from 'redux-saga/effects';
+import { Apis } from 'omnibazaarjs-ws';
 import {
   exchangeBtcFailed,
   exchangeBtcSucceeded,
@@ -47,8 +49,18 @@ export function* exchangeSubscriber() {
 }
 
 
+function* checkAccountVerified() {
+  const { currentUser } = (yield select()).default.auth;
+  const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
+  if (!account.verified) {
+    throw new Error('not_verified');
+  }
+}
+
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
+    yield checkAccountVerified();
+
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
 
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
@@ -58,12 +70,14 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
-    yield put(exchangeBtcFailed(error));
+    yield put(exchangeBtcFailed(error.message));
   }
 }
 
 function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   try {
+    yield checkAccountVerified();
+
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
     yield broadcastExchange(result.hash, 'ETH');
@@ -71,7 +85,6 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     yield put(exchangeEthSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
-    yield put(exchangeEthFailed({...error}));
+    yield put(exchangeEthFailed(error.message));
   }
 }
-
