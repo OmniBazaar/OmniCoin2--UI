@@ -120,7 +120,14 @@ const getListingsDetail = async (user, listingObjects) => {
     const publisher = {
       publisher_ip: listing.publisherIp
     };
-    const listingDetail = await getListing(user, publisher, listing.id);
+
+    let listingDetail = null;
+    try {
+      listingDetail = await getListing(user, publisher, listing.id);
+    } catch (err) {
+      console.log(err);
+    }
+
     listingsMap[listingId] = {
       ...listing,
       title: listingDetail ? listingDetail.listing_title : ''
@@ -156,6 +163,7 @@ function * getSellings() {
       publisher: item.publisher,
       buyer: item.from
     }));
+
     yield put(getMySellingsSucceeded(soldItems));
   } catch (error) {
     console.log('ERROR ', error);
