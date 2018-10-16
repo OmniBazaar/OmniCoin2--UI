@@ -385,7 +385,7 @@ class Exchange extends Component {
           />
           <p>
             {formatMessage(messages.readOmniCoinInformationMemorandumText)}
-            <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
+            <a className="link" href=" https://omnicoin.net/wp-content/uploads/2018/10/Omnicoin-Information-Memorandum.pdf" target="_blank">
               {formatMessage(messages.readOmniCoinInformationMemorandumLink)}
             </a>
           </p>
@@ -406,7 +406,7 @@ class Exchange extends Component {
           />
           <p>
             {formatMessage(messages.readOmniCoinTokenPurchaseAgreementText)}
-            <a className="link" href="https://drive.google.com/open?id=1xYj1s_VM4WavRV4Bm-tmNuTBKAop9vUy" target="_blank">
+            <a className="link" href="https://omnicoin.net/wp-content/uploads/2018/10/OmniCoin-General-Terms-of-Service.pdf" target="_blank">
               {formatMessage(messages.readOmniCoinTokenPurchaseAgreementLink)}
             </a>
             {formatMessage(messages.understandOmniCoinTokenPurchaseAgreement)}
