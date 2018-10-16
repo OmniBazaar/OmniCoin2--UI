@@ -293,7 +293,7 @@ class Wallet extends Component {
                   </Tab.Pane>)
               },
               {
-                menuItem: 'Ethereum',
+                menuItem: 'Ether',
                 render: () =>
                   (<Tab.Pane>
                     {this.props.ethereum.address ?

@@ -35,7 +35,7 @@ export default defineMessages({
   },
   ethereumAddress: {
     id: 'Transfer.ethereumAddress',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   pleaseEnter: {
     id: 'Transfer.pleaseEnter',
