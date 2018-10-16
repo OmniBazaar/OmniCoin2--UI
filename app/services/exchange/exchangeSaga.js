@@ -33,7 +33,8 @@ async function broadcastExchange(txId, coinName) {
   tr.add_type_operation("exchange_create_operation", {
       coin_name: coinName,
       tx_id: txId,
-      sender: currentAcc.get('id')
+      sender: currentAcc.get('id'),
+      extensions: []
   });
   const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
   await tr.set_required_fees();
