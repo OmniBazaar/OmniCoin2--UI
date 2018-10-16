@@ -18,7 +18,7 @@ export default class Background extends Component {
       <div className="background-container">
         <div className="background-content" style={{ backgroundImage: `url(${BackgroundImage})` }}>
           <div className="header">
-            <Image src={Logo} width={460} height={100} />
+            <Image src={Logo} width={420} height={84} />
             <FormattedMessage
               id="Background.header"
               defaultMessage="Comunity-Owned Peer-to-Peer Marketplace"
