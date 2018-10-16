@@ -112,6 +112,10 @@ const messages = defineMessages({
   accountNotVerified: {
     id: 'Exchange.accountNotVerified',
     defaultMessage: "Your account's not verified to do exchange"
+  },
+  omniCoinsAppearNotification: {
+    id: 'Exchange.omniCoinsAppearNotification',
+    defaultMessage: 'Your OmniCoins will appear in your account balance after validations'
   }
 });
 
