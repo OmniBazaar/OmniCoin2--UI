@@ -30,6 +30,19 @@
       .hash {
         width: 60%;        
         word-wrap: break-word;
+        font-size: 9px;                  
+      }
+
+      @media (min-width: 768px) and (max-width: 1024px)  {
+        .hash {
+          width: 40%;        
+        }
+      }
+
+      @media (max-width: 767px) {
+        .hash {
+          width: 30%;        
+        }
       }
     }
   }
