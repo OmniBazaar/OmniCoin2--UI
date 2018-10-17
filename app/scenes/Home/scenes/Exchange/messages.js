@@ -99,7 +99,7 @@ const messages = defineMessages({
   },
   readOmniCoinTokenPurchaseAgreementLink: {
     id: 'Exchange.readOmniCoinTokenPurchaseAgreementLink',
-    defaultMessage: 'OmniCoin Token Purchase Agreement.'
+    defaultMessage: 'OmniCoin General Terms of Service.'
   },
   understandOmniCoinTokenPurchaseAgreement: {
     id: 'Exchange.understandOmniCoinTokenPurchaseAgreement',
