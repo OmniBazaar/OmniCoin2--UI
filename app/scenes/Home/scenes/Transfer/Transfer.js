@@ -86,7 +86,7 @@ const currencyOptions = [
   {
     key: 'ethereum',
     value: 'ethereum',
-    text: 'Ethereum',
+    text: 'Ether',
     description: 'Ethereum Currency'
   }
 ];
