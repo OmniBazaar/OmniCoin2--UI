@@ -426,6 +426,7 @@ class Exchange extends Component {
         <Header className="button--green-bg" title={formatMessage(messages.exchange)} />
         <span className="page-description">{formatMessage(messages.pageDescription)}</span>
         <div className="exchange-form">
+          <span className="omnicoin-appear-notification">{formatMessage(messages.omniCoinsAppearNotification)}</span>      
           <Form
             onChange={() => this.setState({ isPromptVisible: true })}
             onSubmit={handleSubmit(this.submitTransfer)}
