@@ -36,19 +36,13 @@ export function* connect() {
 
   try {
     const { priority, publisherName } = AccountSettingsStorage.getPublisherData();
-    let ips = [];
+    let ips = null;
 
     if (priority === 'publisher') {
       ips = [`${publisherName.publisher_ip}:${dhtPort}`];
     } else {
-      const publishers = yield Apis.instance()
-        .db_api()
-        .exec('get_publisher_nodes_names', []);
-      const publishersAccounts = yield Promise.all(publishers.map(publisher => FetchChain('getAccount', publisher)))
-        .catch(() => { getAccountErrorHappened = true; });
-      ips = (publishersAccounts || [])
-        .filter(publisher => !!publisher.get('publisher_ip'))
-        .map(publisher => `${publisher.get('publisher_ip')}:${dhtPort}`);
+      const publishersAlive = yield getAlivePublisherIps();
+      ips = Object.keys(publishersAlive).map(ip => `${ip}:${dhtPort}`);
     }
 
     const connector = yield call(dhtConnector.init, {
@@ -150,6 +144,27 @@ export function* getAlivePublisherIps() {
   });
 
   return publisherIps;
+}
+
+export function* searchPeers({
+  searchTerm, category,
+  country, state, city,
+  searchListings, subCategory
+}) {
+  const publisherData = AccountSettingsStorage.getPublisherData();
+  if (publisherData.priority === 'publisher') {
+    return {
+      publishers: [publisherData.publisherName.publisher_ip]
+    }
+  }
+
+  const { dht } = (yield select()).default;
+  while (dht.isConnecting) {
+    yield delay(200);
+  }
+
+  
+
 }
 
 export function* getPeersFor({
