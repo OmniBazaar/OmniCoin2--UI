@@ -126,6 +126,10 @@ const messages = defineMessages({
   [ChainTypes.operations.vesting_balance_withdraw]: {
     id: 'RecentTransaction.vestingWithdraw',
     defaultMessage: 'VESTING WITHDRAW'
+  },
+  [ChainTypes.operations.exchange_complete_operation]: {
+    id: 'RecentTransaction.exchange',
+    defaultMessage: 'EXCHANGE'
   }
 });
 
@@ -186,6 +190,21 @@ class RecentTransactions extends Component {
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
+  }
+
+  renderMemo(memo) {
+    if (!memo) {
+      return '';
+    }
+    const lines = memo.split("\n");
+    const lineViews = [];
+    lines.forEach((l, i) => {
+      if (i > 0) {
+        lineViews.push(<br />);
+      }
+      lineViews.push(<span key={i}>{l}</span>);
+    });
+    return lineViews;
   }
 
   render() {
@@ -300,10 +319,10 @@ class RecentTransactions extends Component {
                             </div>
                           </TableCell>
                           {coinType === CoinTypes.OMNI_COIN &&
-                            <TableCell>{row.memo}</TableCell>
+                            <TableCell>{this.renderMemo(row.memo)}</TableCell>
                           }
                           <TableCell>{row.amount}</TableCell>
-                          <TableCell>{row.fromTo === 'exchange' ? 1 : row.fee}</TableCell>
+                          <TableCell>{row.fee}</TableCell>
                           {coinType === CoinTypes.OMNI_COIN &&
                             <TableCell>
                               <div className={cn('badge-tag', row.statusText)}>
