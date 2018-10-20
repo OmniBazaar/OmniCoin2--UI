@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
   ethAddressTitle: {
     id: 'Setting.ethAddressTitle',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   publisherTitle: {
     id: 'PublicData.publisherTitle',
