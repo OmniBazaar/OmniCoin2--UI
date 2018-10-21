@@ -279,7 +279,7 @@ const messages = defineMessages({
   },
   ethereumAddress: {
     id: 'AddListing.ethereumAddress',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
