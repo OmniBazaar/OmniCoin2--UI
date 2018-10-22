@@ -72,6 +72,9 @@ function* searchListings({
   }
 }
 
+export const CATEGORY_IGNORED = ['all', 'featuredlistings'];
+export const SUBCATEGORY_IGNORED = ['all'];
+
 export function* searchListingsByPeersMap({
   payload: {
     peersMap, category, country, state, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu

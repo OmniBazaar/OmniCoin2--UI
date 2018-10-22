@@ -18,7 +18,11 @@ import AccountSettingsStorage from '../../accountSettings/accountStorage';
 import { getPreferences } from '../../preferences/services';
 import { getAllPublishers } from '../../accountSettings/services';
 import { checkAndUpdatePublishersAliveStatus } from '../../listing/listingSaga';
-import { searchListings as searchListingsAction} from "../searchActions";
+import {
+  CATEGORY_IGNORED,
+  SUBCATEGORY_IGNORED,
+  searchListings as searchListingsAction
+} from "../searchActions";
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -146,24 +150,162 @@ export function* getAlivePublisherIps() {
   return publisherIps;
 }
 
+const dhtSearch = (key) => dhtConnector.findPeersFor(key);
+
+const findHostsPresentInAllDhtResults = (dhtSearchResults) => {
+  const resultHosts = dhtSearchResults.map(result => {
+    const hosts = {};
+    result.forEach(r => {
+      if (r.peers) {
+        r.peers.forEach(p => {
+          if (!hosts[p.host]) {
+            hosts[p] = true;
+          }
+        });
+      }
+    });
+
+    return hosts;
+  });
+
+  if (resultHosts.length === 1) {
+    return Object.keys(resultHosts[0]);
+  }
+
+  const hosts = [];
+  Object.keys(resultHosts[0]).forEach(host => {
+    for (let i = 1; i < resultHosts.length; i++) {
+      if (!resultHosts[i][host]) {
+        return;
+      }
+    }
+
+    hosts.push(host);
+  });
+
+  return hosts;
+}
+
+/**
+* return array of result host ips
+*/
+const searchMeta = async ({ category, subCategory, country, state, city }) => {
+  const promises = [];
+
+  if (category && CATEGORY_IGNORED.indexOf(category.toLowerCase()) === -1) {
+    promises.push(dhtSearch(`category:${category}`));
+  }
+
+  if (subCategory && SUBCATEGORY_IGNORED.indexOf(subCategory.toLowerCase()) === -1) {
+    promises.push(dhtSearch(`subcategory:${subcategory}`));
+  }
+
+  if (country) {
+    promises.push(dhtSearch(`country:${country}`));
+  }
+
+  if (state) {
+    promises.push(dhtSearch(`state:${state}`));
+  }
+
+  if (city) {
+    promises.push(dhtSearch(`city:${city}`));
+  }
+
+  if (!promises.length) {
+    return null;
+  }
+
+  const result = await Promise.all(promises);
+  return findHostsPresentInAllDhtResults(result);
+}
+
+const searchKeywords = async (keywords, isSearchAll) => {
+  const result = await Promise.all(keywords.map(keyword => dhtSearch(`keyword:${keyword}`)));
+  const keywordsResults = {};
+  result.forEach((dhtResults, index) => {
+    if (!dhtResults || !dhtResults.length) {
+      keywordsResults[keywords[index]] = {};
+      return;
+    }
+
+    dhtResults.forEach(r => {
+      const keyword = r.keyword.substring(8);
+      if (!keywordsResults[keyword]) {
+        keywordsResults[keyword] = {};
+      }
+
+      if (!r.peers || !r.peers.length) {
+        return;
+      }
+
+      r.peers.forEach(peer => {
+        const { host, weight } = peer;
+        if (!keywordsResults[keyword][host]) {
+          keywordsResults[keyword][host] = {
+            address: host,
+            weight
+          };
+        } else {
+          keywordsResults[keyword][host].weight += weight;
+        }
+      });
+    });
+  });
+
+  if (keywords.length === 1) {
+    return keywordsResults;
+  }
+
+  if (isSearchAll) {
+    const firstKeywordResult = keywordsResults[keywords[0]];
+    const validHosts = [];
+    Object.keys(firstKeywordResult).forEach(host => {
+      for (let i = 1; i < keywords.length; i++) {
+        if (!keywordsResults[keywords[i]][host]) {
+          return;
+        }
+      }
+      validHosts.push(host);
+    });
+
+    if (!validHosts.length) {
+      return {};
+    }
+
+    const searchAllResults = {};
+    validHosts.forEach(host => {
+      
+    });
+  }
+}
+
 export function* searchPeers({
   searchTerm, category,
   country, state, city,
   searchListings, subCategory
 }) {
-  const publisherData = AccountSettingsStorage.getPublisherData();
-  if (publisherData.priority === 'publisher') {
-    return {
-      publishers: [publisherData.publisherName.publisher_ip]
-    }
-  }
-
   const { dht } = (yield select()).default;
   while (dht.isConnecting) {
     yield delay(200);
   }
 
-  
+  let metaHosts = yield searchMeta({category, subcategory, country, state, city});
+  if (metaHosts === null) {
+    return null;
+  }
+
+  const publisherData = AccountSettingsStorage.getPublisherData();
+  const isPublisherSelected = publisherData.priority === 'publisher';
+  if (isPublisherSelected) {
+    const priorityPublisher = publisherData.publisherName.publisher_ip;
+    if (metaHosts.indexOf(priorityPublisher) === -1) {
+      return null;
+    }
+
+    metaHosts = [priorityPublisher];
+  }
+
 
 }
 
