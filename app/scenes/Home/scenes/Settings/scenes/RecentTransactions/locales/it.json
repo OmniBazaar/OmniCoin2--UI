@@ -17,5 +17,6 @@
   "RecentTransactions.welcomeBonus": "WELCOME BONUS",
   "RecentTransactions.saleBonus": "SALE BONUS",
   "RecentTransactions.witnessBonus": "WITNESS BONUS",
-  "RecentTransactions.developerBonus": "DEVELOPER BONUS"
+  "RecentTransactions.developerBonus": "DEVELOPER BONUS",
+  "RecentTransaction.exchange": "EXCHANGE"
 }

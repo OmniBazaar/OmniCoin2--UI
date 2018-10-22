@@ -17,7 +17,7 @@ const currencies = {
   },
   ETHEREUM: {
     id: 'Marketplace.currencyEthereum',
-    defaultMessage: 'Ethereum'
+    defaultMessage: 'Ether'
   },
   OMNICOIN: {
     id: 'Marketplace.currencyOmnycoin',
