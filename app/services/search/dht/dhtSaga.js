@@ -220,17 +220,18 @@ const searchMeta = async ({ category, subCategory, country, state, city }) => {
   return findHostsPresentInAllDhtResults(result);
 }
 
-const searchKeywords = async (keywords, isSearchAll) => {
+const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
+  keywords = keywords.map(k => k.toLowerCase());
   const result = await Promise.all(keywords.map(keyword => dhtSearch(`keyword:${keyword}`)));
   const keywordsResults = {};
   result.forEach((dhtResults, index) => {
+    const keyword = keywords[index];
     if (!dhtResults || !dhtResults.length) {
-      keywordsResults[keywords[index]] = {};
+      keywordsResults[keyword] = {};
       return;
     }
 
     dhtResults.forEach(r => {
-      const keyword = r.keyword.substring(8);
       if (!keywordsResults[keyword]) {
         keywordsResults[keyword] = {};
       }
@@ -257,33 +258,51 @@ const searchKeywords = async (keywords, isSearchAll) => {
     return keywordsResults;
   }
 
+  let validHosts = null;
+
   if (isSearchAll) {
     const firstKeywordResult = keywordsResults[keywords[0]];
-    const validHosts = [];
+    validHosts = [];
     Object.keys(firstKeywordResult).forEach(host => {
       for (let i = 1; i < keywords.length; i++) {
         if (!keywordsResults[keywords[i]][host]) {
           return;
         }
       }
-      validHosts.push(host);
+      if (filteredHosts && filteredHosts.indexOf(host) > -1) {
+        validHosts.push(host);
+      }
     });
-
-    if (!validHosts.length) {
-      return {};
-    }
-
-    const searchAllResults = {};
-    validHosts.forEach(host => {
-      
-    });
+  } else if (filteredHosts) {
+    validHosts = filteredHosts;
   }
+
+  if (!validHosts) {
+    return keywordsResults;
+  }
+
+  if (!validHosts.length) {
+    return {};
+  }
+
+  const searchResults = {};
+  Object.keys(keywordsResults).forEach(keyword => {
+    validHosts.forEach(host => {
+      if (keywordsResults[keyword][host]) {
+        if (!searchResults[keyword]) {
+          searchResults[keyword] = {};
+        } 
+        searchResults[keyword][host] = keywordsResults[keyword][host];
+      }
+    });
+  });
+
+  return searchResults;
 }
 
 export function* searchPeers({
-  searchTerm, category,
-  country, state, city,
-  searchListings, subCategory
+  searchTerm, category, subCategory,
+  country, state, city, isSearchByAllKeywords
 }) {
   const { dht } = (yield select()).default;
   while (dht.isConnecting) {
@@ -291,7 +310,8 @@ export function* searchPeers({
   }
 
   let metaHosts = yield searchMeta({category, subcategory, country, state, city});
-  if (metaHosts === null) {
+  const hasMetaSearch = metaHosts !== null;
+  if (hasMetaSearch && !metaHosts.length) {
     return null;
   }
 
@@ -299,14 +319,63 @@ export function* searchPeers({
   const isPublisherSelected = publisherData.priority === 'publisher';
   if (isPublisherSelected) {
     const priorityPublisher = publisherData.publisherName.publisher_ip;
-    if (metaHosts.indexOf(priorityPublisher) === -1) {
+    if (hasMetaSearch && metaHosts.indexOf(priorityPublisher) === -1) {
       return null;
     }
 
     metaHosts = [priorityPublisher];
+    hasMetaSearch = true;
   }
 
+  let keywords = searchTerm || [];
+  if (typeof searchTerm === 'string') {
+    keywords = searchTerm.split(' ').map(item => item.trim());
+  }
+  if (keywords.length) {
+    const keywordSearchResults = yield searchKeywords(keywords, isSearchByAllKeywords, hasMetaSearch ? metaHosts : null);
+    if (!Object.keys(keywordSearchResults).length) {
+      return null;
+    }
+    if (isSearchByAllKeywords) {
+      const publishersData = {};
+      keywordSearchResults.forEach((hosts, host) => {
+        hosts.forEach(pub => {
+          if (!publisherData[host]) {
+            publisherData[host] = pub;
+          } else {
+            publisherData[host].weight += pub.weight;
+          }
+        });
+      });
 
+      return {
+        keywords,
+        publishers: Object.keys(publishersData).map(h => publishersData[h])
+      };
+    } else {
+      const keywordsData = [];
+      keywordSearchResults.forEach((hosts, keyword) => {
+        keywordsData.push({
+          keyword,
+          publishers: Object.keys(hosts).map(h => hosts[h])
+        });
+      });
+      return {
+        keywords: keywordsData
+      };
+    }
+  }
+
+  if (hasMetaSearch) {
+    return {
+      publishers: metaHosts.map(h => ({
+        address: h,
+        weight: 1
+      }))
+    }
+  }
+
+  return null;
 }
 
 export function* getPeersFor({

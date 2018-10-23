@@ -22,6 +22,7 @@ import {
 import { clearMyListings } from '../listing/listingActions';
 import SearchHistory from './searchHistory';
 import { getNewId, messageTypes, ws } from '../marketplace/wsSaga';
+import { searchPeers } from './dht/dhtSaga';
 
 
 export function* searchSubscriber() {
@@ -34,7 +35,125 @@ export function* searchSubscriber() {
   ]);
 }
 
+function* obSearch({
+  dhtResult, searchTerm, category, subCategory,
+  country, state, city, isSearchByAllKeywords, fromSearchMenu
+}) {
+  let message;
+  const id = getNewId();
+  const filters = [];
+
+  if (category && CATEGORY_IGNORED.indexOf(category.toLowerCase()) === -1) {
+    filters.push({
+      op: '=',
+      name: 'category',
+      value: category,
+    });
+  }
+
+  if (subCategory && SUBCATEGORY_IGNORED.indexOf(subCategory.toLowerCase()) === -1) {
+    filters.push({
+      op: '=',
+      name: 'subcategory',
+      value: subCategory,
+    });
+  }
+
+  if (country) {
+    filters.push({
+      op: '=',
+      name: 'country',
+      value: country,
+    });
+  }
+
+  if (state) {
+    filters.push({
+      op: '=',
+      name: 'state',
+      value: state,
+    });
+  }
+
+  if (city) {
+    filters.push({
+      op: '=',
+      name: 'city',
+      value: city,
+    });
+  }
+
+  const type = (
+    isSearchByAllKeywords ?
+    messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS :
+    messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD
+  );
+
+  message = {
+    id,
+    type,
+    command: {
+      currency: 'BTC',
+      range: '20',
+      filters,
+      ...dhtResult
+    }
+  };
+
+  if (searchByAllKeywords) {
+    message = {
+      type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS
+    };
+  } else {
+    message = {
+      type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD,
+      command: {
+        keywords: peersMap,
+        currency: 'BTC',
+        range: '20',
+        filters
+      },
+    };
+  }
+
+  ws.send(JSON.stringify(message));
+  yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
+}
+
 function* searchListings({
+  payload: {
+    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
+  }
+}) {
+  try {
+    const { saving } = (yield select()).default.listing.saveListing;
+    if (saving) {
+      yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
+      return;
+    }
+
+    yield put(clearMyListings());
+    const { currentUser } = (yield select()).default.auth;
+    if (historify) {
+      const searchHistory = new SearchHistory(currentUser.username);
+      searchHistory.add({ searchTerm, category, subCategory });
+    }
+    yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
+
+    const { searchListingOption } = getPreferences();
+    const isSearchByAllKeywords = searchListingOption && searchListingOption === 'allKeywords';
+
+    const dhtResult = yield searchPeers({
+      searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
+    });
+    
+  } catch (e) {
+    console.log('ERROR ', e);
+    yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
+  }
+}
+
+function* searchListingsOld({
   payload: {
     searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }
