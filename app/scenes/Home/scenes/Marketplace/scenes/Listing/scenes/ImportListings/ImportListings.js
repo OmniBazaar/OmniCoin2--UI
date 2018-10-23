@@ -161,6 +161,11 @@ class ImportListings extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.removeAllFiles();
+    this.props.listingActions.removeAllFiles();
+  }
+
   vendorsConfigs = {
     amazon: () => (
       <AmazonListingsConfig
