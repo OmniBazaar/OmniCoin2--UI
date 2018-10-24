@@ -49,6 +49,8 @@ export function* connect() {
       ips = Object.keys(publishersAlive).map(ip => `${ip}:${dhtPort}`);
     }
 
+    console.log({ips});
+
     const connector = yield call(dhtConnector.init, {
       publishers: ips
     });
@@ -66,7 +68,9 @@ export function* connect() {
 }
 
 export function* reconnect() {
-  yield call(dhtConnector.disconnect);
+  console.log('RECONNECT');
+  yield dhtConnector.disconnect();
+  console.log('DISCONNECT');
   yield put({ type: 'DHT_CONNECT' });
 }
 
@@ -228,6 +232,7 @@ const searchMeta = async ({ category, subCategory, country, state, city }) => {
 const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   keywords = keywords.map(k => k.toLowerCase());
   const result = await Promise.all(keywords.map(keyword => dhtSearch(`keyword:${keyword}`)));
+  console.log({result});
   const keywordsResults = {};
   result.forEach((dhtResults, index) => {
     const keyword = keywords[index];
@@ -237,12 +242,12 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
     }
 
     dhtResults.forEach(r => {
-      if (!keywordsResults[keyword]) {
-        keywordsResults[keyword] = {};
-      }
-
       if (!r.peers || !r.peers.length) {
         return;
+      }
+
+      if (!keywordsResults[keyword]) {
+        keywordsResults[keyword] = {};
       }
 
       r.peers.forEach(peer => {
@@ -266,6 +271,7 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   let validHosts = null;
 
   if (isSearchAll) {
+    console.log({keywordsResults, filteredHosts});
     const firstKeywordResult = keywordsResults[keywords[0]];
     validHosts = [];
     Object.keys(firstKeywordResult).forEach(host => {
@@ -274,9 +280,11 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
           return;
         }
       }
-      if (filteredHosts && filteredHosts.indexOf(host) > -1) {
-        validHosts.push(host);
+      if (filteredHosts && filteredHosts.indexOf(host) === -1) {
+        return;
       }
+
+      validHosts.push(host);
     });
   } else if (filteredHosts) {
     validHosts = filteredHosts;
@@ -312,13 +320,14 @@ export function* searchPeers({
   console.log({searchTerm, category, subCategory,
   country, state, city, isSearchByAllKeywords})
 
-  const { dht } = (yield select()).default;
-  while (dht.isConnecting) {
+  let { dht } = (yield select()).default;
+  while (!dht.connector || dht.isConnecting) {
     yield delay(200);
+    dht = (yield select()).default.dht;
   }
 
   let metaHosts = yield searchMeta({category, subCategory, country, state, city});
-  const hasMetaSearch = metaHosts !== null;
+  let hasMetaSearch = metaHosts !== null;
   if (hasMetaSearch && !metaHosts.length) {
     return null;
   }

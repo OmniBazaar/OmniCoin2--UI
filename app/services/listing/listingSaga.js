@@ -351,8 +351,13 @@ export function* checkListingHash({ payload: { listing } }) {
 
 export function* checkAndUpdatePublishersAliveStatus() {
   const publisherResults = yield call(getAllPublishers);
+  const publisherResultsMap = {};
+  publisherResults.forEach(pub => {
+    publisherResultsMap[pub.publisher_ip] = true;
+  });
+
   const allPublishers = (yield select()).default.listing.allPublishers.publishers;
-  let publishers = [...allPublishers];
+  let publishers = allPublishers.filter(pub => publisherResultsMap[pub.publisher_ip]);
   const existPublishers = {};
   publishers.forEach(pub => {
     existPublishers[pub.publisher_ip] = true;

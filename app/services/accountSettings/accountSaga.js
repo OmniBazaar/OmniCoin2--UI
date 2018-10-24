@@ -34,6 +34,7 @@ import { loadListingDefault } from "../listing/listingDefaultsActions";
 import { loadLocalPreferences } from "../preferences/preferencesActions";
 import { checkUpdate } from "../updateNotification/updateNotificationActions";
 import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
+import { dhtReconnect } from '../search/dht/dhtActions';
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -89,13 +90,20 @@ export function* updatePublicData() {
     eth_address: account.ethAddress,
   };
 
+  let isChangePublisher = false;
   if (dbAccount.is_a_publisher !== account.publisher || dbAccount.publisher_ip !== account.ipAddress) {
     data['is_a_publisher'] = account.publisher;
     data['publisher_ip'] = account.publisher ? account.ipAddress : '';
+    isChangePublisher = true;
   }
 
   try {
     yield updateAccount(data);
+    
+    if (isChangePublisher) {
+      yield put(dhtReconnect());
+    }
+    
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
     console.log('ERR', e);

@@ -91,23 +91,16 @@ class Marketplace extends Component {
       this.fetchListings(this.props.account.publisherData);
     }
 
-    if (this.props.dht.isConnecting && !nextProps.dht.isConnecting) {
-      this.fetchListings(this.props.account.publisherData);
-    }
+    // if (this.props.dht.isConnecting && !nextProps.dht.isConnecting) {
+    //   this.fetchListings(this.props.account.publisherData);
+    // }
   }
 
   fetchListings({
     country, state, city, keywords
   }) {
     const searchTerm = keywords.join(' ');
-    const searchListings = () => {
-      if (!this.props.dht.isConnecting && this.props.dht.connector) {
-        this.props.searchActions.searchListings(searchTerm, 'All', country, state, city, true, null);
-      } else {
-        setTimeout(searchListings, 500);
-      }
-    };
-    searchListings();
+    this.props.searchActions.searchListings(searchTerm, 'All', country, state, city, true, null);
   }
 
   listItems(items, size) {

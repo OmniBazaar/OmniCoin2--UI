@@ -84,6 +84,7 @@ function* obSearch({
     });
   }
 
+  isSearchByAllKeywords = isSearchByAllKeywords || !dhtResult.keywords.length;
   const type = (
     isSearchByAllKeywords ?
     messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS :
