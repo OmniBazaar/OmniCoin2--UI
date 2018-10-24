@@ -31,6 +31,7 @@ const defaultState = {
   country: '',
   state: '',
   name: '',
+  units: '',
   bitcoin_address: '',
   ethereum_address: ''
 };
