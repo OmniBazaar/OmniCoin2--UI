@@ -8,7 +8,7 @@ import {
   select
 } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
-import { includes, uniqBy } from 'lodash';
+import { includes, uniqBy, forOwn } from 'lodash';
 import { Apis } from 'omnibazaarjs-ws';
 import { FetchChain } from 'omnibazaarjs';
 
@@ -22,7 +22,7 @@ import {
   CATEGORY_IGNORED,
   SUBCATEGORY_IGNORED,
   searchListings as searchListingsAction
-} from "../searchActions";
+} from "../searchSaga";
 
 const dhtPort = '8500';
 const dhtConnector = new DHTConnector();
@@ -159,7 +159,7 @@ const findHostsPresentInAllDhtResults = (dhtSearchResults) => {
       if (r.peers) {
         r.peers.forEach(p => {
           if (!hosts[p.host]) {
-            hosts[p] = true;
+            hosts[p.host] = true;
           }
         });
       }
@@ -167,6 +167,11 @@ const findHostsPresentInAllDhtResults = (dhtSearchResults) => {
 
     return hosts;
   });
+
+  console.log({
+    resultHosts,
+    dhtSearchResults
+  })
 
   if (resultHosts.length === 1) {
     return Object.keys(resultHosts[0]);
@@ -197,7 +202,7 @@ const searchMeta = async ({ category, subCategory, country, state, city }) => {
   }
 
   if (subCategory && SUBCATEGORY_IGNORED.indexOf(subCategory.toLowerCase()) === -1) {
-    promises.push(dhtSearch(`subcategory:${subcategory}`));
+    promises.push(dhtSearch(`subcategory:${subCategory}`));
   }
 
   if (country) {
@@ -286,13 +291,13 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   }
 
   const searchResults = {};
-  Object.keys(keywordsResults).forEach(keyword => {
+  forOwn(keywordsResults, (hosts, keyword) => {
     validHosts.forEach(host => {
-      if (keywordsResults[keyword][host]) {
+      if (hosts[host]) {
         if (!searchResults[keyword]) {
           searchResults[keyword] = {};
         } 
-        searchResults[keyword][host] = keywordsResults[keyword][host];
+        searchResults[keyword][host] = hosts[host];
       }
     });
   });
@@ -304,12 +309,15 @@ export function* searchPeers({
   searchTerm, category, subCategory,
   country, state, city, isSearchByAllKeywords
 }) {
+  console.log({searchTerm, category, subCategory,
+  country, state, city, isSearchByAllKeywords})
+
   const { dht } = (yield select()).default;
   while (dht.isConnecting) {
     yield delay(200);
   }
 
-  let metaHosts = yield searchMeta({category, subcategory, country, state, city});
+  let metaHosts = yield searchMeta({category, subCategory, country, state, city});
   const hasMetaSearch = metaHosts !== null;
   if (hasMetaSearch && !metaHosts.length) {
     return null;
@@ -327,23 +335,36 @@ export function* searchPeers({
     hasMetaSearch = true;
   }
 
+  console.log({metaHosts});
+
   let keywords = searchTerm || [];
-  if (typeof searchTerm === 'string') {
-    keywords = searchTerm.split(' ').map(item => item.trim());
+  if (typeof keywords === 'string') {
+    keywords = keywords.trim();
+    if (keywords) {
+      keywords = keywords.split(' ').map(item => item.trim()).filter(item => item);
+    } else {
+      keywords = [];
+    }
   }
+
+  console.log({keywords});
+
   if (keywords.length) {
     const keywordSearchResults = yield searchKeywords(keywords, isSearchByAllKeywords, hasMetaSearch ? metaHosts : null);
+
+    console.log({keywordSearchResults});
+
     if (!Object.keys(keywordSearchResults).length) {
       return null;
     }
     if (isSearchByAllKeywords) {
       const publishersData = {};
-      keywordSearchResults.forEach((hosts, host) => {
-        hosts.forEach(pub => {
+      forOwn(keywordSearchResults, (hosts) => {
+        forOwn(hosts, (pub, host) => {
           if (!publisherData[host]) {
-            publisherData[host] = pub;
+            publishersData[host] = pub;
           } else {
-            publisherData[host].weight += pub.weight;
+            publishersData[host].weight += pub.weight;
           }
         });
       });
@@ -354,12 +375,13 @@ export function* searchPeers({
       };
     } else {
       const keywordsData = [];
-      keywordSearchResults.forEach((hosts, keyword) => {
+      forOwn(keywordSearchResults, (hosts, keyword) => {
         keywordsData.push({
           keyword,
           publishers: Object.keys(hosts).map(h => hosts[h])
         });
       });
+
       return {
         keywords: keywordsData
       };
@@ -367,12 +389,15 @@ export function* searchPeers({
   }
 
   if (hasMetaSearch) {
+    const publishers = metaHosts.map(h => ({
+      address: h,
+      weight: 1
+    }));
+
     return {
-      publishers: metaHosts.map(h => ({
-        address: h,
-        weight: 1
-      }))
-    }
+      keywords: [],
+      publishers
+    };
   }
 
   return null;

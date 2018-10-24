@@ -17,12 +17,14 @@ import {
   saveSearchSucceeded,
   saveSearchFailed,
   searching,
-  setSearchListingsParams
+  setSearchListingsParams,
+  searchResultEmpty
 } from './searchActions';
 import { clearMyListings } from '../listing/listingActions';
 import SearchHistory from './searchHistory';
 import { getNewId, messageTypes, ws } from '../marketplace/wsSaga';
 import { searchPeers } from './dht/dhtSaga';
+import { getPreferences } from '../preferences/services';
 
 
 export function* searchSubscriber() {
@@ -36,11 +38,10 @@ export function* searchSubscriber() {
 }
 
 function* obSearch({
-  dhtResult, searchTerm, category, subCategory,
-  country, state, city, isSearchByAllKeywords, fromSearchMenu
+  searchId, dhtResult, searchTerm, category, subCategory,
+  country, state, city, isSearchByAllKeywords
 }) {
   let message;
-  const id = getNewId();
   const filters = [];
 
   if (category && CATEGORY_IGNORED.indexOf(category.toLowerCase()) === -1) {
@@ -90,7 +91,7 @@ function* obSearch({
   );
 
   message = {
-    id,
+    id: searchId,
     type,
     command: {
       currency: 'BTC',
@@ -100,24 +101,9 @@ function* obSearch({
     }
   };
 
-  if (searchByAllKeywords) {
-    message = {
-      type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS
-    };
-  } else {
-    message = {
-      type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD,
-      command: {
-        keywords: peersMap,
-        currency: 'BTC',
-        range: '20',
-        filters
-      },
-    };
-  }
+  console.log({message});
 
   ws.send(JSON.stringify(message));
-  yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
 }
 
 function* searchListings({
@@ -126,6 +112,9 @@ function* searchListings({
   }
 }) {
   try {
+    const searchId = getNewId();
+    yield put(searching(searchId, searchTerm, category, subCategory, fromSearchMenu));
+
     const { saving } = (yield select()).default.listing.saveListing;
     if (saving) {
       yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
@@ -146,7 +135,18 @@ function* searchListings({
     const dhtResult = yield searchPeers({
       searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
     });
-    
+
+    console.log({dhtResult});
+
+    if (!dhtResult) {
+      yield put(searchResultEmpty(searchId));
+      return;
+    }
+
+    yield obSearch({
+      searchId, dhtResult, searchTerm, category, subCategory,
+      country, state, city, isSearchByAllKeywords, fromSearchMenu
+    });
   } catch (e) {
     console.log('ERROR ', e);
     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
@@ -272,6 +272,10 @@ export function* searchListingsByPeersMap({
       },
     };
   }
+
+  console.log({
+    peersMap, message
+  })
 
   ws.send(JSON.stringify(message));
   yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
