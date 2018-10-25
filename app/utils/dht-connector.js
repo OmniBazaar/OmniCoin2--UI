@@ -68,10 +68,7 @@ export default class DHTConnector {
     await this.reconnectIfNeeded();
 
     try {
-      const dhtPeers = await connector.findPeersFor(text);
-      console.log({dhtPeers})
-      return dhtPeers;
-      // return connector.findPeersFor(text);
+      return await connector.findPeersFor(text);
     } catch (e) {
       console.log('DHT ERROR', e);
 
@@ -88,7 +85,7 @@ export default class DHTConnector {
       return;
     }
 
-    await connector.destroy();
+    connector.destroy();
 
     connector = null;
     isConnectorLoaded = false;

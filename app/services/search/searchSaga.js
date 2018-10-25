@@ -27,6 +27,9 @@ import { searchPeers } from './dht/dhtSaga';
 import { getPreferences } from '../preferences/services';
 
 
+export const CATEGORY_IGNORED = ['all', 'featuredlistings'];
+export const SUBCATEGORY_IGNORED = ['all'];
+
 export function* searchSubscriber() {
   yield all([
     takeEvery('SEARCH_LISTINGS', searchListings),
@@ -102,7 +105,7 @@ function* obSearch({
     }
   };
 
-  console.log({message});
+  console.log({search: message});
 
   ws.send(JSON.stringify(message));
 }
@@ -137,8 +140,6 @@ function* searchListings({
       searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
     });
 
-    console.log({dhtResult});
-
     if (!dhtResult) {
       yield put(searchResultEmpty(searchId));
       return;
@@ -154,133 +155,130 @@ function* searchListings({
   }
 }
 
-function* searchListingsOld({
-  payload: {
-    searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
-  }
-}) {
-  try {
-    const { saving } = (yield select()).default.listing.saveListing;
-    if (saving) {
-      yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
-      return;
-    }
+// function* searchListingsOld({
+//   payload: {
+//     searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
+//   }
+// }) {
+//   try {
+//     const { saving } = (yield select()).default.listing.saveListing;
+//     if (saving) {
+//       yield put(setSearchListingsParams(searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu));
+//       return;
+//     }
 
-    yield put(clearMyListings());
-    const { currentUser } = (yield select()).default.auth;
-    if (historify) {
-      const searchHistory = new SearchHistory(currentUser.username);
-      searchHistory.add({ searchTerm, category, subCategory });
-    }
-    yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
-    yield put({
-      type: 'DHT_GET_PEERS_FOR',
-      payload: {
-        searchTerm,
-        category,
-        country,
-        state,
-        city,
-        searchListings: true,
-        subCategory,
-        fromSearchMenu,
-      }
-    });
-  } catch (e) {
-    console.log('ERROR ', e);
-    yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
-  }
-}
+//     yield put(clearMyListings());
+//     const { currentUser } = (yield select()).default.auth;
+//     if (historify) {
+//       const searchHistory = new SearchHistory(currentUser.username);
+//       searchHistory.add({ searchTerm, category, subCategory });
+//     }
+//     yield put({ type: 'GET_RECENT_SEARCHES', payload: { username: currentUser.username } });
+//     yield put({
+//       type: 'DHT_GET_PEERS_FOR',
+//       payload: {
+//         searchTerm,
+//         category,
+//         country,
+//         state,
+//         city,
+//         searchListings: true,
+//         subCategory,
+//         fromSearchMenu,
+//       }
+//     });
+//   } catch (e) {
+//     console.log('ERROR ', e);
+//     yield put({ type: 'SEARCH_LISTINGS_FAILED', error: e.message });
+//   }
+// }
 
-export const CATEGORY_IGNORED = ['all', 'featuredlistings'];
-export const SUBCATEGORY_IGNORED = ['all'];
+// export function* searchListingsByPeersMap({
+//   payload: {
+//     peersMap, category, country, state, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
+//   }
+// }) {
+//   let message;
+//   const id = getNewId();
+//   const filters = [];
 
-export function* searchListingsByPeersMap({
-  payload: {
-    peersMap, category, country, state, city, subCategory, searchByAllKeywords, searchTerm, fromSearchMenu
-  }
-}) {
-  let message;
-  const id = getNewId();
-  const filters = [];
+//   if (category && category !== 'All' && category !== 'featuredListings') {
+//     filters.push({
+//       op: '=',
+//       name: 'category',
+//       value: category,
+//     });
+//   }
 
-  if (category && category !== 'All' && category !== 'featuredListings') {
-    filters.push({
-      op: '=',
-      name: 'category',
-      value: category,
-    });
-  }
+//   if (subCategory && subCategory !== 'all') {
+//     filters.push({
+//       op: '=',
+//       name: 'subcategory',
+//       value: subCategory,
+//     });
+//   }
 
-  if (subCategory && subCategory !== 'all') {
-    filters.push({
-      op: '=',
-      name: 'subcategory',
-      value: subCategory,
-    });
-  }
+//   if (country) {
+//     filters.push({
+//       op: '=',
+//       name: 'country',
+//       value: country,
+//     });
+//   }
 
-  if (country) {
-    filters.push({
-      op: '=',
-      name: 'country',
-      value: country,
-    });
-  }
+//   if (state) {
+//     filters.push({
+//       op: '=',
+//       name: 'state',
+//       value: state,
+//     });
+//   }
 
-  if (state) {
-    filters.push({
-      op: '=',
-      name: 'state',
-      value: state,
-    });
-  }
+//   if (city) {
+//     filters.push({
+//       op: '=',
+//       name: 'city',
+//       value: city,
+//     });
+//   }
 
-  if (city) {
-    filters.push({
-      op: '=',
-      name: 'city',
-      value: city,
-    });
-  }
+//   if (searchByAllKeywords) {
+//     let keywords = [];
+//     if (searchTerm) {
+//       keywords = searchTerm.split(' ');
+//     }
+//     message = {
+//       id,
+//       type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
+//       command: {
+//         keywords,
+//         publishers: peersMap.reduce((publishers, curr) =>
+//           uniqBy([...publishers, ...(curr.publishers || [])], ({ address }) => address), []),
+//         currency: 'BTC',
+//         range: '20',
+//         filters
+//       },
+//     };
+//   } else {
+//     message = {
+//       id,
+//       type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD,
+//       command: {
+//         keywords: peersMap,
+//         currency: 'BTC',
+//         range: '20',
+//         filters
+//       },
+//     };
+//   }
 
-  if (searchByAllKeywords) {
-    let keywords = [];
-    if (searchTerm) {
-      keywords = searchTerm.split(' ');
-    }
-    message = {
-      id,
-      type: messageTypes.MARKETPLACE_SEARCH_BY_ALL_KEYWORDS,
-      command: {
-        keywords,
-        publishers: peersMap.reduce((publishers, curr) =>
-          uniqBy([...publishers, ...(curr.publishers || [])], ({ address }) => address), []),
-        currency: 'BTC',
-        range: '20',
-        filters
-      },
-    };
-  } else {
-    message = {
-      id,
-      type: messageTypes.MARKETPLACE_SEARCH_BY_ANY_KEYWORD,
-      command: {
-        keywords: peersMap,
-        currency: 'BTC',
-        range: '20',
-        filters
-      },
-    };
-  }
+//   console.log({
+//     peersMap, message
+//   })
 
-  console.log({
-    peersMap, message
-  })
-
-  ws.send(JSON.stringify(message));
-  yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
-}
+//   ws.send(JSON.stringify(message));
+//   yield put(searching(id, searchTerm, category, subCategory, fromSearchMenu));
+// }
 
 function* getRecentSearches() {
   try {

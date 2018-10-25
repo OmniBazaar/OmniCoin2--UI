@@ -206,6 +206,10 @@ export const ensureListingData = listing => {
     }
   });
 
+  if (result.keywords && result.keywords.length) {
+    result.keywords = result.keywords.filter(k => k).map(k => k.toLowerCase());
+  }
+
   return result;
 };
 

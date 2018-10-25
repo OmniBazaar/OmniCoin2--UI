@@ -31,7 +31,7 @@ export function* dhtSubscriber() {
   yield all([
     takeLatest('DHT_CONNECT', connect),
     takeLatest('DHT_RECONNECT', reconnect),
-    takeLatest('DHT_GET_PEERS_FOR', getPeersFor),
+    // takeLatest('DHT_GET_PEERS_FOR', getPeersFor),
   ]);
 }
 
@@ -48,8 +48,6 @@ export function* connect() {
       const publishersAlive = yield getAlivePublisherIps();
       ips = Object.keys(publishersAlive).map(ip => `${ip}:${dhtPort}`);
     }
-
-    console.log({ips});
 
     const connector = yield call(dhtConnector.init, {
       publishers: ips
@@ -68,69 +66,68 @@ export function* connect() {
 }
 
 export function* reconnect() {
-  console.log('RECONNECT');
+  console.log('DHT RECONNECT');
   yield dhtConnector.disconnect();
-  console.log('DISCONNECT');
   yield put({ type: 'DHT_CONNECT' });
 }
 
-async function doLocalSearch({ country, state, city }) {
-  const countryKey = `country:${country}`;
-  const stateKey = `state:${state}`;
-  const cityKey = `city:${city}`;
+// async function doLocalSearch({ country, state, city }) {
+//   const countryKey = `country:${country}`;
+//   const stateKey = `state:${state}`;
+//   const cityKey = `city:${city}`;
 
-  return await Promise.all([
-    country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
-    state ? dhtConnector.findPeersFor(stateKey) : noPeersFallback(),
-    city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback()
-  ]);
-}
+//   return await Promise.all([
+//     country ? dhtConnector.findPeersFor(countryKey) : noPeersFallback(),
+//     state ? dhtConnector.findPeersFor(stateKey) : noPeersFallback(),
+//     city ? dhtConnector.findPeersFor(cityKey) : noPeersFallback()
+//   ]);
+// }
 
-const checkPresent = (host, filter, dhtResp) => {
-  if (!filter) {
-    return true;
-  }
+// const checkPresent = (host, filter, dhtResp) => {
+//   if (!filter) {
+//     return true;
+//   }
 
-  if (!dhtResp) {
-    return false;
-  }
+//   if (!dhtResp) {
+//     return false;
+//   }
 
-  for (let i = 0; i < dhtResp.length; i++) {
-    if (dhtResp[i].peers) {
-      const found = dhtResp[i].peers.find(({ host: pHost }) => pHost === host);
-      if (found) {
-        return true;
-      }
-    }
-  }
+//   for (let i = 0; i < dhtResp.length; i++) {
+//     if (dhtResp[i].peers) {
+//       const found = dhtResp[i].peers.find(({ host: pHost }) => pHost === host);
+//       if (found) {
+//         return true;
+//       }
+//     }
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
-function isPresentInFilters(
-  host,
-  {
-    categoryResp, subCategoryResp, countryResp, stateResp, cityResp
-  },
-  {
-    category, subCategory, country, state, city
-  }
-) {
-  if (category === 'All' || category === 'featuredListings') {
-    category = '';
-  }
-  if (subCategory === 'all') {
-    subCategory = '';
-  }
+// function isPresentInFilters(
+//   host,
+//   {
+//     categoryResp, subCategoryResp, countryResp, stateResp, cityResp
+//   },
+//   {
+//     category, subCategory, country, state, city
+//   }
+// ) {
+//   if (category === 'All' || category === 'featuredListings') {
+//     category = '';
+//   }
+//   if (subCategory === 'all') {
+//     subCategory = '';
+//   }
 
-  return (
-    checkPresent(host, category, categoryResp) &&
-    checkPresent(host, subCategory, subCategoryResp) &&
-    checkPresent(host, country, countryResp) &&
-    checkPresent(host, state, stateResp) &&
-    checkPresent(host, city, cityResp)
-  )
-}
+//   return (
+//     checkPresent(host, category, categoryResp) &&
+//     checkPresent(host, subCategory, subCategoryResp) &&
+//     checkPresent(host, country, countryResp) &&
+//     checkPresent(host, state, stateResp) &&
+//     checkPresent(host, city, cityResp)
+//   )
+// }
 
 export function* getAlivePublisherIps() {
   while (true) {
@@ -171,11 +168,6 @@ const findHostsPresentInAllDhtResults = (dhtSearchResults) => {
 
     return hosts;
   });
-
-  console.log({
-    resultHosts,
-    dhtSearchResults
-  })
 
   if (resultHosts.length === 1) {
     return Object.keys(resultHosts[0]);
@@ -232,7 +224,6 @@ const searchMeta = async ({ category, subCategory, country, state, city }) => {
 const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   keywords = keywords.map(k => k.toLowerCase());
   const result = await Promise.all(keywords.map(keyword => dhtSearch(`keyword:${keyword}`)));
-  console.log({result});
   const keywordsResults = {};
   result.forEach((dhtResults, index) => {
     const keyword = keywords[index];
@@ -271,7 +262,6 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   let validHosts = null;
 
   if (isSearchAll) {
-    console.log({keywordsResults, filteredHosts});
     const firstKeywordResult = keywordsResults[keywords[0]];
     validHosts = [];
     Object.keys(firstKeywordResult).forEach(host => {
@@ -317,9 +307,6 @@ export function* searchPeers({
   searchTerm, category, subCategory,
   country, state, city, isSearchByAllKeywords
 }) {
-  console.log({searchTerm, category, subCategory,
-  country, state, city, isSearchByAllKeywords})
-
   let { dht } = (yield select()).default;
   while (!dht.connector || dht.isConnecting) {
     yield delay(200);
@@ -336,15 +323,22 @@ export function* searchPeers({
   const isPublisherSelected = publisherData.priority === 'publisher';
   if (isPublisherSelected) {
     const priorityPublisher = publisherData.publisherName.publisher_ip;
+    if (!priorityPublisher) {
+      return null;
+    }
+
     if (hasMetaSearch && metaHosts.indexOf(priorityPublisher) === -1) {
+      return null;
+    }
+
+    const publishersAlive = yield getAlivePublisherIps();
+    if (!publishersAlive[priorityPublisher]) {
       return null;
     }
 
     metaHosts = [priorityPublisher];
     hasMetaSearch = true;
   }
-
-  console.log({metaHosts});
 
   let keywords = searchTerm || [];
   if (typeof keywords === 'string') {
@@ -356,12 +350,8 @@ export function* searchPeers({
     }
   }
 
-  console.log({keywords});
-
   if (keywords.length) {
     const keywordSearchResults = yield searchKeywords(keywords, isSearchByAllKeywords, hasMetaSearch ? metaHosts : null);
-
-    console.log({keywordSearchResults});
 
     if (!Object.keys(keywordSearchResults).length) {
       return null;
@@ -412,138 +402,138 @@ export function* searchPeers({
   return null;
 }
 
-export function* getPeersFor({
-  payload: {
-    searchTerm, category, country, state, city, searchListings, subCategory, fromSearchMenu
-  },
-}) {
-  try {
-    if (!country) {
-      city = '';
-      state = '';
-    }
+// export function* getPeersFor({
+//   payload: {
+//     searchTerm, category, country, state, city, searchListings, subCategory, fromSearchMenu
+//   },
+// }) {
+//   try {
+//     if (!country) {
+//       city = '';
+//       state = '';
+//     }
 
-    const publisherData = AccountSettingsStorage.getPublisherData();
+//     const publisherData = AccountSettingsStorage.getPublisherData();
 
-    const categoryKey = category ? `category:${category}` : '';
-    const subcategoryKey = subCategory ? `subcategory:${subCategory}` : '';
+//     const categoryKey = category ? `category:${category}` : '';
+//     const subcategoryKey = subCategory ? `subcategory:${subCategory}` : '';
 
-    let extraKeywordsResponse = yield Promise.all([
-      (category && category !== 'All' && category !== 'featuredListings') ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
-      (subCategory && subCategory !== 'all') ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
-    ]);
+//     let extraKeywordsResponse = yield Promise.all([
+//       (category && category !== 'All' && category !== 'featuredListings') ? dhtConnector.findPeersFor(categoryKey) : noPeersFallback(),
+//       (subCategory && subCategory !== 'all') ? dhtConnector.findPeersFor(subcategoryKey) : noPeersFallback(),
+//     ]);
 
-    if (publisherData.priority === 'local' && country) {
-      const localRes = yield doLocalSearch(publisherData);
-      extraKeywordsResponse = [...extraKeywordsResponse, ...localRes];
-    }
+//     if (publisherData.priority === 'local' && country) {
+//       const localRes = yield doLocalSearch(publisherData);
+//       extraKeywordsResponse = [...extraKeywordsResponse, ...localRes];
+//     }
 
-    const [categoryResp, subCategoryResp, countryResp, stateResp, cityResp] = extraKeywordsResponse;
+//     const [categoryResp, subCategoryResp, countryResp, stateResp, cityResp] = extraKeywordsResponse;
 
-    extraKeywordsResponse = extraKeywordsResponse.reduce((acc, curr) => [...acc, ...curr], []);
+//     extraKeywordsResponse = extraKeywordsResponse.reduce((acc, curr) => [...acc, ...curr], []);
 
-    let extraKeywordsPeers = extraKeywordsResponse
-      .reduce((final, resp) => [...final, ...(resp.peers || [])], []);
+//     let extraKeywordsPeers = extraKeywordsResponse
+//       .reduce((final, resp) => [...final, ...(resp.peers || [])], []);
 
-    extraKeywordsPeers = uniqBy(extraKeywordsPeers, ({ host }) => host)
-      .filter(({ host }) => isPresentInFilters(
-        host,
-        {
-          categoryResp, subCategoryResp, countryResp, stateResp, cityResp
-        },
-        {
-          category, subCategory, country, state, city
-        }
-      ));
+//     extraKeywordsPeers = uniqBy(extraKeywordsPeers, ({ host }) => host)
+//       .filter(({ host }) => isPresentInFilters(
+//         host,
+//         {
+//           categoryResp, subCategoryResp, countryResp, stateResp, cityResp
+//         },
+//         {
+//           category, subCategory, country, state, city
+//         }
+//       ));
 
-    const isPublisherSelected = publisherData.priority === 'publisher';
+//     const isPublisherSelected = publisherData.priority === 'publisher';
 
-    if (isPublisherSelected) {
-      extraKeywordsPeers = extraKeywordsPeers
-        .filter(({ host }) => host === publisherData.publisherName.publisher_ip);
-    }
+//     if (isPublisherSelected) {
+//       extraKeywordsPeers = extraKeywordsPeers
+//         .filter(({ host }) => host === publisherData.publisherName.publisher_ip);
+//     }
 
-    let keywords = searchTerm || [];
+//     let keywords = searchTerm || [];
 
-    if (typeof keywords === 'string') {
-      keywords = searchTerm.split(' ').map(item => item.trim());
-    }
+//     if (typeof keywords === 'string') {
+//       keywords = searchTerm.split(' ').map(item => item.trim());
+//     }
 
-    const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
-    const allResponses = yield Promise.all(responses)
-      .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
+//     const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
+//     const allResponses = yield Promise.all(responses)
+//       .then(results => results.reduce((acc, curr) => [...acc, ...curr], []));
 
-    let peersMap;
+//     let peersMap;
 
-    const extraKeywordsPeerHosts = extraKeywordsPeers.map(i => i.host);
+//     const extraKeywordsPeerHosts = extraKeywordsPeers.map(i => i.host);
 
-    const publisherIps = yield getAlivePublisherIps();
+//     const publisherIps = yield getAlivePublisherIps();
 
-    if (keywords.length) {
-      const isExtraFilter = (
-        (category && category !== 'All' && category !== 'featuredListings') ||
-        (subCategory && subCategory !== 'all') ||
-        country ||
-        state ||
-        city
-      );
-      peersMap = allResponses.map((response) => ({
-        keyword: response.keyword ? response.keyword.substring(8) : '',
-        publishers: isPublisherSelected ?
-          [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || []).filter(keyPeer => (
-            publisherIps[keyPeer.host] &&
-            (
-              !isExtraFilter ||
-              includes(extraKeywordsPeerHosts, keyPeer.host)
-            )
-          )),
-      })).filter(({ publishers }) => publishers.length);
-    } else {
-      peersMap = extraKeywordsResponse.map((response) => ({
-        publishers: isPublisherSelected ?
-          [{ host: publisherData.publisherName.publisher_ip }] :
-          (response.peers || []).filter(keyPeer => (
-              publisherIps[keyPeer.host] &&
-              includes(extraKeywordsPeerHosts, keyPeer.host)
-          )),
-        })).filter(el => el.publishers.length);
-    }
+//     if (keywords.length) {
+//       const isExtraFilter = (
+//         (category && category !== 'All' && category !== 'featuredListings') ||
+//         (subCategory && subCategory !== 'all') ||
+//         country ||
+//         state ||
+//         city
+//       );
+//       peersMap = allResponses.map((response) => ({
+//         keyword: response.keyword ? response.keyword.substring(8) : '',
+//         publishers: isPublisherSelected ?
+//           [{ host: publisherData.publisherName.publisher_ip }] :
+//           (response.peers || []).filter(keyPeer => (
+//             publisherIps[keyPeer.host] &&
+//             (
+//               !isExtraFilter ||
+//               includes(extraKeywordsPeerHosts, keyPeer.host)
+//             )
+//           )),
+//       })).filter(({ publishers }) => publishers.length);
+//     } else {
+//       peersMap = extraKeywordsResponse.map((response) => ({
+//         publishers: isPublisherSelected ?
+//           [{ host: publisherData.publisherName.publisher_ip }] :
+//           (response.peers || []).filter(keyPeer => (
+//               publisherIps[keyPeer.host] &&
+//               includes(extraKeywordsPeerHosts, keyPeer.host)
+//           )),
+//         })).filter(el => el.publishers.length);
+//     }
 
-    peersMap.forEach((peerItem) => {
-      peerItem
-    });
+//     peersMap.forEach((peerItem) => {
+//       peerItem
+//     });
 
-    peersMap = adjustPeersMap(peersMap);
+//     peersMap = adjustPeersMap(peersMap);
 
-    yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
+//     yield put({ type: 'DHT_FETCH_PEERS_SUCCEEDED', peersMap });
 
-    const { searchListingOption } = getPreferences();
+//     const { searchListingOption } = getPreferences();
 
-    if (peersMap.length !== 0 && searchListings) {
-      yield fork(searchListingsByPeersMap, {
-        payload: {
-          peersMap,
-          category,
-          subCategory,
-          searchTerm,
-          country: country || publisherData.country,
-          state,
-          city: city || (country && publisherData.city) || '',
-          searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
-          fromSearchMenu
-        }
-      });
-    }
-    // search for "test" keyword when there is no results at all
-    if (peersMap.length === 0 && !fromSearchMenu) {
-      yield put(searchListingsAction("test", 'All', country, state, city, true, null));
-    }
-  } catch (e) {
-    console.log('ERROR ', e);
-    yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
-  }
-}
+//     if (peersMap.length !== 0 && searchListings) {
+//       yield fork(searchListingsByPeersMap, {
+//         payload: {
+//           peersMap,
+//           category,
+//           subCategory,
+//           searchTerm,
+//           country: country || publisherData.country,
+//           state,
+//           city: city || (country && publisherData.city) || '',
+//           searchByAllKeywords: !keywords.length || (searchListingOption && searchListingOption === 'allKeywords'),
+//           fromSearchMenu
+//         }
+//       });
+//     }
+//     // search for "test" keyword when there is no results at all
+//     if (peersMap.length === 0 && !fromSearchMenu) {
+//       yield put(searchListingsAction("test", 'All', country, state, city, true, null));
+//     }
+//   } catch (e) {
+//     console.log('ERROR ', e);
+//     yield put({ type: 'DHT_FETCH_PEERS_FAILED', error: e.message });
+//   }
+// }
 
 export const countPeersForKeywords = async (keywords) => {
   const responses = keywords.map(keyword => dhtConnector.findPeersFor(`keyword:${keyword}`));
@@ -570,34 +560,34 @@ export const countPeersForKeywords = async (keywords) => {
   return publishers;
 };
 
-function getPublishersWeights(peersMap) {
-  const weights = {};
-  peersMap.forEach(item => {
-    item.publishers.forEach(publisher => {
-      if (!weights[publisher]) {
-        weights[publisher] = 1;
-      } else {
-        weights.publisher += 1;
-      }
-    });
-  });
-  return weights;
-}
+// function getPublishersWeights(peersMap) {
+//   const weights = {};
+//   peersMap.forEach(item => {
+//     item.publishers.forEach(publisher => {
+//       if (!weights[publisher]) {
+//         weights[publisher] = 1;
+//       } else {
+//         weights.publisher += 1;
+//       }
+//     });
+//   });
+//   return weights;
+// }
 
-function adjustPeersMap(peersMap) {
-  const publishersWeights = getPublishersWeights(peersMap);
-  return peersMap.map(item => ({
-    keyword: item.keyword || null,
-    publishers: uniqBy(item.publishers.map(publisher => ({
-      address: publisher.host,
-      weight: publishersWeights[publisher]
-    })), 'address')
-  }));
-}
+// function adjustPeersMap(peersMap) {
+//   const publishersWeights = getPublishersWeights(peersMap);
+//   return peersMap.map(item => ({
+//     keyword: item.keyword || null,
+//     publishers: uniqBy(item.publishers.map(publisher => ({
+//       address: publisher.host,
+//       weight: publishersWeights[publisher]
+//     })), 'address')
+//   }));
+// }
 
-function noPeersFallback() {
-  return [{
-    noPeers: true,
-    timedOut: false,
-  }];
-}
+// function noPeersFallback() {
+//   return [{
+//     noPeers: true,
+//     timedOut: false,
+//   }];
+// }
