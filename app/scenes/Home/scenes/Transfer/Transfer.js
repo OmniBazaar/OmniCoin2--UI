@@ -162,7 +162,8 @@ class Transfer extends Component {
 
     this.state = {
       isModalOpen: false,
-      isPromptVisible: false
+      isPromptVisible: false,
+      submitSucceeded: false
     };
   }
 
@@ -222,6 +223,7 @@ class Transfer extends Component {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
       } else {
+        this.setState({ submitSucceeded: true });
         this.props.reset();
         this.handleInitialize(0);
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
@@ -731,7 +733,7 @@ class Transfer extends Component {
             </div>
           }
         </div>
-        { this.renderShipping() }
+        { !this.state.submitSucceeded && this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">

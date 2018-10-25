@@ -31,7 +31,7 @@ import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt
 import './import-listings.scss';
 
 
-const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name'];
+const MANDATORY_DEFAULTS_FIELDS = ['category', 'currency', 'description', 'name', 'units'];
 
 const iconSize = 42;
 
@@ -161,6 +161,11 @@ class ImportListings extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.removeAllFiles();
+    this.props.listingActions.removeAllFiles();
+  }
+
   vendorsConfigs = {
     amazon: () => (
       <AmazonListingsConfig
@@ -237,13 +242,13 @@ class ImportListings extends Component {
     }
 
     const {
-      category, currency, description, name,
+      category, currency, description, name, units
     } = pick(
       this.props.listingDefaults,
       MANDATORY_DEFAULTS_FIELDS
     );
 
-    if (!category || !currency || !description || !name) {
+    if (!category || !currency || !description || !name || !units) {
       return toastr.error(
         formatMessage(messages.importationErrorTitle),
         formatMessage(messages.importationMissingDefaults)
