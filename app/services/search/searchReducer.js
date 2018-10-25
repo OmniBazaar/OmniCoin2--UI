@@ -21,6 +21,7 @@ import {
   deleteSearchSucceeded,
   deleteSearchFailed,
   searching,
+  searchResultEmpty,
   marketplaceReturnListings,
   marketplaceReturnBool,
   searchListings,
@@ -338,6 +339,18 @@ const reducer = handleActions({
       subCategory,
       fromSearchMenu
     };
+  },
+  [searchResultEmpty](state, { payload: { searchId } }) {
+    if (state.searchId === searchId) {
+      return {
+        ...state,
+        searchResults: [],
+        searchResultsFiltered: [],
+        searching: false
+      };
+    }
+    
+    return state;
   },
   [marketplaceReturnListings](state, { data }) {
     const commandListings = JSON.parse(data.command.listings);

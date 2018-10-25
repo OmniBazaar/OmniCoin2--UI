@@ -22,9 +22,7 @@ export default class DHTConnector {
   } = {}) => {
     connector = omnibazaarDHT({ host, bootstrap: publishers });
 
-    await connector.connect({ keywords, asPublisher: canPublish })
-      .catch(console.log);
-
+    await connector.connect({ keywords, asPublisher: canPublish });
     isConnectorLoaded = true;
 
     return connector;
@@ -68,7 +66,7 @@ export default class DHTConnector {
     await this.reconnectIfNeeded();
 
     try {
-      return connector.findPeersFor(text);
+      return await connector.findPeersFor(text);
     } catch (e) {
       console.log('DHT ERROR', e);
 
@@ -85,7 +83,7 @@ export default class DHTConnector {
       return;
     }
 
-    await connector.destroy();
+    connector.destroy();
 
     connector = null;
     isConnectorLoaded = false;
