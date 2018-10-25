@@ -3,8 +3,6 @@ import omnibazaarDHT from 'omnibazaar-dht';
 let connector;
 let isConnectorLoaded = false;
 
-console.log({omnibazaarDHT})
-
 export default class DHTConnector {
   /**
    * Creates a new instance of the connector
