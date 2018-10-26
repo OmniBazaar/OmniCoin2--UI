@@ -395,7 +395,6 @@ class Menu extends Component {
               {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, 'http://omnicoin.info', true)}
               {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
               {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
-              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
             </div>
           </div>
         </div>
