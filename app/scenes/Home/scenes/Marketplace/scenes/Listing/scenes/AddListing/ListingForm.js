@@ -331,7 +331,7 @@ class ListingForm extends Component {
 
   populateEthAddress() {
     const { editingListing, account, auth, ethereum } = this.props;
-    let address = editingListing.ethereum_address;
+    let address = editingListing && editingListing.ethereum_address;
     if (!address) {
       address = account.ethAddress || auth.account.eth_address || ethereum.address
     }
