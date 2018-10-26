@@ -22,9 +22,10 @@ import {
 import cn from 'classnames';
 import { toastr } from 'react-redux-toastr';
 import ethers from 'ethers';
+import { ipcRenderer } from 'electron';
+
 
 import './exchange.scss';
-
 import messages from '../Exchange/messages';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import BitcoinWalletDropdown from '../../scenes/Transfer/component/BitcoinWalletDropdown';
@@ -44,7 +45,7 @@ import {
 import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import { SATOSHI_IN_BTC } from '../../../../utils/constants';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
-import ExchangeRatesTable from './components/ExchangeRatesTable/ExchangeRatesTable'; 
+import ExchangeRatesTable from './components/ExchangeRatesTable/ExchangeRatesTable';
 
 const currencyOptions = [
   {
@@ -65,18 +66,18 @@ const minEth = getMinEthValue();
 
 const ethAmountValidator = addValidator({
   validator: (option, value, allValues) => {
-    const max = ethers.utils.parseEther(option.max + '');
+    const max = ethers.utils.parseEther(`${option.max}`);
     const min = ethers.utils.parseEther(minEth);
     let eth;
     try {
-      eth = ethers.utils.parseEther(value + '')
+      eth = ethers.utils.parseEther(`${value}`);
     } catch (err) {
       return {
         ...messages.minimumAmount,
         values: {
           amount: minEth
         }
-      }
+      };
     }
 
     if (eth.lt(min)) {
@@ -85,16 +86,16 @@ const ethAmountValidator = addValidator({
         values: {
           amount: minEth
         }
-      }
+      };
     }
-    
+
     if (eth.gte(max)) {
       return {
         ...messages.maximumAmountAvailable,
         values: {
           amount: option.max
         }
-      }
+      };
     }
   }
 });
@@ -128,23 +129,25 @@ const validate = values => {
     }
 
     const max = walletData.balance / SATOSHI_IN_BTC;
-    const maxValueValidator = numericality({ '<': max, msg: formatMessage(messages.maximumAmountAvailable, {
-        amount: max 
-    })});
+    const maxValueValidator = numericality({
+      '<': max,
+      msg: formatMessage(messages.maximumAmountAvailable, {
+        amount: max
+      })
+    });
     const maxErr = maxValueValidator(amount);
     if (maxErr) {
       errors.amount = maxErr;
     }
   }
 
-  return errors
-}
+  return errors;
+};
 
 let wallets = [];
 let formatMessage;
 
 class Exchange extends Component {
-
   state = {
     isPromptVisible: false
   };
@@ -171,7 +174,7 @@ class Exchange extends Component {
       if (nextProps.exchange.error) {
         if (nextProps.exchange.error === 'not_verified') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.accountNotVerified));
-        }else if (nextProps.exchange.error.arg === 'privateKey') {
+        } else if (nextProps.exchange.error.arg === 'privateKey') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.walletNotConnected));
         } else {
           toastr.error(formatMessage(messages.error), formatMessage(messages.errorExchange));
@@ -188,9 +191,17 @@ class Exchange extends Component {
     }
   }
 
+  openInformationMemorandumPdf = () => {
+    ipcRenderer.send('open-pdf', 'https://omnicoin.net/wp-content/uploads/2018/10/Omnicoin-Information-Memorandum.pdf');
+  }
+
+  openGeneralTermsOfServicePdf = () => {
+    ipcRenderer.send('open-pdf', 'https://omnicoin.net/wp-content/uploads/2018/10/OmniCoin-General-Terms-of-Service.pdf');
+  }
+
   renderCurrencyField = ({
-                           input, options
-                         }) => (
+    input, options
+  }) => (
     <Select
       value={this.props.exchangeForm.currency}
       options={options}
@@ -210,8 +221,8 @@ class Exchange extends Component {
   );
 
   renderUnitsField = ({
-                        input, placeholder, buttonText, disabled, buttonClass, meta: { touched, error }
-                      }) => {
+    input, placeholder, buttonText, disabled, buttonClass, meta: { touched, error }
+  }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
@@ -232,8 +243,8 @@ class Exchange extends Component {
   };
 
   renderHiddenField = ({
-                         input
-                       }) => (
+    input
+  }) => (
     <input
       {...input}
       type="hidden"
@@ -381,11 +392,11 @@ class Exchange extends Component {
           <Field
             name="omniCoinInformationMemorandum"
             component={this.renderCheckboxField}
-            validate={[requiredFieldValidator]}          
+            validate={[requiredFieldValidator]}
           />
           <p>
             {formatMessage(messages.readOmniCoinInformationMemorandumText)}
-            <a className="link" href=" https://omnicoin.net/wp-content/uploads/2018/10/Omnicoin-Information-Memorandum.pdf" target="_blank">
+            <a className="link" onClick={this.openInformationMemorandumPdf}>
               {formatMessage(messages.readOmniCoinInformationMemorandumLink)}
             </a>
           </p>
@@ -406,7 +417,7 @@ class Exchange extends Component {
           />
           <p>
             {formatMessage(messages.readOmniCoinTokenPurchaseAgreementText)}
-            <a className="link" href="https://omnicoin.net/wp-content/uploads/2018/10/OmniCoin-General-Terms-of-Service.pdf" target="_blank">
+            <a className="link" onClick={this.openGeneralTermsOfServicePdf}>
               {formatMessage(messages.readOmniCoinTokenPurchaseAgreementLink)}
             </a>
             {formatMessage(messages.understandOmniCoinTokenPurchaseAgreement)}
@@ -426,12 +437,13 @@ class Exchange extends Component {
         <Header className="button--green-bg" title={formatMessage(messages.exchange)} />
         <span className="page-description">{formatMessage(messages.pageDescription)}</span>
         <div className="exchange-form">
-          <span className="omnicoin-appear-notification">{formatMessage(messages.omniCoinsAppearNotification)}</span>      
+          <span className="omnicoin-appear-notification">{formatMessage(messages.omniCoinsAppearNotification)}</span>
           <Form
             onChange={() => this.setState({ isPromptVisible: true })}
             onSubmit={handleSubmit(this.submitTransfer)}
-            className="exchange-form-container">
-            <FormPrompt isVisible={this.state.isPromptVisible}/>
+            className="exchange-form-container"
+          >
+            <FormPrompt isVisible={this.state.isPromptVisible} />
             <div className="section">
               <div className="form-group">
                 <span>{formatMessage(messages.currency)}</span>
@@ -449,15 +461,15 @@ class Exchange extends Component {
             </div>
             {currency === 'bitcoin' && this.renderBitcoinForm()}
             {currency === 'ethereum' && this.renderEthereumForm()}
-            <div className='footer-container'>
-              <div className='exchange-rate-table'>
+            <div className="footer-container">
+              <div className="exchange-rate-table">
                 <ExchangeRatesTable />
               </div>
               <div className="omnicoin-description-links">
                 <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
                 <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
-                <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />                
-              
+                <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />
+
                 <div className="form-group">
                   <span />
                   <div className="field left floated">
@@ -483,34 +495,34 @@ class Exchange extends Component {
 const selector = formValueSelector('exchangeForm');
 
 export default compose(
-connect(
-  state => ({
-    ...state.default,
-    exchangeForm: {
-      currency: selector(state, 'currency'),
-      amount: selector(state, 'amount'),
-      wallet: selector(state, 'wallet')
-    }
-  }),
-  (dispatch) => ({
-    initialize,
-    changeFieldValue: (field, value) => {
-      dispatch(change('exchangeForm', field, value));
-    },
-    exchangeActions: bindActionCreators({
-      exchangeEth,
-      exchangeBtc
-    }, dispatch),
-    bitcoinActions: bindActionCreators({
-      getWallets
-    }, dispatch)
+  connect(
+    state => ({
+      ...state.default,
+      exchangeForm: {
+        currency: selector(state, 'currency'),
+        amount: selector(state, 'amount'),
+        wallet: selector(state, 'wallet')
+      }
+    }),
+    (dispatch) => ({
+      initialize,
+      changeFieldValue: (field, value) => {
+        dispatch(change('exchangeForm', field, value));
+      },
+      exchangeActions: bindActionCreators({
+        exchangeEth,
+        exchangeBtc
+      }, dispatch),
+      bitcoinActions: bindActionCreators({
+        getWallets
+      }, dispatch)
+    })
+  ),
+  reduxForm({
+    form: 'exchangeForm',
+    keepDirtyOnReinitialize: true,
+    enableReinitdestroyOnUnmountialize: true,
+    destroyOnUnmount: true,
+    validate,
   })
-),
-reduxForm({
-  form: 'exchangeForm',
-  keepDirtyOnReinitialize: true,
-  enableReinitdestroyOnUnmountialize: true,
-  destroyOnUnmount: true,
-  validate: validate,
-})
 )(injectIntl(Exchange));
