@@ -115,6 +115,7 @@ function* searchListings({
     searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }
 }) {
+  console.log({searchPayload: {searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu}});
   try {
     const searchId = getNewId();
     yield put(searching(searchId, searchTerm, category, subCategory, fromSearchMenu));
@@ -136,13 +137,30 @@ function* searchListings({
     const { searchListingOption } = getPreferences();
     const isSearchByAllKeywords = searchListingOption && searchListingOption === 'allKeywords';
 
-    const dhtResult = yield searchPeers({
+    let dhtResult = yield searchPeers({
       searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
     });
 
-    if (!dhtResult) {
-      yield put(searchResultEmpty(searchId));
-      return;
+    if (!dhtResult && !fromSearchMenu) {
+      if (!fromSearchMenu) {
+        console.log('Do special keyword search');
+        yield searchListings({
+          payload: {
+            searchTerm: 'test', 
+            category: 'All',
+            subCategory: '',
+            country: '',
+            state: '',
+            city: '',
+            historify: false,
+            fromSearchMenu: true
+          }
+        });
+        return;
+      } else {
+        yield put(searchResultEmpty(searchId));
+        return;
+      }
     }
 
     yield obSearch({
