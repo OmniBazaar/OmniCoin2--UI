@@ -31,7 +31,7 @@ const messages = defineMessages({
   },
   exchange: {
     id: "Exchange.exchange",
-    defaultMessage: "OmniCoin Token Sale"
+    defaultMessage: "Purchase OmniCoins"
   },
   from: {
     id: "Exchange.from",
