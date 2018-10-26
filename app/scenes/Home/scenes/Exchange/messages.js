@@ -115,7 +115,7 @@ const messages = defineMessages({
   },
   omniCoinsAppearNotification: {
     id: 'Exchange.omniCoinsAppearNotification',
-    defaultMessage: 'Your OmniCoins will appear in your account balance after validations'
+    defaultMessage: 'Purchased OmniCoins will appear in your XOM wallet after 2 BTC or 11 ETH blockchain confirmations.'
   }
 });
 
