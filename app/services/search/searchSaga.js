@@ -140,7 +140,7 @@ function* searchListings({
       searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
     });
 
-    if (!dhtResult && !fromSearchMenu) {
+    if (!dhtResult) {
       if (!fromSearchMenu) {
         console.log('Do special keyword search');
         yield searchListings({
@@ -155,11 +155,11 @@ function* searchListings({
             fromSearchMenu: true
           }
         });
-        return;
       } else {
         yield put(searchResultEmpty(searchId));
-        return;
       }
+
+      return;
     }
 
     yield obSearch({
