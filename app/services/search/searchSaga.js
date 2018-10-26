@@ -115,7 +115,6 @@ function* searchListings({
     searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
   }
 }) {
-  console.log({searchPayload: {searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu}});
   try {
     const searchId = getNewId();
     yield put(searching(searchId, searchTerm, category, subCategory, fromSearchMenu));
@@ -137,7 +136,7 @@ function* searchListings({
     const { searchListingOption } = getPreferences();
     const isSearchByAllKeywords = searchListingOption && searchListingOption === 'allKeywords';
 
-    let dhtResult = yield searchPeers({
+    const dhtResult = yield searchPeers({
       searchTerm, category, subCategory, country, state, city, isSearchByAllKeywords
     });
 
