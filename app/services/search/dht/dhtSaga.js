@@ -368,18 +368,32 @@ export function* searchPeers({
         });
       });
 
+      const pubs = Object.keys(publishersData).map(h => publishersData[h]);
+      if (!pubs.length) {
+        return null;
+      }
+
       return {
         keywords,
-        publishers: Object.keys(publishersData).map(h => publishersData[h])
+        publishers: pubs
       };
     } else {
       const keywordsData = [];
       forOwn(keywordSearchResults, (hosts, keyword) => {
+        const ips = Object.keys(hosts);
+        if (!ips.length) {
+          return;
+        }
+
         keywordsData.push({
           keyword,
-          publishers: Object.keys(hosts).map(h => hosts[h])
+          publishers: ips.map(h => hosts[h])
         });
       });
+
+      if (!keywordsData.length) {
+        return null;
+      }
 
       return {
         keywords: keywordsData
