@@ -148,20 +148,22 @@ class PublicData extends Component {
 
   componentWillMount() {
     const { account } = this.props.auth;
-    if (account.is_referrer !== this.props.account.referrer) {
-      this.toggleReferrer();
-    }
-    if (account.is_a_publisher !== this.props.account.publisher) {
-      this.togglePublisher();
-    }
-    if (account.is_an_escrow !== this.props.account.escrow) {
-      this.toggleEscrow();
-    }
-    if (account.publisher_ip) {
-      this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
-    }
-    if (account.is_a_processor && account.is_a_processor !== this.props.account.transactionProcessor) {
-      this.toggleTransactionProcessor();
+    if (account) {
+      if (account.is_referrer !== this.props.account.referrer) {
+        this.toggleReferrer();
+      }
+      if (account.is_a_publisher !== this.props.account.publisher) {
+        this.togglePublisher();
+      }
+      if (account.is_an_escrow !== this.props.account.escrow) {
+        this.toggleEscrow();
+      }
+      if (account.publisher_ip) {
+        this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
+      }
+      if (account.is_a_processor && account.is_a_processor !== this.props.account.transactionProcessor) {
+        this.toggleTransactionProcessor();
+      }
     }
     // todo referrer
     this.freezeSettings();
@@ -372,7 +374,7 @@ class PublicData extends Component {
               src={this.getTransactionIcon()}
               width={iconSize}
               height={iconSize}
-              className={cn('checkbox', this.props.auth.account.is_a_processor ? 'disabled' : '')}
+              className={cn('checkbox', this.props.auth.account && this.props.auth.account.is_a_processor ? 'disabled' : '')}
               onClick={this.toggleTransactionProcessor}
             />
           </div>
