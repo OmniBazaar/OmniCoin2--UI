@@ -312,7 +312,7 @@ class Transfer extends Component {
     const { auth: { account }, transferForm: { toName } } = this.props;
 
     return escrows
-      .filter(({ id, name }) => account.id !== id || name !== toName)
+      .filter(({ id, name }) => account.id !== id && name !== toName)
       .map(escrow => ({
         key: escrow.id,
         value: escrow.id,
