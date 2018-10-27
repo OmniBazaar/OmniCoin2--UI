@@ -14,7 +14,6 @@ const reducer = handleActions({
     return {
       ...state,
       isConnecting: true,
-      error: null,
     };
   },
 
@@ -22,6 +21,7 @@ const reducer = handleActions({
     ...state,
     isConnecting: false,
     connector,
+    error: null,
   }),
 
   DHT_CONNECT_FAILED: (state, { error }) => ({

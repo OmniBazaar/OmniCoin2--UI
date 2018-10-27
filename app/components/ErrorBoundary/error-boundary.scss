@@ -1,6 +1,14 @@
 @import '../../styles/index';
 
-.error-boundary {
-  color: $primary-white;
-  font-size: 2em;
+.boundary-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  .message {
+    color: $primary-white;
+    font-size: 2em;
+    margin-bottom: 1em;
+    margin-top: -1em;
+  }
 }

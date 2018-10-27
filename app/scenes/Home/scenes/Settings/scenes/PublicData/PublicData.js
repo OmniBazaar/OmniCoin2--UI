@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
   ethAddressTitle: {
     id: 'Setting.ethAddressTitle',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   publisherTitle: {
     id: 'PublicData.publisherTitle',
@@ -352,7 +352,7 @@ class PublicData extends Component {
             <p className="title">{formatMessage(messages.publisherTitle)}</p>
             <div>
               {`${formatMessage(messages.publisherBody)} `}
-              <a href="http://checkip.dyndns.com/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
+              <a href="https://dyn.com/dns/" target="_blank">DynDNS</a> {` ${formatMessage(messages.or)} `} <a href="https://www.noip.com/" target="_blank">NoIP</a>.
             </div>
             <div> Download publisher server here: <a href="http://publisher.omnibazaar.com" target="_blank">{"http://publisher.omnibazaar.com"}</a></div>
           </div>

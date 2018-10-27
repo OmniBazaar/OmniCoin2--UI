@@ -142,7 +142,12 @@ class OmnicoinHistory extends BaseStorage {
           isXom: true
         };
       }
-      if (op.opInTrx === 0) {
+      if (op.operationType === ChainTypes.operations.vesting_balance_withdraw && op.opInTrx === 1) {
+        console.log(op);
+      }
+      if (op.opInTrx === 0 ||
+          (op.operationType === ChainTypes.operations.vesting_balance_withdraw
+           && op.opInTrx === 1)) {
         transactions[trxKey] = {
           ...op,
           ...transactions[trxKey]
@@ -237,6 +242,7 @@ class OmnicoinHistory extends BaseStorage {
         id: op.listingId,
         count: op.listingCount,
         date: op.date,
+        from: op.from
       }));
   }
 
@@ -252,7 +258,8 @@ class OmnicoinHistory extends BaseStorage {
       ...el,
       price: el.price.amount / TOKENS_IN_XOM,
       seller: res[0].get('name'),
-      publisher: res[1].get('name')
+      publisher: res[1].get('name'),
+      publisherIp: res[1].get('publisher_ip')
     }))));
     return listingObjects;
   }
@@ -342,6 +349,8 @@ class OmnicoinHistory extends BaseStorage {
       ChainTypes.operations.witness_bonus_operation,
       ChainTypes.operations.founder_bonus_operation,
       ChainTypes.operations.witness_create,
+      ChainTypes.operations.vesting_balance_withdraw,
+      ChainTypes.operations.exchange_complete_operation
     ].includes(el.op[0]));
     for (let i = 0; i < history.length; ++i) {
       const el = history[i];
@@ -349,7 +358,8 @@ class OmnicoinHistory extends BaseStorage {
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
             || el.op[0] === ChainTypes.operations.sale_bonus_operation
             || el.op[0] === ChainTypes.operations.witness_bonus_operation
-            || el.op[0] === ChainTypes.operations.founder_bonus_operation) {
+            || el.op[0] === ChainTypes.operations.founder_bonus_operation
+            || el.op[0] === ChainTypes.operations.vesting_balance_withdraw) {
           const operation = {
             id: el.id,
             blockNum: el.block_num,
@@ -359,7 +369,9 @@ class OmnicoinHistory extends BaseStorage {
             fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             obFee: this.processObFee(el.op[1].ob_fee),
             operationType: el.op[0],
-            amount: el.result[1].amount / TOKENS_IN_XOM,
+            amount: el.op[0] === ChainTypes.operations.vesting_balance_withdraw
+              ? el.op[1].amount.amount / TOKENS_IN_XOM
+              : el.result[1].amount / TOKENS_IN_XOM,
             isIncoming: true
           };
           if (operation.operationType === ChainTypes.operations.sale_bonus_operation
@@ -427,6 +439,23 @@ class OmnicoinHistory extends BaseStorage {
             }
           }
           this.addOperation(operation);
+        } else if (el.op[0] === ChainTypes.operations.exchange_complete_operation) {
+          const toAcc = await FetchChain('getAccount', el.op[1].receiver);
+          this.addOperation({
+            id: el.id,
+            blockNum: el.block_num,
+            opInTrx: el.op_in_trx,
+            trxInBlock: el.trx_in_block,
+            date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
+            fee: el.op[1].fee.amount / TOKENS_IN_XOM,
+            operationType: el.op[0],
+            amount: el.op[1].amount.amount / TOKENS_IN_XOM,
+            from: 'exchange',
+            to: toAcc.get('name'),
+            fromTo: 'exchange',
+            isIncoming: true,
+            memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
+          });
         } else {
           const [from, to] = await OmnicoinHistory.getParties(el.op);
           this.addOperation({

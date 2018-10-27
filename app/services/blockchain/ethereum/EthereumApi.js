@@ -3,7 +3,7 @@ import { wrapRequest } from '../../utils';
 import ethers from 'ethers';
 
 var Wallet = ethers.Wallet;
-const isProd = () => process.env.NODE_ENV === 'production';
+const isProd = () => true;//process.env.NODE_ENV === 'production';
 const ApiAddress = isProd() ? 'http://api.etherscan.io/api' : 'http://api-ropsten.etherscan.io/api';
 const ApiKey = '76ST8GSF68S6Q9TY1EMQ6ZQKZXMZ9N6HJ1';
 
@@ -64,12 +64,14 @@ const makeEthereumPayment = async function (privateKey, to, amount) {
   await validateEthereumAddress(to)
   var wallet = new Wallet(privateKey, provider);
   var amount = ethers.utils.parseEther(amount + ''); //accept string only
-  var sendPromise = wallet.send(to, amount);
-
-  return sendPromise.then(function (transactionHash) {
-    console.log(transactionHash);
-    // return transactionHash;
+  const d = (new Date()).getTime();
+  const data = d.toString(16);
+  return wallet.sendTransaction({
+    to: to,
+    value: amount,
+    data: '0x0' + data.substr(-4)
   });
+  // return await wallet.send(to, amount);
 };
 
 const addEthereumAddress = function (privateKey, address, label) {

@@ -1,0 +1,129 @@
+@import '../../../../styles/index';
+
+.page-description {
+  margin: -37px 4px 0 29px;
+}
+
+.exchange-form {
+
+  .omnicoin-appear-notification{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .exchange-form-container {
+    padding: 15px;
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .exchange-rate-table {
+      flex: 2;
+      margin-top: 15px;
+      table {
+        width: 90%;
+      }
+    }
+
+    .omnicoin-description-links {
+      flex: 4;
+      display: flex;
+      flex-direction: column;
+      margin: 15px;
+      margin-left: 0;
+      /*width: 65%;      */
+      /*float: right;*/
+
+      .read-omniCoin-white-paper, 
+      .read-omniCoin-information-memorandum,
+      .read-omniCoin-token-purchase-agreement {
+        display: flex;
+        flex-direction: row;
+
+        p {
+          a {
+            margin-left: 4px;
+            margin-right: 4px;
+          }
+        }
+        
+        .check-container {
+          padding-right: 15px
+        }
+      }
+      .form-group {
+
+        .floated {
+          position: absolute;
+        }
+      }
+    }
+
+    .form-group {
+      label, span {
+        flex: 2;
+        align-self: center;
+      }
+
+      .exchange-input {
+        &.currency {
+          display: flex;
+        }
+        flex: 3;
+        position: relative;
+
+        button {
+          position: absolute;
+          right: -2px;
+          bottom: 1px;
+        }
+
+        .button--green {
+          color: #01b540 !important;
+        }
+
+        .text-area {
+          resize: none;
+          background-color: #e8edf0 !important;
+        }
+
+        .label {
+          margin-left: 15px;
+        }
+
+        &.deal {
+          margin-top: 10px;
+        }
+      }
+
+      .field {
+        flex: 3;
+        margin-top: 15px;
+      }
+
+      .textfield {
+        flex: 3;
+        padding: 0.67857143em 1em;
+      }
+
+      .button {
+        font-size: 1rem;
+      }
+    }
+
+    .title {
+      font-size: 17px;
+      line-height: 17px;
+      margin-bottom: 10px;
+    }
+  }
+}

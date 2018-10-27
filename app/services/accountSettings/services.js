@@ -18,9 +18,8 @@ export const lookupIp = async (address) => {
 
 export const getAllPublishers = async () => {
   const publishersNames = await Apis.instance().db_api().exec('get_publisher_nodes_names', []);
-  const publishers = (
-	  (await Promise.all(publishersNames.map(publisherName => FetchChain('getAccount', publisherName)))
-    ).map(publisher => publisher.toJS())
+  const publishers = await Promise.all(
+    publishersNames.map(async publisherName => await getAccountByName(publisherName))
   );
   const promises = [];
   publishers.forEach(publisher => {
@@ -43,3 +42,6 @@ export const getPublisherByIp = async (publisherIp) => {
   return publishers.find(publisher => publisher.publisher_ip === ip);
 };
 
+export const getAccountByName = async (username) => {
+  return await Apis.instance().db_api().exec('get_account_by_name', [username])
+}

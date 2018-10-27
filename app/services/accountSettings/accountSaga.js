@@ -34,6 +34,7 @@ import { loadListingDefault } from "../listing/listingDefaultsActions";
 import { loadLocalPreferences } from "../preferences/preferencesActions";
 import { checkUpdate } from "../updateNotification/updateNotificationActions";
 import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
+import { dhtReconnect } from '../search/dht/dhtActions';
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -75,18 +76,34 @@ export function* accountSubscriber() {
 
 export function* updatePublicData() {
   const { account } = (yield select()).default;
+  const { currentUser } = (yield select()).default.auth;
   const { is_a_processor } = (yield select()).default.auth.account;
+
+  const dbAccount = yield (Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]));
+  
+  const data = {
+    transactionProcessor: is_a_processor ? false : account.transactionProcessor,
+    wantsToVote: account.wantsToVote,
+    is_referrer: account.referrer,
+    is_an_escrow: account.escrow,
+    btc_address: account.btcAddress,
+    eth_address: account.ethAddress,
+  };
+
+  let isChangePublisher = false;
+  if (dbAccount.is_a_publisher !== account.publisher || dbAccount.publisher_ip !== account.ipAddress) {
+    data['is_a_publisher'] = account.publisher;
+    data['publisher_ip'] = account.publisher ? account.ipAddress : '';
+    isChangePublisher = true;
+  }
+
   try {
-    yield updateAccount({
-      transactionProcessor: is_a_processor ? false : account.transactionProcessor,
-      wantsToVote: account.wantsToVote,
-      is_a_publisher: account.publisher,
-      is_referrer: account.referrer,
-      is_an_escrow: account.escrow,
-      publisher_ip: account.ipAddress,
-      btc_address: account.btcAddress,
-      eth_address: account.ethAddress,
-    });
+    yield updateAccount(data);
+    
+    if (isChangePublisher) {
+      yield put(dhtReconnect());
+    }
+    
     yield put({ type: 'UPDATE_PUBLIC_DATA_SUCCEEDED' });
   } catch (e) {
     console.log('ERR', e);

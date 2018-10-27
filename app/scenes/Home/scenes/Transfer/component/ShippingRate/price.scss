@@ -1,0 +1,35 @@
+@import '../../../../../../styles/index';
+
+.shipping-rate-item {
+  background-color: $lighter-blue;
+  padding: 10px;
+  margin-top: 12px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+
+  &.active {
+    border: 2px solid $primary-green;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .service {
+    font-weight: bold;
+  }
+
+  .amount {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 10px;
+    }
+  }
+}

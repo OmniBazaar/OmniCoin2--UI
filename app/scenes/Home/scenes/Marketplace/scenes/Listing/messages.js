@@ -144,5 +144,25 @@ export default defineMessages({
   contactSeller: {
     id: 'Listing.contactSeller',
     defaultMessage: 'Contact Seller'
+  },
+  yourAddress: {
+    id: 'Listing.yourAddress',
+    defaultMessage: 'Shipping Address Confirmation'
+  },
+  enterShippingAddress: {
+    id: 'Listing.enterShippingAddress',
+    defaultMessage: 'Please enter your shipping address'
+  },
+  shippingAddressNote: {
+    id: 'Listing.shippingAddressNote',
+    defaultMessage: 'NOTE: if your shipping address will change, please contact seller'
+  },
+  save: {
+    id: 'Listing.save',
+    defaultMessage: 'Save'
+  },
+  cancel: {
+    id: 'Listing.cancel',
+    defaultMessage: 'Cancel'
   }
 });

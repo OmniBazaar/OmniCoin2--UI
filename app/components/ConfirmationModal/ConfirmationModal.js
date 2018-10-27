@@ -40,7 +40,7 @@ class ConfirmationModal extends Component {
     return (
       <Modal size="tiny" open={isOpen} onClose={onCancel} className="confirmation-modal" closeIcon>
         <Modal.Header>
-          {formatMessage(messages.confirmation)}
+          {this.props.title || formatMessage(messages.confirmation)}
         </Modal.Header>
         <Modal.Content>
           <p>

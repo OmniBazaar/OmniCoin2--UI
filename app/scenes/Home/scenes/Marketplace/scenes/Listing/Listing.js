@@ -22,13 +22,16 @@ import ConfirmationModal from '../../../../../../components/ConfirmationModal/Co
 import Menu from '../../../Marketplace/scenes/Menu/Menu';
 import Breadcrumb from '../../../Marketplace/scenes/Breadcrumb/Breadcrumb';
 import PriceItem from './components/PriceItem';
+import AddressModal from './components/AddressModal/AddressModal';
 import CoinTypes from './constants';
 import { integerWithCommas } from '../../../../../../utils/numeric';
 import UserIcon from './images/icn-users-review.svg';
 import { currencyConverter } from '../../../../../../services/utils';
+import { getWeightUnit, getSizeUnit } from './utils';
 import ObNet from '../../../../../../assets/images/ob-net.png';
 
 import messages from './messages';
+import listingFormMessages from './scenes/AddListing/messages';
 import './listing.scss';
 
 import {
@@ -44,12 +47,15 @@ import {
   reportListing
 } from '../../../../../../services/listing/listingActions';
 
+import { setBuyerAddress } from '../../../../../../services/transfer/transferActions';
+
 const iconSizeSmall = 12;
 
 class Listing extends Component {
   state = {
     confirmDeleteOpen: false,
     confirmReportOpen: false,
+    addressModalOpen: false
   };
 
   componentWillMount() {
@@ -64,6 +70,7 @@ class Listing extends Component {
     }, 100);
     this.props.listingActions.getFavorites();
     this.props.listingActions.isFavorite(this.props.match.params.id);
+    this.props.transferActions.setBuyerAddress(null);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -339,6 +346,25 @@ class Listing extends Component {
     this.props.listingActions.setNumberToBuy(v);
   };
 
+  onBuyClick() {
+    const { listingDetail } = this.props.listing;
+    if (listingDetail.no_shipping_address_required) {
+      this.buyItem();
+    } else {
+      this.setState({addressModalOpen: true});
+    }
+  }
+
+  onCancelBuyerAddress() {
+    this.setState({addressModalOpen: false});
+  }
+
+  onSaveBuyerAddress(address, saveAsDefault) {
+    const { currentUser } = this.props.auth;
+    this.props.transferActions.setBuyerAddress(address, saveAsDefault, currentUser.username);
+    this.buyItem();
+  }
+
   renderUserButtons(maxQuantity) {
     const { formatMessage } = this.props.intl;
     const { loading, error, numberToBuy } = this.props.listing.buyListing;
@@ -351,7 +377,7 @@ class Listing extends Component {
       <div className="buttons-wrapper">
         <div className="buy-wrapper">
           <Button
-            onClick={() => this.buyItem()}
+            onClick={this.onBuyClick.bind(this)}
             content={formatMessage(messages.buyNow)}
             className="button--green-bg"
             loading={loading}
@@ -554,6 +580,84 @@ class Listing extends Component {
     );
   }
 
+  renderWeightAndSize() {
+    const { listingDetail } = this.props.listing;
+    const { formatMessage } = this.props.intl;
+
+    if (
+      !listingDetail.weight && 
+      !listingDetail.width && 
+      !listingDetail.height && 
+      !listingDetail.length
+    ) {
+      return null;
+    }
+
+    return (
+      <div className="listing-weight-size">
+        <span className="title">{formatMessage(listingFormMessages.weightAndSize)}</span>
+        {
+          listingDetail.weight &&
+          <div>
+            <span>{formatMessage(listingFormMessages.weight)}:</span>
+            {listingDetail.weight} {formatMessage(getWeightUnit(listingDetail)).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.width &&
+          <div>
+            <span>{formatMessage(listingFormMessages.width)}:</span>
+            {listingDetail.width} {formatMessage(getSizeUnit(listingDetail, 'width_unit')).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.height &&
+          <div>
+            <span>{formatMessage(listingFormMessages.height)}:</span>
+            {listingDetail.height} {formatMessage(getSizeUnit(listingDetail, 'height_unit')).toLowerCase()}
+          </div>
+        }
+        {
+          listingDetail.length &&
+          <div>
+            <span>{formatMessage(listingFormMessages.length)}:</span>
+            {listingDetail.length} {formatMessage(getSizeUnit(listingDetail, 'length_unit')).toLowerCase()}
+          </div>
+        }
+      </div>
+    );
+  }
+
+  renderShipping() {
+    const { listingDetail } = this.props.listing;
+    const { formatMessage } = this.props.intl;
+
+    if (!listingDetail || !listingDetail.shipping_description) {
+      return null;
+    }
+
+    const contents = [];
+    listingDetail.shipping_description.split("\n").forEach((line, i) => {
+      if (i > 0) {
+        contents.push(<br/>);
+      }
+      contents.push(line);
+    });
+
+    return (
+      <div className="shipping">
+        <span className="title">{formatMessage(listingFormMessages.shipping)}</span>
+        <p className="description">{contents}</p>
+        { 
+          listingDetail.no_shipping_address_required && 
+          <div className='no-address-required'>
+            {formatMessage(listingFormMessages.noShippingAddressRequired)}
+          </div>
+        }
+      </div>
+    );
+  }
+
   renderDetail() {
     const { listingDetail } = this.props.listing;
     const { formatMessage } = this.props.intl;
@@ -561,6 +665,14 @@ class Listing extends Component {
     if (!listingDetail) {
       return null;
     }
+
+    const descriptionContents = [];
+    listingDetail.description.split("\n").forEach((line, i) => {
+      if (i > 0) {
+        descriptionContents.push(<br/>);
+      }
+      descriptionContents.push(line);
+    });
 
     return [
       <Breadcrumb category={listingDetail.category} subCategory={listingDetail.subcategory} />,
@@ -570,8 +682,10 @@ class Listing extends Component {
       </div>,
       <div className="listing-description">
         <span className="title">{formatMessage(messages.itemDescription)}</span>
-        <p className="description">{listingDetail.description}</p>
-      </div>
+        <p className="description">{descriptionContents}</p>
+      </div>,
+      this.renderShipping(),
+      this.renderWeightAndSize()
     ];
   }
 
@@ -606,6 +720,11 @@ class Listing extends Component {
           >
             {formatMessage(messages.reportConfirmationQuestion)}
           </ConfirmationModal>
+          <AddressModal
+            isOpen={this.state.addressModalOpen}
+            onCancel={this.onCancelBuyerAddress.bind(this)}
+            onSave={this.onSaveBuyerAddress.bind(this)}
+          />
         </div>
       </div>
     );
@@ -640,6 +759,9 @@ Listing.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  transferActions: PropTypes.shape({
+    setBuyerAddress: PropTypes.func
+  }).isRequired
 };
 
 
@@ -660,5 +782,8 @@ export default connect(
       deleteListing,
       reportListing
     }, dispatch),
+    transferActions: bindActionCreators({
+      setBuyerAddress
+    }, dispatch)
   }),
 )(injectIntl(Listing));

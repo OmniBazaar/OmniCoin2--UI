@@ -25,7 +25,9 @@ const listingProps = [
   'quantity', 'units', 'start_date', 'end_date', 'continuous',
   'images', 'description', 'keywords', 'name', 'contact_type',
   'contact_info', 'country', 'address', 'city', 'post_code',
-  'state', 'owner', "priority_fee"
+  'state', 'owner', "priority_fee", "weight", "width", "height", "length", "shipping_price_included",
+  'weight_unit', 'width_unit', 'height_unit', 'length_unit',
+  'no_shipping_address_required', 'shipping_description'
 ];
 
 
@@ -204,6 +206,10 @@ export const ensureListingData = listing => {
     }
   });
 
+  if (result.keywords && result.keywords.length) {
+    result.keywords = result.keywords.filter(k => k).map(k => k.toLowerCase());
+  }
+
   return result;
 };
 
@@ -288,3 +294,10 @@ export const checkPublisherAliveStatus = async (user, publisher) => {
   }
 };
 
+export const getListing = async (user, publisher, listingId) => {
+  const options = {
+    method: 'GET',
+    json: true
+  };
+  return await makeRequest(user, publisher, `listings/${listingId}`, options);
+}

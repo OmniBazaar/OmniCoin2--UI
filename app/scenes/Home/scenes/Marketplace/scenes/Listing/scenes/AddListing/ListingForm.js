@@ -24,6 +24,7 @@ import Calendar from './components/Calendar/Calendar';
 import PublishersDropdown from './components/PublishersDropdown/PublishersDropdown';
 import BitcoinWalletDropdown from './components/BitcoinWalletDropdown/BitcoinWalletDropdown';
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
+import GeneralDropdown from './components/GeneralDropdown/GeneralDropdown';
 
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
@@ -42,6 +43,16 @@ import {
   setBtcAddress,
   setEthAddress
 } from '../../../../../../../../services/accountSettings/accountActions';
+import {
+  requiredFieldValidator,
+  numericFieldValidator,
+  allowBlankNumericFieldValidator,
+  omnicoinFieldValidator,
+  bitcoinFieldValidator,
+  ethereumFieldValidator,
+  fiatFieldValidator,
+  ethereumPriceFieldValidator
+} from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
 import cn from 'classnames';
@@ -49,18 +60,16 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
+import { weightUnits, sizeUnits } from  './constants'; 
 
 const contactOmniMessage = 'OmniMessage';
 
-const requiredFieldValidator = required({ message: messages.fieldRequired });
-const numericFieldValidator = numericality({ message: messages.fieldNumeric });
-const omnicoinFieldValidator = numericality({ '>=': 1 / TOKENS_IN_XOM, msg: messages.omnicoinFieldValidator });
-const bitcoinFieldValidator = numericality({ '>=': 0.00001, msg: messages.bitcoinFieldValidator });
-const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
-const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldValidator });
+
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
+
+const unitKeys = ['weight_unit', 'width_unit', 'height_unit', 'length_unit'];
 
 class ListingForm extends Component {
   static asyncValidate = async (values) => {
@@ -104,6 +113,7 @@ class ListingForm extends Component {
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
     this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
+    this.GeneralDropdown = makeValidatableField(GeneralDropdown);
 
     this.state = {
       keywords: '',
@@ -163,7 +173,8 @@ class ListingForm extends Component {
         continuous: true,
         ...defaultData,
         price_using_omnicoin: true,
-        start_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        shipping_price_included: false
       };
 
       if (defaultData.bitcoin_address) {
@@ -180,6 +191,12 @@ class ListingForm extends Component {
         data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
       }
     }
+
+    unitKeys.forEach(key => {
+      if (!data[key]) {
+        data[key] = key === 'weight_unit' ? 'oz' : 'in';
+      }
+    });
 
     this.props.initialize(data);
   }
@@ -300,6 +317,27 @@ class ListingForm extends Component {
     this.setState({ keywords });
   }
 
+  onShowEthPriceChange = (e, isShow) => {
+    if (isShow) {
+      this.populateEthAddress();
+    }
+  }
+
+  onCurrencyChange = (e, currency) => {
+    if (currency === 'ETHEREUM') {
+      this.populateEthAddress();
+    }
+  }
+
+  populateEthAddress() {
+    const { editingListing, account, auth, ethereum } = this.props;
+    let address = editingListing && editingListing.ethereum_address;
+    if (!address) {
+      address = account.ethAddress || auth.account.eth_address || ethereum.address
+    }
+    this.props.formActions.change('ethereum_address', address);
+  }
+
   getImagesData() {
     const { listingImages } = this.props.listing;
 
@@ -366,7 +404,7 @@ class ListingForm extends Component {
     } else if (currency === 'BITCOIN') {
       priceValidators.push(bitcoinFieldValidator);
     } else if (currency === 'ETHEREUM') {
-      priceValidators.push(ethereumFieldValidator);
+      priceValidators.push(ethereumPriceFieldValidator);
     } else {
       priceValidators.push(fiatFieldValidator);
     }
@@ -386,6 +424,19 @@ class ListingForm extends Component {
     const {
       listing_id, publisher, keywords, ...data
     } = values;
+
+    if (!data.weight) {
+      delete data.weight_unit;
+    }
+    if (!data.width) {
+      delete data.width_unit;
+    }
+    if (!data.height) {
+      delete data.height_unit;
+    }
+    if (!data.length) {
+      delete data.length_unit;
+    }
 
     const obj = {
       ...data,
@@ -480,7 +531,7 @@ class ListingForm extends Component {
                 name="listing_title"
                 component={InputField}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnter)}
+                placeholder={formatMessage(messages.pleaseEnterTitle)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -534,6 +585,7 @@ class ListingForm extends Component {
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
+                onChange={this.onCurrencyChange}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -545,6 +597,15 @@ class ListingForm extends Component {
                 component={this.PriceInput}
                 className="textfield"
                 validate={this.getPriceValidators(currency)}
+              />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Field
+                name="shipping_price_included"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.shippingPriceIncluded)
+                }}
               />
             </Grid.Column>
           </Grid.Row>
@@ -566,6 +627,7 @@ class ListingForm extends Component {
                 props={{
                   label: formatMessage(messages.ethereumPrice)
                 }}
+                onChange={this.onShowEthPriceChange}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -614,7 +676,6 @@ class ListingForm extends Component {
                 component={InputField}
                 className="textfield"
                 validate={[requiredFieldValidator]}
-                value={account.ethAddress || auth.account.eth_address || ethWalletAddress}
                 onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
               />
             </Grid.Column>
@@ -760,12 +821,11 @@ class ListingForm extends Component {
 
           <Grid.Row className="row-section">
             <Grid.Column width={16}>
-              <span className="title">{formatMessage(messages.description)}</span>
+              <span className="title">{formatMessage(messages.description)}*</span>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
-              <span>{formatMessage(messages.description)}*</span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
@@ -773,7 +833,7 @@ class ListingForm extends Component {
                 name="description"
                 component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(messages.pleaseEnter)}
+                placeholder={formatMessage(messages.pleaseEnterDescription)}
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -881,6 +941,146 @@ class ListingForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+
+          <Grid.Row className="row-section">
+            <Grid.Column width={16}>
+              <span className="title">{formatMessage(messages.shipping)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4} className="top-align">
+            </Grid.Column>
+            <Grid.Column width={10}>
+              <Field
+                type="textarea"
+                name="shipping_description"
+                component={this.DescriptionInput}
+                className="textfield"
+                placeholder={formatMessage(messages.enterShippingInformation)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}></Grid.Column>
+            <Grid.Column width={12}>
+              <Field
+                name="no_shipping_address_required"
+                component={Checkbox}
+                props={{
+                  label: formatMessage(messages.noShippingAddressRequired)
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row className="row-section">
+            <Grid.Column width={16}>
+              <span className="title">{formatMessage(messages.weightAndSize)}</span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.weight)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="weight"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.weight)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="weight_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: weightUnits
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.width)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="width"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.width)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="width_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.height)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="height"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.height)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="height_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(messages.length)}</span>
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="length"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.length)}
+                validate={[allowBlankNumericFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                name="length_unit"
+                component={GeneralDropdown}
+                props={{
+                  data: sizeUnits
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
           <Grid.Row>
             <Grid.Column width={4} />
             <Grid.Column width={4}>

@@ -1,0 +1,28 @@
+.address-confirm-modal {
+	.head-msg {
+		margin: 20px;
+	}
+	.address-form {
+		margin: 20px;
+
+		.dropdown {
+			width: 100%;
+		}
+
+		.actions {
+			float: right;
+		}
+
+		.default-check {
+			display: flex !important;
+			flex-direction: column;
+			justify-content: center;
+
+			.check-form {
+				.description {
+					margin: 0;
+				}
+			}
+		}
+	}
+}

@@ -186,13 +186,38 @@
     }
   }
 
-  .listing-description {
+  .listing-description, .listing-weight-size, .shipping {
     flex: 1 1 auto;
     padding: 20px;
     background-color: $background-gray;
 
     .description {
       margin-top: 12px;
+    }
+  }
+
+  .shipping {
+    padding-top: 0;
+
+    .no-address-required {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  }
+
+  .listing-weight-size {
+    padding-top: 0;
+
+    .title {
+      margin-bottom: 2px;
+    }
+
+    >div {
+      margin-top: 10px;
+      >span {
+        display: inline-block;
+        min-width: 60px;
+      }
     }
   }
 

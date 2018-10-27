@@ -215,6 +215,11 @@ class TransactionDetails extends Component {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const { detailSelected } = this.props.account;
+
+    if (!detailSelected) {
+      return null;
+    }
+
     const containerClass = classNames({
       'details-container': true,
       details: true,
@@ -234,7 +239,7 @@ class TransactionDetails extends Component {
             <div className="top-container">
               <div className="item">
                 <span>{formatMessage(messages.transactionHash)}</span>
-                <span className="code primary-blue">{detailSelected.hash}</span>
+                <span className="code primary-blue hash">{detailSelected.hash}</span>
               </div>
             </div>
             :
@@ -243,10 +248,12 @@ class TransactionDetails extends Component {
                 <span>{formatMessage(messages.block)}</span>
                 <span className="code primary-blue">{detailSelected.blockNum}</span>
               </div>
-              <div className="item">
-                <span>{formatMessage(messages.transaction)}</span>
-                <span className="code">{detailSelected.trxInBlock}</span>
-              </div>
+              {!detailSelected.isEther &&
+                <div className="item">
+                  <span>{formatMessage(messages.transaction)}</span>
+                  <span className="code">{detailSelected.trxInBlock}</span>
+                </div>
+              }
             </div>
           }
 

@@ -135,6 +135,10 @@ const getBadgeClass = (type) => {
       return 'witBonus';
     case ChainTypes.operations.founder_bonus_operation:
       return 'fBonus';
+    case ChainTypes.operations.vesting_balance_withdraw:
+      return 'vestingWithdraw';
+    case ChainTypes.operations.exchange_complete_operation:
+      return 'exchange';
     default:
       break;
   }

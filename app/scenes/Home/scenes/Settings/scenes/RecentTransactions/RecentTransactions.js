@@ -122,8 +122,15 @@ const messages = defineMessages({
   [ChainTypes.operations.founder_bonus_operation]: {
     id: 'RecentTransactions.developerBonus',
     defaultMessage: 'DEVELOPER BONUS'
+  },
+  [ChainTypes.operations.vesting_balance_withdraw]: {
+    id: 'RecentTransaction.vestingWithdraw',
+    defaultMessage: 'VESTING WITHDRAW'
+  },
+  [ChainTypes.operations.exchange_complete_operation]: {
+    id: 'RecentTransaction.exchange',
+    defaultMessage: 'EXCHANGE'
   }
-
 });
 
 
@@ -152,6 +159,10 @@ class RecentTransactions extends Component {
     }
     if (this.props.coinType !== nextProps.coinType) {
       this.fetchTransactions(nextProps.coinType);
+
+      if (this.props.account.showDetails) {
+        this.props.accountSettingsActions.showDetailsModal();
+      }
     }
   }
 
@@ -179,6 +190,21 @@ class RecentTransactions extends Component {
 
   onCloseDetails() {
     this.props.accountSettingsActions.showDetailsModal();
+  }
+
+  renderMemo(memo) {
+    if (!memo) {
+      return '';
+    }
+    const lines = memo.split("\n");
+    const lineViews = [];
+    lines.forEach((l, i) => {
+      if (i > 0) {
+        lineViews.push(<br />);
+      }
+      lineViews.push(<span key={i}>{l}</span>);
+    });
+    return lineViews;
   }
 
   render() {
@@ -277,9 +303,9 @@ class RecentTransactions extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentTransactionsVisible && recentTransactionsVisible.map(row =>
+                {recentTransactionsVisible && recentTransactionsVisible.map((row, index) =>
                       (
-                        <TableRow key={hash(row)}>
+                        <TableRow key={hash(row) + index.toString()}>
                           <TableCell>{dateformat(row.date, 'yyyy-mm-dd HH:MM:ss')}</TableCell>
                           <TableCell>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -293,7 +319,7 @@ class RecentTransactions extends Component {
                             </div>
                           </TableCell>
                           {coinType === CoinTypes.OMNI_COIN &&
-                            <TableCell>{row.memo}</TableCell>
+                            <TableCell>{this.renderMemo(row.memo)}</TableCell>
                           }
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row.fee}</TableCell>
@@ -307,19 +333,17 @@ class RecentTransactions extends Component {
                           {/* <TableCell className="balance"> */}
                           {/* {row.balance} */}
                           {/* </TableCell> */}
-                          {(coinType === CoinTypes.OMNI_COIN || coinType === CoinTypes.BIT_COIN) &&
-                            <TableCell>
-                              <span
-                                className="link"
-                                onClick={() => this.onClickDetails(row.id)}
-                                onKeyDown={() => this.onClickDetails(row.id)}
-                                role="link"
-                                tabIndex={0}
-                              >
-                                {formatMessage(messages.details)}
-                              </span>
-                            </TableCell>
-                          }
+                          <TableCell>
+                            <span
+                              className="link"
+                              onClick={() => this.onClickDetails(row.id)}
+                              onKeyDown={() => this.onClickDetails(row.id)}
+                              role="link"
+                              tabIndex={0}
+                            >
+                              {formatMessage(messages.details)}
+                            </span>
+                          </TableCell>
                         </TableRow>
                       ))
                     }

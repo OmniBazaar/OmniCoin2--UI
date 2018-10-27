@@ -21,6 +21,7 @@ const {
   marketplaceReturnListings,
   marketplaceReturnBool,
   searching,
+  searchResultEmpty,
   filterSearch,
   setSearchListingsParams,
   clearSearchResults
@@ -51,6 +52,7 @@ const {
   SEARCHING: (searchId, searchTerm, category, subCategory, fromSearchMenu) => ({
     searchId, searchTerm, category, subCategory, fromSearchMenu
   }),
+  SEARCH_RESULT_EMPTY: (searchId) => ({ searchId }),
   FILTER_SEARCH: (currency, category) => ({ currency, category }),
   SET_SEARCH_LISTINGS_PARAMS: (searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu) => ({
     searchTerm, category, country, state, city, historify, subCategory, fromSearchMenu
@@ -79,6 +81,7 @@ export {
   marketplaceReturnBool,
   marketplaceReturnListings,
   searching,
+  searchResultEmpty,
   filterSearch,
   setSearchListingsParams,
   clearSearchResults

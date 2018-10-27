@@ -68,7 +68,7 @@ class ExistingEthereumWallet extends Component {
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} className="add-ethereum-wallet">
         <Form.Field>
-          {formatMessage(messages.chooseOption) + ":"}
+          {formatMessage(messages.chooseOption)}
         </Form.Field>
         <Form.Field>
           <Checkbox

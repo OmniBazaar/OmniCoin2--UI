@@ -20,7 +20,8 @@ import {
   bitcoinTransferSucceeded,
   bitcoinTransferFailed,
   ethereumTransferSucceeded,
-  ethereumTransferFailed
+  ethereumTransferFailed,
+  saleBonus as saleBonusAction
 } from "./transferActions";
 
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
@@ -51,6 +52,8 @@ function* omnicoinTransfer({payload: {
   to, amount, memo, reputation, listingId, listingTitle, listingCount
 }}) {
   const { currentUser } = (yield select()).default.auth;
+  let buyer = currentUser.username,
+      seller = to;
   try {
     const [fromAcc, toAcc] = yield Promise.all([
       FetchChain('getAccount', currentUser.username),
@@ -81,23 +84,19 @@ function* omnicoinTransfer({payload: {
     yield put(omnicoinTransferSucceeded());
     yield put(getAccountBalance(fromAcc.toJS()));
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
-        seller: to,
-        buyer: currentUser.username,
+      yield addPurchaseAndSendMails({
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'omnicoin'
-      };
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, to, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
+      yield put(saleBonusAction(seller, buyer))
     }
   } catch (error) {
     let e = JSON.stringify(error);
-    console.log('ERROR', error);
     if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
       e = 'Not enough funds';
     }
@@ -110,27 +109,27 @@ function* bitcoinTransfer({ payload: {
 }}) {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const buyer = currentUser.username,
+          seller = toName;
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
+    
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
-        seller: toName,
-        buyer: currentUser.username,
+      yield addPurchaseAndSendMails({
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'bitcoin'
-      };
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
+      yield put(saleBonusAction(seller, buyer))
     }
   } catch (error) {
-    console.log('ERROR', error);
-    yield put(bitcoinTransferFailed(error));
+    console.log(error);
+    yield put(bitcoinTransferFailed({...error}));
   }
 }
 
@@ -139,23 +138,22 @@ function* ethereumTransfer({payload: {
 } }) {
   try {
     const { currentUser } = (yield select()).default.auth;
+    const buyer = currentUser.username,
+          seller = toName;
     yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
     yield put(ethereumTransferSucceeded());
     if (listingId) {
-      const purchaseObject = {
-        date: new Date(),
-        seller: toName,
-        buyer: currentUser.username,
+      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
+      yield addPurchaseAndSendMails({
+        seller,
+        buyer,
         amount,
         listingId,
         listingCount,
         listingTitle,
         currency: 'ethereum'
-      };
-      sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
-      yield put(addPurchase(purchaseObject));
-      yield put(sendPurchaseInfoMail(currentUser.username, toName, JSON.stringify(purchaseObject)));
-      yield put(sendPurchaseInfoMail(currentUser.username, currentUser.username, JSON.stringify(purchaseObject)));
+      });
+      yield put(saleBonusAction(seller, buyer))
     }
     console.log("Ether res", res);
   } catch (error) {
@@ -167,6 +165,46 @@ function* ethereumTransfer({payload: {
     }
   }
 }
+
+const weightAndSizeKeys = ['weight', 'width', 'height', 'length'];
+function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCount, listingTitle, currency}) {
+  const { listingDetail } = (yield select()).default.listing;
+  const purchaseObject = {
+    date: new Date(),
+    seller,
+    buyer,
+    amount,
+    listingId,
+    listingCount,
+    listingTitle,
+    currency
+  };
+  const { buyerAddress } = (yield select()).default.transfer;
+  const shipment = {
+    buyerAddress
+  };
+  const { shippingRates, selectedShippingRateIndex } = (yield select()).default.shipping;
+  if (shippingRates && shippingRates.length && selectedShippingRateIndex > -1) {
+    const rate = shippingRates[selectedShippingRateIndex];
+    if (rate) {
+      shipment.shippingCost = {...rate};
+    }
+  }
+  purchaseObject.shipment = shipment;
+
+  weightAndSizeKeys.forEach(key => {
+    if (listingDetail[key]) {
+      purchaseObject.weightAndSize = {
+        ...purchaseObject.weightAndSize,
+        [key]: listingDetail[key],
+        [`${key}_unit`]: listingDetail[`${key}_unit`]
+      };
+    }
+  });
+
+  yield put(addPurchase(purchaseObject));
+    yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  }
 
 
 function* createEscrowTransaction({ payload: {
@@ -209,7 +247,6 @@ function* createEscrowTransaction({ payload: {
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_SUCCEEDED' });
   } catch (error) {
     const errorMsg = error.message.indexOf('Insufficient Balance') !== -1 ? 'Not enough funds' : error.message;
-    console.log('ERROR', error);
     yield put({ type: 'CREATE_ESCROW_TRANSACTION_FAILED', error: errorMsg });
   }
 }
@@ -233,7 +270,6 @@ function* getCommonEscrows({ payload: { from, to } }) {
     toEscrows = yield Promise.all(toEscrows.map(el => FetchChain('getAccount', el))).then(res => res.map(el => el.toJS()));
     yield put({ type: 'GET_COMMON_ESCROWS_SUCCEEDED', commonEscrows: _.intersectionBy(fromEscrows, toEscrows, 'id') });
   } catch (error) {
-    console.log('ERROR ', error);
     yield put({ type: 'GET_COMMON_ESCROWS_FAILED', error: error.message });
   }
 }

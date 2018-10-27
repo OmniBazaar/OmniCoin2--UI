@@ -95,8 +95,7 @@ export default class MenuBuilder {
         { label: 'Learn More', click() { shell.openExternal('http://support.omnibazaar.com/'); } },
         { label: 'Knowledge Base', click() { shell.openExternal('http://support.omnibazaar.com/knowledgebase/'); } },
         { label: 'Reddit', click() { shell.openExternal('https://www.reddit.com/r/OmniBazaar/'); } },
-        { label: 'Telegram', click() { shell.openExternal('https://t.me/omnibazaar'); } },
-        { label: 'Search Issues', click() { shell.openExternal('https://github.com/OmniBazaar/OmniCoin2--Core/issues'); } }
+        { label: 'Telegram', click() { shell.openExternal('https://t.me/omnibazaar'); } }
       ]
     };
 
@@ -174,11 +173,6 @@ export default class MenuBuilder {
         label: 'Telegram',
         click() {
           shell.openExternal('https://t.me/omnibazaar');
-        }
-      }, {
-        label: 'Search Issues',
-        click() {
-          shell.openExternal('https://github.com/OmniBazaar/OmniCoin2--Core/issues');
         }
       }]
     }];

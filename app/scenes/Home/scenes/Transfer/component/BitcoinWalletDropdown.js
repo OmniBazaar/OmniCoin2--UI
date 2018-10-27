@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { getWallets } from '../../../../../services/blockchain/bitcoin/bitcoinActions';
-import { SATOSHI_IN_BTC } from '../../../../../utils/constants';
+import { SATOSHI_IN_BTC, MANUAL_INPUT_VALUE } from '../../../../../utils/constants';
 import messages from '../messages';
 
 class BitcoinWalletDropdown extends Component {

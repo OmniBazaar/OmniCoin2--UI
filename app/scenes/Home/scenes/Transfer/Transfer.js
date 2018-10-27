@@ -21,12 +21,16 @@ import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { $ } from 'moneysafe';
 
+import {
+  InputField
+} from '../../../../components/ValidatableField/ValidatableField';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import ConfirmationModal from '../../../../components/ConfirmationModal/ConfirmationModal';
 import DealRating from '../../../../components/DealRating/DealRating';
 import Header from '../../../../components/Header';
 import BitcoinWalletDropdown from './component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
+import ShippingRate from './component/ShippingRate/ShippingRate';
 
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import './transfer.scss';
@@ -41,9 +45,13 @@ import {
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
+import {
+  getShippingRates,
+  resetShipping
+} from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
-import { Prompt } from 'react-router-dom';
+import { MANUAL_INPUT_VALUE } from "../../../../utils/constants";
 
 import messages from './messages';
 
@@ -78,8 +86,8 @@ const currencyOptions = [
   {
     key: 'ethereum',
     value: 'ethereum',
-    text: 'Ethereum',
-    description: 'Ethereum Currency'
+    text: 'Ether',
+    description: 'Ether Currency'
   }
 ];
 
@@ -99,7 +107,6 @@ const amountDecimalsValidator = addValidator({
 });
 
 class Transfer extends Component {
-
   static escrowOptions(escrows) {
     return escrows.map(escrow => ({
       key: escrow.id,
@@ -155,12 +162,20 @@ class Transfer extends Component {
 
     this.state = {
       isModalOpen: false,
-      isPromptVisible: false
+      isPromptVisible: false,
+      submitSucceeded: false
     };
   }
 
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
+    const listingId = purchaseParams.get('listing_id');
+    if (listingId) {
+      this.setState({
+        isPromptVisible: true
+      });
+    }
+
     const type = purchaseParams.get('type');
     const price = purchaseParams.get('price');
     const number = purchaseParams.get('number');
@@ -170,6 +185,9 @@ class Transfer extends Component {
     const ethereumAddress = purchaseParams.get('ethereum_address');
     const listingCurrency = purchaseParams.get('currency');
     const convertedAmount = type ? currencyConverter(amount, listingCurrency, type.toUpperCase()) : 0;
+
+    this.initialAmount = parseFloat(convertedAmount);
+
     this.handleInitialize(convertedAmount);
 
     if (type === CoinTypes.BIT_COIN) {
@@ -191,6 +209,8 @@ class Transfer extends Component {
 
   componentWillMount() {
     this.props.ethereumActions.getEthereumWallets();
+
+    this.checkRequestShippingRates();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -203,6 +223,7 @@ class Transfer extends Component {
       if (nextProps.transfer.error) {
         toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
       } else {
+        this.setState({ submitSucceeded: true });
         this.props.reset();
         this.handleInitialize(0);
         toastr.success(formatMessage(messages.transfer), formatMessage(messages.successTransfer));
@@ -247,10 +268,37 @@ class Transfer extends Component {
         this.props.change('amount', convertedAmount);
       }
     }
+
+    if (this.props.shipping.selectedShippingRateIndex !== nextProps.shipping.selectedShippingRateIndex) {
+      const rate = nextProps.shipping.shippingRates[nextProps.shipping.selectedShippingRateIndex];
+      if (rate) {
+        this.onShippingRateChange(rate);
+      }
+    }
   }
 
-  componentWillUnmount() {
-    //this.props.transferActions.setCurrency(undefined);
+  getListingId() {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    return purchaseParams.get('listing_id');
+  }
+
+  checkRequestShippingRates() {
+    this.props.shippingActions.resetShipping();
+
+    const listingId = this.getListingId();
+    if (listingId) {
+      const { listingDetail } = this.props.listing;
+      if (listingDetail.shipping_price_included || listingDetail.no_shipping_address_required || !listingDetail.weight) {
+        return;
+      }
+
+      const purchaseParams = new URLSearchParams(this.props.location.search);
+      const number = purchaseParams.get('number');
+
+      const listing = {...listingDetail};
+      const { buyerAddress } = this.props.transfer;
+      this.props.shippingActions.getShippingRates(listing, buyerAddress, number);
+    }
   }
 
   handleInitialize(price) {
@@ -264,7 +312,7 @@ class Transfer extends Component {
     const { auth: { account }, transferForm: { toName } } = this.props;
 
     return escrows
-      .filter(({ id, name }) => account.id !== id || name !== toName)
+      .filter(({ id, name }) => account.id !== id && name !== toName)
       .map(escrow => ({
         key: escrow.id,
         value: escrow.id,
@@ -395,16 +443,18 @@ class Transfer extends Component {
   renderCurrencyField = ({
     input, options, disabled
   }) => (
+    <div className="transfer-input">
       <Select
-        className="textfield currency-dropdown-cont"
-        value={this.props.transfer.transferCurrency}
-        options={options}
-        disabled={disabled}
-        onChange={(param, data) => {
-          input.onChange(data.value);
-          this.onChangeCurrency(data);
-        }}
-      />
+          className="textfield"
+          value={this.props.transfer.transferCurrency}
+          options={options}
+          disabled={disabled}
+          onChange={(param, data) => {
+            input.onChange(data.value);
+            this.onChangeCurrency(data);
+          }}
+        />
+    </div>
     );
 
   renderDealRatingField = ({
@@ -466,6 +516,77 @@ class Transfer extends Component {
       </span>
     </div>
   );
+
+  onShippingRateChange(shippingRate) {
+    const purchaseParams = new URLSearchParams(this.props.location.search);
+    const type = purchaseParams.get('type');
+
+    const shippingAmount = currencyConverter(shippingRate.rate, 'USD', type.toUpperCase());
+    let newAmount = this.initialAmount + parseFloat(shippingAmount);
+    if (type === CoinTypes.BIT_COIN) {
+      newAmount = parseFloat(newAmount.toFixed(8));
+    } else if (type === CoinTypes.OMNI_COIN) {
+      newAmount = parseFloat(newAmount.toFixed(5));
+    }
+    this.props.change('amount', newAmount);
+  }
+
+  renderShippingContent() {
+    const { listingDetail } = this.props.listing;
+
+    const { shipping } = this.props;
+
+    if (shipping.loading) {
+      return (<div className='transfer-input'><Loader active inline="centered" /></div>);
+    }
+
+    const { formatMessage } = this.props.intl;
+
+    if (listingDetail.shipping_price_included) {
+      return (<div className='transfer-input'>{formatMessage(messages.shippingCostIsIncluded)}</div>);
+    }
+
+    if (!listingDetail.weight || shipping.error || !shipping.shippingRates.length) {
+      return (<div className='transfer-input'>{formatMessage(messages.contactSellerForShippingCosts)}</div>);
+    }
+
+    return (
+      <div className='transfer-input rates'>
+        {
+          shipping.shippingRates.map((shipRate, index) => {
+            return (
+              <ShippingRate key={index} index={index} />
+            );
+          })
+        }
+      </div>
+    );
+  }
+
+  renderShipping() {
+    const listingId = this.getListingId();
+    if (!listingId) {
+      return null;
+    }
+
+    const { listingDetail } = this.props.listing;
+    if (listingDetail.no_shipping_address_required) {
+      return null;
+    }
+
+    const { formatMessage } = this.props.intl;
+
+    return (
+      <div className="section">
+        <p className="title">{formatMessage(messages.shipping)}</p>
+        <div className="form-group shipping-cost">
+          <span>{formatMessage(messages.shippingCost)}</span>
+          { this.renderShippingContent() }
+          <div className="col-1" />
+        </div>
+      </div>
+    );
+  }
 
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
@@ -612,6 +733,7 @@ class Transfer extends Component {
             </div>
           }
         </div>
+        { !this.state.submitSucceeded && this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -632,6 +754,7 @@ class Transfer extends Component {
   renderBitCoinForm() {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
+    const { wallet } = this.props.transferForm || {};
 
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const listingId = purchaseParams.get('listing_id');
@@ -658,16 +781,18 @@ class Transfer extends Component {
           <p className="title">{formatMessage(messages.to)}</p>
           <div className="form-group">
             <span>{formatMessage(messages.bitcoinAddress)}*</span>
-            <Field
-              type="text"
-              name="toAddress"
-              placeholder={formatMessage(messages.pleaseEnter)}
-              component="input"
-              className="textfield currency-dropdown-cont"
-              validate={[
-                required({ message: formatMessage(messages.fieldRequired) })
-              ]}
-            />
+            <div className="transfer-input">
+              <Field
+                type="text"
+                name="toAddress"
+                placeholder={formatMessage(messages.pleaseEnter)}
+                component="input"
+                className="textfield currency-dropdown-cont"
+                validate={[
+                  required({ message: formatMessage(messages.fieldRequired) })
+                ]}
+              />
+            </div>
             <div className="col-1" />
           </div>
         </div>
@@ -697,6 +822,7 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
         </div>
+        { this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -762,6 +888,7 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
         </div>
+        { this.renderShipping() }
         <div className="form-group">
           <span />
           <div className="field left floated">
@@ -795,7 +922,9 @@ class Transfer extends Component {
   }
 
   onChangeCurrency = (data) => {
-    this.setState({ isPromptVisible: true });
+    if (this.props.transfer.amount) {
+      this.setState({ isPromptVisible: true });
+    }
     const { formatMessage } = this.props.intl;
     this.props.transferActions.setCurrency(data.value);
   };
@@ -872,6 +1001,7 @@ class Transfer extends Component {
     amount
   }) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
+    
     this.props.transferActions.bitcoinTransfer(
       toAddress,
       purchaseParams.get('seller_name'),
@@ -993,6 +1123,9 @@ Transfer.propTypes = {
       balance: PropTypes.string,
     }),
   }),
+  shippingActions: PropTypes.shape({
+    getShippingRates: PropTypes.func
+  })
 };
 
 Transfer.defaultProps = {
@@ -1019,6 +1152,7 @@ export default compose(
         fromName: selector(state, 'fromName'),
         useEscrow: selector(state, 'useEscrow'),
         amount: selector(state, 'amount'),
+        wallet: selector(state, 'wallet')
       }
     }),
     (dispatch) => ({
@@ -1033,6 +1167,10 @@ export default compose(
         getCommonEscrows,
         createEscrowTransaction,
         saleBonus
+      }, dispatch),
+      shippingActions: bindActionCreators({
+        getShippingRates,
+        resetShipping
       }, dispatch),
       initialize,
       changeFieldValue: (field, value) => {

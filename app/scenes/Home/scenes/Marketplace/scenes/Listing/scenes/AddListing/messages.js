@@ -29,6 +29,14 @@ const messages = defineMessages({
     id: 'AddListing.pleaseEnter',
     defaultMessage: 'Please enter'
   },
+  pleaseEnterTitle: {
+    id: 'AddListing.pleaseEnterTitle',
+    defaultMessage: 'Please enter title'
+  },
+  pleaseEnterDescription: {
+    id: 'AddListing.pleaseEnterDescription',
+    defaultMessage: 'Please enter description'
+  },
   placing: {
     id: 'AddListing.placing',
     defaultMessage: 'Placing'
@@ -265,9 +273,13 @@ const messages = defineMessages({
     id: 'AddListing.ethereumFieldValidator',
     defaultMessage: 'Should be greater or equal to 1 wei'
   },
+  ethereumPriceFieldValidator: {
+    id: 'AddListing.ethereumPriceFieldValidator',
+    defaultMessage: 'Should be greater or equal to 0.000001'
+  },
   ethereumAddress: {
     id: 'AddListing.ethereumAddress',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
@@ -360,6 +372,70 @@ const messages = defineMessages({
   fiatFieldValidator: {
     id: 'AddListing.fiatFieldValidator',
     defaultMessage: 'Should be greater or equal to 0.01'
+  },
+  weightAndSize: {
+    id: 'AddListing.weightAndSize',
+    defaultMessage: 'Weight and Size'
+  },
+  weight: {
+    id: 'AddListing.weight',
+    defaultMessage: 'Weight'
+  },
+  ounce: {
+    id: 'AddListing.ounce',
+    defaultMessage: 'Ounces'
+  },
+  pound: {
+    id: 'AddListing.pound',
+    defaultMessage: 'Pound'
+  },
+  gram: {
+    id: 'AddListing.gram',
+    defaultMessage: 'Gram'
+  },
+  width: {
+    id: 'AddListing.width',
+    defaultMessage: 'Width'
+  },
+  height: {
+    id: 'AddListing.height',
+    defaultMessage: 'Height'
+  },
+  length: {
+    id: 'AddListing.length',
+    defaultMessage: 'Length'
+  },
+  inches: {
+    id: 'AddListing.inches',
+    defaultMessage: 'Inches'
+  },
+  shippingPriceIncluded: {
+    id: 'AddListing.shippingPriceIncluded',
+    defaultMessage: 'Shipping Price Included'
+  },
+  shipping: {
+    id: 'AddListing.shipping',
+    defaultMessage: 'Shipping'
+  },
+  noShippingAddressRequired: {
+    id: 'AddListing.noShippingAddressRequired',
+    defaultMessage: 'No shipping address required'
+  },
+  kilograms: {
+    id: 'AddListing.kilograms',
+    defaultMessage: 'Kilograms'
+  },
+  centimeters: {
+    id: 'AddListing.centimeters',
+    defaultMessage: 'Centimeters'
+  },
+  enterShippingInformation: {
+    id: 'AddListing.enterShippingInformation',
+    defaultMessage: 'Enter additional shipping information, instructions or requirements (optional).'
+  },
+  saveAsDefault: {
+    id: 'AddListing.saveAsDefault',
+    defaultMessage: 'Save as default'
   }
 });
 

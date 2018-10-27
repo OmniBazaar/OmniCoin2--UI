@@ -382,10 +382,9 @@ class Menu extends Component {
           <div className="submenu">
             <p className="title">{formatMessage(aboutCategories.documentation)}</p>
             <div className="sub-categories">
-              {this.renderOption(aboutCategories.knowledgeBase, mainCategories.about, 'http://support.omnibazaar.com/knowledgebase/', true)}
+              {this.renderOption(aboutCategories.knowledgeBase, mainCategories.about, 'https://omnibazaar.helprace.com/s1-general/knowledgebase', true)}
               {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
-              {this.renderOption(aboutCategories.technology, mainCategories.about, 'http://omnibazaar.com/index.php/support/technology', true)}
-              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://omnibazaar.com/index.php/support/white-paper', true)}
+              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://whitepaper.omnibazaar.com', true)}
             </div>
           </div>
           <div className="submenu">
@@ -395,7 +394,6 @@ class Menu extends Component {
               {this.renderOption(aboutCategories.blockExplorer, mainCategories.about, 'http://omnicoin.info', true)}
               {this.renderOption(aboutCategories.blog, mainCategories.about, 'http://omnibazaar.com/index.php/about/news', true)}
               {this.renderOption(aboutCategories.newsletter, mainCategories.about, 'http://eepurl.com/M708n', true)}
-              {this.renderOption(aboutCategories.contact, mainCategories.about, 'http://omnibazaar.com/index.php/about/contact', true)}
             </div>
           </div>
         </div>

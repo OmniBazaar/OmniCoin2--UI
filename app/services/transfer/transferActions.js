@@ -14,7 +14,9 @@ const {
   bitcoinTransferFailed,
   ethereumTransfer,
   ethereumTransferSucceeded,
-  ethereumTransferFailed
+  ethereumTransferFailed,
+  setBuyerAddress,
+  loadDefaultShippingAddress
 } = createActions({
   CREATE_ESCROW_TRANSACTION: (buyer, seller, escrow, amount, memo, transferToEscrow, expirationTime, listingId, listingTitle, listingCount) =>
     ({ buyer, seller, escrow, amount, memo, transferToEscrow, expirationTime, listingId, listingTitle, listingCount }),
@@ -32,7 +34,9 @@ const {
   ETHEREUM_TRANSFER: (toEthereumAddress, toName, privateKey, amount, listingId, listingTitle, listingCount) =>
     ({toEthereumAddress, toName, amount, privateKey, listingId, listingTitle, listingCount }),
   ETHEREUM_TRANSFER_SUCCEEDED: () => ({ }),
-  ETHEREUM_TRANSFER_FAILED: (error) => ({ error })
+  ETHEREUM_TRANSFER_FAILED: (error) => ({ error }),
+  SET_BUYER_ADDRESS: (address, saveAsDefault, username) => ({ address, saveAsDefault, username }),
+  LOAD_DEFAULT_SHIPPING_ADDRESS: (username) => ({ username })
 });
 
 export {
@@ -49,5 +53,7 @@ export {
   bitcoinTransferFailed,
   ethereumTransfer,
   ethereumTransferSucceeded,
-  ethereumTransferFailed
+  ethereumTransferFailed,
+  setBuyerAddress,
+  loadDefaultShippingAddress
 };

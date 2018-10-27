@@ -41,6 +41,10 @@
           &.deal {
             margin-top: 10px;
           }
+
+          .shipping-rate-item:first-child{
+            margin: 0;
+          }
         }
 
         .field {
@@ -55,6 +59,17 @@
 
         .button {
           font-size: 1rem;
+        }
+
+        &.shipping-cost{
+          >span{
+            align-self: flex-start;
+          }
+
+          >.rates {
+            max-height: 250px;
+            overflow-y: auto;
+          }
         }
       }
 

@@ -35,7 +35,7 @@ export default defineMessages({
   },
   ethereumAddress: {
     id: 'Transfer.ethereumAddress',
-    defaultMessage: 'Ethereum address'
+    defaultMessage: 'Ether address'
   },
   pleaseEnter: {
     id: 'Transfer.pleaseEnter',
@@ -156,5 +156,37 @@ export default defineMessages({
   confirmEthereumCurrency: {
     id: 'Transfer.confirmEthereumCurrency',
     defaultMessage: 'Are you sure you want to pay in Ethereum?'
+  },
+  shipping: {
+    id: 'Transfer.shipping',
+    defaultMessage: 'Shipping'
+  },
+  shippingCost: {
+    id: 'Transfer.shippingCost',
+    defaultMessage: 'Shipping cost'
+  },
+  shippingCostIsIncluded: {
+    id: 'Transfer.shippingCostIsIncluded',
+    defaultMessage: 'Shipping cost is included in listing price'
+  },
+  contactSellerForShippingCosts: {
+    id: 'Transfer.contactSellerForShippingCosts',
+    defaultMessage: 'Contact seller for shipping costs'
+  },
+  enterBitcoinAddress: {
+    id: 'Transfer.enterBitcoinAddress',
+    defaultMessage: 'Please enter Bitcoin address'
+  },
+  manualEnterAddress: {
+    id: 'Transfer.manualEnter',
+    defaultMessage: 'Enter address manually'
+  },
+  privateKey: {
+    id: 'Transfer.privateKey',
+    defaultMessage: 'Private key WIF'
+  },
+  enterPrivateKey: {
+    id: 'Transfer.enterPrivateKey',
+    defaultMessage: 'Please enter private key'
   }
 });

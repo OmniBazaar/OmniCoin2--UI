@@ -2,7 +2,8 @@ import {
   takeEvery,
   put,
   all,
-  call
+  call,
+  select
 } from 'redux-saga/effects';
 import path from 'path';
 import { FetchChain } from 'omnibazaarjs/es';
@@ -19,6 +20,8 @@ import {
   addSellingFailed
 } from './myPurchasesActions';
 
+import OmnicoinHistory from '../../accountSettings/omnicoinHistory';
+
 import {
   getUserDataFolder,
   checkDir,
@@ -27,7 +30,7 @@ import {
   writeFile
 } from "../../fileUtils";
 import { getStoredCurrentUser } from "../../blockchain/auth/services";
-import { getObjectById } from "../../listing/apis";
+import { getObjectById, getListing } from "../../listing/apis";
 
 export const Types = {
   selling: 'selling',
@@ -104,16 +107,64 @@ function* getPurchases() {
   }
 }
 
-function* getSellings() {
-  try {
-    const filePath = yield call(getFilePath, Types.selling);
-    if (isExist(filePath)) {
-      const content = yield readFile(filePath);
-      const sellings = JSON.parse(content);
-      yield put(getMySellingsSucceeded(sellings));
-    } else {
-      yield put(getMySellingsSucceeded([]));
+const getListingsDetail = async (user, listingObjects) => {
+  const listingsMap = {};
+  listingObjects.forEach(listing => {
+    if (!listingsMap[listing.id]) {
+      listingsMap[listing.id] = listing;
     }
+  });
+
+  await Promise.all(Object.keys(listingsMap).map(async (listingId) => {
+    const listing = listingsMap[listingId];
+    const publisher = {
+      publisher_ip: listing.publisherIp
+    };
+
+    let listingDetail = null;
+    try {
+      listingDetail = await getListing(user, publisher, listing.id);
+    } catch (err) {
+      console.log(err);
+    }
+
+    listingsMap[listingId] = {
+      ...listing,
+      title: listingDetail ? listingDetail.listing_title : ''
+    };
+  }));
+
+  return listingObjects.map(listing => ({
+    ...listing,
+    title: listingsMap[listing.id].title
+  }));
+}
+
+function * getSellings() {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    const historyStorage = new OmnicoinHistory(currentUser);
+    yield historyStorage.refresh();
+    let soldOpers = historyStorage.getSellOperations();
+    const soldListings = yield historyStorage.getListingObjects(soldOpers);
+    const soldListingsMap = {};
+    soldListings.forEach(listing => soldListings[listing.id] = listing);
+    let soldItems = soldOpers.map(op => ({
+      ...op,
+      ...soldListings[op.id]
+    }));
+    soldItems = yield getListingsDetail({...currentUser}, soldItems);
+    soldItems = soldItems.map(item => ({
+      listingId: item.id,
+      title: item.title,
+      date: item.date,
+      count: item.count,
+      price: item.price,
+      publisher: item.publisher,
+      buyer: item.from
+    }));
+
+    yield put(getMySellingsSucceeded(soldItems));
   } catch (error) {
     console.log('ERROR ', error);
     yield put(getMySellingsFailed(error));

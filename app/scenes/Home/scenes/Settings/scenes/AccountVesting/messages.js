@@ -11,6 +11,6 @@ export default defineMessages({
   },
   noVestings: {
     id: 'AccountVesting.noVestings',
-    defaultMessage: 'You have no vesting balances.'
+    defaultMessage: 'You have no vesting balances at this time.'
   }
 });

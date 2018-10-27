@@ -22,6 +22,7 @@ import Support from './scenes/Support/Support';
 import IdentityVerificationForm from './scenes/IdentityVerification/IdentityVerificationForm';
 import Transfer from './scenes/Transfer/Transfer';
 import Wallet from './scenes/Wallet/Wallet';
+import Exchange from './scenes/Exchange/Exchange';
 import Listing from './scenes/Marketplace/scenes/Listing/Listing';
 import MyListings from './scenes/Marketplace/scenes/Listing/scenes/MyListings/MyListings';
 import FavoriteListings from './scenes/Marketplace/scenes/Listing/scenes/FavoriteListings/FavoriteListings';
@@ -77,6 +78,7 @@ import { getWallets } from '../../services/blockchain/bitcoin/bitcoinActions';
 import { getEthereumWallets } from '../../services/blockchain/ethereum/EthereumActions';
 import { checkPublishersAlive } from '../../services/listing/listingActions';
 import { subscribeForMail, mailReceived, loadFolder } from '../../services/mail/mailActions';
+import { loadDefaultShippingAddress } from '../../services/transfer/transferActions';
 import MailTypes from '../../services/mail/mailTypes';
 
 const iconSize = 20;
@@ -106,8 +108,7 @@ class Home extends Component {
       this.props.listingActions.checkPublishersAlive();
       this.init(nextProps.auth.currentUser);
     }
-
-    if (nextProps.dht.error) {
+    if (nextProps.dht.error && !this.props.dht.error) {
       this.props.dhtActions.dhtReconnect();
     }
   }
@@ -123,6 +124,8 @@ class Home extends Component {
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);
     this.props.listingActions.checkPublishersAlive();
     this.props.authActions.referralBonus();
+    this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
+    this.props.transferActions.loadDefaultShippingAddress(currentUser.username);
     this.mailSubscribe(currentUser);
   }
 
@@ -181,6 +184,7 @@ class Home extends Component {
     logoutTimeout *= 60000;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
+
 
     if (!this.props.auth.currentUser) {
       if (!this.props.auth.lastLoginUserName) {
@@ -266,6 +270,15 @@ class Home extends Component {
                     defaultMessage="Transfer"
                   />
                 </NavLink>
+                {identityVerificationStatus && identityVerificationStatus.verified &&
+                  <NavLink to="/exchange" activeClassName="active" className="menu-item">
+                    <Image src={TransferIcon} height={iconSize} width={iconSize}/>
+                    <FormattedMessage
+                      id="Home.Token Sale"
+                      defaultMessage="Token Sale"
+                    />
+                  </NavLink>
+                }
                 <NavLink to="/escrow" activeClassName="active" className="menu-item">
                   <Image src={EscrowIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
@@ -305,10 +318,10 @@ class Home extends Component {
                 <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', 'identity-verification')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
-                    defaultMessage="Identity Verification"
+                    defaultMessage="Whitelist for Token Sale"
                   />
                   <span className="identity-verification-status">
-                    {identityVerificationStatus && identityVerificationStatus.verified ? 'verified' : 'not verified'}
+                    {identityVerificationStatus && identityVerificationStatus.verified ? 'Verified' : 'Not Verified'}
                     {identityVerificationStatus && identityVerificationStatus.comment && <span className="tooltiptext">{ identityVerificationStatus.comment}</span>}
                   </span>
                 </NavLink>
@@ -331,6 +344,7 @@ class Home extends Component {
             <Route path="/start-guide" render={(props) => <StartGuide {...props} />} />
             <Route path="/escrow" render={(props) => <Escrow {...props} />} />
             <Route path="/mail" render={(props) => <Mail {...props} />} />
+            <Route path="/exchange" render={(props) => <Exchange {...props} />} />
             <Route path="/marketplace" render={(props) => <Marketplace {...props} />} />
             <Route path="/processors" render={(props) => <Processors {...props} />} />
             <Route path="/settings" render={(props) => <Settings {...props} />} />
@@ -391,6 +405,9 @@ export default connect(
     dhtActions: bindActionCreators({ dhtReconnect }, dispatch),
     bitcoinActions: bindActionCreators({ getWallets }, dispatch),
     ethereumActions: bindActionCreators({ getEthereumWallets }, dispatch),
+    transferActions: bindActionCreators({
+      loadDefaultShippingAddress
+    }, dispatch),
     mailActions: bindActionCreators({
       subscribeForMail,
       mailReceived,
@@ -425,14 +442,30 @@ Home.propTypes = {
     getIdentityVerificationStatus: PropTypes.func,
     getAccount: PropTypes.func,
     logout: PropTypes.func,
-    requestAppVersion: PropTypes.func
+    requestAppVersion: PropTypes.func,
+    referralBonus: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func
   }).isRequired,
+  bitcoinActions: PropTypes.shape({
+    getWallets: PropTypes.func
+  }).isRequired,
+  ethereumActions: PropTypes.shape({
+    getEthereumWallets: PropTypes.func
+  }).isRequired,
+  listingActions: PropTypes.shape({
+    loadListingDefault: PropTypes.func
+  }).isRequired,
+  connectionActions: PropTypes.shape({
+    restartNodeIfExists: PropTypes.func
+  }).isRequired,
   dhtActions: PropTypes.shape({
     dhtReconnect: PropTypes.func
   }),
+  transferActions: PropTypes.shape({
+    loadDefaultShippingAddress: PropTypes.func
+  }).isRequired,
   mail: PropTypes.shape({
     messages: PropTypes.shape({
       inbox: PropTypes.array,
