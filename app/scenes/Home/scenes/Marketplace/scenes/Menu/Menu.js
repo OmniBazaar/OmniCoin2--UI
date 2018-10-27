@@ -384,7 +384,7 @@ class Menu extends Component {
             <div className="sub-categories">
               {this.renderOption(aboutCategories.knowledgeBase, mainCategories.about, 'https://omnibazaar.helprace.com/s1-general/knowledgebase', true)}
               {this.renderOption(aboutCategories.forum, mainCategories.about, 'http://support.omnibazaar.com/', true)}
-              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://omnibazaar.com/index.php/support/white-paper', true)}
+              {this.renderOption(aboutCategories.whitePaper, mainCategories.about, 'http://whitepaper.omnibazaar.com', true)}
             </div>
           </div>
           <div className="submenu">

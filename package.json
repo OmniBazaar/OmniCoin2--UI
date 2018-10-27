@@ -173,6 +173,7 @@
     "dateformat": "^3.0.3",
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
+    "electron-pdf-window": "^1.0.12",
     "ethers": "^3.0.25",
     "file-url": "^2.0.2",
     "font-awesome": "^4.7.0",
