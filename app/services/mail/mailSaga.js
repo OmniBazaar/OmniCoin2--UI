@@ -12,6 +12,7 @@ import {
   storeMessage,
   getMessagesFromFolder,
   getMessage,
+  updateMessageFolder,
   deleteMessage,
   generateMailUUID
 } from './mailStorage';
@@ -34,6 +35,7 @@ export function* mailSubscriber() {
     takeEvery('LOAD_FOLDER', loadFolder),
     takeEvery('DELETE_MAIL', deleteMail),
     takeEvery('MAIL_SET_READ', mailSetRead),
+    takeEvery('ALL_MAILS_SET_READ', allMailsSetRead),
     takeEvery('SEND_PURCHASE_INFO_MAIL', sendPurchaseInfoMail)
   ]);
 }
@@ -147,4 +149,11 @@ function* mailSetRead(action) {
 
 function* sendPurchaseInfoMail({ payload: { from, to, info } }) {
   yield put(sendMailAction(from, to, purchaseInfoSubject, info, () => {}, () => {}));
+}
+
+function* allMailsSetRead(action) {
+  const { user, messageFolder } = action.payload;
+  const emails = getMessagesFromFolder(user, messageFolder);
+  emails.forEach(email => email.read_status = true);
+  updateMessageFolder(user, messageFolder, emails)
 }
