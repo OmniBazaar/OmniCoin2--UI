@@ -12,7 +12,6 @@ import MyEscrowProposals from './scenes/MyEscrowProposals/MyEscrowProposals';
 import Header from '../../../../components/Header/index';
 
 import {
-  loadEscrowTransactions,
   loadEscrowAgents,
   loadMyEscrowAgents,
   getEscrowSettings
@@ -47,7 +46,6 @@ const rowsPerPage = 20;
 class Escrow extends Component {
   componentDidMount() {
     const { username } = this.props.auth.currentUser;
-    this.props.escrowActions.loadEscrowTransactions(username);
     this.props.escrowActions.loadMyEscrowAgents(username);
     this.props.escrowActions.getEscrowSettings();
   }
@@ -113,7 +111,6 @@ class Escrow extends Component {
 
 Escrow.propTypes = {
   escrowActions: PropTypes.shape({
-    loadEscrowTransactions: PropTypes.func,
     loadMyEscrowAgents: PropTypes.func,
     getEscrowSettings: PropTypes.func,
   }),
@@ -141,7 +138,6 @@ export default connect(
   state => ({ ...state.default }),
   (dispatch) => ({
     escrowActions: bindActionCreators({
-      loadEscrowTransactions,
       loadMyEscrowAgents,
       getEscrowSettings,
       loadEscrowAgents

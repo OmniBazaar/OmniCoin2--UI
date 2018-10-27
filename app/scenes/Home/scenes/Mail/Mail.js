@@ -23,13 +23,14 @@ import {
   deleteMail,
   loadFolder,
   mailSetRead,
+  allMailsSetRead,
   setActiveMessage,
   showReplyModal
 } from '../../../../services/mail/mailActions';
 import Header from '../../../../components/Header';
 
 import './mail.scss';
-import {getBodyFromMessage, getSubjectFromMessage} from "./utils";
+import { getBodyFromMessage, getSubjectFromMessage } from './utils';
 
 const folders = [
   {
@@ -107,6 +108,10 @@ class Mail extends Component {
     this.props.mailActions.loadFolder(username, MailTypes.OUTBOX);
     this.props.mailActions.loadFolder(username, MailTypes.SENT);
     this.props.mailActions.loadFolder(username, MailTypes.DELETED);
+    this.props.mailActions.allMailsSetRead(
+      this.props.auth.currentUser.username,
+      MailTypes.INBOX
+    );
     this.changeFolder(MailTypes.INBOX);
   }
 
@@ -332,6 +337,7 @@ Mail.propTypes = {
     deleteMail: PropTypes.func,
     loadFolder: PropTypes.func,
     mailSetRead: PropTypes.func,
+    allMailsSetRead: PropTypes.func,
     setActiveFolder: PropTypes.func,
     setActiveMessage: PropTypes.func,
     showReplyModal: PropTypes.func
@@ -357,6 +363,7 @@ export default connect(
       deleteMail,
       loadFolder,
       mailSetRead,
+      allMailsSetRead,
       setActiveFolder,
       setActiveMessage,
       showReplyModal,
