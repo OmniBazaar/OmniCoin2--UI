@@ -14,6 +14,15 @@ export function storeMessage(mailObject, user, messageFolder) {
   localStorage.setItem('mail', JSON.stringify(mailFolder));
 }
 
+export function updateMessageFolder(user, messageFolder, emails) {
+  let mailFolder = localStorage.getItem('mail');
+  if (!mailFolder) { mailFolder = {}; } else { mailFolder = JSON.parse(localStorage.getItem('mail')); }
+
+  if (!mailFolder[user]) { mailFolder[user] = {}; }
+  mailFolder[user][messageFolder] = emails.reduce((total, email) => ({ ...total, [email.uuid]: email }), {});
+  localStorage.setItem('mail', JSON.stringify(mailFolder));
+}
+
 export function getMessage(user, messageFolder, uuid) {
   const mailObject = JSON.parse(localStorage.getItem('mail'));
   try {
