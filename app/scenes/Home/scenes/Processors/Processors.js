@@ -48,10 +48,10 @@ class Processors extends Component {
     ) {
       toastr.success(formatMessage(messages.success), formatMessage(messages.voteSuccess));
     }
-    if (nextProps.processorsTop.error && !this.props.processorsTop.error) {
+    if (nextProps.processorsTop.error && !this.props.processorsTop.error && typeof nextProps.processorsTop.error !== 'object') {
       toastr.error(formatMessage(messages.error), nextProps.processorsTop.error);
     }
-    if (nextProps.processorsStandby.error && !this.props.processorsStandby.error) {
+    if (nextProps.processorsStandby.error && !this.props.processorsStandby.error && typeof nextProps.processorsStandby.error !== 'object') {
       toastr.error(formatMessage(messages.error), nextProps.processorsStandby.error);
     }
   }
