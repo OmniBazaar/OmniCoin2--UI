@@ -30,6 +30,7 @@ import RateModal from './components/RateModal/RateModal';
 import VotingToggle from '../../../../../../components/VotingToggle/VotingToggle';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import ConfirmationModal from '../../../../../../components/ConfirmationModal/ConfirmationModal';
+import { loadEscrowTransactions } from '../../../../../../services/escrow/escrowActions';
 
 import './my-escrow-transactions.scss';
 
@@ -168,6 +169,11 @@ class MyEscrowTransactions extends Component {
     this.submitProposal = this.submitProposal.bind(this);
     this.toggleProposalConfirmationModal = this.toggleProposalConfirmationModal.bind(this);
     this.toggleCalendar = this.toggleCalendar.bind(this);
+  }
+
+  componentDidMount() {
+    const { username } = this.props.auth.currentUser;
+    this.props.escrowActions.loadEscrowTransactions(username);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -553,6 +559,7 @@ MyEscrowTransactions.propTypes = {
     formatMessage: PropTypes.func
   }),
   escrowActions: PropTypes.shape({
+    loadEscrowTransactions: PropTypes.func,    
     releaseEscrowTransaction: PropTypes.func,
     returnEscrowTransaction: PropTypes.func,
     setActivePageMyEscrow: PropTypes.func,
@@ -578,6 +585,7 @@ export default connect(
   state => ({ ...state.default }),
   dispatch => ({
     escrowActions: bindActionCreators({
+      loadEscrowTransactions,
       returnEscrowTransaction,
       releaseEscrowTransaction,
       setActivePageMyEscrow,
