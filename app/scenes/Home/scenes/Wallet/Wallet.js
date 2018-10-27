@@ -10,6 +10,7 @@ import { Tab, Image, Loader, Button } from 'semantic-ui-react';
 import hash from 'object-hash';
 import { toastr } from 'react-redux-toastr';
 const { shell } = require('electron');
+import isOnline from 'is-online';
 
 import Header from '../../../../components/Header';
 import BitcoinWalletDetail from './components/BitcoinWalletDetail/BitcoinWalletDetail';
@@ -59,7 +60,12 @@ class Wallet extends Component {
     this.onClickRefreshWallets = this.onClickRefreshWallets.bind(this);
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    const { formatMessage } = this.props.intl;
+    const isonline = await isOnline();
+    if (!isonline) {
+      toastr.error(formatMessage(messages.error), 'No internet connection');
+    }
     this.props.bitcoinActions.getWallets();
     this.props.ethereumActions.getEthereumWallets();
     this.requestBalance();
@@ -79,7 +85,9 @@ class Wallet extends Component {
           );
         });
       } else {
-        toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+        if(typeof nextProps.bitcoin.error !== 'object') {
+          toastr.error(formatMessage(messages.error), nextProps.bitcoin.error);
+        }
       }
     }
   }
