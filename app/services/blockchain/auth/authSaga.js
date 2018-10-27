@@ -292,7 +292,7 @@ function* requestReferrer() {
 function* logout() {
   // reseting redux store
   yield put({ type: 'RESET' });
-  ChainStore.resetCache();
+  // ChainStore.resetCache();
   yield put(setup());
 }
 
