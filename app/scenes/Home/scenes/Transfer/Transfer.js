@@ -475,13 +475,13 @@ class Transfer extends Component {
   };
 
   renderMemoField = ({
-    input, placeholder, meta: { touched, error }
+    input, placeholder, meta: { visited, error }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{errorMessage}</span>))}
+        {visited && ((error && <span className="error">{errorMessage}</span>))}
         <TextArea
           {...input}
           autoHeight={false}
