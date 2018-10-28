@@ -67,7 +67,7 @@ export default defineMessages({
   },
   failedTransfer: {
     id: 'Transfer.failedUpdate',
-    defaultMessage: 'Transfer failed.'
+    defaultMessage: 'Insufficient funds.'
   },
   selectEscrow: {
     id: 'Transfer.selectEscrow',
