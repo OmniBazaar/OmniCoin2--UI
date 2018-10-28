@@ -22,7 +22,6 @@ import sudo from 'sudo-prompt';
 import kill from 'kill-port';
 import log from 'electron-log'; // do not remove
 const nodemailer = require('nodemailer');
-const PDFWindow = require('electron-pdf-window')
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -334,9 +333,12 @@ app.on('ready', async () => {
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
   ipcMain.on('exit', () => app.quit());
   ipcMain.on('open-pdf', (event, pdf) => {
-    const win = new PDFWindow({
+    const win = new BrowserWindow({
       width: 800,
-      height: 600
+      height: 600,
+      webPreferences: {
+        plugins: true
+      }
     });
     win.loadURL(pdf);
   });
