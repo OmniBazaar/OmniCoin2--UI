@@ -19,6 +19,20 @@
 
     &.main {
       margin-bottom: 20px;
+      word-wrap: break-word;      
+      width: 60%;    
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px)  {
+      .main {
+        width: 40%;        
+      }
+    }
+
+    @media (max-width: 767px) {
+      .main {
+        width: 30%;        
+      }
     }
   }
 
