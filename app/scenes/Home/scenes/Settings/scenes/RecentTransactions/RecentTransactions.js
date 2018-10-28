@@ -144,6 +144,7 @@ class RecentTransactions extends Component {
 
   componentWillMount() {
     this.fetchTransactions(this.props.coinType);
+    this.props.accountSettingsActions.setActivePage(1);
   }
 
   componentWillUnmount() {
