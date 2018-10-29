@@ -16,7 +16,8 @@ const defaultState = {
   error: null,
   txid: null,
   requestingRates: false,
-  rates: null
+  rates: null,
+  requestRatesError: null
 };
 
 const reducer = handleActions({
@@ -75,7 +76,7 @@ const reducer = handleActions({
     return {
       ...state,
       requestingRates: false,
-      error,
+      requestRatesError: error,
       rates
     };
   }

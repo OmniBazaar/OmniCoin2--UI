@@ -20,7 +20,7 @@ import {
   exchangeRequestRatesFinished
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
-import { currencyConverter } from "../utils";
+import { exchangeXOM } from "../utils";
 
 import * as BitcoinApi from "../blockchain/bitcoin/BitcoinApi";
 import * as EthereumApi from "../blockchain/ethereum/EthereumApi";
@@ -72,7 +72,9 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
     yield broadcastExchange(result.txid, 'BTC');
-    sendBTCMail(currencyConverter(amount, 'BITCOIN', 'OMNICOIN'), amount, result.txid, formatMessage);
+
+    const { rates } = (yield select()).default.exchange;
+    sendBTCMail(exchangeXOM(amount, rates.btcToXom), amount, result.txid, formatMessage);
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -87,7 +89,9 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
     yield broadcastExchange(result.hash, 'ETH');
-    sendETHMail(currencyConverter(amount, 'ETHEREUM', 'OMNICOIN'), amount, result.hash, formatMessage);
+
+    const { rates } = (yield select()).default.exchange;
+    sendETHMail(exchangeXOM(amount, rates.ethToXom), amount, result.hash, formatMessage);
     yield put(exchangeEthSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -97,7 +101,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
 
 function* requestRates() {
   try {
-    const response = await request({
+    const response = yield request({
       uri: `${config.exchangeServer}/rate/rates`,
       json: true
     });
