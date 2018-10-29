@@ -30,8 +30,8 @@ export const isWelcomeBonusAvailable = wrapRequest(async (data) => fetch(`${apiU
 
 export const getIdentityVerificationStatus = wrapRequest(async (username) => fetch(`${apiURL}/identity-verification-status/${username}`));
 
-const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
-const identityVerificationBaseURL = 'https://test-api.sumsub.com';
+const identityVerificationApiKey = 'NRRVCPBSGZZTGD';
+const identityVerificationBaseURL = 'https://api.sumsub.com';
 const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}&key=${identityVerificationApiKey}`, {
   method: 'POST'
 }));
