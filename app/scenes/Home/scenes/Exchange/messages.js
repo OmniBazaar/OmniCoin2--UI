@@ -116,6 +116,10 @@ const messages = defineMessages({
   omniCoinsAppearNotification: {
     id: 'Exchange.omniCoinsAppearNotification',
     defaultMessage: 'Purchased OmniCoins will appear in your XOM wallet after 2 BTC or 11 ETH blockchain confirmations.'
+  },
+  requestExchangeRateFail: {
+    id: 'Exchange.requestExchangeRateFail',
+    defaultMessage: 'Get exchange rates fail'
   }
 });
 

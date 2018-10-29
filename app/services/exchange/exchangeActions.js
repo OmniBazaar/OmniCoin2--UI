@@ -6,7 +6,9 @@ const {
   exchangeBtcFailed,
   exchangeEth,
   exchangeEthSucceeded,
-  exchangeEthFailed
+  exchangeEthFailed,
+  exchangeRequestRates,
+  exchangeRequestRatesFinished
 } = createActions({
   EXCHANGE_BTC: (guid, password, walletIdx, amount, formatMessage) => ({
     guid, password, walletIdx, amount, formatMessage
@@ -17,7 +19,9 @@ const {
     privateKey, amount, formatMessage
   }),
   EXCHANGE_ETH_SUCCEEDED: (txid) => ({ txid }),
-  EXCHANGE_ETH_FAILED: (error) => ({ error })
+  EXCHANGE_ETH_FAILED: (error) => ({ error }),
+  EXCHANGE_REQUEST_RATES: () => ({}),
+  EXCHANGE_REQUEST_RATES_FINISHED: (error, rates) => ({ error, rates })
 });
 
 export {
@@ -26,5 +30,7 @@ export {
   exchangeBtcSucceeded,
   exchangeEth,
   exchangeEthFailed,
-  exchangeEthSucceeded
+  exchangeEthSucceeded,
+  exchangeRequestRates,
+  exchangeRequestRatesFinished
 }
