@@ -72,7 +72,7 @@ class IdentityVerificationForm extends Component {
     return (
       <React.Fragment>
         <Script
-          url="https://api.sumsub.com/idensic/static/idensic.js"
+          url="https://test-api.sumsub.com/idensic/static/idensic.js"
           onLoad={() => { this.setState({ identityVerificationUiLoaded: true }); }}
         />
         <div id="identityVerification" />
