@@ -71,8 +71,8 @@ class MyEscrowProposals extends Component {
     const { formatMessage } = this.props.intl;
     const { currentUser } = this.props.auth;
     const { loading, proposalId } = this.props.escrow.activeEscrowProposals.proposalApprove;
-    const idPath = `http://35.171.116.3:8080//#/objects/${proposal.id}`;
-    const escrowPath = `http://35.171.116.3:8080//#/objects/${proposal.escrow}`;
+    const idPath = `http://omnicoin.info/#/objects/${proposal.id}`;
+    const escrowPath = `http://omnicoin.info/#/objects/${proposal.escrow}`;
     console.log(idPath, escrowPath);
     return (
       <span className="proposal">

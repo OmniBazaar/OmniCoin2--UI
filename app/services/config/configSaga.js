@@ -9,7 +9,7 @@ import {
 import { getConfigFailed, getConfigSucceeded } from './configActions';
 import { wrapRequest } from '../utils';
 
-const url = 'http://35.171.116.3/config.json';
+const url = 'https://omnibazaar.com/config.json';
 
 export function* configSubscriber() {
   yield all([
