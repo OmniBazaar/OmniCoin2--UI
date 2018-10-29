@@ -3,6 +3,6 @@ export const faucetAddresses = [
 ];
 
 export const nodesAddresses = [
-  { name: 'Scopic Node', url: 'ws://35.171.116.3:8090' },
+  { name: 'Omnibazaar Node', url: 'ws://35.171.116.3:8090' },
 ];
 

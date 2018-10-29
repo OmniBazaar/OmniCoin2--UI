@@ -71,6 +71,10 @@ const messages = defineMessages({
     id: 'RecentTransactions.type',
     defaultMessage: 'Status'
   },
+  sale: {
+    id: 'RecentTransactions.sale',
+    defaultMessage: 'SALE'
+  },
   [ChainTypes.operations.transfer]: {
     id: 'RecentTransactions.transfer',
     defaultMessage: 'TRANSFER'
@@ -328,7 +332,9 @@ class RecentTransactions extends Component {
                           {coinType === CoinTypes.OMNI_COIN &&
                             <TableCell>
                               <div className={cn('badge-tag', row.statusText)}>
-                                {formatMessage(messages[row.type])}
+                                {row.type === ChainTypes.operations.transfer && row.listingId
+                                  ? formatMessage(messages.sale)
+                                  : formatMessage(messages[row.type])}
                               </div>
                             </TableCell>
                           }
