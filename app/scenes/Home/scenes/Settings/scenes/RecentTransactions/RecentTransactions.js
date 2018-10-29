@@ -144,7 +144,7 @@ class RecentTransactions extends Component {
 
   componentWillMount() {
     this.fetchTransactions(this.props.coinType);
-    this.props.accountSettingsActions.setActivePage(1);
+    this.props.accountSettingsActions.setActivePage(1);    
   }
 
   componentWillUnmount() {
@@ -160,6 +160,7 @@ class RecentTransactions extends Component {
     }
     if (this.props.coinType !== nextProps.coinType) {
       this.fetchTransactions(nextProps.coinType);
+      this.props.accountSettingsActions.setActivePage(1);
 
       if (this.props.account.showDetails) {
         this.props.accountSettingsActions.showDetailsModal();
