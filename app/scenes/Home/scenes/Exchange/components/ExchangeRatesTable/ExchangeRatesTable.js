@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
-import { Table } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Table, Loader } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
-import { currencyConverter } from '../../../../../../services/utils';
+import { toastr } from 'react-redux-toastr';
+import { exchangeXOM } from '../../../../../../services/utils';
+import { exchangeRequestRates } from '../../../../../../services/exchange/exchangeActions';
 import messages from '../../messages';
 
-const ethToXom = currencyConverter(1, 'ETHEREUM', 'OMNICOIN');
-const btcToXom = currencyConverter(1, 'BITCOIN', 'OMNICOIN');
-
 class ExchangeRatesTable extends Component {
+	componentDidMount() {
+		this.props.exchangeActions.exchangeRequestRates();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.exchange.requestingRates && !nextProps.exchange.requestingRates) {
+			if (nextProps.exchange.requestRatesError) {
+				const { formatMessage } = this.props.intl;
+				toastr.error(formatMessage(messages.error), formatMessage(messages.requestExchangeRateFail));
+			}
+		}
+	}
+
 	render() {
 		const { formatMessage } = this.props.intl;
+		const { requestingRates, rates } = this.props.exchange;
+
 		return (
 			<Table celled striped>
 		    <Table.Header>
@@ -24,7 +40,11 @@ class ExchangeRatesTable extends Component {
 		          1 BTC
 		        </Table.Cell>
 		        <Table.Cell>
-		        	{btcToXom} XOM
+		        	{
+		        		requestingRates ?
+		        		<Loader size='tiny' active inline='centered' /> :
+		        		<span>{rates ? exchangeXOM(1, rates.btcToXom) : 0} XOM</span>
+		        	}
 		        </Table.Cell>
 		      </Table.Row>
 		      <Table.Row>
@@ -32,7 +52,11 @@ class ExchangeRatesTable extends Component {
 		          1 ETH
 		        </Table.Cell>
 		        <Table.Cell>
-		        	{ethToXom} XOM
+		        	{
+		        		requestingRates ?
+		        		<Loader size='tiny' active inline='centered' /> :
+		        		<span>{rates ? exchangeXOM(1, rates.ethToXom) : 0} XOM</span>
+		        	}
 		        </Table.Cell>
 		      </Table.Row>
 		    </Table.Body>
@@ -41,4 +65,13 @@ class ExchangeRatesTable extends Component {
 	}
 }
 
-export default injectIntl(ExchangeRatesTable);
+export default connect(
+	state => ({
+		exchange: state.default.exchange
+	}),
+	dispatch => ({
+		exchangeActions: bindActionCreators({
+			exchangeRequestRates
+		}, dispatch)
+	})
+)(injectIntl(ExchangeRatesTable));

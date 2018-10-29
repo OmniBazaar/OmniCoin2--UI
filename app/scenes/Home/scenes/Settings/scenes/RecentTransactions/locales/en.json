@@ -18,5 +18,6 @@
   "RecentTransactions.saleBonus": "SALE BONUS",
   "RecentTransactions.witnessBonus": "PROCESSOR BONUS",
   "RecentTransactions.developerBonus": "DEVELOPER BONUS",
-  "RecentTransaction.exchange": "EXCHANGE"
+  "RecentTransaction.exchange": "EXCHANGE",
+  "RecentTransaction.sale": "SALE"
 }

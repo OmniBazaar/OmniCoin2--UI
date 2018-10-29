@@ -14,7 +14,7 @@
   "Transfer.transferSecurity": "SecureSend (Payment Protection Service).",
   "Transfer.useEscrowService": "SecureSend (Payment Protection Service).",
   "Transfer.successUpdate": "Transfer successful.",
-  "Transfer.failedUpdate": "Transfer failed.",
+  "Transfer.failedUpdate": "Insufficient funds.",
   "Transfer.selectEscrow": "Select escrow",
   "Transfer.transferToEscrow": "Transfer to escrow (USUALLY NOT NECESSARY).",
   "Transfer.expirationTime": "Expiration time",
