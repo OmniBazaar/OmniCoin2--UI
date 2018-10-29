@@ -5,16 +5,19 @@ import {
 import {
   put,
   takeLatest,
+  takeEvery,
   all,
   call,
   select
 } from 'redux-saga/effects';
 import { Apis } from 'omnibazaarjs-ws';
+import request from 'request-promise-native';
 import {
   exchangeBtcFailed,
   exchangeBtcSucceeded,
   exchangeEthFailed,
-  exchangeEthSucceeded
+  exchangeEthSucceeded,
+  exchangeRequestRatesFinished
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
 import { currencyConverter } from "../utils";
@@ -24,6 +27,7 @@ import * as EthereumApi from "../blockchain/ethereum/EthereumApi";
 import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 import {getStoredCurrentUser} from "../blockchain/auth/services";
 import {fetchAccount} from "../blockchain/utils/miscellaneous";
+import config from '../../config/config';
 
 
 async function broadcastExchange(txId, coinName) {
@@ -46,6 +50,7 @@ export function* exchangeSubscriber() {
   yield all([
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
+    takeEvery('EXCHANGE_REQUEST_RATES', requestRates)
   ]);
 }
 
@@ -87,5 +92,21 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeEthFailed(error.message));
+  }
+}
+
+function* requestRates() {
+  try {
+    const response = await request({
+      uri: `${config.exchangeServer}/rate/rates`,
+      json: true
+    });
+    if (!response || !response.rates) {
+      throw new Error('Request rates fail');
+    }
+    yield put(exchangeRequestRatesFinished(null, response.rates));
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(exchangeRequestRatesFinished(error));
   }
 }

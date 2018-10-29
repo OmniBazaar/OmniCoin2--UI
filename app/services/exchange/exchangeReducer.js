@@ -6,13 +6,17 @@ import {
   exchangeBtcFailed,
   exchangeEth,
   exchangeEthFailed,
-  exchangeEthSucceeded
+  exchangeEthSucceeded,
+  exchangeRequestRates,
+  exchangeRequestRatesFinished
 } from "./exchangeActions";
 
 const defaultState = {
   loading: false,
   error: null,
-  txid: null
+  txid: null,
+  requestingRates: false,
+  rates: null
 };
 
 const reducer = handleActions({
@@ -59,6 +63,21 @@ const reducer = handleActions({
       loading: false,
       error
     }
+  },
+  [exchangeRequestRates](state) {
+    return {
+      ...state,
+      requestingRates: true,
+      rates: null
+    };
+  },
+  [exchangeRequestRatesFinished](state, { payload: { error, rates } }) {
+    return {
+      ...state,
+      requestingRates: false,
+      error,
+      rates
+    };
   }
 }, defaultState);
 
