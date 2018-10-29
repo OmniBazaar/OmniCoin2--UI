@@ -345,7 +345,7 @@ app.on('ready', async () => {
   ipcMain.on('report-error', (event, errorLog, username) => {
     const mailOptions = {
       from: 'sender@email.com',
-      to: 'swoopyyy@gmail.com, kate.f@scopicsoftware.com',
+      to: 'swoopyyy@gmail.com, kate.f@scopicsoftware.com, support@omnibazaar.com',
       subject: 'Omnibazar error report - ' + username,
       html: errorLog
     };
