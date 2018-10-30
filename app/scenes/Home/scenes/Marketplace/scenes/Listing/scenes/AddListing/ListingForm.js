@@ -787,7 +787,6 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
-                ref='publisherField'
                 name="publisher"
                 component={this.PublishersDropdown}
                 props={{
