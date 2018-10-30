@@ -203,7 +203,8 @@ function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCoun
   });
 
   yield put(addPurchase(purchaseObject));
-    yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  yield put(sendPurchaseInfoMail(buyer, seller, JSON.stringify(purchaseObject)));
   }
 
 
