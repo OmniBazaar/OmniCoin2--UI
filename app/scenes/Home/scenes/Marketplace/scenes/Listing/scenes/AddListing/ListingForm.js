@@ -4,7 +4,7 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Form, Button, Grid } from 'semantic-ui-react';
-import { Field, reduxForm, getFormValues, change } from 'redux-form';
+import { Field, reduxForm, getFormValues, change, isDirty } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import { NavLink, Prompt } from 'react-router-dom';
@@ -116,8 +116,7 @@ class ListingForm extends Component {
     this.GeneralDropdown = makeValidatableField(GeneralDropdown);
 
     this.state = {
-      keywords: '',
-      isPromptVisible: false
+      keywords: ''
     };
   }
 
@@ -254,6 +253,13 @@ class ListingForm extends Component {
       this.resetForm();
     }
 
+    if (
+      (this.props.formValues && typeof this.props.formValues.publisher === 'string') &&
+      (nextProps.formValues && typeof nextProps.formValues.publisher === 'object')
+    ) {
+      this.props.initialize(nextProps.formValues);
+    }
+
     this.setState({ keywords: nextProps.formValues && nextProps.formValues.keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
@@ -285,6 +291,8 @@ class ListingForm extends Component {
         const { editingListing } = this.props;
         if (!editingListing) {
           this.resetForm();
+        } else {
+          this.props.initialize(nextProps.formValues);
         }
 
         this.showSuccessToast(
@@ -447,11 +455,8 @@ class ListingForm extends Component {
       obj.bitcoin_address = obj.manual_bitcoin_address;
       delete obj.manual_bitcoin_address;
     }
-    saveListing(publisher, obj, listing_id);
 
-    this.setState({
-      isPromptVisible: false
-    })
+    saveListing(publisher, obj, listing_id);
   }
 
   renderKeywordsInput() {
@@ -506,8 +511,8 @@ class ListingForm extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onChange={() => this.setState({ isPromptVisible: true })} onSubmit={handleSubmit(this.submit.bind(this))}>
-        <FormPrompt isVisible={this.state.isPromptVisible}/>
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
+        <FormPrompt isVisible={this.props.isFormDirty}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
@@ -782,6 +787,7 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
+                ref='publisherField'
                 name="publisher"
                 component={this.PublishersDropdown}
                 props={{
@@ -814,9 +820,7 @@ class ListingForm extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Images
-                publisher={publisher}
-              />
+              <Images />
             </Grid.Column>
           </Grid.Row>
 
@@ -1167,7 +1171,8 @@ export default compose(
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults,
       bitcoin: state.default.bitcoin,
-      ethereum: state.default.ethereum
+      ethereum: state.default.ethereum,
+      isFormDirty: isDirty('listingForm')(state)
     }),
     (dispatch) => ({
       listingActions: bindActionCreators({
