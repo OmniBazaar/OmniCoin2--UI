@@ -221,7 +221,11 @@ class Transfer extends Component {
     const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
-        toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
+        if (nextProps.transfer.error === 'Insufficient funds') {
+          toastr.error(formatMessage(messages.transfer), formatMessage(messages.insufficientFunds));
+        } else {
+          toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
+        }
       } else {
         this.setState({ submitSucceeded: true });
         this.props.reset();
