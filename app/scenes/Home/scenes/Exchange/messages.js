@@ -120,6 +120,10 @@ const messages = defineMessages({
   requestExchangeRateFail: {
     id: 'Exchange.requestExchangeRateFail',
     defaultMessage: 'Get exchange rates fail'
+  },
+  ethTransactionNotValid: {
+    id: 'Exchange.ethTransactionNotValid',
+    defaultMessage: 'Unfortunately the Ethereum transaction was not created successfully and coin will be returned back to your wallet, please try again'
   }
 });
 

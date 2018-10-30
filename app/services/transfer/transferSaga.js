@@ -96,9 +96,9 @@ function* omnicoinTransfer({payload: {
       yield put(saleBonusAction(seller, buyer))
     }
   } catch (error) {
-    let e = JSON.stringify(error);
-    if (error.message && error.message.indexOf('Insufficient Balance' !== -1)) {
-      e = 'Not enough funds';
+    let e = error.message || error;
+    if (error.message && error.message.indexOf('Insufficient Balance') !== -1) {
+      e = 'Insufficient funds';
     }
     yield put(omnicoinTransferFailed(e));
   }
@@ -129,7 +129,11 @@ function* bitcoinTransfer({ payload: {
     }
   } catch (error) {
     console.log(error);
-    yield put(bitcoinTransferFailed({...error}));
+    let e = error.message || error;
+    if (error.message && error.message.indexOf('Insufficient Balance') !== -1) {
+      e = 'Insufficient funds';
+    }
+    yield put(bitcoinTransferFailed(e));
   }
 }
 
@@ -158,11 +162,11 @@ function* ethereumTransfer({payload: {
     console.log("Ether res", res);
   } catch (error) {
     console.log('ERROR', error);
-    if (error.message) {
-      yield put(ethereumTransferFailed(error.message));
-    } else {
-      yield put(ethereumTransferFailed(error));
+    let e = error.message || error;
+    if (error.message && error.message.indexOf('Insufficient Balance') !== -1) {
+      e = 'Insufficient funds';
     }
+    yield put(ethereumTransferFailed(e));
   }
 }
 
@@ -203,7 +207,8 @@ function* addPurchaseAndSendMails({seller, buyer, amount, listingId, listingCoun
   });
 
   yield put(addPurchase(purchaseObject));
-    yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  yield put(sendPurchaseInfoMail(buyer, buyer, JSON.stringify(purchaseObject)));
+  yield put(sendPurchaseInfoMail(buyer, seller, JSON.stringify(purchaseObject)));
   }
 
 

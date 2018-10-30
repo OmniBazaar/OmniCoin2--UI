@@ -50,7 +50,7 @@ class ShippingRate extends Component {
       >
         
         <div className="service">
-          <span>{rate.carrier} - {rate.service}</span>
+          <span>{rate.carrier} - {rate.service.split(/(?=[A-Z])/).join(' ')}</span>
         </div>
         <div className="amount">
           <span>{rate.rate} USD</span>

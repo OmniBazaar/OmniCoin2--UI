@@ -40,7 +40,7 @@ class OmnicoinHistory extends BaseStorage {
     }
     if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
-      return escrowTr.amount;
+      return escrowTr ? escrowTr.amount : 0;
     }
     return 0;
   }
@@ -50,14 +50,15 @@ class OmnicoinHistory extends BaseStorage {
       return op.memo;
     } else if (this.isEscrowResult(op)) {
       const escrowTr = this.findEscrowTransactionByResult(op);
-      return escrowTr.memo;
+      return escrowTr ? escrowTr.memo : '';
     }
     return '';
   }
 
   getObFee(op) {
     if (this.isEscrowResult(op)) {
-      return this.findEscrowTransactionByResult(op).obFee;
+      const escrowTransactionResult = this.findEscrowTransactionByResult(op);
+      return escrowTransactionResult ? escrowTransactionResult.obFee : 0;
     }
     return op.obFee;
   }
@@ -77,7 +78,9 @@ class OmnicoinHistory extends BaseStorage {
     const out = {};
     if (fee) {
       Object.keys(fee).forEach(key => {
-        out[key] = fee[key].amount / TOKENS_IN_XOM;
+        if (fee[key].amount) {
+          out[key] = fee[key].amount / TOKENS_IN_XOM;
+        }
       });
     }
     return out;
@@ -88,7 +91,10 @@ class OmnicoinHistory extends BaseStorage {
   }
 
   findEscrowTransactionByResult(op) {
-    const filtered = Object.keys(this.cache).filter(i => this.cache[i].escrow === op.escrow && this.cache[i].operationType === ChainTypes.operations.escrow_create_operation);
+    const filtered = Object.keys(this.cache).filter(i => 
+      this.cache[i].escrow === op.escrow && 
+      this.cache[i].operationType === ChainTypes.operations.escrow_create_operation
+    );
     return this.cache[filtered[0]];
   }
 
@@ -328,7 +334,6 @@ class OmnicoinHistory extends BaseStorage {
       getGlobalObject(),
       getDynGlobalObject()
     ]);
-    console.log('DYN GLOBAL OBJECT ', dynGlobalObject);
     const result = await ChainStore.fetchRecentHistory(account.get('id'));
     let history = [];
     const h = result.get('history');

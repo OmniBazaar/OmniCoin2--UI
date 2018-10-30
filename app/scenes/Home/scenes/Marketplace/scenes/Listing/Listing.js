@@ -562,7 +562,7 @@ class Listing extends Component {
            <PriceItem
              amount={listingDetail.price}
              coinLabel={CoinTypes.LOCAL}
-             currency={listingDetail.currency}
+             currency={listingDetail.currency === 'ETHEREUM' ? 'ETHER' : listingDetail.currency}
              isUserOwner={this.isOwner()}
            />
           }
