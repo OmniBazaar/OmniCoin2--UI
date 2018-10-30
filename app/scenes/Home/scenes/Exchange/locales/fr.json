@@ -26,5 +26,6 @@
   "Exchange.exchangeRate": "Exchange rate",
   "Exchange.accountNotVerified": "Your account's not verified to do exchange",
   "Exchange.omniCoinsAppearNotification": "Purchased OmniCoins will appear in your XOM wallet after 2 BTC or 11 ETH blockchain confirmations.",
-  "Exchange.requestExchangeRateFail": "Get exchange rates fail" 
+  "Exchange.requestExchangeRateFail": "Get exchange rates fail",
+  "Exchange.ethTransactionNotValid": "Unfortunately the Ethereum transaction was not created successfully and coin will be returned back to your wallet, please try again" 
 }
