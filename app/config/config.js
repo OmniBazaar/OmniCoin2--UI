@@ -1,5 +1,5 @@
 export default {
 	updateServer: "http://update.omnibazaar.com",
-	easypostApiKey: "EZTK798edec1e9ea4d66ad5960ee102d1430Xf0tmw9Bu4OIpsFeVaC7lA",
+	easypostApiKey: "EZAK24e734467ad34a129200a9d509010eb805evYpV8nimjOjRn4HtT6w",
 	exchangeServer: "http://74.208.211.227/exchange/api"
 };
