@@ -462,6 +462,7 @@ class ListingForm extends Component {
         <TagsInput
           value={this.state.keywords ? this.state.keywords.split(',') : []}
           name="keywords"
+          addOnBlur
           inputProps={{
             className: cn('react-tagsinput-input', { empty: !this.state.keywords }),
             placeholder: (

@@ -113,12 +113,19 @@ const currencyConverter = (amount, fromCur, toCur, noFixedValue) => {
 
 
 let minEthValue;
-const getMinEthValue = () => {
+const getMinEthValue = (ethToXomRate) => {
   if (minEthValue) {
     return minEthValue;
   }
 
-  const minEth = currencyConverter(0.00001, 'OMNICOIN', 'ETHEREUM', true).toFixed(18);
+  let minEth;
+  if (typeof ethToXomRate !== 'undefined') {
+    minEth = 0.00001 / parseFloat(ethToXomRate);
+    minEth = minEth.toFixed(18);
+  } else {
+    minEth = currencyConverter(0.00001, 'OMNICOIN', 'ETHEREUM', true).toFixed(18);
+  }
+  
   let min = '';
   for (let i = 0; i < minEth.length; i++) {
     const c = minEth.charAt(i);
@@ -139,6 +146,10 @@ const getMinEthValue = () => {
   }
 
   return minEthValue;
+}
+
+const exchangeXOM = (amount, rate) => {
+  return getAllowedAmount(amount * parseFloat(rate));
 }
 /*
 function currencyConverter(amount, from, to) {
@@ -165,5 +176,6 @@ export {
   wsWatcher,
   reputationOptions,
   currencyConverter,
-  getMinEthValue
+  getMinEthValue,
+  exchangeXOM
 };

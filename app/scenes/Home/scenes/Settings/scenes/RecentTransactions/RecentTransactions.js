@@ -71,6 +71,10 @@ const messages = defineMessages({
     id: 'RecentTransactions.type',
     defaultMessage: 'Status'
   },
+  sale: {
+    id: 'RecentTransactions.sale',
+    defaultMessage: 'SALE'
+  },
   [ChainTypes.operations.transfer]: {
     id: 'RecentTransactions.transfer',
     defaultMessage: 'TRANSFER'
@@ -144,6 +148,7 @@ class RecentTransactions extends Component {
 
   componentWillMount() {
     this.fetchTransactions(this.props.coinType);
+    this.props.accountSettingsActions.setActivePage(1);    
   }
 
   componentWillUnmount() {
@@ -159,6 +164,7 @@ class RecentTransactions extends Component {
     }
     if (this.props.coinType !== nextProps.coinType) {
       this.fetchTransactions(nextProps.coinType);
+      this.props.accountSettingsActions.setActivePage(1);
 
       if (this.props.account.showDetails) {
         this.props.accountSettingsActions.showDetailsModal();
@@ -326,7 +332,9 @@ class RecentTransactions extends Component {
                           {coinType === CoinTypes.OMNI_COIN &&
                             <TableCell>
                               <div className={cn('badge-tag', row.statusText)}>
-                                {formatMessage(messages[row.type])}
+                                {row.type === ChainTypes.operations.transfer && row.listingId
+                                  ? formatMessage(messages.sale)
+                                  : formatMessage(messages[row.type])}
                               </div>
                             </TableCell>
                           }

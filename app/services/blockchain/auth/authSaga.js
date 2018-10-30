@@ -190,7 +190,12 @@ function* signup(action) {
     }
   } catch (e) {
     console.log('ERROR', e);
-    const error = (typeof e === 'object') ? e.message : e;
+    let error;
+    if (e.name === 'TypeError') {
+      error = 'Please try again in a few minutes.';
+    } else {
+      error = (typeof e === 'object') ? e.message : e;
+    }
     yield put({ type: 'SIGNUP_FAILED', error });
   }
 }

@@ -479,13 +479,13 @@ class Transfer extends Component {
   };
 
   renderMemoField = ({
-    input, placeholder, meta: { touched, error }
+    input, placeholder, meta: { visited, error }
   }) => {
     const { formatMessage } = this.props.intl;
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div className="transfer-input">
-        {touched && ((error && <span className="error">{errorMessage}</span>))}
+        {visited && ((error && <span className="error">{errorMessage}</span>))}
         <TextArea
           {...input}
           autoHeight={false}
@@ -594,7 +594,7 @@ class Transfer extends Component {
 
   renderOmniCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { transfer, transferForm } = this.props;
+    const { transfer, transferForm, shipping } = this.props;
     const { gettingCommonEscrows } = this.props.transfer;
     let { commonEscrows } = this.props.transfer;
 
@@ -743,10 +743,10 @@ class Transfer extends Component {
           <div className="field left floated">
             <Button
               type="submit"
-              loading={transfer.loading}
+              loading={transfer.loading || shipping.loading}
               content={formatMessage(messages.TRANSFER)}
               className="button--green-bg"
-              disabled={!!this.props.invalid}
+              disabled={!!this.props.invalid || shipping.loading}
             />
           </div>
           <div className="col-1" />
@@ -757,7 +757,7 @@ class Transfer extends Component {
 
   renderBitCoinForm() {
     const { formatMessage } = this.props.intl;
-    const { transfer } = this.props;
+    const { transfer, shipping } = this.props;
     const { wallet } = this.props.transferForm || {};
 
     const purchaseParams = new URLSearchParams(this.props.location.search);
@@ -832,10 +832,10 @@ class Transfer extends Component {
           <div className="field left floated">
             <Button
               type="submit"
-              loading={transfer.loading}
+              loading={transfer.loading || shipping.loading}
               content={formatMessage(messages.TRANSFER)}
               className="button--green-bg"
-              disabled={this.props.invalid}
+              disabled={this.props.invalid || shipping.loading}
             />
           </div>
           <div className="col-1" />
