@@ -1,6 +1,7 @@
 import { URL, URLSearchParams } from 'url';
 import { wrapRequest } from '../../utils';
 import ethers from 'ethers';
+import config from '../../../config/config';
 
 var Wallet = ethers.Wallet;
 const isProd = () => true;//process.env.NODE_ENV === 'production';
@@ -131,6 +132,16 @@ var isChecksumAddress = function (address) {
   return true;
 };
 
+let infuraProvider = null;
+const infuraApiKey = '207b7351ef4e4d279acd671ed906a243';
+const getEthTransaction = (txHash) => {
+  if (!infuraProvider) {
+    infuraProvider = new ethers.providers.InfuraProvider(null, infuraApiKey);
+  }
+
+  return infuraProvider.getTransaction(txHash);
+}
+
 export {
   createEthereumWallet,
   getEthereumWallets,
@@ -139,5 +150,6 @@ export {
   addEthereumAddress,
   getEthereumAddress,
   getEthereumTransactions,
-  validateEthereumAddress
+  validateEthereumAddress,
+  getEthTransaction
 };
