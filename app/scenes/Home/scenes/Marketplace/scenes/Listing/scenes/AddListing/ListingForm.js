@@ -820,7 +820,7 @@ class ListingForm extends Component {
               </span>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Images />
+              <Images publisher={publisher} />
             </Grid.Column>
           </Grid.Row>
 
