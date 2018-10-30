@@ -172,7 +172,9 @@ class Exchange extends Component {
     if (this.props.exchange.loading && !nextProps.exchange.loading) {
       this.props.bitcoinActions.getWallets();
       if (nextProps.exchange.error) {
-        if (nextProps.exchange.error === 'not_verified') {
+        if (nextProps.exchange.error === 'eth_transaction_not_valid') {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.ethTransactionNotValid), {timeOut: 10000});
+        } else if (nextProps.exchange.error === 'not_verified') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.accountNotVerified));
         } else if (nextProps.exchange.error.arg === 'privateKey') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.walletNotConnected));

@@ -10,6 +10,7 @@ import {
   call,
   select
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { Apis } from 'omnibazaarjs-ws';
 import request from 'request-promise-native';
 import {
@@ -88,10 +89,19 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
-    yield broadcastExchange(result.hash, 'ETH');
+    const txHash = result.hash;
+
+    yield delay(5000);
+
+    const transaction = yield call(EthereumApi.getEthTransaction, txHash);
+    if (!transaction) {
+      throw new Error('eth_transaction_not_valid');
+    }
+
+    yield broadcastExchange(txHash, 'ETH');
 
     const { rates } = (yield select()).default.exchange;
-    sendETHMail(exchangeXOM(amount, rates.ethToXom), amount, result.hash, formatMessage);
+    sendETHMail(exchangeXOM(amount, rates.ethToXom), amount, txHash, formatMessage);
     yield put(exchangeEthSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
