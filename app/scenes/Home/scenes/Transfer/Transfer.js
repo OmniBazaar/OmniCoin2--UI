@@ -51,7 +51,7 @@ import {
 } from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
 import { currencyConverter } from "../../../../services/utils";
-import { MANUAL_INPUT_VALUE } from "../../../../utils/constants";
+import { MANUAL_INPUT_VALUE, SATOSHI_IN_BTC, TOKENS_IN_XOM } from "../../../../utils/constants";
 
 import messages from './messages';
 
@@ -213,6 +213,34 @@ class Transfer extends Component {
     this.checkRequestShippingRates();
   }
 
+  getBalance() {
+    const { balance } = this.props.blockchainWallet;
+    if (balance && balance.balance) {
+      return balance.balance / TOKENS_IN_XOM;
+    }
+    return 0.00;
+  }
+
+  getBtcBalance() {
+    const { wallets } = this.props.bitcoin;
+    let balance = 0.00;
+    if (wallets && wallets.length) {
+      wallets.forEach(function (item) {
+        balance = balance + item.balance
+      });
+    }
+    return balance / SATOSHI_IN_BTC;
+  }
+
+  getEthBalance() {
+    const { balance } = this.props.ethereum;
+    let ethereumBalance = 0;
+    if (balance) {
+      ethereumBalance = balance;
+    }
+    return ethereumBalance;
+  }
+
   componentWillReceiveProps(nextProps) {
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const price = purchaseParams.get('price');
@@ -221,7 +249,16 @@ class Transfer extends Component {
     const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
-        if (nextProps.transfer.error === 'Insufficient funds') {
+        const { amount, currencySelected } = this.props.transferForm;
+        let balance;
+        if (currencySelected === 'ethereum') {
+          balance = this.getEthBalance();
+        } else if (currencySelected === 'bitcoin') {
+          balance = this.getBtcBalance();
+        } else {
+          balance = this.getBalance();
+        }
+        if (amount > balance) {
           toastr.error(formatMessage(messages.transfer), formatMessage(messages.insufficientFunds));
         } else {
           toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
@@ -1156,7 +1193,8 @@ export default compose(
         fromName: selector(state, 'fromName'),
         useEscrow: selector(state, 'useEscrow'),
         amount: selector(state, 'amount'),
-        wallet: selector(state, 'wallet')
+        wallet: selector(state, 'wallet'),
+        currencySelected: selector(state, 'currencySelected')
       }
     }),
     (dispatch) => ({
