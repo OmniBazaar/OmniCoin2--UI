@@ -1036,11 +1036,10 @@ class Transfer extends Component {
 
   submitBitcoinTransfer({
     toAddress,
-    password,
-    guid,
     wallet,
     amount
   }) {
+    const { guid, password } = this.props.bitcoin;
     const purchaseParams = new URLSearchParams(this.props.location.search);
     
     this.props.transferActions.bitcoinTransfer(
@@ -1058,9 +1057,9 @@ class Transfer extends Component {
 
   submitEthereumTransfer({
     toAddress,
-    privateKey,
     amount
   }) {
+    const { privateKey } = this.props.ethereum;
     const purchaseParams = new URLSearchParams(this.props.location.search);
     this.props.transferActions.ethereumTransfer(
       toAddress,
