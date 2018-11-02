@@ -159,7 +159,6 @@ function* ethereumTransfer({payload: {
       });
       yield put(saleBonusAction(seller, buyer))
     }
-    console.log("Ether res", res);
   } catch (error) {
     console.log('ERROR', error);
     let e = error.message || error;
