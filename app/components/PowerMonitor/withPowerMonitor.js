@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { dhtReconnect } from '../../services/search/dht/dhtActions';
+import { connect as connectNodes } from '../../services/blockchain/connection/connectionActions';
 
 export default (WrappedComponent) => {
 	class PMHOC extends React.Component {
@@ -12,7 +13,9 @@ export default (WrappedComponent) => {
 		}
 
 		onPowerResume() {
-			this.props.dhtActions.dhtReconnect();
+			this.props.pmDhtActions.dhtReconnect();
+			const { nodes } = this.props.pmConfig;
+			this.props.pmConnectionActions.connectNodes(nodes);
 		}
 
 		render() {
@@ -21,10 +24,15 @@ export default (WrappedComponent) => {
 	}
 
 	return connect(
-		null,
+		state => ({
+			pmConfig: state.default.config
+		}),
 		dispatch => ({
-			dhtActions: bindActionCreators({
+			pmDhtActions: bindActionCreators({
 				dhtReconnect
+			}, dispatch),
+			pmConnectionActions: bindActionCreators({
+				connectNodes
 			}, dispatch)
 		})
 	)(PMHOC);

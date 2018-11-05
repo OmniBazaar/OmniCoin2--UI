@@ -27,28 +27,43 @@ const sleep = (duration) => {
 const reconnectInterval = 3000; //ms
 const reconnect = async (nodes) => {
   console.log('NODE: retry connect...');
+  await closeNodeSocket();
   await sleep(reconnectInterval);
-  await Apis.close();
   return await createConnection(nodes);
+}
+
+let lastApiInstance = null;
+let originWSOnclose = null;
+
+const closeNodeSocket = async () => {
+  if (lastApiInstance) {
+    lastApiInstance.ws_rpc.ws.onclose = originWSOnclose;
+    await Apis.close();
+    lastApiInstance = null;
+  }
 }
 
 async function createConnection(nodes) {
   while (true) {
     try {
+      await closeNodeSocket();
+      
       const urls = nodes.map(item => item.url);
       const connectionManager = new Manager({ url: nodes[0].url, urls });
       const connectionStart = new Date().getTime();
 
       await connectionManager.connectWithFallback(true);
       const apiInstance = Apis.instance();
+      lastApiInstance = apiInstance;
       const ws = apiInstance.ws_rpc.ws;
-      const originOnclose = ws.onclose;
+      originWSOnclose = ws.onclose;
       ws.onclose = (e) => {
+        console.log('on node socket error');
         if (e.code !== 1000) {
           console.log('Node unexpected close', e);
           reconnect(nodes);
         }
-        originOnclose(e);
+        originWSOnclose(e);
       };
       const { url } = apiInstance;
       return {
@@ -58,8 +73,8 @@ async function createConnection(nodes) {
     } catch (err) {
       console.log('Create connect error:', err);
       console.log('NODE: retry connect...');
+      await closeNodeSocket();
       await sleep(reconnectInterval);
-      await Apis.close();
     }
   }
 }
