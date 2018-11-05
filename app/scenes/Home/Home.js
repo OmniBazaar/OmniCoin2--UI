@@ -45,6 +45,7 @@ import UpdateNotification from './components/UpdateNotification/UpdateNotificati
 import PublisherUpdateNotification from './components/PublisherUpdateNotification/PublisherUpdateNotification';
 import AccountSettingsStorage from '../../services/accountSettings/accountStorage';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+import withPowerMonitor from '../../components/PowerMonitor/withPowerMonitor';
 
 import './home.scss';
 import '../../styles/_modal.scss';
@@ -414,7 +415,7 @@ export default connect(
       loadFolder
     }, dispatch)
   })
-)(Home);
+)(withPowerMonitor(Home));
 
 Home.propTypes = {
   connection: PropTypes.shape({
