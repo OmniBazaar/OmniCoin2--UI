@@ -167,10 +167,10 @@ class ListingForm extends Component {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         priority_fee: listingPriority,
-        price_using_btc: false,
-        price_using_eth: false,
         continuous: true,
         ...defaultData,
+        price_using_btc: true,
+        price_using_eth: true,
         price_using_omnicoin: true,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         shipping_price_included: false
@@ -482,6 +482,7 @@ class ListingForm extends Component {
   }
 
   render() {
+    console.log(this.props, "propssss")
     const { formatMessage } = this.props.intl;
     const {
       category,
