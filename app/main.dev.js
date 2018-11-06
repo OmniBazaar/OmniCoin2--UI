@@ -21,15 +21,6 @@ import path from 'path';
 import sudo from 'sudo-prompt';
 import kill from 'kill-port';
 import log from 'electron-log'; // do not remove
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: "omnibazaarerror@gmail.com",
-    pass: "klRtm45Js"
-  }
-});
 
 
 let mainWindow = null;
@@ -341,21 +332,6 @@ app.on('ready', async () => {
       }
     });
     win.loadURL(pdf);
-  });
-  ipcMain.on('report-error', (event, errorLog, username) => {
-    const mailOptions = {
-      from: 'sender@email.com',
-      to: 'swoopyyy@gmail.com, kate.f@scopicsoftware.com, support@omnibazaar.com',
-      subject: 'Omnibazar error report - ' + username,
-      html: errorLog
-    };
-
-    transporter.sendMail(mailOptions, function (err, info) {
-      if(err)
-        console.log(err);
-      else
-        console.log(info);
-    });
   });
 
   mainWindow = new BrowserWindow({
