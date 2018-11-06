@@ -3,7 +3,11 @@
  */
 import { wrapRequest } from '../../utils';
 
-const apiURL = 'http://35.171.116.3:5050/api';
+
+const apiURL = process.env.NODE_ENV === 'development'
+  ? 'http://35.171.116.3:5050/api'
+  : 'http://74.208.211.227:5050/api';
+
 export const checkBonus = wrapRequest(async (data) => fetch(`${apiURL}/bonus-check`, {
   method: 'POST',
   headers: {
@@ -29,6 +33,8 @@ export const isWelcomeBonusAvailable = wrapRequest(async (data) => fetch(`${apiU
 }));
 
 export const getIdentityVerificationStatus = wrapRequest(async (username) => fetch(`${apiURL}/identity-verification-status/${username}`));
+
+export const isWelcomeBonusReceived = wrapRequest(async (username) => fetch(`${apiURL}/is-welcome-bonus-received/${username}`));
 
 const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
 const identityVerificationBaseURL = 'https://test-api.sumsub.com';
