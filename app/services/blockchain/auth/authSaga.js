@@ -67,6 +67,7 @@ export function* subscriber() {
     takeEvery('SIGNUP', signup),
     takeEvery('GET_ACCOUNT', getAccount),
     takeEvery('GET_WELCOME_BONUS_AMOUNT', getWelcomeBonusAmount),
+    takeEvery('IS_WELCOME_BONUS_RECEIVED', isWelcomeBonusReceived),
     takeEvery('RECEIVE_WELCOME_BONUS', receiveWelcomeBonus),
     takeEvery('GET_IDENTITY_VERIFICATION_TOKEN', getIdentityVerificationToken),
     takeEvery('GET_IDENTITY_VERIFICATION_STATUS', getIdentityVerificationStatus),
@@ -230,6 +231,29 @@ function* getIdentityVerificationToken({ payload: { username } }) {
     console.log(error);
   }
 }
+
+function* isWelcomeBonusReceived({ payload: { username } }) {
+  try {
+    const macAddress = localStorage.getItem("macAddress");
+    const harddriveId = localStorage.getItem("hardDriveId");
+    const data = {
+      harddriveId,
+      macAddress
+    };
+    const response = yield call(AuthApi.isWelcomeBonusAvailable, data);
+    const resp = yield call(AuthApi.isWelcomeBonusReceived, username);
+    yield put({
+      type: "IS_WELCOME_BONUS_RECEIVED_SUCCEEDED",
+      payload: {
+        isWelcomeBonusReceived: resp.isWelcomeBonusReceived,
+        isWelcomeBonusAvailable: response.isWelcomeBonusAvailable
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 function* getIdentityVerificationStatus({ payload: { data: username } }) {
   try {

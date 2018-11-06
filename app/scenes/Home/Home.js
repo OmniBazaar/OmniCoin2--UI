@@ -69,7 +69,8 @@ import {
   logout,
   requestAppVersion,
   getIdentityVerificationStatus,
-  referralBonus
+  referralBonus,
+  isWelcomeBonusReceived
 } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
@@ -125,6 +126,7 @@ class Home extends Component {
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);
     this.props.listingActions.checkPublishersAlive();
     this.props.authActions.referralBonus();
+    this.props.authActions.isWelcomeBonusReceived(currentUser.username);
     this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
     this.props.transferActions.loadDefaultShippingAddress(currentUser.username);
     this.mailSubscribe(currentUser);
@@ -178,6 +180,7 @@ class Home extends Component {
   };
 
   render() {
+    const { isWelcomeBonusReceived, isWelcomeBonusAvailable } = this.props.auth;
     const { identityVerificationStatus } = this.props.auth;
     const appVersion = localStorage.getItem('appVersion');
     const { visible } = this.state;
@@ -316,6 +319,15 @@ class Home extends Component {
                     defaultMessage="Support"
                   />
                 </NavLink>
+                {!isWelcomeBonusReceived && isWelcomeBonusAvailable ? (
+                  <NavLink to="/air-drop" activeClassName="active" className="menu-item">
+                    <FormattedMessage
+                      id="Home.claimFreeOmniCoins"
+                      defaultMessage="Claim Your Free OmniCoins"
+                    />
+                  </NavLink>
+                  ) : ' '
+                }
                 <NavLink to="/identity-verification" activeClassName="active" className={cn('menu-item', 'identity-verification')}>
                   <FormattedMessage
                     id="Home.IdentityVerification"
@@ -393,7 +405,8 @@ export default connect(
       logout,
       requestAppVersion,
       getIdentityVerificationStatus,
-      referralBonus
+      referralBonus,
+      isWelcomeBonusReceived
     }, dispatch),
     listingActions: bindActionCreators({
       loadListingDefault,
@@ -444,7 +457,8 @@ Home.propTypes = {
     getAccount: PropTypes.func,
     logout: PropTypes.func,
     requestAppVersion: PropTypes.func,
-    referralBonus: PropTypes.func
+    referralBonus: PropTypes.func,
+    isWelcomeBonusReceived: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func
