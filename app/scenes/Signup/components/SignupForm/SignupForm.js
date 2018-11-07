@@ -178,7 +178,7 @@ class SignupForm extends Component {
   componentWillMount() {
     this.props.initialize({
       password: (`P${key.get_random_key().toWif()}`).substr(0, 45),
-      searchPriority: PriorityTypes.LOCAL_DATA,
+      // searchPriority: PriorityTypes.LOCAL_DATA,
       referrer: this.props.auth.defaultReferrer
     });
   }
@@ -245,20 +245,21 @@ class SignupForm extends Component {
 
   submit(values) {
     const {
-      username, password, referrer, searchPriority, country, state, city, keywords
+      username, password, referrer,
+      // searchPriority, country, state, city, keywords
     } = values;
 
     this.props.authActions.signup(
       username,
       password,
       referrer,
-      {
-        priority: searchPriority,
-        country,
-        state,
-        city,
-        keywords
-      },
+      // {
+      //   priority: searchPriority,
+      //   country,
+      //   state,
+      //   city,
+      //   keywords
+      // },
       null,
       null,
     );
@@ -599,7 +600,7 @@ class SignupForm extends Component {
           name="referrer"
           component={this.renderReferrerField}
         />
-        {this.renderSearchPriority()}
+        {/* {this.renderSearchPriority()} */}
         <div className="menu-item">
           <Field
             name="agreementTerms"
@@ -609,7 +610,7 @@ class SignupForm extends Component {
         {this.renderTerms()}
         <Button
           content={formatMessage(messages.signup)}
-          disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating || this.keywordVal()}
+          disabled={!agreementTerms || !valid || auth.loading || !!asyncValidating }
           color="green"
           className={btnClass}
           loading={auth.loading || dht.isConnecting}

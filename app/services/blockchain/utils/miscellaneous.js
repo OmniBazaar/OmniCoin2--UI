@@ -18,24 +18,65 @@ async function fetchAccount(username) {
   return (await Apis.instance().db_api().exec('get_objects', [[cachedAccount.get('id')]]))[0];
 }
 
-async function createConnection(nodes) {
-  const urls = nodes.map(item => item.url);
-  const connectionManager = new Manager({ url: nodes[0].url, urls });
-  const connectionStart = new Date().getTime();
-  const {
-    node: connectedNode,
-    latency
-  } = await connectionManager.connectWithFallback(true).then(() => {
-    const { url } = Apis.instance();
-    return {
-      node: nodes.find(item => item.url === url),
-      latency: new Date().getTime() - connectionStart
-    };
+const sleep = (duration) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, duration);
   });
-  return {
-    node: connectedNode,
-    latency,
-  };
+}
+
+const reconnectInterval = 3000; //ms
+const reconnect = async (nodes) => {
+  console.log('NODE: retry connect...');
+  await closeNodeSocket();
+  await sleep(reconnectInterval);
+  return await createConnection(nodes);
+}
+
+let lastApiInstance = null;
+let originWSOnclose = null;
+
+const closeNodeSocket = async () => {
+  if (lastApiInstance) {
+    lastApiInstance.ws_rpc.ws.onclose = originWSOnclose;
+    await Apis.close();
+    lastApiInstance = null;
+  }
+}
+
+async function createConnection(nodes) {
+  while (true) {
+    try {
+      await closeNodeSocket();
+      
+      const urls = nodes.map(item => item.url);
+      const connectionManager = new Manager({ url: nodes[0].url, urls });
+      const connectionStart = new Date().getTime();
+
+      await connectionManager.connectWithFallback(true);
+      const apiInstance = Apis.instance();
+      lastApiInstance = apiInstance;
+      const ws = apiInstance.ws_rpc.ws;
+      originWSOnclose = ws.onclose;
+      ws.onclose = (e) => {
+        console.log('on node socket error');
+        if (e.code !== 1000) {
+          console.log('Node unexpected close', e);
+          reconnect(nodes);
+        }
+        originWSOnclose(e);
+      };
+      const { url } = apiInstance;
+      return {
+        node: nodes.find(item => item.url === url),
+        latency: new Date().getTime() - connectionStart
+      };
+    } catch (err) {
+      console.log('Create connect error:', err);
+      console.log('NODE: retry connect...');
+      await closeNodeSocket();
+      await sleep(reconnectInterval);
+    }
+  }
 }
 
 function calcBlockTime(blockNumber, globalObject, dynGlobalObject) {
