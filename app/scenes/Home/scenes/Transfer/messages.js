@@ -192,5 +192,9 @@ export default defineMessages({
   enterPrivateKey: {
     id: 'Transfer.enterPrivateKey',
     defaultMessage: 'Please enter private key'
-  }
+  },
+  maximumAmountAvailable: {
+    id: 'Transfer.maximumAmountAvailable',
+    defaultMessage: 'Maximum amount available is {amount}'
+  },
 });
