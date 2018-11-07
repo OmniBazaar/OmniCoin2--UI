@@ -1,10 +1,10 @@
 {
-  "MyEscrowAgents.search": "Search",
-  "MyEscrowAgents.clear": "Clear",
-  "MyEscrowAgents.approveChanges": "Approve changes",
-  "MyEscrowAgents.user": "User",
-  "MyEscrowAgents.approve": "Approve",
-  "MyEscrowAgents.agentsApproved": "Agents successfully approved",
-  "MyEscrowAgents.error": "Error",
-  "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
+    "MyEscrowAgents.error": "Error", 
+    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
+    "MyEscrowAgents.clear": "Clear", 
+    "MyEscrowAgents.approve": "Approve", 
+    "MyEscrowAgents.search": "Search", 
+    "MyEscrowAgents.user": "User", 
+    "MyEscrowAgents.approveChanges": "Approve changes", 
+    "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
 }

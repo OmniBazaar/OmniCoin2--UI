@@ -1,14 +1,14 @@
 {
-  "GridTable.edit": "EDIT",
-  "GridTable.delete": "DELETE",
-  "GridTable.noData": "No data found.",
-  "GridTable.confirmDeleteTitle": "Confirm",
-  "GridTable.confirmDeleteMessage": "Are you sure you want to delete this listing?",
-  "GridTable.ok": "OK",
-  "GridTable.cancel": "Cancel",
-  "GridTable.error": "Error",
-  "GridTable.success": "Success",
-  "GridTable.deleteListingError": "An error occured while deleting the listing.",
-  "GridTable.deleteListingSuccess": "Listing was deleted successfully.",
-  "GridTable.removeFromFavorites": "REMOVE FROM FAVORITES"
+    "GridTable.removeFromFavorites": "REMOVE FROM FAVORITES", 
+    "GridTable.success": "Success", 
+    "GridTable.delete": "DELETE", 
+    "GridTable.error": "Error", 
+    "GridTable.deleteListingSuccess": "Listing was deleted successfully.", 
+    "GridTable.cancel": "Cancel", 
+    "GridTable.noData": "No data found.", 
+    "GridTable.ok": "OK", 
+    "GridTable.edit": "EDIT", 
+    "GridTable.confirmDeleteTitle": "Confirm", 
+    "GridTable.deleteListingError": "An error occured while deleting the listing.", 
+    "GridTable.confirmDeleteMessage": "Are you sure you want to delete this listing?"
 }

@@ -8,6 +8,7 @@ import { ipcRenderer } from 'electron';
 import Background from '../Background/Background';
 import './error-boundary.scss';
 import {getStoredCurrentUser} from "../../services/blockchain/auth/services";
+import { sendmail } from './services';
 
 
 const messages = defineMessages({
@@ -43,8 +44,8 @@ class ErrorBoundary extends Component {
     });
 
     const user = getStoredCurrentUser();
-    ipcRenderer.send('report-error', error.stack, user.username);
-    log.warn(error, info);
+    sendmail(user.username, error.stack);
+    log.warn(error.stack, info);
   }
 
   render() {
