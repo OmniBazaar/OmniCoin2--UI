@@ -54,6 +54,7 @@ Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; I
 
 [Run]
 Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";
+Filename: "{app}\Omnibazaar.exe"; Description: Run Application; Flags: postinstall nowait skipifsilent
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
