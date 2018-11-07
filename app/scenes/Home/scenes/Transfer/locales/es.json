@@ -41,5 +41,6 @@
   "Transfer.enterBitcoinAddress": "Please enter Bitcoin address",
   "Transfer.manualEnter": "Enter address manually",
   "Transfer.privateKey": "Private key WIF",
-  "Transfer.enterPrivateKey": "Please enter private key"
+  "Transfer.enterPrivateKey": "Please enter private key",
+  "Transfer.maximumAmountAvailable": "Maximum amount available is {amount}"
 }

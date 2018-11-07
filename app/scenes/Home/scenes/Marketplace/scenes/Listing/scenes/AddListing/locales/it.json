@@ -72,5 +72,7 @@
   "AddListing.priorityLow": "Low (0.00% Fee)",
   "AddListing.loadListing": "Load listing",
   "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01",
-  "AddListing.ethereumPriceFieldValidator": "Should be greater or equal to 0.000001"
+  "AddListing.ethereumPriceFieldValidator": "Should be greater or equal to 0.000001",
+  "AddListing.minimumNumericValidator": "Should be greater or equal to {value}",
+  "AddListing.maximumAmountAvailable": "Maximum amount available is {amount}"
 }

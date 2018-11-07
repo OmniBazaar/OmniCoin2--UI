@@ -90,5 +90,7 @@
   "AddListing.kilograms": "Kilograms",
   "AddListing.centimeters": "Centimeters",
   "AddListing.saveAsDefault": "Save as default",
-  "AddListing.ethereumPriceFieldValidator": "Should be greater or equal to 0.000001"
+  "AddListing.ethereumPriceFieldValidator": "Should be greater or equal to 0.000001",
+  "AddListing.minimumNumericValidator": "Should be greater or equal to {value}",
+  "AddListing.maximumAmountAvailable": "Maximum amount available is {amount}"
 }
