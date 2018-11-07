@@ -1,7 +1,7 @@
 {
-  "Processors.topProcessors": "Active Processors",
-  "Processors.standbyProcessors": "Standby Processors",
-  "Processors.success": "Success",
-  "Processors.voteSuccess": "You voted successfully!",
-  "Processors.error": "Error"
+    "Processors.standbyProcessors": "Standby Processors", 
+    "Processors.voteSuccess": "You voted successfully!", 
+    "Processors.error": "Error", 
+    "Processors.success": "Success", 
+    "Processors.topProcessors": "Active Processors"
 }

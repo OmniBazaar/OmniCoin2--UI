@@ -1,14 +1,14 @@
 {
-  "Menu.addListing": "ADD LISTING",
-  "Menu.community": "Community",
-  "Menu.housing": "Housing",
-  "Menu.gigs": "Gigs",
-  "Menu.quickLinks": "Quick Links",
-  "Menu.support": "Support",
-  "Menu.usefulLinks": "Useful Links",
-  "Menu.omniLink": "OmniBazaar.com",
-  "Menu.recent": "Recent",
-  "Menu.extendedSearch": "Extended Search",
-  "Menu.viewAll": "VIEW ALL",
-  "Menu.default": "Default"
+    "Menu.usefulLinks": "Useful Links", 
+    "Menu.viewAll": "VIEW ALL", 
+    "Menu.housing": "Housing", 
+    "Menu.default": "Default", 
+    "Menu.gigs": "Gigs", 
+    "Menu.omniLink": "OmniBazaar.com", 
+    "Menu.extendedSearch": "Extended Search", 
+    "Menu.addListing": "ADD LISTING", 
+    "Menu.recent": "Recent", 
+    "Menu.quickLinks": "Quick Links", 
+    "Menu.community": "Community", 
+    "Menu.support": "Support"
 }

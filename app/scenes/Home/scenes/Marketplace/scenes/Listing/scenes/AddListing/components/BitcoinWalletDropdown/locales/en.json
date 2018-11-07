@@ -1,4 +1,4 @@
 {
-  "BitcoinWalletDropdown.defaultWalletLabel": "Wallet",
-  "BitcoinWalletDropdown.manualEnter": "Enter address manually"
+    "BitcoinWalletDropdown.manualEnter": "Enter address manually", 
+    "BitcoinWalletDropdown.defaultWalletLabel": "Wallet"
 }

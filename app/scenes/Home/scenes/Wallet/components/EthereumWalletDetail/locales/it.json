@@ -1,4 +1,4 @@
 {
-  "EthereumWalletDetail.wallet": "Wallet",
-  "EthereumWalletDetail.currentBalance": "Current Balance"
+    "EthereumWalletDetail.currentBalance": "Current Balance", 
+    "EthereumWalletDetail.wallet": "Wallet"
 }
