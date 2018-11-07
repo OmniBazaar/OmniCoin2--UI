@@ -1,5 +1,5 @@
 export const sendmail = (username, errorlog) => {
-    fetch('http://35.171.116.3/sendmail/', {
+    fetch('http://74.208.211.227/sendmail/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
