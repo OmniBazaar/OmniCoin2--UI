@@ -1,5 +1,7 @@
+import config from '../../config/config';
+
 export const sendmail = (username, errorlog) => {
-    fetch('http://74.208.211.227/sendmail/', {
+    fetch(config.mailServer, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
