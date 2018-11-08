@@ -3,6 +3,9 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import loader from '../../assets/images/loader.gif';
+import save from '../../assets/images/save.png';
+
 import './validatable-field.scss';
 
 const Field = ({
@@ -23,7 +26,7 @@ const Field = ({
         {touched && (error && <span className="error">{errorMessage}</span>)}
       </div>
       {isIconVisible && asyncValidating && (
-        <i className="fa fa-spinner fa-spin validatable-field-spinner" />
+        <img src={loader} alt="loader" className="validatable-field-spinner" />
       )}
       {isIconVisible &&
         !pristine &&
@@ -31,7 +34,7 @@ const Field = ({
         !asyncValidating &&
         valid &&
         !formAsyncErrors[input.name] && (
-          <i className="fa fa-check validatable-field-check" />
+          <img src={save} alt="save" className="validatable-field-check" />
         )}
       <input {...input} placeholder={placeholder} type={type} />
     </React.Fragment>
