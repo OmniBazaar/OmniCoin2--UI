@@ -61,6 +61,9 @@ class IdentityVerificationForm extends Component {
             steps: {
               IDENTITY: {
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
+              },
+              SELFIE: {
+                instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
               }
             }
           }
