@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Field, reduxForm, Form, formValueSelector } from 'redux-form';
+import { Field, reduxForm, Form, formValueSelector, getFormAsyncErrors } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
@@ -13,6 +13,8 @@ import { required, email } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
+import * as AuthApi from '../../../../services/blockchain/auth/AuthApi';
+
 import { getWelcomeBonusAmount, receiveWelcomeBonus } from '../../../../services/blockchain/auth/authActions';
 import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 
@@ -136,15 +138,48 @@ class AirDropForm extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.authActions.getWelcomeBonusAmount();
-  }
+    static asyncValidate = async (values, dispatch, props, field) => {
+      const errors = props.asyncErrors;
+      const {
+        twitterUsername,
+        telegramPhoneNumber,
+        email
+      } = values;
+      if (field === 'twitterUsername') {
+        try {
+          await AuthApi.checkTwitterUsername({ twitterUsername });
+        } catch (e) {
+          throw { ...errors, twitterUsername: e.errorMessage };
+        }
+      }
+      if (field === 'telegramPhoneNumber') {
+        try {
+          await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
+        } catch (e) {
+          throw { ...errors, telegramPhoneNumber: e.errorMessage };
+        }
+      }
+      if (field === 'email') {
+        try {
+          await AuthApi.checkEmail({ email });
+        } catch (e) {
+          throw { ...errors, email: e.errorMessage };
+        }
+      }
+      if (errors) {
+        throw errors;
+      }
+    } ;
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.error && !this.props.auth.error) {
-      toastr.error(nextProps.auth.error);
+    componentDidMount() {
+      this.props.authActions.getWelcomeBonusAmount();
     }
-  }
+
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.auth.error && !this.props.auth.error) {
+        toastr.error(nextProps.auth.error);
+      }
+    }
 
   signUp = () => {
     this.props.history.push('/');
@@ -189,9 +224,11 @@ class AirDropForm extends Component {
             <Field
               type="text"
               name="telegramPhoneNumber"
+              formAsyncErrors={this.props.formAsyncErrors || {}}
               placeholder={formatMessage(messages.telegramPhoneNumber)}
               component={ValidatableField}
-              validate={this.props.AirDropForm.telegramChannel ? [required({ message: formatMessage(messages.fieldRequired) })] : undefined}
+              isIconVisible
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
         </div>
@@ -242,9 +279,11 @@ class AirDropForm extends Component {
             <Field
               type="text"
               name="twitterUsername"
+              formAsyncErrors={this.props.formAsyncErrors || {}}              
               placeholder={formatMessage(messages.twitterUserName)}
               component={ValidatableField}
-              validate={this.props.AirDropForm.twitterChannel ? [required({ message: formatMessage(messages.fieldRequired) })] : undefined}
+              isIconVisible
+              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
             />
           </div>
         </div>
@@ -273,9 +312,11 @@ class AirDropForm extends Component {
             <Field
               type="text"
               name="email"
+              formAsyncErrors={this.props.formAsyncErrors || {}}              
               placeholder={formatMessage(messages.email)}
               component={ValidatableField}
-              validate={this.props.AirDropForm.mailingList ? [required({ message: formatMessage(messages.fieldRequired) }), email({ message: formatMessage(messages.invalidEmail) })] : undefined}
+              isIconVisible
+              validate={[required({ message: formatMessage(messages.fieldRequired) }), email({ message: formatMessage(messages.invalidEmail) })]}
             />
           </div>
         </div>
@@ -291,10 +332,11 @@ class AirDropForm extends Component {
       formatMessage: this.props.intl.formatMessage
     });
   })
+
   render() {
-    const btnClass = (this.props.auth.loading || !!this.props.asyncValidating) ? 'ui loading' : '';
+    const btnClass = (this.props.auth.loading) ? 'ui loading' : '';
     const welcomeBonusAmount = this.props.auth.welcomeBonusAmount ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString() : '';
-    const { handleSubmit, valid } = this.props;
+    const { handleSubmit, valid, formAsyncErrors } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <React.Fragment>
@@ -305,10 +347,10 @@ class AirDropForm extends Component {
             })}
           </h2>
           <Form onSubmit={handleSubmit(this.submit)} className="form">
-            <Field name="telegramChannel" component={this.renderTelegramChannelField} />
+            <Field name="telegramChannel" formAsyncErrors={this.props.formAsyncErrors} component={this.renderTelegramChannelField} />
             <Field name="telegramBot" component={this.renderTelegramBotField} />
-            <Field name="twitterChannel" component={this.renderTwitterChannelField} />
-            <Field name="mailingList" component={this.renderMailingListField} />
+            <Field name="twitterChannel" formAsyncErrors={this.props.formAsyncErrors} component={this.renderTwitterChannelField} />
+            <Field name="mailingList" formAsyncErrors={this.props.formAsyncErrors} component={this.renderMailingListField} />
             <div className="buttons">
               <Button
                 disabled={!valid}
@@ -336,21 +378,25 @@ AirDropForm = withRouter(AirDropForm);
 AirDropForm = reduxForm({
   form: 'AirDropForm',
   validate: AirDropForm.validate,
-  asyncBlurFields: [],
-  destroyOnUnmount: true
+  asyncBlurFields: ['telegramPhoneNumber', 'twitterUsername', 'email'],
+  asyncValidate: AirDropForm.asyncValidate,
+  destroyOnUnmount: true,
 })(AirDropForm);
 
 const selector = formValueSelector('AirDropForm');
+
+const asyncErrorsSelector = getFormAsyncErrors('AirDropForm');
 
 AirDropForm = injectIntl(AirDropForm);
 
 export default connect(
   state => ({
     ...state.default,
+    formAsyncErrors: asyncErrorsSelector(state),
     AirDropForm: {
       telegramChannel: selector(state, 'telegramChannel'),
       twitterChannel: selector(state, 'twitterChannel'),
-      mailingList: selector(state, 'mailingList')
+      mailingList: selector(state, 'mailingList'),
     }
   }),
   dispatch => ({
@@ -374,7 +420,7 @@ AirDropForm.propTypes = {
     error: PropTypes.string
   }),
   authActions: PropTypes.shape({
-    getWelcomeBonusAmount: PropTypes.func,
+    getWelcomeBonusAmount: PropTypes.func
   }),
   handleSubmit: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired
