@@ -49,9 +49,7 @@ import {
   allowBlankNumericFieldValidator,
   omnicoinFieldValidator,
   bitcoinFieldValidator,
-  ethereumFieldValidator,
   fiatFieldValidator,
-  ethereumPriceFieldValidator,
   ethAmountValidator
 } from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
