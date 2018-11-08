@@ -29,7 +29,7 @@ const reconnect = async (nodes) => {
   console.log('NODE: retry connect...');
   await closeNodeSocket();
   await sleep(reconnectInterval);
-  return await createConnection(nodes);
+  return await createConnection(nodes, true);
 }
 
 let lastApiInstance = null;
@@ -38,13 +38,21 @@ let originWSOnclose = null;
 const closeNodeSocket = async () => {
   if (lastApiInstance) {
     lastApiInstance.ws_rpc.ws.onclose = originWSOnclose;
-    await Apis.close();
-    lastApiInstance = null;
   }
+  await Apis.close();
+  lastApiInstance = null;
 }
 
-async function createConnection(nodes) {
+let hasForceConnect = false;
+async function createConnection(nodes, isReconnectOnClosed) {
+  if (!isReconnectOnClosed) {
+    hasForceConnect = true;
+  }
   while (true) {
+    if (isReconnectOnClosed && hasForceConnect) {
+      return null;
+    }
+
     try {
       await closeNodeSocket();
       
@@ -66,6 +74,11 @@ async function createConnection(nodes) {
         originWSOnclose(e);
       };
       const { url } = apiInstance;
+
+      if (!isReconnectOnClosed) {
+        hasForceConnect = false;
+      }
+
       return {
         node: nodes.find(item => item.url === url),
         latency: new Date().getTime() - connectionStart
