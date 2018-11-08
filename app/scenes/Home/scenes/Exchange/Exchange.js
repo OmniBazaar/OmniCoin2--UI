@@ -16,8 +16,7 @@ import {
 } from 'semantic-ui-react';
 import {
   required,
-  numericality,
-  addValidator
+  numericality
 } from 'redux-form-validators';
 import cn from 'classnames';
 import { toastr } from 'react-redux-toastr';
@@ -39,8 +38,8 @@ import {
 import {
   numericFieldValidator,
   requiredFieldValidator,
-  ethereumFieldValidator,
-  bitcoinFieldValidator
+  bitcoinFieldValidator,
+  ethAmountValidator
 } from '../Marketplace/scenes/Listing/scenes/AddListing/validators';
 import { getWallets } from '../../../../services/blockchain/bitcoin/bitcoinActions';
 import { SATOSHI_IN_BTC } from '../../../../utils/constants';
@@ -61,44 +60,6 @@ const currencyOptions = [
     description: 'Ether Currency'
   }
 ];
-
-const minEth = getMinEthValue();
-
-const ethAmountValidator = addValidator({
-  validator: (option, value, allValues) => {
-    const min = ethers.utils.parseEther(`${option.min}`);
-    const max = ethers.utils.parseEther(`${option.max}`);
-    let eth;
-    try {
-      eth = ethers.utils.parseEther(`${value}`);
-    } catch (err) {
-      return {
-        ...messages.minimumAmount,
-        values: {
-          amount: option.min
-        }
-      };
-    }
-
-    if (eth.lt(min)) {
-      return {
-        ...messages.minimumAmount,
-        values: {
-          amount: option.min
-        }
-      };
-    }
-
-    if (eth.gte(max)) {
-      return {
-        ...messages.maximumAmountAvailable,
-        values: {
-          amount: option.max
-        }
-      };
-    }
-  }
-});
 
 const validate = values => {
   const { currency, wallet, amount } = values;
@@ -165,6 +126,7 @@ class Exchange extends Component {
     });
     wallets = this.props.bitcoin.wallets;
     formatMessage = this.props.intl.formatMessage;
+    throw new Error();
   }
 
   componentWillReceiveProps(nextProps) {

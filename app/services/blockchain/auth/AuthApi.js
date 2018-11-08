@@ -8,6 +8,30 @@ const apiURL = process.env.NODE_ENV === 'development'
   ? 'http://35.171.116.3:5050/api'
   : 'http://74.208.211.227:5050/api';
 
+export const checkTwitterUsername = wrapRequest(async (data) => fetch(`${apiURL}/check-twitter-username`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data)
+}));
+
+export const checkTelegramPhoneNumber = wrapRequest(async (data) => fetch(`${apiURL}/check-telegram-phone-number`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data)
+}));
+
+export const checkEmail = wrapRequest(async (data) => fetch(`${apiURL}/check-email`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data)
+}));
+
 export const checkBonus = wrapRequest(async (data) => fetch(`${apiURL}/bonus-check`, {
   method: 'POST',
   headers: {
