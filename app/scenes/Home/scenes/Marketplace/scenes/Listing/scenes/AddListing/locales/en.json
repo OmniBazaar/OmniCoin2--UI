@@ -90,5 +90,7 @@
     "AddListing.keywordCommas": "Keywords separated by commas", 
     "AddListing.saveListingErrorNoChangeDetectedMessage": "No changes detected in listing. Please change some data and submit again.", 
     "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01", 
-    "AddListing.optional": "(Optional)"
+    "AddListing.optional": "(Optional)",
+    "AddListing.minimumNumericValidator": "Should be greater or equal to {value}",
+    "AddListing.maximumAmountAvailable": "Maximum amount available is {amount}"
 }

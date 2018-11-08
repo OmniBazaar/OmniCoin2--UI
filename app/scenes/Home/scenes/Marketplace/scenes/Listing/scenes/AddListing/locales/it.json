@@ -72,5 +72,7 @@
     "AddListing.address": "Address", 
     "AddListing.priorityNormal": "Normal (0.50% Fee)", 
     "AddListing.listingTitle": "Listing Title", 
-    "AddListing.ownerDetails": "Owner Details"
+    "AddListing.ownerDetails": "Owner Details",
+    "AddListing.minimumNumericValidator": "Should be greater or equal to {value}",
+    "AddListing.maximumAmountAvailable": "Maximum amount available is {amount}"
 }

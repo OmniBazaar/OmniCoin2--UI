@@ -112,10 +112,11 @@ const currencyConverter = (amount, fromCur, toCur, noFixedValue) => {
 }
 
 
-let minEthValue;
+let minEthValues = {};
 const getMinEthValue = (ethToXomRate) => {
-  if (minEthValue) {
-    return minEthValue;
+  const key = (typeof ethToXomRate !== 'undefined') ? 'undefined' : (ethToXomRate + '');
+  if (minEthValues[key]) {
+    return minEthValues[key];
   }
 
   let minEth;
@@ -140,12 +141,12 @@ const getMinEthValue = (ethToXomRate) => {
         min += '1';
       }
 
-      minEthValue = min;
+      minEthValues[key] = min;
       break;
     }
   }
 
-  return minEthValue;
+  return minEthValues[key];
 }
 
 const exchangeXOM = (amount, rate) => {

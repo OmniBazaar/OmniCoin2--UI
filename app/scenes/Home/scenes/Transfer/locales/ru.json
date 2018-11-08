@@ -41,5 +41,6 @@
     "Transfer.successUpdate": "Transfer successful.", 
     "Transfer.warning": "Warning", 
     "Transfer.to": "To", 
-    "Transfer.oneWeek": "1 week"
+    "Transfer.oneWeek": "1 week",
+    "Transfer.maximumAmountAvailable": "Maximum amount available is {amount}"
 }

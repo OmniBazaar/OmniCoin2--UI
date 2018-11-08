@@ -436,7 +436,15 @@ const messages = defineMessages({
   saveAsDefault: {
     id: 'AddListing.saveAsDefault',
     defaultMessage: 'Save as default'
-  }
+  },
+  minimumNumericValidator: {
+    id: 'AddListing.minimumNumericValidator',
+    defaultMessage: 'Should be greater or equal to {value}'
+  },
+  maximumAmountAvailable: {
+    id: 'AddListing.maximumAmountAvailable',
+    defaultMessage: 'Maximum amount available is {amount}'
+  },
 });
 
 export default messages;
