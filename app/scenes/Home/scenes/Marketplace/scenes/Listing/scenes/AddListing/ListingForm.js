@@ -51,7 +51,8 @@ import {
   bitcoinFieldValidator,
   ethereumFieldValidator,
   fiatFieldValidator,
-  ethereumPriceFieldValidator
+  ethereumPriceFieldValidator,
+  ethAmountValidator
 } from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
@@ -61,6 +62,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
 import { weightUnits, sizeUnits } from  './constants'; 
+import { getMinEthValue } from "../../../../../../../../services/utils";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -412,7 +414,7 @@ class ListingForm extends Component {
     } else if (currency === 'BITCOIN') {
       priceValidators.push(bitcoinFieldValidator);
     } else if (currency === 'ETHEREUM') {
-      priceValidators.push(ethereumPriceFieldValidator);
+      priceValidators.push(ethAmountValidator({min: getMinEthValue()}));
     } else {
       priceValidators.push(fiatFieldValidator);
     }

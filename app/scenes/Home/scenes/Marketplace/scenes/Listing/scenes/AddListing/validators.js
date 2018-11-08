@@ -18,7 +18,11 @@ export const ethereumPriceFieldValidator = numericality({ '>=': 0.000001, msg: m
 export const ethAmountValidator = addValidator({
   validator: (option, value, allValues) => {
     const min = ethers.utils.parseEther(`${option.min}`);
-    const max = ethers.utils.parseEther(`${option.max}`);
+    let max = null;
+    if (option.max) {
+    	max = ethers.utils.parseEther(`${option.max}`);
+    }
+    
     let eth;
     try {
       eth = ethers.utils.parseEther(`${value}`);
@@ -40,7 +44,7 @@ export const ethAmountValidator = addValidator({
       };
     }
 
-    if (eth.gte(max)) {
+    if (max && eth.gte(max)) {
       return {
         ...messages.maximumAmountAvailable,
         values: {
