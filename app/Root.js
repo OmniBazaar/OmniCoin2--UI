@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
 import { Loader } from 'semantic-ui-react';
+import { createBrowserHistory } from 'history';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
@@ -17,7 +18,9 @@ import localeData from './../app/dist/i18n/data.json';
 import Background from "./components/Background/Background";
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
-
+const history = createBrowserHistory({
+  basename: window.location.pathname
+});
 
 class Root extends Component {
 
@@ -48,7 +51,7 @@ class Root extends Component {
   renderContent() {
     return (
         <div>
-          <Router>
+          <Router history={history}>
             <ErrorBoundary>
               <Switch>
                 <Route path="/signup" render={(props) => <Signup {...props} />} />
