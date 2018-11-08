@@ -144,7 +144,7 @@ function* ethereumTransfer({payload: {
     const { currentUser } = (yield select()).default.auth;
     const buyer = currentUser.username,
           seller = toName;
-    yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount * 0.99);
+    yield call(EthereumApi.makeEthereumPayment, privateKey, toEthereumAddress, amount);
     yield put(ethereumTransferSucceeded());
     if (listingId) {
       sendOBFeesByEth(amount, toName, currentUser.username, listingId, privateKey);
@@ -159,7 +159,6 @@ function* ethereumTransfer({payload: {
       });
       yield put(saleBonusAction(seller, buyer))
     }
-    console.log("Ether res", res);
   } catch (error) {
     console.log('ERROR', error);
     let e = error.message || error;

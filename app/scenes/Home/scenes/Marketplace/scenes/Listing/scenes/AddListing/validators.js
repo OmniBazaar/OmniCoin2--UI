@@ -1,6 +1,7 @@
+import ethers from 'ethers';
 import messages from "./messages";
 import {TOKENS_IN_XOM, WEI_IN_ETH} from "../../../../../../../../utils/constants";
-import {numericality, required} from "redux-form-validators";
+import {numericality, required, addValidator} from "redux-form-validators";
 
 
 export const requiredFieldValidator = required({ message: messages.fieldRequired });
@@ -14,3 +15,42 @@ export const bitcoinFieldValidator = numericality({ '>=': 0.00001, msg: messages
 export const ethereumFieldValidator = numericality({ '>=': 1 / WEI_IN_ETH, msg: messages.ethereumFieldValidator });
 export const fiatFieldValidator = numericality({ '>=': 0.01, msg: messages.fiatFieldValidator });
 export const ethereumPriceFieldValidator = numericality({ '>=': 0.000001, msg: messages.ethereumPriceFieldValidator });
+export const ethAmountValidator = addValidator({
+  validator: (option, value, allValues) => {
+    const min = ethers.utils.parseEther(`${option.min}`);
+    let max = null;
+    if (option.max) {
+    	max = ethers.utils.parseEther(`${option.max}`);
+    }
+    
+    let eth;
+    try {
+      eth = ethers.utils.parseEther(`${value}`);
+    } catch (err) {
+      return {
+        ...messages.minimumNumericValidator,
+        values: {
+          value: option.min
+        }
+      };
+    }
+
+    if (eth.lt(min)) {
+      return {
+        ...messages.minimumNumericValidator,
+        values: {
+          value: option.min
+        }
+      };
+    }
+
+    if (max && eth.gte(max)) {
+      return {
+        ...messages.maximumAmountAvailable,
+        values: {
+          amount: option.max
+        }
+      };
+    }
+  }
+});

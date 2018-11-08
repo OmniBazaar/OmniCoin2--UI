@@ -49,9 +49,8 @@ import {
   allowBlankNumericFieldValidator,
   omnicoinFieldValidator,
   bitcoinFieldValidator,
-  ethereumFieldValidator,
   fiatFieldValidator,
-  ethereumPriceFieldValidator
+  ethAmountValidator
 } from "./validators";
 import * as BitcoinApi from '../../../../../../../../services/blockchain/bitcoin/BitcoinApi';
 import TagsInput from '../../../../../../../../components/TagsInput';
@@ -61,6 +60,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
 import { weightUnits, sizeUnits } from  './constants'; 
+import { getMinEthValue } from "../../../../../../../../services/utils";
 
 const contactOmniMessage = 'OmniMessage';
 
@@ -167,10 +167,10 @@ class ListingForm extends Component {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
         priority_fee: listingPriority,
-        price_using_btc: false,
-        price_using_eth: false,
         continuous: true,
         ...defaultData,
+        price_using_btc: true,
+        price_using_eth: true,
         price_using_omnicoin: true,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         shipping_price_included: false
@@ -412,7 +412,7 @@ class ListingForm extends Component {
     } else if (currency === 'BITCOIN') {
       priceValidators.push(bitcoinFieldValidator);
     } else if (currency === 'ETHEREUM') {
-      priceValidators.push(ethereumPriceFieldValidator);
+      priceValidators.push(ethAmountValidator({min: getMinEthValue()}));
     } else {
       priceValidators.push(fiatFieldValidator);
     }
@@ -482,6 +482,7 @@ class ListingForm extends Component {
   }
 
   render() {
+    console.log(this.props, "propssss")
     const { formatMessage } = this.props.intl;
     const {
       category,

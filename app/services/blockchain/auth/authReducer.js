@@ -34,6 +34,7 @@ const defaultState = {
   showTermsModal: false,
   welcomeBonusAmount: null,
   isWelcomeBonusAvailable: null,
+  isWelcomeBonusReceived: null,
   identityVerificationToken: null,
   defaultReferrer: null,
   appVersion: ''
@@ -143,6 +144,11 @@ const reducer = handleActions({
   GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED: (state, action) => ({
     ...state,
     identityVerificationToken: action.token
+  }),
+  IS_WELCOME_BONUS_RECEIVED_SUCCEEDED: (state, action) => console.log(action, 'actioninreducer') || ({
+    ...state,
+    isWelcomeBonusReceived: action.payload.isWelcomeBonusReceived,
+    isWelcomeBonusAvailable: action.payload.isWelcomeBonusAvailable
   }),
   GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED: (state, action) => ({
     ...state,

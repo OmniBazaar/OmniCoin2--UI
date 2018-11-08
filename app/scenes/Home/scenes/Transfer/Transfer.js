@@ -50,8 +50,16 @@ import {
   resetShipping
 } from '../../../../services/shipping/shippingActions';
 import CoinTypes from '../Marketplace/scenes/Listing/constants';
-import { currencyConverter } from "../../../../services/utils";
-import { MANUAL_INPUT_VALUE } from "../../../../utils/constants";
+import { currencyConverter, getMinEthValue } from "../../../../services/utils";
+import { MANUAL_INPUT_VALUE, SATOSHI_IN_BTC, TOKENS_IN_XOM } from "../../../../utils/constants";
+
+import {
+  numericFieldValidator,
+  requiredFieldValidator,
+  bitcoinFieldValidator,
+  omnicoinFieldValidator,
+  ethAmountValidator
+} from '../Marketplace/scenes/Listing/scenes/AddListing/validators';
 
 import messages from './messages';
 
@@ -105,6 +113,60 @@ const amountDecimalsValidator = addValidator({
     }
   },
 });
+
+const validate = values => {
+  const { currencySelected, wallet, amount } = values;
+  const errors = {};
+
+  if (currencySelected === 'bitcoin') {
+    const validators = [
+      requiredFieldValidator,
+      numericFieldValidator,
+      bitcoinFieldValidator
+    ];
+
+    for (let i = 0; i < validators.length; i++) {
+      const err = validators[i](amount);
+      if (err) {
+        errors.amount = err;
+        return errors;
+      }
+    }
+
+    if (typeof wallet === 'undefined' || wallet === null || wallet < 0) {
+      return;
+    }
+
+    if (!wallets || !wallets.length) {
+      return;
+    }
+
+    const walletData = wallets.filter(w => w.index === wallet)[0];
+    if (!walletData) {
+      return;
+    }
+
+    const max = walletData.balance / SATOSHI_IN_BTC;
+    const maxValueValidator = numericality({
+      '<': max,
+      msg: formatMessage(messages.maximumAmountAvailable, {
+        amount: max
+      })
+    });
+    const maxErr = maxValueValidator(amount);
+    console.log({
+      maxErr
+    })
+    if (maxErr) {
+      errors.amount = maxErr;
+    }
+  }
+
+  return errors;
+};
+
+let wallets = [];
+let formatMessage;
 
 class Transfer extends Component {
   static escrowOptions(escrows) {
@@ -176,6 +238,8 @@ class Transfer extends Component {
       });
     }
 
+    formatMessage = this.props.intl.formatMessage;
+
     const type = purchaseParams.get('type');
     const price = purchaseParams.get('price');
     const number = purchaseParams.get('number');
@@ -205,12 +269,46 @@ class Transfer extends Component {
       this.props.change('currencySelected', 'omnicoin');
       this.props.change('toName', to);
     }
+
+    if (!type) {
+      this.props.initialize({
+        currencySelected: this.props.transfer.transferCurrency
+      });
+    }
   }
 
   componentWillMount() {
     this.props.ethereumActions.getEthereumWallets();
 
     this.checkRequestShippingRates();
+  }
+
+  getBalance() {
+    const { balance } = this.props.blockchainWallet;
+    if (balance && balance.balance) {
+      return balance.balance / TOKENS_IN_XOM;
+    }
+    return 0.00;
+  }
+
+  getBtcBalance() {
+    const { wallets } = this.props.bitcoin;
+    let balance = 0.00;
+    if (wallets && wallets.length) {
+      wallets.forEach(function (item) {
+        balance = balance + item.balance
+      });
+    }
+    return balance / SATOSHI_IN_BTC;
+  }
+
+  getEthBalance() {
+    const { balance } = this.props.ethereum;
+    let ethereumBalance = 0;
+    if (balance) {
+      ethereumBalance = balance;
+    }
+    return ethereumBalance;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -221,7 +319,16 @@ class Transfer extends Component {
     const { transferCurrency } = this.props.transfer;
     if (this.props.transfer.loading && !nextProps.transfer.loading) {
       if (nextProps.transfer.error) {
-        if (nextProps.transfer.error === 'Insufficient funds') {
+        const { amount, currencySelected } = this.props.transferForm;
+        let balance;
+        if (currencySelected === 'ethereum') {
+          balance = this.getEthBalance();
+        } else if (currencySelected === 'bitcoin') {
+          balance = this.getBtcBalance();
+        } else {
+          balance = this.getBalance();
+        }
+        if (amount > balance) {
           toastr.error(formatMessage(messages.transfer), formatMessage(messages.insufficientFunds));
         } else {
           toastr.error(formatMessage(messages.transfer), formatMessage(messages.failedTransfer));
@@ -248,6 +355,8 @@ class Transfer extends Component {
       }
     }
     if (nextProps.bitcoin.wallets !== this.props.bitcoin.wallets) {
+      wallets = nextProps.bitcoin.wallets;
+
       this.props.change('password', nextProps.bitcoin.password);
       this.props.change('guid', nextProps.bitcoin.guid);
     }
@@ -637,14 +746,9 @@ class Transfer extends Component {
               className="textfield1"
               buttonText="XOM"
               validate={[
-                required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
-                amountDecimalsValidator({
-                  message: formatMessage(messages.numberExceedsDecimalsLimit, {
-                    limit: XOM_DECIMALS_LIMIT
-                  }),
-                }),
-                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
+                requiredFieldValidator,
+                numericFieldValidator,
+                omnicoinFieldValidator
               ]}
               disabled={!!listingId}
             />
@@ -811,11 +915,6 @@ class Transfer extends Component {
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="BTC"
-              validate={[
-                required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
-                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
-              ]}
               disabled={listingId}
             />
             <div className="col-1" />
@@ -882,9 +981,12 @@ class Transfer extends Component {
               className="textfield1"
               buttonText="ETH"
               validate={[
-                required({ message: formatMessage(messages.fieldRequired) }),
-                numericality({ '>': 0, message: formatMessage(messages.numberRequired) }),
-                numericality({ '>=': 0, message: formatMessage(messages.numberCannotBeNegative) })
+                requiredFieldValidator,
+                numericFieldValidator,
+                ethAmountValidator({
+                  min: getMinEthValue(),
+                  max: this.props.ethereum.balance
+                })
               ]}
               disabled={listingId}
             />
@@ -999,11 +1101,10 @@ class Transfer extends Component {
 
   submitBitcoinTransfer({
     toAddress,
-    password,
-    guid,
     wallet,
     amount
   }) {
+    const { guid, password } = this.props.bitcoin;
     const purchaseParams = new URLSearchParams(this.props.location.search);
     
     this.props.transferActions.bitcoinTransfer(
@@ -1021,9 +1122,9 @@ class Transfer extends Component {
 
   submitEthereumTransfer({
     toAddress,
-    privateKey,
     amount
   }) {
+    const { privateKey } = this.props.ethereum;
     const purchaseParams = new URLSearchParams(this.props.location.search);
     this.props.transferActions.ethereumTransfer(
       toAddress,
@@ -1156,7 +1257,8 @@ export default compose(
         fromName: selector(state, 'fromName'),
         useEscrow: selector(state, 'useEscrow'),
         amount: selector(state, 'amount'),
-        wallet: selector(state, 'wallet')
+        wallet: selector(state, 'wallet'),
+        currencySelected: selector(state, 'currencySelected')
       }
     }),
     (dispatch) => ({
@@ -1189,6 +1291,7 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
+    validate
     //  asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

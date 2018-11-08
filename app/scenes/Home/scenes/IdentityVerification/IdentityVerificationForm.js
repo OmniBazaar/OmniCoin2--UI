@@ -57,6 +57,16 @@ class IdentityVerificationForm extends Component {
           // steps to require:
           // identity proof (passport, id card or driving license) and a selfie
           requiredDocuments: 'IDENTITY:PASSPORT,ID_CARD,DRIVERS;SELFIE:SELFIE',
+          uiConf: {
+            steps: {
+              IDENTITY: {
+                instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
+              },
+              SELFIE: {
+                instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
+              }
+            }
+          }
         },
         // function for the iframe callbacks
         (messageType, payload) => {

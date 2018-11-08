@@ -49,6 +49,11 @@ const fixImagesData = (data) => {
 const reducer = handleActions({
   [loadListingDefault](state) {
     const data = getStoredListingDefautls();
+    if (Object.keys(data).length === 0) {
+      data.price_using_btc = true;
+      data.price_using_eth = true;
+      data.price_using_omnicoin = true;
+    }
     if (!data.price_using_btc && data.currency !== 'BITCOIN') {
       delete data.bitcoin_address;
     }

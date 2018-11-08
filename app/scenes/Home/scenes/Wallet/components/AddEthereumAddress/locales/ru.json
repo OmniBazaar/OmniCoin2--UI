@@ -1,6 +1,6 @@
 {
-  "AddEthereumAddress.label": "Label (optional)",
-  "AddEthereumAddress.createWallet": "ADD",
-  "AddEthereumAddress.cancel": "CANCEL",
-  "AddEthereumAddress.pleaseEnter": "Please enter"
+    "AddEthereumAddress.createWallet": "ADD", 
+    "AddEthereumAddress.pleaseEnter": "Please enter", 
+    "AddEthereumAddress.cancel": "CANCEL", 
+    "AddEthereumAddress.label": "Label (optional)"
 }

@@ -1,4 +1,4 @@
 {
-  "OmnicoinWalletDetail.wallet": "Wallet",
-  "OmnicoinWalletDetail.currentBalance": "Current Balance"
+    "OmnicoinWalletDetail.currentBalance": "Current Balance", 
+    "OmnicoinWalletDetail.wallet": "Wallet"
 }

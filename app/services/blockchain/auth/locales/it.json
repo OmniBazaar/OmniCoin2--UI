@@ -1,4 +1,4 @@
 {
-  "AuthService.invalidPassword": "Invalid password",
-  "AuthService.noAccount": "Account doesn't exist"
+    "AuthService.invalidPassword": "Invalid password", 
+    "AuthService.noAccount": "Account doesn't exist"
 }

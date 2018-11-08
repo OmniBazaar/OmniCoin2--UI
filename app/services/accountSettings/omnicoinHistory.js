@@ -148,12 +148,15 @@ class OmnicoinHistory extends BaseStorage {
           isXom: true
         };
       }
-      if (op.operationType === ChainTypes.operations.vesting_balance_withdraw && op.opInTrx === 1) {
-        console.log(op);
-      }
+      
       if (op.opInTrx === 0 ||
-          (op.operationType === ChainTypes.operations.vesting_balance_withdraw
-           && op.opInTrx === 1)) {
+          (
+            (
+              op.operationType === ChainTypes.operations.vesting_balance_withdraw ||
+              op.operationType === ChainTypes.operations.escrow_release_operation
+            ) && op.opInTrx === 1
+          )
+      ) {
         transactions[trxKey] = {
           ...op,
           ...transactions[trxKey]
@@ -432,11 +435,11 @@ class OmnicoinHistory extends BaseStorage {
               FetchChain('getAccount', el.op[1].publisher),
               FetchChain('getAccount', el.op[1].seller)
             ]);
-            operation.from = seller.get('name');
-            operation.to = publisher.get('name');
-            operation.fromTo = this.currentUser.username === seller.get('name')
-              ? publisher.get('name')
-              : seller.get('name');
+            operation.from = seller ? seller.get('name') : '';
+            operation.to = publisher ? publisher.get('name') : '';
+            operation.fromTo = this.currentUser.username === operation.from
+              ? operation.to
+              : operation.from;
             if (operation.from === operation.to) {
               operation.isIncoming = false;
             } else if (el.op[1].publisher === account.get('id')) {

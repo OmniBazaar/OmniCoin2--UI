@@ -117,7 +117,7 @@ class PrivateData extends Component {
           </div>
           <div className="form-group">
             <span />
-            <Button type="submit" content="UPDATE" className="button--green-bg" />
+            <Button disabled={this.props.pristine} type="submit" content="UPDATE" className="button--green-bg" />
             <div className="col-1" />
             <div className="col-1" />
           </div>
@@ -165,12 +165,14 @@ PrivateData.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }),
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  pristine: Boolean
 };
 
 PrivateData.defaultProps = {
   account: {},
   intl: {},
+  pristine: false,
 };
 
 export default compose(
