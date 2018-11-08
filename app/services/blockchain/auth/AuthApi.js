@@ -4,11 +4,9 @@
 import { wrapRequest } from '../../utils';
 
 
-// const apiURL = process.env.NODE_ENV === 'development'
-//   ? 'http://35.171.116.3:5050/api'
-//   : 'http://74.208.211.227:5050/api';
-
-const apiURL = 'http://localhost:5000/api'
+const apiURL = process.env.NODE_ENV === 'development'
+  ? 'http://35.171.116.3:5050/api'
+  : 'http://74.208.211.227:5050/api';
 
 export const checkTwitterUsername = wrapRequest(async (data) => fetch(`${apiURL}/check-twitter-username`, {
   method: 'POST',
