@@ -64,7 +64,7 @@ function* omnicoinTransfer({payload: {
     const operationObj = {
       from: fromAcc.get('id'),
       to: toAcc.get('id'),
-      reputation_vote: parseInt(reputation),
+      reputation_vote: parseInt(reputation) || 5,
       amount: {
         asset_id: '1.3.0',
         amount: Math.ceil(amount * TOKENS_IN_XOM)
