@@ -241,11 +241,16 @@ const processReferrer = async () => {
         let start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
 
-		if (start === 0) {
-			start = end;
-		}
+    		if (start === 0) {
+    			start = end;
+    		}
 
-        event.sender.send('receive-referrer', { referrer: data.substring(start, end) });
+        let referrer = data.substring(start, end);
+        const regex = /([a-zA-Z0-9\-\.])+/i;
+        const found = referrer.match(regex);
+        referrer = found.length ? found[0] : '';
+
+        event.sender.send('receive-referrer', { referrer });
       }
     });
   });
