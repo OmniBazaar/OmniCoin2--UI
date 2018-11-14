@@ -312,13 +312,13 @@ class Home extends Component {
                     defaultMessage="Quick Start"
                   />
                 </NavLink>
-                <NavLink to="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
+                <a href="https://support.omnibazaar.com" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.support"
                     defaultMessage="Support"
                   />
-                </NavLink>
+                </a>
                 {!isWelcomeBonusReceived && isWelcomeBonusAvailable ? (
                   <NavLink to="/air-drop" activeClassName="active" className="menu-item">
                     <FormattedMessage
