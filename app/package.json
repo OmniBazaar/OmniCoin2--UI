@@ -1,7 +1,7 @@
 {
   "name": "OmniBazaar",
   "productName": "OmniBazaar",
-  "version": "1.0.6929",
+  "version": "1.1.6929",
   "description": "Comunity-owned peer-to-peer marketplace",
   "main": "./main.prod.js",
   "author": {
