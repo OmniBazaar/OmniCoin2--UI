@@ -8,6 +8,7 @@ import { toastr } from 'react-redux-toastr';
 import ip from 'ip';
 import { debounce } from 'lodash';
 import cn from 'classnames';
+import { Apis } from 'omnibazaarjs-ws';
 
 import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
@@ -142,7 +143,8 @@ class PublicData extends Component {
     this.state = {
       ip: '',
       wantsToVote: false,
-      isModalOpen: false
+      isModalOpen: false,
+      accountUpdateFee: null
     };
   }
 
@@ -167,6 +169,25 @@ class PublicData extends Component {
     }
     // todo referrer
     this.freezeSettings();
+  }
+
+  calculateAccountUpdateFee(currentFees) {
+    const { parameters, scale } = currentFees;
+    const scalePercent = scale * 20/100;
+    const { fee } = parameters[6][1];
+    return fee * scalePercent/10000/100000;
+  }
+
+  async componentDidMount() {
+    try {
+      const globalProperties = await Apis.instance().db_api().exec('get_global_properties', []);
+      const accountUpdateFee = this.calculateAccountUpdateFee(globalProperties.parameters.current_fees);
+      this.setState({
+        accountUpdateFee
+      })
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -405,7 +426,7 @@ class PublicData extends Component {
           />
           <div className="labels">
             <span>{formatMessage(messages.updateTransactionFee)}</span>
-            <span className="amount">20 XOM</span>
+            <span className="amount">{this.state.accountUpdateFee} XOM</span>
           </div>
         </div>
         <ConfirmationModal
