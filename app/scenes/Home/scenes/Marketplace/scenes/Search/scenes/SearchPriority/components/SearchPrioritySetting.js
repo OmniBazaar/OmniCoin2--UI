@@ -125,7 +125,7 @@ class SearchPrioritySetting extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    if (!nextProps.dht.isConnecting && this.props.dht.isConnecting) {
+    if (this.state.isSubmitting && !nextProps.dht.isConnecting && this.props.dht.isConnecting) {
       this.setState({ isSubmitting: false });
       toastr.success(formatMessage(messages.update), formatMessage(messages.updateSuccess));
     }
@@ -338,7 +338,7 @@ class SearchPrioritySetting extends Component {
               type="submit"
               content={formatMessage(messages.apply)}
               className="button--green-bg"
-              loading={isConnecting || this.state.isSubmitting}
+              loading={this.state.isSubmitting}
               disabled={isDisabled}
             />
             <div className="col-1" />

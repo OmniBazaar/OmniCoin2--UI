@@ -126,7 +126,6 @@ class Exchange extends Component {
     });
     wallets = this.props.bitcoin.wallets;
     formatMessage = this.props.intl.formatMessage;
-    throw new Error();
   }
 
   componentWillReceiveProps(nextProps) {

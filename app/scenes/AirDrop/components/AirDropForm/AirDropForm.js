@@ -9,7 +9,7 @@ import { Field, reduxForm, Form, formValueSelector, getFormAsyncErrors } from 'r
 import { withRouter } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
-import { required, email } from 'redux-form-validators';
+import { required, email, format } from 'redux-form-validators';
 import PropTypes from 'prop-types';
 import { toastr } from 'react-redux-toastr';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
@@ -109,6 +109,10 @@ const messages = defineMessages({
   getWhiteListedForTokenSale: {
     id: 'AirDropForm.getWhiteListedForTokenSale',
     defaultMessage: 'Get white-listed for our token sale'
+  },
+  wrongNumberFormat: {
+    id: 'AirDropForm.wrongNumberFormat',
+    defaultMessage: 'Wrong number format'
   }
 });
 
@@ -228,7 +232,13 @@ class AirDropForm extends Component {
               placeholder={formatMessage(messages.telegramPhoneNumber)}
               component={ValidatableField}
               isIconVisible
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) }),
+                format({
+                  with: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+                  message: formatMessage( messages.wrongNumberFormat)
+                })
+              ]}
             />
           </div>
         </div>
