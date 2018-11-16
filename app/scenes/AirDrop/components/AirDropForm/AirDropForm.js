@@ -159,13 +159,13 @@ class AirDropForm extends Component {
           throw { ...errors, twitterUsername: e.errorMessage };
         }
       }
-      if (field === 'telegramPhoneNumber') {
-        try {
-          await AuthApi.checkTelegramPhoneNumber(currentUser, { telegramPhoneNumber });
-        } catch (e) {
-          throw { ...errors, telegramPhoneNumber: e.errorMessage };
-        }
-      }
+      // if (field === 'telegramPhoneNumber') {
+      //   try {
+      //     await AuthApi.checkTelegramPhoneNumber(currentUser, { telegramPhoneNumber });
+      //   } catch (e) {
+      //     throw { ...errors, telegramPhoneNumber: e.errorMessage };
+      //   }
+      // }
       if (field === 'email') {
         try {
           await AuthApi.checkEmail(currentUser, { email });

@@ -271,7 +271,7 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
   try {
     // Check if the user is connected to all 3 OmnibaZaar social media channels
     const { currentUser } = (yield select()).default.auth;
-    yield call(AuthApi.checkBonus, currentUser, values);
+    // yield call(AuthApi.checkBonus, currentUser, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
     const { telegramPhoneNumber, email, twitterUsername } = values;
