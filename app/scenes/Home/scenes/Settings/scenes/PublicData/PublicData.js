@@ -172,10 +172,13 @@ class PublicData extends Component {
   }
 
   calculateAccountUpdateFee(currentFees) {
+    const currentGlobalFeeScalePercentage = 20;
+    const XOMConversionRate = 100000;
+    const graphene100Percent = 10000;
     const { parameters, scale } = currentFees;
-    const scalePercent = scale * 20/100;
+    const scalePercent = scale * currentGlobalFeeScalePercentage/100;
     const { fee } = parameters[6][1];
-    return fee * scalePercent/10000/100000;
+    return fee * scalePercent/graphene100Percent/XOMConversionRate;
   }
 
   async componentDidMount() {
