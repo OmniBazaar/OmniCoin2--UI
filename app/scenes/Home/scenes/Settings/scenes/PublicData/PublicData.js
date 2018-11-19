@@ -8,6 +8,7 @@ import { toastr } from 'react-redux-toastr';
 import ip from 'ip';
 import { debounce } from 'lodash';
 import cn from 'classnames';
+import { Apis } from 'omnibazaarjs-ws';
 
 import IpInput from './components/IpInput';
 import CheckNormal from '../../../../images/ch-box-0-norm.svg';
@@ -142,7 +143,8 @@ class PublicData extends Component {
     this.state = {
       ip: '',
       wantsToVote: false,
-      isModalOpen: false
+      isModalOpen: false,
+      accountUpdateFee: null
     };
   }
 
@@ -161,12 +163,34 @@ class PublicData extends Component {
       if (account.publisher_ip) {
         this.props.accountSettingsActions.changeIpAddress(account.publisher_ip);
       }
-      if (account.is_a_processor && account.is_a_processor !== this.props.account.transactionProcessor) {
+      if (account.is_a_processor !== this.props.account.transactionProcessor) {
         this.toggleTransactionProcessor();
       }
     }
     // todo referrer
     this.freezeSettings();
+  }
+
+  calculateAccountUpdateFee(currentFees) {
+    const currentGlobalFeeScalePercentage = 20;
+    const XOMConversionRate = 100000;
+    const graphene100Percent = 10000;
+    const { parameters, scale } = currentFees;
+    const scalePercent = scale * currentGlobalFeeScalePercentage/100;
+    const { fee } = parameters[6][1];
+    return fee * scalePercent/graphene100Percent/XOMConversionRate;
+  }
+
+  async componentDidMount() {
+    try {
+      const globalProperties = await Apis.instance().db_api().exec('get_global_properties', []);
+      const accountUpdateFee = this.calculateAccountUpdateFee(globalProperties.parameters.current_fees);
+      this.setState({
+        accountUpdateFee
+      })
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -404,8 +428,8 @@ class PublicData extends Component {
             className="button--green-bg"
           />
           <div className="labels">
-            <span>{formatMessage(messages.updateTransactionFee)}</span>
-            <span className="amount">20 XOM</span>
+            <span>{formatMessage(messages.updateTransactionFee)}</span>	&nbsp;
+            <span className="amount">{this.state.accountUpdateFee} XOM</span>
           </div>
         </div>
         <ConfirmationModal

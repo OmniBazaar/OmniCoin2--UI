@@ -3,8 +3,8 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import loader from '../../assets/images/loader.gif';
-import save from '../../assets/images/save.png';
+import loader from '../../assets/images/loading.gif';
+import checkmark from '../../assets/images/checkmark.png';
 
 import './validatable-field.scss';
 
@@ -34,7 +34,7 @@ const Field = ({
         !asyncValidating &&
         valid &&
         !formAsyncErrors[input.name] && (
-          <img src={save} alt="save" className="validatable-field-check" />
+          <img src={checkmark} alt="checkmark" className="validatable-field-check" />
         )}
       <input {...input} placeholder={placeholder} type={type} />
     </React.Fragment>
@@ -76,7 +76,7 @@ Field.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func
   }),
-  formAsyncErrors: PropTypes.string,
+  formAsyncErrors: PropTypes.object,
   isIconVisible: PropTypes.bool
 };
 
@@ -87,7 +87,7 @@ Field.defaultProps = {
   meta: {},
   intl: {},
   formAsyncErrors: {},
-  isIconVisible: {}
+  isIconVisible: false
 };
 
 export { InputField, makeValidatableField };

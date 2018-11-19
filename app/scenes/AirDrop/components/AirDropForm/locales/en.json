@@ -21,5 +21,6 @@
     "AirDropForm.skipFreeCoins": "Skip the free coins", 
     "AirDropForm.joinTwitterChannelConfirmation": "I joined the OmniBazaar channel. My Twitter user name is", 
     "AirDropForm.telegramPhoneNumber": "Phone Number",
-    "AirDropForm.wrongNumberFormat": "Wrong number format"
+    "AirDropForm.wrongNumberFormat": "Wrong number format",
+    "AirDropForm: notWorkingServer": "The server is down. Try again later"
 }

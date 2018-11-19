@@ -113,8 +113,14 @@ const messages = defineMessages({
   wrongNumberFormat: {
     id: 'AirDropForm.wrongNumberFormat',
     defaultMessage: 'Wrong number format'
+  },
+  notWorkingServer: {
+    id: 'AirDropForm.notWorkingServer',
+    defaultMessage: 'The server is down. Try again later'
   }
 });
+
+let currentUser = null;
 
 class AirDropForm extends Component {
   static validate = values => {
@@ -140,10 +146,12 @@ class AirDropForm extends Component {
     this.state = {
       loading: false
     };
+    currentUser = props.auth.currentUser;
   }
 
     static asyncValidate = async (values, dispatch, props, field) => {
       const errors = props.asyncErrors;
+      const { formatMessage } = props.intl;
       const {
         twitterUsername,
         telegramPhoneNumber,
@@ -151,22 +159,31 @@ class AirDropForm extends Component {
       } = values;
       if (field === 'twitterUsername') {
         try {
-          await AuthApi.checkTwitterUsername({ twitterUsername });
+          await AuthApi.checkTwitterUsername(currentUser, { twitterUsername });
         } catch (e) {
+          if(e.message === "Failed to fetch") {
+            throw { ...errors, twitterUsername: formatMessage(messages.notWorkingServer) };
+          }
           throw { ...errors, twitterUsername: e.errorMessage };
         }
       }
-      if (field === 'telegramPhoneNumber') {
-        try {
-          await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
-        } catch (e) {
-          throw { ...errors, telegramPhoneNumber: e.errorMessage };
-        }
-      }
+      // if (field === 'telegramPhoneNumber') {
+      //   try {
+      //     await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
+      //   } catch (e) {
+      //     if(e.message === "Failed to fetch") {
+      //       throw { ...errors, telegramPhoneNumber: formatMessage(messages.notWorkingServer) };
+      //     }
+      //     throw { ...errors, telegramPhoneNumber: e.errorMessage };
+      //   }
+      // }
       if (field === 'email') {
         try {
-          await AuthApi.checkEmail({ email });
+          await AuthApi.checkEmail(currentUser, { email });
         } catch (e) {
+          if(e.message === "Failed to fetch") {
+            throw { ...errors, email: formatMessage(messages.notWorkingServer) };
+          }
           throw { ...errors, email: e.errorMessage };
         }
       }
@@ -182,6 +199,9 @@ class AirDropForm extends Component {
     componentWillReceiveProps(nextProps) {
       if (nextProps.auth.error && !this.props.auth.error) {
         toastr.error(nextProps.auth.error);
+      }
+      if (nextProps.auth.currentUser !== this.props.auth.currentUser) {
+        currentUser = nextProps.auth.currentUser;
       }
     }
 
@@ -335,12 +355,12 @@ class AirDropForm extends Component {
   };
 
   submit = values => new Promise((resolve, reject) => {
-    this.props.authActions.receiveWelcomeBonus({
-      values,
-      resolve,
-      reject,
-      formatMessage: this.props.intl.formatMessage
-    });
+      this.props.authActions.receiveWelcomeBonus({
+        values,
+        resolve,
+        reject,
+        formatMessage: this.props.intl.formatMessage
+      });
   })
 
   render() {
