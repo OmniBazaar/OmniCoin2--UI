@@ -20,6 +20,7 @@ import {
   referralBonusSucceeded,
   referralBonusFailed,
   requestReferrerFinish,
+  referralBonus as referralBonusAction,
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
@@ -282,6 +283,7 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     };
     yield call(AuthApi.receiveWelcomeBonus, data);
     yield put(welcomeBonusSucceeded());
+    yield put(referralBonusAction());
   } catch (error) {
     yield call(reject, new SubmissionError(error.messages));
     yield put(welcomeBonusFailed(error.message));
