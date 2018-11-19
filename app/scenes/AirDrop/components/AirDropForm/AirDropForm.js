@@ -120,6 +120,8 @@ const messages = defineMessages({
   }
 });
 
+let currentUser = null;
+
 class AirDropForm extends Component {
   static validate = values => {
     const errors = {};
@@ -144,6 +146,7 @@ class AirDropForm extends Component {
     this.state = {
       loading: false
     };
+    currentUser = props.auth.currentUser;
   }
 
     static asyncValidate = async (values, dispatch, props, field) => {
@@ -156,7 +159,7 @@ class AirDropForm extends Component {
       } = values;
       if (field === 'twitterUsername') {
         try {
-          await AuthApi.checkTwitterUsername({ twitterUsername });
+          await AuthApi.checkTwitterUsername(currentUser, { twitterUsername });
         } catch (e) {
           if(e.message === "Failed to fetch") {
             throw { ...errors, twitterUsername: formatMessage(messages.notWorkingServer) };
@@ -164,19 +167,19 @@ class AirDropForm extends Component {
           throw { ...errors, twitterUsername: e.errorMessage };
         }
       }
-      if (field === 'telegramPhoneNumber') {
-        try {
-          await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
-        } catch (e) {
-          if(e.message === "Failed to fetch") {
-            throw { ...errors, telegramPhoneNumber: formatMessage(messages.notWorkingServer) };
-          }
-          throw { ...errors, telegramPhoneNumber: e.errorMessage };
-        }
-      }
+      // if (field === 'telegramPhoneNumber') {
+      //   try {
+      //     await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
+      //   } catch (e) {
+      //     if(e.message === "Failed to fetch") {
+      //       throw { ...errors, telegramPhoneNumber: formatMessage(messages.notWorkingServer) };
+      //     }
+      //     throw { ...errors, telegramPhoneNumber: e.errorMessage };
+      //   }
+      // }
       if (field === 'email') {
         try {
-          await AuthApi.checkEmail({ email });
+          await AuthApi.checkEmail(currentUser, { email });
         } catch (e) {
           if(e.message === "Failed to fetch") {
             throw { ...errors, email: formatMessage(messages.notWorkingServer) };
@@ -196,6 +199,9 @@ class AirDropForm extends Component {
     componentWillReceiveProps(nextProps) {
       if (nextProps.auth.error && !this.props.auth.error) {
         toastr.error(nextProps.auth.error);
+      }
+      if (nextProps.auth.currentUser !== this.props.auth.currentUser) {
+        currentUser = nextProps.auth.currentUser;
       }
     }
 
