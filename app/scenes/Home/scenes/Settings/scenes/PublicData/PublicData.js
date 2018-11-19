@@ -428,7 +428,7 @@ class PublicData extends Component {
             className="button--green-bg"
           />
           <div className="labels">
-            <span>{formatMessage(messages.updateTransactionFee)}</span>
+            <span>{formatMessage(messages.updateTransactionFee)}</span>	&nbsp;
             <span className="amount">{this.state.accountUpdateFee} XOM</span>
           </div>
         </div>
