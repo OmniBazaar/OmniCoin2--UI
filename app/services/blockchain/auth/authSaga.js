@@ -286,8 +286,12 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     yield call(AuthApi.receiveWelcomeBonus, currentUser,  data);
     yield put(welcomeBonusSucceeded());
   } catch (error) {
-    yield call(reject, new SubmissionError(error.messages));
-    yield put(welcomeBonusFailed(error.message));
+    if(error.message === 'Failed to fetch'){
+      yield put(welcomeBonusFailed("The server is down. Try again later"));
+    } else {
+      yield call(reject, new SubmissionError(error.messages));
+      yield put(welcomeBonusFailed(error.message));
+    }
   }
 }
 
