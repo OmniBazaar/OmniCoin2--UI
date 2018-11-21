@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
   joinTwitterChannelSuggestion: {
     id: 'AirDropForm.joinTwitterChannelSuggestion',
-    defaultMessage: 'Join our Twitter channel here:'
+    defaultMessage: 'Join our Twitter channel and retweet the pinned post here:'
   },
   twitterLink: {
     id: 'AirDropForm.twitterLink',

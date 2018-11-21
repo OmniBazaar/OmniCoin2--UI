@@ -7,7 +7,7 @@
     "AirDropForm.twitterUserName": "User name", 
     "AirDropForm.telegramUserName": "User name", 
     "AirDropForm.email": "E-mail Address", 
-    "AirDropForm.joinTwitterChannelSuggestion": "Join our Twitter channel here:", 
+    "AirDropForm.joinTwitterChannelSuggestion": "Join our Twitter channel and retweet the pinned post here:", 
     "AirDropForm.twitterLink": "OmniBazaar on Twitter", 
     "AirDropForm.joinTelegramBotSuggestion": "Find \"@omnicoin_verification_bot\" on Telegram and start the bot (type \"/start\"):",
     "AirDropForm.joinTelegramBotConfirmation": "I joined the omnicoin_verification_bot.", 
