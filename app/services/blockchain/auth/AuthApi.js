@@ -25,7 +25,7 @@ export const checkTwitterUsername = wrapRequest(async (user, data) => doAuthRequ
   body: JSON.stringify(data)
 }));
 
-export const checkTelegramPhoneNumber = wrapRequest(async (user, data) => doAuthRequest(`${apiURL}/check-telegram-phone-number`, user, {
+export const checkTelegramUser = wrapRequest(async (user, data) => doAuthRequest(`${apiURL}/check-telegram-user`, user, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

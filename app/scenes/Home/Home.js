@@ -403,7 +403,6 @@ export default connect(
       logout,
       requestAppVersion,
       getIdentityVerificationStatus,
-      referralBonus,
       isWelcomeBonusReceived
     }, dispatch),
     listingActions: bindActionCreators({

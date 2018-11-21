@@ -248,7 +248,7 @@ const processReferrer = async () => {
         let referrer = data.substring(start, end);
         const regex = /([a-zA-Z0-9\-\.])+/i;
         const found = referrer.match(regex);
-        referrer = found.length ? found[0] : '';
+        referrer = found && found.length ? found[0] : '';
 
         event.sender.send('receive-referrer', { referrer });
       }
