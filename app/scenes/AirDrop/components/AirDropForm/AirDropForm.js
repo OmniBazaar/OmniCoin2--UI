@@ -36,27 +36,27 @@ const messages = defineMessages({
   },
   joinTelegramChannelConfirmation: {
     id: 'AirDropForm.joinTelegramChannelConfirmation',
-    defaultMessage: 'I joined the OmniBazaar channel. My Telegram phone number is'
+    defaultMessage: 'I joined the OmniBazaar channel. My Telegram user ID is'
   },
   joinTelegramBotSuggestion: {
     id: 'AirDropForm.joinTelegramBotSuggestion',
-    defaultMessage: 'Start the Bot here:'
+    defaultMessage: 'Find \"@omnicoin_verification_bot\" on Telegram and start the bot (type \"/start\"):'
   },
   omnicoinVerificationBotLink: {
     id: 'AirDropForm.omnicoinVerificationBotLink',
-    defaultMessage: 'Omnicoin verification bot'
+    defaultMessage: 'OmniCoin Verification Bot'
   },
   joinTelegramBotConfirmation: {
     id: 'AirDropForm.joinTelegramBotConfirmation',
     defaultMessage: 'I joined the omnicoin verification bot.'
   },
-  telegramPhoneNumber: {
-    id: 'AirDropForm.telegramPhoneNumber',
-    defaultMessage: 'Phone Number'
+  telegramUserId: {
+    id: 'AirDropForm.telegramUserId',
+    defaultMessage: 'User ID'
   },
   joinTwitterChannelSuggestion: {
     id: 'AirDropForm.joinTwitterChannelSuggestion',
-    defaultMessage: 'Join our Twitter channel here:'
+    defaultMessage: 'Join our Twitter channel and retweet the pinned post here:'
   },
   twitterLink: {
     id: 'AirDropForm.twitterLink',
@@ -112,7 +112,7 @@ const messages = defineMessages({
   },
   wrongNumberFormat: {
     id: 'AirDropForm.wrongNumberFormat',
-    defaultMessage: 'Wrong number format'
+    defaultMessage: 'Wrong ID format'
   },
   notWorkingServer: {
     id: 'AirDropForm.notWorkingServer',
@@ -154,7 +154,7 @@ class AirDropForm extends Component {
       const { formatMessage } = props.intl;
       const {
         twitterUsername,
-        telegramPhoneNumber,
+        telegramUserId,
         email
       } = values;
       if (field === 'twitterUsername') {
@@ -167,16 +167,17 @@ class AirDropForm extends Component {
           throw { ...errors, twitterUsername: e.errorMessage };
         }
       }
-      // if (field === 'telegramPhoneNumber') {
-      //   try {
-      //     await AuthApi.checkTelegramPhoneNumber({ telegramPhoneNumber });
-      //   } catch (e) {
-      //     if(e.message === "Failed to fetch") {
-      //       throw { ...errors, telegramPhoneNumber: formatMessage(messages.notWorkingServer) };
-      //     }
-      //     throw { ...errors, telegramPhoneNumber: e.errorMessage };
-      //   }
-      // }
+      if (field === 'telegramUserId') {
+        try {
+          console.log({telegramUserId})
+          await AuthApi.checkTelegramUser(currentUser, { telegramUserId });
+        } catch (e) {
+          if(e.message === "Failed to fetch") {
+            throw { ...errors, telegramUserId: formatMessage(messages.notWorkingServer) };
+          }
+          throw { ...errors, telegramUserId: e.errorMessage };
+        }
+      }
       if (field === 'email') {
         try {
           await AuthApi.checkEmail(currentUser, { email });
@@ -247,15 +248,15 @@ class AirDropForm extends Component {
           <div className="ui form">
             <Field
               type="text"
-              name="telegramPhoneNumber"
+              name="telegramUserId"
               formAsyncErrors={this.props.formAsyncErrors || {}}
-              placeholder={formatMessage(messages.telegramPhoneNumber)}
+              placeholder={formatMessage(messages.telegramUserId)}
               component={ValidatableField}
               isIconVisible
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
                 format({
-                  with: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+                  with: /^[0-9]+$/,
                   message: formatMessage( messages.wrongNumberFormat)
                 })
               ]}
@@ -408,7 +409,7 @@ AirDropForm = withRouter(AirDropForm);
 AirDropForm = reduxForm({
   form: 'AirDropForm',
   validate: AirDropForm.validate,
-  asyncBlurFields: ['telegramPhoneNumber', 'twitterUsername', 'email'],
+  asyncBlurFields: ['telegramUserId', 'twitterUsername', 'email'],
   asyncValidate: AirDropForm.asyncValidate,
   destroyOnUnmount: true,
 })(AirDropForm);

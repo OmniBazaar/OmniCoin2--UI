@@ -275,12 +275,12 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     // yield call(AuthApi.checkBonus, currentUser, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
-    const { telegramPhoneNumber, email, twitterUsername } = values;
+    const { telegramUserId, email, twitterUsername } = values;
     const data = {
       harddriveId,
       macAddress,
       email,
-      telegramPhoneNumber,
+      telegramUserId,
       twitterUsername,
       userName: currentUser.username
     };
