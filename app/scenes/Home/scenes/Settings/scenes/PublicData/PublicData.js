@@ -260,8 +260,6 @@ class PublicData extends Component {
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
-    } else if (!is_a_processor && !transactionProcessor) {
-      this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
