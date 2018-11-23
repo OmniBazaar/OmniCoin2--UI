@@ -60,9 +60,9 @@ function reputationOptions(from = 0, to = 10) {
 }
 
 const coefficients = {
-  USDtoEUR: 0.86,
-  USDtoBITCOIN: 0.000133,
-  USDtoETHEREUM: 0.002118,
+  USDtoEUR: 0.8772,
+  USDtoBITCOIN: 0.0002323,
+  USDtoETHEREUM: 0.008,
   USDtoOMNICOIN: 300.03,
   USDtoGBP: 0.75,
   USDtoCAD: 0.76,
