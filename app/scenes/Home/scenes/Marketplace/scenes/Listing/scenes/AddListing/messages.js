@@ -445,6 +445,18 @@ const messages = defineMessages({
     id: 'AddListing.maximumAmountAvailable',
     defaultMessage: 'Maximum amount available is {amount}'
   },
+  saveSelectionsAsDefaultSettings: {
+    id: 'ListingForm.saveSelectionsAsDefaultSettings',
+    defaultMessage: 'Would you like to save your selections from this listing as your default settings for future listings? This can save you time.'
+  },
+  saveAsDefaultSettings: {
+    id: 'ListingForm.saveAsDefaultSettings',
+    defaultMessage: 'Save as Default Settings'
+  },
+  savedAsDefaults: {
+    id: 'ListingForm.savedAsDefaults',
+    defaultMessage: 'Saved as defaults'
+  }
 });
 
 export default messages;
