@@ -624,7 +624,7 @@ class SignupForm extends Component {
           content={formatMessage(messages.signin)}
           disabled={auth.loading}
           color="blue"
-          className={btnClass}
+          className={btnClass + ' transparent'} 
           onClick={this.signIn}
         />
       </Form>
