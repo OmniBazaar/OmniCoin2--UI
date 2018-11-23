@@ -20,6 +20,10 @@ import ValidatableField from '../../../../components/ValidatableField/Validatabl
 
 import './air-drop-form.scss';
 
+const toastrOptions = {
+  timeOut: 15000
+}
+
 const messages = defineMessages({
   receiveOmnicoinsByFollowingActions: {
     id: 'AirDropForm.receiveOmnicoinsByFollowingActions',
@@ -199,7 +203,7 @@ class AirDropForm extends Component {
 
     componentWillReceiveProps(nextProps) {
       if (nextProps.auth.error && !this.props.auth.error) {
-        toastr.error(nextProps.auth.error);
+        toastr.error(nextProps.auth.error, toastrOptions);
       }
       if (nextProps.auth.currentUser !== this.props.auth.currentUser) {
         currentUser = nextProps.auth.currentUser;
