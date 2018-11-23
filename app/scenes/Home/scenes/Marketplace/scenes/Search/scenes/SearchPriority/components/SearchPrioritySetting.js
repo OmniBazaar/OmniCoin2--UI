@@ -24,6 +24,7 @@ import {
   getPublishers,
   getPublisherData
 } from '../../../../../../../../../services/accountSettings/accountActions';
+import { searchPublishers } from '../../../../../../../../../services/listing/listingActions';
 import { dhtReconnect } from '../../../../../../../../../services/search/dht/dhtActions';
 import './search-priority-setting.scss';
 
@@ -94,9 +95,9 @@ class SearchPrioritySetting extends Component {
   constructor(props) {
     super(props);
 
-    this.publishers = [];
-
     this.state = {
+      publishers: [],
+      loading: true,
       isSubmitting: false,
     };
 
@@ -110,17 +111,39 @@ class SearchPrioritySetting extends Component {
   }
 
   componentWillMount() {
-    this.props.accountSettingsActions.getPublishers();
+    if (!this.props.allPublishers.loading) {
+      this.props.listingActions.searchPublishers();
+    }
     this.props.accountSettingsActions.getPublisherData();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.account.publishers.loading && this.props.account.publishers.loading) {
-      this.publishers = nextProps.account.publishers.publishers.map(publisher => ({
-        value: publisher,
-        text: publisher.name,
-        key: publisher.name,
-      }));
+    if (this.props.allPublishers.loading && !nextProps.allPublishers.loading) {
+      this.props.listingActions.searchPublishers();
+    }
+    if (!nextProps.publishers.searching && this.props.publishers.searching) {
+      this.setState({ loading: false });
+      if (!nextProps.publishers.error) {
+        const publishers = nextProps.publishers.publishers.map(publisher => {
+          const publisherFee = publisher.publisher_fee ? `(${parseInt(publisher.publisher_fee) / 100}% Fee)` : '';
+          const listingCount = publisher.listingCount ? `(${publisher.listingCount})` : '';
+
+          return {
+            value: publisher,
+            text: publisher.name + ` ${publisherFee} ${listingCount}`,
+            key: publisher.name
+          }
+        });
+        this.setState({
+          publishers
+        });
+      } else {
+        const { formatMessage } = this.props.intl;
+        this.showErrorToast(
+          formatMessage(messages.error),
+          formatMessage(messages.searchPublishersErrorMessage)
+        );
+      }
     }
 
     const { formatMessage } = this.props.intl;
@@ -236,14 +259,9 @@ class SearchPrioritySetting extends Component {
   }
 
   renderPublisherOptions() {
-    const { publisherData, publishers } = this.props.account;
+    const { publisherData } = this.props.account;
     const { formatMessage } = this.props.intl;
 
-    let publisher = '';
-
-    if (this.publishers.length) {
-      publisher = _.find(this.publishers, { text: publisherData.publisherName.name });
-    }
 
     return (
       <div className="form-group" key="publisher">
@@ -251,10 +269,10 @@ class SearchPrioritySetting extends Component {
         <Dropdown
           placeholder={formatMessage(messages.publisherPlaceholder)}
           defaultValue={publisherData.publisherName}
-          loading={publishers.loading}
+          loading={this.state.loading}
           fluid
           selection
-          options={this.publishers.length && this.publishers}
+          options={this.state.publishers}
           onChange={this.onChangePublisherName}
         />
         <div className="col-1" />
@@ -378,6 +396,17 @@ SearchPrioritySetting.propTypes = {
   dht: PropTypes.shape({
     isConnecting: PropTypes.bool,
   }),
+  listingActions: PropTypes.shape({
+    searchPublishers: PropTypes.func
+  }),
+  publishers: PropTypes.shape({
+    publishers: PropTypes.array,
+    searching: PropTypes.bool,
+    error: PropTypes.object
+  }).isRequired,
+  allPublishers: PropTypes.shape({
+    loading: PropTypes.bool
+  })
 };
 
 SearchPrioritySetting.defaultProps = {
@@ -392,7 +421,9 @@ SearchPrioritySetting.defaultProps = {
 export default compose(
   connect(
     state => ({
-      ...state.default
+      ...state.default,
+      publishers: state.default.listing.publishers,
+      allPublishers: state.default.listing.allPublishers
     }),
     (dispatch) => ({
       accountSettingsActions: bindActionCreators({
@@ -409,6 +440,9 @@ export default compose(
       dhtActions: bindActionCreators({
         dhtReconnect,
       }, dispatch),
+      listingActions: bindActionCreators({
+        searchPublishers
+      }, dispatch)
     })
   ),
   reduxForm({
