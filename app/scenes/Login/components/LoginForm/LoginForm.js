@@ -190,6 +190,7 @@ class LoginForm extends Component {
           disabled={auth.loading}
           color="blue"
           onClick={this.signUp}
+          className=" transparent"
         />
       </Form>
     );
