@@ -108,7 +108,7 @@ class MyListingsDefaults extends Component {
         data.bitcoin_address = listingDefaults.bitcoin_address;
       } else {
         data.bitcoin_address = MANUAL_INPUT_VALUE;
-        data.manual_bitcoin_address = listingDefaults.bitcoin_address;
+        data.manual_bitcoin_address = listingDefaults.manual_bitcoin_address;
       }
     }
     if (listingDefaults.ethereum_address) {
