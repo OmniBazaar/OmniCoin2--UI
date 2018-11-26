@@ -69,7 +69,8 @@ import {
   logout,
   requestAppVersion,
   getIdentityVerificationStatus,
-  isWelcomeBonusReceived
+  isWelcomeBonusReceived,
+  referralBonus
 } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
@@ -127,6 +128,7 @@ class Home extends Component {
     this.props.authActions.isWelcomeBonusReceived(currentUser.username);
     this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
     this.props.transferActions.loadDefaultShippingAddress(currentUser.username);
+    this.props.authActions.referralBonus();
     this.mailSubscribe(currentUser);
   }
 
@@ -403,7 +405,8 @@ export default connect(
       logout,
       requestAppVersion,
       getIdentityVerificationStatus,
-      isWelcomeBonusReceived
+      isWelcomeBonusReceived,
+      referralBonus
     }, dispatch),
     listingActions: bindActionCreators({
       loadListingDefault,
@@ -454,7 +457,8 @@ Home.propTypes = {
     getAccount: PropTypes.func,
     logout: PropTypes.func,
     requestAppVersion: PropTypes.func,
-    isWelcomeBonusReceived: PropTypes.func
+    isWelcomeBonusReceived: PropTypes.func,
+    referralBonus: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func
