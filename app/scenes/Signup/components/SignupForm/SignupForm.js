@@ -126,15 +126,15 @@ const messages = defineMessages({
     id: "SignupForm.done",
     defaultMessage: "Done"
   },
-  saveUsernamePasswordText: {
-    id: "SignupForm.saveUsernamePasswordText",
+  savePassword1: {
+    id: "SignupForm.savePassword1",
     defaultMessage:
       "IMPORTANT: This username/password combination is the ONLY key to your OmniCoin wallet. Do not give it to anyone."
   },
-  savePasswordText: {
-    id: "SignupForm.savePasswordText",
+  savePassword2: {
+    id: "SignupForm.savePassword2",
     defaultMessage:
-      "COPY and PASTE both parts to a safe place. If lost, your password CANNOT BE RECOVERED"
+      "COPY and PASTE both parts to a safe place. If lost, your password CANNOT BE RECOVERED."
   }
 });
 
@@ -586,12 +586,6 @@ class SignupForm extends Component {
             required({ message: formatMessage(messages.fieldRequired) })
           ]}
         />
-        <div className="save-username-password-text">
-          {formatMessage(messages.saveUsernamePasswordText)}
-        </div>
-        <div className="save-password-text">
-          {formatMessage(messages.savePasswordText)}
-        </div>
         <Field
           type="text"
           name="password"
@@ -600,6 +594,12 @@ class SignupForm extends Component {
             required({ message: formatMessage(messages.fieldRequired) })
           ]}
         />
+        <div className="save-password-text">
+          {formatMessage(messages.savePassword1)}
+        </div>
+        <div className="save-password-text">
+          {formatMessage(messages.savePassword2)}
+        </div>
         <Field
           type="password"
           placeholder={formatMessage(messages.confirmPassword)}
