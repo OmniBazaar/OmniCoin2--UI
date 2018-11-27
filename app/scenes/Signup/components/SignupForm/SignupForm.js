@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+<<<<<<< HEAD
 import electron from "electron";
+=======
+>>>>>>> 92fc752909fd9ea7ddaeb2798e84222bb812ec39
 import { Field, reduxForm, getFormValues, change } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -130,11 +133,12 @@ const messages = defineMessages({
   savePassword1: {
     id: "SignupForm.savePassword1",
     defaultMessage:
-      "IMPORTANT: This password is the ONLY key to your OmniCoin wallet."
+      "IMPORTANT: This username/password combination is the ONLY key to your OmniCoin wallet. Do not give it to anyone."
   },
   savePassword2: {
     id: "SignupForm.savePassword2",
-    defaultMessage: "Save and protect it. If lost, it cannot be recovered."
+    defaultMessage:
+      "COPY and PASTE both parts to a safe place. If lost, your password CANNOT BE RECOVERED."
   }
 });
 

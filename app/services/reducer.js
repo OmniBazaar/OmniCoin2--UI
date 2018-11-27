@@ -27,6 +27,7 @@ import updateNotificationReducer from './updateNotification/updateNotificationRe
 import publisherUpdateNotificationReducer from './publisherUpdateNotification/publisherUpdateNotificationReducer';
 import shippingReducer from './shipping/shippingReducer';
 import exchangeReducer from './exchange/exchangeReducer';
+import currencyReducer from './currency/currencyReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -56,5 +57,6 @@ export default combineReducers({
   updateNotification: updateNotificationReducer,
   publisherUpdateNotification: publisherUpdateNotificationReducer,
   shipping: shippingReducer,
-  exchange: exchangeReducer
+  exchange: exchangeReducer,
+  currency: currencyReducer
 });
