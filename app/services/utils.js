@@ -3,6 +3,7 @@ import {
   ob2SocketClosed,
   ob2SocketOpened
 } from './marketplace/marketplaceActions';
+import { getRates } from './currency/currencySaga';
 
 function wrapRequest(func) {
   return async (...args) => {
@@ -59,17 +60,18 @@ function reputationOptions(from = 0, to = 10) {
   return options;
 }
 
-const coefficients = {
-  USDtoEUR: 0.8772,
-  USDtoBITCOIN: 0.0002323,
-  USDtoETHEREUM: 0.008,
-  USDtoOMNICOIN: 300.03,
-  USDtoGBP: 0.75,
-  USDtoCAD: 0.76,
-  USDtoSEK: 8.89,
-  USDtoAUD: 0.75,
-  USDtoJPY: 108.5
+let coefficients = {
+  // USDtoEUR: 0.8772,
+  // USDtoBITCOIN: 0.0002323,
+  // USDtoETHEREUM: 0.008,
+  // USDtoOMNICOIN: 300.03,
+  // USDtoGBP: 0.75,
+  // USDtoCAD: 0.76,
+  // USDtoSEK: 8.89,
+  // USDtoAUD: 0.75,
+  // USDtoJPY: 108.5
 };
+
 const MINIMUN_AMOUNT = 0;
 
 const getAllowedAmount = (amount, noFixedValue) => {
@@ -80,15 +82,33 @@ const getAllowedAmount = (amount, noFixedValue) => {
   return MINIMUN_AMOUNT;
 };
 
-Object.keys(coefficients).forEach(key => {
-  const units = key.split('to');
-  coefficients[`${units[1]}to${units[0]}`] = 1 / coefficients[key];
-});
+const initCoefficients = (data) => {
+  coefficients = data;
+  Object.keys(coefficients).forEach(key => {
+    const units = key.split('to');
+    coefficients[`${units[1]}to${units[0]}`] = 1 / coefficients[key];
+  });
+}
+
+const checkCurrencyRatesChangedAndUpdateCoefficients = () => {
+  const rates = getRates();
+  const keys = Object.keys(rates);
+  for (let i = 0; i < keys.length; i++) {
+    if (rates[keys[i]] !== coefficients[keys[i]]) {
+      initCoefficients(rates);
+      return true;
+    }
+  }
+
+  return false;
+}
 
 const currencyConverter = (amount, fromCur, toCur, noFixedValue) => {
   if (fromCur === toCur) {
     return amount;
   }
+
+  checkCurrencyRatesChangedAndUpdateCoefficients();
 
   const d = `${fromCur}to${toCur}`;
   if (coefficients[d]) {

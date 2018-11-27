@@ -42,7 +42,8 @@ import {
   updateNotificationSubscriber,
   publisherUpdateNotificationSubscriber,
   shippingSubscriber,
-  exchangeSubscriber
+  exchangeSubscriber,
+  currencySubscriber
 } from './services/saga';
 
 ChainConfig.address_prefix = 'XOM';
@@ -100,6 +101,7 @@ sagaMiddleware.run(updateNotificationSubscriber);
 sagaMiddleware.run(publisherUpdateNotificationSubscriber);
 sagaMiddleware.run(shippingSubscriber);
 sagaMiddleware.run(exchangeSubscriber);
+sagaMiddleware.run(currencySubscriber);
 
 ReactDOM.render(
   (

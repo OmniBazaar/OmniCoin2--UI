@@ -35,6 +35,7 @@ import { loadLocalPreferences } from "../preferences/preferencesActions";
 import { checkUpdate } from "../updateNotification/updateNotificationActions";
 import { publisherCheckUpdate } from '../publisherUpdateNotification/publisherUpdateNotificationActions';
 import { dhtReconnect } from '../search/dht/dhtActions';
+import { getCurrencyRates } from '../currency/currencySaga';
 
 const processBitcoinTransactions = (txs) => {
   const currentUser = getStoredCurrentUser();
@@ -220,6 +221,9 @@ export function* setup() {
     yield put(checkUpdate());
     yield put(publisherCheckUpdate());
     yield put(setupSucceeded());
+
+    //always put this at last
+    yield getCurrencyRates();
   } catch (error) {
     yield put(setupFailed(error));
     console.log('ERROR ', error);
