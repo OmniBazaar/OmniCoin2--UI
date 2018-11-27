@@ -269,7 +269,7 @@ class AirDropForm extends Component {
     const { formatMessage } = this.props.intl;
     return (
       <React.Fragment>
-        <div className="channel-link">
+        <div className="channel-link joinTelegramBotSuggestion">
           <p>
             {formatMessage(messages.joinTelegramBotSuggestion)}&nbsp;
             <a
