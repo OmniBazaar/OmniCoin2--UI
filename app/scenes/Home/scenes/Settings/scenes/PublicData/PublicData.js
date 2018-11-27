@@ -255,16 +255,16 @@ class PublicData extends Component {
     this.props.accountSettingsActions.setPublisher();
   }
 
-  toggleTransactionProcessor() {
+  toggleTransactionProcessor(event) {
     const { is_a_processor } = this.props.auth.account;
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
+   } else if (!is_a_processor && !transactionProcessor && event) {
+     this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
-  }
-
 
   toggleEscrow() {
     this.props.accountSettingsActions.setEscrow();
