@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import electron from "electron";
 import { Field, reduxForm, getFormValues, change } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -138,24 +137,6 @@ const messages = defineMessages({
       "COPY and PASTE both parts to a safe place. If lost, your password CANNOT BE RECOVERED."
   }
 });
-
-const remote = electron.remote;
-const Menu = remote.Menu;
-
-const InputMenu = Menu.buildFromTemplate([
-  {
-    label: "Cut",
-    role: "cut"
-  },
-  {
-    label: "Copy",
-    role: "copy"
-  },
-  {
-    label: "Paste",
-    role: "paste"
-  }
-]);
 
 class SignupForm extends Component {
   static validate = values => {
@@ -394,21 +375,6 @@ class SignupForm extends Component {
     const { props } = this;
     const { formatMessage } = this.props.intl;
     const categoryTitle = formatMessage(messages.termsAndCond);
-
-    document.body.addEventListener("contextmenu", e => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      let node = e.target;
-
-      while (node) {
-        if (node.nodeName.match(/^(input)$/i) || node.isContentEditable) {
-          InputMenu.popup(remote.getCurrentWindow());
-          break;
-        }
-        node = node.parentNode;
-      }
-    });
 
     if (props.auth.showTermsModal) {
       return (
