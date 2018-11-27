@@ -330,7 +330,7 @@ app.on('ready', async () => {
   ipcMain.on('exit', () => app.quit());
   ipcMain.on('open-pdf', (event, pdf) => {
     const win = new BrowserWindow({
-      width: 800,
+      width: 890,
       height: 600,
       webPreferences: {
         plugins: true
