@@ -164,7 +164,7 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
     if (err) {
       console.log('ERROR ', err);
     } else {
-      const wStart = data.indexOf('#witness-id') !== -1 ? data.indexOf('#witness-id') : data.indexOf('witness-id');
+      const wStart = data.indexOf('# witness-id') !== -1 ? data.indexOf('# witness-id') : data.indexOf('witness-id');
       const wEnd = data.indexOf('\n', wStart);
       data = data.replace(data.substring(wStart, wEnd), `witness-id = "${witnessId}"`);
       const pStart = data.indexOf('#private-key') !== -1 ? data.indexOf('#private-key') : data.indexOf('private-key');
@@ -248,7 +248,7 @@ const processReferrer = async () => {
         let referrer = data.substring(start, end);
         const regex = /([a-zA-Z0-9\-\.])+/i;
         const found = referrer.match(regex);
-        referrer = found.length ? found[0] : '';
+        referrer = found && found.length ? found[0] : '';
 
         event.sender.send('receive-referrer', { referrer });
       }

@@ -33,7 +33,8 @@ const defaultState = {
   name: '',
   units: '',
   bitcoin_address: '',
-  ethereum_address: ''
+  ethereum_address: '',
+  manual_bitcoin_address: ''
 };
 
 const fixImagesData = (data) => {

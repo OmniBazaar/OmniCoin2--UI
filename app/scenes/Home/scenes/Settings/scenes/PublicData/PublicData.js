@@ -255,18 +255,17 @@ class PublicData extends Component {
     this.props.accountSettingsActions.setPublisher();
   }
 
-  toggleTransactionProcessor() {
+  toggleTransactionProcessor(event) {
     const { is_a_processor } = this.props.auth.account;
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
-    } else if (!is_a_processor && !transactionProcessor) {
-      this.toggleConfirmationModal();
+   } else if (!is_a_processor && !transactionProcessor && event) {
+     this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
   }
-
 
   toggleEscrow() {
     this.props.accountSettingsActions.setEscrow();
@@ -428,7 +427,7 @@ class PublicData extends Component {
             className="button--green-bg"
           />
           <div className="labels">
-            <span>{formatMessage(messages.updateTransactionFee)}</span>
+            <span>{formatMessage(messages.updateTransactionFee)}</span>	&nbsp;
             <span className="amount">{this.state.accountUpdateFee} XOM</span>
           </div>
         </div>

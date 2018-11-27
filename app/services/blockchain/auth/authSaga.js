@@ -20,6 +20,7 @@ import {
   referralBonusSucceeded,
   referralBonusFailed,
   requestReferrerFinish,
+  referralBonus as referralBonusAction,
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
@@ -165,7 +166,8 @@ function* signup(action) {
     if (result.status === 201) {
       yield put(getAccountAction(username));
       
-      const { isWelcomeBonusAvailable } = yield call(AuthApi.isWelcomeBonusAvailable, { harddriveId, macAddress });
+      const currentUser = {username, password};
+      const { isWelcomeBonusAvailable } = yield call(AuthApi.isWelcomeBonusAvailable, currentUser, { harddriveId, macAddress });
       yield put({
         type: 'SIGNUP_SUCCEEDED',
         user: {
@@ -240,8 +242,9 @@ function* isWelcomeBonusReceived({ payload: { username } }) {
       harddriveId,
       macAddress
     };
-    const response = yield call(AuthApi.isWelcomeBonusAvailable, data);
-    const resp = yield call(AuthApi.isWelcomeBonusReceived, username);
+    const { currentUser } = (yield select()).default.auth;
+    const response = yield call(AuthApi.isWelcomeBonusAvailable, currentUser, data);
+    const resp = yield call(AuthApi.isWelcomeBonusReceived, currentUser, username);
     yield put({
       type: "IS_WELCOME_BONUS_RECEIVED_SUCCEEDED",
       payload: {
@@ -257,7 +260,8 @@ function* isWelcomeBonusReceived({ payload: { username } }) {
 
 function* getIdentityVerificationStatus({ payload: { data: username } }) {
   try {
-    const response = yield call(AuthApi.getIdentityVerificationStatus, username);
+    const { currentUser } = (yield select()).default.auth;
+    const response = yield call(AuthApi.getIdentityVerificationStatus, currentUser, username);
     yield put({ type: 'GET_IDENTITY_VERIFICATION_STATUS_SUCCEEDED', response });
   } catch (error) {
     console.log(error);
@@ -267,39 +271,44 @@ function* getIdentityVerificationStatus({ payload: { data: username } }) {
 function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
   try {
     // Check if the user is connected to all 3 OmnibaZaar social media channels
-    yield call(AuthApi.checkBonus, values);
+    const { currentUser } = (yield select()).default.auth;
+    // yield call(AuthApi.checkBonus, currentUser, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
-    const { currentUser } = (yield select()).default.auth;
-    const { telegramPhoneNumber, email, twitterUsername } = values;
+    const { telegramUserId, email, twitterUsername } = values;
     const data = {
       harddriveId,
       macAddress,
       email,
-      telegramPhoneNumber,
+      telegramUserId,
       twitterUsername,
       userName: currentUser.username
     };
-    yield call(AuthApi.receiveWelcomeBonus, data);
+    yield call(AuthApi.receiveWelcomeBonus, currentUser,  data);
+    yield referralBonus();
     yield put(welcomeBonusSucceeded());
   } catch (error) {
-    yield call(reject, new SubmissionError(error.messages));
-    yield put(welcomeBonusFailed(error.message));
+    if(error.message === 'Failed to fetch'){
+      yield put(welcomeBonusFailed("The server is down. Try again later"));
+    } else {
+      yield call(reject, new SubmissionError(error.messages));
+      yield put(welcomeBonusFailed(error.message));
+    }
   }
 }
 
 function* referralBonus() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const account = yield FetchChain('getAccount', currentUser.username);
+    const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
     const isBonusAvailable = yield Apis.instance().db_api().exec('is_referral_bonus_available', []);
     if (isBonusAvailable
-        && account.get('received_welcome_bonus')
-        && !account.get('sent_referral_bonus')) {
+        && account['received_welcome_bonus']
+        && !account['sent_referral_bonus']) {
       const tr = new TransactionBuilder();
       tr.add_type_operation('referral_bonus_operation', {
-        referred_account: account.get('id'),
-        referrer_account: account.get('referrer')
+        referred_account: account['id'],
+        referrer_account: account['referrer']
       });
       const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
       yield tr.set_required_fees();
