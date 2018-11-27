@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-
 import SignupForm from './components/SignupForm/SignupForm';
 import Background from '../../components/Background/Background';
 import './signup.scss';
