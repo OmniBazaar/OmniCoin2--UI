@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
 import electron from "electron";
-=======
->>>>>>> 92fc752909fd9ea7ddaeb2798e84222bb812ec39
 import { Field, reduxForm, getFormValues, change } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";

@@ -265,6 +265,7 @@ class PublicData extends Component {
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
+  }
 
   toggleEscrow() {
     this.props.accountSettingsActions.setEscrow();
