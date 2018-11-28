@@ -96,7 +96,7 @@ const messages = defineMessages({
   },
   publisherExists: {
     id: 'PublicData.publisherExists',
-    defaultMessage: 'There is an existing publisher for this PC'
+    defaultMessage: 'There is an existing publisher for this IP'
   },
   invalidIp: {
     id: 'PublicData.invalidIp',
