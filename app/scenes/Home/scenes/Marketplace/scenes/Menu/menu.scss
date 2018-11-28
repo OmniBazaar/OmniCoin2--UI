@@ -64,6 +64,10 @@
       padding: 6px 0 !important;
       border-bottom: 1px solid $border-gray;
 
+      &.clickable:hover {
+        background-color: $lighter-gray;
+      }
+
       .gray-text {
         color: $primary-gray;
       }
