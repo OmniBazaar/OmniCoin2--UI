@@ -87,14 +87,16 @@ const searchByFilters = (listings, category, subCategory) => {
 };
 
 const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
-  if (selectedCurrency === item.currency) {
+  const convertCurrency = !selectedCurrency || selectedCurrency === 'All' || selectedCurrency === 'all' ? 'USD' : selectedCurrency;
+
+  if (convertCurrency === item.currency) {
     return {
       ...item,
       convertedPrice: item.price,
     };
   }
 
-  const price = currencyConverter(item.price, item.currency, selectedCurrency);
+  const price = +currencyConverter(item.price, item.currency, convertCurrency);
 
   return {
     ...item,
@@ -105,18 +107,18 @@ const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
 const filterResultData = (searchResults, {
   searchText, currency, category, subCategory
 }) => {
-  let data = searchResults;
+  let data = changeCurrencies(currency, searchResults);
 
   const activePageSearchResults = 1;
   let totalPagesSearchResults;
-  if (currency !== 'all' && currency !== undefined) {
-    data = changeCurrencies(currency, data);
-  }
   let currentData = [];
   let resultByFilters = [];
 
   if (searchText) {
-    let filteredData = data.filter(listing => Object.values(listing).filter(value => value.toString().toLowerCase().indexOf(searchText.toLowerCase()) !== -1).length !== 0);
+    let filteredData = data.filter(listing => Object.values(listing)
+      .filter(value => value.toString()
+        .toLowerCase()
+        .indexOf(searchText.toLowerCase()) !== -1).length !== 0);
     filteredData = _.without(filteredData, undefined);
     resultByFilters = searchByFilters(filteredData, category, subCategory);
     /*
@@ -147,7 +149,10 @@ const reducer = handleActions({
     }
   }) {
     const filterData = filterResultData(state.searchResults, {
-      searchText, currency, category, subCategory
+      searchText,
+      currency,
+      category,
+      subCategory
     });
 
     return {
@@ -257,7 +262,8 @@ const reducer = handleActions({
       ...state,
       savedSearches: _.orderBy(state.savedSearches, [by], [direction === 'ascending' ? 'asc' : 'desc']),
       savedSortOptions: {
-        by, direction
+        by,
+        direction
       }
     };
   },
@@ -266,7 +272,8 @@ const reducer = handleActions({
       ...state,
       recentSearches: _.orderBy(state.recentSearches, [by], [direction === 'ascending' ? 'asc' : 'desc']),
       recentSortOptions: {
-        by, direction
+        by,
+        direction
       }
     };
   },
@@ -349,7 +356,7 @@ const reducer = handleActions({
         searching: false
       };
     }
-    
+
     return state;
   },
   [marketplaceReturnListings](state, { data }) {
