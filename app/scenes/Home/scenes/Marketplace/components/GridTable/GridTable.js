@@ -48,8 +48,18 @@ const iconSizeSmall = 12;
 
 class GridTable extends Component {
   state = {
-    confirmDeleteOpen: false
+    confirmDeleteOpen: false,
+    textsMaxSizes: {
+      descriptionMaxSize: 50,
+      titleMaxSize: 50,
+      categoryMaxSize: 25
+    }
   };
+
+  componentWillMount() {
+    window.addEventListener('resize', this.setTextsSizes.bind(this));
+    this.setTextsSizes();
+  }
 
   componentDidMount() {
     this.props.gridTableActions.sortGridTableBy(
@@ -95,6 +105,46 @@ class GridTable extends Component {
         );
       }
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setTextsSizes);
+  }
+
+  setTextsSizes() {
+    let { textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } } = this.state;
+
+    if (window.innerWidth < 768) {
+      descriptionMaxSize = 60;
+      titleMaxSize = 50;
+      categoryMaxSize = 30;
+    } else if (window.innerWidth < 871) {
+      descriptionMaxSize = 13;
+      titleMaxSize = 10;
+      categoryMaxSize = 7;
+    } else if (window.innerWidth < 1200) {
+      descriptionMaxSize = 20;
+      titleMaxSize = 18;
+      categoryMaxSize = 9;
+    } else if (window.innerWidth < 1351) {
+      descriptionMaxSize = 25;
+      titleMaxSize = 22;
+      categoryMaxSize = 13;
+    }  else if (window.innerWidth < 1550) {
+      descriptionMaxSize = 25;
+      titleMaxSize = 25;
+      categoryMaxSize = 15;
+    } else if (window.innerWidth < 1700) {
+      descriptionMaxSize = 50;
+      titleMaxSize = 40;
+      categoryMaxSize = 25;
+    } else {
+      descriptionMaxSize = 60;
+      titleMaxSize = 50;
+      categoryMaxSize = 30;
+    }
+
+    this.setState({ textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } });
   }
 
   handlePaginationChange = (e, { activePage }) => {
@@ -185,6 +235,7 @@ class GridTable extends Component {
       currency,
       loading
     } = this.props;
+    const { textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } } = this.state;
     const data = gridTableDataFiltered.filter(item => item && item.listing_id);
     const rows = _.chunk(data, 6);
     const { formatMessage } = this.props.intl;
@@ -209,8 +260,9 @@ class GridTable extends Component {
                           image = ObNet
                         }
                         const style = image ? { backgroundImage: `url(${image})` } : {};
-                        let { description } = item;
-                        description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
+                        let { description, listing_title: listingTitle } = item;
+                        description = description.length > descriptionMaxSize ? `${description.substring(0, descriptionMaxSize)}...` : description;
+                        listingTitle = listingTitle.length > titleMaxSize ? `${listingTitle.substring(0, titleMaxSize)}...` : listingTitle;
 
                         let categoryTitle = '';
                         if (item.category && item.category.toLowerCase() !== 'all') {
@@ -218,7 +270,16 @@ class GridTable extends Component {
                             formatMessage(mainCategories[item.category]) : item.category;
                         }
                         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
-                        const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+                        let subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+
+                        if (categoryTitle.length + subCategoryTitle.length > categoryMaxSize) {
+                          if (categoryTitle.length > categoryMaxSize) {
+                            categoryTitle = `${categoryTitle.substring(0, categoryMaxSize - 2)}...`;
+                            subCategoryTitle = `${subCategoryTitle.substring(0, 2)}...`;
+                          } else {
+                            subCategoryTitle = `${subCategoryTitle.substring(0, categoryMaxSize - categoryTitle.length)}...`;
+                          }
+                        }
 
                         return (
                           <TableCell className="item" key={hash(item)}>
@@ -226,8 +287,8 @@ class GridTable extends Component {
                               <div className="img-wrapper" style={style} />
                             </Link>
 
-                            <Link to={`listing/${item.listing_id}`}>
-                              <span className="title">{item.listing_title}</span>
+                            <Link to={`listing/${item.listing_id}`} className="title">
+                              <span>{listingTitle}</span>
                             </Link>
 
                             <span className="subtitle">
