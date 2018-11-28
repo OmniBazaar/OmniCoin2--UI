@@ -77,7 +77,9 @@ PriceItem.defaultProps = {
 };
 
 export default connect(
-  state => ({ ...state.default }),
+  state => ({
+    listing: state.default.listing
+  }),
   (dispatch) => ({
     listingActions: bindActionCreators({
       setActiveCurrency

@@ -142,11 +142,11 @@ function* searchListings({
 
     if (!dhtResult) {
       if (!fromSearchMenu) {
-        console.log('Do special keyword search');
+        console.log('Do special search: forSale-all');
         yield searchListings({
           payload: {
-            searchTerm: 'test', 
-            category: 'All',
+            searchTerm: '', 
+            category: 'forSale',
             subCategory: '',
             country: '',
             state: '',

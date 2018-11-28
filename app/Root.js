@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
 import { Loader } from 'semantic-ui-react';
 import { createBrowserHistory } from 'history';
+import inputMenu from 'electron-input-menu';
+import context from 'electron-contextmenu-middleware';
 
 import Signup from './scenes/Signup/Signup';
 import Login from './scenes/Login/Login';
@@ -17,6 +19,10 @@ import { setup } from "./services/accountSettings/accountActions";
 import localeData from './../app/dist/i18n/data.json';
 import Background from "./components/Background/Background";
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+
+context.use(inputMenu);
+
+context.activate();
 
 const history = createBrowserHistory({
   basename: window.location.pathname

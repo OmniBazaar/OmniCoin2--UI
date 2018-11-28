@@ -22,6 +22,7 @@ import { updateNotificationSubscriber } from './updateNotification/updateNotific
 import { publisherUpdateNotificationSubscriber } from './publisherUpdateNotification/publisherUpdateNotificationSaga';
 import { shippingSubscriber } from './shipping/shippingSaga';
 import { exchangeSubscriber } from "./exchange/exchangeSaga";
+import { currencySubscriber } from './currency/currencySaga';
 
 export {
   connectionSubscriber,
@@ -47,5 +48,6 @@ export {
   updateNotificationSubscriber,
   publisherUpdateNotificationSubscriber,
   shippingSubscriber,
-  exchangeSubscriber
+  exchangeSubscriber,
+  currencySubscriber
 };
