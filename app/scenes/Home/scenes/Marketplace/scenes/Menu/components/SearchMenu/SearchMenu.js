@@ -121,11 +121,9 @@ class SearchMenu extends Component {
           </Grid.Row>
         :
         savedSearches.slice(0, maxSearches).map((search) => (
-          <Grid.Row key={hash(search)}>
+          <Grid.Row key={hash(search)} onClick={() => this.handleSubmit({ search })} className="clickable">
             <Grid.Column width={4}>
-              <a onClick={() => this.handleSubmit({ search })}>
-                {search.searchTerm}
-              </a>
+              <span className="gray-text"> {search.searchTerm}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <span className="gray-text">{startCase(search.category)}</span>
