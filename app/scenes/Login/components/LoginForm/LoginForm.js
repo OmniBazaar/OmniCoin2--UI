@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import electron from "electron";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -59,24 +58,6 @@ const messages = defineMessages({
   }
 });
 
-const remote = electron.remote;
-const Menu = remote.Menu;
-
-const InputMenu = Menu.buildFromTemplate([
-  {
-    label: "Cut",
-    role: "cut"
-  },
-  {
-    label: "Copy",
-    role: "copy"
-  },
-  {
-    label: "Paste",
-    role: "paste"
-  }
-]);
-
 class LoginForm extends Component {
   static asyncValidate = async values => {
     const isonline = await isOnline();
@@ -110,23 +91,6 @@ class LoginForm extends Component {
     }
 
     this.props.initialize({ username: this.props.auth.lastLoginUserName });
-  }
-
-  componentDidMount() {
-    document.body.addEventListener("contextmenu", e => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      let node = e.target;
-
-      while (node) {
-        if (node.nodeName.match(/^(input)$/i) || node.isContentEditable) {
-          InputMenu.popup(remote.getCurrentWindow());
-          break;
-        }
-        node = node.parentNode;
-      }
-    });
   }
 
   componentWillReceiveProps(nextProps) {
