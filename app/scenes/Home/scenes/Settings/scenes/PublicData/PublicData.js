@@ -90,6 +90,10 @@ const messages = defineMessages({
     id: 'PublicData.successUpdate',
     defaultMessage: 'Updated successfully'
   },
+  notEnoughBalance: {
+    id: 'PublicData.notEnoughBalance',
+    defaultMessage: 'Failed to update account because of not enough balance'
+  },
   failedUpdate: {
     id: 'PublicData.failedUpdate',
     defaultMessage: 'Failed to update account'
@@ -200,6 +204,9 @@ class PublicData extends Component {
         if (nextProps.account.error.message.indexOf('is already registered') !== -1) {
           toastr.error(formatMessage(messages.error), formatMessage(messages.publisherExists));
           return;
+        } else if (nextProps.account.error.message.indexOf('is less than required') !== -1) {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.notEnoughBalance));
+          return;
         }
         toastr.error(formatMessage(messages.error), formatMessage(messages.failedUpdate));
       } else {
@@ -260,8 +267,8 @@ class PublicData extends Component {
     const { transactionProcessor } = this.props.account;
     if (is_a_processor && !transactionProcessor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
-   } else if (!is_a_processor && !transactionProcessor && event) {
-     this.toggleConfirmationModal();
+    } else if (!is_a_processor && !transactionProcessor && event) {
+      this.toggleConfirmationModal();
     } else if (transactionProcessor && !is_a_processor) {
       this.props.accountSettingsActions.setTransactionProcessor(this.state.wantsToVote);
     }
@@ -383,13 +390,13 @@ class PublicData extends Component {
           </div>
         </div>
         {account.publisher &&
-          <div className="ip">
-            <span>IP: </span>
-            <IpInput
-              value={this.props.account.ipAddress}
-              onChange={this.onChangeIpAddress.bind(this)}
-            />
-          </div>
+        <div className="ip">
+          <span>IP: </span>
+          <IpInput
+            value={this.props.account.ipAddress}
+            onChange={this.onChangeIpAddress.bind(this)}
+          />
+        </div>
         }
         <div className="description">
           <div className="check-container">
