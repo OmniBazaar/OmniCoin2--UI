@@ -154,6 +154,20 @@ const runNode = async () => {
   });
 };
 
+const updateConfigData = (name, value, config) => {
+  const values = config.match(new RegExp(`${name}[ ="]*(.*$)`, 'gm')).map(el => el.replace(new RegExp(`${name} [ =]*`, 'gm'), ''));
+  const exist = values.indexOf(value) !== -1;
+  let newData = config;
+  if (!exist) {
+    const lineStart = config.search(new RegExp(`^[ #]*${name}[ =]*(.*$)`, 'gm'));
+    newData = `${config.substr(0, lineStart)}${name} = ${value}\n${config.substr(lineStart)}`;
+  } else {
+    const escapeVal = value.replace(/([\[\]])/gm, "\\$1");
+    newData = config.replace(new RegExp(`^[ #]*${name}[ =]*${escapeVal}.*$`, 'gm'), `${name} = ${value}`);
+  }
+  return newData;
+}
+
 
 const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   let path = getNodeDirDevPath();
@@ -164,14 +178,10 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
     if (err) {
       console.log('ERROR ', err);
     } else {
-      const wStart = data.indexOf('# witness-id') !== -1 ? data.indexOf('# witness-id') : data.indexOf('witness-id');
-      const wEnd = data.indexOf('\n', wStart);
-      data = data.replace(data.substring(wStart, wEnd), `witness-id = "${witnessId}"`);
-      const pStart = data.indexOf('#private-key') !== -1 ? data.indexOf('#private-key') : data.indexOf('private-key');
-      const pEnd = data.indexOf('\n', pStart);
-      data = data.replace(data.substring(pStart, pEnd), `private-key = ["${pubKey}", "${privKey}"]`);
-      fs.writeFile(`${path}/witness_node_data_dir/config.ini`, data, (err) => {
-        console.log('ERROR ', err);
+      const witnessIdUpdatedData = updateConfigData('witness-id', `"${witnessId}"`, data);
+      const privateKeyUpdatedData = updateConfigData('private-key', `["${pubKey}", "${privKey}"]`, witnessIdUpdatedData);
+      fs.writeFile(`${path}/witness_node_data_dir/config.ini`, privateKeyUpdatedData, (error) => {
+        console.log('ERROR ', error);
       });
       runNode();
     }
