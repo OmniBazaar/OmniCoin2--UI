@@ -18,7 +18,8 @@ import {
   exchangeBtcSucceeded,
   exchangeEthFailed,
   exchangeEthSucceeded,
-  exchangeRequestRatesFinished
+  exchangeRequestRatesFinished,
+  exchangeRequestSaleFinished
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
 import { exchangeXOM } from "../utils";
@@ -51,7 +52,8 @@ export function* exchangeSubscriber() {
   yield all([
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
-    takeEvery('EXCHANGE_REQUEST_RATES', requestRates)
+    takeEvery('EXCHANGE_REQUEST_RATES', requestRates),
+    takeEvery('EXCHANGE_REQUEST_SALE', requestSale)
   ]);
 }
 
@@ -122,5 +124,21 @@ function* requestRates() {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeRequestRatesFinished(error));
+  }
+}
+
+function* requestSale() {
+  try {
+    const response = yield request({
+      uri: `${config.exchangeServer}/sale`,
+      json: true
+    });
+    if (!response || !response.phases) {
+      throw new Error('Request exchange sale fail');
+    }
+    yield put(exchangeRequestSaleFinished(null, response));
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(exchangeRequestSaleFinished(error));
   }
 }
