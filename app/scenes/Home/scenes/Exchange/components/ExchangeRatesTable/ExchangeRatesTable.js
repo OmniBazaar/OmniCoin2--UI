@@ -6,7 +6,11 @@ import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { exchangeXOM } from '../../../../../../services/utils';
 import { exchangeRequestRates } from '../../../../../../services/exchange/exchangeActions';
+import Rate from './Rate';
 import messages from '../../messages';
+import btcIcon from '../../../Wallet/images/th-bitcoin.svg';
+import ethIcon from '../../../Wallet/images/eth-small.svg';
+import xomIcon from '../../../Wallet/images/omnic.svg';
 
 class ExchangeRatesTable extends Component {
 	componentDidMount() {
@@ -27,40 +31,12 @@ class ExchangeRatesTable extends Component {
 		const { requestingRates, rates } = this.props.exchange;
 
 		return (
-			<Table celled striped>
-		    <Table.Header>
-		      <Table.Row>
-		        <Table.HeaderCell colSpan='2'>{formatMessage(messages.exchangeRate)}</Table.HeaderCell>
-		      </Table.Row>
-		    </Table.Header>
-
-		    <Table.Body>
-		      <Table.Row>
-		        <Table.Cell>
-		          1 BTC
-		        </Table.Cell>
-		        <Table.Cell>
-		        	{
-		        		requestingRates ?
-		        		<Loader size='tiny' active inline='centered' /> :
-		        		<span>{rates ? exchangeXOM(1, rates.btcToXom) : 0} XOM</span>
-		        	}
-		        </Table.Cell>
-		      </Table.Row>
-		      <Table.Row>
-		        <Table.Cell>
-		          1 ETH
-		        </Table.Cell>
-		        <Table.Cell>
-		        	{
-		        		requestingRates ?
-		        		<Loader size='tiny' active inline='centered' /> :
-		        		<span>{rates ? exchangeXOM(1, rates.ethToXom) : 0} XOM</span>
-		        	}
-		        </Table.Cell>
-		      </Table.Row>
-		    </Table.Body>
-		  </Table>
+			<div className='exchange-rates'>
+				<div className='title'>{formatMessage(messages.exchangeRate)}</div>
+				<Rate icon={xomIcon} fromName='XOM' toName='USD' rate={rates ? rates.xomToUsd : 0} />
+				<Rate icon={btcIcon} fromName='BTC' toName='XOM' rate={rates ? exchangeXOM(1, rates.btcToXom) : 0} />
+				<Rate icon={ethIcon} fromName='ETH' toName='XOM' rate={rates ? exchangeXOM(1, rates.ethToXom) : 0} />
+			</div>
 		);
 	}
 }
