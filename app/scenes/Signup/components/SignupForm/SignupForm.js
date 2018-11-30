@@ -608,8 +608,8 @@ class SignupForm extends Component {
         <div className="save-password-text">
           {formatMessage(messages.savePassword2)}
         </div>
-        <div className="password-input-container">
-          <div>
+        <div className="confirm-password-input-row-container">
+          <div className="password-input-field-container">
             <Field
               type={`${showPassword ? 'text' : 'password'}`}
               placeholder={formatMessage(messages.confirmPassword)}

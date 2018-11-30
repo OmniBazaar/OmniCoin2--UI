@@ -13,18 +13,23 @@
   select {
     margin-bottom: 15px;
   }
-  .password-input-container {
+  .confirm-password-input-row-container {
     display: flex;
     background-color: white;
     align-items: center;
     padding-right: 10px;
     justify-content: space-between;
     border: 1px solid rgba(34, 36, 38, 0.15);
-    margin-bottom: 15px;
-    div {
+    margin: 20px 0 15px 0;
+    position: relative;
+    .password-input-field-container {
       flex: 1;
       display: flex;
       flex-direction: column;
+      div {
+        position: absolute;
+        top: -20px;
+      }
       input {
         border: none;
         margin-bottom: 0;
