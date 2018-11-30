@@ -107,7 +107,7 @@ const messages = defineMessages({
   },
   exchangeRate: {
     id: 'Exchange.exchangeRate',
-    defaultMessage: 'Exchange rate'
+    defaultMessage: 'Exchange Rate'
   },
   accountNotVerified: {
     id: 'Exchange.accountNotVerified',
@@ -124,6 +124,34 @@ const messages = defineMessages({
   ethTransactionNotValid: {
     id: 'Exchange.ethTransactionNotValid',
     defaultMessage: 'Unfortunately the Ethereum transaction was not created successfully and coin will be returned back to your wallet, please try again'
+  },
+  buyOmnicoins: {
+    id: 'Exchange.buyOmnicoins',
+    defaultMessage: 'Buy OmniCoins'
+  },
+  defaultSalePhaseTitle: {
+    id: 'Exchange.defaultSalePhaseTitle',
+    defaultMessage: 'Sale starts in'
+  },
+  salePhaseInProgress: {
+    id: 'Exchange.salePhaseInProgress',
+    defaultMessage: '{name} in Progress'
+  },
+  salePhaseStartIn: {
+    id: 'Exchange.salePhaseStartIn',
+    defaultMessage: '{name} starts in'
+  },
+  stageProgress: {
+    id: 'Exchange.stageProgress',
+    defaultMessage: 'Stage Progress'
+  },
+  omnicoinsSold: {
+    id: 'Exchange.omnicoinsSold',
+    defaultMessage: 'OmniCoins Sold'
+  },
+  omnicoinsAvailable: {
+    id: 'Exchange.omnicoinsAvailable',
+    defaultMessage: 'OmniCoins Available'
   }
 });
 

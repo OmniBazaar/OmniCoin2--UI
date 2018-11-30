@@ -8,6 +8,7 @@ import {
   TextArea,
   Loader
 } from 'semantic-ui-react';
+import { FetchChain } from 'omnibazaarjs/es';
 import { required, numericality, length, addValidator } from 'redux-form-validators';
 import {
   Field,
@@ -228,6 +229,14 @@ class Transfer extends Component {
       submitSucceeded: false
     };
   }
+
+  static asyncValidate = async (values) => {
+    try {
+      await FetchChain('getAccount', values.toName);
+    } catch (e) {
+      throw { toName: messages.accountDoNotExist };
+    }
+  };
 
   componentDidMount() {
     const purchaseParams = new URLSearchParams(this.props.location.search);
@@ -1291,7 +1300,7 @@ export default compose(
     fields: ['toName', 'fromName', 'useEscrow'],
     asyncBlurFields: ['toName'],
     destroyOnUnmount: true,
-    validate
-    //  asyncValidate: Transfer.asyncValidate,
+    validate,
+    asyncValidate: Transfer.asyncValidate,
   })
 )(injectIntl(Transfer));

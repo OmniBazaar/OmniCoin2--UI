@@ -8,7 +8,11 @@ import {
   exchangeEthFailed,
   exchangeEthSucceeded,
   exchangeRequestRates,
-  exchangeRequestRatesFinished
+  exchangeRequestRatesFinished,
+  exchangeRequestSale,
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase,
+  exchangeMakeSaleSuccess
 } from "./exchangeActions";
 
 const defaultState = {
@@ -17,7 +21,11 @@ const defaultState = {
   txid: null,
   requestingRates: false,
   rates: null,
-  requestRatesError: null
+  requestRatesError: null,
+  sale: {},
+  requestingSale: false,
+  requestSaleError: null,
+  inProgressPhase: null
 };
 
 const reducer = handleActions({
@@ -78,6 +86,38 @@ const reducer = handleActions({
       requestingRates: false,
       requestRatesError: error,
       rates
+    };
+  },
+  [exchangeRequestSale](state) {
+    return {
+      ...state,
+      sale: {},
+      requestingSale: true,
+      requestSaleError: null,
+      inProgressPhase: null
+    };
+  },
+  [exchangeRequestSaleFinished](state, { payload: { error, sale } }) {
+    return {
+      ...state,
+      requestingSale: false,
+      requestSaleError: error,
+      sale: sale && !error ? sale : {}
+    };
+  },
+  [exchangeSetInProgressPhase](state, { payload: { phase } }) {
+    return {
+      ...state,
+      inProgressPhase: phase
+    };
+  },
+  [exchangeMakeSaleSuccess](state, { payload: { progress } }) {
+    return {
+      ...state,
+      sale: {
+        ...state.sale,
+        progress
+      }
     };
   }
 }, defaultState);
