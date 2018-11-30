@@ -29,19 +29,21 @@ export function* preferencesSubscriber() {
   ]);
 }
 
-function* savePreferences({ payload: { preferences } }) {
+function* savePreferences({ payload: { preferences, updateNode } }) {
   try {
     const currentReferences = yield call(getPreferences);
 
     yield call(storePreferences, preferences);
     if (!currentReferences.autorun && preferences.autorun) {
       ipcRenderer.send('launch-node-daemon');
-    } 
+    }
     if (currentReferences.autorun && !preferences.autorun) {
       ipcRenderer.send('stop-node-daemon');
     }
     yield put(savePreferencesSuccess(preferences));
-    yield put(restartNode()); // bcs the app is still running
+    if (updateNode) {
+      yield put(restartNode()); // bcs the app is still running
+    }
   } catch(err) {
     console.log("ERROR", err)
     yield put(savePreferencesError(err));

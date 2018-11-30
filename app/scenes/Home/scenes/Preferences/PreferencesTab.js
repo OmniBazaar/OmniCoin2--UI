@@ -126,6 +126,8 @@ class PreferencesTab extends Component {
   onSubmit(values) {
     const publisher = this.props.auth.account.is_a_publisher;
     const escrow = this.props.auth.account.is_an_escrow;
+    const { preferences: { preferences } } = this.props;
+    let isRestartNode = false;
 
     if (!publisher) {
       values.publisherFee = '';
@@ -135,7 +137,11 @@ class PreferencesTab extends Component {
       values.escrowFee = '';
     }
 
-    this.props.preferencesActions.savePreferences(values);
+    if (!!preferences.autorun !== !!values.autorun) {
+      isRestartNode = true;
+    }
+
+    this.props.preferencesActions.savePreferences(values, isRestartNode);
   }
 
   render() {
