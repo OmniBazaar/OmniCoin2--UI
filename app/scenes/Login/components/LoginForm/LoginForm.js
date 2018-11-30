@@ -75,11 +75,13 @@ class LoginForm extends Component {
 
   constructor(props) {
     super(props);
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
     this.submit = this.submit.bind(this);
     this.signUp = this.signUp.bind(this);
   }
 
   state = {
+    showPassword: false,
     showUsernameInput: false
   };
 
@@ -118,10 +120,16 @@ class LoginForm extends Component {
     this.props.authActions.login(username, password);
   }
 
+  togglePasswordVisibility() {
+    const { showPassword } = this.state;
+    this.setState({ showPassword: !showPassword });
+  }
+
   renderPasswordField = ({
     input,
     disabled,
     loading,
+    showPassword,
     meta: { touched, error, warning }
   }) => {
     const { formatMessage } = this.props.intl;
@@ -133,11 +141,17 @@ class LoginForm extends Component {
       <div>
         {touched && (error && <span className="error">{errorMessage}</span>)}
         <div className="password">
-          <input
-            {...input}
-            type="password"
-            placeholder={formatMessage(messages.enterPassword)}
-          />
+          <div className="password-input-container">
+            <input
+              {...input}
+              type={`${showPassword ? 'text' : 'password'}`}
+              placeholder={formatMessage(messages.enterPassword)}
+            />
+            <i
+              onClick={this.togglePasswordVisibility}
+              className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+            />
+          </div>
           <Button
             content={formatMessage(messages.unlock)}
             disabled={
@@ -157,7 +171,7 @@ class LoginForm extends Component {
   render() {
     const { handleSubmit, valid, auth, asyncValidating } = this.props;
     const { formatMessage } = this.props.intl;
-    const { showUsernameInput } = this.state;
+    const { showUsernameInput, showPassword } = this.state;
 
     return (
       <Form onSubmit={handleSubmit(this.submit)} className="login">
@@ -183,6 +197,7 @@ class LoginForm extends Component {
           name="password"
           disabled={!valid}
           loading={auth.loading}
+          showPassword={showPassword}
           component={this.renderPasswordField}
           validate={[
             required({ message: formatMessage(messages.fieldRequired) })
