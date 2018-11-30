@@ -33,8 +33,7 @@ import { exchangeXOM, getMinEthValue } from '../../../../services/utils';
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
-  exchangeEth,
-  exchangeRequestSale
+  exchangeEth
 } from '../../../../services/exchange/exchangeActions';
 import {
   numericFieldValidator,
@@ -122,8 +121,6 @@ class Exchange extends Component {
   }
 
   componentDidMount() {
-    this.props.exchangeActions.exchangeRequestSale();
-
     this.props.initialize({
       currency: currencyOptions[0].value,
       amount: 0
@@ -398,11 +395,24 @@ class Exchange extends Component {
     );
   };
 
+  checkCanDoSale() {
+    const { inProgressPhase, sale } = this.props.exchange;
+    if (!inProgressPhase || !sale.progress) {
+      return false;
+    }
+
+    if (sale.progress.phase !== inProgressPhase.name) {
+      return parseFloat(inProgressPhase.xom) > 0;
+    }
+
+    return parseFloat(inProgressPhase.xom) - parseFloat(sale.progress.sold) > 0;
+  }
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { handleSubmit } = this.props;
+    const { handleSubmit, exchange } = this.props;
     const { currency, wallet } = this.props.exchangeForm;
+
     return (
       <div className="container exchange-page">
         <div className='header'>
@@ -456,7 +466,7 @@ class Exchange extends Component {
                       loading={this.props.exchange.loading}
                       content={formatMessage(messages.exchange)}
                       className="button--green-bg submit-btn"
-                      disabled={this.props.invalid}
+                      disabled={this.props.invalid || !this.checkCanDoSale()}
                     />
                   </div>
                 </div>
@@ -492,8 +502,7 @@ export default compose(
       },
       exchangeActions: bindActionCreators({
         exchangeEth,
-        exchangeBtc,
-        exchangeRequestSale
+        exchangeBtc
       }, dispatch),
       bitcoinActions: bindActionCreators({
         getWallets

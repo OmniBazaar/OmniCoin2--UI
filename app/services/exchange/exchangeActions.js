@@ -10,7 +10,8 @@ const {
   exchangeRequestRates,
   exchangeRequestRatesFinished,
   exchangeRequestSale,
-  exchangeRequestSaleFinished
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase
 } = createActions({
   EXCHANGE_BTC: (guid, password, walletIdx, amount, formatMessage) => ({
     guid, password, walletIdx, amount, formatMessage
@@ -25,7 +26,8 @@ const {
   EXCHANGE_REQUEST_RATES: () => ({}),
   EXCHANGE_REQUEST_RATES_FINISHED: (error, rates) => ({ error, rates }),
   EXCHANGE_REQUEST_SALE: () => ({}),
-  EXCHANGE_REQUEST_SALE_FINISHED: (error, sale) => ({ error, sale })
+  EXCHANGE_REQUEST_SALE_FINISHED: (error, sale) => ({ error, sale }),
+  EXCHANGE_SET_IN_PROGRESS_PHASE: (phase) => ({ phase })
 });
 
 export {
@@ -38,5 +40,6 @@ export {
   exchangeRequestRates,
   exchangeRequestRatesFinished,
   exchangeRequestSale,
-  exchangeRequestSaleFinished
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase
 }

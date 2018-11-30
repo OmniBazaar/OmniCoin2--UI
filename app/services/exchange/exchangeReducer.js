@@ -10,7 +10,8 @@ import {
   exchangeRequestRates,
   exchangeRequestRatesFinished,
   exchangeRequestSale,
-  exchangeRequestSaleFinished
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase
 } from "./exchangeActions";
 
 const defaultState = {
@@ -22,7 +23,8 @@ const defaultState = {
   requestRatesError: null,
   sale: {},
   requestingSale: false,
-  requestSaleError: null
+  requestSaleError: null,
+  inProgressPhase: null
 };
 
 const reducer = handleActions({
@@ -90,7 +92,8 @@ const reducer = handleActions({
       ...state,
       sale: {},
       requestingSale: true,
-      requestSaleError: null
+      requestSaleError: null,
+      inProgressPhase: null
     };
   },
   [exchangeRequestSaleFinished](state, { payload: { error, sale } }) {
@@ -99,6 +102,12 @@ const reducer = handleActions({
       requestingSale: false,
       requestSaleError: error,
       sale: sale && !error ? sale : {}
+    };
+  },
+  [exchangeSetInProgressPhase](state, { payload: { phase } }) {
+    return {
+      ...state,
+      inProgressPhase: phase
     };
   }
 }, defaultState);

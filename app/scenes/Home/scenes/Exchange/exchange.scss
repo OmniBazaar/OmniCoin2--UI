@@ -144,6 +144,11 @@
             span {
               margin-left: 10px;
             }
+
+            &.full {
+              border-top-right-radius: 6px;
+              border-bottom-right-radius: 6px;
+            }
           }
           .available {
             float: right;
@@ -154,6 +159,11 @@
             border-bottom-left-radius: 0;
             span {
               margin-right: 10px;
+            }
+
+            &.full {
+              border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
             }
           }
         }

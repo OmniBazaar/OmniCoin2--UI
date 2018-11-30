@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import cn from 'classnames';
 import { injectIntl } from 'react-intl';
 import messages from '../../messages';
 
@@ -18,7 +19,7 @@ class StageProgress extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.phase !== this.props.phase) {
+		if (nextProps.exchange.inProgressPhase !== this.props.exchange.inProgressPhase) {
 			this.calculateProgress(nextProps);
 		} else if (this.props.exchange.requestingSale && !nextProps.exchange.requestingSale) {
 			if (nextProps.exchange.requestingSaleError) {
@@ -30,22 +31,25 @@ class StageProgress extends Component {
 	}
 
 	calculateProgress(props) {
-		if (!props.phase || !props.exchange.sale.progress) {
+		const { inProgressPhase, sale } = props.exchange;
+		if (!inProgressPhase || !sale.progress) {
 			this.setState(initialState);
 			return;
 		}
 
-		const { progress } = props.exchange.sale;
-		const { phase } = props;
+		const { progress } = sale;
 		let soldXom;
 		let availableXom;
-		if (progress.phase === phase.name) {
+		if (progress.phase === inProgressPhase.name) {
 			soldXom = parseFloat(progress.sold);
 		} else {
 			soldXom = 0;
 		}
 
-		availableXom = parseFloat(phase.xom) - soldXom;
+		availableXom = parseFloat(inProgressPhase.xom) - soldXom;
+		if (availableXom < 0) {
+			availableXom = 0;
+		}
 
 		this.setState({ soldXom, availableXom });
 	}
@@ -78,10 +82,10 @@ class StageProgress extends Component {
 						</div>
 					</div>
 					<div className='progress'>
-						<div className='sold' style={{width: `${sold}%`}}>
+						<div className={cn('sold', {full: sold === 100})} style={{width: `${sold}%`}}>
 							<span>{sold < 5 ? '' : `${sold}%`}</span>
 						</div>
-						<div className='available' style={{width: `${100 - sold}%`}}>
+						<div className={cn('available', {full: sold === 0})} style={{width: `${100 - sold}%`}}>
 							<span>{100 - sold >= 5 ? `${100 - sold}%` : ''}</span>
 						</div>
 					</div>
