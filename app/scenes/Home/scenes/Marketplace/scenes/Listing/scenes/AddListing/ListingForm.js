@@ -188,7 +188,7 @@ class ListingForm extends Component {
       if (defaultData.ethereum_address) {
         data.ethereum_address = defaultData.ethereum_address;
       } else {
-        data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
+        data.ethereum_address = ethereum.address;
       }
     }
 
