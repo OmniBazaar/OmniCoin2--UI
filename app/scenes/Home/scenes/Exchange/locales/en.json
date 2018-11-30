@@ -22,10 +22,17 @@
     "Exchange.numberExceedsDecimalsLimit": "Amount cannot have more than {limit} numbers after decimal", 
     "Exchange.success": "Success", 
     "Exchange.errorExchange": "Not enough funds", 
-    "Exchange.exchangeRate": "Exchange rate", 
+    "Exchange.exchangeRate": "Exchange Rate", 
     "Exchange.numberCannotBeNegative": "Amount cannot be a negative value", 
     "Exchange.pageDescription": "This page will allow you to purchase OmniCoins using funds contained in your Bitcoin and Ether wallets in this OmniBazaar application. If you have not already done so, you must first transfer some bitcoins or ether into your OmniBazaar wallets.", 
     "Exchange.omniCoinsAppearNotification": "Purchased OmniCoins will appear in your XOM wallet after 2 BTC or 11 ETH blockchain confirmations.", 
     "Exchange.minimumAmount": "Minimum amount is {amount}", 
-    "Exchange.numberRequired": "Number required"
+    "Exchange.numberRequired": "Number required",
+    "Exchange.buyOmnicoins": "Buy OmniCoins",
+    "Exchange.defaultSalePhaseTitle": "Sale starts in",
+    "Exchange.salePhaseInProgress": "{name} in Progress",
+    "Exchange.salePhaseStartIn": "{name} starts in",
+    "Exchange.stageProgress": "Stage Progress",
+    "Exchange.omnicoinsSold": "OmniCoins Sold",
+    "Exchange.omnicoinsAvailable": "OmniCoins Available"
 }

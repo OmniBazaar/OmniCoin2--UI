@@ -17,9 +17,22 @@
   .password {
     display: flex;
     flex-direction: row;
-    input {
-      border-bottom-right-radius: 0 !important;
-      border-top-right-radius: 0 !important;
+    .password-input-container {
+      display: flex;
+      background-color: white;
+      align-items: center;
+      padding-right: 10px;
+      border: 1px solid rgba(34, 36, 38, 0.15);
+      input {
+        border: none;
+      }
+      i {
+        cursor: pointer;
+        font-size: 25px;
+        &:hover {
+          color: rgba(0, 0, 0, 0.67);
+        }
+      }
     }
     button {
       border-bottom-left-radius: 0 !important;

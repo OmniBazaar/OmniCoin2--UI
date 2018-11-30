@@ -144,6 +144,42 @@ const getBadgeClass = (type) => {
   }
 };
 
+const getStatusMessaage = (type) => {
+  switch (type) {
+    case ChainTypes.operations.escrow_create_operation:
+      return 'pending';
+    case ChainTypes.operations.transfer:
+      return 'transfer';
+    case ChainTypes.operations.escrow_release_operation:
+      return 'released';
+    case ChainTypes.operations.escrow_return_operation:
+      return 'returned';
+    case ChainTypes.operations.listing_delete_operation:
+    case ChainTypes.operations.listing_update_operation:
+    case ChainTypes.operations.listing_create_operation:
+      return 'listing';
+    case ChainTypes.operations.account_update:
+    case ChainTypes.operations.witness_create:
+      return 'account';
+    case ChainTypes.operations.welcome_bonus_operation:
+      return 'welcome bonus';
+    case ChainTypes.operations.referral_bonus_operation:
+      return 'referral bonus';
+    case ChainTypes.operations.sale_bonus_operation:
+      return 'sale bonus';
+    case ChainTypes.operations.witness_bonus_operation:
+      return 'processor bonus';
+    case ChainTypes.operations.founder_bonus_operation:
+      return 'developer bonus';
+    case ChainTypes.operations.vesting_balance_withdraw:
+      return 'vesting withdraw';
+    case ChainTypes.operations.exchange_complete_operation:
+      return 'exchange';
+    default:
+      break;
+  }
+};
+
 const savePublisherData = data => {
   let newData = {
     ...data
@@ -437,7 +473,10 @@ const reducer = handleActions({
     const { rowsPerPage } = state;
     let filteredData = state.recentTransactions;
     if (filterText) {
-      filteredData = filteredData.filter(el => JSON.stringify(el).indexOf(filterText) !== -1);
+      filteredData = filteredData.filter(el => {
+        const textEl = ChainTypes.operations.transfer === el.type && el.listingId ? `${JSON.stringify(el)} SALE` : JSON.stringify(el) + getStatusMessaage(el.type);
+        return textEl.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
+      });
     }
     const totalPages = getTotalPages(filteredData, rowsPerPage);
     const currentData = sliceData(filteredData, activePage, rowsPerPage);

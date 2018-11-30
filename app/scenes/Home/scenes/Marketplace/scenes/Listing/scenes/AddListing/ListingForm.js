@@ -173,9 +173,6 @@ class ListingForm extends Component {
         priority_fee: listingPriority,
         continuous: true,
         ...defaultData,
-        price_using_btc: true,
-        price_using_eth: true,
-        price_using_omnicoin: true,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         shipping_price_included: false
       };
@@ -191,7 +188,7 @@ class ListingForm extends Component {
       if (defaultData.ethereum_address) {
         data.ethereum_address = defaultData.ethereum_address;
       } else {
-        data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
+        data.ethereum_address = ethereum.address;
       }
     }
 
@@ -200,7 +197,6 @@ class ListingForm extends Component {
         data[key] = key === 'weight_unit' ? 'oz' : 'in';
       }
     });
-
     this.props.initialize(data);
   }
 

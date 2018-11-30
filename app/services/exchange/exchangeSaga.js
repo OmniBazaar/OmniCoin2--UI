@@ -18,7 +18,9 @@ import {
   exchangeBtcSucceeded,
   exchangeEthFailed,
   exchangeEthSucceeded,
-  exchangeRequestRatesFinished
+  exchangeRequestRatesFinished,
+  exchangeRequestSaleFinished,
+  exchangeMakeSaleSuccess
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
 import { exchangeXOM } from "../utils";
@@ -28,6 +30,7 @@ import * as EthereumApi from "../blockchain/ethereum/EthereumApi";
 import {generateKeyFromPassword} from "../blockchain/utils/wallet";
 import {getStoredCurrentUser} from "../blockchain/auth/services";
 import {fetchAccount} from "../blockchain/utils/miscellaneous";
+import { getAuthHeaders } from '../listing/apis';
 import config from '../../config/config';
 
 
@@ -51,7 +54,8 @@ export function* exchangeSubscriber() {
   yield all([
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
-    takeEvery('EXCHANGE_REQUEST_RATES', requestRates)
+    takeEvery('EXCHANGE_REQUEST_RATES', requestRates),
+    takeEvery('EXCHANGE_REQUEST_SALE', requestSale)
   ]);
 }
 
@@ -64,6 +68,39 @@ function* checkAccountVerified() {
   }
 }
 
+function* makeSale(transactionResult, currency, amount) {
+  if (!transactionResult) {
+    return;
+  }
+
+  try {
+    const exchangeId = transactionResult[0].trx.operation_results[0][1];
+    const { currentUser } = (yield select()).default.auth;
+    const authHeader = yield getAuthHeaders(currentUser);
+    const response = yield request({
+      uri: `${config.exchangeServer}/sale/makeSale`,
+      method: 'POST',
+      json: true,
+      headers: authHeader,
+      body: {
+        exchangeId,
+        currency,
+        amount
+      }
+    });
+    if (!response) {
+      throw new Error('Request make sale fail');
+    }
+    if (response.error) {
+      throw new Error(response.error);
+    }
+    const { progress } = response;
+    yield put(exchangeMakeSaleSuccess(progress));
+  } catch (err) {
+    console.log('Make sale error', err);
+  }
+}
+
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
     yield checkAccountVerified();
@@ -72,10 +109,13 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
-    yield broadcastExchange(result.txid, 'BTC');
+    const trx = yield broadcastExchange(result.txid, 'BTC');
 
     const { rates } = (yield select()).default.exchange;
-    sendBTCMail(exchangeXOM(amount, rates.btcToXom), amount, result.txid, formatMessage);
+    const xom = exchangeXOM(amount, rates.btcToXom);
+    yield makeSale(trx, 'btc', xom);
+
+    sendBTCMail(xom, amount, result.txid, formatMessage);
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -98,10 +138,13 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
       throw new Error('eth_transaction_not_valid');
     }
 
-    yield broadcastExchange(txHash, 'ETH');
+    const trx = yield broadcastExchange(txHash, 'ETH');
 
     const { rates } = (yield select()).default.exchange;
-    sendETHMail(exchangeXOM(amount, rates.ethToXom), amount, txHash, formatMessage);
+    const xom = exchangeXOM(amount, rates.ethToXom);
+    yield makeSale(trx, 'eth', xom);
+    
+    sendETHMail(xom, amount, txHash, formatMessage);
     yield put(exchangeEthSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -122,5 +165,21 @@ function* requestRates() {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeRequestRatesFinished(error));
+  }
+}
+
+function* requestSale() {
+  try {
+    const response = yield request({
+      uri: `${config.exchangeServer}/sale`,
+      json: true
+    });
+    if (!response || !response.phases) {
+      throw new Error('Request exchange sale fail');
+    }
+    yield put(exchangeRequestSaleFinished(null, response));
+  } catch (error) {
+    console.log('ERROR ', error);
+    yield put(exchangeRequestSaleFinished(error));
   }
 }

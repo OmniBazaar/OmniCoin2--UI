@@ -126,12 +126,12 @@ class SearchResults extends Component {
             },
             {
               title: formatMessage(messages.lowestPrice),
-              sortBy: 'price',
+              sortBy: 'convertedPrice',
               sortDirection: 'ascending'
             },
             {
               title: formatMessage(messages.highestPrice),
-              sortBy: 'price',
+              sortBy: 'convertedPrice',
               sortDirection: 'descending'
             }
           ]}
