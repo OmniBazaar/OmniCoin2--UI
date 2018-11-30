@@ -11,7 +11,8 @@ import {
   exchangeRequestRatesFinished,
   exchangeRequestSale,
   exchangeRequestSaleFinished,
-  exchangeSetInProgressPhase
+  exchangeSetInProgressPhase,
+  exchangeMakeSaleSuccess
 } from "./exchangeActions";
 
 const defaultState = {
@@ -108,6 +109,15 @@ const reducer = handleActions({
     return {
       ...state,
       inProgressPhase: phase
+    };
+  },
+  [exchangeMakeSaleSuccess](state, { payload: { progress } }) {
+    return {
+      ...state,
+      sale: {
+        ...state.sale,
+        progress
+      }
     };
   }
 }, defaultState);

@@ -19,7 +19,6 @@ class Sale extends Component {
 	}
 
 	onChangePhaseInProgress = (phase) => {
-		console.log('on change phase', phase);
 		this.props.exchangeActions.exchangeSetInProgressPhase(phase);
 	}
 

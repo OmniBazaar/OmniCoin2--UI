@@ -21,7 +21,10 @@ class StageProgress extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.exchange.inProgressPhase !== this.props.exchange.inProgressPhase) {
 			this.calculateProgress(nextProps);
-		} else if (this.props.exchange.requestingSale && !nextProps.exchange.requestingSale) {
+		} else if (
+			(this.props.exchange.requestingSale && !nextProps.exchange.requestingSale) ||
+			(this.props.exchange.sale !== nextProps.exchange.sale)
+		) {
 			if (nextProps.exchange.requestingSaleError) {
 				this.setState(initialState);
 			} else {

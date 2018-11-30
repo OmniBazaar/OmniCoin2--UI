@@ -38,7 +38,6 @@ class SaleTime extends Component {
 				this.setState(this.initialState);
 				this.props.onChangePhaseInProgress(null);
 			} else {
-				console.log('On request success')
 				this.init(nextProps);
 			}
 		}
@@ -64,9 +63,6 @@ class SaleTime extends Component {
 			p.endTimestamp = moment.utc(p.endUtc).unix();
 
 			if (p.startTimestamp <= now && now < p.endTimestamp) {
-				console.log({
-					now,p
-				})
 				this.phaseIndex = i;
 				hasInProgress = true;
 			} else if (this.phaseIndex === -1 && p.startTimestamp > now) {
@@ -125,15 +121,14 @@ class SaleTime extends Component {
 		let phaseHeading;
 		if (phase.startTimestamp <= now) {
 			duration = phase.endTimestamp - now;
-			phaseHeading = formatMessage(messages.salePhaseInProgress, {name: phase.name});
+			phaseHeading = formatMessage(messages.salePhaseInProgress, {name: phase.displayName});
 			if (!this.isInProgress || isChangePhase) {
-				console.log('change phase', phase)
 				this.props.onChangePhaseInProgress(phase);
 			}
 			this.isInProgress = true;
 		} else {
 			duration = phase.startTimestamp - now;
-			phaseHeading = formatMessage(messages.salePhaseStartIn, {name: phase.name});
+			phaseHeading = formatMessage(messages.salePhaseStartIn, {name: phase.displayName});
 			this.isInProgress = false;
 		}
 
