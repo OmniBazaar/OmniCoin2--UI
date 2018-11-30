@@ -175,9 +175,11 @@ class SignupForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      keywordsTouched: false
+      keywordsTouched: false,
+      showPassword: false
     };
     this.defaultReferrer = localStorage.getItem("referrer");
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
     this.submit = this.submit.bind(this);
     this.signIn = this.signIn.bind(this);
   }
@@ -249,6 +251,11 @@ class SignupForm extends Component {
 
   signIn() {
     this.props.history.push("/login");
+  }
+
+  togglePasswordVisibility() {
+    const { showPassword } = this.state;
+    this.setState({ showPassword: !showPassword });
   }
 
   submit(values) {
@@ -575,6 +582,7 @@ class SignupForm extends Component {
       auth.loading || !!this.props.asyncValidating ? "ui loading" : ""
     );
     const { formatMessage } = this.props.intl;
+    const { showPassword } = this.state;
     return (
       <Form onSubmit={handleSubmit(this.submit)} className="signup">
         <Field
@@ -600,15 +608,23 @@ class SignupForm extends Component {
         <div className="save-password-text">
           {formatMessage(messages.savePassword2)}
         </div>
-        <Field
-          type="password"
-          placeholder={formatMessage(messages.confirmPassword)}
-          name="passwordConfirmation"
-          component={ValidatableField}
-          validate={[
-            required({ message: formatMessage(messages.fieldRequired) })
-          ]}
-        />
+        <div className="confirm-password-input-row-container">
+          <div className="password-input-field-container">
+            <Field
+              type={`${showPassword ? 'text' : 'password'}`}
+              placeholder={formatMessage(messages.confirmPassword)}
+              name="passwordConfirmation"
+              component={ValidatableField}
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) })
+              ]}
+            />
+          </div>
+          <i
+            onClick={this.togglePasswordVisibility}
+            className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+          />
+        </div>
         <Field
           type="text"
           name="referrer"
