@@ -86,7 +86,7 @@ class Root extends Component {
     const { isLoading } = this.props.connection;
     const messages = this.getLocaleMessages(language);
     return (
-      <IntlProvider locale={language} messages={messages} key={language}>
+      <IntlProvider locale={language} messages={messages}>
         {isLoading ? this.renderLoader() : this.renderContent()}
       </IntlProvider>
     );
