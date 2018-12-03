@@ -195,6 +195,7 @@
   .exchange-form {
     display: flex;
     margin-top: 20px;
+    position: relative;
     .exchange-form-container {
       flex: 2;
       padding-right: 50px;
@@ -363,6 +364,15 @@
           margin-bottom: 0;
         }
       }
+    }
+
+    .overlay-sale-disble {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 }
