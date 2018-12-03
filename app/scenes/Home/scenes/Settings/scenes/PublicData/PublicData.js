@@ -92,7 +92,7 @@ const messages = defineMessages({
   },
   notEnoughBalance: {
     id: 'PublicData.notEnoughBalance',
-    defaultMessage: 'Failed to update account because of not enough balance'
+    defaultMessage: 'Update failed due to insufficient funds available'
   },
   failedUpdate: {
     id: 'PublicData.failedUpdate',
