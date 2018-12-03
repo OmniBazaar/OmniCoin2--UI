@@ -412,6 +412,7 @@ class Exchange extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit, exchange } = this.props;
     const { currency, wallet } = this.props.exchangeForm;
+    const canDoSale = this.checkCanDoSale();
 
     return (
       <div className="container exchange-page">
@@ -466,7 +467,7 @@ class Exchange extends Component {
                       loading={this.props.exchange.loading}
                       content={formatMessage(messages.exchange)}
                       className="button--green-bg submit-btn"
-                      disabled={this.props.invalid || !this.checkCanDoSale()}
+                      disabled={this.props.invalid || !canDoSale}
                     />
                   </div>
                 </div>
@@ -476,6 +477,8 @@ class Exchange extends Component {
             <div className="exchange-rate-table">
               <ExchangeRatesTable />
             </div>
+
+            {!canDoSale && <div className='overlay-sale-disble' />}
           </div>
         </div>
       </div>
