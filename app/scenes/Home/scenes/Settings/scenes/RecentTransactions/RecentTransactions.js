@@ -345,7 +345,7 @@ class RecentTransactions extends Component {
                             <span
                               className="link"
                               onClick={() => this.onClickDetails(row)}
-                              onKeyDown={() => this.onClickDetails(row.id)}
+                              onKeyDown={() => this.onClickDetails(row)}
                               role="link"
                               tabIndex={0}
                             >
