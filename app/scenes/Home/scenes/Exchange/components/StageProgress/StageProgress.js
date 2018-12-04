@@ -19,7 +19,10 @@ class StageProgress extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.exchange.inProgressPhase !== this.props.exchange.inProgressPhase) {
+		if (
+			nextProps.exchange.inProgressPhase !== this.props.exchange.inProgressPhase ||
+			nextProps.exchange.waitingPhase !== this.props.exchange.waitingPhase
+		) {
 			this.calculateProgress(nextProps);
 		} else if (
 			(this.props.exchange.requestingSale && !nextProps.exchange.requestingSale) ||
@@ -34,15 +37,23 @@ class StageProgress extends Component {
 	}
 
 	calculateProgress(props) {
-		const { inProgressPhase, sale } = props.exchange;
+		const { inProgressPhase, waitingPhase, sale } = props.exchange;
+		let soldXom;
+		let availableXom;
+
 		if (!inProgressPhase || !sale.progress) {
-			this.setState(initialState);
+			if (!waitingPhase) {
+				this.setState(initialState);
+			} else {
+				soldXom = 0;
+				availableXom = parseFloat(waitingPhase.xom);
+				this.setState({ soldXom, availableXom });
+			}
+			
 			return;
 		}
 
 		const { progress } = sale;
-		let soldXom;
-		let availableXom;
 		if (progress.phase === inProgressPhase.name) {
 			soldXom = parseFloat(progress.sold);
 		} else {
@@ -86,10 +97,10 @@ class StageProgress extends Component {
 					</div>
 					<div className='progress'>
 						<div className={cn('sold', {full: sold === 100})} style={{width: `${sold}%`}}>
-							<span>{sold < 5 ? '' : `${sold}%`}</span>
+							<span>{`${sold}%`}</span>
 						</div>
 						<div className={cn('available', {full: sold === 0})} style={{width: `${100 - sold}%`}}>
-							<span>{100 - sold >= 5 ? `${100 - sold}%` : ''}</span>
+							<span>{`${100 - sold}%`}</span>
 						</div>
 					</div>
 				</div>
