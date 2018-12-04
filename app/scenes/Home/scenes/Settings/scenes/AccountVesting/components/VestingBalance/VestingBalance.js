@@ -58,11 +58,11 @@ class VestingBalance extends Component {
           <Table.Row>
             <Table.HeaderCell colSpan="2">
               <span className="blue">
-                {formatMessage(messages[Object.values(VestingTypes).includes(vb.type)
-                    ? vb.type
-                    : VestingTypes.none
-                    ])}
-                {' '}
+                {
+                  Object.values(VestingTypes).includes(vb.type) && vb.type !== VestingTypes.none ?
+                  ( formatMessage(messages[vb.type]) + ' ' ) :
+                  ''
+                }
                 {formatMessage(messages.vestingId, { id: vb.id })}
               </span>
             </Table.HeaderCell>
@@ -76,25 +76,6 @@ class VestingBalance extends Component {
               {vb.balance.amount / TOKENS_IN_XOM} XOM
             </Table.Cell>
           </Table.Row>
-          {/*<Table.Row>*/}
-            {/*<Table.Cell>{formatMessage(messages.cdEarned)}</Table.Cell>*/}
-            {/*<Table.Cell textAlign="right">*/}
-              {/*{formatMessage(messages.coinDays, {*/}
-                  {/*number: Math.ceil(earned / secondsPerDay / TOKENS_IN_XOM)*/}
-              {/*})}*/}
-            {/*</Table.Cell>*/}
-          {/*</Table.Row>*/}
-          {/*<Table.Row>*/}
-            {/*<Table.Cell>{formatMessage(messages.cdRequired)}</Table.Cell>*/}
-            {/*<Table.Cell textAlign="right">*/}
-              {/*{formatMessage(messages.coinDays, {*/}
- {/*number: Math.ceil(vb.balance.amount*/}
-                  {/** vestingPeriod*/}
-                  {/*/ secondsPerDay*/}
-                  {/*/ TOKENS_IN_XOM)*/}
-              {/*})}*/}
-            {/*</Table.Cell>*/}
-          {/*</Table.Row>*/}
           <Table.Row>
             <Table.Cell>{formatMessage(messages.percentVested)}</Table.Cell>
             <Table.Cell textAlign="right">
