@@ -13,7 +13,7 @@
     "PublicData.processorBody": "TRANSACTION PROCESSOR: Transaction Processors are paid OmniCoins for processing the transactions of the other user in the marketplace. Because this is a well-paid and highly-responsible position, Transaction Processor are selected only from the most active participants in the marketplace. Referring new users, publishing listings for others, being known and trusted by other users, and having a good reputation in the marketplace all count toward being recognized as an \"active participant\" and qualifying to be a Transaction Processor.",
     "PublicData.successUpdate": "Updated successfully",
     "PublicData.publisherExists": "There is an existing publisher for this IP",
-    "PublicData.notEnoughBalance": "Failed to update account because of not enough balance",
+    "PublicData.notEnoughBalance": "Update failed due to insufficient funds available",
     "PublicData.failedUpdate": "Failed to update account",
     "PublicData.or": "or",
     "PublicData.error": "Error",
