@@ -25,7 +25,8 @@ const defaultState = {
   sale: {},
   requestingSale: false,
   requestSaleError: null,
-  inProgressPhase: null
+  inProgressPhase: null,
+  waitingPhase: null
 };
 
 const reducer = handleActions({
@@ -105,10 +106,11 @@ const reducer = handleActions({
       sale: sale && !error ? sale : {}
     };
   },
-  [exchangeSetInProgressPhase](state, { payload: { phase } }) {
+  [exchangeSetInProgressPhase](state, { payload: { inProgressPhase, waitingPhase } }) {
     return {
       ...state,
-      inProgressPhase: phase
+      inProgressPhase,
+      waitingPhase
     };
   },
   [exchangeMakeSaleSuccess](state, { payload: { progress } }) {

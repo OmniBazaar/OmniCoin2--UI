@@ -16,7 +16,7 @@
     "PublicData.successUpdate": "Updated successfully",
     "PublicData.nodeRestartSuccess": "Witness node was restarted successfully",
     "PublicData.publisherExists": "There is an existing publisher for this IP",
-    "PublicData.notEnoughBalance": "Failed to update account because of not enough balance",
+    "PublicData.notEnoughBalance": "Update failed due to insufficient funds available",
     "PublicData.failedUpdate": "Failed to update account",
     "PublicData.or": "or",
     "PublicData.error": "Error",

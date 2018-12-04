@@ -18,8 +18,8 @@ class Sale extends Component {
 		this.props.exchangeActions.exchangeRequestSale();
 	}
 
-	onChangePhaseInProgress = (phase) => {
-		this.props.exchangeActions.exchangeSetInProgressPhase(phase);
+	onChangePhaseInProgress = (inProgressPhase, waitingPhase) => {
+		this.props.exchangeActions.exchangeSetInProgressPhase(inProgressPhase, waitingPhase);
 	}
 
 	render() {

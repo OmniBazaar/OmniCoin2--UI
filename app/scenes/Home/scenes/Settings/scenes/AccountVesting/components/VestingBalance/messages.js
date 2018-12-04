@@ -47,10 +47,6 @@ export default defineMessages({
     id: 'VestingBalance.claim',
     defaultMessage: 'Claim'
   },
-  [VestingTypes.none]: {
-    id: 'VestingBalance.none',
-    defaultMessage: '\u200b'
-  },
   [VestingTypes.escrowFee]: {
     id: 'VestingBalance.escrowFee',
     defaultMessage: 'ESCROW FEE'

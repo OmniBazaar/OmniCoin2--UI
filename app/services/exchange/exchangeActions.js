@@ -28,7 +28,7 @@ const {
   EXCHANGE_REQUEST_RATES_FINISHED: (error, rates) => ({ error, rates }),
   EXCHANGE_REQUEST_SALE: () => ({}),
   EXCHANGE_REQUEST_SALE_FINISHED: (error, sale) => ({ error, sale }),
-  EXCHANGE_SET_IN_PROGRESS_PHASE: (phase) => ({ phase }),
+  EXCHANGE_SET_IN_PROGRESS_PHASE: (inProgressPhase, waitingPhase) => ({ inProgressPhase, waitingPhase }),
   EXCHANGE_MAKE_SALE_SUCCESS: (progress) => ({ progress })
 });
 
