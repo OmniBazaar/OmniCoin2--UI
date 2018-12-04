@@ -109,13 +109,11 @@ class Menu extends Component {
       );
     }
 
-    const categoryId = category.id === 'Marketplace.more' ? 'Marketplace.community' : category.id
-
     return (
       <li className={optionMenuClass}>
         <span
-          onClick={() => this.viewCategory(categoryId)}
-          onKeyDown={() => this.viewCategory(categoryId)}
+          onClick={() => this.viewCategory(category.id)}
+          onKeyDown={() => this.viewCategory(category.id)}
           tabIndex={0}
           role="link"
         >
@@ -171,6 +169,7 @@ class Menu extends Component {
   };
 
   viewCategory = (categoryId, parent) => {
+    if (categoryId === 'Marketplace.more') return;
     this.props.history.push('/search-results');
     const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);
