@@ -12,7 +12,8 @@
   height: 100%;
   width: 100%;
   flex: 1;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   .ui.active.text.inline.loader {
     margin-bottom: 40px;
@@ -79,6 +80,7 @@
       .options {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         button {
           border-radius: 16px!important;
