@@ -175,14 +175,17 @@ class OmnicoinHistory extends BaseStorage {
       } else if (op.to === this.currentUser.username) {
         if (op.operationType === ChainTypes.operations.listing_create_operation
             || op.operationType === ChainTypes.operations.listing_update_operation
-            || op.operationType === ChainTypes.operations.transfer) {
+            || op.operationType === ChainTypes.operations.transfer
+            || op.operationType === ChainTypes.operations.escrow_create_operation) {
           transactions[trxKey].fee += totalObFee;
         }
       } else if (op.from === this.currentUser.username) {
         transactions[trxKey].fee += op.fee;
         if (op.operationType !== ChainTypes.operations.transfer
             && op.operationType !== ChainTypes.operations.listing_create_operation
-            && op.operationType !== ChainTypes.operations.listing_update_operation) {
+            && op.operationType !== ChainTypes.operations.escrow_create_operation
+            && op.operationType !== ChainTypes.operations.escrow_release_operation
+            && op.operationType !== ChainTypes.operations.escrow_return_operation) {
           transactions[trxKey].fee += totalObFee;
         } else {
           transactions[trxKey].fee += op.obFee.publisher_fee || 0;

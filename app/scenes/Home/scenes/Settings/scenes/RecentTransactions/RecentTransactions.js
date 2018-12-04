@@ -188,9 +188,9 @@ class RecentTransactions extends Component {
     this.props.accountSettingsActions.setActivePage(activePage);
   };
 
-  onClickDetails = (detailId) => {
-    const { recentTransactions } = this.props.account;
-    const transaction = recentTransactions.find(el => el.id === detailId);
+  onClickDetails = (transaction) => {
+    // const { recentTransactions } = this.props.account;
+    // const transaction = recentTransactions.find(el => el.id === detailId);
     this.props.accountSettingsActions.showDetailsModal(transaction);
   };
 
@@ -344,7 +344,7 @@ class RecentTransactions extends Component {
                           <TableCell>
                             <span
                               className="link"
-                              onClick={() => this.onClickDetails(row.id)}
+                              onClick={() => this.onClickDetails(row)}
                               onKeyDown={() => this.onClickDetails(row.id)}
                               role="link"
                               tabIndex={0}
