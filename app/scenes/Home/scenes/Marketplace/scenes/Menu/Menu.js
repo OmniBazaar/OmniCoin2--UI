@@ -109,11 +109,13 @@ class Menu extends Component {
       );
     }
 
+    const categoryId = category.id === 'Marketplace.more' ? 'Marketplace.community' : category.id
+
     return (
       <li className={optionMenuClass}>
         <span
-          onClick={() => this.viewCategory(category.id)}
-          onKeyDown={() => this.viewCategory(category.id)}
+          onClick={() => this.viewCategory(categoryId)}
+          onKeyDown={() => this.viewCategory(categoryId)}
           tabIndex={0}
           role="link"
         >
