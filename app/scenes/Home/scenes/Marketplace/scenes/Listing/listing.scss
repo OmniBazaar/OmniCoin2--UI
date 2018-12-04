@@ -37,14 +37,21 @@
       }
 
       .image-gallery-slide {
-        img {
-          height: 100%;
-          object-fit: fill;
-          object-position: center;
-          width: auto !important;
-          display: block;
-          margin: auto
+        background: transparent;
+        .image-gallery-image {
+          display: flex;
+          img {
+            height: auto;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: fill;
+            object-position: center;
+            width: auto !important;
+            display: block;
+            margin: auto;
+          }
         }
+
       }
 
       a.image-gallery-thumbnail {
