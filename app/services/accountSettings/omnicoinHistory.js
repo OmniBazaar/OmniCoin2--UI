@@ -1,5 +1,6 @@
 import { orderBy, zip, uniqBy } from 'lodash';
 import { FetchChain, ChainStore, ChainTypes } from 'omnibazaarjs/es';
+import Immutable from 'immutable';
 import { Apis } from 'omnibazaarjs-ws';
 
 import BaseStorage from '../../utils/baseStorage';
@@ -340,32 +341,49 @@ class OmnicoinHistory extends BaseStorage {
       getGlobalObject(),
       getDynGlobalObject()
     ]);
-    const result = await ChainStore.fetchRecentHistory(account.get('id'));
-    let history = [];
-    const h = result.get('history');
+    // const result = await ChainStore.fetchRecentHistory(account.get('id'));
+    let start = '1.11.0';
+    const accountId = account.get('id');
     const seenOps = new Set();
-    history = history.concat(h.toJS().filter(op => !seenOps.has(op.id) && seenOps.add(op.id)));
-    history = history.filter(el => [
-      ChainTypes.operations.transfer,
-      ChainTypes.operations.escrow_create_operation,
-      ChainTypes.operations.escrow_release_operation,
-      ChainTypes.operations.escrow_return_operation,
-      ChainTypes.operations.account_update,
-      ChainTypes.operations.listing_create_operation,
-      ChainTypes.operations.listing_update_operation,
-      ChainTypes.operations.listing_delete_operation,
-      ChainTypes.operations.welcome_bonus_operation,
-      ChainTypes.operations.referral_bonus_operation,
-      ChainTypes.operations.sale_bonus_operation,
-      ChainTypes.operations.witness_bonus_operation,
-      ChainTypes.operations.founder_bonus_operation,
-      ChainTypes.operations.witness_create,
-      ChainTypes.operations.vesting_balance_withdraw,
-      ChainTypes.operations.exchange_complete_operation
-    ].includes(el.op[0]));
-    for (let i = 0; i < history.length; ++i) {
-      const el = history[i];
-      if (!this.exists(el.id)) {
+    let count = 0;
+    while (count < 1000) {
+      let result = await this.fetchRecentHistory(accountId, start);
+      if (!result.length) {
+        break;
+      }
+
+      start = result[result.length - 1].id;
+
+      result = result.filter(op => !seenOps.has(op.id) && seenOps.add(op.id));
+      result = result.filter(el => [
+        ChainTypes.operations.transfer,
+        ChainTypes.operations.escrow_create_operation,
+        ChainTypes.operations.escrow_release_operation,
+        ChainTypes.operations.escrow_return_operation,
+        ChainTypes.operations.account_update,
+        ChainTypes.operations.listing_create_operation,
+        ChainTypes.operations.listing_update_operation,
+        ChainTypes.operations.listing_delete_operation,
+        ChainTypes.operations.welcome_bonus_operation,
+        ChainTypes.operations.referral_bonus_operation,
+        ChainTypes.operations.sale_bonus_operation,
+        ChainTypes.operations.witness_bonus_operation,
+        ChainTypes.operations.founder_bonus_operation,
+        ChainTypes.operations.witness_create,
+        ChainTypes.operations.vesting_balance_withdraw,
+        ChainTypes.operations.exchange_complete_operation
+      ].includes(el.op[0]));
+
+      for (let i = 0; i < result.length; ++i) {
+        const el = result[i];
+        if (this.exists(el.id)) {
+          count++;
+          if (count >= 1000) {
+            break;
+          }
+          continue;
+        }
+
         if (el.op[0] === ChainTypes.operations.welcome_bonus_operation
             || el.op[0] === ChainTypes.operations.sale_bonus_operation
             || el.op[0] === ChainTypes.operations.witness_bonus_operation
@@ -393,6 +411,7 @@ class OmnicoinHistory extends BaseStorage {
               && this.currentUser.username !== 'omnibazaar') {
             continue;
           }
+          count++;
           this.addOperation(operation);
         } else if (el.op[0] === ChainTypes.operations.referral_bonus_operation) {
           if (el.op[1].referred_account !== account.get('id')) {
@@ -400,6 +419,7 @@ class OmnicoinHistory extends BaseStorage {
               FetchChain('getAccount', el.op[1].referred_account),
               FetchChain('getAccount', el.op[1].referrer_account)
             ]);
+            count++;
             this.addOperation({
               id: el.id,
               blockNum: el.block_num,
@@ -449,9 +469,11 @@ class OmnicoinHistory extends BaseStorage {
               operation.isIncoming = true;
             }
           }
+          count++;
           this.addOperation(operation);
         } else if (el.op[0] === ChainTypes.operations.exchange_complete_operation) {
           const toAcc = await FetchChain('getAccount', el.op[1].receiver);
+          count++;
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
@@ -469,6 +491,7 @@ class OmnicoinHistory extends BaseStorage {
           });
         } else {
           const [from, to] = await OmnicoinHistory.getParties(el.op);
+          count++;
           this.addOperation({
             id: el.id,
             blockNum: el.block_num,
@@ -492,10 +515,69 @@ class OmnicoinHistory extends BaseStorage {
             isIncoming: from.get('name') !== this.currentUser.username
           });
         }
+
+        if (count >= 1000) {
+          break;
+        }
       }
     }
+    
     this.save();
   }
+
+  async fetchRecentHistory(accountId, start) {
+    const ops = await Apis.instance().history_api().exec("get_account_history", [accountId, '1.11.0', 100, start]);
+    if (start !== '1.11.0') {
+      return ops.slice(1);
+    }
+
+    return ops;
+  }
+
+  /*
+  async fetchRecentHistory(accountId) {
+    const account = ChainStore.objects_by_id.get(accountId);
+    if (!account) return;
+
+    const operations = await this.getAccountHistory(accountId);
+
+    let currentHistory = account.get("history");
+    if (!currentHistory) currentHistory = Immutable.List();
+    let updatedHistory = Immutable.fromJS(operations);
+    const updatedAccount = account.set("history", updatedHistory);
+    ChainStore.objects_by_id.set(accountId, updatedAccount);
+    return updatedAccount;
+  }
+
+  async getAccountHistory(accountId, limit) {
+    if (!limit) {
+      limit = 1000;
+    }
+
+    const operations = [];
+    let start = '1.11.0';
+    let excludeFirstItem = false;
+    while (operations.length < limit) {
+      let ops = await Apis.instance().history_api().exec("get_account_history", [accountId, '1.11.0', 100, start]);
+      if (excludeFirstItem) {
+        ops = ops.slice(1);
+      }
+      if (ops.length === 0) {
+        break;
+      }
+
+      for (let i = 0; i< ops.length; i++) {
+        operations.push(ops[i]);
+        if (operations.length >= limit) {
+          break;
+        }
+        start = ops[i].id;
+      }
+
+      excludeFirstItem = true;
+    }
+    return operations;
+  }*/
 }
 
 export default OmnicoinHistory;
