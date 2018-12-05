@@ -312,7 +312,7 @@ class Home extends Component {
                     defaultMessage="Quick Start"
                   />
                 </NavLink>
-                <a href="https://support.omnibazaar.com" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
+                <a href="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.support"
