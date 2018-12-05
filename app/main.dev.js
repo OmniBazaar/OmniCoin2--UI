@@ -142,7 +142,10 @@ const runNode = async () => {
   }
   await killNode();
 
-  const nodeProcess = spawn(nodePath);
+  const nodeProcess = spawn(nodePath,{
+    detached: true,
+    stdio: 'ignore'
+  });
   nodeProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
