@@ -538,7 +538,9 @@ class Marketplace extends Component {
 
     return (
       <div className="market-footer">
-        <span className="title">{formatMessage(messages.getOmniCoins)}</span>
+        <NavLink to="/identity-verification">
+          <Button content={formatMessage(messages.getOmniCoins)} className="title button--green-bg" />
+        </NavLink>
         <span className="description">{formatMessage(messages.getOmniCoinsText)}</span>
         {/* <div>
           <Button
