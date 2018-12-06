@@ -8,7 +8,11 @@ const {
   exchangeEthSucceeded,
   exchangeEthFailed,
   exchangeRequestRates,
-  exchangeRequestRatesFinished
+  exchangeRequestRatesFinished,
+  exchangeRequestSale,
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase,
+  exchangeMakeSaleSuccess
 } = createActions({
   EXCHANGE_BTC: (guid, password, walletIdx, amount, formatMessage) => ({
     guid, password, walletIdx, amount, formatMessage
@@ -21,7 +25,11 @@ const {
   EXCHANGE_ETH_SUCCEEDED: (txid) => ({ txid }),
   EXCHANGE_ETH_FAILED: (error) => ({ error }),
   EXCHANGE_REQUEST_RATES: () => ({}),
-  EXCHANGE_REQUEST_RATES_FINISHED: (error, rates) => ({ error, rates })
+  EXCHANGE_REQUEST_RATES_FINISHED: (error, rates) => ({ error, rates }),
+  EXCHANGE_REQUEST_SALE: () => ({}),
+  EXCHANGE_REQUEST_SALE_FINISHED: (error, sale) => ({ error, sale }),
+  EXCHANGE_SET_IN_PROGRESS_PHASE: (inProgressPhase, waitingPhase) => ({ inProgressPhase, waitingPhase }),
+  EXCHANGE_MAKE_SALE_SUCCESS: (progress) => ({ progress })
 });
 
 export {
@@ -32,5 +40,9 @@ export {
   exchangeEthFailed,
   exchangeEthSucceeded,
   exchangeRequestRates,
-  exchangeRequestRatesFinished
+  exchangeRequestRatesFinished,
+  exchangeRequestSale,
+  exchangeRequestSaleFinished,
+  exchangeSetInProgressPhase,
+  exchangeMakeSaleSuccess
 }

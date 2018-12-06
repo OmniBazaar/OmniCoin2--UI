@@ -70,7 +70,17 @@ class Marketplace extends Component {
     return categoryName;
   }
 
+  state = {
+    textsMaxSizes: {
+      descriptionMaxSize: 50,
+      titleMaxSize: 50,
+      categoryMaxSize: 25
+    }
+  };
+
   componentWillMount() {
+    window.addEventListener('resize', this.setTextsSizes.bind(this));
+    this.setTextsSizes();
     this.props.accountActions.getPublisherData();
   }
 
@@ -96,6 +106,10 @@ class Marketplace extends Component {
     // }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setTextsSizes);
+  }
+
   fetchListings({
     country, state, city, keywords
   }) {
@@ -109,7 +123,7 @@ class Marketplace extends Component {
         if (!item.description || !item.listing_title) {
           return;
         }
-
+        const { textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } } = this.state;
         const { formatMessage } = this.props.intl;
         const image = item.images && item.images.length ? item.images[0] : '';
         let imageUrl = `http://${item.ip}/publisher-images/${image ? image.thumb : ''}`;
@@ -118,8 +132,9 @@ class Marketplace extends Component {
         }
 
         const style = { backgroundImage: `url(${imageUrl})` };
-        let { description } = item;
-        description = description.length > 55 ? `${description.substring(0, 55)}...` : description;
+        let { description, listing_title: listingTitle } = item;
+        description = description.length > descriptionMaxSize ? `${description.substring(0, descriptionMaxSize)}...` : description;
+        listingTitle = listingTitle.length > titleMaxSize ? `${listingTitle.substring(0, titleMaxSize)}...` : listingTitle;
 
         let categoryTitle = '';
         if (item.category && item.category.toLowerCase() !== 'all') {
@@ -127,7 +142,16 @@ class Marketplace extends Component {
             formatMessage(mainCategories[item.category]) : item.category;
         }
         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
-        const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+        let subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+
+        if (categoryTitle.length + subCategoryTitle.length > categoryMaxSize) {
+          if (categoryTitle.length > categoryMaxSize) {
+            categoryTitle = `${categoryTitle.substring(0, categoryMaxSize - 2)}...`;
+            subCategoryTitle = `${subCategoryTitle.substring(0, 2)}...`;
+          } else {
+            subCategoryTitle = `${subCategoryTitle.substring(0, categoryMaxSize - categoryTitle.length)}...`;
+          }
+        }
 
         return (
           <div key={`fl-item-${item.listing_id}`} className="item">
@@ -136,7 +160,7 @@ class Marketplace extends Component {
             </Link>
             <Link to={`listing/${item.listing_id}`}>
               <span className="title" >
-                {item.listing_title}
+                {listingTitle}
               </span>
             </Link>
             <span className="subtitle">
@@ -437,6 +461,42 @@ class Marketplace extends Component {
     }
   };
 
+  setTextsSizes() {
+    let { textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } } = this.state;
+
+    if (window.innerWidth < 768) {
+      descriptionMaxSize = 60;
+      titleMaxSize = 50;
+      categoryMaxSize = 30;
+    } else if (window.innerWidth < 871) {
+      descriptionMaxSize = 13;
+      titleMaxSize = 10;
+      categoryMaxSize = 7;
+    } else if (window.innerWidth < 1200) {
+      descriptionMaxSize = 20;
+      titleMaxSize = 18;
+      categoryMaxSize = 9;
+    } else if (window.innerWidth < 1351) {
+      descriptionMaxSize = 25;
+      titleMaxSize = 22;
+      categoryMaxSize = 13;
+    }  else if (window.innerWidth < 1550) {
+      descriptionMaxSize = 25;
+      titleMaxSize = 25;
+      categoryMaxSize = 15;
+    } else if (window.innerWidth < 1700) {
+      descriptionMaxSize = 50;
+      titleMaxSize = 40;
+      categoryMaxSize = 25;
+    } else {
+      descriptionMaxSize = 60;
+      titleMaxSize = 50;
+      categoryMaxSize = 30;
+    }
+
+    this.setState({ textsMaxSizes: { descriptionMaxSize, titleMaxSize, categoryMaxSize } });
+  }
+
   renderListItems(type, title, itemsList, loading) {
     const { formatMessage } = this.props.intl;
     let maxDisplay = 6;
@@ -478,7 +538,9 @@ class Marketplace extends Component {
 
     return (
       <div className="market-footer">
-        <span className="title">{formatMessage(messages.getOmniCoins)}</span>
+        <NavLink to="/identity-verification">
+          <Button content={formatMessage(messages.getOmniCoins)} className="title button--green-bg" />
+        </NavLink>
         <span className="description">{formatMessage(messages.getOmniCoinsText)}</span>
         {/* <div>
           <Button

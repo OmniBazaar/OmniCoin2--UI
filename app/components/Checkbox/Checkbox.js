@@ -31,6 +31,10 @@ class Checkbox extends Component {
   }
 
   handleClick() {
+    if (this.props.disabled) {
+      return;
+    }
+    
     if (this.props.onChecked) {
       this.props.onChecked(!this.state.isChecked);
     }

@@ -1,85 +1,88 @@
-import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Button, Form, Image, Divider } from 'semantic-ui-react';
-import { required } from 'redux-form-validators';
-import { toastr } from 'react-redux-toastr';
-import cn from 'classnames';
-import { withRouter } from 'react-router-dom';
-import { FetchChain } from 'omnibazaarjs/es';
-import { defineMessages, injectIntl } from 'react-intl';
-import PropTypes from 'prop-types';
-const isOnline = require('is-online');
+import React, { Component } from "react";
+import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Button, Form, Image, Divider } from "semantic-ui-react";
+import { required } from "redux-form-validators";
+import { toastr } from "react-redux-toastr";
+import cn from "classnames";
+import { withRouter } from "react-router-dom";
+import { FetchChain } from "omnibazaarjs/es";
+import { defineMessages, injectIntl } from "react-intl";
+import PropTypes from "prop-types";
+const isOnline = require("is-online");
 
-import { login } from '../../../../services/blockchain/auth/authActions';
+import { login } from "../../../../services/blockchain/auth/authActions";
 
-import './login-form.scss';
-import BtnLock from '../../../../assets/images/common/btn-lock-norm+pres.svg';
-import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
+import "./login-form.scss";
+import BtnLock from "../../../../assets/images/common/btn-lock-norm+pres.svg";
+import ValidatableField from "../../../../components/ValidatableField/ValidatableField";
 
 const messages = defineMessages({
   accountDoesntExist: {
-    id: 'LoginForm.accountDoesntExist',
-    defaultMessage: 'Account doesn\'t exist'
+    id: "LoginForm.accountDoesntExist",
+    defaultMessage: "Account doesn't exist"
   },
   connectionDoesntExist: {
-    id: 'LoginForm.connectionDoesntExist',
-    defaultMessage: 'There is no internet connection. Please connect to the internet and try again'
+    id: "LoginForm.connectionDoesntExist",
+    defaultMessage:
+      "There is no internet connection. Please connect to the internet and try again"
   },
   enterPassword: {
-    id: 'LoginForm.enterPassword',
-    defaultMessage: 'Enter password'
+    id: "LoginForm.enterPassword",
+    defaultMessage: "Enter password"
   },
   unlock: {
-    id: 'LoginForm.unlock',
-    defaultMessage: 'Unlock'
+    id: "LoginForm.unlock",
+    defaultMessage: "Unlock"
   },
   enterUsername: {
-    id: 'LoginForm.enterUsername',
-    defaultMessage: 'Enter your username'
+    id: "LoginForm.enterUsername",
+    defaultMessage: "Enter your username"
   },
   fieldRequired: {
-    id: 'LoginForm.fieldRequired',
-    defaultMessage: 'This field is required'
+    id: "LoginForm.fieldRequired",
+    defaultMessage: "This field is required"
   },
   noAccount: {
-    id: 'LoginForm.noAccount',
-    defaultMessage: 'Don\'t have an account yet?'
+    id: "LoginForm.noAccount",
+    defaultMessage: "Don't have an account yet?"
   },
   signup: {
-    id: 'LoginForm.signup',
-    defaultMessage: 'Sign up'
+    id: "LoginForm.signup",
+    defaultMessage: "Sign up"
   },
   error: {
-    id: 'LoginForm.error',
-    defaultMessage: 'Error'
+    id: "LoginForm.error",
+    defaultMessage: "Error"
   }
 });
 
 class LoginForm extends Component {
-  static asyncValidate = async (values) => {
+  static asyncValidate = async values => {
     const isonline = await isOnline();
     if (!isonline) {
       throw { username: messages.connectionDoesntExist };
     } else {
       try {
-        const account = await FetchChain('getAccount', values.username);
+        const account = await FetchChain("getAccount", values.username);
       } catch (e) {
-        console.log('ERR', e);
+        console.log("ERR", e);
         throw { username: messages.accountDoesntExist };
       }
     }
-  }
+  };
 
   constructor(props) {
     super(props);
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
     this.submit = this.submit.bind(this);
     this.signUp = this.signUp.bind(this);
   }
 
   state = {
-    showUsernameInput: false,
+    showPassword: false,
+    showUsernameInput: false
   };
 
   componentWillMount() {
@@ -95,46 +98,67 @@ class LoginForm extends Component {
   componentWillReceiveProps(nextProps) {
     const { formatMessage } = this.props.intl;
     if (nextProps.auth.error && !this.props.auth.error) {
-      const content = nextProps.auth.error.id ? formatMessage(nextProps.auth.error)
+      const content = nextProps.auth.error.id
+        ? formatMessage(nextProps.auth.error)
         : nextProps.auth.error;
       toastr.error(formatMessage(messages.error), content);
     }
 
-    if (nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName) {
+    if (
+      nextProps.auth.lastLoginUserName !== this.props.auth.lastLoginUserName
+    ) {
       this.props.initialize({ username: nextProps.auth.lastLoginUserName });
     }
   }
 
   signUp() {
-    this.props.history.push('/signup');
+    this.props.history.push("/signup");
   }
 
   submit(values) {
     const { password, username } = values;
-    this.props.authActions.login(
-      username,
-      password,
-    );
+    this.props.authActions.login(username, password);
+  }
+
+  togglePasswordVisibility() {
+    const { showPassword } = this.state;
+    this.setState({ showPassword: !showPassword });
   }
 
   renderPasswordField = ({
-    input, disabled, loading, meta: { touched, error, warning }
+    input,
+    disabled,
+    loading,
+    showPassword,
+    meta: { touched, error, warning }
   }) => {
     const { formatMessage } = this.props.intl;
-    const btnClass = cn(loading || !!this.props.asyncValidating ? 'ui loading' : '');
+    const btnClass = cn(
+      loading || !!this.props.asyncValidating ? "ui loading" : ""
+    );
     const errorMessage = error && error.id ? formatMessage(error) : error;
     return (
       <div>
-        {touched && ((error && <span className="error">{ errorMessage }</span>))}
+        {touched && (error && <span className="error">{errorMessage}</span>)}
         <div className="password">
-          <input
-            {...input}
-            type="password"
-            placeholder={formatMessage(messages.enterPassword)}
-          />
+          <div className="password-input-container">
+            <input
+              {...input}
+              type={`${showPassword ? 'text' : 'password'}`}
+              placeholder={formatMessage(messages.enterPassword)}
+            />
+            <i
+              onClick={this.togglePasswordVisibility}
+              className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+            />
+          </div>
           <Button
             content={formatMessage(messages.unlock)}
-            disabled={disabled || this.props.auth.loading || !!this.props.asyncValidating}
+            disabled={
+              disabled ||
+              this.props.auth.loading ||
+              !!this.props.asyncValidating
+            }
             color="green"
             type="submit"
             className={btnClass}
@@ -145,76 +169,73 @@ class LoginForm extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      valid,
-      auth,
-      asyncValidating
-    } = this.props;
+    const { handleSubmit, valid, auth, asyncValidating } = this.props;
     const { formatMessage } = this.props.intl;
-    const { showUsernameInput } = this.state;
+    const { showUsernameInput, showPassword } = this.state;
+
     return (
-      <Form
-        onSubmit={handleSubmit(this.submit)}
-        className="login"
-      >
-        {showUsernameInput ?
+      <Form onSubmit={handleSubmit(this.submit)} className="login">
+        {showUsernameInput ? (
           <div className="username">
             <Field
               type="text"
               name="username"
               placeholder={formatMessage(messages.enterUsername)}
               component={ValidatableField}
-              validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+              validate={[
+                required({ message: formatMessage(messages.fieldRequired) })
+              ]}
             />
           </div>
-          :
+        ) : (
           [
             <Image src={BtnLock} width={50} height={50} />,
             <span>{auth.currentUser.username}</span>
           ]
-        }
+        )}
         <Field
           name="password"
           disabled={!valid}
           loading={auth.loading}
+          showPassword={showPassword}
           component={this.renderPasswordField}
-          validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+          validate={[
+            required({ message: formatMessage(messages.fieldRequired) })
+          ]}
         />
         <Divider fitted />
         <div className="question">
-          <h3>{ formatMessage(messages.noAccount) }</h3>
+          <h3>{formatMessage(messages.noAccount)}</h3>
         </div>
         <Button
           content={formatMessage(messages.signup)}
           disabled={auth.loading}
           color="blue"
           onClick={this.signUp}
+          className=" transparent"
         />
       </Form>
     );
   }
 }
 
-
 LoginForm = withRouter(LoginForm);
 
 LoginForm = reduxForm({
-  form: 'loginForm',
+  form: "loginForm",
   asyncValidate: LoginForm.asyncValidate,
-  asyncBlurFields: ['username'],
-  destroyOnUnmount: true,
+  asyncBlurFields: ["username"],
+  destroyOnUnmount: true
 })(LoginForm);
 
 LoginForm = injectIntl(LoginForm);
 
 export default connect(
-  (state) => ({ ...state.default }),
-  (dispatch) => ({
-    authActions: bindActionCreators({ login }, dispatch),
+  state => ({ ...state.default }),
+  dispatch => ({
+    authActions: bindActionCreators({ login }, dispatch)
   })
 )(LoginForm);
-
 
 LoginForm.propTypes = {
   initialize: PropTypes.func,

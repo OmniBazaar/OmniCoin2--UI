@@ -9,6 +9,7 @@ import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import { NavLink, Prompt } from 'react-router-dom';
 import moment from 'moment';
+import isEqual from "lodash/isEqual";
 
 import CategoryDropdown from './components/CategoryDropdown/CategoryDropdown';
 import SubCategoryDropdown from './components/SubCategoryDropdown/SubCategoryDropdown';
@@ -38,6 +39,7 @@ import {
   saveListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
+import { saveListingDefault } from '../../../../../../../../services/listing/listingDefaultsActions';
 import {
   updatePublicData,
   setBtcAddress,
@@ -61,10 +63,10 @@ import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
 import { weightUnits, sizeUnits } from  './constants'; 
 import { getMinEthValue } from "../../../../../../../../services/utils";
+import ConfirmationModal from '../../../../../../../../components/ConfirmationModal/ConfirmationModal';
+import { getStoredListingDefautls } from '../../../../../../../../services/listing/listingDefaultsService';
 
 const contactOmniMessage = 'OmniMessage';
-
-
 
 const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
 const MAX_IMAGE_SIZE = '1mb';
@@ -116,7 +118,9 @@ class ListingForm extends Component {
     this.GeneralDropdown = makeValidatableField(GeneralDropdown);
 
     this.state = {
-      keywords: ''
+      keywords: '',
+      isModalOpen: false,
+      listingDefaults: null
     };
   }
 
@@ -140,7 +144,7 @@ class ListingForm extends Component {
     this.resetForm();
   }
 
-  initFormData() {
+  initFormData(listingDefaults = this.props.listingDefaults) {
     const {
       editingListing,
       auth,
@@ -161,7 +165,7 @@ class ListingForm extends Component {
         }
       }
     } else {
-      const { images, ...defaultData } = this.props.listingDefaults;
+      const { images, ...defaultData } = listingDefaults;
       const listingPriority = this.getDefaultListingPriority();
       data = {
         contact_type: contactOmniMessage,
@@ -169,9 +173,6 @@ class ListingForm extends Component {
         priority_fee: listingPriority,
         continuous: true,
         ...defaultData,
-        price_using_btc: true,
-        price_using_eth: true,
-        price_using_omnicoin: true,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         shipping_price_included: false
       };
@@ -181,13 +182,13 @@ class ListingForm extends Component {
           data.bitcoin_address = defaultData.bitcoin_address;
         } else {
           data.bitcoin_address = MANUAL_INPUT_VALUE;
-          data.manual_bitcoin_address = defaultData.bitcoin_address;
+          data.manual_bitcoin_address = defaultData.manual_bitcoin_address;
         }
       }
       if (defaultData.ethereum_address) {
         data.ethereum_address = defaultData.ethereum_address;
       } else {
-        data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
+        data.ethereum_address = ethereum.address;
       }
     }
 
@@ -196,7 +197,6 @@ class ListingForm extends Component {
         data[key] = key === 'weight_unit' ? 'oz' : 'in';
       }
     });
-
     this.props.initialize(data);
   }
 
@@ -236,8 +236,8 @@ class ListingForm extends Component {
     return `http://${publisherIp}/publisher-images/${path}`;
   }
 
-  resetForm() {
-    this.initFormData();
+  resetForm(listingDefaults) {
+    this.initFormData(listingDefaults);
     this.initImages();
     this.props.listingActions.resetSaveListing();
     this.setState({
@@ -246,6 +246,19 @@ class ListingForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(!isEqual(this.props.listingDefaults, nextProps.listingDefaults)){
+      this.resetForm(nextProps.listingDefaults);
+    }
+    if(this.props.submitSucceeded) {
+      const defaults = getStoredListingDefautls();
+      if (Object.keys(defaults).length === 0) {
+        const listingDefaults = {}
+        Object.keys(this.props.listingDefaults).forEach(key => {
+          listingDefaults[key] = this.props.formValues[key]
+        })
+        this.setState({ isModalOpen: true, listingDefaults: { ...listingDefaults, images: {} } })
+      }
+    }
     if ((
       nextProps.formValues !== this.props.formValues
         && !nextProps.formValues
@@ -481,8 +494,22 @@ class ListingForm extends Component {
     );
   }
 
+
+  toggleConfirmationModal = () => {
+    this.setState({ isModalOpen: false })
+    this.resetForm();
+  }
+
+  confirmSaveDefaults = () => {
+    // save todefaults
+    const { formatMessage } = this.props.intl;
+
+    this.props.listingDefaultsActions.saveListingDefault(this.state.listingDefaults);
+    this.setState({ isModalOpen: false })
+    toastr.success(formatMessage(messages.savedAsDefaults));
+  }
+
   render() {
-    console.log(this.props, "propssss")
     const { formatMessage } = this.props.intl;
     const {
       category,
@@ -1103,6 +1130,14 @@ class ListingForm extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        <ConfirmationModal
+          isOpen={this.state.isModalOpen}
+          title= {formatMessage(messages.saveAsDefaultSettings)}
+          onApprove={this.confirmSaveDefaults}
+          onCancel={this.toggleConfirmationModal}
+        >
+        {formatMessage(messages.saveSelectionsAsDefaultSettings)}
+        </ConfirmationModal>
       </Form>
     );
   }
@@ -1168,6 +1203,7 @@ export default compose(
       auth: state.default.auth,
       account: state.default.account,
       listing: state.default.listing,
+      listingDefaults: state.default.listingDefaults,
       formValues: getFormValues('listingForm')(state),
       listingDefaults: state.default.listingDefaults,
       bitcoin: state.default.bitcoin,
@@ -1184,6 +1220,9 @@ export default compose(
         setBtcAddress,
         setEthAddress,
         updatePublicData,
+      }, dispatch),
+      listingDefaultsActions: bindActionCreators({
+        saveListingDefault,
       }, dispatch),
       formActions: bindActionCreators({
         change: (field, value) => change('listingForm', field, value)

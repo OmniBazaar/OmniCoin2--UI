@@ -20,6 +20,7 @@ import {
   referralBonusSucceeded,
   referralBonusFailed,
   requestReferrerFinish,
+  referralBonus as referralBonusAction,
 } from './authActions';
 import { getFirstReachable } from './services';
 import * as AuthApi from './AuthApi';
@@ -274,16 +275,17 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
     // yield call(AuthApi.checkBonus, currentUser, values);
     const macAddress = localStorage.getItem('macAddress');
     const harddriveId = localStorage.getItem('hardDriveId');
-    const { telegramPhoneNumber, email, twitterUsername } = values;
+    const { telegramUserId, email, twitterUsername } = values;
     const data = {
       harddriveId,
       macAddress,
       email,
-      telegramPhoneNumber,
+      telegramUserId,
       twitterUsername,
       userName: currentUser.username
     };
     yield call(AuthApi.receiveWelcomeBonus, currentUser,  data);
+    yield referralBonus();
     yield put(welcomeBonusSucceeded());
   } catch (error) {
     if(error.message === 'Failed to fetch'){
@@ -298,15 +300,15 @@ function* receiveWelcomeBonus({ payload: { data: { values, reject } } }) {
 function* referralBonus() {
   try {
     const { currentUser } = (yield select()).default.auth;
-    const account = yield FetchChain('getAccount', currentUser.username);
+    const account = yield Apis.instance().db_api().exec('get_account_by_name', [currentUser.username]);
     const isBonusAvailable = yield Apis.instance().db_api().exec('is_referral_bonus_available', []);
     if (isBonusAvailable
-        && account.get('received_welcome_bonus')
-        && !account.get('sent_referral_bonus')) {
+        && account['received_welcome_bonus']
+        && !account['sent_referral_bonus']) {
       const tr = new TransactionBuilder();
       tr.add_type_operation('referral_bonus_operation', {
-        referred_account: account.get('id'),
-        referrer_account: account.get('referrer')
+        referred_account: account['id'],
+        referrer_account: account['referrer']
       });
       const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
       yield tr.set_required_fees();

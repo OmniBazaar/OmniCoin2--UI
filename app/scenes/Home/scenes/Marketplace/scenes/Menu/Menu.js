@@ -169,6 +169,7 @@ class Menu extends Component {
   };
 
   viewCategory = (categoryId, parent) => {
+    if (categoryId === 'Marketplace.more') return;
     this.props.history.push('/search-results');
     const { country, state, city } = this.props.account.publisherData;
     const category = parent ? Menu.getValue(parent) : Menu.getValue(categoryId);

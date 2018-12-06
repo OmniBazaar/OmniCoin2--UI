@@ -69,8 +69,8 @@ import {
   logout,
   requestAppVersion,
   getIdentityVerificationStatus,
-  referralBonus,
-  isWelcomeBonusReceived
+  isWelcomeBonusReceived,
+  referralBonus
 } from '../../services/blockchain/auth/authActions';
 import { loadListingDefault } from '../../services/listing/listingDefaultsActions';
 import { restartNode } from '../../services/blockchain/connection/connectionActions';
@@ -125,10 +125,10 @@ class Home extends Component {
     this.props.authActions.requestAppVersion();
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);
     this.props.listingActions.checkPublishersAlive();
-    this.props.authActions.referralBonus();
     this.props.authActions.isWelcomeBonusReceived(currentUser.username);
     this.props.mailActions.loadFolder(currentUser.username, MailTypes.INBOX);
     this.props.transferActions.loadDefaultShippingAddress(currentUser.username);
+    this.props.authActions.referralBonus();
     this.mailSubscribe(currentUser);
   }
 
@@ -312,7 +312,7 @@ class Home extends Component {
                     defaultMessage="Quick Start"
                   />
                 </NavLink>
-                <a href="https://support.omnibazaar.com" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
+                <a href="https://omnibazaar.helprace.com/" target="_blank" rel="noopener noreferrer" activeClassName="active" className="menu-item">
                   <Image src={SupportIcon} height={iconSize} width={iconSize} />
                   <FormattedMessage
                     id="Home.support"
@@ -405,8 +405,8 @@ export default connect(
       logout,
       requestAppVersion,
       getIdentityVerificationStatus,
-      referralBonus,
-      isWelcomeBonusReceived
+      isWelcomeBonusReceived,
+      referralBonus
     }, dispatch),
     listingActions: bindActionCreators({
       loadListingDefault,
@@ -457,8 +457,8 @@ Home.propTypes = {
     getAccount: PropTypes.func,
     logout: PropTypes.func,
     requestAppVersion: PropTypes.func,
-    referralBonus: PropTypes.func,
-    isWelcomeBonusReceived: PropTypes.func
+    isWelcomeBonusReceived: PropTypes.func,
+    referralBonus: PropTypes.func
   }),
   preferencesActions: PropTypes.shape({
     loadLocalPreferences: PropTypes.func

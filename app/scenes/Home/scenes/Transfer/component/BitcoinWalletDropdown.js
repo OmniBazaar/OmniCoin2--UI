@@ -47,6 +47,7 @@ class BitcoinWalletDropdown extends Component {
         onChange={this.onChange.bind(this)}
         value={value}
         loading={isGettingWallets}
+        disabled={this.props.disabled}
       />
     );
   }

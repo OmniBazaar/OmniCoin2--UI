@@ -204,7 +204,7 @@ class TransactionDetails extends Component {
         <div>
           <p>{formatMessage(messages.operations)}</p>
           <div className={operationClass}>
-            {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(operation)}
+            {operationTitle} {operation.amount} (XOM) {text} {this.getFeeDetail(detailSelected)}
           </div>
         </div>
       );
