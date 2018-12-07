@@ -90,8 +90,10 @@ const initCoefficients = (data) => {
   });
 }
 
-const checkCurrencyRatesChangedAndUpdateCoefficients = () => {
-  const rates = getRates();
+const checkCurrencyRatesChangedAndUpdateCoefficients = (rates) => {
+  if (!rates) {
+    rates = getRates();
+  }
   const keys = Object.keys(rates);
   for (let i = 0; i < keys.length; i++) {
     if (rates[keys[i]] !== coefficients[keys[i]]) {
@@ -103,12 +105,12 @@ const checkCurrencyRatesChangedAndUpdateCoefficients = () => {
   return false;
 }
 
-const currencyConverter = (amount, fromCur, toCur, noFixedValue) => {
+const currencyConverter = (amount, fromCur, toCur, noFixedValue, rates) => {
   if (fromCur === toCur) {
     return amount;
   }
 
-  checkCurrencyRatesChangedAndUpdateCoefficients();
+  checkCurrencyRatesChangedAndUpdateCoefficients(rates);
 
   const d = `${fromCur}to${toCur}`;
   if (coefficients[d]) {
