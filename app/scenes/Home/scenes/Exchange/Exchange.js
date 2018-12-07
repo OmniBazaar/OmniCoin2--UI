@@ -29,7 +29,7 @@ import messages from '../Exchange/messages';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import BitcoinWalletDropdown from '../../scenes/Transfer/component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
-import { exchangeXOM, getMinEthValue } from '../../../../services/utils';
+import { exchangeXOM, getMinEthValue, currencyConverter } from '../../../../services/utils';
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
@@ -235,7 +235,7 @@ class Exchange extends Component {
   renderBitcoinForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates } = this.props.exchange;
+    const { requestRatesError, requestingRates, rates, sale } = this.props.exchange;
     const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
@@ -272,7 +272,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? exchangeXOM(amount, rates.btcToXom) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
           </div>
         </div>
       </div>
@@ -282,7 +282,7 @@ class Exchange extends Component {
   renderEthereumForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates} = this.props.exchange;
+    const { requestRatesError, requestingRates, rates, sale} = this.props.exchange;
     const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
@@ -301,7 +301,7 @@ class Exchange extends Component {
                 requiredFieldValidator,
                 numericFieldValidator,
                 ethAmountValidator({
-                  min: disabled ? 0 : getMinEthValue(rates.ethToXom),
+                  min: disabled ? 0 : getMinEthValue(),
                   max: this.props.ethereum.balance
                 })
               ]}
@@ -311,7 +311,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? exchangeXOM(amount, rates.ethToXom) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'ETHEREUM', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
           </div>
         </div>
       </div>

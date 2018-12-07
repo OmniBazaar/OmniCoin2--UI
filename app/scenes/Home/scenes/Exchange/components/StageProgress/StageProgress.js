@@ -55,12 +55,13 @@ class StageProgress extends Component {
 
 		const { progress } = sale;
 		if (progress.phase === inProgressPhase.name) {
-			soldXom = parseFloat(progress.sold);
+			soldXom = parseFloat(parseFloat(progress.sold).toFixed(5));
 		} else {
 			soldXom = 0;
 		}
 
-		availableXom = parseFloat(inProgressPhase.xom) - soldXom;
+		availableXom = (parseFloat(inProgressPhase.xom) - soldXom).toFixed(5);
+		availableXom = parseFloat(availableXom);
 		if (availableXom < 0) {
 			availableXom = 0;
 		}

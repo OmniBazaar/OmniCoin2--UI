@@ -18,12 +18,11 @@ import {
   exchangeBtcSucceeded,
   exchangeEthFailed,
   exchangeEthSucceeded,
-  exchangeRequestRatesFinished,
   exchangeRequestSaleFinished,
   exchangeMakeSaleSuccess
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
-import { exchangeXOM } from "../utils";
+import { currencyConverter } from "../utils";
 
 import * as BitcoinApi from "../blockchain/bitcoin/BitcoinApi";
 import * as EthereumApi from "../blockchain/ethereum/EthereumApi";
@@ -54,7 +53,7 @@ export function* exchangeSubscriber() {
   yield all([
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
-    takeEvery('EXCHANGE_REQUEST_RATES', requestRates),
+    // takeEvery('EXCHANGE_REQUEST_RATES', requestRates),
     takeEvery('EXCHANGE_REQUEST_SALE', requestSale)
   ]);
 }
@@ -68,38 +67,38 @@ function* checkAccountVerified() {
   }
 }
 
-function* makeSale(transactionResult, currency, amount) {
-  if (!transactionResult) {
-    return;
-  }
+// function* makeSale(transactionResult, currency, amount) {
+//   if (!transactionResult) {
+//     return;
+//   }
 
-  try {
-    const exchangeId = transactionResult[0].trx.operation_results[0][1];
-    const { currentUser } = (yield select()).default.auth;
-    const authHeader = yield getAuthHeaders(currentUser);
-    const response = yield request({
-      uri: `${config.exchangeServer}/sale/makeSale`,
-      method: 'POST',
-      json: true,
-      headers: authHeader,
-      body: {
-        exchangeId,
-        currency,
-        amount
-      }
-    });
-    if (!response) {
-      throw new Error('Request make sale fail');
-    }
-    if (response.error) {
-      throw new Error(response.error);
-    }
-    const { progress } = response;
-    yield put(exchangeMakeSaleSuccess(progress));
-  } catch (err) {
-    console.log('Make sale error', err);
-  }
-}
+//   try {
+//     const exchangeId = transactionResult[0].trx.operation_results[0][1];
+//     const { currentUser } = (yield select()).default.auth;
+//     const authHeader = yield getAuthHeaders(currentUser);
+//     const response = yield request({
+//       uri: `${config.exchangeServer}/sale/makeSale`,
+//       method: 'POST',
+//       json: true,
+//       headers: authHeader,
+//       body: {
+//         exchangeId,
+//         currency,
+//         amount
+//       }
+//     });
+//     if (!response) {
+//       throw new Error('Request make sale fail');
+//     }
+//     if (response.error) {
+//       throw new Error(response.error);
+//     }
+//     const { progress } = response;
+//     yield put(exchangeMakeSaleSuccess(progress));
+//   } catch (err) {
+//     console.log('Make sale error', err);
+//   }
+// }
 
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
@@ -111,11 +110,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
     const trx = yield broadcastExchange(result.txid, 'BTC');
 
-    const { rates } = (yield select()).default.exchange;
-    const xom = exchangeXOM(amount, rates.btcToXom);
-    yield makeSale(trx, 'btc', xom);
-
-    sendBTCMail(xom, amount, result.txid, formatMessage);
+    sendBTCMail(amount, result.txid, formatMessage);
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -131,20 +126,25 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
     const txHash = result.hash;
 
-    yield delay(5000);
+    let i = 5;
+    let transaction = null;
+    while (i > 0) {
+      yield delay(5000);
 
-    const transaction = yield call(EthereumApi.getEthTransaction, txHash);
+      transaction = yield call(EthereumApi.getEthTransaction, txHash);
+      if (transaction) {
+        break;
+      }
+      i--;
+    }
+    
     if (!transaction) {
       throw new Error('eth_transaction_not_valid');
     }
 
     const trx = yield broadcastExchange(txHash, 'ETH');
 
-    const { rates } = (yield select()).default.exchange;
-    const xom = exchangeXOM(amount, rates.ethToXom);
-    yield makeSale(trx, 'eth', xom);
-    
-    sendETHMail(xom, amount, txHash, formatMessage);
+    sendETHMail(amount, txHash, formatMessage);
     yield put(exchangeEthSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
@@ -152,21 +152,21 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   }
 }
 
-function* requestRates() {
-  try {
-    const response = yield request({
-      uri: `${config.exchangeServer}/rate/rates`,
-      json: true
-    });
-    if (!response || !response.rates) {
-      throw new Error('Request rates fail');
-    }
-    yield put(exchangeRequestRatesFinished(null, response.rates));
-  } catch (error) {
-    console.log('ERROR ', error);
-    yield put(exchangeRequestRatesFinished(error));
-  }
-}
+// function* requestRates() {
+//   try {
+//     const response = yield request({
+//       uri: `${config.exchangeServer}/rate/rates`,
+//       json: true
+//     });
+//     if (!response || !response.rates) {
+//       throw new Error('Request rates fail');
+//     }
+//     yield put(exchangeRequestRatesFinished(null, response.rates));
+//   } catch (error) {
+//     console.log('ERROR ', error);
+//     yield put(exchangeRequestRatesFinished(error));
+//   }
+// }
 
 function* requestSale() {
   try {
