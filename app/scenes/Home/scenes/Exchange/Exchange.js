@@ -29,7 +29,7 @@ import messages from '../Exchange/messages';
 import { makeValidatableField } from '../../../../components/ValidatableField/ValidatableField';
 import BitcoinWalletDropdown from '../../scenes/Transfer/component/BitcoinWalletDropdown';
 import FormPrompt from '../../../../components/FormPrompt/FormPrompt';
-import { exchangeXOM, getMinEthValue } from '../../../../services/utils';
+import { exchangeXOM, getMinEthValue, currencyConverter } from '../../../../services/utils';
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
@@ -110,6 +110,8 @@ let wallets = [];
 let formatMessage;
 
 class Exchange extends Component {
+  canDoSale = true;
+
   state = {
     isPromptVisible: false
   };
@@ -164,7 +166,7 @@ class Exchange extends Component {
   }
 
   renderCurrencyField = ({
-    input, options
+    input, options, disabled
   }) => (
     <Select
       value={this.props.exchangeForm.currency}
@@ -181,6 +183,7 @@ class Exchange extends Component {
             toastr.warning(formatMessage(messages.warning), formatMessage(messages.walletNotConnected));
         }
       }}
+      disabled={disabled}
     />
   );
 
@@ -199,7 +202,7 @@ class Exchange extends Component {
           placeholder={placeholder}
           disabled={disabled}
         />
-        <Button className={cn('copy-btn button--gray-text address-button', buttonClass)}>
+        <Button type='button' className={cn('copy-btn button--gray-text address-button', buttonClass)}>
           {buttonText}
         </Button>
       </div>
@@ -232,8 +235,8 @@ class Exchange extends Component {
   renderBitcoinForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates } = this.props.exchange;
-    const disabled = requestingRates || requestRatesError;
+    const { requestRatesError, requestingRates, rates, sale } = this.props.exchange;
+    const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
         <div className="section">
@@ -247,6 +250,7 @@ class Exchange extends Component {
                 validate={[
                   required({ msg: formatMessage(messages.fieldRequired) })
                 ]}
+                disabled={!this.canDoSale}
               />
             </div>
           </div>
@@ -268,7 +272,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? exchangeXOM(amount, rates.btcToXom) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
           </div>
         </div>
       </div>
@@ -278,8 +282,8 @@ class Exchange extends Component {
   renderEthereumForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates} = this.props.exchange;
-    const disabled = requestingRates || requestRatesError;
+    const { requestRatesError, requestingRates, rates, sale} = this.props.exchange;
+    const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
         <div className="section">
@@ -297,7 +301,7 @@ class Exchange extends Component {
                 requiredFieldValidator,
                 numericFieldValidator,
                 ethAmountValidator({
-                  min: disabled ? 0 : getMinEthValue(rates.ethToXom),
+                  min: disabled ? 0 : getMinEthValue(),
                   max: this.props.ethereum.balance
                 })
               ]}
@@ -307,23 +311,24 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? exchangeXOM(amount, rates.ethToXom) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'ETHEREUM', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
           </div>
         </div>
       </div>
     );
   }
 
-  renderCheckboxField = ({ input, label, onCheck }) => (
+  renderCheckboxField = ({ input, label, onCheck, disabled }) => (
     <div className="transfer-input" style={{ display: 'flex' }}>
       <Checkbox
         value={input.value}
         onChecked={(value) => {
-            input.onChange(value);
-            if (onCheck) {
-              onCheck(value);
-            }
-          }}
+          input.onChange(value);
+          if (onCheck) {
+            onCheck(value);
+          }
+        }}
+        disabled={disabled}
       />
       <span className="label">
         {label}
@@ -331,7 +336,7 @@ class Exchange extends Component {
     </div>
   );
 
-  renderOmniCoinWhitePaper = () => {
+  renderOmniCoinWhitePaper = ({ disabled }) => {
     const { formatMessage } = this.props.intl;
     return (
       <React.Fragment>
@@ -340,6 +345,7 @@ class Exchange extends Component {
             name="omniCoinWhitePaper"
             component={this.renderCheckboxField}
             validate={[requiredFieldValidator]}
+            disabled={disabled}
           />
           <p>
             {formatMessage(messages.readOmniCoinWhitePaperText)}
@@ -352,7 +358,7 @@ class Exchange extends Component {
     );
   };
 
-  renderOmniCoinInformationMemorandum = () => {
+  renderOmniCoinInformationMemorandum = ({ disabled }) => {
     const { formatMessage } = this.props.intl;
     return (
       <React.Fragment>
@@ -361,6 +367,7 @@ class Exchange extends Component {
             name="omniCoinInformationMemorandum"
             component={this.renderCheckboxField}
             validate={[requiredFieldValidator]}
+            disabled={disabled}
           />
           <p>
             {formatMessage(messages.readOmniCoinInformationMemorandumText)}
@@ -373,7 +380,7 @@ class Exchange extends Component {
     );
   };
 
-  renderOmniCoinTokenPurchaseAgreement = () => {
+  renderOmniCoinTokenPurchaseAgreement = ({ disabled }) => {
     const { formatMessage } = this.props.intl;
     return (
       <React.Fragment>
@@ -382,6 +389,7 @@ class Exchange extends Component {
             name="omniCoinTokenPurchaseAgreement"
             component={this.renderCheckboxField}
             validate={[requiredFieldValidator]}
+            disabled={disabled}
           />
           <p>
             {formatMessage(messages.readOmniCoinTokenPurchaseAgreementText)}
@@ -412,7 +420,7 @@ class Exchange extends Component {
     const { formatMessage } = this.props.intl;
     const { handleSubmit, exchange } = this.props;
     const { currency, wallet } = this.props.exchangeForm;
-    const canDoSale = this.checkCanDoSale();
+    this.canDoSale = this.checkCanDoSale();
 
     return (
       <div className="container exchange-page">
@@ -448,6 +456,7 @@ class Exchange extends Component {
                       className="textfield1"
                       options={currencyOptions}
                       component={this.renderCurrencyField}
+                      disabled={!this.canDoSale}
                     />
                   </div>
                 </div>
@@ -457,9 +466,21 @@ class Exchange extends Component {
               <div className="footer-container">
                 <span className='left'/>
                 <div className="omnicoin-description-links">
-                  <Field name="omniCoinWhitePaper" component={this.renderOmniCoinWhitePaper} />
-                  <Field name="omniCoinInformationMemorandum" component={this.renderOmniCoinInformationMemorandum} />
-                  <Field name="omniCoinTokenPurchaseAgreement" component={this.renderOmniCoinTokenPurchaseAgreement} />
+                  <Field
+                    name="omniCoinWhitePaper"
+                    component={this.renderOmniCoinWhitePaper}
+                    disabled={!this.canDoSale}
+                  />
+                  <Field
+                    name="omniCoinInformationMemorandum"
+                    component={this.renderOmniCoinInformationMemorandum}
+                    disabled={!this.canDoSale}
+                  />
+                  <Field
+                    name="omniCoinTokenPurchaseAgreement"
+                    component={this.renderOmniCoinTokenPurchaseAgreement}
+                    disabled={!this.canDoSale}
+                  />
 
                   <div className="form-group">
                     <Button
@@ -467,7 +488,7 @@ class Exchange extends Component {
                       loading={this.props.exchange.loading}
                       content={formatMessage(messages.exchange)}
                       className="button--green-bg submit-btn"
-                      disabled={this.props.invalid || !canDoSale}
+                      disabled={this.props.invalid || !this.canDoSale}
                     />
                   </div>
                 </div>
@@ -477,8 +498,6 @@ class Exchange extends Component {
             <div className="exchange-rate-table">
               <ExchangeRatesTable />
             </div>
-
-            {!canDoSale && <div className='overlay-sale-disble' />}
           </div>
         </div>
       </div>

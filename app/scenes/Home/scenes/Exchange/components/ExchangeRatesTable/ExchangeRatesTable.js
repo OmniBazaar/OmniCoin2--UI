@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { Table, Loader } from 'semantic-ui-react';
 import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
-import { exchangeXOM } from '../../../../../../services/utils';
-import { exchangeRequestRates } from '../../../../../../services/exchange/exchangeActions';
+import { currencyConverter } from '../../../../../../services/utils';
 import Rate from './Rate';
 import messages from '../../messages';
 import btcIcon from '../../../Wallet/images/th-bitcoin.svg';
@@ -13,29 +12,52 @@ import ethIcon from '../../../Wallet/images/eth-small.svg';
 import xomIcon from '../../../Wallet/images/omnic.svg';
 
 class ExchangeRatesTable extends Component {
+	state = {
+		xomToUsd: '--',
+		btcToXom: '--',
+		ethToXom: '--'
+	}
+
 	componentDidMount() {
-		this.props.exchangeActions.exchangeRequestRates();
+		this.calculateRates(this.props.sale);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.exchange.requestingRates && !nextProps.exchange.requestingRates) {
-			if (nextProps.exchange.requestRatesError) {
-				const { formatMessage } = this.props.intl;
-				toastr.error(formatMessage(messages.error), formatMessage(messages.requestExchangeRateFail));
-			}
+		if (nextProps.sale !== this.props.sale || nextProps.currencyRates !== this.props.currencyRates) {
+			this.calculateRates(nextProps.sale);
 		}
+	}
+
+	calculateRates(sale) {
+		let xomToUsd = '--';
+		let btcToXom = '--';
+		let ethToXom = '--';
+
+		if (sale) {
+			const { rates } = sale;
+			if (rates && rates.OMNICOINtoUSD) {
+				xomToUsd = rates.OMNICOINtoUSD;
+			}
+			btcToXom = currencyConverter(1, 'BITCOIN', 'OMNICOIN', false, rates);
+			ethToXom = currencyConverter(1, 'ETHEREUM', 'OMNICOIN', false, rates);
+		}
+
+		this.setState({
+			xomToUsd,
+			btcToXom,
+			ethToXom
+		});
 	}
 
 	render() {
 		const { formatMessage } = this.props.intl;
-		const { requestingRates, rates } = this.props.exchange;
 
 		return (
 			<div className='exchange-rates'>
 				<div className='title'>{formatMessage(messages.exchangeRate)}</div>
-				<Rate icon={xomIcon} fromName='XOM' toName='USD' rate={rates ? rates.xomToUsd : 0} />
-				<Rate icon={btcIcon} fromName='BTC' toName='XOM' rate={rates ? exchangeXOM(1, rates.btcToXom) : 0} />
-				<Rate icon={ethIcon} fromName='ETH' toName='XOM' rate={rates ? exchangeXOM(1, rates.ethToXom) : 0} />
+				<Rate icon={xomIcon} fromName='XOM' toName='USD' rate={this.state.xomToUsd} />
+				<Rate icon={btcIcon} fromName='BTC' toName='XOM' rate={this.state.btcToXom} />
+				<Rate icon={ethIcon} fromName='ETH' toName='XOM' rate={this.state.ethToXom} />
 			</div>
 		);
 	}
@@ -43,11 +65,7 @@ class ExchangeRatesTable extends Component {
 
 export default connect(
 	state => ({
-		exchange: state.default.exchange
-	}),
-	dispatch => ({
-		exchangeActions: bindActionCreators({
-			exchangeRequestRates
-		}, dispatch)
+		sale: state.default.exchange.sale,
+		currencyRates: state.default.currency.currencyRates
 	})
 )(injectIntl(ExchangeRatesTable));

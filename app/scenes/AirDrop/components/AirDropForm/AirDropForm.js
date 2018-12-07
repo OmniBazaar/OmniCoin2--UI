@@ -94,7 +94,7 @@ const messages = defineMessages({
   },
   mailchimpLink: {
     id: "AirDropForm.mailchimpLink",
-    defaultMessage: "OmniBazaar on MailChimp"
+    defaultMessage: "Newsletter Registration"
   },
   joinNewsletterChannelConfirmation: {
     id: "AirDropForm.joinNewsletterChannelConfirmation",

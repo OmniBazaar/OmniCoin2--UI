@@ -64,6 +64,9 @@ class IdentityVerificationForm extends Component {
               },
               SELFIE: {
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
+              },
+              LANDING: {
+                instructions: "To be invited to the OmniCoin Token Sale, agree to the conditions below and follow the steps to verify your identity."
               }
             }
           }
