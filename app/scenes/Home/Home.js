@@ -120,7 +120,7 @@ class Home extends Component {
     this.props.bitcoinActions.getWallets();
     this.props.ethereumActions.getEthereumWallets();
     this.props.listingActions.loadListingDefault();
-    this.props.connectionActions.restartNodeIfExists();
+    this.props.connectionActions.restartNodeIfExists(true);
     this.props.dhtActions.dhtReconnect();
     this.props.authActions.requestAppVersion();
     this.props.authActions.getIdentityVerificationStatus(currentUser.username);

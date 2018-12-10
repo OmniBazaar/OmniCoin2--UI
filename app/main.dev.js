@@ -42,7 +42,9 @@ if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true')
   require('electron-debug')();
   const path = require('path');
   const p = path.join(__dirname, '..', 'app', 'node_modules');
-  require('module').globalPaths.push(p);
+  require('module')
+    .globalPaths
+    .push(p);
 }
 
 const installExtensions = async () => {
@@ -117,7 +119,7 @@ const getOb2ProdPath = () => {
 const getNodeDirProdPath = () => `${getProdBasePath(process.platform)}/witness_node`;
 
 const getNodeDirDevPath = () =>
-  getNodeDirProdPath()
+    getNodeDirProdPath()
   // return getDevBasePath() + '/witness_node';
 ;
 
@@ -142,7 +144,7 @@ const runNode = async () => {
   }
   await killNode();
 
-  const nodeProcess = spawn(nodePath,{
+  const nodeProcess = spawn(nodePath, {
     detached: true,
     stdio: 'ignore'
   });
@@ -157,22 +159,38 @@ const runNode = async () => {
   });
 };
 
+const isNodeRunning = (query, cb) => {
+  let platform = process.platform;
+  let cmd = '';
+  switch (platform) {
+    case 'win32' : cmd = `tasklist`; break;
+    case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
+    case 'linux' : cmd = `ps -A`; break;
+    default: break;
+  }
+  exec(cmd, (err, stdout, stderr) => {
+    cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  });
+}
+
 const updateConfigData = (name, value, config) => {
-  const values = config.match(new RegExp(`${name}[ ="]*(.*$)`, 'gm')).map(el => el.replace(new RegExp(`${name} [ =]*`, 'gm'), ''));
+  const values = config.match(new RegExp(`${name}[ ="]*(.*$)`, 'gm'))
+    .map(el => el.replace(new RegExp(`${name} [ =]*`, 'gm'), ''));
   const exist = values.indexOf(value) !== -1;
   let newData = config;
   if (!exist) {
     const lineStart = config.search(new RegExp(`^[ #]*${name}[ =]*(.*$)`, 'gm'));
-    newData = `${config.substr(0, lineStart)}${name} = ${value}\n${config.substr(lineStart)}`;
+    newData = `${config.substr(0, lineStart)}${name} = ${value}\r\n${config.substr(lineStart)}`;
   } else {
-    const escapeVal = value.replace(/([\[\]])/gm, "\\$1");
+    const escapeVal = value.replace(/([\[\]])/gm, '\\$1');
     newData = config.replace(new RegExp(`^[ #]*${name}[ =]*${escapeVal}.*$`, 'gm'), `${name} = ${value}`);
   }
   return newData;
-}
+};
 
 
-const restartNodeIfExists = (witnessId, pubKey, privKey) => {
+const restartNodeIfExists = (witnessId, pubKey, privKey, data) => {
+  const { payload: { restartIfNotExist } } = data;
   let path = getNodeDirDevPath();
   if (isProd()) {
     path = getNodeDirProdPath();
@@ -186,7 +204,18 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
       fs.writeFile(`${path}/witness_node_data_dir/config.ini`, privateKeyUpdatedData, (error) => {
         console.log('ERROR ', error);
       });
-      runNode();
+      console.log("KH************** restartIfNotExist", '\x1b[33m', restartIfNotExist, '\x1b[0m')
+      if (restartIfNotExist) {
+        isNodeRunning('witness_node.exe', (status) => {
+          console.log("KH************** STATUS", status)
+          if (!status){
+            runNode();
+          }
+        });
+      } else {
+        console.log("KH************** RESTART")
+        runNode();
+      }
     }
   });
 };
@@ -254,9 +283,9 @@ const processReferrer = async () => {
         let start = data.lastIndexOf('-') + 1;
         const end = data.lastIndexOf('.');
 
-    		if (start === 0) {
-    			start = end;
-    		}
+        if (start === 0) {
+          start = end;
+        }
 
         let referrer = data.substring(start, end);
         const regex = /([a-zA-Z0-9\-\.])+/i;
@@ -278,15 +307,19 @@ const getAppVersion = () => {
 const processMacAddress = async () => {
   getmac.getMac((err, macAddress) => {
     if (err) throw err;
-    machineId().then((hardDriveId) => {
-      if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-        macAddress += Math.random();
-        hardDriveId += Math.random();
-      }
-      ipcMain.on('get-pc-ids', (event) => {
-        event.sender.send('receive-pc-ids', { macAddress, hardDriveId });
+    machineId()
+      .then((hardDriveId) => {
+        if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+          macAddress += Math.random();
+          hardDriveId += Math.random();
+        }
+        ipcMain.on('get-pc-ids', (event) => {
+          event.sender.send('receive-pc-ids', {
+            macAddress,
+            hardDriveId
+          });
+        });
       });
-    });
   });
 };
 
@@ -303,9 +336,9 @@ const runBitcoinCli = async () => {
  */
 
 app.on('window-all-closed', () => {
- // if (process.platform !== 'darwin') {
-    app.quit();
- // }
+  // if (process.platform !== 'darwin') {
+  app.quit();
+  // }
 });
 
 // shouldQuit will be truthy if another instance of this app attempts to start
@@ -335,8 +368,8 @@ app.on('ready', async () => {
   await runBitcoinCli();
   getAppVersion();
 
-  ipcMain.on('restart-node', (event, witnessId, pubKey, privKey) => {
-    restartNodeIfExists(witnessId, pubKey, privKey);
+  ipcMain.on('restart-node', (event, witnessId, pubKey, privKey, restartIfNotExist) => {
+    restartNodeIfExists(witnessId, pubKey, privKey, restartIfNotExist);
   });
   ipcMain.on('launch-node-daemon', () => launchNodeDaemon());
   ipcMain.on('stop-node-daemon', () => stopNodeDaemon());
