@@ -1,5 +1,5 @@
 export default {
-	updateServer: "http://update.omnibazaar.com",
+	updateServer: "http://35.171.116.3/updates",
 	easypostApiKey: "EZAK24e734467ad34a129200a9d509010eb805evYpV8nimjOjRn4HtT6w",
 	exchangeServer: "http://35.171.116.3/exchange/api",
 	mailServer: "http://35.171.116.3/sendmail/",
