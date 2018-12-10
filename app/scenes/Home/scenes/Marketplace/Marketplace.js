@@ -535,10 +535,11 @@ class Marketplace extends Component {
 
   renderFooter() {
     const { formatMessage } = this.props.intl;
+    const { identityVerificationStatus } = this.props.auth;
 
     return (
       <div className="market-footer">
-        <NavLink to="/identity-verification">
+        <NavLink to={identityVerificationStatus && identityVerificationStatus.verified ? '/exchange' : '/identity-verification'}>
           <Button content={formatMessage(messages.getOmniCoins)} className="title button--green-bg" />
         </NavLink>
         <span className="description">{formatMessage(messages.getOmniCoinsText)}</span>
@@ -666,6 +667,9 @@ Marketplace.propTypes = {
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
+  }),
+  auth: PropTypes.shape({
+    identityVerificationStatus: PropTypes.string
   }),
   search: PropTypes.shape({
     recentSearches: PropTypes.array,
