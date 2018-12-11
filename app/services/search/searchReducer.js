@@ -385,10 +385,7 @@ const reducer = handleActions({
       };
     }
 
-    return {
-      ...state,
-      searching: false
-    };
+    return state;
   },
   [setSearchListingsParams](state, { payload }) {
     return {

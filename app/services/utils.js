@@ -4,6 +4,7 @@ import {
   ob2SocketOpened
 } from './marketplace/marketplaceActions';
 import { getRates } from './currency/currencySaga';
+import { exec } from "child_process";
 
 function wrapRequest(func) {
   return async (...args) => {
@@ -43,7 +44,6 @@ function wsWatcher(socket, messageTypes) {
     };
   });
 }
-
 
 function reputationOptions(from = 0, to = 10) {
   const options = [];
@@ -148,7 +148,7 @@ const getMinEthValue = (ethToXomRate) => {
   } else {
     minEth = currencyConverter(0.00001, 'OMNICOIN', 'ETHEREUM', true).toFixed(18);
   }
-  
+
   let min = '';
   for (let i = 0; i < minEth.length; i++) {
     const c = minEth.charAt(i);

@@ -303,117 +303,128 @@ const searchKeywords = async (keywords, isSearchAll, filteredHosts) => {
   return searchResults;
 }
 
+let isSearchingDHT = false;
 export function* searchPeers({
   searchTerm, category, subCategory,
   country, state, city, isSearchByAllKeywords
 }) {
-  let { dht } = (yield select()).default;
-  while (!dht.connector || dht.isConnecting) {
-    yield delay(200);
-    dht = (yield select()).default.dht;
-  }
+  try {
+    while (isSearchingDHT) {
+      yield delay(200);
+    }
 
-  let metaHosts = yield searchMeta({category, subCategory, country, state, city});
-  let hasMetaSearch = metaHosts !== null;
-  if (hasMetaSearch && !metaHosts.length) {
-    return null;
-  }
+    isSearchingDHT = true;
 
-  const publisherData = AccountSettingsStorage.getPublisherData();
-  const isPublisherSelected = publisherData.priority === 'publisher';
-  if (isPublisherSelected) {
-    const priorityPublisher = publisherData.publisherName.publisher_ip;
-    if (!priorityPublisher) {
+    let { dht } = (yield select()).default;
+    while (!dht.connector || dht.isConnecting) {
+      yield delay(200);
+      dht = (yield select()).default.dht;
+    }
+
+    let metaHosts = yield searchMeta({category, subCategory, country, state, city});
+    let hasMetaSearch = metaHosts !== null;
+    if (hasMetaSearch && !metaHosts.length) {
       return null;
     }
 
-    if (hasMetaSearch && metaHosts.indexOf(priorityPublisher) === -1) {
-      return null;
-    }
-
-    const publishersAlive = yield getAlivePublisherIps();
-    if (!publishersAlive[priorityPublisher]) {
-      return null;
-    }
-
-    metaHosts = [priorityPublisher];
-    hasMetaSearch = true;
-  }
-
-  let keywords = searchTerm || [];
-  if (typeof keywords === 'string') {
-    keywords = keywords.trim();
-    if (keywords) {
-      keywords = keywords.split(' ').map(item => item.trim()).filter(item => item);
-    } else {
-      keywords = [];
-    }
-  }
-
-  if (keywords.length) {
-    const keywordSearchResults = yield searchKeywords(keywords, isSearchByAllKeywords, hasMetaSearch ? metaHosts : null);
-
-    if (!Object.keys(keywordSearchResults).length) {
-      return null;
-    }
-    if (isSearchByAllKeywords) {
-      const publishersData = {};
-      forOwn(keywordSearchResults, (hosts) => {
-        forOwn(hosts, (pub, host) => {
-          if (!publisherData[host]) {
-            publishersData[host] = pub;
-          } else {
-            publishersData[host].weight += pub.weight;
-          }
-        });
-      });
-
-      const pubs = Object.keys(publishersData).map(h => publishersData[h]);
-      if (!pubs.length) {
+    const publisherData = AccountSettingsStorage.getPublisherData();
+    const isPublisherSelected = publisherData.priority === 'publisher';
+    if (isPublisherSelected) {
+      const priorityPublisher = publisherData.publisherName.publisher_ip;
+      if (!priorityPublisher) {
         return null;
       }
 
-      return {
-        keywords,
-        publishers: pubs
-      };
-    } else {
-      const keywordsData = [];
-      forOwn(keywordSearchResults, (hosts, keyword) => {
-        const ips = Object.keys(hosts);
-        if (!ips.length) {
-          return;
+      if (hasMetaSearch && metaHosts.indexOf(priorityPublisher) === -1) {
+        return null;
+      }
+
+      const publishersAlive = yield getAlivePublisherIps();
+      if (!publishersAlive[priorityPublisher]) {
+        return null;
+      }
+
+      metaHosts = [priorityPublisher];
+      hasMetaSearch = true;
+    }
+
+    let keywords = searchTerm || [];
+    if (typeof keywords === 'string') {
+      keywords = keywords.trim();
+      if (keywords) {
+        keywords = keywords.split(' ').map(item => item.trim()).filter(item => item);
+      } else {
+        keywords = [];
+      }
+    }
+
+    if (keywords.length) {
+      const keywordSearchResults = yield searchKeywords(keywords, isSearchByAllKeywords, hasMetaSearch ? metaHosts : null);
+
+      if (!Object.keys(keywordSearchResults).length) {
+        return null;
+      }
+      if (isSearchByAllKeywords) {
+        const publishersData = {};
+        forOwn(keywordSearchResults, (hosts) => {
+          forOwn(hosts, (pub, host) => {
+            if (!publisherData[host]) {
+              publishersData[host] = pub;
+            } else {
+              publishersData[host].weight += pub.weight;
+            }
+          });
+        });
+
+        const pubs = Object.keys(publishersData).map(h => publishersData[h]);
+        if (!pubs.length) {
+          return null;
         }
 
-        keywordsData.push({
-          keyword,
-          publishers: ips.map(h => hosts[h])
-        });
-      });
+        return {
+          keywords,
+          publishers: pubs
+        };
+      } else {
+        const keywordsData = [];
+        forOwn(keywordSearchResults, (hosts, keyword) => {
+          const ips = Object.keys(hosts);
+          if (!ips.length) {
+            return;
+          }
 
-      if (!keywordsData.length) {
-        return null;
+          keywordsData.push({
+            keyword,
+            publishers: ips.map(h => hosts[h])
+          });
+        });
+
+        if (!keywordsData.length) {
+          return null;
+        }
+
+        return {
+          keywords: keywordsData
+        };
       }
+    }
+
+    if (hasMetaSearch) {
+      const publishers = metaHosts.map(h => ({
+        address: h,
+        weight: 1
+      }));
 
       return {
-        keywords: keywordsData
+        keywords: [],
+        publishers
       };
     }
+
+    return null;
+  } finally {
+    isSearchingDHT = false;
   }
-
-  if (hasMetaSearch) {
-    const publishers = metaHosts.map(h => ({
-      address: h,
-      weight: 1
-    }));
-
-    return {
-      keywords: [],
-      publishers
-    };
-  }
-
-  return null;
 }
 
 // export function* getPeersFor({
