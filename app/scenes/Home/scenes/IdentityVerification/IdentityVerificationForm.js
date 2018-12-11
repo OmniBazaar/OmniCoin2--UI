@@ -60,7 +60,7 @@ class IdentityVerificationForm extends Component {
           uiConf: {
             steps: {
               APPLICANT_DATA: {
-                instructions: 'To get your account verified fill the basic information below. \n\nCitizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.'
+                instructions: 'To get your account verified fill the basic information below. \n\n ###### Citizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.'
               },
               IDENTITY: {
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
