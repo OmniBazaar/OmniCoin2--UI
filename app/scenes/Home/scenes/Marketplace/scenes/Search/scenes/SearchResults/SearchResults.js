@@ -158,8 +158,10 @@ class SearchResults extends Component {
         </div>
         <div className="body">
           <Breadcrumb category={category} subCategory={subCategory} />
-          {(this.props.dht.isLoading || this.props.search.searching || saveListing.saving)
-            ?
+          {
+            (!this.props.dht.isLoading && !this.props.search.searching && !saveListing.saving)
+            ? this.renderSearchResults()
+            :
               <Loader
                 content={
                   saveListing.saving || this.props.dht.isLoading
@@ -169,8 +171,6 @@ class SearchResults extends Component {
                 inline
                 active
               />
-            :
-            this.renderSearchResults()
           }
         </div>
       </div>
