@@ -57,16 +57,47 @@ Filename: "{app}\vc_redist.x64.exe"; Parameters: "/q";
 Filename: "{app}\Omnibazaar.exe"; Description: Run Application; Flags: postinstall nowait skipifsilent
 
 [Code]
+var
+    wasWitnessNodeRunning : boolean;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
     appDataPath, filename : string;
+    resultCode : integer;
 begin
-    if CurStep = ssPostInstall then
+    if CurStep = ssInstall then
+    begin
+        wasWitnessNodeRunning := False;
+        if Exec(ExpandConstant('{cmd}'), '/C tasklist | findstr "witness_node.exe"', '', SW_HIDE, ewWaitUntilTerminated, resultCode) then
+        begin
+            if resultCode = 0 then
+            begin
+                wasWitnessNodeRunning := True
+                if not Exec(ExpandConstant('{cmd}'), '/C taskkill /IM witness_node.exe /F /T', '', SW_HIDE, ewWaitUntilTerminated, resultCode) then
+                begin
+                    MsgBox('Unable to close witness_node process. Error code: ' + IntToStr(resultCode), mbError, MB_OK);
+                end
+            end
+        end
+        else
+        begin
+            MsgBox('Unable to find witness_node process. Error code: ' + IntToStr(resultCode), mbError, MB_OK);
+        end
+    end
+    else if CurStep = ssPostInstall then
     begin    
         // Get value of {srcexe} constant (path to installer file)
         filename := ExtractFileName(ExpandConstant('{srcexe}'));    
         appDataPath := ExpandConstant('{userappdata}');
 
         SaveStringToFile(appDataPath + '\{#APPDATA_DIR}\omnibazaar.set', 'referrer='+filename, False);
+
+        if wasWitnessNodeRunning then
+        begin
+            if not Exec(ExpandConstant('{localappdata}\{#APPDATA_DIR}\witness_node\witness_node.exe'), '', '', SW_HIDE, ewNoWait, resultCode) then
+            begin
+                MsgBox('Unable to restart witness_node process. Error code: ' + IntToStr(resultCode), mbError, MB_OK);
+            end
+        end
     end;
 end;
