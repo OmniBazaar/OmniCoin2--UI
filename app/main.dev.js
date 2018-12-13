@@ -163,10 +163,10 @@ const isNodeRunning = (query, cb) => {
   let platform = process.platform;
   let cmd = '';
   switch (platform) {
-    case 'win32' : cmd = `tasklist`; break;
-    case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
+    case 'win32' : cmd = `tasklist`; query=+ '.exe'; break;
+    case 'darwin' : cmd = `ps -ax`; break;
     case 'linux' : cmd = `ps -A`; break;
-    default: break;
+    default: ''; break;
   }
   exec(cmd, (err, stdout, stderr) => {
     cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
@@ -204,16 +204,13 @@ const restartNodeIfExists = (witnessId, pubKey, privKey, data) => {
       fs.writeFile(`${path}/witness_node_data_dir/config.ini`, privateKeyUpdatedData, (error) => {
         console.log('ERROR ', error);
       });
-      console.log("KH************** restartIfNotExist", '\x1b[33m', restartIfNotExist, '\x1b[0m')
       if (restartIfNotExist) {
-        isNodeRunning('witness_node.exe', (status) => {
-          console.log("KH************** STATUS", status)
+        isNodeRunning('witness_node', (status) => {
           if (!status){
             runNode();
           }
         });
       } else {
-        console.log("KH************** RESTART")
         runNode();
       }
     }
