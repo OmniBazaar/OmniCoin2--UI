@@ -32,6 +32,8 @@ import {
   saveListing,
   saveListingSuccess,
   saveListingError,
+  previewListing,
+  previewListingError,
   resetDeleteListing,
   deleteListing,
   deleteListingSuccess,
@@ -96,6 +98,7 @@ const defaultState = {
     listing: null,
     listingId: null
   },
+  previewListing: null,
   deleteListing: {
     deleting: false,
     error: null,
@@ -541,6 +544,21 @@ const reducer = handleActions({
         error,
         listingId
       }
+    };
+  },
+  [previewListing](state, { payload: { listing } }) {
+    return {
+      ...state,
+      previewListing: {
+        ...state.previewListing,
+        ...listing
+      }
+    };
+  },
+  [previewListingError](state, { payload: { error } }) {
+    return {
+      ...state,
+      error
     };
   },
   [resetDeleteListing](state) {

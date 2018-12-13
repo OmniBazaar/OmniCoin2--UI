@@ -7,7 +7,7 @@ import { Form, Button, Grid } from 'semantic-ui-react';
 import { Field, reduxForm, getFormValues, change, isDirty } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
-import { NavLink, Prompt } from 'react-router-dom';
+import { Link, NavLink, Prompt, withRouter } from 'react-router-dom';
 import moment from 'moment';
 import isEqual from "lodash/isEqual";
 
@@ -37,6 +37,7 @@ import {
 import {
   setListingImages,
   saveListing,
+  previewListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
 import { saveListingDefault } from '../../../../../../../../services/listing/listingDefaultsActions';
@@ -120,8 +121,12 @@ class ListingForm extends Component {
     this.state = {
       keywords: '',
       isModalOpen: false,
-      listingDefaults: null
+      listingDefaults: null,
+      submitType: 'save'
     };
+
+    this.submit = this.submit.bind(this);
+    this.onSubmitClick = this.onSubmitClick.bind(this);
   }
 
   renderLabeledField = ({
@@ -246,6 +251,9 @@ class ListingForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(!this.props.listing.previewListing && !!nextProps.listing.previewListing){
+        this.props.history.push('listing/preview');
+    }
     if(!isEqual(this.props.listingDefaults, nextProps.listingDefaults)){
       this.resetForm(nextProps.listingDefaults);
     }
@@ -440,8 +448,9 @@ class ListingForm extends Component {
     toastr.error(title, message);
   }
 
-  submit(values) {
-    const { saveListing } = this.props.listingActions;
+  submit = values => {
+    const { submitType } = this.state;
+    const { saveListing, previewListing } = this.props.listingActions;
     const {
       listing_id, publisher, keywords, ...data
     } = values;
@@ -469,6 +478,11 @@ class ListingForm extends Component {
       delete obj.manual_bitcoin_address;
     }
 
+    if (submitType === 'preview') {
+      previewListing(obj);
+      return;
+    }
+
     saveListing(publisher, obj, listing_id);
   }
 
@@ -494,10 +508,13 @@ class ListingForm extends Component {
     );
   }
 
-
   toggleConfirmationModal = () => {
     this.setState({ isModalOpen: false })
     this.resetForm();
+  }
+
+  onSubmitClick(type) {
+    this.setState({ submitType: type || 'save' });
   }
 
   confirmSaveDefaults = () => {
@@ -539,8 +556,8 @@ class ListingForm extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
-        <FormPrompt isVisible={this.props.isFormDirty}/>
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit)}>
+        <FormPrompt isVisible={this.state.submitType !== 'preview' && this.props.isFormDirty}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
@@ -1118,6 +1135,9 @@ class ListingForm extends Component {
             <Grid.Column width={3}>
               <Button
                 type="submit"
+                name="submit"
+                value="submit"
+                onClick={this.onSubmitClick}
                 content={
                   formatMessage(editingListing ?
                     messages.saveListing :
@@ -1130,13 +1150,16 @@ class ListingForm extends Component {
             </Grid.Column>
             <Grid.Column width={3}>
               <Button
-                type="button"
+                type="submit"
+                name="preview"
+                value="preview"
+                onClick={() => this.onSubmitClick('preview')}
                 content={
                   formatMessage(messages.previewListingCaps)
                 }
                 className="button--primary uppercase"
                 loading={saving || submitting || asyncValidating}
-                disabled={saving || submitting || asyncValidating}
+                disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
@@ -1158,7 +1181,8 @@ ListingForm.propTypes = {
   listingActions: PropTypes.shape({
     setListingImages: PropTypes.func,
     resetSaveListing: PropTypes.func,
-    saveListing: PropTypes.func
+    saveListing: PropTypes.func,
+    previewListing: PropTypes.func
   }).isRequired,
   accountActions: PropTypes.shape({
     updatePublicData: PropTypes.func,
@@ -1202,6 +1226,8 @@ ListingForm.propTypes = {
   }).isRequired,
 };
 
+ListingForm = withRouter(ListingForm);
+
 export default compose(
   reduxForm({
     form: 'listingForm',
@@ -1216,7 +1242,6 @@ export default compose(
       listing: state.default.listing,
       listingDefaults: state.default.listingDefaults,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults,
       bitcoin: state.default.bitcoin,
       ethereum: state.default.ethereum,
       isFormDirty: isDirty('listingForm')(state)
@@ -1225,7 +1250,8 @@ export default compose(
       listingActions: bindActionCreators({
         setListingImages,
         saveListing,
-        resetSaveListing
+        resetSaveListing,
+        previewListing
       }, dispatch),
       accountActions: bindActionCreators({
         setBtcAddress,
