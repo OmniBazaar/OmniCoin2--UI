@@ -61,7 +61,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
-import { weightUnits, sizeUnits } from  './constants'; 
+import { weightUnits, sizeUnits } from  './constants';
 import { getMinEthValue } from "../../../../../../../../services/utils";
 import ConfirmationModal from '../../../../../../../../components/ConfirmationModal/ConfirmationModal';
 import { getStoredListingDefautls } from '../../../../../../../../services/listing/listingDefaultsService';
@@ -1115,7 +1115,7 @@ class ListingForm extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
+            <Grid.Column width={3}>
               <Button
                 type="submit"
                 content={
@@ -1126,6 +1126,17 @@ class ListingForm extends Component {
                 className="button--green-bg uppercase"
                 loading={saving || submitting || asyncValidating}
                 disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
+              />
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Button
+                type="button"
+                content={
+                  formatMessage(messages.previewListingCaps)
+                }
+                className="button--primary uppercase"
+                loading={saving || submitting || asyncValidating}
+                disabled={saving || submitting || asyncValidating}
               />
             </Grid.Column>
           </Grid.Row>
