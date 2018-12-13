@@ -65,6 +65,10 @@ systemctl daemon-reload
 chown -R $SUDO_USER:$SUDO_USER ~/.OmniBazaar
 if systemctl is-active -q witness-node; then
   systemctl restart witness-node
+elif pgrep -x witness_node; then
+  killall witness_node
+  sleep 5
+  sudo -H -u $SUDO_USER bash -c '${HOME}/.OmniBazaar/witness_node/witness_node </dev/null &>/dev/null &'
 fi
 <</POSTINST>>
 <<PRERM>>
