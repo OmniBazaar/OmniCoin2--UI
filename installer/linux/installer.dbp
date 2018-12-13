@@ -60,7 +60,12 @@ fi
 chmod -R u=rwx,g=r,o=r ~/.OmniBazaar
 chmod u=rwx,g=rx,o=r ~/.OmniBazaar/witness_node/witness_node
 cp /usr/share/OmniBazaar/service/witness-node.service /etc/systemd/system/
+sed -i "s|\~|${HOME}|" /etc/systemd/system/witness-node.service
+systemctl daemon-reload
 chown -R $SUDO_USER:$SUDO_USER ~/.OmniBazaar
+if systemctl is-active -q witness-node; then
+  systemctl restart witness-node
+fi
 <</POSTINST>>
 <<PRERM>>
 0
@@ -70,6 +75,7 @@ chown -R $SUDO_USER:$SUDO_USER ~/.OmniBazaar
 #!/bin/sh
 set -e
 rm -rf ~/.OmniBazaar
+rm /etc/systemd/system/witness-node.service
 <</POSTRM>>
 <</SCRIPTS>>
 <<CHANGELOG>>
