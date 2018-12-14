@@ -90,6 +90,7 @@ function* checkAccountVerified() {
 
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
+    yield requestSale();
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
@@ -113,6 +114,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
 function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   try {
+    yield requestSale();
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
