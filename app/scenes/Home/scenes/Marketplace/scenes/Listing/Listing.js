@@ -44,7 +44,8 @@ import {
   setNumberToBuy,
   setActiveCurrency,
   deleteListing,
-  reportListing
+  reportListing,
+  clearPreviewListing
 } from '../../../../../../services/listing/listingActions';
 
 import { setBuyerAddress } from '../../../../../../services/transfer/transferActions';
@@ -55,11 +56,12 @@ class Listing extends Component {
   state = {
     confirmDeleteOpen: false,
     confirmReportOpen: false,
-    addressModalOpen: false
+    addressModalOpen: false,
+    isPreview: this.props.location.pathname.includes('preview')
   };
 
   componentWillMount() {
-    this.props.listingActions.getListingDetail(this.props.match.params.id);
+    !this.state.isPreview && this.props.listingActions.getListingDetail(this.props.match.params.id);
     this.props.listingActions.setActiveCurrency(CoinTypes.LOCAL);
   }
 
@@ -68,69 +70,80 @@ class Listing extends Component {
     setTimeout(() => {
       this.setGallerySize();
     }, 100);
-    this.props.listingActions.getFavorites();
-    this.props.listingActions.isFavorite(this.props.match.params.id);
-    this.props.transferActions.setBuyerAddress(null);
+    if (!this.state.isPreview) {
+      this.props.listingActions.getFavorites();
+      this.props.listingActions.isFavorite(this.props.match.params.id);
+      this.props.transferActions.setBuyerAddress(null);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { props } = this;
-    const {
-      listingDetail,
-      listingDetailRequest,
-      favoriteListings,
-    } = props.listing;
+    const { isPreview } = this.state
+    if (!isPreview) {
+      const { props } = this;
+      const {
+        listingDetail,
+        listingDetailRequest,
+        favoriteListings,
+      } = props.listing;
 
-    if (listingDetailRequest.loading && !nextProps.listing.listingDetailRequest.loading) {
-      if (nextProps.listing.listingDetailRequest.error) {
-        this.errorToast(messages.loadListingError);
+      if (listingDetailRequest.loading && !nextProps.listing.listingDetailRequest.loading) {
+        if (nextProps.listing.listingDetailRequest.error) {
+          this.errorToast(messages.loadListingError);
+        }
       }
-    }
 
-    if (listingDetail && nextProps.listing.listingDetail) {
-      if (listingDetail.listing_id !== nextProps.listing.listingDetail.listing_id ||
-        favoriteListings.length !== nextProps.listing.favoriteListings.length) {
-        props.listingActions.isFavorite(nextProps.listing.listingDetail.listing_id);
+      if (listingDetail && nextProps.listing.listingDetail) {
+        if (listingDetail.listing_id !== nextProps.listing.listingDetail.listing_id ||
+          favoriteListings.length !== nextProps.listing.favoriteListings.length) {
+          props.listingActions.isFavorite(nextProps.listing.listingDetail.listing_id);
+        }
       }
-    }
-    if (listingDetail !== nextProps.listing.listingDetail) {
-      if (nextProps.listing.listingDetail && !nextProps.listing.listingDetail.existsInBlockchain) {
-        this.warningToast(messages.notInBlockchain);
-      } else if (nextProps.listing.listingDetail && nextProps.listing.listingDetail.quantity === 0) {
-        this.errorToast(messages.outOfStock);
-      } else {
-        this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
-      }
-    }
-    if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
-      const { error } = nextProps.listing.buyListing;
-      if (error) {
-        if (error === 'hash') {
-          this.errorToast(messages.hashIsInvalid);
+      if (listingDetail !== nextProps.listing.listingDetail) {
+        if (nextProps.listing.listingDetail && !nextProps.listing.listingDetail.existsInBlockchain) {
+          this.warningToast(messages.notInBlockchain);
+        } else if (nextProps.listing.listingDetail && nextProps.listing.listingDetail.quantity === 0) {
+          this.errorToast(messages.outOfStock);
         } else {
-          this.errorToast(messages.error);
+          this.props.listingActions.isListingFine(nextProps.listing.listingDetail);
+        }
+      }
+      if (this.props.listing.buyListing.loading && !nextProps.listing.buyListing.loading) {
+        const { error } = nextProps.listing.buyListing;
+        if (error) {
+          if (error === 'hash') {
+            this.errorToast(messages.hashIsInvalid);
+          } else {
+            this.errorToast(messages.error);
+          }
+        }
+      }
+      if (this.props.listing.deleteListing.deleting && !nextProps.listing.deleteListing.deleting) {
+        if (nextProps.listing.deleteListing.error) {
+          this.errorToast(messages.deleteListingError);
+        } else {
+          this.props.history.push('/listings');
+        }
+      }
+      if (this.props.listing.reportListing.reporting && !nextProps.listing.reportListing.reporting) {
+        if (nextProps.listing.reportListing.error) {
+          const { error } = nextProps.listing.reportListing;
+          if (error.indexOf('Proof of Participation score is too low.') !== -1) {
+            this.errorToast(messages.reportListingErrorPopScore);
+          } else {
+            this.errorToast(messages.reportListingError);
+          }
+        } else {
+          this.successToast(messages.reportListingSuccess);
+          this.props.listingActions.getListingDetail(this.props.match.params.id);
         }
       }
     }
-    if (this.props.listing.deleteListing.deleting && !nextProps.listing.deleteListing.deleting) {
-      if (nextProps.listing.deleteListing.error) {
-        this.errorToast(messages.deleteListingError);
-      } else {
-        this.props.history.push('/listings');
-      }
-    }
-    if (this.props.listing.reportListing.reporting && !nextProps.listing.reportListing.reporting) {
-      if (nextProps.listing.reportListing.error) {
-        const { error } = nextProps.listing.reportListing;
-        if (error.indexOf('Proof of Participation score is too low.') !== -1) {
-          this.errorToast(messages.reportListingErrorPopScore);
-        } else {
-          this.errorToast(messages.reportListingError);
-        }
-      } else {
-        this.successToast(messages.reportListingSuccess);
-        this.props.listingActions.getListingDetail(this.props.match.params.id);
-      }
+  }
+
+  componentWillUnmount() {
+    if (this.props.history.location.pathname !== '/add-listing') {
+      this.props.listingActions.clearPreviewListing();
     }
   }
 
@@ -149,8 +162,8 @@ class Listing extends Component {
     toastr.warning(formatMessage(messages.warning), formatMessage(message));
   }
 
-  isOwner() {
-    return this.props.listing.listingDetail.owner === this.props.auth.currentUser.username;
+  isOwner(listingDetail) {
+    return listingDetail.owner === this.props.auth.currentUser.username;
   }
 
   setGallerySize() {
@@ -198,10 +211,10 @@ class Listing extends Component {
 
   renderUser(listingDetail) {
     const { formatMessage } = this.props.intl;
-
+    const owner = this.state.preview ? this.props.auth.currentUser.username : listingDetail.owner;
     return (
       <Popup
-        trigger={<span className="username">{listingDetail.owner}</span>}
+        trigger={<span className="username">{owner}</span>}
         hoverable
         basic
         on="hover"
@@ -237,7 +250,7 @@ class Listing extends Component {
           </div>
           <Link to={{
             pathname: '/mail',
-            username: listingDetail.owner
+            username: owner
           }}
           >
             <div className="contact-seller">
@@ -419,11 +432,12 @@ class Listing extends Component {
   }
 
   renderGallery(listingDetail) {
-
-    let items = listingDetail.images.map(image => ({
-      original: `http://${listingDetail.ip}/publisher-images/${image.path}`,
-      thumbnail: `http://${listingDetail.ip}/publisher-images/${image.thumb}`
-    }));
+    const { isPreview } = this.state;
+    let items = listingDetail.images.map(image => {
+      const original = isPreview && image.file ? image.file.path : `http://${listingDetail.ip}/publisher-images/${image.path}`,
+        thumbnail = isPreview && image.file ? image.file.path : `http://${listingDetail.ip}/publisher-images/${image.thumb}`;
+      return { original, thumbnail };
+    });
 
     if (!listingDetail.images.length) {
       items = [{
@@ -461,7 +475,7 @@ class Listing extends Component {
         amount={amount}
         coinLabel={CoinTypes.OMNI_COIN}
         currency={CoinTypes.OMNI_CURRENCY}
-        isUserOwner={this.isOwner()}
+        isUserOwner={this.isOwner(listingDetail)}
       />
     );
   }
@@ -473,7 +487,7 @@ class Listing extends Component {
         amount={amount}
         coinLabel={CoinTypes.BIT_COIN}
         currency={CoinTypes.BIT_CURRENCY}
-        isUserOwner={this.isOwner()}
+        isUserOwner={this.isOwner(listingDetail)}
       />
     );
   }
@@ -485,12 +499,27 @@ class Listing extends Component {
         amount={amount}
         coinLabel={CoinTypes.ETHEREUM}
         currency={CoinTypes.ETHEREUM_CURRENCY}
-        isUserOwner={this.isOwner()}
+        isUserOwner={this.isOwner(listingDetail)}
       />
     );
   }
 
+  renderPreviewButtons() {
+    const { formatMessage } = this.props.intl;
+    return (
+      <div className="buttons-wrapper">
+        <Link to="/add-listing">
+          <Button
+            content={formatMessage(messages.continueAdding)}
+            className="button--green-bg"
+          />
+        </Link>
+      </div>
+    )
+  }
+
   renderItemDetails(listingDetail) {
+    const { isPreview } = this.state;
     const { formatMessage } = this.props.intl;
     const statusClass = classNames({
       status: true,
@@ -538,7 +567,7 @@ class Listing extends Component {
         </div>
         <div className="price-wrapper">
           <span>
-            {this.isOwner() ?
+            {this.isOwner(listingDetail) ?
               formatMessage(messages.itemPrice)
               :
               formatMessage(messages.selectCurrency)
@@ -563,15 +592,17 @@ class Listing extends Component {
              amount={listingDetail.price}
              coinLabel={CoinTypes.LOCAL}
              currency={listingDetail.currency === 'ETHEREUM' ? 'ETHER' : listingDetail.currency}
-             isUserOwner={this.isOwner()}
+             isUserOwner={this.isOwner(listingDetail)}
            />
           }
         </div>
-        {this.isOwner() ?
-          this.renderOwnerButtons()
-          :
-          this.renderUserButtons(listingDetail.quantity)
+        {!isPreview && (this.isOwner(listingDetail) ?
+            this.renderOwnerButtons()
+            :
+            this.renderUserButtons(listingDetail.quantity)
+          )
         }
+        {isPreview && this.renderPreviewButtons()}
         <div className="availability">
           <span>{`${formatMessage(messages.available)} `}</span>
           <span>{`${listingDetail.quantity} ${listingDetail.units}`}</span>
@@ -580,14 +611,13 @@ class Listing extends Component {
     );
   }
 
-  renderWeightAndSize() {
-    const { listingDetail } = this.props.listing;
+  renderWeightAndSize(listingDetail) {
     const { formatMessage } = this.props.intl;
 
     if (
-      !listingDetail.weight && 
-      !listingDetail.width && 
-      !listingDetail.height && 
+      !listingDetail.weight &&
+      !listingDetail.width &&
+      !listingDetail.height &&
       !listingDetail.length
     ) {
       return null;
@@ -648,8 +678,8 @@ class Listing extends Component {
       <div className="shipping">
         <span className="title">{formatMessage(listingFormMessages.shipping)}</span>
         <p className="description">{contents}</p>
-        { 
-          listingDetail.no_shipping_address_required && 
+        {
+          listingDetail.no_shipping_address_required &&
           <div className='no-address-required'>
             {formatMessage(listingFormMessages.noShippingAddressRequired)}
           </div>
@@ -659,7 +689,7 @@ class Listing extends Component {
   }
 
   renderDetail() {
-    const { listingDetail } = this.props.listing;
+    const listingDetail = this.state.isPreview ? this.props.listing.previewListing : this.props.listing.listingDetail;
     const { formatMessage } = this.props.intl;
 
     if (!listingDetail) {
@@ -684,8 +714,8 @@ class Listing extends Component {
         <span className="title">{formatMessage(messages.itemDescription)}</span>
         <p className="description">{descriptionContents}</p>
       </div>,
-      this.renderShipping(),
-      this.renderWeightAndSize()
+      this.renderShipping(listingDetail),
+      this.renderWeightAndSize(listingDetail)
     ];
   }
 
@@ -732,12 +762,14 @@ class Listing extends Component {
 }
 
 Listing.propTypes = {
+  location: PropTypes.shape.isRequired,
   listingActions: PropTypes.shape({
     getListingDetail: PropTypes.func,
     isFavorite: PropTypes.func,
     addToFavorites: PropTypes.func,
     removeFromFavorites: PropTypes.func,
     getFavorites: PropTypes.func,
+    clearPreviewListing: PropTypes.func,
   }).isRequired,
   listing: PropTypes.shape({
     listingDetail: PropTypes.object,
@@ -747,6 +779,7 @@ Listing.propTypes = {
     }),
     favoriteListings: PropTypes.array,
     isFavorite: PropTypes.bool,
+    previewListing: PropTypes.object,
     buyListing: PropTypes.shape({
       activeCurrency: PropTypes.string,
       loading: PropTypes.bool,
@@ -774,6 +807,7 @@ export default connect(
       isFavorite,
       getListingDetail,
       addToFavorites,
+      clearPreviewListing,
       removeFromFavorites,
       getFavorites,
       isListingFine,

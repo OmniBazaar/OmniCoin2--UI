@@ -38,6 +38,7 @@ import {
   setListingImages,
   saveListing,
   previewListing,
+  clearPreviewListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
 import { saveListingDefault } from '../../../../../../../../services/listing/listingDefaultsActions';
@@ -146,7 +147,18 @@ class ListingForm extends Component {
   );
 
   componentWillMount() {
-    this.resetForm();
+    if (!this.props.listing.previewListing) {
+      this.resetForm();
+    } else {
+      this.initFormData(this.props.listing.previewListing);
+      this.props.listingActions.clearPreviewListing();
+    }
+  }
+
+  componentWillUnmount() {
+    if (!!this.props.listing.previewListing && this.props.history.location.pathname !== '/listing/preview' ) {
+      this.props.listingActions.clearPreviewListing();
+    }
   }
 
   initFormData(listingDefaults = this.props.listingDefaults) {
@@ -187,7 +199,7 @@ class ListingForm extends Component {
           data.bitcoin_address = defaultData.bitcoin_address;
         } else {
           data.bitcoin_address = MANUAL_INPUT_VALUE;
-          data.manual_bitcoin_address = defaultData.manual_bitcoin_address;
+          data.manual_bitcoin_address = defaultData.manual_bitcoin_address || defaultData.bitcoin_address;
         }
       }
       if (defaultData.ethereum_address) {
@@ -202,6 +214,7 @@ class ListingForm extends Component {
         data[key] = key === 'weight_unit' ? 'oz' : 'in';
       }
     });
+
     this.props.initialize(data);
   }
 
@@ -281,7 +294,17 @@ class ListingForm extends Component {
       this.props.initialize(nextProps.formValues);
     }
 
-    this.setState({ keywords: nextProps.formValues && nextProps.formValues.keywords });
+    let keywords;
+
+    if (!!nextProps.formValues && !!nextProps.formValues.keywords) {
+      if (typeof nextProps.formValues.keywords === 'string') {
+        keywords = nextProps.formValues.keywords;
+      } else if (Array.isArray(nextProps.formValues.keywords)) {
+        keywords = nextProps.formValues.keywords.join(',');
+      }
+    }
+
+    this.setState({ keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
 
@@ -471,7 +494,7 @@ class ListingForm extends Component {
     const obj = {
       ...data,
       images: this.getImagesData(),
-      keywords: keywords.split(',').map(el => el.trim())
+      keywords: typeof keywords === 'string' ? keywords.split(',').map(el => el.trim()) : keywords
     };
     if (obj.bitcoin_address === MANUAL_INPUT_VALUE) {
       obj.bitcoin_address = obj.manual_bitcoin_address;
@@ -479,7 +502,7 @@ class ListingForm extends Component {
     }
 
     if (submitType === 'preview') {
-      previewListing(obj);
+      previewListing({ ...obj, ...{ publisher } });
       return;
     }
 
@@ -488,11 +511,16 @@ class ListingForm extends Component {
 
   renderKeywordsInput() {
     const { formatMessage } = this.props.intl;
-
+    let value = [];
+    if (typeof  this.state.keywords === 'string') {
+      value = this.state.keywords.split(',');
+    } else if (Array.isArray(this.state.keywords)) {
+      value = this.state.keywords;
+    }
     return (
       <div>
         <TagsInput
-          value={this.state.keywords ? this.state.keywords.split(',') : []}
+          value={value}
           name="keywords"
           addOnBlur
           inputProps={{
@@ -1182,7 +1210,8 @@ ListingForm.propTypes = {
     setListingImages: PropTypes.func,
     resetSaveListing: PropTypes.func,
     saveListing: PropTypes.func,
-    previewListing: PropTypes.func
+    previewListing: PropTypes.func,
+    clearPreviewListing: PropTypes.func
   }).isRequired,
   accountActions: PropTypes.shape({
     updatePublicData: PropTypes.func,
@@ -1251,7 +1280,8 @@ export default compose(
         setListingImages,
         saveListing,
         resetSaveListing,
-        previewListing
+        previewListing,
+        clearPreviewListing
       }, dispatch),
       accountActions: bindActionCreators({
         setBtcAddress,

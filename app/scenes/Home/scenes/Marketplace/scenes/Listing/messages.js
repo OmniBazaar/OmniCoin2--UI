@@ -69,6 +69,10 @@ export default defineMessages({
     id: 'Listing.buyNow',
     defaultMessage: 'BUY NOW'
   },
+  continueAdding: {
+    id: 'Listing.continueAdding',
+    defaultMessage: 'CONTINUE ADDING'
+  },
   addToFavorites: {
     id: 'Listing.addToFavorites',
     defaultMessage: 'ADD TO FAVORITES'
