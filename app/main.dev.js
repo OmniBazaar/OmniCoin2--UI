@@ -163,7 +163,7 @@ const isNodeRunning = (query, cb) => {
   let platform = process.platform;
   let cmd = '';
   switch (platform) {
-    case 'win32' : cmd = `tasklist`; query=+ '.exe'; break;
+    case 'win32' : cmd = `tasklist`; query+= '.exe'; break;
     case 'darwin' : cmd = `ps -ax`; break;
     case 'linux' : cmd = `ps -A`; break;
     default: ''; break;
