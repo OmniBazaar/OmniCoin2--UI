@@ -157,6 +157,20 @@ const runNode = async () => {
   });
 };
 
+const isNodeRunning = (query, cb) => {
+  let platform = process.platform;
+  let cmd = '';
+  switch (platform) {
+    case 'win32' : cmd = `tasklist`; query+= '.exe'; break;
+    case 'darwin' : cmd = `ps -ax`; break;
+    case 'linux' : cmd = `ps -A`; break;
+    default: ''; break;
+  }
+  exec(cmd, (err, stdout, stderr) => {
+    cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  });
+}
+
 const updateConfigData = (name, value, config) => {
   const values = config.match(new RegExp(`${name}[ ="]*(.*$)`, 'gm')).map(el => el.replace(new RegExp(`${name} [ =]*`, 'gm'), ''));
   const exist = values.indexOf(value) !== -1;
@@ -186,7 +200,15 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
       fs.writeFile(`${path}/witness_node_data_dir/config.ini`, privateKeyUpdatedData, (error) => {
         console.log('ERROR ', error);
       });
-      runNode();
+      if (restartIfNotExist) {
+        isNodeRunning('witness_node', (status) => {
+          if (!status){
+            runNode();
+          }
+        });
+      } else {
+        runNode();
+      }
     }
   });
 };

@@ -9,34 +9,36 @@ const messages = defineMessages({
   },
   exchangeBodyBTC: {
     id: 'ExchangeService.exchangeBodyBTC',
-    defaultMessage: 'You requested XOM for {cryptoAmount} BTC.\n Transaction id: {txid}'
+    defaultMessage: 'You requested {xom} XOM for {cryptoAmount} BTC.\n Transaction id: {txid}'
   },
   exchangeBodyETH: {
     id: 'ExchangeService.exchangeBodyETH',
-    defaultMessage: 'You requested XOM for {cryptoAmount} ETH.\n Transaction hash: {txid}'
+    defaultMessage: 'You requested {xom} XOM for {cryptoAmount} ETH.\n Transaction hash: {txid}'
   }
 });
 
-export const sendBTCMail = (btcAmount, txid, formatMessage) => {
+export const sendBTCMail = (btcAmount, xom, txid, formatMessage) => {
   const currentUser = getStoredCurrentUser();
   sendMail(
     currentUser.username,
     currentUser.username,
     formatMessage(messages.exchangeSubject),
     formatMessage(messages.exchangeBodyBTC, {
+      xom,
       cryptoAmount: btcAmount,
       txid
     })
   )
 };
 
-export const sendETHMail = (ethAmount, txid, formatMessage) => {
+export const sendETHMail = (ethAmount, xom, txid, formatMessage) => {
   const currentUser = getStoredCurrentUser();
   sendMail(
     currentUser.username,
     currentUser.username,
     formatMessage(messages.exchangeSubject),
     formatMessage(messages.exchangeBodyETH, {
+      xom,
       cryptoAmount: ethAmount,
       txid
     })
