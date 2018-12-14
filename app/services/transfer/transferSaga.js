@@ -64,7 +64,7 @@ function* omnicoinTransfer({payload: {
     const operationObj = {
       from: fromAcc.get('id'),
       to: toAcc.get('id'),
-      reputation_vote: parseInt(reputation) || 5,
+      reputation_vote: !!parseInt(reputation) || parseInt(reputation) === 0 ? parseInt(reputation) : 5,
       amount: {
         asset_id: '1.3.0',
         amount: Math.ceil(amount * TOKENS_IN_XOM)
@@ -113,7 +113,7 @@ function* bitcoinTransfer({ payload: {
           seller = toName;
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
     yield call(BitcoinApi.makePayment, guid, password, toBitcoinAddress, amountSatoshi, walletIdx);
-    
+
     yield put(bitcoinTransferSucceeded());
     if (listingId) {
       yield addPurchaseAndSendMails({
