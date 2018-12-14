@@ -41,6 +41,10 @@ class SaleTime extends Component {
 				this.init(nextProps);
 			}
 		}
+
+		if (this.props.exchange.sale !== nextProps.exchange.sale) {
+			this.init(nextProps);
+		}
 	}
 
 	init(props) {
@@ -48,7 +52,7 @@ class SaleTime extends Component {
 			clearInterval(this.timeHandler);
 		}
 
-		const { sale } = props.exchange;
+		const sale = { ...props.exchange.sale };
 		if (!sale.phases || !sale.phases.length) {
 			this.setState(this.initialState);
 			return;
