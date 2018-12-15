@@ -48,7 +48,6 @@ function* restartNode(restartIfNotExist) {
     const key = generateKeyFromPassword(currentUser.username, 'active', currentUser.password);
     const account = yield call(FetchChain, 'getAccount', currentUser.username);
     const witness = yield Apis.instance().db_api().exec('get_witness_by_account', [account.get('id')]);
-    console.log("KH************** saga-1", '\x1b[33m', restartIfNotExist, '\x1b[0m')
     if (witness && !preferences.autorun) {
       console.log("KH************** saga-2", '\x1b[33m', restartIfNotExist, '\x1b[0m')
       ipcRenderer.send('restart-node', witness.id, key.pubKey, key.privKey.toWif(), restartIfNotExist);
