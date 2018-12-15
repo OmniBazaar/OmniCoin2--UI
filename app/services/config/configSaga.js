@@ -9,7 +9,7 @@ import {
 import { getConfigFailed, getConfigSucceeded } from './configActions';
 import { wrapRequest } from '../utils';
 
-const url = 'https://omnibazaar.com/config.json';
+import { configJson } from '../../config/config';
 
 export function* configSubscriber() {
   yield all([
@@ -19,7 +19,7 @@ export function* configSubscriber() {
 
 function* getConfig() {
   try {
-    const config = yield call(wrapRequest(async () => fetch(url)));
+    const config = yield call(wrapRequest(async () => fetch(configJson)));
     yield put(getConfigSucceeded(config));
   } catch (error) {
     console.log('ERROR ', error);
