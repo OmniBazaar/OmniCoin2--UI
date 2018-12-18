@@ -264,19 +264,21 @@ class ListingForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!this.props.listing.previewListing && !!nextProps.listing.previewListing){
+    if (!this.props.listing.previewListing && !!nextProps.listing.previewListing) {
         this.props.history.push('listing/preview');
     }
-    if(!isEqual(this.props.listingDefaults, nextProps.listingDefaults)){
+    if (!isEqual(this.props.listingDefaults, nextProps.listingDefaults)) {
       this.resetForm(nextProps.listingDefaults);
     }
-    if(this.props.submitSucceeded) {
+    if (this.props.submitSucceeded) {
       const defaults = getStoredListingDefautls();
       if (Object.keys(defaults).length === 0) {
         const listingDefaults = {}
-        Object.keys(this.props.listingDefaults).forEach(key => {
-          listingDefaults[key] = this.props.formValues[key]
-        })
+        if (!!this.props.formValues) {
+          Object.keys(this.props.listingDefaults).forEach(key => {
+            listingDefaults[key] = this.props.formValues[key];
+          });
+        }
         this.setState({ isModalOpen: true, listingDefaults: { ...listingDefaults, images: {} } })
       }
     }
