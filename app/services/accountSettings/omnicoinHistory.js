@@ -482,7 +482,7 @@ class OmnicoinHistory extends BaseStorage {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             operationType: el.op[0],
-            amount: el.op[1].amount.amount / TOKENS_IN_XOM,
+            amount: el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0,
             from: 'exchange',
             to: toAcc.get('name'),
             fromTo: 'exchange',
