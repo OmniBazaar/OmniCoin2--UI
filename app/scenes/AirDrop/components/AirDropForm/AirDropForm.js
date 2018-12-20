@@ -253,7 +253,7 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinTelegramChannelSuggestion)}&nbsp;
-            <a className="link" href="https://t.me/Omni_Bazaar" target="_blank">
+            <a className="link" href="https://t.me/joinchat/H2QdOkiX0JBjhrGQeyAt9g" target="_blank">
               {formatMessage(messages.telegramLink)}
             </a>
           </p>
