@@ -81,6 +81,7 @@ class StageProgress extends Component {
 	render() {
 		const { formatMessage } = this.props.intl;
 		const sold = this.calculateSoldPercent();
+		const available = Math.round((100 - sold) * 100) / 100;
 
 		return (
 			<div className='stage-progress'>
@@ -100,8 +101,8 @@ class StageProgress extends Component {
 						<div className={cn('sold', {full: sold === 100})} style={{width: `${sold}%`}}>
 							<span>{`${sold}%`}</span>
 						</div>
-						<div className={cn('available', {full: sold === 0})} style={{width: `${100 - sold}%`}}>
-							<span>{`${100 - sold}%`}</span>
+						<div className={cn('available', {full: sold === 0})} style={{width: `${available}%`}}>
+							<span>{`${available}%`}</span>
 						</div>
 					</div>
 				</div>
