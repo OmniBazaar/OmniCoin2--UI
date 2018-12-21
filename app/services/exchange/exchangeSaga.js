@@ -90,7 +90,7 @@ function* checkAccountVerified() {
 
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
-    yield requestSale();
+    yield put(exchangeRequestSale(false));
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
@@ -101,7 +101,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield requestSale();
+    yield put(exchangeRequestSale(false));
     const xom = yield broadcastExchange('BTC', authHeader, result.txid);
 
     sendBTCMail(amount, xom, result.txid, formatMessage);
@@ -114,7 +114,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
 function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   try {
-    yield requestSale();
+    yield put(exchangeRequestSale(false));
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
@@ -140,7 +140,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield requestSale();
+    yield put(exchangeRequestSale(false));
     const xom = yield broadcastExchange('ETH', authHeader, txHash);
 
     sendETHMail(amount, xom, txHash, formatMessage);
@@ -151,7 +151,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   }
 }
 
-function* requestSale() {
+function* requestSale({ payload: { onlyRates } }) {
   try {
     const response = yield request({
       uri: `${config.exchangeServer}/sale`,
@@ -160,7 +160,7 @@ function* requestSale() {
     if (!response || !response.phases) {
       throw new Error('Request exchange sale fail');
     }
-    yield put(exchangeRequestSaleFinished(null, response));
+    yield put(exchangeRequestSaleFinished(null, response, onlyRates));
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeRequestSaleFinished(error));
