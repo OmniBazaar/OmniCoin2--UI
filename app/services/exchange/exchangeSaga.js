@@ -151,7 +151,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   }
 }
 
-function* requestSale({ payload: { onlyRates } }) {
+function* requestSale() {
   try {
     const response = yield request({
       uri: `${config.exchangeServer}/sale`,
@@ -160,7 +160,7 @@ function* requestSale({ payload: { onlyRates } }) {
     if (!response || !response.phases) {
       throw new Error('Request exchange sale fail');
     }
-    yield put(exchangeRequestSaleFinished(null, response, onlyRates));
+    yield put(exchangeRequestSaleFinished(null, response));
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeRequestSaleFinished(error));
