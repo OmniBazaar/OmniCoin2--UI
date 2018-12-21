@@ -472,7 +472,7 @@ class OmnicoinHistory extends BaseStorage {
           count++;
           this.addOperation(operation);
         } else if (el.op[0] === ChainTypes.operations.exchange_create_operation) {
-          const toAcc = await FetchChain('getAccount', el.op[1].receiver);
+          const toAcc = await FetchChain('getAccount', el.op[1].sender);
           count++;
         
           this.addOperation({
