@@ -22,8 +22,8 @@ const {
   }),
   EXCHANGE_ETH_SUCCEEDED: (txid) => ({ txid }),
   EXCHANGE_ETH_FAILED: (error) => ({ error }),
-  EXCHANGE_REQUEST_SALE: () => ({}),
-  EXCHANGE_REQUEST_SALE_FINISHED: (error, sale) => ({ error, sale }),
+  EXCHANGE_REQUEST_SALE: (onlyRates) => ({onlyRates}),
+  EXCHANGE_REQUEST_SALE_FINISHED: (error, sale, onlyRates) => ({ error, sale, onlyRates }),
   EXCHANGE_SET_IN_PROGRESS_PHASE: (inProgressPhase, waitingPhase) => ({ inProgressPhase, waitingPhase }),
   EXCHANGE_MAKE_SALE_SUCCESS: (progress) => ({ progress })
 });
