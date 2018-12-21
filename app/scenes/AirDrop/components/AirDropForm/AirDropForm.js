@@ -2,32 +2,33 @@
  * created by alaverdyanrafayel on 08/07/18
  */
 
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   Field,
   reduxForm,
   Form,
   formValueSelector,
-  getFormAsyncErrors
-} from "redux-form";
-import { withRouter } from "react-router-dom";
-import { defineMessages, injectIntl } from "react-intl";
-import { Button } from "semantic-ui-react";
-import { required, email, format } from "redux-form-validators";
-import PropTypes from "prop-types";
-import { toastr } from "react-redux-toastr";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
-import * as AuthApi from "../../../../services/blockchain/auth/AuthApi";
+  getFormAsyncErrors,
+  stopAsyncValidation
+} from 'redux-form';
+import { withRouter } from 'react-router-dom';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Button } from 'semantic-ui-react';
+import { required, email, format } from 'redux-form-validators';
+import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
+import Checkbox from '../../../../components/Checkbox/Checkbox';
+import * as AuthApi from '../../../../services/blockchain/auth/AuthApi';
 
 import {
   getWelcomeBonusAmount,
   receiveWelcomeBonus
-} from "../../../../services/blockchain/auth/authActions";
-import ValidatableField from "../../../../components/ValidatableField/ValidatableField";
+} from '../../../../services/blockchain/auth/authActions';
+import ValidatableField from '../../../../components/ValidatableField/ValidatableField';
 
-import "./air-drop-form.scss";
+import './air-drop-form.scss';
 
 const toastrOptions = {
   timeOut: 15000
@@ -35,107 +36,107 @@ const toastrOptions = {
 
 const messages = defineMessages({
   receiveOmnicoinsByFollowingActions: {
-    id: "AirDropForm.receiveOmnicoinsByFollowingActions",
+    id: 'AirDropForm.receiveOmnicoinsByFollowingActions',
     defaultMessage:
-      "You can receive {current_bonus_amount} OmniCoins just for doing the following actions"
+      'You can receive {current_bonus_amount} OmniCoins just for doing the following actions'
   },
   joinTelegramChannelSuggestion: {
-    id: "AirDropForm.joinTelegramChannelSuggestion",
-    defaultMessage: "Join our Telegram channel here:"
+    id: 'AirDropForm.joinTelegramChannelSuggestion',
+    defaultMessage: 'Join our Telegram channel here:'
   },
   telegramLink: {
-    id: "AirDropForm.telegramLink",
-    defaultMessage: "OmniBazaar on Telegram"
+    id: 'AirDropForm.telegramLink',
+    defaultMessage: 'OmniBazaar on Telegram'
   },
   joinTelegramChannelConfirmation: {
-    id: "AirDropForm.joinTelegramChannelConfirmation",
-    defaultMessage: "I joined the OmniBazaar channel."
+    id: 'AirDropForm.joinTelegramChannelConfirmation',
+    defaultMessage: 'I joined the OmniBazaar channel.'
   },
   telegramUserID: {
-    id: "AirDropForm.telegramUserID",
-    defaultMessage: "My Telegram user ID is"
+    id: 'AirDropForm.telegramUserID',
+    defaultMessage: 'My Telegram user ID is'
   },
   joinTelegramBotSuggestion: {
-    id: "AirDropForm.joinTelegramBotSuggestion",
+    id: 'AirDropForm.joinTelegramBotSuggestion',
     defaultMessage:
       'Find "@omnicoin_verification_bot" on Telegram and start the bot (type "/start"):'
   },
   omnicoinVerificationBotLink: {
-    id: "AirDropForm.omnicoinVerificationBotLink",
-    defaultMessage: "OmniCoin Verification Bot"
+    id: 'AirDropForm.omnicoinVerificationBotLink',
+    defaultMessage: 'OmniCoin Verification Bot'
   },
   joinTelegramBotConfirmation: {
-    id: "AirDropForm.joinTelegramBotConfirmation",
-    defaultMessage: "I joined the omnicoin verification bot."
+    id: 'AirDropForm.joinTelegramBotConfirmation',
+    defaultMessage: 'I joined the omnicoin verification bot.'
   },
   telegramUserId: {
-    id: "AirDropForm.telegramUserId",
-    defaultMessage: "User ID"
+    id: 'AirDropForm.telegramUserId',
+    defaultMessage: 'User ID'
   },
   joinTwitterChannelSuggestion: {
-    id: "AirDropForm.joinTwitterChannelSuggestion",
-    defaultMessage: "Join our Twitter channel and retweet the pinned post here:"
+    id: 'AirDropForm.joinTwitterChannelSuggestion',
+    defaultMessage: 'Join our Twitter channel and retweet the pinned post here:'
   },
   twitterLink: {
-    id: "AirDropForm.twitterLink",
-    defaultMessage: "OmniBazaar on Twitter"
+    id: 'AirDropForm.twitterLink',
+    defaultMessage: 'OmniBazaar on Twitter'
   },
   joinTwitterChannelConfirmation: {
-    id: "AirDropForm.joinTwitterChannelConfirmation",
-    defaultMessage: "I joined the OmniBazaar channel. My Twitter user name is"
+    id: 'AirDropForm.joinTwitterChannelConfirmation',
+    defaultMessage: 'I joined the OmniBazaar channel. My Twitter user name is'
   },
   twitterUserName: {
-    id: "AirDropForm.twitterUserName",
-    defaultMessage: "User name"
+    id: 'AirDropForm.twitterUserName',
+    defaultMessage: 'User name'
   },
   joinNewsletterChannelSuggestion: {
-    id: "AirDropForm.joinNewsletterChannelSuggestion",
-    defaultMessage: "Join our Newsletter mailing list here:"
+    id: 'AirDropForm.joinNewsletterChannelSuggestion',
+    defaultMessage: 'Join our Newsletter mailing list here:'
   },
   mailchimpLink: {
-    id: "AirDropForm.mailchimpLink",
-    defaultMessage: "Newsletter Registration"
+    id: 'AirDropForm.mailchimpLink',
+    defaultMessage: 'Newsletter Registration'
   },
   joinNewsletterChannelConfirmation: {
-    id: "AirDropForm.joinNewsletterChannelConfirmation",
+    id: 'AirDropForm.joinNewsletterChannelConfirmation',
     defaultMessage:
-      "I joined the OmniBazaar mailing list. My e-mail address is:"
+      'I joined the OmniBazaar mailing list. My e-mail address is:'
   },
   email: {
-    id: "AirDropForm.email",
-    defaultMessage: "E-mail Address"
+    id: 'AirDropForm.email',
+    defaultMessage: 'E-mail Address'
   },
   receiveWelcomeBonus: {
-    id: "AirDropForm.receiveWelcomeBonus",
-    defaultMessage: "Receive Welcome Bonus"
+    id: 'AirDropForm.receiveWelcomeBonus',
+    defaultMessage: 'Receive Welcome Bonus'
   },
   skipFreeCoins: {
-    id: "AirDropForm.skipFreeCoins",
-    defaultMessage: "Skip the free coins"
+    id: 'AirDropForm.skipFreeCoins',
+    defaultMessage: 'Skip the free coins'
   },
   fieldRequired: {
-    id: "AirDropForm.fieldRequired",
-    defaultMessage: "This field is required"
+    id: 'AirDropForm.fieldRequired',
+    defaultMessage: 'This field is required'
   },
   invalidEmail: {
-    id: "AirDropForm.invalidEmail",
-    defaultMessage: "Email is invalid"
+    id: 'AirDropForm.invalidEmail',
+    defaultMessage: 'Email is invalid'
   },
   signup: {
-    id: "AirDropForm.signup",
-    defaultMessage: "Sign up"
+    id: 'AirDropForm.signup',
+    defaultMessage: 'Sign up'
   },
   getWhiteListedForTokenSale: {
-    id: "AirDropForm.getWhiteListedForTokenSale",
-    defaultMessage: "Get white-listed for our token sale"
+    id: 'AirDropForm.getWhiteListedForTokenSale',
+    defaultMessage: 'Get white-listed for our token sale'
   },
   wrongNumberFormat: {
-    id: "AirDropForm.wrongNumberFormat",
-    defaultMessage: "Wrong ID format"
+    id: 'AirDropForm.wrongNumberFormat',
+    defaultMessage: 'Wrong ID format'
   },
   notWorkingServer: {
-    id: "AirDropForm.notWorkingServer",
-    defaultMessage: "The server is down. Try again later"
+    id: 'AirDropForm.notWorkingServer',
+    defaultMessage: 'The server is down. Try again later'
   }
 });
 
@@ -172,11 +173,11 @@ class AirDropForm extends Component {
     const errors = props.asyncErrors;
     const { formatMessage } = props.intl;
     const { twitterUsername, telegramUserId, email } = values;
-    if (field === "twitterUsername") {
+    if (field === 'twitterUsername') {
       try {
         await AuthApi.checkTwitterUsername(currentUser, { twitterUsername });
       } catch (e) {
-        if (e.message === "Failed to fetch") {
+        if (e.message === 'Failed to fetch') {
           throw {
             ...errors,
             twitterUsername: formatMessage(messages.notWorkingServer)
@@ -187,7 +188,6 @@ class AirDropForm extends Component {
     }
     if (field === "telegramUserId") {
       try {
-        console.log({ telegramUserId });
         await AuthApi.checkTelegramUser(currentUser, { telegramUserId });
       } catch (e) {
         if (e.message === "Failed to fetch") {
@@ -199,11 +199,11 @@ class AirDropForm extends Component {
         throw { ...errors, telegramUserId: e.errorMessage };
       }
     }
-    if (field === "email") {
+    if (field === 'email') {
       try {
         await AuthApi.checkEmail(currentUser, { email });
       } catch (e) {
-        if (e.message === "Failed to fetch") {
+        if (e.message === 'Failed to fetch') {
           throw { ...errors, email: formatMessage(messages.notWorkingServer) };
         }
         throw { ...errors, email: e.errorMessage };
@@ -228,11 +228,11 @@ class AirDropForm extends Component {
   }
 
   signUp = () => {
-    this.props.history.push("/");
+    this.props.history.push('/');
   };
 
   renderCheckboxField = ({ input, label, onCheck }) => (
-    <div className="transfer-input" style={{ display: "flex" }}>
+    <div className="transfer-input" style={{ display: 'flex' }}>
       <Checkbox
         value={input.value}
         onChecked={value => {
@@ -253,7 +253,7 @@ class AirDropForm extends Component {
         <div className="channel-link">
           <p>
             {formatMessage(messages.joinTelegramChannelSuggestion)}&nbsp;
-            <a className="link" href="https://t.me/Omni_Bazaar" target="_blank">
+            <a className="link" href="https://t.me/joinchat/H2QdOkiX0JBjhrGQeyAt9g" target="_blank">
               {formatMessage(messages.telegramLink)}
             </a>
           </p>
@@ -285,7 +285,7 @@ class AirDropForm extends Component {
           <Field name="telegramBot" component={this.renderCheckboxField} />
           <p>{formatMessage(messages.joinTelegramBotConfirmation)} </p>
           <p className="telegramUserID">
-            {formatMessage(messages.telegramUserID)}{" "}
+            {formatMessage(messages.telegramUserID)}{' '}
           </p>
           <div className="ui form">
             <Field
@@ -294,7 +294,7 @@ class AirDropForm extends Component {
               formAsyncErrors={this.props.formAsyncErrors || {}}
               placeholder={formatMessage(messages.telegramUserId)}
               component={ValidatableField}
-              isIconVisible
+              isIconVisible={!this.props.auth.loading}
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
                 format({
@@ -307,7 +307,6 @@ class AirDropForm extends Component {
         </div>
       </React.Fragment>
     );
-    f;
   };
   renderTwitterChannelField = () => {
     const { formatMessage } = this.props.intl;
@@ -335,7 +334,7 @@ class AirDropForm extends Component {
               formAsyncErrors={this.props.formAsyncErrors || {}}
               placeholder={formatMessage(messages.twitterUserName)}
               component={ValidatableField}
-              isIconVisible
+              isIconVisible={!this.props.auth.loading}
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
@@ -367,7 +366,7 @@ class AirDropForm extends Component {
               formAsyncErrors={this.props.formAsyncErrors || {}}
               placeholder={formatMessage(messages.email)}
               component={ValidatableField}
-              isIconVisible
+              isIconVisible={!this.props.auth.loading}
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) }),
                 email({ message: formatMessage(messages.invalidEmail) })
@@ -389,11 +388,21 @@ class AirDropForm extends Component {
       });
     });
 
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.props.stopFormAsyncValidation('AirDropForm', {});
+    setTimeout(() => {
+      this.props.handleSubmit(this.submit)();
+    });
+  };
+
   render() {
-    const btnClass = this.props.auth.loading ? "ui loading" : "";
+    const btnClass = this.props.auth.loading ? 'ui loading' : '';
     const welcomeBonusAmount = this.props.auth.welcomeBonusAmount
       ? (this.props.auth.welcomeBonusAmount / 100000).toLocaleString()
-      : "";
+      : '';
     const { handleSubmit, valid, formAsyncErrors } = this.props;
     const { formatMessage } = this.props.intl;
     return (
@@ -404,7 +413,7 @@ class AirDropForm extends Component {
               current_bonus_amount: welcomeBonusAmount
             })}
           </h2>
-          <Form onSubmit={handleSubmit(this.submit)} className="form">
+          <Form onSubmit={this.handleFormSubmit} className="form">
             <Field
               name="telegramChannel"
               formAsyncErrors={this.props.formAsyncErrors}
@@ -429,7 +438,6 @@ class AirDropForm extends Component {
                 onClick={this.signUp}
               />
               <Button
-                disabled={!valid}
                 className={btnClass}
                 content={formatMessage(messages.receiveWelcomeBonus)}
                 color="green"
@@ -446,16 +454,15 @@ class AirDropForm extends Component {
 AirDropForm = withRouter(AirDropForm);
 
 AirDropForm = reduxForm({
-  form: "AirDropForm",
-  validate: AirDropForm.validate,
-  asyncBlurFields: ["telegramUserId", "twitterUsername", "email"],
+  form: 'AirDropForm',
+  asyncBlurFields: ['telegramUserId', 'twitterUsername', 'email'],
   asyncValidate: AirDropForm.asyncValidate,
   destroyOnUnmount: true
 })(AirDropForm);
 
-const selector = formValueSelector("AirDropForm");
+const selector = formValueSelector('AirDropForm');
 
-const asyncErrorsSelector = getFormAsyncErrors("AirDropForm");
+const asyncErrorsSelector = getFormAsyncErrors('AirDropForm');
 
 AirDropForm = injectIntl(AirDropForm);
 
@@ -464,16 +471,17 @@ export default connect(
     ...state.default,
     formAsyncErrors: asyncErrorsSelector(state),
     AirDropForm: {
-      telegramChannel: selector(state, "telegramChannel"),
-      twitterChannel: selector(state, "twitterChannel"),
-      mailingList: selector(state, "mailingList")
+      telegramChannel: selector(state, 'telegramChannel'),
+      twitterChannel: selector(state, 'twitterChannel'),
+      mailingList: selector(state, 'mailingList')
     }
   }),
   dispatch => ({
     authActions: bindActionCreators(
       { getWelcomeBonusAmount, receiveWelcomeBonus },
       dispatch
-    )
+    ),
+    stopFormAsyncValidation: bindActionCreators(stopAsyncValidation, dispatch),
   })
 )(AirDropForm);
 
@@ -495,6 +503,7 @@ AirDropForm.propTypes = {
   authActions: PropTypes.shape({
     getWelcomeBonusAmount: PropTypes.func
   }),
+  stopFormAsyncValidation: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired
 };
