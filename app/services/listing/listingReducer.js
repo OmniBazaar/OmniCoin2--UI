@@ -677,10 +677,12 @@ const reducer = handleActions({
     };
   },
   [searchPublishers](state) {
+    const counter = state.publishers && state.publishers.counter ? state.publishers.counter + 1 : 1
     return {
       ...state,
       publishers: {
         ...state.publishers,
+        counter,
         searching: true,
         publishers: [],
         error: null
@@ -688,9 +690,11 @@ const reducer = handleActions({
     };
   },
   [searchPublishersFinish](state, { payload: { error, publishers } }) {
+    const counter = state.publishers && state.publishers.counter ? state.publishers.counter - 1 : 0
     const pubs = {
       ...state.publishers,
-      searching: false
+      counter,
+      searching: !!counter
     };
 
     if (error) {
