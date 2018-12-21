@@ -71,7 +71,7 @@ export default defineMessages({
   },
   continueAdding: {
     id: 'Listing.continueAdding',
-    defaultMessage: 'CONTINUE ADDING'
+    defaultMessage: 'EDIT LISTING'
   },
   addToFavorites: {
     id: 'Listing.addToFavorites',

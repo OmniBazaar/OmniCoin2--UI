@@ -4,7 +4,7 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Form, Button, Grid } from 'semantic-ui-react';
-import { Field, reduxForm, getFormValues, change, isDirty } from 'redux-form';
+import { Field, reduxForm, getFormValues, change, isDirty, SubmissionError  } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
 import { Link, NavLink, Prompt, withRouter } from 'react-router-dom';
@@ -507,7 +507,7 @@ class ListingForm extends Component {
 
     if (submitType === 'preview') {
       previewListing({ ...obj, ...{ publisher } });
-      return;
+      throw new SubmissionError();
     }
 
     saveListing(publisher, obj, listing_id);
@@ -1180,20 +1180,22 @@ class ListingForm extends Component {
                 disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
               />
             </Grid.Column>
-            <Grid.Column width={3}>
-              <Button
-                type="submit"
-                name="preview"
-                value="preview"
-                onClick={() => this.onSubmitClick('preview')}
-                content={
-                  formatMessage(messages.previewListingCaps)
-                }
-                className="button--primary uppercase"
-                loading={saving || submitting || asyncValidating}
-                disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
-              />
-            </Grid.Column>
+            {!editingListing &&
+              <Grid.Column width={3}>
+                <Button
+                  type="submit"
+                  name="preview"
+                  value="preview"
+                  onClick={() => this.onSubmitClick('preview')}
+                  content={
+                    formatMessage(messages.previewListingCaps)
+                  }
+                  className="button--primary uppercase"
+                  loading={saving || submitting || asyncValidating}
+                  disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
+                />
+              </Grid.Column>
+            }
           </Grid.Row>
         </Grid>
         <ConfirmationModal

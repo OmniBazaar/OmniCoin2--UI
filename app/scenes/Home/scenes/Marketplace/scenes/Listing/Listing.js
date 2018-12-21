@@ -167,7 +167,7 @@ class Listing extends Component {
   }
 
   setGallerySize() {
-    if (this.gallery) {
+    if (this.gallery && !this.state.isPreview) {
       this.gallery.children[0].lastChild.firstChild.style.height = `${this.gallery.offsetWidth}px`;
     }
   }
@@ -658,8 +658,7 @@ class Listing extends Component {
     );
   }
 
-  renderShipping() {
-    const { listingDetail } = this.props.listing;
+  renderShipping(listingDetail) {
     const { formatMessage } = this.props.intl;
 
     if (!listingDetail || !listingDetail.shipping_description) {
