@@ -16,6 +16,13 @@ class Sale extends Component {
 
 	componentWillMount() {
 		this.props.exchangeActions.exchangeRequestSale();
+		this.updateSaleTimer = setInterval(() =>{
+			this.props.exchangeActions.exchangeRequestSale(true);
+		}, 30000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.updateSaleTimer);
 	}
 
 	onChangePhaseInProgress = (inProgressPhase, waitingPhase) => {

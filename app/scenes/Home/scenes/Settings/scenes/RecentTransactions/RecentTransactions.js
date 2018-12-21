@@ -131,7 +131,7 @@ const messages = defineMessages({
     id: 'RecentTransaction.vestingWithdraw',
     defaultMessage: 'VESTING WITHDRAW'
   },
-  [ChainTypes.operations.exchange_complete_operation]: {
+  [ChainTypes.operations.exchange_create_operation]: {
     id: 'RecentTransaction.exchange',
     defaultMessage: 'EXCHANGE'
   }
