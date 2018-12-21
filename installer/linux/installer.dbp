@@ -78,6 +78,13 @@ fi
 1
 #!/bin/sh
 set -e
+if [ "$1" != "upgrade" ]; then
+  if systemctl is-active -q witness-node; then
+    systemctl stop witness-node
+  elif pgrep -x witness_node; then
+    killall witness_node
+  fi
+fi
 rm -rf ~/.OmniBazaar
 rm /etc/systemd/system/witness-node.service
 <</POSTRM>>
