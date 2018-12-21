@@ -41,6 +41,7 @@ Source: ".\icon.ico"; DestDir: {app}; Flags: ignoreversion
 
 [UninstallRun]
 Filename: "{cmd}"; Parameters: "/C taskkill /im Omnibazaar.exe /f /t 1> NUL 2> NUL && timeout 5 > NUL"
+Filename: "{cmd}"; Parameters: "/C taskkill /IM witness_node.exe /F /T"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
