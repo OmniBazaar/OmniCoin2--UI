@@ -45,7 +45,7 @@ class Breadcrumb extends Component {
     const { category, subCategory } = this.props;
     const categoryTitle = category && category !== 'All' ? formatMessage(mainCategories[category]) : category || '';
     const subcategory = getSubCategoryTitle(category, subCategory);
-    const subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+    const subCategoryTitle = subcategory && subcategory !== '' ? formatMessage(subcategory) : '';
 
     return (
       <div className="top-header">
