@@ -270,7 +270,7 @@ class GridTable extends Component {
                             formatMessage(mainCategories[item.category]) : item.category;
                         }
                         const subcategory = getSubCategoryTitle(item.category, item.subcategory);
-                        let subCategoryTitle = subcategory !== '' ? formatMessage(subcategory) : '';
+                        let subCategoryTitle = subcategory && subcategory !== '' ? formatMessage(subcategory) : '';
 
                         if (categoryTitle.length + subCategoryTitle.length > categoryMaxSize) {
                           if (categoryTitle.length > categoryMaxSize) {
