@@ -90,7 +90,7 @@ function* checkAccountVerified() {
 
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
@@ -101,7 +101,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     const xom = yield broadcastExchange('BTC', authHeader, result.txid);
 
     sendBTCMail(amount, xom, result.txid, formatMessage);
@@ -114,7 +114,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
 function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
   try {
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     yield checkAccountVerified();
 
     const omnibazaar = yield call(fetchAccount, 'omnibazaar');
@@ -140,7 +140,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     const xom = yield broadcastExchange('ETH', authHeader, txHash);
 
     sendETHMail(amount, xom, txHash, formatMessage);
@@ -165,4 +165,8 @@ function* requestSale({ payload: { onlyRates } }) {
     console.log('ERROR ', error);
     yield put(exchangeRequestSaleFinished(error));
   }
+}
+
+function* updateSaleRates() {
+  yield requestSale({ payload: { onlyRates: true } });
 }

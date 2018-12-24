@@ -92,7 +92,7 @@ const reducer = handleActions({
 
     if (onlyRates) {
       const saleState = state.sale;
-      saleState.currencyRates = sale.currencyRates;
+      saleState.rates = sale.rates;
       return {
         ...state,
         requestingSale: false,
