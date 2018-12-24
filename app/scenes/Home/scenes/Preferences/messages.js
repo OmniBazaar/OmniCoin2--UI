@@ -173,6 +173,10 @@ export default defineMessages({
     id: 'Preferences.fieldRequired',
     defaultMessage: 'This field is required.'
   },
+  fieldMaxNumber: {
+    id: 'Preferences.fieldInvalidNumber',
+    defaultMessage: 'Invalid number'
+  },
   autoRun: {
     id: 'Preferences.autoRun',
     defaultMessage: 'Autorun witness node'
