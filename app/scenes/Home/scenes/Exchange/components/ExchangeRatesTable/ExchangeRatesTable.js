@@ -66,6 +66,6 @@ class ExchangeRatesTable extends Component {
 export default connect(
 	state => ({
 		sale: state.default.exchange.sale,
-		currencyRates: state.default.currency.currencyRates
+		currencyRates: state.default.exchange.sale.rates
 	})
 )(injectIntl(ExchangeRatesTable));

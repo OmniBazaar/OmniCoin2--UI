@@ -69,21 +69,43 @@ const reducer = handleActions({
       error
     }
   },
-  [exchangeRequestSale](state) {
+  [exchangeRequestSale](state, { payload: { onlyRates } }) {
+    if (onlyRates) {
+      return state;
+    }
+    
     return {
       ...state,
-      sale: {},
       requestingSale: true,
       requestSaleError: null,
       inProgressPhase: null
     };
   },
-  [exchangeRequestSaleFinished](state, { payload: { error, sale } }) {
+  [exchangeRequestSaleFinished](state, { payload: { error, sale, onlyRates } }) {
+    if (error) {
+      return {
+        ...state,
+        requestingSale: false,
+        requestSaleError: error,
+      };
+    }
+
+    if (onlyRates) {
+      const saleState = state.sale;
+      saleState.rates = sale.rates;
+      return {
+        ...state,
+        requestingSale: false,
+        requestSaleError: error,
+        sale: saleState
+      };
+    }
+
     return {
       ...state,
       requestingSale: false,
       requestSaleError: error,
-      sale: sale && !error ? sale : {}
+      sale: sale && !error ? sale : state.sale
     };
   },
   [exchangeSetInProgressPhase](state, { payload: { inProgressPhase, waitingPhase } }) {

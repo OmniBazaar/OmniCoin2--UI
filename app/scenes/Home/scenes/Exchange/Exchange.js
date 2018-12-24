@@ -272,7 +272,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'BITCOIN', 'OMNICOIN', false, this.props.currencyRates) : 0} XOM</span>
           </div>
         </div>
       </div>
@@ -311,7 +311,7 @@ class Exchange extends Component {
         <div className="section">
           <div className="form-group">
             <span>{formatMessage(messages.willReceive)}</span>
-            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'ETHEREUM', 'OMNICOIN', false, sale.rates) : 0} XOM</span>
+            <span className='amount'>{!isNaN(amount) && !disabled ? currencyConverter(amount, 'ETHEREUM', 'OMNICOIN', false, this.props.currencyRates) : 0} XOM</span>
           </div>
         </div>
       </div>
@@ -511,6 +511,7 @@ export default compose(
   connect(
     state => ({
       ...state.default,
+      currencyRates: state.default.exchange.sale.rates,
       exchangeForm: {
         currency: selector(state, 'currency'),
         amount: selector(state, 'amount'),

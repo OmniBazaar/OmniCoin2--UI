@@ -6,7 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
-import { required } from 'redux-form-validators';
+import { required, numericality } from 'redux-form-validators';
 import Info from '../../images/info2.png';
 
 import {
@@ -164,11 +164,14 @@ class PreferencesTab extends Component {
               </Grid.Column>
               <Grid.Column width={10}>
                 <Field
-                  type="text"
+                  type="number"
                   name="logoutTimeout"
                   placeholder={formatMessage(messages.logoutTimeout)}
                   component={ValidatableField}
-                  validate={[required({ message: formatMessage(messages.fieldRequired) })]}
+                  validate={[
+                    required({ message: formatMessage(messages.fieldRequired) }),
+                    numericality({ '<': Number.MAX_SAFE_INTEGER, message: formatMessage(messages.fieldMaxNumber) })
+                  ]}
                 />
                 <div className="auto-log-out">
                   {formatMessage(messages.autoLogOut)}
