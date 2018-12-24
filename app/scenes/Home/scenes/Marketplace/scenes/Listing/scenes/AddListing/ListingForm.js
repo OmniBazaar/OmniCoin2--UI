@@ -589,7 +589,7 @@ class ListingForm extends Component {
 
     return (
       <Form className="add-listing-form" onSubmit={handleSubmit(this.submit)}>
-        <FormPrompt isVisible={this.state.submitType !== 'preview' && this.props.isFormDirty}/>
+        <FormPrompt isVisible={this.state.submitType !== 'preview' && (this.props.isFormDirty || this.props.location.pathname.includes('continue'))}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>

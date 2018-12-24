@@ -508,7 +508,7 @@ class Listing extends Component {
     const { formatMessage } = this.props.intl;
     return (
       <div className="buttons-wrapper">
-        <Link to="/add-listing">
+        <Link to="/add-listing/continue">
           <Button
             content={formatMessage(messages.continueAdding)}
             className="button--green-bg"
