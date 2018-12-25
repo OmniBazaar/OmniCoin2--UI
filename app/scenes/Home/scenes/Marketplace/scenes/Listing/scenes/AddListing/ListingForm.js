@@ -265,7 +265,7 @@ class ListingForm extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.listing.previewListing && !!nextProps.listing.previewListing) {
-        this.props.history.push('listing/preview');
+        this.props.history.push('/listing/preview');
     }
     if (!isEqual(this.props.listingDefaults, nextProps.listingDefaults)) {
       this.resetForm(nextProps.listingDefaults);

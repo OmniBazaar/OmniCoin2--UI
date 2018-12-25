@@ -49,6 +49,7 @@ import {
 } from '../../../../../../services/listing/listingActions';
 
 import { setBuyerAddress } from '../../../../../../services/transfer/transferActions';
+import FormPrompt from '../../../../../../components/FormPrompt/FormPrompt';
 
 const iconSizeSmall = 12;
 
@@ -57,7 +58,8 @@ class Listing extends Component {
     confirmDeleteOpen: false,
     confirmReportOpen: false,
     addressModalOpen: false,
-    isPreview: this.props.location.pathname.includes('preview')
+    isPreview: this.props.location.pathname.includes('preview'),
+    showConfirmPopUp: this.props.location.pathname.includes('preview')
   };
 
   componentWillMount() {
@@ -211,7 +213,7 @@ class Listing extends Component {
 
   renderUser(listingDetail) {
     const { formatMessage } = this.props.intl;
-    const owner = this.state.preview ? this.props.auth.currentUser.username : listingDetail.owner;
+    const owner = this.state.isPreview ? this.props.auth.currentUser.username : listingDetail.owner;
     return (
       <Popup
         trigger={<span className="username">{owner}</span>}
@@ -504,16 +506,21 @@ class Listing extends Component {
     );
   }
 
+  handleContinueAddingListingButtonClick() {
+    this.setState({ showConfirmPopUp: false }, () => {
+      this.props.history.push('/add-listing/continue');
+    });
+  }
+
   renderPreviewButtons() {
     const { formatMessage } = this.props.intl;
     return (
       <div className="buttons-wrapper">
-        <Link to="/add-listing/continue">
-          <Button
-            content={formatMessage(messages.continueAdding)}
-            className="button--green-bg"
-          />
-        </Link>
+        <Button
+          onClick={this.handleContinueAddingListingButtonClick.bind(this)}
+          content={formatMessage(messages.continueAdding)}
+          className="button--green-bg"
+        />
       </div>
     )
   }
@@ -724,6 +731,7 @@ class Listing extends Component {
 
     return (
       <div className="marketplace-container category-listing listing">
+        <FormPrompt isVisible={this.state.showConfirmPopUp}/>
         <div className="header">
           <Menu />
         </div>
