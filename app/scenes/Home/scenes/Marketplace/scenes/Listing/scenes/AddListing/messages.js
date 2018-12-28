@@ -185,6 +185,10 @@ const messages = defineMessages({
     id: 'AddListing.createListingCaps',
     defaultMessage: 'CREATE LISTING'
   },
+  previewListingCaps: {
+    id: 'AddListing.previewListingCaps',
+    defaultMessage: 'PREVIEW LISTING'
+  },
   warning: {
     id: 'AddListing.warning',
     defaultMessage: 'Warning'

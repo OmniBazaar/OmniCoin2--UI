@@ -32,6 +32,10 @@ import {
   saveListing,
   saveListingSuccess,
   saveListingError,
+  previewListing,
+  previewListingError,
+  clearPreviewListing,
+  clearPreviewListingError,
   resetDeleteListing,
   deleteListing,
   deleteListingSuccess,
@@ -96,6 +100,7 @@ const defaultState = {
     listing: null,
     listingId: null
   },
+  previewListing: null,
   deleteListing: {
     deleting: false,
     error: null,
@@ -389,8 +394,6 @@ const reducer = handleActions({
         thumb,
         fileName,
       };
-      delete imageItem.file;
-      delete imageItem.localFilePath;
 
       return {
         ...state,
@@ -543,6 +546,33 @@ const reducer = handleActions({
       }
     };
   },
+  [previewListing](state, { payload: { listing } }) {
+    return {
+      ...state,
+      previewListing: {
+        ...state.previewListing,
+        ...listing
+      }
+    };
+  },
+  [previewListingError](state, { payload: { error } }) {
+    return {
+      ...state,
+      error
+    };
+  },
+  [clearPreviewListing](state, { payload: {} }) {
+    return {
+      ...state,
+      previewListing: null
+    };
+  },
+  [clearPreviewListingError](state, { payload: { error } }) {
+    return {
+      ...state,
+      error
+    };
+  },
   [resetDeleteListing](state) {
     return {
       ...state,
@@ -647,10 +677,12 @@ const reducer = handleActions({
     };
   },
   [searchPublishers](state) {
+    const counter = state.publishers && state.publishers.counter ? state.publishers.counter + 1 : 1
     return {
       ...state,
       publishers: {
         ...state.publishers,
+        counter,
         searching: true,
         publishers: [],
         error: null
@@ -658,9 +690,11 @@ const reducer = handleActions({
     };
   },
   [searchPublishersFinish](state, { payload: { error, publishers } }) {
+    const counter = state.publishers && state.publishers.counter ? state.publishers.counter - 1 : 0
     const pubs = {
       ...state.publishers,
-      searching: false
+      counter,
+      searching: !!counter
     };
 
     if (error) {

@@ -364,7 +364,7 @@ export function* checkAndUpdatePublishersAliveStatus() {
   });
   const tasks = [];
   const { currentUser } = (yield select()).default.auth;
-  const user = { ...currentUser }; 
+  const user = { ...currentUser };
   publisherResults.forEach(pub => {
     if (!existPublishers[pub.publisher_ip]) {
       pub.alive = true;
@@ -443,11 +443,11 @@ function* checkPublishersAlive() {
       yield put(checkPublishersAliveFinish(null, []));
       return;
     }
-    const user = { ...currentUser }; 
+    const user = { ...currentUser };
     yield call(getAuthHeaders, user);
 
     const publishers = yield call(getAllPublishers);
-    
+
     const tasks = publishers.map(pub => {
       return call(checkPublisherAlive, user, pub);
     });
