@@ -8,15 +8,15 @@ import open from 'open';
 const messages = defineMessages({
   newVersionAvailable: {
     id: 'UpdateForcer.newVersionAvailable',
-    defaultMessage: 'A new version of app is available. Please kindly install it or quit the app'
+    defaultMessage: 'A new version of OmniBazaar is available. Click "Download" to receive the update. When the download is complete, open the file to launch the update installer'
   },
   install: {
     id: 'UpdateForcer.install',
-    defaultMessage: 'Install'
+    defaultMessage: 'Download'
   },
   quit: {
     id: 'UpdateForcer.quit',
-    defaultMessage: 'Quit'
+    defaultMessage: 'Cancel'
   }
 });
 
