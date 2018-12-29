@@ -218,7 +218,6 @@ class Home extends Component {
     const { mail: { messages: { inbox } } } = this.props;
 
     const unreadMessages = (inbox || []).filter(email => !email.read_status);
-    console.log(logoutTimeout, 'logoutTimeout-----logoutTimeoutlogoutTimeout-');
 
     return (
       <div className="home-container">
