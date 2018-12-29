@@ -186,6 +186,8 @@ class Home extends Component {
     const { visible } = this.state;
     let { logoutTimeout } = this.props.preferences.preferences;
     logoutTimeout *= 60000;
+    const maxTimout = 2147483647; // 32 bit integer
+    if (logoutTimeout > maxTimout) logoutTimeout = maxTimout;
     const sideBarClass = cn('sidebar', visible ? 'visible' : '');
     const homeContentClass = cn('home-content', visible ? '' : 'shrink');
 
@@ -216,6 +218,7 @@ class Home extends Component {
     const { mail: { messages: { inbox } } } = this.props;
 
     const unreadMessages = (inbox || []).filter(email => !email.read_status);
+    console.log(logoutTimeout, 'logoutTimeout-----logoutTimeoutlogoutTimeout-');
 
     return (
       <div className="home-container">
@@ -276,7 +279,7 @@ class Home extends Component {
                 </NavLink>
                 {identityVerificationStatus && identityVerificationStatus.verified &&
                   <NavLink to="/exchange" activeClassName="active" className="menu-item">
-                    <Image src={TransferIcon} height={iconSize} width={iconSize}/>
+                    <Image src={TransferIcon} height={iconSize} width={iconSize} />
                     <FormattedMessage
                       id="Home.Token Sale"
                       defaultMessage="Token Sale"
