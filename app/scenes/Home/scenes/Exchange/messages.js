@@ -152,6 +152,14 @@ const messages = defineMessages({
   omnicoinsAvailable: {
     id: 'Exchange.omnicoinsAvailable',
     defaultMessage: 'OmniCoins Available'
+  },
+  omnicoinBtcAddressEmpty: {
+    'id': 'Exchange.omnicoinBtcAddressEmpty',
+    defaultMessage: 'Omnicoin BTC address is empty'
+  },
+  omnicoinEthAddressEmpty: {
+    'id': 'Exchange.omnicoinEthAddressEmpty',
+    defaultMessage: 'Omnicoin ETH address is empty'
   }
 });
 

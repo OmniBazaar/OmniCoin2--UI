@@ -93,10 +93,13 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     yield updateSaleRates();
     yield checkAccountVerified();
 
-    const omnibazaar = yield call(fetchAccount, 'omnibazaar');
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin['btc_address']) {
+      throw new Error('invalid_omnicoin_btc_address');
+    }
 
     const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
-    const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
+    const result = yield call(BitcoinApi.makePayment, guid, password, omnicoin['btc_address'], amountSatoshi, walletIdx);
 
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
@@ -117,8 +120,11 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     yield updateSaleRates();
     yield checkAccountVerified();
 
-    const omnibazaar = yield call(fetchAccount, 'omnibazaar');
-    const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin['eth_address']) {
+      throw new Error('invalid_omnicoin_eth_address');
+    }
+    const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnicoin['eth_address'], amount);
     const txHash = result.hash;
 
     let i = 5;

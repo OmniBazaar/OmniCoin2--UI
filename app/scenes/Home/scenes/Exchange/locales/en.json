@@ -34,5 +34,7 @@
     "Exchange.salePhaseStartIn": "{name} starts in",
     "Exchange.stageProgress": "Stage Progress",
     "Exchange.omnicoinsSold": "OmniCoins Sold",
-    "Exchange.omnicoinsAvailable": "OmniCoins Available"
+    "Exchange.omnicoinsAvailable": "OmniCoins Available",
+    "Exchange.omnicoinBtcAddressEmpty": "Omnicoin BTC address is empty",
+    "Exchange.omnicoinEthAddressEmpty": "Omnicoin ETH address is empty"
 }
