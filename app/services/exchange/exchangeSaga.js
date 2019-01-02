@@ -94,7 +94,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     yield checkAccountVerified();
 
     const omnicoin = yield call(fetchAccount, 'omnicoin');
-    if (!omnicoin['btc_address']) {
+    if (!omnicoin || !omnicoin['btc_address']) {
       throw new Error('invalid_omnicoin_btc_address');
     }
 
@@ -121,7 +121,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     yield checkAccountVerified();
 
     const omnicoin = yield call(fetchAccount, 'omnicoin');
-    if (!omnicoin['eth_address']) {
+    if (!omnicoin || !omnicoin['eth_address']) {
       throw new Error('invalid_omnicoin_eth_address');
     }
     const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnicoin['eth_address'], amount);
