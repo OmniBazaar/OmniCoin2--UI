@@ -76,6 +76,7 @@ const reducer = handleActions({
     
     return {
       ...state,
+      sale: {},
       requestingSale: true,
       requestSaleError: null,
       inProgressPhase: null
