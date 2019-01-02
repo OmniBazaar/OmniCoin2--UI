@@ -142,6 +142,10 @@ class Exchange extends Component {
           toastr.error(formatMessage(messages.error), formatMessage(messages.accountNotVerified));
         } else if (nextProps.exchange.error.arg === 'privateKey') {
           toastr.error(formatMessage(messages.error), formatMessage(messages.walletNotConnected));
+        } else if (nextProps.exchange.error === 'invalid_omnicoin_btc_address') {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.omnicoinBtcAddressEmpty));
+        } else if (nextProps.exchange.error === 'invalid_omnicoin_eth_address') {
+          toastr.error(formatMessage(messages.error), formatMessage(messages.omnicoinEthAddressEmpty));
         } else {
           toastr.error(formatMessage(messages.error), formatMessage(messages.errorExchange));
         }

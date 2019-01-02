@@ -346,6 +346,9 @@ class OmnicoinHistory extends BaseStorage {
     const accountId = account.get('id');
     const seenOps = new Set();
     let count = 0;
+    const exchangeAmountData = {};
+    const exchangeTxMap = {};
+
     while (count < 1000) {
       let result = await this.fetchRecentHistory(accountId, start);
       if (!result.length) {
@@ -371,7 +374,8 @@ class OmnicoinHistory extends BaseStorage {
         ChainTypes.operations.founder_bonus_operation,
         ChainTypes.operations.witness_create,
         ChainTypes.operations.vesting_balance_withdraw,
-        ChainTypes.operations.exchange_create_operation
+        ChainTypes.operations.exchange_create_operation,
+        ChainTypes.operations.exchange_complete_operation
       ].includes(el.op[0]));
 
       for (let i = 0; i < result.length; ++i) {
@@ -472,7 +476,10 @@ class OmnicoinHistory extends BaseStorage {
           count++;
           this.addOperation(operation);
         } else if (el.op[0] === ChainTypes.operations.exchange_create_operation) {
-          const toAcc = await FetchChain('getAccount', el.op[1].sender);
+          const exchangeId = el.result[1];
+          exchangeAmountData[exchangeId] = el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0;
+        } else if (el.op[0] === ChainTypes.operations.exchange_complete_operation) {
+          const toAcc = await FetchChain('getAccount', el.op[1].receiver);
           count++;
         
           this.addOperation({
@@ -483,13 +490,17 @@ class OmnicoinHistory extends BaseStorage {
             date: calcBlockTime(el.block_num, globalObject, dynGlobalObject).getTime(),
             fee: el.op[1].fee.amount / TOKENS_IN_XOM,
             operationType: el.op[0],
-            amount: el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0,
+            // amount: el.op[1].amount ? el.op[1].amount.amount / TOKENS_IN_XOM : 0,
+            amount: 0,
             from: 'exchange',
             to: toAcc.get('name'),
             fromTo: 'exchange',
             isIncoming: true,
             memo: el.op[1].memo ? decodeMemo(el.op[1].memo, activeKey) : null,
           });
+
+          const exchId = el.op[1].exchange;
+          exchangeTxMap[exchId] = el.id;
         } else {
           const [from, to] = await OmnicoinHistory.getParties(el.op);
           count++;
@@ -523,6 +534,15 @@ class OmnicoinHistory extends BaseStorage {
       }
     }
     
+    Object.keys(exchangeTxMap).forEach(exchangeId => {
+      const txId = exchangeTxMap[exchangeId];
+      if (typeof exchangeAmountData[exchangeId] !== 'undefined') {
+        this.cache[txId].amount = exchangeAmountData[exchangeId];
+      } else {
+        delete this.cache[txId];
+      }
+    });
+
     this.save();
   }
 
