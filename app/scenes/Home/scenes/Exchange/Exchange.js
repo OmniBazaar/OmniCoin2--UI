@@ -7,12 +7,14 @@ import {
   reduxForm,
   formValueSelector,
   change,
-  initialize
+  initialize,
+  getFormSyncErrors
 } from 'redux-form';
 import {
   Button,
   Form,
   Select,
+  Loader
 } from 'semantic-ui-react';
 import {
   required,
@@ -33,7 +35,9 @@ import { exchangeXOM, getMinEthValue, currencyConverter } from '../../../../serv
 import Header from '../../../../components/Header';
 import {
   exchangeBtc,
-  exchangeEth
+  exchangeEth,
+  getBtcTransactionFee,
+  resetTransactionFees
 } from '../../../../services/exchange/exchangeActions';
 import {
   numericFieldValidator,
@@ -123,6 +127,8 @@ class Exchange extends Component {
   }
 
   componentDidMount() {
+    this.props.exchangeActions.resetTransactionFees();
+
     this.props.initialize({
       currency: currencyOptions[0].value,
       amount: 0
@@ -186,6 +192,9 @@ class Exchange extends Component {
             const { formatMessage } = this.props.intl;
             toastr.warning(formatMessage(messages.warning), formatMessage(messages.walletNotConnected));
         }
+        if (data.value === 'bitcoin') {
+          this.getBtcFee();
+        }
       }}
       disabled={disabled}
     />
@@ -223,7 +232,39 @@ class Exchange extends Component {
     />
   );
 
-  submitTransfer(values) {
+  onBitcoinWalletChange = (e, val) => {
+    if (val != this.props.exchangeForm.wallet) {
+      this.getBtcFee({
+        wallet: val
+      });
+    }
+  }
+
+  onBtcAmountChange = (val) => {
+    this.getBtcFee();
+  }
+
+  getBtcFee(data) {
+    if (!data) data = {};
+    const { guid, password } = this.props.bitcoin;
+    let { wallet, amount } = data;
+    if (typeof wallet === 'undefined') {
+      wallet = this.props.exchangeForm.wallet;
+    }
+    if (typeof amount === 'undefined') {
+      amount = this.props.exchangeForm.amount;
+    }
+
+    if (typeof wallet !== 'undefined' && typeof amount !== 'undefined' && amount) {
+      if (!this.props.formErrors.amount) {
+        this.props.exchangeActions.getBtcTransactionFee(guid, password, wallet, amount);
+      } else {
+        this.props.exchangeActions.resetTransactionFees();
+      }
+    }
+  }
+
+  async submitTransfer(values) {
     const { currency } = this.props.exchangeForm;
     const { formatMessage } = this.props.intl;
     if (currency === 'bitcoin') {
@@ -239,7 +280,10 @@ class Exchange extends Component {
   renderBitcoinForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates, sale } = this.props.exchange;
+    const {
+      requestRatesError, requestingRates,
+      rates, sale, gettingBtcFee, btcFee, getBtcFeeError
+    } = this.props.exchange;
     const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
@@ -254,6 +298,7 @@ class Exchange extends Component {
                 validate={[
                   required({ msg: formatMessage(messages.fieldRequired) })
                 ]}
+                onChange={this.onBitcoinWalletChange}
                 disabled={!this.canDoSale}
               />
             </div>
@@ -269,8 +314,25 @@ class Exchange extends Component {
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="BTC"
+              onBlur={this.onBtcAmountChange}
               disabled={disabled}
             />
+          </div>
+        </div>
+        <div className="section">
+          <div className="form-group">
+            <span>{formatMessage(messages.transactionFee)}</span>
+            <span className='amount fee'>
+              { gettingBtcFee && <Loader active inline className='fee-loader' /> }
+              {
+                !gettingBtcFee && getBtcFeeError &&
+                formatMessage(messages.transactionFeeFail)
+              }
+              {
+                !gettingBtcFee && !getBtcFeeError &&
+                `${btcFee} BTC`
+              }
+            </span>
           </div>
         </div>
         <div className="section">
@@ -520,7 +582,8 @@ export default compose(
         currency: selector(state, 'currency'),
         amount: selector(state, 'amount'),
         wallet: selector(state, 'wallet')
-      }
+      },
+      formErrors: getFormSyncErrors('exchangeForm')(state)
     }),
     (dispatch) => ({
       initialize,
@@ -529,7 +592,9 @@ export default compose(
       },
       exchangeActions: bindActionCreators({
         exchangeEth,
-        exchangeBtc
+        exchangeBtc,
+        getBtcTransactionFee,
+        resetTransactionFees
       }, dispatch),
       bitcoinActions: bindActionCreators({
         getWallets

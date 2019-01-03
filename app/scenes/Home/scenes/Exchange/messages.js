@@ -160,6 +160,14 @@ const messages = defineMessages({
   omnicoinEthAddressEmpty: {
     'id': 'Exchange.omnicoinEthAddressEmpty',
     defaultMessage: 'Omnicoin ETH address is empty'
+  },
+  transactionFee: {
+    id: 'Exchange.transactionFee',
+    defaultMessage: 'Transaction fee'
+  },
+  transactionFeeFail: {
+    id: 'Exchange.transactionFeeFail',
+    defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds'
   }
 });
 

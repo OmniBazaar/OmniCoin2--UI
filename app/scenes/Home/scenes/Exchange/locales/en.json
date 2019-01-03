@@ -36,5 +36,7 @@
     "Exchange.omnicoinsSold": "OmniCoins Sold",
     "Exchange.omnicoinsAvailable": "OmniCoins Available",
     "Exchange.omnicoinBtcAddressEmpty": "Omnicoin BTC address is empty",
-    "Exchange.omnicoinEthAddressEmpty": "Omnicoin ETH address is empty"
+    "Exchange.omnicoinEthAddressEmpty": "Omnicoin ETH address is empty",
+    "Exchange.transactionFee": "Transaction fee",
+    "Exchange.transactionFeeFail": "Fail to get transaction fee, wallet may not have enough funds"
 }
