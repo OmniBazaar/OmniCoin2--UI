@@ -10,7 +10,10 @@ import {
   exchangeRequestSale,
   exchangeRequestSaleFinished,
   exchangeSetInProgressPhase,
-  exchangeMakeSaleSuccess
+  exchangeMakeSaleSuccess,
+  getBtcTransactionFee,
+  getBtcTransactionFeeFinished,
+  resetTransactionFees
 } from "./exchangeActions";
 
 const defaultState = {
@@ -21,7 +24,11 @@ const defaultState = {
   requestingSale: false,
   requestSaleError: null,
   inProgressPhase: null,
-  waitingPhase: null
+  waitingPhase: null,
+  calculateBtcFeeId: null,
+  gettingBtcFee: false,
+  btcFee: 0,
+  getBtcFeeError: null
 };
 
 const reducer = handleActions({
@@ -123,6 +130,36 @@ const reducer = handleActions({
         ...state.sale,
         progress
       }
+    };
+  },
+  [getBtcTransactionFee](state, { payload: { id } }) {
+    return {
+      ...state,
+      calculateBtcFeeId: id,
+      gettingBtcFee: true,
+      getBtcFeeError: null
+    };
+  },
+  [getBtcTransactionFeeFinished](state, { payload: { id, error, fee } }) {
+    if (id !== state.calculateBtcFeeId) {
+      return state;
+    }
+
+    return {
+      ...state,
+      calculateBtcFeeId: null,
+      gettingBtcFee: false,
+      getBtcFeeError: error,
+      btcFee: error ? 0 : fee
+    };
+  },
+  [resetTransactionFees](state) {
+    return {
+      ...state,
+      calculateBtcFeeId: null,
+      gettingBtcFee: false,
+      getBtcFeeError: null,
+      btcFee: 0
     };
   }
 }, defaultState);

@@ -53,6 +53,10 @@ const sendTransaction = async (from, to, privateKeyWIF, amount) => {
   });
 }
 
+const getTotalFee = wrapRequest(async (guid, password, to, amount, from) => (
+  fetch(`${address}/merchant/${guid}/payment-fee?password=${password}&to=${to}&amount=${amount}&from=${from}&fee_per_byte=${feePerByte}`)
+));
+
 export {
   createWallet,
   getWallets,
@@ -63,5 +67,6 @@ export {
   validateAddress,
   getHistory,
   sendToMany,
-  sendTransaction
+  sendTransaction,
+  getTotalFee
 };
