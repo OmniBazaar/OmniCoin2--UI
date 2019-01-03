@@ -21,7 +21,7 @@
     "Exchange.amount": "Amount", 
     "Exchange.numberExceedsDecimalsLimit": "Amount cannot have more than {limit} numbers after decimal", 
     "Exchange.success": "Success", 
-    "Exchange.errorExchange": "Not enough funds", 
+    "Exchange.errorExchange": "Exchange's not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again", 
     "Exchange.exchangeRate": "Exchange Rate", 
     "Exchange.numberCannotBeNegative": "Amount cannot be a negative value", 
     "Exchange.pageDescription": "This page will allow you to purchase OmniCoins using funds contained in your Bitcoin and Ether wallets in this OmniBazaar application. If you have not already done so, you must first transfer some bitcoins or ether into your OmniBazaar wallets.", 

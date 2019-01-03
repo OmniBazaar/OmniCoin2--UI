@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   errorExchange: {
     id: 'Exchange.errorExchange',
-    defaultMessage: 'Not enough funds'
+    defaultMessage: 'Exchange\'s not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again'
   },
   walletNotConnected: {
     id: 'Exchange.walletNotConnected',
