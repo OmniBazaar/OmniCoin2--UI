@@ -15,7 +15,7 @@ import { machineId } from 'node-machine-id';
 import getmac from 'getmac';
 import MenuBuilder from './menu';
 // import bitcoincli from 'blockchain-wallet-service';
-import bitcoincli from './services/lib/blockchain-wallet-service';
+import bitcoincli from 'blockchain-wallet-service-api';
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
