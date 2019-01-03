@@ -111,7 +111,15 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     yield put(exchangeBtcSucceeded());
   } catch (error) {
     console.log('ERROR ', error);
-    yield put(exchangeBtcFailed(error.message));
+    yield put(exchangeBtcFailed(
+      error.message ? 
+      error.message : 
+      (
+        error.error ? 
+        error.error : 
+        error
+      )
+    ));
   }
 }
 
