@@ -22,7 +22,8 @@ import {
   exchangeRequestSaleFinished,
   exchangeMakeSaleSuccess,
   getBtcTransactionFeeFinished,
-  resetTransactionFees
+  resetTransactionFees,
+  getEthTransactionFeeFinished
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
 import { currencyConverter } from "../utils";
@@ -78,7 +79,8 @@ export function* exchangeSubscriber() {
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
     takeEvery('EXCHANGE_REQUEST_SALE', requestSale),
-    takeEvery('GET_BTC_TRANSACTION_FEE', getBtcTransactionFee)
+    takeEvery('GET_BTC_TRANSACTION_FEE', getBtcTransactionFee),
+    takeEvery('GET_ETH_TRANSACTION_FEE', getEthTransactionFee)
   ]);
 }
 
@@ -209,5 +211,20 @@ function* getBtcTransactionFee({ payload: { id, guid, password, walletIdx, amoun
   } catch (err) {
     console.log('Get btc fee error', err);
     yield put(getBtcTransactionFeeFinished(id, err));
+  }
+}
+
+function* getEthTransactionFee({ payload: { id, privateKey, amount } }) {
+  try {
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin || !omnicoin['eth_address']) {
+      throw new Error('invalid_omnicoin_eth_address');
+    }
+    const result = yield call(EthereumApi.getEthFee, privateKey, omnicoin['eth_address'], amount);
+    const { maxFee, estimateFee } = result;
+    yield put(getEthTransactionFeeFinished(id, null, maxFee, estimateFee));
+  } catch (err) {
+    console.log('Get eth fee error', err);
+    yield put(getEthTransactionFeeFinished(id, err));
   }
 }

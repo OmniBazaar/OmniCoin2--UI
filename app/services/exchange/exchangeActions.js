@@ -13,7 +13,9 @@ const {
   exchangeMakeSaleSuccess,
   getBtcTransactionFee,
   getBtcTransactionFeeFinished,
-  resetTransactionFees
+  resetTransactionFees,
+  getEthTransactionFee,
+  getEthTransactionFeeFinished
 } = createActions({
   EXCHANGE_BTC: (guid, password, walletIdx, amount, formatMessage) => ({
     guid, password, walletIdx, amount, formatMessage
@@ -33,7 +35,9 @@ const {
     guid, password, walletIdx, amount, id: Date.now()
   }),
   GET_BTC_TRANSACTION_FEE_FINISHED: (id, error, fee) => ({ id, error, fee }),
-  RESET_TRANSACTION_FEES: () => ({})
+  RESET_TRANSACTION_FEES: () => ({}),
+  GET_ETH_TRANSACTION_FEE: (privateKey, amount) => ({privateKey, amount, id: Date.now()}),
+  GET_ETH_TRANSACTION_FEE_FINISHED: (id, error, maxFee, estimateFee) => ({id, error, maxFee, estimateFee})
 });
 
 export {
@@ -49,5 +53,7 @@ export {
   exchangeMakeSaleSuccess,
   getBtcTransactionFee,
   getBtcTransactionFeeFinished,
-  resetTransactionFees
+  resetTransactionFees,
+  getEthTransactionFee,
+  getEthTransactionFeeFinished
 }

@@ -37,6 +37,10 @@
     "Exchange.omnicoinsAvailable": "OmniCoins Available",
     "Exchange.omnicoinBtcAddressEmpty": "Omnicoin BTC address is empty",
     "Exchange.omnicoinEthAddressEmpty": "Omnicoin ETH address is empty",
-    "Exchange.transactionFee": "Transaction fee",
-    "Exchange.transactionFeeFail": "Fail to get transaction fee, wallet may not have enough funds"
+    "Exchange.btcTransactionFee": "BTC transaction fee",
+    "Exchange.btcTransactionFeeFail": "Fail to get transaction fee, wallet may not have enough funds",
+    "Exchange.ethTransactionFee": "ETH transaction fee",
+    "Exchange.ethEstimateTransactionFee": "Estimate fee",
+    "Exchange.ethMaxTransactionFee": "Max fee",
+    "Exchange.ethTransactionFeeFail": "Fail to get transaction fee, wallet may not have enough funds or due to ETH network error"
 }

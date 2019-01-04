@@ -13,7 +13,9 @@ import {
   exchangeMakeSaleSuccess,
   getBtcTransactionFee,
   getBtcTransactionFeeFinished,
-  resetTransactionFees
+  resetTransactionFees,
+  getEthTransactionFee,
+  getEthTransactionFeeFinished
 } from "./exchangeActions";
 
 const defaultState = {
@@ -28,7 +30,12 @@ const defaultState = {
   calculateBtcFeeId: null,
   gettingBtcFee: false,
   btcFee: 0,
-  getBtcFeeError: null
+  getBtcFeeError: null,
+  calculateEthFeeId: null,
+  gettingEthFee: false,
+  ethEstimateFee: 0,
+  ethMaxFee: 0,
+  getEthFeeError: null
 };
 
 const reducer = handleActions({
@@ -159,9 +166,36 @@ const reducer = handleActions({
       calculateBtcFeeId: null,
       gettingBtcFee: false,
       getBtcFeeError: null,
-      btcFee: 0
+      btcFee: 0,
+      calculateEthFeeId: null,
+      gettingEthFee: false,
+      getEthFeeError: null,
+      ethMaxFee: 0,
+      ethEstimateFee: 0
     };
-  }
+  },
+  [getEthTransactionFee](state, { payload: { id } }) {
+    return {
+      ...state,
+      calculateEthFeeId: id,
+      gettingEthFee: true,
+      getEthFeeError: null
+    };
+  },
+  [getEthTransactionFeeFinished](state, { payload: { id, error, maxFee, estimateFee } }) {
+    if (id !== state.calculateEthFeeId) {
+      return state;
+    }
+
+    return {
+      ...state,
+      calculateEthFeeId: null,
+      gettingEthFee: false,
+      getEthFeeError: error,
+      ethMaxFee: error ? 0 : maxFee,
+      ethEstimateFee: error ? 0 : estimateFee
+    };
+  },
 }, defaultState);
 
 export default reducer;
