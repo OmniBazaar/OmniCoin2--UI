@@ -105,7 +105,6 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
     const amountSatoshi = Math.round(amount * Math.pow(10, 8));
     const result = yield call(BitcoinApi.makePayment, guid, password, omnicoin['btc_address'], amountSatoshi, walletIdx);
-    console.log({result});
 
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
