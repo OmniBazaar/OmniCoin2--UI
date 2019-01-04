@@ -37,7 +37,8 @@ import {
   exchangeBtc,
   exchangeEth,
   getBtcTransactionFee,
-  resetTransactionFees
+  resetTransactionFees,
+  getEthTransactionFee
 } from '../../../../services/exchange/exchangeActions';
 import {
   numericFieldValidator,
@@ -126,7 +127,7 @@ class Exchange extends Component {
     this.submitTransfer = this.submitTransfer.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.exchangeActions.resetTransactionFees();
 
     this.props.initialize({
@@ -194,6 +195,8 @@ class Exchange extends Component {
         }
         if (data.value === 'bitcoin') {
           this.getBtcFee();
+        } else {
+          this.getEthFee();
         }
       }}
       disabled={disabled}
@@ -240,8 +243,12 @@ class Exchange extends Component {
     }
   }
 
-  onBtcAmountChange = (val) => {
+  onBtcAmountChange = () => {
     this.getBtcFee();
+  }
+
+  onEthAmountChange = () => {
+    this.getEthFee();
   }
 
   getBtcFee(data) {
@@ -264,6 +271,18 @@ class Exchange extends Component {
     }
   }
 
+  getEthFee() {
+    const { privateKey } = this.props.ethereum;
+    const { amount } = this.props.exchangeForm;
+    if (typeof amount !== 'undefined' && amount) {
+      if (!this.props.formErrors.amount) {
+        this.props.exchangeActions.getEthTransactionFee(privateKey, amount);
+      } else {
+        this.props.exchangeActions.resetTransactionFees();
+      }
+    }
+  }
+
   async submitTransfer(values) {
     const { currency } = this.props.exchangeForm;
     const { formatMessage } = this.props.intl;
@@ -272,7 +291,11 @@ class Exchange extends Component {
       this.props.exchangeActions.exchangeBtc(guid, password, values.wallet, values.amount, formatMessage);
     } else {
       const { privateKey } = this.props.ethereum;
-      this.props.exchangeActions.exchangeEth(privateKey, values.amount, formatMessage);
+      let { ethEstimateFee } = this.props.exchange;
+      if (!ethEstimateFee) {
+        ethEstimateFee = 0;
+      }
+      this.props.exchangeActions.exchangeEth(privateKey, values.amount, ethEstimateFee, formatMessage);
     }
   }
 
@@ -321,12 +344,12 @@ class Exchange extends Component {
         </div>
         <div className="section">
           <div className="form-group">
-            <span>{formatMessage(messages.transactionFee)}</span>
+            <span>{formatMessage(messages.btcTransactionFee)}</span>
             <span className='amount fee'>
               { gettingBtcFee && <Loader active inline className='fee-loader' /> }
               {
                 !gettingBtcFee && getBtcFeeError &&
-                formatMessage(messages.transactionFeeFail)
+                formatMessage(messages.btcTransactionFeeFail)
               }
               {
                 !gettingBtcFee && !getBtcFeeError &&
@@ -348,7 +371,11 @@ class Exchange extends Component {
   renderEthereumForm() {
     const { formatMessage } = this.props.intl;
     const { amount } = this.props.exchangeForm;
-    const { requestRatesError, requestingRates, rates, sale} = this.props.exchange;
+    const {
+      requestRatesError, requestingRates,
+      rates, sale, gettingEthFee, 
+      getEthFeeError, ethEstimateFee
+    } = this.props.exchange;
     const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
       <div>
@@ -371,7 +398,23 @@ class Exchange extends Component {
                   max: this.props.ethereum.balance
                 })
               ]}
+              onBlur={this.onEthAmountChange}
             />
+          </div>
+        </div>
+        <div className="section">
+          <div className="form-group">
+            <span className='label-align-top'>{formatMessage(messages.ethEstimateTransactionFee)}</span>
+            <span className='amount fee eth'>
+              { gettingEthFee && <Loader active inline className='fee-loader' /> }
+              {
+                !gettingEthFee && getEthFeeError &&
+                formatMessage(messages.ethTransactionFeeFail)
+              }
+              {
+                !gettingEthFee && !getEthFeeError && `${ethEstimateFee} ETH`
+              }
+            </span>
           </div>
         </div>
         <div className="section">
@@ -594,7 +637,8 @@ export default compose(
         exchangeEth,
         exchangeBtc,
         getBtcTransactionFee,
-        resetTransactionFees
+        resetTransactionFees,
+        getEthTransactionFee
       }, dispatch),
       bitcoinActions: bindActionCreators({
         getWallets

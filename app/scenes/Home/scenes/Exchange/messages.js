@@ -161,14 +161,22 @@ const messages = defineMessages({
     'id': 'Exchange.omnicoinEthAddressEmpty',
     defaultMessage: 'Omnicoin ETH address is empty'
   },
-  transactionFee: {
-    id: 'Exchange.transactionFee',
-    defaultMessage: 'Transaction fee'
+  btcTransactionFee: {
+    id: 'Exchange.btcTransactionFee',
+    defaultMessage: 'BTC transaction fee'
   },
-  transactionFeeFail: {
-    id: 'Exchange.transactionFeeFail',
+  btcTransactionFeeFail: {
+    id: 'Exchange.btcTransactionFeeFail',
     defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds'
-  }
+  },
+  ethEstimateTransactionFee: {
+    id: 'Exchange.ethEstimateTransactionFee',
+    defaultMessage: 'ETH estimated fee'
+  },
+  ethTransactionFeeFail: {
+    id: 'Exchange.ethTransactionFeeFail',
+    defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds or due to ETH network error'
+  },
 });
 
 export default messages;
