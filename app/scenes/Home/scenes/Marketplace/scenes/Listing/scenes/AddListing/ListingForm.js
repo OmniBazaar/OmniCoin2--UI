@@ -1200,7 +1200,7 @@ class ListingForm extends Component {
         </Grid>
         <ConfirmationModal
           isOpen={this.state.isModalOpen}
-          title= {formatMessage(messages.saveAsDefaultSettings)}
+          title={formatMessage(messages.saveAsDefaultSettings)}
           onApprove={this.confirmSaveDefaults}
           onCancel={this.toggleConfirmationModal}
         >

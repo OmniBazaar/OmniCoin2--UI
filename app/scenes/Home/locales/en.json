@@ -12,5 +12,6 @@
     "Home.wallet": "Wallet", 
     "Home.mail": "Mail", 
     "Home.publisherDataIsEmpty": "You didn't specify your search priority criteria. Do you wish to do it now?", 
-    "Home.publisherUpdatesAvailable": "Publisher Updates"
+    "Home.publisherUpdatesAvailable": "Publisher Updates",
+    "Home.specifySearchPriorityCriteria": "Specify Search Priority Criteria"
 }
