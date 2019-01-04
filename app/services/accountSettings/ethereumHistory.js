@@ -26,6 +26,9 @@ class EthereumHistory {
 
   getHistory() {
     const formattedTransactions = this.transactions.map(transaction => {
+      const gasPriceWei = utils.bigNumberify(transaction.gasPrice);
+      const gasUsed = utils.bigNumberify(transaction.gasUsed);
+      const fee = gasPriceWei.mul(gasUsed);
       return {
         id: transaction.hash,
         isEther: true,
@@ -36,7 +39,7 @@ class EthereumHistory {
         from: transaction.from,
         to: transaction.to,
         fromTo: this.transactionType(transaction.to),
-        fee: this.getFeeTransaction(transaction.to, transaction.gasPrice),
+        fee: this.getFeeTransaction(transaction.to, fee),
         type: 0,
         operationType: 0,
         operations: []

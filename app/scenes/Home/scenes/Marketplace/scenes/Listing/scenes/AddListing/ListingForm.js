@@ -4,10 +4,10 @@ import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Form, Button, Grid } from 'semantic-ui-react';
-import { Field, reduxForm, getFormValues, change, isDirty } from 'redux-form';
+import { Field, reduxForm, getFormValues, change, isDirty, SubmissionError  } from 'redux-form';
 import { required, numericality } from 'redux-form-validators';
 import { toastr } from 'react-redux-toastr';
-import { NavLink, Prompt } from 'react-router-dom';
+import { Link, NavLink, Prompt, withRouter } from 'react-router-dom';
 import moment from 'moment';
 import isEqual from "lodash/isEqual";
 
@@ -37,6 +37,8 @@ import {
 import {
   setListingImages,
   saveListing,
+  previewListing,
+  clearPreviewListing,
   resetSaveListing
 } from '../../../../../../../../services/listing/listingActions';
 import { saveListingDefault } from '../../../../../../../../services/listing/listingDefaultsActions';
@@ -61,7 +63,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 
 import './add-listing.scss';
 import { TOKENS_IN_XOM, WEI_IN_ETH, MANUAL_INPUT_VALUE } from "../../../../../../../../utils/constants";
-import { weightUnits, sizeUnits } from  './constants'; 
+import { weightUnits, sizeUnits } from  './constants';
 import { getMinEthValue } from "../../../../../../../../services/utils";
 import ConfirmationModal from '../../../../../../../../components/ConfirmationModal/ConfirmationModal';
 import { getStoredListingDefautls } from '../../../../../../../../services/listing/listingDefaultsService';
@@ -120,8 +122,12 @@ class ListingForm extends Component {
     this.state = {
       keywords: '',
       isModalOpen: false,
-      listingDefaults: null
+      listingDefaults: null,
+      submitType: 'save'
     };
+
+    this.submit = this.submit.bind(this);
+    this.onSubmitClick = this.onSubmitClick.bind(this);
   }
 
   renderLabeledField = ({
@@ -141,7 +147,18 @@ class ListingForm extends Component {
   );
 
   componentWillMount() {
-    this.resetForm();
+    if (!this.props.listing.previewListing) {
+      this.resetForm();
+    } else {
+      this.initFormData(this.props.listing.previewListing);
+      this.props.listingActions.clearPreviewListing();
+    }
+  }
+
+  componentWillUnmount() {
+    if (!!this.props.listing.previewListing && this.props.history.location.pathname !== '/listing/preview' ) {
+      this.props.listingActions.clearPreviewListing();
+    }
   }
 
   initFormData(listingDefaults = this.props.listingDefaults) {
@@ -182,7 +199,7 @@ class ListingForm extends Component {
           data.bitcoin_address = defaultData.bitcoin_address;
         } else {
           data.bitcoin_address = MANUAL_INPUT_VALUE;
-          data.manual_bitcoin_address = defaultData.manual_bitcoin_address;
+          data.manual_bitcoin_address = defaultData.manual_bitcoin_address || defaultData.bitcoin_address;
         }
       }
       if (defaultData.ethereum_address) {
@@ -197,6 +214,7 @@ class ListingForm extends Component {
         data[key] = key === 'weight_unit' ? 'oz' : 'in';
       }
     });
+
     this.props.initialize(data);
   }
 
@@ -246,16 +264,21 @@ class ListingForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!isEqual(this.props.listingDefaults, nextProps.listingDefaults)){
+    if (!this.props.listing.previewListing && !!nextProps.listing.previewListing) {
+        this.props.history.push('/listing/preview');
+    }
+    if (!isEqual(this.props.listingDefaults, nextProps.listingDefaults)) {
       this.resetForm(nextProps.listingDefaults);
     }
-    if(this.props.submitSucceeded) {
+    if (this.props.submitSucceeded) {
       const defaults = getStoredListingDefautls();
       if (Object.keys(defaults).length === 0) {
         const listingDefaults = {}
-        Object.keys(this.props.listingDefaults).forEach(key => {
-          listingDefaults[key] = this.props.formValues[key]
-        })
+        if (!!this.props.formValues) {
+          Object.keys(this.props.listingDefaults).forEach(key => {
+            listingDefaults[key] = this.props.formValues[key];
+          });
+        }
         this.setState({ isModalOpen: true, listingDefaults: { ...listingDefaults, images: {} } })
       }
     }
@@ -273,7 +296,17 @@ class ListingForm extends Component {
       this.props.initialize(nextProps.formValues);
     }
 
-    this.setState({ keywords: nextProps.formValues && nextProps.formValues.keywords });
+    let keywords;
+
+    if (!!nextProps.formValues && !!nextProps.formValues.keywords) {
+      if (typeof nextProps.formValues.keywords === 'string') {
+        keywords = nextProps.formValues.keywords;
+      } else if (Array.isArray(nextProps.formValues.keywords)) {
+        keywords = nextProps.formValues.keywords.join(',');
+      }
+    }
+
+    this.setState({ keywords });
 
     const { error, saving } = nextProps.listing.saveListing;
 
@@ -440,8 +473,10 @@ class ListingForm extends Component {
     toastr.error(title, message);
   }
 
-  submit(values) {
-    const { saveListing } = this.props.listingActions;
+  submit = values => {
+    const { submitType } = this.state;
+    const { saveListing, previewListing } = this.props.listingActions;
+    const { listingDetails } = this.props.listing;
     const {
       listing_id, publisher, keywords, ...data
     } = values;
@@ -461,12 +496,18 @@ class ListingForm extends Component {
 
     const obj = {
       ...data,
+      ip: !!listingDetails && !!listingDetails.ip ? listingDetails.ip : '',
       images: this.getImagesData(),
-      keywords: keywords.split(',').map(el => el.trim())
+      keywords: typeof keywords === 'string' ? keywords.split(',').map(el => el.trim()) : keywords
     };
     if (obj.bitcoin_address === MANUAL_INPUT_VALUE) {
       obj.bitcoin_address = obj.manual_bitcoin_address;
       delete obj.manual_bitcoin_address;
+    }
+
+    if (submitType === 'preview') {
+      previewListing({ ...obj, ...{ publisher } });
+      throw new SubmissionError();
     }
 
     saveListing(publisher, obj, listing_id);
@@ -474,11 +515,16 @@ class ListingForm extends Component {
 
   renderKeywordsInput() {
     const { formatMessage } = this.props.intl;
-
+    let value = [];
+    if (typeof  this.state.keywords === 'string') {
+      value = this.state.keywords.split(',');
+    } else if (Array.isArray(this.state.keywords)) {
+      value = this.state.keywords;
+    }
     return (
       <div>
         <TagsInput
-          value={this.state.keywords ? this.state.keywords.split(',') : []}
+          value={value}
           name="keywords"
           addOnBlur
           inputProps={{
@@ -494,10 +540,13 @@ class ListingForm extends Component {
     );
   }
 
-
   toggleConfirmationModal = () => {
     this.setState({ isModalOpen: false })
     this.resetForm();
+  }
+
+  onSubmitClick(type) {
+    this.setState({ submitType: type || 'save' });
   }
 
   confirmSaveDefaults = () => {
@@ -539,8 +588,8 @@ class ListingForm extends Component {
     const ethWalletAddress = ethereum.address;
 
     return (
-      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit.bind(this))}>
-        <FormPrompt isVisible={this.props.isFormDirty}/>
+      <Form className="add-listing-form" onSubmit={handleSubmit(this.submit)}>
+        <FormPrompt isVisible={this.state.submitType !== 'preview' && (this.props.isFormDirty || this.props.location.pathname.includes('continue'))}/>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>
@@ -1115,9 +1164,12 @@ class ListingForm extends Component {
 
           <Grid.Row>
             <Grid.Column width={4} />
-            <Grid.Column width={4}>
+            <Grid.Column width={3}>
               <Button
                 type="submit"
+                name="submit"
+                value="submit"
+                onClick={this.onSubmitClick}
                 content={
                   formatMessage(editingListing ?
                     messages.saveListing :
@@ -1128,11 +1180,27 @@ class ListingForm extends Component {
                 disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
               />
             </Grid.Column>
+            {!editingListing &&
+              <Grid.Column width={3}>
+                <Button
+                  type="submit"
+                  name="preview"
+                  value="preview"
+                  onClick={() => this.onSubmitClick('preview')}
+                  content={
+                    formatMessage(messages.previewListingCaps)
+                  }
+                  className="button--primary uppercase"
+                  loading={saving || submitting || asyncValidating}
+                  disabled={saving || invalid || !this.state.keywords || submitting || asyncValidating}
+                />
+              </Grid.Column>
+            }
           </Grid.Row>
         </Grid>
         <ConfirmationModal
           isOpen={this.state.isModalOpen}
-          title= {formatMessage(messages.saveAsDefaultSettings)}
+          title={formatMessage(messages.saveAsDefaultSettings)}
           onApprove={this.confirmSaveDefaults}
           onCancel={this.toggleConfirmationModal}
         >
@@ -1147,7 +1215,9 @@ ListingForm.propTypes = {
   listingActions: PropTypes.shape({
     setListingImages: PropTypes.func,
     resetSaveListing: PropTypes.func,
-    saveListing: PropTypes.func
+    saveListing: PropTypes.func,
+    previewListing: PropTypes.func,
+    clearPreviewListing: PropTypes.func
   }).isRequired,
   accountActions: PropTypes.shape({
     updatePublicData: PropTypes.func,
@@ -1191,6 +1261,8 @@ ListingForm.propTypes = {
   }).isRequired,
 };
 
+ListingForm = withRouter(ListingForm);
+
 export default compose(
   reduxForm({
     form: 'listingForm',
@@ -1205,7 +1277,6 @@ export default compose(
       listing: state.default.listing,
       listingDefaults: state.default.listingDefaults,
       formValues: getFormValues('listingForm')(state),
-      listingDefaults: state.default.listingDefaults,
       bitcoin: state.default.bitcoin,
       ethereum: state.default.ethereum,
       isFormDirty: isDirty('listingForm')(state)
@@ -1214,7 +1285,9 @@ export default compose(
       listingActions: bindActionCreators({
         setListingImages,
         saveListing,
-        resetSaveListing
+        resetSaveListing,
+        previewListing,
+        clearPreviewListing
       }, dispatch),
       accountActions: bindActionCreators({
         setBtcAddress,

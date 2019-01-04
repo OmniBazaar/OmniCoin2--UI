@@ -11,7 +11,7 @@ import './confirmation-modal.scss';
 const messages = defineMessages({
   confirmation: {
     id: 'ConfirmationModal.confirmation',
-    defaultMessage: 'Confirmation'
+    defaultMessage: 'Update OmniBazaar'
   },
   approve: {
     id: 'ConfirmationModal.approve',
@@ -29,18 +29,20 @@ class ConfirmationModal extends Component {
   render() {
     const {
       isOpen,
-      question,
       onCancel,
       onApprove,
       cancelText,
       approveText,
-      loading
+      loading,
+      title
     } = this.props;
     const { formatMessage } = this.props.intl;
+    const customApproveText = approveText && approveText.id ? formatMessage(approveText) : approveText;
+    const customTitle = title && title.id ? formatMessage(title) : title;
     return (
       <Modal size="tiny" open={isOpen} onClose={onCancel} className="confirmation-modal" closeIcon>
         <Modal.Header>
-          {this.props.title || formatMessage(messages.confirmation)}
+          {customTitle || formatMessage(messages.confirmation)}
         </Modal.Header>
         <Modal.Content>
           <p>
@@ -57,7 +59,7 @@ class ConfirmationModal extends Component {
           <Button
             className="button--primary"
             loading={loading}
-            content={approveText || formatMessage(messages.approve)}
+            content={customApproveText || formatMessage(messages.approve)}
             onClick={onApprove}
           />
         </Modal.Actions>
@@ -71,6 +73,8 @@ ConfirmationModal.defaultProps = {
   loading: false,
   onCancel: () => {},
   onApprove: () => {},
+  approveText: '',
+  cancelText: '',
 };
 
 ConfirmationModal.propTypes = {
@@ -78,7 +82,7 @@ ConfirmationModal.propTypes = {
   loading: PropTypes.bool,
   onCancel: PropTypes.func,
   onApprove: PropTypes.func,
-  approveText: PropTypes.string,
+  approveText: PropTypes.string || PropTypes.object,
   cancelText: PropTypes.string
 };
 

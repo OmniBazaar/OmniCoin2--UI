@@ -256,6 +256,10 @@
           align-self: center;
         }
 
+        .label-align-top {
+          align-self: flex-start;
+        }
+
         .amount {
           flex: 5;
         }
@@ -318,6 +322,24 @@
 
       .submit-btn {
         text-transform: uppercase;
+      }
+
+      .fee-loader,
+      .fee-loader:before,
+      .fee-loader:after {
+        width: 20px;
+        height: 20px;
+      }
+
+      .amount.fee.eth {
+        div > div:first-child {
+          margin-bottom: 15px;
+        }
+
+        div > div > span:first-child {
+          display: inline-block;
+          width: 90px;
+        }
       }
     }
 

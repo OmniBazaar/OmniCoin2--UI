@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   errorExchange: {
     id: 'Exchange.errorExchange',
-    defaultMessage: 'Not enough funds'
+    defaultMessage: 'Exchange\'s not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again'
   },
   walletNotConnected: {
     id: 'Exchange.walletNotConnected',
@@ -152,7 +152,31 @@ const messages = defineMessages({
   omnicoinsAvailable: {
     id: 'Exchange.omnicoinsAvailable',
     defaultMessage: 'OmniCoins Available'
-  }
+  },
+  omnicoinBtcAddressEmpty: {
+    'id': 'Exchange.omnicoinBtcAddressEmpty',
+    defaultMessage: 'Omnicoin BTC address is empty'
+  },
+  omnicoinEthAddressEmpty: {
+    'id': 'Exchange.omnicoinEthAddressEmpty',
+    defaultMessage: 'Omnicoin ETH address is empty'
+  },
+  btcTransactionFee: {
+    id: 'Exchange.btcTransactionFee',
+    defaultMessage: 'BTC estimated fee'
+  },
+  btcTransactionFeeFail: {
+    id: 'Exchange.btcTransactionFeeFail',
+    defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds'
+  },
+  ethEstimateTransactionFee: {
+    id: 'Exchange.ethEstimateTransactionFee',
+    defaultMessage: 'ETH estimated fee'
+  },
+  ethTransactionFeeFail: {
+    id: 'Exchange.ethTransactionFeeFail',
+    defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds or due to ETH network error'
+  },
 });
 
 export default messages;

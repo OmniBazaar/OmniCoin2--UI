@@ -20,7 +20,10 @@ import {
   exchangeEthSucceeded,
   exchangeRequestSale,
   exchangeRequestSaleFinished,
-  exchangeMakeSaleSuccess
+  exchangeMakeSaleSuccess,
+  getBtcTransactionFeeFinished,
+  resetTransactionFees,
+  getEthTransactionFeeFinished
 } from "./exchangeActions";
 import { sendBTCMail, sendETHMail } from "./utils";
 import { currencyConverter } from "../utils";
@@ -75,7 +78,9 @@ export function* exchangeSubscriber() {
   yield all([
     takeLatest('EXCHANGE_BTC', exchangeBtc),
     takeLatest('EXCHANGE_ETH', exchangeEth),
-    takeEvery('EXCHANGE_REQUEST_SALE', requestSale)
+    takeEvery('EXCHANGE_REQUEST_SALE', requestSale),
+    takeEvery('GET_BTC_TRANSACTION_FEE', getBtcTransactionFee),
+    takeEvery('GET_ETH_TRANSACTION_FEE', getEthTransactionFee)
   ]);
 }
 
@@ -90,35 +95,52 @@ function* checkAccountVerified() {
 
 function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMessage }}) {
   try {
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     yield checkAccountVerified();
 
-    const omnibazaar = yield call(fetchAccount, 'omnibazaar');
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin || !omnicoin['btc_address']) {
+      throw new Error('invalid_omnicoin_btc_address');
+    }
 
-    const amountSatoshi = Math.ceil(amount * Math.pow(10, 8));
-    const result = yield call(BitcoinApi.makePayment, guid, password, omnibazaar['btc_address'], amountSatoshi, walletIdx);
+    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const result = yield call(BitcoinApi.makePayment, guid, password, omnicoin['btc_address'], amountSatoshi, walletIdx);
 
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     const xom = yield broadcastExchange('BTC', authHeader, result.txid);
 
-    sendBTCMail(amount, xom, result.txid, formatMessage);
+    const btcFee = yield BitcoinApi.getBtcTransactionFee(result.txid);
+    sendBTCMail(amount, xom, result.txid, btcFee, formatMessage);
     yield put(exchangeBtcSucceeded());
+    yield put(resetTransactionFees());
   } catch (error) {
     console.log('ERROR ', error);
-    yield put(exchangeBtcFailed(error.message));
+    yield put(exchangeBtcFailed(
+      error.message ? 
+      error.message : 
+      (
+        error.error ? 
+        error.error : 
+        error
+      )
+    ));
+    yield put(resetTransactionFees());
   }
 }
 
-function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
+function* exchangeEth({ payload: { privateKey, amount, estimatedFee, formatMessage }}) {
   try {
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     yield checkAccountVerified();
 
-    const omnibazaar = yield call(fetchAccount, 'omnibazaar');
-    const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnibazaar['eth_address'], amount);
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin || !omnicoin['eth_address']) {
+      throw new Error('invalid_omnicoin_eth_address');
+    }
+    const result = yield call(EthereumApi.makeEthereumPayment, privateKey, omnicoin['eth_address'], amount);
     const txHash = result.hash;
 
     let i = 5;
@@ -140,14 +162,16 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
 
-    yield put(exchangeRequestSale(false));
+    yield updateSaleRates();
     const xom = yield broadcastExchange('ETH', authHeader, txHash);
 
-    sendETHMail(amount, xom, txHash, formatMessage);
+    sendETHMail(amount, xom, txHash, estimatedFee, formatMessage);
     yield put(exchangeEthSucceeded());
+    yield put(resetTransactionFees());
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeEthFailed(error.message));
+    yield put(resetTransactionFees());
   }
 }
 
@@ -164,5 +188,44 @@ function* requestSale({ payload: { onlyRates } }) {
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeRequestSaleFinished(error));
+  }
+}
+
+function* updateSaleRates() {
+  yield requestSale({ payload: { onlyRates: true } });
+}
+
+function* getBtcTransactionFee({ payload: { id, guid, password, walletIdx, amount }}) {
+  try {
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin || !omnicoin['btc_address']) {
+      throw new Error('invalid_omnicoin_btc_address');
+    }
+
+    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const result = yield call(BitcoinApi.getTotalFee, guid, password, omnicoin['btc_address'], amountSatoshi, walletIdx);
+    if (result.error) {
+      throw result.error;
+    }
+    const fee = parseFloat(result.fee) / Math.pow(10, 8);
+    yield put(getBtcTransactionFeeFinished(id, null, fee));
+  } catch (err) {
+    console.log('Get btc fee error', err);
+    yield put(getBtcTransactionFeeFinished(id, err));
+  }
+}
+
+function* getEthTransactionFee({ payload: { id, privateKey, amount } }) {
+  try {
+    const omnicoin = yield call(fetchAccount, 'omnicoin');
+    if (!omnicoin || !omnicoin['eth_address']) {
+      throw new Error('invalid_omnicoin_eth_address');
+    }
+    const result = yield call(EthereumApi.getEthFee, privateKey, omnicoin['eth_address'], amount);
+    const { maxFee, estimateFee } = result;
+    yield put(getEthTransactionFeeFinished(id, null, maxFee, estimateFee));
+  } catch (err) {
+    console.log('Get eth fee error', err);
+    yield put(getEthTransactionFeeFinished(id, err));
   }
 }

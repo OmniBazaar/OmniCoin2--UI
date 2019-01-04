@@ -27,6 +27,27 @@ import { checkPublisherAliveStatus } from '../../../../../../../../services/list
 import PublishersDropdown from '../AddListing/components/PublishersDropdown/PublishersDropdown';
 import AmazonListingsConfig from './components/AmazonListingsConfig/AmazonListingsConfig';
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
+import {
+  allCategories,
+  saleCategories,
+  servicesCategories,
+  jobsCategories,
+  cryptoCategories,
+  communityCategories,
+  housingCategories,
+  gigsCategories
+} from '../../../../categories';
+
+const subcategoryMap = {
+  all: allCategories,
+  forSale: saleCategories,
+  services: servicesCategories,
+  jobs: jobsCategories,
+  cryptoBazaar: cryptoCategories,
+  community: communityCategories,
+  housing: housingCategories,
+  gigs: gigsCategories
+};
 
 import './import-listings.scss';
 
@@ -316,7 +337,9 @@ class ImportListings extends Component {
   importForm() {
     const { formatMessage } = this.props.intl;
     const { stagingFile } = this.props.listingImport;
-    const { validatingPublisher, configValid, selectedVendor, selectedPublisher } = this.state;
+    const {
+ validatingPublisher, configValid, selectedVendor, selectedPublisher 
+} = this.state;
 
     return (
       <Form className="import-listing-form">
@@ -354,7 +377,7 @@ class ImportListings extends Component {
                   placeholder={formatMessage(messages.selectPublisher)}
                   value={this.state.selectedPublisher}
                   onChange={selectedPublisher => {
-                    this.setState({selectedPublisher});
+                    this.setState({ selectedPublisher });
                     this.setPromptVisible();
                   }}
                 />
@@ -422,6 +445,10 @@ class ImportListings extends Component {
   }
 
   updateCategory({ categorySelected, index, fileIndex }) {
+    if (this.props.listingImport.importedFiles[fileIndex].items[index].category !== categorySelected) {
+      this.updateSubCategory({ index, fileIndex, subCategory: Object.keys(subcategoryMap[categorySelected])[0] });
+    }
+
     this.props.listingActions.updateFileItemCategory({
       index, fileIndex, category: categorySelected,
     });
