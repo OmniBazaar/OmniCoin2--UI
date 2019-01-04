@@ -163,7 +163,7 @@ const messages = defineMessages({
   },
   btcTransactionFee: {
     id: 'Exchange.btcTransactionFee',
-    defaultMessage: 'BTC transaction fee'
+    defaultMessage: 'BTC estimated fee'
   },
   btcTransactionFeeFail: {
     id: 'Exchange.btcTransactionFeeFail',
