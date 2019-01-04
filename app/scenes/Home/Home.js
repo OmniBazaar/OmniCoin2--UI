@@ -223,6 +223,7 @@ class Home extends Component {
       <div className="home-container">
         <ConfirmationModal
           isOpen={this.state.isSPVisible}
+          title={{ id: 'Home.specifySearchPriorityCriteria', defaultMessage: 'Specify Search Priority Criteria' }}
           onApprove={() => {
             this.setState({ isSPVisible: false });
             this.props.history.push('/search-priority');
