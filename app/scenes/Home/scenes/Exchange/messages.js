@@ -169,17 +169,9 @@ const messages = defineMessages({
     id: 'Exchange.btcTransactionFeeFail',
     defaultMessage: 'Fail to get transaction fee, wallet may not have enough funds'
   },
-  ethTransactionFee: {
-    id: 'Exchange.ethTransactionFee',
-    defaultMessage: 'ETH transaction fee'
-  },
   ethEstimateTransactionFee: {
     id: 'Exchange.ethEstimateTransactionFee',
-    defaultMessage: 'Estimate fee'
-  },
-  ethMaxTransactionFee: {
-    id: 'Exchange.ethMaxTransactionFee',
-    defaultMessage: 'Max fee'
+    defaultMessage: 'ETH estimated fee'
   },
   ethTransactionFeeFail: {
     id: 'Exchange.ethTransactionFeeFail',

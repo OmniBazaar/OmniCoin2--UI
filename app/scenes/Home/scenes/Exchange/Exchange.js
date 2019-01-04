@@ -369,8 +369,8 @@ class Exchange extends Component {
     const { amount } = this.props.exchangeForm;
     const {
       requestRatesError, requestingRates,
-      rates, sale, gettingEthFee, getEthFeeError,
-      ethEstimateFee, ethMaxFee
+      rates, sale, gettingEthFee, 
+      getEthFeeError, ethEstimateFee
     } = this.props.exchange;
     const disabled = requestingRates || requestRatesError || !this.canDoSale;
     return (
@@ -400,30 +400,15 @@ class Exchange extends Component {
         </div>
         <div className="section">
           <div className="form-group">
-            <span className='label-align-top'>{formatMessage(messages.ethTransactionFee)}</span>
+            <span className='label-align-top'>{formatMessage(messages.ethEstimateTransactionFee)}</span>
             <span className='amount fee eth'>
+              { gettingEthFee && <Loader active inline className='fee-loader' /> }
               {
                 !gettingEthFee && getEthFeeError &&
                 formatMessage(messages.ethTransactionFeeFail)
               }
               {
-                !getEthFeeError &&
-                <div>
-                  <div>
-                    <span>{formatMessage(messages.ethEstimateTransactionFee)}:</span>
-                    <span>
-                      { gettingEthFee && <Loader active inline className='fee-loader' /> }
-                      {!gettingEthFee && `${ethEstimateFee} ETH`}
-                    </span>
-                  </div>
-                  <div>
-                    <span>{formatMessage(messages.ethMaxTransactionFee)}:</span>
-                    <span>
-                      { gettingEthFee && <Loader active inline className='fee-loader' /> }
-                      {!gettingEthFee && `${ethMaxFee} ETH`}
-                    </span>
-                  </div>
-                </div>
+                !gettingEthFee && !getEthFeeError && `${ethEstimateFee} ETH`
               }
             </span>
           </div>
