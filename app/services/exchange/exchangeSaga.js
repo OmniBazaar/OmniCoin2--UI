@@ -105,6 +105,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
 
     const amountSatoshi = Math.round(amount * Math.pow(10, 8));
     const result = yield call(BitcoinApi.makePayment, guid, password, omnicoin['btc_address'], amountSatoshi, walletIdx);
+    console.log({result});
 
     const { currentUser } = (yield select()).default.auth;
     const authHeader = yield getAuthHeaders(currentUser);
@@ -112,7 +113,8 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     yield updateSaleRates();
     const xom = yield broadcastExchange('BTC', authHeader, result.txid);
 
-    sendBTCMail(amount, xom, result.txid, formatMessage);
+    const btcFee = yield BitcoinApi.getBtcTransactionFee(result.txid);
+    sendBTCMail(amount, xom, result.txid, btcFee, formatMessage);
     yield put(exchangeBtcSucceeded());
     yield put(resetTransactionFees());
   } catch (error) {
@@ -130,7 +132,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
   }
 }
 
-function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
+function* exchangeEth({ payload: { privateKey, amount, estimatedFee, formatMessage }}) {
   try {
     yield updateSaleRates();
     yield checkAccountVerified();
@@ -164,7 +166,7 @@ function* exchangeEth({ payload: { privateKey, amount, formatMessage }}) {
     yield updateSaleRates();
     const xom = yield broadcastExchange('ETH', authHeader, txHash);
 
-    sendETHMail(amount, xom, txHash, formatMessage);
+    sendETHMail(amount, xom, txHash, estimatedFee, formatMessage);
     yield put(exchangeEthSucceeded());
     yield put(resetTransactionFees());
   } catch (error) {

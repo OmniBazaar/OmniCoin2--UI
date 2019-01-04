@@ -127,7 +127,7 @@ class Exchange extends Component {
     this.submitTransfer = this.submitTransfer.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.exchangeActions.resetTransactionFees();
 
     this.props.initialize({
@@ -291,7 +291,11 @@ class Exchange extends Component {
       this.props.exchangeActions.exchangeBtc(guid, password, values.wallet, values.amount, formatMessage);
     } else {
       const { privateKey } = this.props.ethereum;
-      this.props.exchangeActions.exchangeEth(privateKey, values.amount, formatMessage);
+      let { ethEstimateFee } = this.props.exchange;
+      if (!ethEstimateFee) {
+        ethEstimateFee = 0;
+      }
+      this.props.exchangeActions.exchangeEth(privateKey, values.amount, ethEstimateFee, formatMessage);
     }
   }
 

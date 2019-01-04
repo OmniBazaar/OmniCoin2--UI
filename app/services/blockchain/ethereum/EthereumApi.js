@@ -142,6 +142,13 @@ const getEthTransaction = (txHash) => {
   return infuraProvider.getTransaction(txHash);
 }
 
+const calculateEthTransactionFee = (transaction) => {
+  const gasPriceWei = ethers.utils.bigNumberify(transaction.gasPrice);
+  const gasUsed = ethers.utils.bigNumberify(transaction.gasUsed);
+  const fee = gasPriceWei.mul(gasUsed);
+  return ethers.utils.formatEther(fee);
+}
+
 const getEthFee = async (privateKey, to, amount) => {
   const provider = ethers.providers.getDefaultProvider();
   const wallet = new Wallet(privateKey, provider);
@@ -161,7 +168,7 @@ const getEthFee = async (privateKey, to, amount) => {
   const estimateFee = estimateGas.mul(gasPrice);
   return {
     maxFee: ethers.utils.formatEther(maxFee),
-    estimateFee: ethers.utils.formatEther(estimateFee),
+    estimateFee: ethers.utils.formatEther(estimateFee)
   };
 }
 
@@ -175,5 +182,6 @@ export {
   getEthereumTransactions,
   validateEthereumAddress,
   getEthTransaction,
-  getEthFee
+  getEthFee,
+  calculateEthTransactionFee
 };
