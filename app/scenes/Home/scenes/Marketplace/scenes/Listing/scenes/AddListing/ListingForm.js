@@ -476,7 +476,6 @@ class ListingForm extends Component {
   submit = values => {
     const { submitType } = this.state;
     const { saveListing, previewListing } = this.props.listingActions;
-    const { listingDetails } = this.props.listing;
     const {
       listing_id, publisher, keywords, ...data
     } = values;
@@ -496,7 +495,6 @@ class ListingForm extends Component {
 
     const obj = {
       ...data,
-      ip: !!listingDetails && !!listingDetails.ip ? listingDetails.ip : '',
       images: this.getImagesData(),
       keywords: typeof keywords === 'string' ? keywords.split(',').map(el => el.trim()) : keywords
     };
