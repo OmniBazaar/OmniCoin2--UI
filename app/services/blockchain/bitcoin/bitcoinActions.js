@@ -9,7 +9,9 @@ const {
   toggleModal,
   toggleAddAddressModal,
   connectWallet,
-  connectWalletFinish
+  connectWalletFinish,
+  getBitcoinBalance,
+  getBitcoinBalanceFinished
 } = createActions({
   CREATE_WALLET: (password, label, email) => ({ password, label, email }),
   GET_WALLETS: (guid, password) => ({ guid, password }),
@@ -21,7 +23,9 @@ const {
   TOGGLE_MODAL: () => ({ }),
   TOGGLE_ADD_ADDRESS_MODAL: () => ({ }),
   CONNECT_WALLET: (guid, password) => ({ guid, password }),
-  CONNECT_WALLET_FINISH: (error) => ({ error })
+  CONNECT_WALLET_FINISH: (error) => ({ error }),
+  GET_BITCOIN_BALANCE: (guid, password) => ({ guid, password }),
+  GET_BITCOIN_BALANCE_FINISHED: (balance) => ({ balance })
 });
 
 export {
@@ -33,5 +37,7 @@ export {
   toggleModal,
   toggleAddAddressModal,
   connectWallet,
-  connectWalletFinish
+  connectWalletFinish,
+  getBitcoinBalance,
+  getBitcoinBalanceFinished
 };

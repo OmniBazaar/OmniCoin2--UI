@@ -100,7 +100,11 @@ const reducer = handleActions({
     loading: false,
     error
   }),
-  [getEthereumBalance](state) {
+  [getEthereumBalance](state, { payload: { silient } }) {
+    if (silient) {
+      return state;
+    }
+    
     return {
       ...state,
       loading: true,

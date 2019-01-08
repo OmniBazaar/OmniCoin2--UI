@@ -96,12 +96,15 @@ function* makeEthereumPayment({
   }
 }
 
-function* getEthereumBalance({ payload: { privateKey } }) {
+function* getEthereumBalance({ payload: { privateKey, silient } }) {
   try {
     const balance = yield call(EthereumApi.getEthereumBalance, privateKey);;
     yield put({ type: 'GET_ETHEREUM_BALANCE_SUCCEEDED', balance });
   } catch (error) {
-    yield put({ type: 'GET_ETHEREUM_BALANCE_FAILED', error });
+    console.log('Get eth balance error', error);
+    if (!silient) {
+      yield put({ type: 'GET_ETHEREUM_BALANCE_FAILED', error });
+    }
   }
 }
 

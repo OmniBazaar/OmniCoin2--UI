@@ -44,6 +44,8 @@ const getHistory = wrapRequest(async (addresses, n, offset) => {
   return fetch(`${blockInfoAddress}/multiaddr?active=${active}&format=json&n=${n}&offset=${offset}`)
 });
 
+const getWalletBalance = wrapRequest(async (guid, password) => fetch(`${address}/merchant/${guid}/balance?password=${password}`));
+
 const sendTransaction = async (from, to, privateKeyWIF, amount) => {
   return bitcoinTransaction.sendTransaction({
     from: from,
@@ -105,5 +107,6 @@ export {
   sendToMany,
   sendTransaction,
   getTotalFee,
-  getBtcTransactionFee
+  getBtcTransactionFee,
+  getWalletBalance
 };
