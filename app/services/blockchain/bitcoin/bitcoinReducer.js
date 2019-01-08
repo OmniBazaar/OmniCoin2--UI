@@ -8,7 +8,8 @@ import {
   toggleModal,
   toggleAddAddressModal,
   connectWallet,
-  connectWalletFinish
+  connectWalletFinish,
+  getBitcoinBalanceFinished
 } from './bitcoinActions';
 
 const defaultState = {
@@ -26,7 +27,8 @@ const defaultState = {
     isOpen: false
   },
   connectingWallet: false,
-  connectWalletError: null
+  connectWalletError: null,
+  balance: 0
 };
 
 const reducer = handleActions({
@@ -60,15 +62,24 @@ const reducer = handleActions({
       message: null
     };
   },
-  GET_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => ({
-    ...state,
-    wallets,
-    guid,
-    password,
-    isGettingWallets: false,
-    loading: false,
-    error: null
-  }),
+  GET_WALLETS_SUCCEEDED: (state, { wallets, guid, password }) => {
+    let balance = 0.00;
+    if (wallets && wallets.length) {
+      wallets.forEach((item) => {
+        balance = balance + item.balance
+      });
+    }
+    return {
+      ...state,
+      wallets,
+      guid,
+      password,
+      balance,
+      isGettingWallets: false,
+      loading: false,
+      error: null
+    };
+  },
   GET_WALLETS_FAILED: (state, { error }) => ({
     ...state,
     isGettingWallets: false,
@@ -167,6 +178,12 @@ const reducer = handleActions({
     ...state,
     ...defaultState
   }),
+  [getBitcoinBalanceFinished](state, { payload: { balance } }) {
+    return {
+      ...state,
+      balance
+    };
+  }
 }, defaultState);
 
 export default reducer;

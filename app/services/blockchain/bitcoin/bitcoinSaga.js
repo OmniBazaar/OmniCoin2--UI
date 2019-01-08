@@ -8,7 +8,7 @@ import {
 
 import * as BitcoinApi from './BitcoinApi';
 import { persitBitcoinWalletData, getBitcoinWalletData } from './services';
-import { connectWalletFinish } from './bitcoinActions';
+import { connectWalletFinish, getBitcoinBalanceFinished } from './bitcoinActions';
 import {CoinTypes} from "../../../scenes/Home/scenes/Wallet/constants";
 import { getRecentTransactions } from "../../accountSettings/accountActions";
 
@@ -20,7 +20,8 @@ export function* bitcoinSubscriber() {
     takeEvery('GET_BALANCE', getBalance),
     takeEvery('ADD_ADDRESS', addAddress),
     takeEvery('CONNECT_WALLET', connectWallet),
-    takeEvery('GET_WALLETS_SUCCEEDED', getWalletsSucceededHandler)
+    takeEvery('GET_WALLETS_SUCCEEDED', getWalletsSucceededHandler),
+    takeEvery('GET_BITCOIN_BALANCE', getBitcoinBalance)
   ]);
 }
 
@@ -111,4 +112,29 @@ function* addAddress({ payload: { guid, password, label } }) {
 
 function* getWalletsSucceededHandler() {
   yield put(getRecentTransactions(CoinTypes.BIT_COIN));
+}
+
+function* getBitcoinBalance({ payload: { guid, password } }) {
+  try {
+    const { currentUser } = (yield select()).default.auth;
+    if (!guid || !password) {
+      const walletData = yield call(getBitcoinWalletData, currentUser);
+      guid = walletData.guid;
+      password = walletData.password;
+    }
+
+    const res = yield call(BitcoinApi.getWalletBalance, guid, password);
+    const balance = res.balance;
+
+    // const wallets = yield call(BitcoinApi.getWallets, password, guid);
+    // let balance = 0.00;
+    // if (wallets && wallets.length) {
+    //   wallets.forEach((item) => {
+    //     balance = balance + item.balance
+    //   });
+    // }
+    yield put(getBitcoinBalanceFinished(balance));
+  } catch (error) {
+    console.log('ERROR get bitcoin balance', error);
+  }
 }

@@ -17,7 +17,7 @@ const {
   MAKE_ETHEREUM_PAYMENT: (address, privateKey, to, amount, from, fee) => ({
     address, privateKey, to, amount, from, fee
   }),
-  GET_ETHEREUM_BALANCE: (address, privateKey) => ({ address, privateKey }),
+  GET_ETHEREUM_BALANCE: (address, privateKey, silient) => ({ address, privateKey, silient }),
   ADD_ETHEREUM_ADDRESS: (address, privateKey, label) => ({ address, privateKey, label }),
   TOGGLE_ETHEREUM_MODAL: () => ({ }),
   TOGGLE_ADD_ADDRESS_ETHEREUM_MODAL: () => ({ }),
