@@ -25,6 +25,7 @@ import {
   resetTransactionFees,
   getEthTransactionFeeFinished
 } from "./exchangeActions";
+import { getBitcoinBalance } from '../blockchain/bitcoin/bitcoinActions';
 import { sendBTCMail, sendETHMail } from "./utils";
 import { currencyConverter } from "../utils";
 
@@ -116,6 +117,7 @@ function* exchangeBtc({ payload: { guid, password, walletIdx, amount, formatMess
     sendBTCMail(amount, xom, result.txid, btcFee, formatMessage);
     yield put(exchangeBtcSucceeded());
     yield put(resetTransactionFees());
+    yield put(getBitcoinBalance());
   } catch (error) {
     console.log('ERROR ', error);
     yield put(exchangeBtcFailed(

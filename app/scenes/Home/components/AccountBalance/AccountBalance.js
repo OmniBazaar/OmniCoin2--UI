@@ -40,13 +40,13 @@ class AccountBalance extends Component {
   }
   
   getBtcBalance() {
-    const { wallets } = this.props.bitcoin;
-    let balance = 0.00;
-    if (wallets && wallets.length) {
-      wallets.forEach(function (item) {
-        balance = balance + item.balance
-      });
-    }
+    const { balance } = this.props.bitcoin;
+    // let balance = 0.00;
+    // if (wallets && wallets.length) {
+    //   wallets.forEach(function (item) {
+    //     balance = balance + item.balance
+    //   });
+    // }
     return balance / SATOSHI_IN_BTC;
   }
 
