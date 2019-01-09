@@ -19,7 +19,12 @@ export function* configSubscriber() {
 
 function* getConfig() {
   try {
-    const config = yield call(wrapRequest(async () => fetch(configJson)));
+    const fetchOptions = {
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    };
+    const config = yield call(wrapRequest(async () => fetch(configJson, fetchOptions)));
     yield put(getConfigSucceeded(config));
   } catch (error) {
     console.log('ERROR ', error);
