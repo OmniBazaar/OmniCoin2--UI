@@ -119,20 +119,20 @@ function* getBitcoinBalance({ payload: { guid, password } }) {
     const { currentUser } = (yield select()).default.auth;
     if (!guid || !password) {
       const walletData = yield call(getBitcoinWalletData, currentUser);
+      if (!walletData) {
+        return;
+      }
+      
       guid = walletData.guid;
       password = walletData.password;
     }
 
+    if (!guid) {
+      return;
+    }
+
     const res = yield call(BitcoinApi.getWalletBalance, guid, password);
     const balance = res.balance;
-
-    // const wallets = yield call(BitcoinApi.getWallets, password, guid);
-    // let balance = 0.00;
-    // if (wallets && wallets.length) {
-    //   wallets.forEach((item) => {
-    //     balance = balance + item.balance
-    //   });
-    // }
     yield put(getBitcoinBalanceFinished(balance));
   } catch (error) {
     console.log('ERROR get bitcoin balance', error);
