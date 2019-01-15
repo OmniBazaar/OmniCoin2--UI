@@ -14,7 +14,12 @@ import {
   ethereumTransferSucceeded,
   ethereumTransferFailed,
   setBuyerAddress,
-  loadDefaultShippingAddress
+  loadDefaultShippingAddress,
+  transferGetBtcTransactionFee,
+  transferGetBtcTransactionFeeFinished,
+  transferResetTransactionFees,
+  transferGetEthTransactionFee,
+  transferGetEthTransactionFeeFinished
 } from './transferActions';
 
 import { getStoredShippingAddress, storeShippingAddress } from './services'
@@ -36,7 +41,16 @@ const defaultState = {
   commonEscrows: [],
   transferCurrency: 'omnicoin',
   buyerAddress: null,
-  defaultShippingAddress: {}
+  defaultShippingAddress: {},
+  calculateBtcFeeId: null,
+  gettingBtcFee: false,
+  btcFee: 0,
+  getBtcFeeError: null,
+  calculateEthFeeId: null,
+  gettingEthFee: false,
+  ethEstimateFee: 0,
+  ethMaxFee: 0,
+  getEthFeeError: null
 };
 
 const reducer = handleActions({
@@ -162,7 +176,64 @@ const reducer = handleActions({
       ...state,
       defaultShippingAddress
     };
-  }
+  },
+  [transferGetBtcTransactionFee](state, { payload: { id } }) {
+    return {
+      ...state,
+      calculateBtcFeeId: id,
+      gettingBtcFee: true,
+      getBtcFeeError: null
+    };
+  },
+  [transferGetBtcTransactionFeeFinished](state, { payload: { id, error, fee } }) {
+    if (id !== state.calculateBtcFeeId) {
+      return state;
+    }
+
+    return {
+      ...state,
+      calculateBtcFeeId: null,
+      gettingBtcFee: false,
+      getBtcFeeError: error,
+      btcFee: error ? 0 : fee
+    };
+  },
+  [transferResetTransactionFees](state) {
+    return {
+      ...state,
+      calculateBtcFeeId: null,
+      gettingBtcFee: false,
+      getBtcFeeError: null,
+      btcFee: 0,
+      calculateEthFeeId: null,
+      gettingEthFee: false,
+      getEthFeeError: null,
+      ethMaxFee: 0,
+      ethEstimateFee: 0
+    };
+  },
+  [transferGetEthTransactionFee](state, { payload: { id } }) {
+    return {
+      ...state,
+      calculateEthFeeId: id,
+      gettingEthFee: true,
+      getEthFeeError: null
+    };
+  },
+  [transferGetEthTransactionFeeFinished](state, { payload: { id, error, maxFee, estimateFee } }) {
+    if (id !== state.calculateEthFeeId) {
+      return state;
+    }
+
+    return {
+      ...state,
+      calculateEthFeeId: null,
+      gettingEthFee: false,
+      getEthFeeError: error,
+      ethMaxFee: error ? 0 : maxFee,
+      ethEstimateFee: error ? 0 : estimateFee
+    };
+  },
 }, defaultState);
 
 export default reducer;

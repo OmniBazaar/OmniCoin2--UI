@@ -16,6 +16,7 @@ import {
   formValueSelector,
   change,
   initialize,
+  getFormSyncErrors
 } from 'redux-form';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -42,7 +43,10 @@ import {
   setCurrency,
   getCommonEscrows,
   createEscrowTransaction,
-  saleBonus
+  saleBonus,
+  transferGetBtcTransactionFee,
+  transferResetTransactionFees,
+  transferGetEthTransactionFee
 } from '../../../../services/transfer/transferActions';
 import { reputationOptions } from '../../../../services/utils';
 import { getEthereumWallets } from '../../../../services/blockchain/ethereum/EthereumActions';
@@ -63,6 +67,7 @@ import {
 } from '../Marketplace/scenes/Listing/scenes/AddListing/validators';
 
 import messages from './messages';
+import exchangeMessages from '../Exchange/messages';
 
 const walletOptions = [
   {
@@ -653,6 +658,69 @@ class Transfer extends Component {
     this.props.change('amount', newAmount);
   }
 
+  onBitcoinWalletChange = (e, val) => {
+    if (val != this.props.transferForm.wallet) {
+      this.getBtcFee({
+        wallet: val
+      });
+    }
+  }
+
+  onBtcAmountChange = () => {
+    this.getBtcFee();
+  }
+
+  onEthAmountChange = () => {
+    this.getEthFee();
+  }
+
+  onBtcToAddressChange = () => {
+    this.getBtcFee();
+  }
+
+  onEthToAddressChange = () => {
+    this.getEthFee();
+  }
+
+  getBtcFee(data) {
+    if (!data) data = {};
+    const { guid, password } = this.props.bitcoin;
+    let { wallet, amount, toAddress } = data;
+    if (typeof wallet === 'undefined') {
+      wallet = this.props.transferForm.wallet;
+    }
+    if (typeof amount === 'undefined') {
+      amount = this.props.transferForm.amount;
+    }
+    if (typeof toAddress === 'undefined') {
+      toAddress = this.props.transferForm.toAddress;
+    }
+
+    if (
+      typeof wallet !== 'undefined' && 
+      typeof amount !== 'undefined' && amount &&
+      toAddress
+    ) {
+      if (!this.props.formErrors.amount) {
+        this.props.transferActions.transferGetBtcTransactionFee(guid, password, wallet, amount, toAddress);
+      } else {
+        this.props.transferActions.transferResetTransactionFees();
+      }
+    }
+  }
+
+  getEthFee() {
+    const { privateKey } = this.props.ethereum;
+    const { amount, toAddress } = this.props.transferForm;
+    if (typeof amount !== 'undefined' && amount) {
+      if (!this.props.formErrors.amount) {
+        this.props.transferActions.transferGetEthTransactionFee(privateKey, amount, toAddress);
+      } else {
+        this.props.transferActions.transferResetTransactionFees();
+      }
+    }
+  }
+
   renderShippingContent() {
     const { listingDetail } = this.props.listing;
 
@@ -872,6 +940,7 @@ class Transfer extends Component {
     const { formatMessage } = this.props.intl;
     const { transfer, shipping } = this.props;
     const { wallet } = this.props.transferForm || {};
+    const { gettingBtcFee, btcFee, getBtcFeeError } = transfer;
 
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const listingId = purchaseParams.get('listing_id');
@@ -889,6 +958,7 @@ class Transfer extends Component {
                 validate={[
                   required({ message: formatMessage(messages.fieldRequired) })
                 ]}
+                onChange={this.onBitcoinWalletChange}
               />
             </div>
             <div className="col-1" />
@@ -908,6 +978,7 @@ class Transfer extends Component {
                 validate={[
                   required({ message: formatMessage(messages.fieldRequired) })
                 ]}
+                onBlur={this.onBtcToAddressChange}
               />
             </div>
             <div className="col-1" />
@@ -924,9 +995,28 @@ class Transfer extends Component {
               component={this.renderUnitsField}
               className="textfield1"
               buttonText="BTC"
+              onBlur={this.onBtcAmountChange}
               disabled={listingId}
             />
             <div className="col-1" />
+          </div>
+          <div className="section">
+            <p className="title">{formatMessage(messages.fee)}</p>
+            <div className="form-group">
+              <span>{formatMessage(exchangeMessages.btcTransactionFee)}</span>
+              <span className='amount fee'>
+                { gettingBtcFee && <Loader active inline className='fee-loader' /> }
+                {
+                  !gettingBtcFee && getBtcFeeError &&
+                  formatMessage(exchangeMessages.btcTransactionFeeFail)
+                }
+                {
+                  !gettingBtcFee && !getBtcFeeError &&
+                  `${btcFee} BTC`
+                }
+              </span>
+              <div className="col-1" />
+            </div>
           </div>
           <div className="form-group">
             <Field type="text" name="guid" fieldValue={this.props.bitcoin.guid} component={this.renderHiddenField} />
@@ -955,6 +1045,7 @@ class Transfer extends Component {
   renderEthereumForm() {
     const { formatMessage } = this.props.intl;
     const { transfer } = this.props;
+    const { gettingEthFee, getEthFeeError, ethEstimateFee } = transfer;
 
     const purchaseParams = new URLSearchParams(this.props.location.search);
     const listingId = purchaseParams.get('listing_id');
@@ -974,6 +1065,7 @@ class Transfer extends Component {
               validate={[
                 required({ message: formatMessage(messages.fieldRequired) })
               ]}
+              onBlur={this.onEthToAddressChange}
             />
             <div className="col-1" />
           </div>
@@ -997,9 +1089,27 @@ class Transfer extends Component {
                   max: this.props.ethereum.balance
                 })
               ]}
+              onBlur={this.onEthAmountChange}
               disabled={listingId}
             />
             <Field type="text" name="privateKey" fieldValue={this.props.ethereum.privateKey} component={this.renderHiddenField} />
+            <div className="col-1" />
+          </div>
+        </div>
+        <div className="section">
+          <p className="title">{formatMessage(messages.fee)}</p>
+          <div className="form-group">
+            <span>{formatMessage(exchangeMessages.ethEstimateTransactionFee)}</span>
+            <span className='amount fee eth'>
+              { gettingEthFee && <Loader active inline className='fee-loader' /> }
+              {
+                !gettingEthFee && getEthFeeError &&
+                formatMessage(exchangeMessages.ethTransactionFeeFail)
+              }
+              {
+                !gettingEthFee && !getEthFeeError && `${ethEstimateFee} ETH`
+              }
+            </span>
             <div className="col-1" />
           </div>
         </div>
@@ -1042,6 +1152,11 @@ class Transfer extends Component {
     }
     const { formatMessage } = this.props.intl;
     this.props.transferActions.setCurrency(data.value);
+    if (data.value === 'bitcoin') {
+      this.getBtcFee();
+    } else if (data.value === 'ethereum') {
+      this.getEthFee();
+    }
   };
 
   transferForm() {
@@ -1205,6 +1320,9 @@ Transfer.propTypes = {
     createEscrowTransaction: PropTypes.func,
     setCurrency: PropTypes.func,
     saleBonus: PropTypes.func,
+    transferGetBtcTransactionFee: PropTypes.func,
+    transferResetTransactionFees: PropTypes.func,
+    transferGetEthTransactionFee: PropTypes.func
   }),
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
@@ -1267,8 +1385,10 @@ export default compose(
         useEscrow: selector(state, 'useEscrow'),
         amount: selector(state, 'amount'),
         wallet: selector(state, 'wallet'),
-        currencySelected: selector(state, 'currencySelected')
-      }
+        currencySelected: selector(state, 'currencySelected'),
+        toAddress: selector(state, 'toAddress')
+      },
+      formErrors: getFormSyncErrors('transferForm')(state)
     }),
     (dispatch) => ({
       ethereumActions: bindActionCreators({
@@ -1281,7 +1401,10 @@ export default compose(
         setCurrency,
         getCommonEscrows,
         createEscrowTransaction,
-        saleBonus
+        saleBonus,
+        transferGetBtcTransactionFee,
+        transferResetTransactionFees,
+        transferGetEthTransactionFee
       }, dispatch),
       shippingActions: bindActionCreators({
         getShippingRates,
