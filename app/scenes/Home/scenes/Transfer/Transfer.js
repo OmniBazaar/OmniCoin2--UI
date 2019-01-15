@@ -845,7 +845,10 @@ class Transfer extends Component {
             <div className="col-1" />
           </div>
           <div className="form-group">
-            <span>{formatMessage(messages.transferSecurity)}</span>
+            <span>
+              <div>{formatMessage(messages.transferSecurity)}</div>
+              <div className='note-lb'>{formatMessage(messages.secureTransferNote)}</div>
+            </span>
             <div className="transfer-input">
               <Field
                 name="useEscrow"
