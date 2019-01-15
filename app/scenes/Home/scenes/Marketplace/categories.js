@@ -174,6 +174,10 @@ const saleCategories = defineMessages({
     id: 'Marketplace.musicalInstruments',
     defaultMessage: 'Music'
   },
+  nsfw: {
+    id: 'Marketplace.nsfw',
+    defaultMessage: 'NSFW'
+  },
   photoVideo: {
     id: 'Marketplace.photoVideo',
     defaultMessage: 'Photo / Video'
@@ -181,7 +185,7 @@ const saleCategories = defineMessages({
   rvCampers: {
     id: 'Marketplace.rvCampers',
     defaultMessage: 'RVs / Campers'
-  },
+  }
 });
 
 const servicesCategories = defineMessages({
