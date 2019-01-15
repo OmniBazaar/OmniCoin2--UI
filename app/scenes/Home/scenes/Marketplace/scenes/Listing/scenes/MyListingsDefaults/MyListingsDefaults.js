@@ -17,6 +17,7 @@ import CountryDropdown from '../AddListing/components/CountryDropdown/CountryDro
 import Checkbox from '../AddListing/components/Checkbox/Checkbox';
 import Images from '../AddListing/components/Images/Images';
 import BitcoinWalletDropdown from '../AddListing/components/BitcoinWalletDropdown/BitcoinWalletDropdown';
+import PriorityFeeDropdown from '../AddListing/components/PriorityFeeDropdown/PriorityFeeDropdown';
 
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
 
@@ -43,6 +44,7 @@ import * as EthereumApi from '../../../../../../../../services/blockchain/ethere
 import '../AddListing/add-listing.scss';
 import UnitDropdown from '../AddListing/components/UnitDropdown/UnitDropdown';
 import {MANUAL_INPUT_VALUE} from "../../../../../../../../utils/constants";
+import priorityFees from '../AddListing/priorityFees';
 
 const iconSize = 42;
 
@@ -97,7 +99,8 @@ class MyListingsDefaults extends Component {
       auth,
       account,
       ethereum,
-      listingDefaults
+      listingDefaults,
+      preferences
     } = this.props;
 
     const data = {
@@ -115,6 +118,9 @@ class MyListingsDefaults extends Component {
       data.ethereum_address = listingDefaults.ethereum_address;
     } else {
       data.ethereum_address = account.ethAddress || auth.account.eth_address || ethereum.address;
+    }
+    if (typeof data.priority_fee === 'undefined' || data.priority_fee === '') {
+      data.priority_fee = preferences.preferences.listingPriority;
     }
     this.props.initialize(data);
     this.props.listingDefaultsActions.loadListingDefault();
@@ -341,6 +347,23 @@ class MyListingsDefaults extends Component {
           </Grid.Row>
           }
 
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <span>{formatMessage(addListingMessages.priorityFee)}</span>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Field
+                type="text"
+                name="priority_fee"
+                component={PriorityFeeDropdown}
+                props={{
+                  placeholder: formatMessage(addListingMessages.selectPriorityFee),
+                  priorityFees
+                }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
 
           <Grid.Row>
             <Grid.Column width={4} className="top-align">
@@ -540,6 +563,7 @@ export default compose(
       auth: state.default.auth,
       bitcoin: state.default.bitcoin,
       ethereum: state.default.ethereum,
+      preferences: state.default.preferences,
       formValues: getFormValues('listingDefaultsForm')(state)
     }),
     (dispatch) => ({

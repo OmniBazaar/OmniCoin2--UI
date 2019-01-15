@@ -30,7 +30,7 @@ class Dropdown extends Component {
         placeholder={this.props.placeholder}
         options={this.options}
         onChange={this.onChange.bind(this)}
-        value={value}
+        value={value + ''}
         className={className}
       />
     );

@@ -187,9 +187,9 @@ class ListingForm extends Component {
       data = {
         contact_type: contactOmniMessage,
         contact_info: this.props.auth.currentUser.username,
-        priority_fee: listingPriority,
         continuous: true,
         ...defaultData,
+        priority_fee: listingPriority,
         start_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         shipping_price_included: false
       };
@@ -224,6 +224,11 @@ class ListingForm extends Component {
   }
 
   getDefaultListingPriority() {
+    const { listingDefaults } = this.props;
+    if (typeof listingDefaults.priority_fee !== 'undefined' && listingDefaults.priority_fee !== '') {
+      return listingDefaults.priority_fee;
+    }
+
     const preferencesStorageKey = `preferences_${this.props.auth.currentUser.username}`;
     const userPreferences = JSON.parse(localStorage.getItem(preferencesStorageKey));
 
