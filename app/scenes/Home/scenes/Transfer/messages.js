@@ -67,7 +67,7 @@ export default defineMessages({
   },
   failedTransfer: {
     id: 'Transfer.failedUpdate',
-    defaultMessage: 'Transfer Failed.'
+    defaultMessage: 'Transfer\'s not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again'
   },
   insufficientFunds: {
     id: 'Transfer.insufficientFunds',
@@ -197,4 +197,8 @@ export default defineMessages({
     id: 'Transfer.maximumAmountAvailable',
     defaultMessage: 'Maximum amount available is {amount}'
   },
+  fee: {
+    id: 'Transfer.fee',
+    defaultMessage: 'Fee'
+  }
 });
