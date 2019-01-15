@@ -55,11 +55,15 @@ export default defineMessages({
   },
   transferSecurity: {
     id: 'Transfer.transferSecurity',
-    defaultMessage: 'Transfer Security'
+    defaultMessage: 'SecureSend Payment Protection'
   },
   useEscrowService: {
     id: 'Transfer.useEscrowService',
-    defaultMessage: 'Use SecureSend (Escrow Service).'
+    defaultMessage: 'SecureSend (Payment Protection Service).'
+  },
+  secureTransferNote: {
+    id: 'Transfer.secureTransferNote',
+    defaultMessage: '(Highly recommended if you do not know the seller)'
   },
   successTransfer: {
     id: 'Transfer.successUpdate',
