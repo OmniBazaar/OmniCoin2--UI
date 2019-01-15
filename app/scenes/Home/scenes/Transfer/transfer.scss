@@ -71,6 +71,21 @@
             overflow-y: auto;
           }
         }
+
+        .fee-loader,
+        .fee-loader:before,
+        .fee-loader:after {
+          width: 20px;
+          height: 20px;
+        }
+
+        .amount.fee {
+          flex: 3;
+        }
+
+        .note-lb {
+          color: red;
+        }
       }
 
       .title {

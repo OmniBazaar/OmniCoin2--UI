@@ -31,10 +31,10 @@ class BalanceUpdateBackground extends Component {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    if (btcTimer) {
+    if (this.btcTimer) {
       clearInterval(this.btcTimer);
     }
-    if (ethTimer) {
+    if (this.ethTimer) {
       clearInterval(this.ethTimer);
     }
   }

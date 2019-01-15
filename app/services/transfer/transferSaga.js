@@ -21,7 +21,10 @@ import {
   bitcoinTransferFailed,
   ethereumTransferSucceeded,
   ethereumTransferFailed,
-  saleBonus as saleBonusAction
+  saleBonus as saleBonusAction,
+  transferGetBtcTransactionFeeFinished,
+  transferResetTransactionFees,
+  transferGetEthTransactionFeeFinished
 } from "./transferActions";
 
 import * as BitcoinApi from '../blockchain/bitcoin/BitcoinApi';
@@ -44,7 +47,9 @@ export function* transferSubscriber() {
     takeLatest('ETHEREUM_TRANSFER', ethereumTransfer),
     takeLatest('CREATE_ESCROW_TRANSACTION', createEscrowTransaction),
     takeEvery('GET_COMMON_ESCROWS', getCommonEscrows),
-    takeEvery('SALE_BONUS', saleBonus)
+    takeEvery('SALE_BONUS', saleBonus),
+    takeEvery('TRANSFER_GET_BTC_TRANSACTION_FEE', getBtcTransactionFee),
+    takeEvery('TRANSFER_GET_ETH_TRANSACTION_FEE', getEthTransactionFee)
   ]);
 }
 
@@ -127,6 +132,7 @@ function* bitcoinTransfer({ payload: {
       });
       yield put(saleBonusAction(seller, buyer))
     }
+    yield put(transferResetTransactionFees());
   } catch (error) {
     console.log(error);
     let e = error.message || error;
@@ -134,6 +140,7 @@ function* bitcoinTransfer({ payload: {
       e = 'Insufficient funds';
     }
     yield put(bitcoinTransferFailed(e));
+    yield put(transferResetTransactionFees());
   }
 }
 
@@ -159,6 +166,7 @@ function* ethereumTransfer({payload: {
       });
       yield put(saleBonusAction(seller, buyer))
     }
+    yield put(transferResetTransactionFees());
   } catch (error) {
     console.log('ERROR', error);
     let e = error.message || error;
@@ -166,6 +174,7 @@ function* ethereumTransfer({payload: {
       e = 'Insufficient funds';
     }
     yield put(ethereumTransferFailed(e));
+    yield put(transferResetTransactionFees());
   }
 }
 
@@ -304,5 +313,31 @@ function* saleBonus({ payload: { seller, buyer } }) {
     }
   } catch (error) {
     console.log('ERROR ', error);
+  }
+}
+
+function* getBtcTransactionFee({ payload: { id, guid, password, walletIdx, amount, toAddress }}) {
+  try {
+    const amountSatoshi = Math.round(amount * Math.pow(10, 8));
+    const result = yield call(BitcoinApi.getTotalFee, guid, password, toAddress, amountSatoshi, walletIdx);
+    if (result.error) {
+      throw result.error;
+    }
+    const fee = parseFloat(result.fee) / Math.pow(10, 8);
+    yield put(transferGetBtcTransactionFeeFinished(id, null, fee));
+  } catch (err) {
+    console.log('Get btc fee error', err);
+    yield put(transferGetBtcTransactionFeeFinished(id, err));
+  }
+}
+
+function* getEthTransactionFee({ payload: { id, privateKey, amount, toAddress } }) {
+  try {
+    const result = yield call(EthereumApi.getEthFee, privateKey, toAddress, amount);
+    const { maxFee, estimateFee } = result;
+    yield put(transferGetEthTransactionFeeFinished(id, null, maxFee, estimateFee));
+  } catch (err) {
+    console.log('Get eth fee error', err);
+    yield put(transferGetEthTransactionFeeFinished(id, err));
   }
 }

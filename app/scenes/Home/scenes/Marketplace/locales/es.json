@@ -268,5 +268,6 @@
     "Marketplace.new": "New", 
     "Marketplace.referralsNewUser": "Referrals (Each new user)", 
     "Marketplace.userOwned": "Lower prices for buyers", 
-    "Marketplace.garageSale": "Garage Sale"
+    "Marketplace.garageSale": "Garage Sale",
+    "Marketplace.nsfw": "NSFW"
 }

@@ -55,11 +55,15 @@ export default defineMessages({
   },
   transferSecurity: {
     id: 'Transfer.transferSecurity',
-    defaultMessage: 'Transfer Security'
+    defaultMessage: 'SecureSend Payment Protection'
   },
   useEscrowService: {
     id: 'Transfer.useEscrowService',
-    defaultMessage: 'Use SecureSend (Escrow Service).'
+    defaultMessage: 'SecureSend (Payment Protection Service).'
+  },
+  secureTransferNote: {
+    id: 'Transfer.secureTransferNote',
+    defaultMessage: '(Highly recommended if you do not know the seller)'
   },
   successTransfer: {
     id: 'Transfer.successUpdate',
@@ -67,7 +71,7 @@ export default defineMessages({
   },
   failedTransfer: {
     id: 'Transfer.failedUpdate',
-    defaultMessage: 'Transfer Failed.'
+    defaultMessage: 'Transfer\'s not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again'
   },
   insufficientFunds: {
     id: 'Transfer.insufficientFunds',
@@ -197,4 +201,8 @@ export default defineMessages({
     id: 'Transfer.maximumAmountAvailable',
     defaultMessage: 'Maximum amount available is {amount}'
   },
+  fee: {
+    id: 'Transfer.fee',
+    defaultMessage: 'Fee'
+  }
 });

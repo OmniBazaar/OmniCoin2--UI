@@ -8,7 +8,7 @@
     "Transfer.selectWallet": "Select Wallet", 
     "Transfer.bitcoinAddress": "Bitcoin address", 
     "Transfer.selectEscrow": "Select escrow", 
-    "Transfer.failedUpdate": "Transfer failed.", 
+    "Transfer.failedUpdate": "Transfer's not success, it may be cryptocurrency network problem or not enough funds to pay transaction amount and fees, please try again", 
     "Transfer.escrowNotFound": "You don't any have any approved escrow agents in common with the specified account. Go to the \"Escrow\" tab and approve some additional escrow agents.", 
     "Transfer.currency": "Select Currency", 
     "Transfer.accountDoNotExist": "Account doesn't exist.", 
@@ -32,7 +32,8 @@
     "Transfer.transferToEscrow": "Transfer to escrow (USUALLY NOT NECESSARY).", 
     "Transfer.oneDay": "1 day", 
     "Transfer.twoWeeks": "2 weeks", 
-    "Transfer.transferSecurity": "SecureSend (Payment Protection Service).", 
+    "Transfer.transferSecurity": "SecureSend Payment Protection", 
+    "Transfer.secureTransferNote": "(Highly recommended if you do not know the seller)",
     "Transfer.maxLength": "Memo must be less than 150 characters.", 
     "Transfer.numberCannotBeNegative": "Amount cannot be a negative value", 
     "Transfer.manualEnter": "Enter address manually", 
@@ -42,5 +43,6 @@
     "Transfer.warning": "Warning", 
     "Transfer.to": "To", 
     "Transfer.oneWeek": "1 week",
-    "Transfer.maximumAmountAvailable": "Maximum amount available is {amount}"
+    "Transfer.maximumAmountAvailable": "Maximum amount available is {amount}",
+    "Transfer.fee": "Fee"
 }
