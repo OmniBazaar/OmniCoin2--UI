@@ -472,6 +472,23 @@ class ImportListings extends Component {
     });
   }
 
+  _hasFieldsMissing(importedFiles) {
+    for (let i = 0; i < importedFiles.length; i++) {
+      const { items } = importedFiles[i];
+      for (let j = 0; j < items.length; j++) {
+        const { listing_title, description, category, subcategory } = items[j];
+        if (
+          !listing_title || !description || !category || !subcategory || 
+          category.toLowerCase() === 'all' || subcategory.toLowerCase() === 'all'
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { importedFiles, importingFile, stagingFile } = this.props.listingImport;
@@ -479,6 +496,8 @@ class ImportListings extends Component {
     let isDisabled = false;
     if (!selectedVendor || (selectedVendor !== 'all' && !configValid) || !selectedPublisher || !importedFiles.length) {
       isDisabled = true;
+    } else {
+      isDisabled = this._hasFieldsMissing(importedFiles);
     }
 
 
