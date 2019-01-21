@@ -204,5 +204,9 @@ export default defineMessages({
   fee: {
     id: 'Transfer.fee',
     defaultMessage: 'Fee'
+  },
+  secureTransferExplain: {
+    id: 'Transfer.secureTransferExplain',
+    defaultMessage: 'Explainer video https://youtu.be/Znwfr2EPCNQ'
   }
 });

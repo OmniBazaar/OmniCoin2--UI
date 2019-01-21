@@ -848,6 +848,7 @@ class Transfer extends Component {
             <span>
               <div>{formatMessage(messages.transferSecurity)}</div>
               <div className='note-lb'>{formatMessage(messages.secureTransferNote)}</div>
+              <div>{formatMessage(messages.secureTransferExplain)}</div>
             </span>
             <div className="transfer-input">
               <Field
