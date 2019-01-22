@@ -207,6 +207,6 @@ export default defineMessages({
   },
   secureTransferExplain: {
     id: 'Transfer.secureTransferExplain',
-    defaultMessage: 'Explainer video https://youtu.be/Znwfr2EPCNQ'
+    defaultMessage: 'Explainer video '
   }
 });
