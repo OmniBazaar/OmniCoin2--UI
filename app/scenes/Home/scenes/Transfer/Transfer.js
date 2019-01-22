@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { $ } from 'moneysafe';
+import open from 'open';
 
 import {
   InputField
@@ -666,6 +667,10 @@ class Transfer extends Component {
     }
   }
 
+  openExplainerVideo = () => {
+    open('https://youtu.be/Znwfr2EPCNQ');
+  }
+
   onBtcAmountChange = () => {
     this.getBtcFee();
   }
@@ -848,7 +853,10 @@ class Transfer extends Component {
             <span>
               <div>{formatMessage(messages.transferSecurity)}</div>
               <div className='note-lb'>{formatMessage(messages.secureTransferNote)}</div>
-              <div>{formatMessage(messages.secureTransferExplain)}</div>
+              <div>
+                <span>{formatMessage(messages.secureTransferExplain)}</span>
+                <span onClick={this.openExplainerVideo} className='link'>https://youtu.be/Znwfr2EPCNQ</span>
+              </div>
             </span>
             <div className="transfer-input">
               <Field
