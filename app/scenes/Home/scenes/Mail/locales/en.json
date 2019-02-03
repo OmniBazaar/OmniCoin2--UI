@@ -1,5 +1,5 @@
 {
-    "Mail.replyBody": "\n\nOn {date} <{sender}> wrote:\n\n{body}", 
+    "Mail.replyBody": "On {date} <{sender}> wrote:\n\n{body}", 
     "Mail.startTyping": "Start typing", 
     "Mail.buyPurchaseSubject": "You bought {listing} from {seller}", 
     "Mail.compose": "Compose", 

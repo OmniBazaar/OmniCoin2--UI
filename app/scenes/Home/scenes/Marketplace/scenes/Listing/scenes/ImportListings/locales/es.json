@@ -1,13 +1,13 @@
 {
-    "ImportListings.filesToImport": "Files to Import", 
+    "ImportListings.removeAll": "REMOVE ALL", 
     "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
     "ImportListings.warning": "Warning", 
-    "ImportListings.files": "Files", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.importedData": "Imported Data", 
     "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings"
+    "ImportListings.importListings": "Import Listings", 
+    "ImportListings.myListings": "My Listings", 
+    "ImportListings.ok": "Okay", 
+    "ImportListings.listingsVendor": "Listings Vendor", 
+    "ImportListings.importedData": "Imported Data", 
+    "ImportListings.files": "Files", 
+    "ImportListings.filesToImport": "Files to Import"
 }

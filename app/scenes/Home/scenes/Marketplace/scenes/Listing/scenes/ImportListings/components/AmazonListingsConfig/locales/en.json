@@ -7,10 +7,10 @@
     "AmazonListingsConfig.successTitle": "Success", 
     "AmazonListingsConfig.rememberConfig": "I want to use this configuration for this provider's future importations", 
     "AmazonListingsConfig.accessKey": "Your access key", 
-    "AmazonListingsConfig.accessKeyError": "Your access key is missing", 
     "AmazonListingsConfig.accessKeyTitle": "AWS Access Key*", 
+    "AmazonListingsConfig.accessKeyError": "Your access key is missing", 
     "AmazonListingsConfig.assocTagError": "Your assoc tag is missing", 
-    "AmazonListingsConfig.secretKeyError": "Your secret key is missing", 
+    "AmazonListingsConfig.secretKeyTitle": "AWS Secret Key*", 
     "AmazonListingsConfig.updateConfig": "Update Config", 
-    "AmazonListingsConfig.secretKeyTitle": "AWS Secret Key*"
+    "AmazonListingsConfig.secretKeyError": "Your secret key is missing"
 }

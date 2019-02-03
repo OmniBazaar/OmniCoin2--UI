@@ -6,9 +6,9 @@
     "Menu.gigs": "Gigs", 
     "Menu.omniLink": "OmniBazaar.com", 
     "Menu.extendedSearch": "Extended Search", 
-    "Menu.addListing": "ADD LISTING", 
     "Menu.recent": "Recent", 
-    "Menu.quickLinks": "Quick Links", 
     "Menu.community": "Community", 
+    "Menu.quickLinks": "Quick Links", 
+    "Menu.addListing": "ADD LISTING", 
     "Menu.support": "Support"
 }

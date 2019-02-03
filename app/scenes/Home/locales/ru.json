@@ -10,6 +10,6 @@
     "Home.escrow": "Escrow", 
     "Home.wallet": "Wallet", 
     "Home.mail": "Mail", 
-    "Home.publisherDataIsEmpty": "You didn't specify your search priority criteria. Do you wish to do it now?",
+    "Home.publisherDataIsEmpty": "You didn't specify your search priority criteria. Do you wish to specify it now?", 
     "Home.specifySearchPriorityCriteria": "Specify Search Priority Criteria"
 }

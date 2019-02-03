@@ -1,8 +1,8 @@
 {
     "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
     "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
+    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
+    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
     "AuthService.noAccount": "Account doesn't exist", 
     "AuthService.accountExists": "This account name is already taken. Please choose another one", 
     "AuthService.invalidPassword": "Invalid password"

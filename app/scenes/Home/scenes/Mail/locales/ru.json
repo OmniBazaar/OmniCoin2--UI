@@ -1,5 +1,5 @@
 {
-    "Mail.replyBody": "\n\nOn {date} <{sender}> wrote:\n\n{body}", 
+    "Mail.replyBody": "On {date} <{sender}> wrote:\n\n{body}", 
     "Mail.startTyping": "Start typing", 
     "Mail.buyPurchaseSubject": "You bought {listing} from {seller}", 
     "Mail.compose": "Compose", 
@@ -10,7 +10,7 @@
     "Mail.sellPurchaseBody": "{buyer} bought {number} {listing}\nListing id: {listingId}\nPrice: {price}{currency}", 
     "Mail.message": "Message", 
     "Mail.error": "Error", 
-    "Mail.required": "Required", 
+    "Mail.subject": "Subject", 
     "Mail.cancel": "CANCEL", 
     "Mail.newMessage": "New Message", 
     "Mail.mailNotSent": "There was an error while trying to send your mail", 
@@ -20,6 +20,6 @@
     "Mail.enterMessage": "Enter message", 
     "Mail.addressBook": "ADDRESS BOOK", 
     "Mail.to": "To", 
-    "Mail.subject": "Subject", 
+    "Mail.required": "Required", 
     "Mail.enterSubject": "Enter subject"
 }

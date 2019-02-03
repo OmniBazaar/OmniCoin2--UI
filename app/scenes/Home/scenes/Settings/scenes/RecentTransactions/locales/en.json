@@ -1,5 +1,4 @@
 {
-    "RecentTransactions.welcomeBonus": "WELCOME BONUS", 
     "RecentTransaction.sale": "SALE", 
     "RecentTransactions.fee": "Fee", 
     "RecentTransactions.memo": "Memo", 
@@ -8,16 +7,17 @@
     "RecentTransactions.witnessBonus": "PROCESSOR BONUS", 
     "RecentTransactions.developerBonus": "DEVELOPER BONUS", 
     "RecentTransactions.referralBonus": "REFERRAL BONUS", 
+    "RecentTransactions.updateListing": "LISTING", 
     "RecentTransactions.release": "RELEASED", 
     "RecentTransactions.saleBonus": "SALE BONUS", 
     "RecentTransactions.deleteListing": "LISTING", 
     "RecentTransactions.details": "DETAILS", 
     "RecentTransaction.exchange": "EXCHANGE", 
     "RecentTransactions.amount": "Amount", 
-    "RecentTransactions.balance": "Balance", 
+    "RecentTransactions.welcomeBonus": "WELCOME BONUS", 
     "RecentTransactions.type": "Status", 
     "RecentTransactions.updateAccount": "ACCOUNT", 
-    "RecentTransactions.updateListing": "LISTING", 
+    "RecentTransactions.balance": "Balance", 
     "RecentTransactions.transfer": "TRANSFER", 
     "RecentTransactions.return": "RETURNED"
 }
