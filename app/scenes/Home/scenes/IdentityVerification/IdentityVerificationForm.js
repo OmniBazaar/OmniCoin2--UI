@@ -59,6 +59,9 @@ class IdentityVerificationForm extends Component {
           requiredDocuments: 'IDENTITY:PASSPORT,ID_CARD,DRIVERS;SELFIE:SELFIE',
           uiConf: {
             steps: {
+              APPLICANT_DATA: {
+                instructions: 'To get your account verified fill the basic information below. \n\n ###### Citizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.'
+              },
               IDENTITY: {
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
               },
@@ -66,7 +69,7 @@ class IdentityVerificationForm extends Component {
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
               },
               LANDING: {
-                instructions: "To be invited to the OmniCoin Token Sale, agree to the conditions below and follow the steps to verify your identity."
+                instructions: 'To be invited to the OmniCoin Token Sale, agree to the conditions below and follow the steps to verify your identity.'
               }
             }
           }
