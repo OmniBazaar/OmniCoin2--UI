@@ -53,5 +53,6 @@
     "Listing.marketplace": "Marketplace", 
     "Listing.warning": "Warning", 
     "Listing.enterShippingAddress": "Please enter your shipping address", 
-    "Listing.highestPrice": "Highest Price"
+    "Listing.highestPrice": "Highest Price",
+    "Listing.email": "Email"
 }

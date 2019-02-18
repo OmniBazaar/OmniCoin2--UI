@@ -31,29 +31,9 @@ import Header from '../../../../components/Header';
 
 import './mail.scss';
 import { getBodyFromMessage, getSubjectFromMessage } from './utils';
+import messages from "./messages";
 
-const folders = [
-  {
-    type: MailTypes.INBOX,
-    label: 'Inbox',
-    newEmails: 1,
-  },
-  {
-    type: MailTypes.OUTBOX,
-    label: 'Outbox',
-    newEmails: 0,
-  },
-  {
-    type: MailTypes.SENT,
-    label: 'Sent',
-    newEmails: 0,
-  },
-  {
-    type: MailTypes.DELETED,
-    label: 'Deleted',
-    newEmails: 0,
-  }
-];
+let folders = null;
 
 const iconSize = 20;
 
@@ -93,6 +73,30 @@ class Mail extends Component {
     this.onCloseCompose = this.onCloseCompose.bind(this);
     this.onClickReply = this.onClickReply.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
+
+    const { formatMessage } = props.intl;
+    folders = [
+      {
+        type: MailTypes.INBOX,
+        label: formatMessage(messages.inboxFolder),
+        newEmails: 1,
+      },
+      {
+        type: MailTypes.OUTBOX,
+        label: formatMessage(messages.sentFolder),
+        newEmails: 0,
+      },
+      {
+        type: MailTypes.SENT,
+        label: formatMessage(messages.deliveredFolder),
+        newEmails: 0,
+      },
+      {
+        type: MailTypes.DELETED,
+        label: formatMessage(messages.deletedFolder),
+        newEmails: 0,
+      }
+    ];
   }
 
   componentWillMount() {

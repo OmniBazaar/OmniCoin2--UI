@@ -48,5 +48,6 @@
     "Listing.marketplace": "Marketplace", 
     "Listing.warning": "Warning", 
     "Listing.removeFromFavorites": "REMOVE FROM FAVORITES", 
-    "Listing.highestPrice": "Highest Price"
+    "Listing.highestPrice": "Highest Price",
+    "Listing.email": "Email"
 }

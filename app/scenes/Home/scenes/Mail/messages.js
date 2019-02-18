@@ -100,5 +100,21 @@ export default defineMessages({
   shippingCost: {
     id: 'Mail.shippingCost',
     defaultMessage: 'Shipping cost: {carrier} - {service}    {rate} USD'
+  },
+  inboxFolder: {
+    id: 'Mail.inboxFolder',
+    defaultMessage: 'Inbox'
+  },
+  sentFolder: {
+    id: 'Mail.sentFolder',
+    defaultMessage: 'Sent'
+  },
+  deliveredFolder: {
+    id: 'Mail.deliveredFolder',
+    defaultMessage: 'Delivered'
+  },
+  deletedFolder: {
+    id: 'Mail.deletedFolder',
+    defaultMessage: 'Deleted'
   }
 });
