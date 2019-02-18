@@ -23,5 +23,9 @@
     "Mail.addressBook": "ADDRESS BOOK", 
     "Mail.to": "To", 
     "Mail.subject": "Subject", 
-    "Mail.enterSubject": "Enter subject"
+    "Mail.enterSubject": "Enter subject",
+    "Mail.inboxFolder": "Inbox",
+    "Mail.sentFolder": "Sent",
+    "Mail.deliveredFolder": "Delivered",
+    "Mail.deletedFolder": "Deleted"
 }

@@ -17,7 +17,6 @@ import PriorityFeeDropdown from './components/PriorityFeeDropdown/PriorityFeeDro
 import CurrencyDropdown from './components/CurrencyDropdown/CurrencyDropdown';
 import ConditionDropdown from './components/ConditionDropdown/ConditionDropdown';
 import UnitDropdown from './components/UnitDropdown/UnitDropdown';
-import ContactDropdown from './components/ContactDropdown/ContactDropdown';
 import CountryDropdown from './components/CountryDropdown/CountryDropdown';
 import StateDropdown from './components/StateDropdown/StateDropdown';
 import Checkbox from './components/Checkbox/Checkbox';
@@ -109,7 +108,6 @@ class ListingForm extends Component {
     this.PriorityFeeDropdown = makeValidatableField(PriorityFeeDropdown);
     this.ConditionDropdown = makeValidatableField(ConditionDropdown);
     this.UnitDropdown = makeValidatableField(UnitDropdown);
-    this.ContactDropdown = makeValidatableField(ContactDropdown);
     this.CountryDropdown = makeValidatableField(CountryDropdown);
     this.StateDropdown = makeValidatableField(StateDropdown);
     this.Calendar = makeValidatableField(Calendar);
@@ -185,8 +183,8 @@ class ListingForm extends Component {
       const { images, ...defaultData } = listingDefaults;
       const listingPriority = this.getDefaultListingPriority();
       data = {
-        contact_type: contactOmniMessage,
-        contact_info: this.props.auth.currentUser.username,
+        // contact_type: contactOmniMessage,
+        // contact_info: this.props.auth.currentUser.username,
         continuous: true,
         ...defaultData,
         priority_fee: listingPriority,
@@ -943,6 +941,16 @@ class ListingForm extends Component {
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
+            <Grid.Column width={8} className="align-top">
+              <Field
+                name="email"
+                component={InputField}
+                placeholder={formatMessage(messages.email)}
+                className="textfield"
+                validate={[requiredFieldValidator]}
+              />
+            </Grid.Column>
+            {/*
             <Grid.Column width={4} className="align-top">
               <Field
                 name="contact_type"
@@ -964,6 +972,7 @@ class ListingForm extends Component {
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
+            */}
           </Grid.Row>
 
           <Grid.Row>
@@ -1022,6 +1031,15 @@ class ListingForm extends Component {
                 className="textfield"
                 placeholder={formatMessage(messages.postalCode)}
                 validate={[requiredFieldValidator]}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="phone"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(messages.phone)}
               />
             </Grid.Column>
           </Grid.Row>

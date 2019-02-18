@@ -226,10 +226,6 @@ class Listing extends Component {
         className="user-menu"
       >
         <div className="contact-popup">
-          <div className="info">
-            <span>{formatMessage(messages.preferredContact)}</span>
-            <span className="value">{listingDetail.contact_type}</span>
-          </div>
           <div className="two-column">
             <div className="info">
               <span>{formatMessage(messages.name)}</span>
@@ -250,6 +246,17 @@ class Listing extends Component {
               <span className="value">{listingDetail.address}</span>
             </div>
           </div>
+          {
+            listingDetail.email &&
+            <div className="info">
+              <span>{formatMessage(messages.email)}</span>
+              <span className="value link">
+                <a href={`mailto: ${listingDetail.email}`}>
+                  {listingDetail.email}
+                </a>
+              </span>
+            </div>
+          }
           <Link to={{
             pathname: '/mail',
             username: owner

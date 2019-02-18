@@ -92,5 +92,7 @@
     "AddListing.keywordCommas": "Keywords separated by commas", 
     "AddListing.saveListingErrorNoChangeDetectedMessage": "No changes detected in listing. Please change some data and submit again.", 
     "AddListing.fiatFieldValidator": "Should be greater or equal to 0.01", 
-    "AddListing.optional": "(Optional)"
+    "AddListing.optional": "(Optional)",
+    "AddListing.email": "Email address where buyers can contact you",
+    "AddListing.phone": "Phone (optional)"
 }

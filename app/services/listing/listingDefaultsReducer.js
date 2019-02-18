@@ -35,7 +35,9 @@ const defaultState = {
   bitcoin_address: '',
   ethereum_address: '',
   manual_bitcoin_address: '',
-  priority_fee: ''
+  priority_fee: '',
+  phone: '',
+  email: ''
 };
 
 const fixImagesData = (data) => {

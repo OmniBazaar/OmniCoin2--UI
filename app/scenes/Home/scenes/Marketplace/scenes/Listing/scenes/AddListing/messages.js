@@ -460,6 +460,14 @@ const messages = defineMessages({
   savedAsDefaults: {
     id: 'ListingForm.savedAsDefaults',
     defaultMessage: 'Saved as defaults'
+  },
+  email: {
+    id: 'AddListing.email',
+    defaultMessage: 'Email address where buyers can contact you'
+  },
+  phone: {
+    id: 'AddListing.phone',
+    defaultMessage: 'Phone (optional)'
   }
 });
 

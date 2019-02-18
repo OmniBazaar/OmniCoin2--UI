@@ -74,5 +74,7 @@
     "AddListing.address": "Address", 
     "AddListing.priorityNormal": "Normal (0.50% Fee)", 
     "AddListing.listingTitle": "Listing Title", 
-    "AddListing.location": "Location"
+    "AddListing.location": "Location",
+    "AddListing.email": "Email address where buyers can contact you",
+    "AddListing.phone": "Phone (optional)"
 }

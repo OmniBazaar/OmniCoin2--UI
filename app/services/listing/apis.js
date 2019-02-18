@@ -27,7 +27,7 @@ const listingProps = [
   'contact_info', 'country', 'address', 'city', 'post_code',
   'state', 'owner', "priority_fee", "weight", "width", "height", "length", "shipping_price_included",
   'weight_unit', 'width_unit', 'height_unit', 'length_unit',
-  'no_shipping_address_required', 'shipping_description'
+  'no_shipping_address_required', 'shipping_description', 'email', 'phone'
 ];
 
 
