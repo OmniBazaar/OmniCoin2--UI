@@ -54,5 +54,6 @@
     "Listing.warning": "Warning", 
     "Listing.enterShippingAddress": "Please enter your shipping address", 
     "Listing.highestPrice": "Highest Price",
-    "Listing.email": "Email"
+    "Listing.email": "Email",
+    "Listing.phone": "Phone"
 }

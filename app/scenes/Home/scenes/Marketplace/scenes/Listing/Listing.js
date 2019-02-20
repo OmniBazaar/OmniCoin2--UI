@@ -247,6 +247,13 @@ class Listing extends Component {
             </div>
           </div>
           {
+            listingDetail.phone &&
+            <div className="info">
+              <span>{formatMessage(messages.phone)}</span>
+              <span className="value">{listingDetail.phone}</span>
+            </div>
+          }
+          {
             listingDetail.email &&
             <div className="info">
               <span>{formatMessage(messages.email)}</span>
@@ -257,15 +264,6 @@ class Listing extends Component {
               </span>
             </div>
           }
-          <Link to={{
-            pathname: '/mail',
-            username: owner
-          }}
-          >
-            <div className="contact-seller">
-              <span>{formatMessage(messages.contactSeller)}</span>
-            </div>
-          </Link>
         </div>
       </Popup>
     );
