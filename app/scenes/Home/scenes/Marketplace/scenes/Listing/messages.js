@@ -172,5 +172,9 @@ export default defineMessages({
   email: {
     id: 'Listing.email',
     defaultMessage: 'Email'
+  },
+  phone: {
+    id: 'Listing.phone',
+    defaultMessage: 'Phone'
   }
 });

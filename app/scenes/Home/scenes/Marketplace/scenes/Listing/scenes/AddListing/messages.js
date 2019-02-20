@@ -139,15 +139,15 @@ const messages = defineMessages({
   },
   owner: {
     id: 'AddListing.owner',
-    defaultMessage: 'Owner'
+    defaultMessage: 'Saler'
   },
   ownerDetails: {
     id: 'AddListing.ownerDetails',
-    defaultMessage: 'Owner Details'
+    defaultMessage: 'Saler Details'
   },
   ownerName: {
     id: 'AddListing.ownerName',
-    defaultMessage: 'Owner Name'
+    defaultMessage: 'Saler Name'
   },
   preferredContact: {
     id: 'AddListing.preferredContact',

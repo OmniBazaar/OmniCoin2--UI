@@ -49,5 +49,6 @@
     "Listing.warning": "Warning", 
     "Listing.removeFromFavorites": "REMOVE FROM FAVORITES", 
     "Listing.highestPrice": "Highest Price",
-    "Listing.email": "Email"
+    "Listing.email": "Email",
+    "Listing.phone": "Phone"
 }
