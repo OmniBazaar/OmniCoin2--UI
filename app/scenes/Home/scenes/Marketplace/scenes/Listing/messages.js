@@ -168,5 +168,13 @@ export default defineMessages({
   cancel: {
     id: 'Listing.cancel',
     defaultMessage: 'Cancel'
+  },
+  email: {
+    id: 'Listing.email',
+    defaultMessage: 'Email'
+  },
+  phone: {
+    id: 'Listing.phone',
+    defaultMessage: 'Phone'
   }
 });

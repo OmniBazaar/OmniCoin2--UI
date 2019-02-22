@@ -1,6 +1,5 @@
 {
     "DataTable.view": "VIEW", 
-    "DataTable.error": "Error", 
     "DataTable.parameters": "Parameters", 
     "DataTable.default": "Default", 
     "DataTable.successSave": "Successfully saved", 
@@ -9,5 +8,6 @@
     "DataTable.date": "Date", 
     "DataTable.success": "Success", 
     "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE"
+    "DataTable.save": "SAVE", 
+    "DataTable.error": "Error"
 }

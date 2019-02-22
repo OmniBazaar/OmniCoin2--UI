@@ -1,13 +1,13 @@
 {
     "Settings.accountId": "Account ID", 
     "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.publicData": "Public Data", 
+    "Settings.eth": "ETH", 
     "Settings.btc": "BTC", 
     "Settings.registered": "REGISTERED", 
     "Settings.xom": "XOM", 
-    "Settings.currentBalance": "Current Balance", 
+    "Settings.publicData": "Public Data", 
     "Settings.account": "Account", 
-    "Settings.eth": "ETH", 
+    "Settings.currentBalance": "Current Balance", 
     "Settings.privateData": "Private Data", 
     "Settings.vestingBalances": "Vesting Balances"
 }

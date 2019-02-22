@@ -139,15 +139,15 @@ const messages = defineMessages({
   },
   owner: {
     id: 'AddListing.owner',
-    defaultMessage: 'Owner'
+    defaultMessage: 'Seller'
   },
   ownerDetails: {
     id: 'AddListing.ownerDetails',
-    defaultMessage: 'Owner Details'
+    defaultMessage: 'Seller Details'
   },
   ownerName: {
     id: 'AddListing.ownerName',
-    defaultMessage: 'Owner Name'
+    defaultMessage: 'Seller Name'
   },
   preferredContact: {
     id: 'AddListing.preferredContact',
@@ -460,6 +460,14 @@ const messages = defineMessages({
   savedAsDefaults: {
     id: 'ListingForm.savedAsDefaults',
     defaultMessage: 'Saved as defaults'
+  },
+  email: {
+    id: 'AddListing.email',
+    defaultMessage: 'Email address where buyers can contact you'
+  },
+  phone: {
+    id: 'AddListing.phone',
+    defaultMessage: 'Phone (optional)'
   }
 });
 

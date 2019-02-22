@@ -1,5 +1,5 @@
 {
-    "Mail.replyBody": "\n\nOn {date} <{sender}> wrote:\n\n{body}", 
+    "Mail.replyBody": "On {date} <{sender}> wrote:\n\n{body}", 
     "Mail.startTyping": "Start typing", 
     "Mail.buyPurchaseSubject": "You bought {listing} from {seller}", 
     "Mail.compose": "Compose", 
@@ -23,5 +23,9 @@
     "Mail.addressBook": "ADDRESS BOOK", 
     "Mail.to": "To", 
     "Mail.subject": "Subject", 
-    "Mail.enterSubject": "Enter subject"
+    "Mail.enterSubject": "Enter subject",
+    "Mail.inboxFolder": "Inbox",
+    "Mail.sentFolder": "Sent",
+    "Mail.deliveredFolder": "Delivered",
+    "Mail.deletedFolder": "Deleted"
 }

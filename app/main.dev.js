@@ -194,22 +194,22 @@ const restartNodeIfExists = (witnessId, pubKey, privKey) => {
   }
   fs.readFile(`${path}/witness_node_data_dir/config.ini`, 'utf8', (err, data) => {
     if (err) {
-      console.log('ERROR ', err);
+      console.log('ERROR - Read witness node config.ini', err);
     } else {
       const witnessIdUpdatedData = updateConfigData('witness-id', `"${witnessId}"`, data);
       const privateKeyUpdatedData = updateConfigData('private-key', `["${pubKey}", "${privKey}"]`, witnessIdUpdatedData);
       fs.writeFile(`${path}/witness_node_data_dir/config.ini`, privateKeyUpdatedData, (error) => {
-        console.log('ERROR ', error);
+        if (error) {
+          console.log('ERROR - write witness not config.ini ', error);
+        } else {
+          isNodeRunning('witness_node', (status) => {
+            console.log('Witness node running status', status)
+            if (!status){
+              runNode();
+            }
+          });
+        }
       });
-      if (restartIfNotExist) {
-        isNodeRunning('witness_node', (status) => {
-          if (!status){
-            runNode();
-          }
-        });
-      } else {
-        runNode();
-      }
     }
   });
 };

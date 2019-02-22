@@ -1,5 +1,5 @@
 {
-    "ConfirmationModal.confirmation": "Update OmniBazaar",
-    "ConfirmationModal.approve": "OK",
-    "ConfirmationModal.cancel": "Cancel"
+    "ConfirmationModal.confirmation": "Confirmation", 
+    "ConfirmationModal.approve": "OK", 
+    "ConfirmationModal.cancel": "CANCEL"
 }

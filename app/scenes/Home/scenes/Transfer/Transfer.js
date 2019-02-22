@@ -853,9 +853,8 @@ class Transfer extends Component {
             <span>
               <div>{formatMessage(messages.transferSecurity)}</div>
               <div className='note-lb'>{formatMessage(messages.secureTransferNote)}</div>
-              <div>
-                <span>{formatMessage(messages.secureTransferExplain)}</span>
-                <span onClick={this.openExplainerVideo} className='link'>https://youtu.be/Znwfr2EPCNQ</span>
+              <div onClick={this.openExplainerVideo} className='link'>
+                {formatMessage(messages.secureTransferExplain)}
               </div>
             </span>
             <div className="transfer-input">

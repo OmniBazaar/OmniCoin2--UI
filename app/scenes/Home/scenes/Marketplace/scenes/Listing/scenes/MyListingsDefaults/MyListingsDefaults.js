@@ -404,6 +404,14 @@ class MyListingsDefaults extends Component {
                 onChange={this.onChange}
               />
             </Grid.Column>
+            <Grid.Column width={8} className="align-top">
+              <Field
+                name="email"
+                component={InputField}
+                placeholder={formatMessage(addListingMessages.email)}
+                className="textfield"
+              />
+            </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
@@ -461,6 +469,15 @@ class MyListingsDefaults extends Component {
                 className="textfield"
                 placeholder={formatMessage(addListingMessages.postalCode)}
                 onChange={this.onChange}
+              />
+            </Grid.Column>
+            <Grid.Column width={4} className="align-top">
+              <Field
+                type="text"
+                name="phone"
+                component={InputField}
+                className="textfield"
+                placeholder={formatMessage(addListingMessages.phone)}
               />
             </Grid.Column>
           </Grid.Row>
