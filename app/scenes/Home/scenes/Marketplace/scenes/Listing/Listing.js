@@ -264,6 +264,15 @@ class Listing extends Component {
               </span>
             </div>
           }
+          <Link to={{
+            pathname: '/mail',
+            username: owner
+          }}
+          >
+            <div className="contact-seller">
+              <span>{formatMessage(messages.contactSeller)}</span>
+            </div>
+          </Link>
         </div>
       </Popup>
     );
