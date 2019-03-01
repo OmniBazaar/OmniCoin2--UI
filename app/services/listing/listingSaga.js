@@ -208,13 +208,11 @@ function* saveListingHandler({ payload: { publisher, listing, listingId } }) {
     }
 
     if (!listing.price_using_btc && listing.currency !== 'BITCOIN') {
-      listing = { ...listing };
-      delete listing.bitcoin_address;
+      listing = { ...listing, bitcoin_address: '' };
     }
 
     if (!listing.price_using_eth && listing.currency !== 'ETHEREUM') {
-      listing = { ...listing };
-      delete listing.ethereum_address;
+      listing = { ...listing, ethereum_address: '' };
     }
 
     if (listingId) {
