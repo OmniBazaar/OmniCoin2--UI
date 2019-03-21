@@ -93,6 +93,46 @@ export default defineMessages({
     id: 'Preferences.russian',
     defaultMessage: 'Russian'
   },
+  arabic: {
+    id: 'Preferences.arabic',
+    defaultMessage: 'عربى'
+  },
+  gujarati: {
+    id: 'Preferences.gujarati',
+    defaultMessage: 'ગુજરાતી'
+  },
+  malaysian: {
+    id: 'Preferences.malaysian',
+    defaultMessage: 'Malaysia'
+  },
+  romanian: {
+    id: 'Preferences.romanian',
+    defaultMessage: 'Română'
+  },
+  turkish: {
+    id: 'Preferences.turkish',
+    defaultMessage: 'Türk'
+  },
+  indonesian: {
+    id: 'Preferences.indonesian',
+    defaultMessage: 'Bahasa Indonesia'
+  },
+  filipino: {
+    id: 'Preferences.filipino',
+    defaultMessage: 'Filipino'
+  },
+  hindi: {
+    id: 'Preferences.hindi',
+    defaultMessage: 'हिंदी'
+  },
+  portuguese: {
+    id: 'Preferences.portuguese',
+    defaultMessage: 'Português'
+  },
+  ukrainian: {
+    id: 'Preferences.ukrainian',
+    defaultMessage: 'Українська'
+  },
   priorityHighest: {
     id: 'Preferences.priorityHighest',
     defaultMessage: 'High (1.00% Fee)'

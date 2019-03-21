@@ -5,5 +5,15 @@ export default {
   es: messages.spanish,
   fr: messages.french,
   it: messages.italian,
-  ru: messages.russian
+  ru: messages.russian,
+  ar: messages.arabic,
+  gu: messages.gujarati,
+  ms: messages.malaysian,
+  ro: messages.romanian,
+  tr: messages.turkish,
+  id: messages.indonesian,
+  tl: messages.filipino,
+  hi: messages.hindi,
+  pt: messages.portuguese,
+  uk: messages.ukrainian
 };

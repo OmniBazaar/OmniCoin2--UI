@@ -42,5 +42,15 @@
     "Preferences.seconds": "SECONDS", 
     "Preferences.listingOptionsToolTip": "When using more than one keyword, searches will return results that contain ANY of those words, or will return only those listings which contain ALL of your keywords", 
     "Preferences.priorityHigher": "Higher (1.50% Fee)", 
-    "Preferences.autoRunNote": "This action requires admin rights."
+    "Preferences.autoRunNote": "This action requires admin rights.",
+    "Preferences.arabic": "عربى",
+    "Preferences.gujarati": "ગુજરાતી",
+    "Preferences.malaysian": "Malaysia",
+    "Preferences.romanian": "Română",
+    "Preferences.turkish": "Türk",
+    "Preferences.indonesian": "Bahasa Indonesia",
+    "Preferences.filipino": "Filipino",
+    "Preferences.hindi": "हिंदी",
+    "Preferences.portuguese": "Português",
+    "Preferences.ukrainian": "Українська"
 }
