@@ -20,7 +20,7 @@ export default defineMessages({
   },
   clickHere: {
     id: 'GridTable.clickHere',
-    defaultMessage: 'CLICK \n HERE.'
+    defaultMessage: 'CLICK HERE.'
   },
   confirmDeleteTitle: {
     id: 'GridTable.confirmDeleteTitle',
