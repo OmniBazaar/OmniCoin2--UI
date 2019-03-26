@@ -79,59 +79,59 @@ export default defineMessages({
   },
   spanish: {
     id: 'Preferences.spanish',
-    defaultMessage: 'Spanish'
+    defaultMessage: 'Español (Spanish)'
   },
   french: {
     id: 'Preferences.french',
-    defaultMessage: 'French'
+    defaultMessage: 'Français (French)'
   },
   italian: {
     id: 'Preferences.italian',
-    defaultMessage: 'Italian'
+    defaultMessage: 'Italiano (Italian)'
   },
   russian: {
     id: 'Preferences.russian',
-    defaultMessage: 'Russian'
+    defaultMessage: 'русский (Russian)'
   },
   arabic: {
     id: 'Preferences.arabic',
-    defaultMessage: 'عربى'
+    defaultMessage: 'عربى (Arabic)'
   },
   gujarati: {
     id: 'Preferences.gujarati',
-    defaultMessage: 'ગુજરાતી'
+    defaultMessage: 'ગુજરાતી (Gujarati)'
   },
   malaysian: {
     id: 'Preferences.malaysian',
-    defaultMessage: 'Malaysia'
+    defaultMessage: 'Malaysia (Malaysian)'
   },
   romanian: {
     id: 'Preferences.romanian',
-    defaultMessage: 'Română'
+    defaultMessage: 'Română (Romanian)'
   },
   turkish: {
     id: 'Preferences.turkish',
-    defaultMessage: 'Türk'
+    defaultMessage: 'Türk (Turkish)'
   },
   indonesian: {
     id: 'Preferences.indonesian',
-    defaultMessage: 'Bahasa Indonesia'
+    defaultMessage: 'Bahasa Indonesia (Indonesian)'
   },
   filipino: {
     id: 'Preferences.filipino',
-    defaultMessage: 'Filipino'
+    defaultMessage: 'Filipino (Filipino)'
   },
   hindi: {
     id: 'Preferences.hindi',
-    defaultMessage: 'हिंदी'
+    defaultMessage: 'हिंदी (Hindi)'
   },
   portuguese: {
     id: 'Preferences.portuguese',
-    defaultMessage: 'Português'
+    defaultMessage: 'Português (Portuguese)'
   },
   ukrainian: {
     id: 'Preferences.ukrainian',
-    defaultMessage: 'Українська'
+    defaultMessage: 'Українська (Ukrainian)'
   },
   priorityHighest: {
     id: 'Preferences.priorityHighest',
