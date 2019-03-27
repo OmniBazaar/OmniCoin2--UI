@@ -1,0 +1,17 @@
+{
+    "SearchPrioritySetting.publisher": "Publisher", 
+    "SearchPrioritySetting.addKeyword": "Add keyword", 
+    "SearchPrioritySetting.publisherName": "Specific Publisher", 
+    "SearchPrioritySetting.updateSuccess": "Successfully updated", 
+    "SearchPrioritySetting.keywords": "Keywords for listings that you want to see", 
+    "SearchPrioritySetting.specificLocation": "Specific Location", 
+    "SearchPrioritySetting.state": "State", 
+    "SearchPrioritySetting.country": "Country", 
+    "SearchPrioritySetting.keywordLabel": "Keywords", 
+    "SearchPrioritySetting.anywhere": "Anywhere", 
+    "SearchPrioritySetting.city": "City", 
+    "SearchPrioritySetting.startTyping": "Start typing...", 
+    "SearchPrioritySetting.update": "Update", 
+    "SearchPrioritySetting.apply": "APPLY", 
+    "SearchPrioritySetting.publisherPlaceholder": "Select publisher..."
+}
