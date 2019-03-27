@@ -7,9 +7,9 @@ class Dropdown extends Component {
   componentWillMount() {
     const { formatMessage } = this.props.intl;
     const { options } = this.props;
-    this.options = Object.keys(options).map(id => ({
-      value: id,
-      text: formatMessage(options[id])
+    this.options = options.map(opt => ({
+      value: opt.id,
+      text: formatMessage(opt.msg)
     }));
   }
 

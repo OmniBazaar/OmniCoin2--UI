@@ -77,6 +77,18 @@ export default defineMessages({
     id: 'Preferences.english',
     defaultMessage: 'English'
   },
+  chinese: {
+    id: 'Preferences.chinese',
+    defaultMessage: '中文 (Chinese)'
+  },
+  korean: {
+    id: 'Preferences.korean',
+    defaultMessage: '한국어 (Korean)'
+  },
+  vietnamese: {
+    id: 'Preferences.vietnamese',
+    defaultMessage: 'Tiếng Việt (Vietnamese)'
+  },
   spanish: {
     id: 'Preferences.spanish',
     defaultMessage: 'Español (Spanish)'
@@ -91,7 +103,7 @@ export default defineMessages({
   },
   russian: {
     id: 'Preferences.russian',
-    defaultMessage: 'русский (Russian)'
+    defaultMessage: 'Pусский (Russian)'
   },
   arabic: {
     id: 'Preferences.arabic',
