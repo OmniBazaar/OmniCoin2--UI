@@ -161,17 +161,27 @@ class GridTable extends Component {
 
   renderEmptyRow() {
     const { formatMessage } = this.props.intl;
-
+    const { showNoDataMessageOnEmpty } = this.props;
     return (
       <TableRow className="items empty">
-        <TableCell className="item noData">
-          <span>
-            {formatMessage(messages.noData)}
-            <span class="link" onClick={this.goToSearchPriority}>
-              {formatMessage(messages.clickHere)}
-            </span>
-          </span>
-        </TableCell>
+        {
+          !showNoDataMessageOnEmpty ? 
+          (
+            <TableCell className="item noData">
+              <span>
+                {formatMessage(messages.noResult)}
+                <span class="link" onClick={this.goToSearchPriority}>
+                  {formatMessage(messages.clickHere)}
+                </span>
+              </span>
+            </TableCell>
+          ) : 
+          (
+            <TableCell className="item">
+              {formatMessage(messages.noData)}
+            </TableCell>
+          )
+        }
       </TableRow>
     );
   }
