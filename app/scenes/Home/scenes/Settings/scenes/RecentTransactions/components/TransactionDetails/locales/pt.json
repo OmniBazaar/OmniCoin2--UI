@@ -1,0 +1,19 @@
+{
+    "TransactionDetails.amountOfAsset": "Amount of asset,", 
+    "TransactionDetails.transaction": "Transaction", 
+    "TransactionDetails.operations": "Operations", 
+    "TransactionDetails.referrerSellerFee": "Sellers's Referrer fee: {fee} XOM", 
+    "TransactionDetails.timeStamp": "TimeStamp", 
+    "TransactionDetails.escrowFeeDetail": "Escrow fee: {fee} XOM", 
+    "TransactionDetails.feeDetail": "Fee: {fee} XOM", 
+    "TransactionDetails.next": "Next", 
+    "TransactionDetails.omnibazaarFeeDetail": "OmniBazaar fee: {fee} XOM", 
+    "TransactionDetails.block": "Block", 
+    "TransactionDetails.close": "CLOSE", 
+    "TransactionDetails.referrerBuyerFee": "Buyer's Referrer fee: {fee} XOM", 
+    "TransactionDetails.publisherFee": "Publisher fee: {fee} XOM", 
+    "TransactionDetails.deposit": "Deposit", 
+    "TransactionDetails.transactionHash": "Transaction hash", 
+    "TransactionDetails.transactionDetails": "Transaction Details", 
+    "TransactionDetails.withdraw": "Withdraw"
+}

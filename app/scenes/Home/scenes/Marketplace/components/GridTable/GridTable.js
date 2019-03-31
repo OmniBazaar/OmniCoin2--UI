@@ -155,14 +155,33 @@ class GridTable extends Component {
     this.props.listingActions.removeFromFavorites(listing_id);
   };
 
+  goToSearchPriority = () => {
+    this.props.history.push('/search-priority');
+  }
+
   renderEmptyRow() {
     const { formatMessage } = this.props.intl;
-
+    const { showNoDataMessageOnEmpty } = this.props;
     return (
       <TableRow className="items empty">
-        <TableCell className="item">
-          {formatMessage(messages.noData)}
-        </TableCell>
+        {
+          !showNoDataMessageOnEmpty ? 
+          (
+            <TableCell className="item noData">
+              <span>
+                {formatMessage(messages.noResult)}
+                <span class="link" onClick={this.goToSearchPriority}>
+                  {formatMessage(messages.clickHere)}
+                </span>
+              </span>
+            </TableCell>
+          ) : 
+          (
+            <TableCell className="item">
+              {formatMessage(messages.noData)}
+            </TableCell>
+          )
+        }
       </TableRow>
     );
   }

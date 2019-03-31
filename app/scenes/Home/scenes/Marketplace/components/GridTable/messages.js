@@ -13,6 +13,14 @@ export default defineMessages({
     id: 'GridTable.noData',
     defaultMessage: 'No data found.'
   },
+  noResult: {
+    id: 'GridTable.noResult',
+    defaultMessage: 'No results found.\nPlease select different search terms.\nOr, change your Search Priority toinclude a larger geographic area or adifferent Publisher.\nTo modify your Search Priority, '
+  },
+  clickHere: {
+    id: 'GridTable.clickHere',
+    defaultMessage: 'CLICK HERE.'
+  },
   confirmDeleteTitle: {
     id: 'GridTable.confirmDeleteTitle',
     defaultMessage: 'Confirm'

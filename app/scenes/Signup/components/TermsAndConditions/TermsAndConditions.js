@@ -142,10 +142,10 @@ const messages = defineMessages({
     id: 'TermsConditions.copyrightContent2',
     defaultMessage: '2.	You may not copy, redistribute, use or publish any part of the Software, except as allowed by this Agreement.'
   },
-  copyrightContent3: {
-    id: 'TermsConditions.copyrightContent3',
-    defaultMessage: '3.	You may not copy, redistribute, use or publish any part of the Software, except as allowed by this Agreement.'
-  },
+  // copyrightContent3: {
+  //   id: 'TermsConditions.copyrightContent3',
+  //   defaultMessage: '3.	You may not copy, redistribute, use or publish any part of the Software, except as allowed by this Agreement.'
+  // },
   
   
   trademarksTitle: {
@@ -640,7 +640,7 @@ class TermsAndConditions extends Component {
         <h3>{formatMessage(messages.copyrightContentTitle)}</h3>
         <p>{formatMessage(messages.copyrightContent1)}</p>
         <p>{formatMessage(messages.copyrightContent2)}</p>
-        <p>{formatMessage(messages.copyrightContent3)}</p>
+        {/* <p>{formatMessage(messages.copyrightContent3)}</p> */}
         
         <h3>{formatMessage(messages.trademarksTitle)}</h3>
         <p>{formatMessage(messages.trademarksTitle1)}</p>

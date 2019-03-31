@@ -77,21 +77,73 @@ export default defineMessages({
     id: 'Preferences.english',
     defaultMessage: 'English'
   },
+  chinese: {
+    id: 'Preferences.chinese',
+    defaultMessage: '中文 (Chinese)'
+  },
+  korean: {
+    id: 'Preferences.korean',
+    defaultMessage: '한국어 (Korean)'
+  },
+  vietnamese: {
+    id: 'Preferences.vietnamese',
+    defaultMessage: 'Tiếng Việt (Vietnamese)'
+  },
   spanish: {
     id: 'Preferences.spanish',
-    defaultMessage: 'Spanish'
+    defaultMessage: 'Español (Spanish)'
   },
   french: {
     id: 'Preferences.french',
-    defaultMessage: 'French'
+    defaultMessage: 'Français (French)'
   },
   italian: {
     id: 'Preferences.italian',
-    defaultMessage: 'Italian'
+    defaultMessage: 'Italiano (Italian)'
   },
   russian: {
     id: 'Preferences.russian',
-    defaultMessage: 'Russian'
+    defaultMessage: 'Pусский (Russian)'
+  },
+  arabic: {
+    id: 'Preferences.arabic',
+    defaultMessage: 'عربى (Arabic)'
+  },
+  gujarati: {
+    id: 'Preferences.gujarati',
+    defaultMessage: 'ગુજરાતી (Gujarati)'
+  },
+  malaysian: {
+    id: 'Preferences.malaysian',
+    defaultMessage: 'Malaysia (Malaysian)'
+  },
+  romanian: {
+    id: 'Preferences.romanian',
+    defaultMessage: 'Română (Romanian)'
+  },
+  turkish: {
+    id: 'Preferences.turkish',
+    defaultMessage: 'Türk (Turkish)'
+  },
+  indonesian: {
+    id: 'Preferences.indonesian',
+    defaultMessage: 'Bahasa Indonesia (Indonesian)'
+  },
+  filipino: {
+    id: 'Preferences.filipino',
+    defaultMessage: 'Filipino (Filipino)'
+  },
+  hindi: {
+    id: 'Preferences.hindi',
+    defaultMessage: 'हिंदी (Hindi)'
+  },
+  portuguese: {
+    id: 'Preferences.portuguese',
+    defaultMessage: 'Português (Portuguese)'
+  },
+  ukrainian: {
+    id: 'Preferences.ukrainian',
+    defaultMessage: 'Українська (Ukrainian)'
   },
   priorityHighest: {
     id: 'Preferences.priorityHighest',

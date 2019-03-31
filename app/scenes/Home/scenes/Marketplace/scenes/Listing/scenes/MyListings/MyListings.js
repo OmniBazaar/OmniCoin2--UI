@@ -127,6 +127,7 @@ class MyListings extends Component {
           loading={saveListing.saving}
           currency={myListingsCurrency}
           showActions
+          showNoDataMessageOnEmpty={true}
           tabs={[
             {
               title: formatMessage(messages.byDate),
