@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import countryRegionData from 'country-region-data';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 
 class StateDropdown extends Component {
 	state = {
@@ -43,9 +44,11 @@ class StateDropdown extends Component {
 	}
 
 	render() {
-	  const { value } = this.props.input;
+		const { value } = this.props.input;
+		const { required } = this.props;
 	  return (
-  <Dropdown
+	<Dropdown
+		className={cn({required: required && !value})}
     search
     compact
     selection

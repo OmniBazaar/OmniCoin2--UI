@@ -218,3 +218,10 @@
 .parent {
   height: 42px;
 }
+
+input[value=''].required,
+textarea.required,
+.dropdown.required,
+.react-tagsinput.required {
+  border-color: red !important;
+}

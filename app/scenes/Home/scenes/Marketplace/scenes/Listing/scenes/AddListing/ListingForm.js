@@ -113,7 +113,9 @@ class ListingForm extends Component {
     this.Calendar = makeValidatableField(Calendar);
     this.PublishersDropdown = makeValidatableField(PublishersDropdown);
     this.BitcoinWalletDropdown = makeValidatableField(BitcoinWalletDropdown);
-    this.DescriptionInput = makeValidatableField((props) => (<textarea {...props} />));
+    this.DescriptionInput = makeValidatableField((props) => ( 
+      <textarea {...props} className={cn('textfield', {required: props.required && !props.value})}/>
+    ));
     this.PriceInput = makeValidatableField(this.renderLabeledField);
     this.GeneralDropdown = makeValidatableField(GeneralDropdown);
 
@@ -135,7 +137,7 @@ class ListingForm extends Component {
       <input
         {...input}
         type="text"
-        className="textfield"
+        className="textfield required"
         placeholder={placeholder}
       />
       <Button type="button" className="copy-btn button--gray-text">
@@ -528,6 +530,7 @@ class ListingForm extends Component {
           value={value}
           name="keywords"
           addOnBlur
+          className={cn('react-tagsinput', {required: !value.length})}
           inputProps={{
             className: cn('react-tagsinput-input', { empty: !this.state.keywords }),
             placeholder: (
@@ -614,7 +617,7 @@ class ListingForm extends Component {
                 type="text"
                 name="listing_title"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.pleaseEnterTitle)}
                 validate={[requiredFieldValidator]}
               />
@@ -637,6 +640,7 @@ class ListingForm extends Component {
                 name="category"
                 component={this.CategoryDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.category),
                   disableAllOption: true
                 }}
@@ -648,6 +652,7 @@ class ListingForm extends Component {
                 name="subcategory"
                 component={this.SubCategoryDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.subCategory),
                   parentCategory: category,
                   disableAllOption: true
@@ -666,6 +671,7 @@ class ListingForm extends Component {
                 component={this.CurrencyDropdown}
                 removeAll
                 props={{
+                  required,
                   placeholder: formatMessage(messages.currency),
                   disableAllOption: true
                 }}
@@ -679,7 +685,7 @@ class ListingForm extends Component {
                 name="price"
                 placeholder={formatMessage(messages.pricePerItem)}
                 component={this.PriceInput}
-                className="textfield"
+                className="textfield required"
                 validate={this.getPriceValidators(currency)}
               />
             </Grid.Column>
@@ -774,6 +780,7 @@ class ListingForm extends Component {
                 name="condition"
                 component={this.ConditionDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.condition)
                 }}
               />
@@ -783,7 +790,7 @@ class ListingForm extends Component {
                 type="text"
                 name="quantity"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.numberAvailable)}
                 validate={[requiredFieldValidator, numericFieldValidator]}
               />
@@ -793,6 +800,7 @@ class ListingForm extends Component {
                 name="units"
                 component={this.UnitDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.unitsOfMeasure)
                 }}
                 validate={[requiredFieldValidator]}
@@ -868,6 +876,7 @@ class ListingForm extends Component {
                 name="publisher"
                 component={this.PublishersDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.selectPublisher),
                   keywords: this.state.keywords
                 }}
@@ -915,6 +924,9 @@ class ListingForm extends Component {
                 name="description"
                 component={this.DescriptionInput}
                 className="textfield"
+                props={{
+                  required
+                }}
                 placeholder={formatMessage(messages.pleaseEnterDescription)}
                 validate={[requiredFieldValidator]}
               />
@@ -936,7 +948,7 @@ class ListingForm extends Component {
                 type="text"
                 name="name"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.ownerName)}
                 validate={[requiredFieldValidator]}
               />
@@ -946,7 +958,7 @@ class ListingForm extends Component {
                 name="email"
                 component={InputField}
                 placeholder={formatMessage(messages.email)}
-                className="textfield"
+                className="textfield required"
                 validate={[requiredFieldValidator]}
               />
             </Grid.Column>
@@ -984,6 +996,7 @@ class ListingForm extends Component {
                 name="country"
                 component={this.CountryDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.country)
                 }}
                 validate={[requiredFieldValidator]}
@@ -994,7 +1007,7 @@ class ListingForm extends Component {
                 type="text"
                 name="address"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.address)}
               />
             </Grid.Column>
@@ -1003,7 +1016,7 @@ class ListingForm extends Component {
                 type="text"
                 name="city"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.city)}
                 validate={[requiredFieldValidator]}
               />
@@ -1017,6 +1030,7 @@ class ListingForm extends Component {
                 name="state"
                 component={this.StateDropdown}
                 props={{
+                  required,
                   placeholder: formatMessage(messages.state),
                   country
                 }}
@@ -1028,7 +1042,7 @@ class ListingForm extends Component {
                 type="text"
                 name="post_code"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 placeholder={formatMessage(messages.postalCode)}
                 validate={[requiredFieldValidator]}
               />
