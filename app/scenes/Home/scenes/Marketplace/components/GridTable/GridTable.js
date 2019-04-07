@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
+import queryString from 'query-string';
 import { toastr } from 'react-redux-toastr';
 import {
   Table,
@@ -69,10 +70,22 @@ class GridTable extends Component {
       this.props.currency
     );
     this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
-    this.props.gridTableActions.setActivePageGridTable(1);
+
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+    const page = parseInt(query.page, 10);
+    
+    if (!isNaN(page)) {
+      this.props.gridTableActions.setActivePageGridTable(page);
+    } else {
+      this.props.gridTableActions.setActivePageGridTable(1);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+
     if (this.props.data !== nextProps.data ||
         this.props.sortBy !== nextProps.sortBy ||
         this.props.sortDirection !== nextProps.sortDirection ||
@@ -84,7 +97,23 @@ class GridTable extends Component {
         nextProps.currency
       );
       this.props.gridTableActions.setPaginationGridTable(this.props.rowsPerPage);
-      this.props.gridTableActions.setActivePageGridTable(1);
+
+      const page = parseInt(query.page, 10);
+      if (!isNaN(page) && this.props.sortBy === nextProps.sortBy && this.props.sortDirection === nextProps.sortDirection) {
+        this.props.gridTableActions.setActivePageGridTable(page);
+      } else {
+        this.props.gridTableActions.setActivePageGridTable(1);
+      }
+    }
+
+    if (nextProps.marketplace.activePageGridTable !== this.props.marketplace.activePageGridTable) {
+      query.page = nextProps.marketplace.activePageGridTable;
+      const strs = Object.keys(query).map(key => `${key}=${query[key]}`);
+
+      this.props.history.push({
+        pathname: location.pathname,
+        search: `?${strs.join('&')}`
+      });
     }
 
     if (

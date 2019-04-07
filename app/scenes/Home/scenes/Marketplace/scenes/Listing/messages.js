@@ -176,5 +176,9 @@ export default defineMessages({
   phone: {
     id: 'Listing.phone',
     defaultMessage: 'Phone'
-  }
+  },
+  back: {
+    id: 'Listing.back',
+    defaultMessage: 'Back'
+  },
 });

@@ -55,5 +55,6 @@
     "Listing.enterShippingAddress": "Please enter your shipping address", 
     "Listing.highestPrice": "Highest Price",
     "Listing.email": "Email",
-    "Listing.phone": "Phone"
+    "Listing.phone": "Phone",
+    "Listing.back": "Back"
 }

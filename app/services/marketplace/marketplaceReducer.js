@@ -132,12 +132,11 @@ const reducer = handleActions({
     const { activePageGridTable } = state;
     const totalPagesGridTable = getTotalPages(data, rowsPerPageGridTable);
     const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
-
     return {
       ...state,
       totalPagesGridTable,
       rowsPerPageGridTable,
-      gridTableDataFiltered: currentData,
+      gridTableDataFiltered: currentData
     };
   },
   [sortGridTableBy](state, {
@@ -175,12 +174,13 @@ const reducer = handleActions({
   [setActivePageGridTable](state, { payload: { activePageGridTable } }) {
     const data = state.gridTableData;
     if (activePageGridTable !== state.activePageGridTable) {
-      const { rowsPerPageGridTable } = state;
-      const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+      const { rowsPerPageGridTable, totalPagesGridTable } = state;
+      const activePage = activePageGridTable <= totalPagesGridTable ? activePageGridTable : 1;
+      const currentData = sliceData(data, activePage, rowsPerPageGridTable);
 
       return {
         ...state,
-        activePageGridTable,
+        activePageGridTable: activePage,
         gridTableDataFiltered: currentData,
       };
     }
