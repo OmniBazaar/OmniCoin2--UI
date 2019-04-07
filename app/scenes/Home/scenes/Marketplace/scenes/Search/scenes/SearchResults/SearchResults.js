@@ -11,7 +11,7 @@ import Breadcrumb from '../../../../../Marketplace/scenes/Breadcrumb/Breadcrumb'
 import SearchFilters from '../../../../../Marketplace/scenes/SearchFilters/SearchFilters';
 
 import { filterSearchResults, searchListings } from '../../../../../../../../services/search/searchActions';
-import { setActiveCategory } from '../../../../../../../../services/marketplace/marketplaceActions';
+import { setActiveCategory, setActivePageGridTable } from '../../../../../../../../services/marketplace/marketplaceActions';
 
 import './search-results.scss';
 
@@ -92,6 +92,7 @@ class SearchResults extends Component {
     const searchText = searchTerm || '';
     const category = (values && values.category) ? values.category : null;
     const subcategory = (values && values.subcategory) ? values.subcategory : null;
+    this.props.gridTableActions.setActivePageGridTable(1);
     this.props.searchActions.filterSearchResults(searchText, currency, category, subcategory);
   }
 
@@ -232,6 +233,9 @@ export default compose(
         searchListings,
         setActiveCategory,
       }, dispatch),
+      gridTableActions: bindActionCreators({
+        setActivePageGridTable
+      }, dispatch)
     })
   )
 )(injectIntl(SearchResults));
