@@ -15,7 +15,7 @@ export default defineMessages({
   },
   noResult: {
     id: 'GridTable.noResult',
-    defaultMessage: 'No results found.\nPlease select different search terms.\nOr, change your Search Priority to\ninclude a larger geographic area\nor adifferent Publisher. To modify\nyour Search Priority, '
+    defaultMessage: 'No results found.\n\nPlease select different search terms.\nOr, change your Search Priority to\ninclude a larger geographic area\nor adifferent Publisher. To modify\nyour Search Priority, '
   },
   clickHere: {
     id: 'GridTable.clickHere',
