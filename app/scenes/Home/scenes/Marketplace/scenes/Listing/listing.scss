@@ -36,11 +36,16 @@
       flex: $galleryWidth;
       margin-right: 20px;
 
+      .image-gallery-slide-wrapper {
+        max-height: 365px;
+      }
+
       .image-gallery-swipe,
       .image-gallery-slides,
       .image-gallery-image,
       .image-gallery-slide {
-        height: 365px;
+        height: 100%;
+        max-height: 365px;
       }
 
       .image-gallery-slide {
@@ -60,9 +65,16 @@
         }
       }
 
+      .image-gallery-thumbnails-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
       a.image-gallery-thumbnail {
+        display: block;
         width: 100px;
         height: 80px;
+        margin-left: 0 !important;
 
         div {
           width: 100%;
