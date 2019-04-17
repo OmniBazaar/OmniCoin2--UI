@@ -19,6 +19,9 @@ import TagsInput from "../../../../components/TagsInput";
 import PriorityTypes from "../../../../common/SearchPriorityType";
 import TermsAndConditions from "../TermsAndConditions/TermsAndConditions";
 
+import Dropdown from "../../../Home/scenes/Preferences/components/Dropdown";
+import languages from "../../../Home/scenes/Preferences/languages";
+
 import {
   signup,
   showTermsModal
@@ -188,7 +191,8 @@ class SignupForm extends Component {
     this.props.initialize({
       password: `P${key.get_random_key().toWif()}`.substr(0, 45),
       // searchPriority: PriorityTypes.LOCAL_DATA,
-      referrer: this.props.auth.defaultReferrer
+      referrer: this.props.auth.defaultReferrer,
+      language: 'en'
     });
   }
 
@@ -262,7 +266,8 @@ class SignupForm extends Component {
     const {
       username,
       password,
-      referrer
+      referrer,
+      language
       // searchPriority, country, state, city, keywords
     } = values;
 
@@ -278,7 +283,9 @@ class SignupForm extends Component {
       //   keywords
       // },
       null,
-      null
+      null,
+      null,
+      language
     );
   }
 
@@ -629,6 +636,15 @@ class SignupForm extends Component {
           type="text"
           name="referrer"
           component={this.renderReferrerField}
+        />
+        <Field
+          name="language"
+          component={Dropdown}
+          props={{
+            options: languages,
+            className: "language-listings",
+            placeholder: "Choose a language"
+          }}
         />
         {/* {this.renderSearchPriority()} */}
         <div className="menu-item">
