@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import cn from 'classnames';
 
 import { MANUAL_INPUT_VALUE } from "../../../../../../../../../../utils/constants";
 import { getWallets } from '../../../../../../../../../../services/blockchain/bitcoin/bitcoinActions';
@@ -44,9 +45,11 @@ class BitcoinWalletDropdown extends Component {
       key: wallets.length,
     });
 
+    const { required } = this.props;
+
     return (
       <Dropdown
-        className="textfield"
+        className={cn('textfield', {required: required && !value})}
         compact
         selection
         placeholder={this.props.placeholder}

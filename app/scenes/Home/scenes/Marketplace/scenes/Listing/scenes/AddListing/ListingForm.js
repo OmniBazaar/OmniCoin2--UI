@@ -741,6 +741,9 @@ class ListingForm extends Component {
                 component={this.BitcoinWalletDropdown}
                 className="textfield"
                 validate={[requiredFieldValidator]}
+                props={{
+                  required
+                }}
               />
             </Grid.Column>
             {this.props.formValues.bitcoin_address === MANUAL_INPUT_VALUE &&
@@ -748,7 +751,7 @@ class ListingForm extends Component {
                 <Field
                   name="manual_bitcoin_address"
                   component={InputField}
-                  className="textfield"
+                  className="textfield required"
                   validate={[requiredFieldValidator]}
                 />
               </Grid.Column>
@@ -764,7 +767,7 @@ class ListingForm extends Component {
               <Field
                 name="ethereum_address"
                 component={InputField}
-                className="textfield"
+                className="textfield required"
                 validate={[requiredFieldValidator]}
                 onChange={({ target: { value } }) => this.props.accountActions.setEthAddress(value)}
               />
