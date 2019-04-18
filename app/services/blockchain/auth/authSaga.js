@@ -22,7 +22,7 @@ import {
   requestReferrerFinish,
   referralBonus as referralBonusAction,
 } from './authActions';
-import { getFirstReachable } from './services';
+import { getFirstReachable, storeLanguage } from './services';
 import * as AuthApi from './AuthApi';
 import { SubmissionError } from 'redux-form';
 import { getAuthHeaders } from '../../listing/apis';
@@ -122,6 +122,7 @@ function* signup(action) {
     username,
     password,
     referrer,
+    language,
     searchPriorityData
   } = action.payload;
   const { faucets } = (yield select()).default.config;
@@ -165,7 +166,8 @@ function* signup(action) {
     const resJson = yield call([result, 'json']);
     if (result.status === 201) {
       yield put(getAccountAction(username));
-      
+      storeLanguage(username, language);
+
       const currentUser = {username, password};
       const { isWelcomeBonusAvailable } = yield call(AuthApi.isWelcomeBonusAvailable, currentUser, { harddriveId, macAddress });
       yield put({
