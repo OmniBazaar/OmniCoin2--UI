@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "子类别",
+    "ImportedFilesTable.category": "类别",
+    "ImportedFilesTable.currency": "货币",
+    "ImportedFilesTable.listingType": "清单类型",
+    "ImportedFilesTable.price": "价格",
+    "ImportedFilesTable.title": "标题",
+    "ImportedFilesTable.description": "说明",
+    "ImportedFilesTable.contactType": "联系人类型",
+    "ImportedFilesTable.contactInfo": "联系信息"
 }

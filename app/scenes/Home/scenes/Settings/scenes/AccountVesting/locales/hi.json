@@ -1,5 +1,5 @@
 {
-    "AccountVesting.success": "Success", 
-    "AccountVesting.error": "Error", 
-    "AccountVesting.noVestings": "You have no vesting balances."
+    "AccountVesting.success": "सफल",
+    "AccountVesting.error": "त्रुटी",
+    "AccountVesting.noVestings": "आपके पास कोई निहित संतुलन नहीं है। "
 }

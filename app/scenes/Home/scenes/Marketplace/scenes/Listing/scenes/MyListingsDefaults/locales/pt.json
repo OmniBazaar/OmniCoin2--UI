@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "SALVAR PADRÕES",
+    "ListingsDefaults.listingDefaults": "Padrões de Listagem",
+    "ListingsDefaults.saveListingSuccessMessage": "Padrões de listagem foram salvos com sucesso.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Sucesso",
+    "ListingsDefaults.myListings": "Minhas Listagens"
 }

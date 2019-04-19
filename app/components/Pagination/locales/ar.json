@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": " < التالي ",
+    "Pagination.ariaFirst": " الصنف الأول",
+    "Pagination.contentFirst": "الأول >>",
+    "Pagination.ariaNext": "الصنف التالي",
+    "Pagination.ariaPrev": " الصنف السابق",
+    "Pagination.contentPrev": "السابق >",
+    "Pagination.ariaLast": "الصنف الأخير",
+    "Pagination.contentLast": "الأخير >>"
 }

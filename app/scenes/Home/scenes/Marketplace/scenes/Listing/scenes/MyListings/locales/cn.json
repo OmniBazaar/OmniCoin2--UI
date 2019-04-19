@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "市场",
+    "MyListings.myListings": "我的清单",
+    "MyListings.lowestPrice": "最低的价格",
+    "MyListings.highestPrice": "最高的价格",
+    "MyListings.byDate": "按日期",
+    "MyListings.allCategories": "所有类别"
 }

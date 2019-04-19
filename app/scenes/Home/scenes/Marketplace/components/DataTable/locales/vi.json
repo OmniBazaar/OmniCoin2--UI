@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "XEM",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "Mặc định",
+    "DataTable.successSave": "Lưu thành công",
+    "DataTable.search": "Tìm kiếm",
+    "DataTable.successDelete": "Xóa thành công",
+    "DataTable.date": "Ngày",
+    "DataTable.success": "Thành công",
+    "DataTable.delete": "XÓA",
+    "DataTable.save": "LƯU",
+    "DataTable.error": "Lỗi"
 }

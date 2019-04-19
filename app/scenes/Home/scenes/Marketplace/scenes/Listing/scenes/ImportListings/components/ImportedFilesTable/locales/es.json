@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Subcategoría",
+    "ImportedFilesTable.category": "Categoría",
+    "ImportedFilesTable.currency": "Divisa",
+    "ImportedFilesTable.listingType": "Tipo de listado",
+    "ImportedFilesTable.price": "Precio",
+    "ImportedFilesTable.title": "Título",
+    "ImportedFilesTable.description": "Descripción",
+    "ImportedFilesTable.contactType": "Tipo de contacto",
+    "ImportedFilesTable.contactInfo": "Información de contacto"
 }

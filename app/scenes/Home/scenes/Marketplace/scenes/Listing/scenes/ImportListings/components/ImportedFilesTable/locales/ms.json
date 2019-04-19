@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Sub-Kategori",
+    "ImportedFilesTable.category": "Kategori",
+    "ImportedFilesTable.currency": "Mata Wang",
+    "ImportedFilesTable.listingType": "Jenis Penyenaraian",
+    "ImportedFilesTable.price": "Harga",
+    "ImportedFilesTable.title": "Tajuk",
+    "ImportedFilesTable.description": "Penerangan",
+    "ImportedFilesTable.contactType": "Jenis Hubungan",
+    "ImportedFilesTable.contactInfo": "Maklumat Hubungan"
 }

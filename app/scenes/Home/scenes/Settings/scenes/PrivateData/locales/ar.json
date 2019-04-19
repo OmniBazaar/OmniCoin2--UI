@@ -1,13 +1,13 @@
 {
-    "PrivateData.update": "Update", 
-    "PrivateData.apply": "APPLY", 
-    "PrivateData.byCategoryType": "By Category / Type", 
-    "PrivateData.country": "Country", 
-    "PrivateData.updateSuccess": "Successfully updated", 
-    "PrivateData.notPublisherYet": "You are not a publisher yet.", 
-    "PrivateData.city": "City", 
-    "PrivateData.localArea": "Local Area", 
-    "PrivateData.startTyping": "Start typing...", 
-    "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.", 
+    "PrivateData.update": "تحديث",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "تم التحديث بنجاح ",
+    "PrivateData.notPublisherYet": "أنت لست ناشرًا بعد",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "نحتاج إلى المعلومات التالية حتى نتمكن من ربطك مع ناشر القوائم الذي يتوافق مع اهتماماتك.",
     "PrivateData.publisherName": "Specific publisher Name"
 }

@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "Pazar yeri",
+    "MyListings.myListings": "İlanlarım",
+    "MyListings.lowestPrice": "En Düşük Fiyat",
+    "MyListings.highestPrice": "En Yüksek Fiyat",
+    "MyListings.byDate": "Tarihe göre",
+    "MyListings.allCategories": "Tüm Kategoriler"
 }

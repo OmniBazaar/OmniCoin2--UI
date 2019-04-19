@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "Sonraki>",
+    "Pagination.ariaFirst": "İlk Ürün",
+    "Pagination.contentFirst": "<< İlk",
+    "Pagination.ariaNext": "Sıradaki eşya",
+    "Pagination.ariaPrev": "Önceki Ürün",
+    "Pagination.contentPrev": "< Önceki",
+    "Pagination.ariaLast": "Son Ürün",
+    "Pagination.contentLast": "Son >>"
 }

@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "에게 {proposedTime}.",
+    "MyEscrowProposals.you": "귀하",
+    "MyEscrowProposals.error": "에러",
+    "MyEscrowProposals.success": "성공",
+    "MyEscrowProposals.proposalText": "{initiator} 에스크로 거래 만료시간 연장제안",
+    "MyEscrowProposals.approve": "승인하다.",
+    "MyEscrowProposals.approveSuccess": "요청이 성공적으로 승인되었습니다."
 }

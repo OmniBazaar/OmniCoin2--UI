@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "기본값으로 저장",
+    "ListingsDefaults.listingDefaults": "기본 설정 목록",
+    "ListingsDefaults.saveListingSuccessMessage": "목록 기본설정이 성공적으로 저장되었습니다.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "성공",
+    "ListingsDefaults.myListings": "나의 목록"
 }

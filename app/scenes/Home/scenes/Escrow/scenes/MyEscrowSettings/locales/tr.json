@@ -1,9 +1,9 @@
 {
-    "MyEscrowSettings.error": "Error", 
-    "MyEscrowSettings.secondCategory": "Any user I vote for as Transaction Processor", 
-    "MyEscrowSettings.firstCategory": "Any user I give a positive reputation rating", 
-    "MyEscrowSettings.saved": "Successfully saved", 
-    "MyEscrowSettings.save": "SAVE SETTINGS", 
-    "MyEscrowSettings.title": "I approve the following categories of users to be escrow agents for my transactions:", 
-    "MyEscrowSettings.thirdCategory": "Any top participant who is an Active Transaction Processor"
+    "MyEscrowSettings.error": "Hata",
+    "MyEscrowSettings.secondCategory": "İşlem İşlemcisi olarak oy kullandığım kullanıcılar",
+    "MyEscrowSettings.firstCategory": "Olumlu bir itibar derecesi verdiğim herhangi bir kullanıcı",
+    "MyEscrowSettings.saved": "Başarıyla kaydedildi",
+    "MyEscrowSettings.save": "AYARLARI KAYDET",
+    "MyEscrowSettings.title": "İşlemlerim için emanet aracısı olmak üzere aşağıdaki kullanıcı kategorilerini onaylıyorum:",
+    "MyEscrowSettings.thirdCategory": "Aktif İşlem İşlemcisi olan herhangi bir üst katılımcı"
 }

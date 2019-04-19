@@ -1,7 +1,7 @@
 {
-    "Latency.low": "Latency.low", 
-    "Latency.milliseconds": "{latency} ms", 
-    "Latency.seconds": "{latency} s", 
-    "Latency.high": "Latency.high", 
-    "Latency.medium": "Latency.medium"
+    "Latency.low": "विलम्ब.निम्न",
+    "Latency.milliseconds": "{latency} ms",
+    "Latency.seconds": "{latency} s",
+    "Latency.high": "विलम्ब.उच्च",
+    "Latency.medium": "विलम्ब.माध्यम"
 }

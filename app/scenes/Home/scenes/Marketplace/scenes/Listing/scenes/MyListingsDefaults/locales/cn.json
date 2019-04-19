@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "保存故障",
+    "ListingsDefaults.listingDefaults": "清单错误",
+    "ListingsDefaults.saveListingSuccessMessage": "成功保存了清单默认值。",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "成功",
+    "ListingsDefaults.myListings": "我的清单"
 }

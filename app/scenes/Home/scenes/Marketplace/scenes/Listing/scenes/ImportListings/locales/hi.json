@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "सभी हटाएं",
+    "ImportListings.onlyTextFileMsg": "केवल TXT फ़ाइलों की अनुमति है।",
+    "ImportListings.warning": "चेतावनी",
+    "ImportListings.addFiles": "फाइलें जोड़ो",
+    "ImportListings.importListings": "आयात सूचियाँ",
+    "ImportListings.myListings": "मेरी सूची",
+    "ImportListings.ok": "ठीक",
+    "ImportListings.listingsVendor": "सूची विक्रेता",
+    "ImportListings.importedData": "आयातित डेटा",
+    "ImportListings.files": "फ़ाइलें",
+    "ImportListings.filesToImport": "आयात करने के लिए फ़ाइलें"
 }

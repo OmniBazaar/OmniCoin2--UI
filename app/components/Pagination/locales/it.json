@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "Prossimo >",
+    "Pagination.ariaFirst": "Primo oggetto",
+    "Pagination.contentFirst": "<< Primo",
+    "Pagination.ariaNext": "Prossimo oggetto",
+    "Pagination.ariaPrev": "Oggetto precedente",
+    "Pagination.contentPrev": "< Precedente",
+    "Pagination.ariaLast": "Ultimo oggetto",
+    "Pagination.contentLast": "Ultimo >>"
 }

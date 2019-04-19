@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "to {proposedTime}.",
+    "MyEscrowProposals.you": "Usted",
+    "MyEscrowProposals.error": "Error",
+    "MyEscrowProposals.success": "Éxito",
+    "MyEscrowProposals.proposalText": "{initiator} propuso extender el plazo para confirmar la transacción de depósito en garantía",
+    "MyEscrowProposals.approve": "Apruébelo",
+    "MyEscrowProposals.approveSuccess": "La propuesta se aprobó con éxito"
 }

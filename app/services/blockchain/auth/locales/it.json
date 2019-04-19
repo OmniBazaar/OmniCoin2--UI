@@ -1,4 +1,9 @@
 {
-    "AuthService.invalidPassword": "Invalid password", 
-    "AuthService.noAccount": "Account doesn't exist"
+    "AuthService.invalidTelegramPhoneNumber": "Non è stato possibile verificare il nome utente nel nostro canale Telegram.",
+    "AuthService.invalidMailChimpEmail": "Non è stato possibile verificare la tua iscrizione via email alla nostra newsletter.",
+    "AuthService.invalidTwitterUsername": "Non è stato possibile verificare che il nome utente sia un follower su Twitter.",
+    "AuthService.invalidUsername": "Utilizzare solo caratteri alfanumerici in minuscolo, trattini e punti. I nomi utente devono iniziare con una lettera e non possono finire con un trattino.",
+    "AuthService.noAccount": "L'account non esiste",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "Password non valida"
 }

@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "投票",
+    "Settings.processor": "处理者",
+    "Settings.currentVotes": "目前的投票",
+    "Settings.vote": "投票",
+    "Settings.votes": "投票 (XOM)",
+    "Settings.approval": "批准"
 }

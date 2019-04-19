@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "Erro ao conectar",
+    "ExistingEthereumWallet.pleaseEnter": "Por favor Enter",
+    "ExistingEthereumWallet.enterBrainKey": "Entre com chave Brain",
+    "NewEthereumWallet.chooseOption": "Selecione método para adicionar carteira:",
+    "ExistingEthereumWallet.cancel": "CANCELAR",
+    "ExistingEthereumWallet.connect": "CONECTAR",
+    "NewEthereumWallet.usingPrivateKey": "Utilize a Chave Privada",
+    "NewEthereumWallet.connectErrorMessage": "Ocorreu um erro ao conectar carteira",
+    "NewEthereumWallet.usingBrainKey": "Utilize a chave Brain",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

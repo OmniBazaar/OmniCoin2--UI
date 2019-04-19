@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "SIMPAN SECARA DEFAULT",
+    "ListingsDefaults.listingDefaults": "Daftar secara Default",
+    "ListingsDefaults.saveListingSuccessMessage": "Daftar Default berhasil disimpan.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Sukses",
+    "ListingsDefaults.myListings": "Daftar Saya"
 }

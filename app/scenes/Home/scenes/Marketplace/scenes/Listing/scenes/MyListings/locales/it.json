@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "Marketplace",
+    "MyListings.myListings": "I miei annunci",
+    "MyListings.lowestPrice": "Prezzo più basso",
+    "MyListings.highestPrice": "Prezzo più alto",
+    "MyListings.byDate": "Per data",
+    "MyListings.allCategories": "Tutte le categorie"
 }

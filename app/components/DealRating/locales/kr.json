@@ -1,5 +1,5 @@
 {
-    "DealRating.great": "GREAT!", 
-    "DealRating.awful": "AWFUL", 
-    "DealRating.neutral": "NEUTRAL"
+    "DealRating.great": "대단해요!",
+    "DealRating.awful": "형편없음",
+    "DealRating.neutral": "중립적"
 }

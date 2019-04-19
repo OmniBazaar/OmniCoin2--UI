@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": "Introduceți numele dvs. de utilizator",
+    "LoginForm.error": "Eroare",
+    "LoginForm.signup": "Înscrie-te",
+    "LoginForm.unlock": "Deblocare",
+    "LoginForm.connectionDoesntExist": "Nu există conexiune la internet. Conectați-vă la internet și încercați din nou.",
+    "LoginForm.accountDoesntExist": "Contul nu există",
+    "LoginForm.enterPassword": "Introduceți parola",
+    "LoginForm.noAccount": "Nu aveți încă un cont?",
+    "LoginForm.fieldRequired": "Acest câmp este necesar"
 }

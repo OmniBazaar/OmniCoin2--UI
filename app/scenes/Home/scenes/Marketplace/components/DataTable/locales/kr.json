@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "보기",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "기본 설정",
+    "DataTable.successSave": "성공적으로 저장됨",
+    "DataTable.search": "검색",
+    "DataTable.successDelete": "성공적으로 삭제됨",
+    "DataTable.date": "일",
+    "DataTable.success": "성공",
+    "DataTable.delete": "삭제",
+    "DataTable.save": "저장",
+    "DataTable.error": "에러"
 }

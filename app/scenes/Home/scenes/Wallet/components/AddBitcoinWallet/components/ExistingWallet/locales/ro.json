@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "An error occurred while connecting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "CANCEL",
+    "ExistingWallet.pleaseEnter": "Vă rugăm să introduceți",
+    "ExistingWallet.connect": "CONNECT",
+    "NewWallet.connectErrorMessage": "A apărut o eroare la conectarea portofelului",
+    "ExistingWallet.enterPassword": "Introduceți parola pentru accesul la cont",
+    "ExistingWallet.walletGuid": "GUID pentru Wallet",
+    "ExistingWallet.ipError": "Acest portofel a fost creat pe un ip diferit. Vă rugăm să introduceți în lista de adrese {ip} în blocchain.info.",
+    "NewWallet.connectErrorTitle": "Eroare Conexiune"
 }

@@ -1,13 +1,13 @@
 {
-    "PrivateData.update": "Update", 
-    "PrivateData.apply": "APPLY", 
-    "PrivateData.byCategoryType": "By Category / Type", 
-    "PrivateData.country": "Country", 
-    "PrivateData.updateSuccess": "Successfully updated", 
-    "PrivateData.notPublisherYet": "You are not a publisher yet.", 
-    "PrivateData.city": "City", 
-    "PrivateData.localArea": "Local Area", 
-    "PrivateData.startTyping": "Start typing...", 
-    "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.", 
+    "PrivateData.update": "업데이트",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "성공적으로 업데이트 됨",
+    "PrivateData.notPublisherYet": "귀하는 아직 게시자가 아닙니다.",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "귀하의 관심분야와 맞는 업체와 연결하기 위해서는 다음의 정보가 필요합니다.",
     "PrivateData.publisherName": "Specific publisher Name"
 }

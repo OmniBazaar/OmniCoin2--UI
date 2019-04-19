@@ -1,5 +1,5 @@
 {
-    "BitcoinWalletDetail.currentBalance": "Current Balance", 
-    "BitcoinWalletDetail.wallet": "Wallet", 
-    "BitcoinWalletDetail.guid": "Wallet GUID:"
+    "BitcoinWalletDetail.currentBalance": "Geçerli Bakiye",
+    "BitcoinWalletDetail.wallet": "Cüzdan",
+    "BitcoinWalletDetail.guid": "Cüzdan GUID'i:"
 }

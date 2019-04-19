@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "连接中...",
+    "ChainFooter.block": "区块",
+    "ChainFooter.noConnection": "无连接",
+    "ChainFooter.refresh": "刷新"
 }

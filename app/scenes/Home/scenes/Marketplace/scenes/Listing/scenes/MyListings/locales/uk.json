@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "Ринок",
+    "MyListings.myListings": "Мої лоти",
+    "MyListings.lowestPrice": "Найнижча ціна",
+    "MyListings.highestPrice": "Найвища ціна",
+    "MyListings.byDate": "По даті",
+    "MyListings.allCategories": "Всі категорії"
 }

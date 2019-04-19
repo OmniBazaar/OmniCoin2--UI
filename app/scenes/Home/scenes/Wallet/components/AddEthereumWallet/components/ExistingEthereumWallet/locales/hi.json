@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "कनेक्ट त्रुटि",
+    "ExistingEthereumWallet.pleaseEnter": "कृपया दर्ज करें",
+    "ExistingEthereumWallet.enterBrainKey": "वॉलेट ब्रेन कुंजी दर्ज करें",
+    "NewEthereumWallet.chooseOption": "वॉलेट जोड़ने के लिए विधि का चयन करें:",
+    "ExistingEthereumWallet.cancel": "रद्द करे",
+    "ExistingEthereumWallet.connect": "जोड़ना",
+    "NewEthereumWallet.usingPrivateKey": "निजी कुंजी का उपयोग करें",
+    "NewEthereumWallet.connectErrorMessage": "वॉलेट जोड़ते  समय एक त्रुटि हुई।",
+    "NewEthereumWallet.usingBrainKey": "ब्रेन कुंजी का प्रयोग करें",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

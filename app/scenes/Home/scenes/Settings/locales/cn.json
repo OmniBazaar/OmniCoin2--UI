@@ -1,13 +1,13 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "账户 ID ",
+    "Settings.recentTransactions": "最近的交易",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "注册",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "公共数据",
+    "Settings.account": "账户",
+    "Settings.currentBalance": "目前的余额",
+    "Settings.privateData": "私人数据",
+    "Settings.vestingBalances": "特别保护权余额"
 }

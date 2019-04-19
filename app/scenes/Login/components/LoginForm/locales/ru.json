@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": "Введите Ваше имя пользователя",
+    "LoginForm.error": "Ошибка",
+    "LoginForm.signup": "Зарегистрироваться",
+    "LoginForm.unlock": "Разблокировать",
+    "LoginForm.connectionDoesntExist": "Нет подключения к интернету. Пожалуйста, подключитесь к интернету и попробуйте снова.",
+    "LoginForm.accountDoesntExist": "Учетная запись не существует",
+    "LoginForm.enterPassword": "Введите пароль",
+    "LoginForm.noAccount": "У вас еще нет учетной записи?",
+    "LoginForm.fieldRequired": "Это обязательное поле"
 }

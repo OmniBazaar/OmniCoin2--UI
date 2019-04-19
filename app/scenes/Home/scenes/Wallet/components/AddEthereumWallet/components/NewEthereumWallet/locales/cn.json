@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "创建新的以太坊钱包",
+    "NewEthereumWallet.success": "成功",
+    "NewEthereumWallet.successMessage": "钱包添加成功。",
+    "NewEthereumWallet.createWallet": "创建钱包",
+    "NewEthereumWallet.cancel": "取消",
+    "NewEthereumWallet.error": "错误"
 }

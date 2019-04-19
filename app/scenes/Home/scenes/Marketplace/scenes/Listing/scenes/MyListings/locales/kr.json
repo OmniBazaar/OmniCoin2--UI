@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "마켓플레이스",
+    "MyListings.myListings": "나의 목록",
+    "MyListings.lowestPrice": "최저가",
+    "MyListings.highestPrice": "최고가",
+    "MyListings.byDate": "날짜별로",
+    "MyListings.allCategories": "모든 카테고리"
 }

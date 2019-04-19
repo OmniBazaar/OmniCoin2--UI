@@ -1,5 +1,5 @@
 {
-    "SettingsMenu.preferences": "Preferences", 
-    "SettingsMenu.logout": "Logout", 
-    "SettingsMenu.accountSettings": "Account Settings"
+    "SettingsMenu.preferences": "환경설정",
+    "SettingsMenu.logout": "로그아웃",
+    "SettingsMenu.accountSettings": "계정 설정"
 }

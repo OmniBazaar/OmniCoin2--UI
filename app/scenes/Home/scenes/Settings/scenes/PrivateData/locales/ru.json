@@ -1,13 +1,13 @@
 {
-    "PrivateData.update": "Update", 
-    "PrivateData.apply": "APPLY", 
-    "PrivateData.byCategoryType": "By Category / Type", 
-    "PrivateData.country": "Country", 
-    "PrivateData.updateSuccess": "Successfully updated", 
-    "PrivateData.notPublisherYet": "You are not a publisher yet.", 
-    "PrivateData.city": "City", 
-    "PrivateData.localArea": "Local Area", 
-    "PrivateData.startTyping": "Start typing...", 
-    "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.", 
+    "PrivateData.update": "Обновить",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "Успешно обновлено",
+    "PrivateData.notPublisherYet": "Вы еще не издатель.",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "Нам нужна следующая информация, чтобы мы могли связать вас с издателем листингов, которые соответствуют вашим интересам.",
     "PrivateData.publisherName": "Specific publisher Name"
 }

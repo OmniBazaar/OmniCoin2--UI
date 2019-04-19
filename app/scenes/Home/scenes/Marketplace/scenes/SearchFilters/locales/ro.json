@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "Subcategorie",
+    "SearchFilters.category": "Categorie",
+    "SearchFilters.search": "Căutare",
+    "SearchFilters.currency": "Moneda"
 }

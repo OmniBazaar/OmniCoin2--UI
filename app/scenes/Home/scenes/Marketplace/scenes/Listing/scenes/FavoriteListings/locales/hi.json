@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "बाज़ार",
+    "FavoriteListings.favoriteListings": "पसंदीदा सूची",
+    "FavoriteListings.byDate": "तिथि के अनुसार",
+    "FavoriteListings.lowestPrice": "निम्नतम मूल्य",
+    "FavoriteListings.highestPrice": "सबसे ज़्यादा कीमत"
 }

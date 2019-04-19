@@ -1,6 +1,6 @@
 {
-    "AddEthereumAddress.createWallet": "ADD", 
-    "AddEthereumAddress.pleaseEnter": "Please enter", 
-    "AddEthereumAddress.cancel": "CANCEL", 
-    "AddEthereumAddress.label": "Label (optional)"
+    "AddEthereumAddress.createWallet": "添加",
+    "AddEthereumAddress.pleaseEnter": "请输入",
+    "AddEthereumAddress.cancel": "取消",
+    "AddEthereumAddress.label": "标签 (可选)"
 }

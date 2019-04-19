@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "Ринок",
+    "FavoriteListings.favoriteListings": "Улюблені лоти",
+    "FavoriteListings.byDate": "По даті",
+    "FavoriteListings.lowestPrice": "Найнижча ціна",
+    "FavoriteListings.highestPrice": "Найвища ціна"
 }

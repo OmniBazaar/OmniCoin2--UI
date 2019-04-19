@@ -1,6 +1,6 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "معاملات ايسكرو الخاصة بي  ",
+    "Escrow.agents": "وكاء ايسكرو الخاصيين بي",
+    "Escrow.escrow": "ايسكرو",
+    "Escrow.settings": "اعدادات الايسكرو الخاصة بي"
 }

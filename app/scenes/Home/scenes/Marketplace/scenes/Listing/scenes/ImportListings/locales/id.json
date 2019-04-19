@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "HAPUS SEMUA",
+    "ImportListings.onlyTextFileMsg": "Hanya file TXT yang diizinkan.",
+    "ImportListings.warning": "Peringatan",
+    "ImportListings.addFiles": "TAMBAH FILE",
+    "ImportListings.importListings": "Impor Daftar",
+    "ImportListings.myListings": "Daftar Saya",
+    "ImportListings.ok": "Okay",
+    "ImportListings.listingsVendor": "Daftar Vendor",
+    "ImportListings.importedData": "Data yang Diimpor",
+    "ImportListings.files": "File",
+    "ImportListings.filesToImport": "File yang  di Impor"
 }

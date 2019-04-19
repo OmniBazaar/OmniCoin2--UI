@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
-    "Processors.error": "Error"
+    "Processors.standbyProcessors": "备用处理器",
+    "Processors.voteSuccess": "你投票成功!",
+    "Processors.topProcessors": "活跃的处理者",
+    "Processors.success": "成功",
+    "Processors.error": "错误"
 }

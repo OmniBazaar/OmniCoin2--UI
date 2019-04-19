@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "देखे ",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "डिफाल्ट",
+    "DataTable.successSave": "सफलतापूर्वक संचित कर लिया गया है",
+    "DataTable.search": "खोज",
+    "DataTable.successDelete": "सफलतापूर्वक हटा दिया गया",
+    "DataTable.date": "दिनांक",
+    "DataTable.success": "सफल",
+    "DataTable.delete": "हटाना",
+    "DataTable.save": "सुरक्षित",
+    "DataTable.error": "त्रुटी"
 }

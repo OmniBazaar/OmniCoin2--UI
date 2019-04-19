@@ -1,13 +1,13 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "ID Akaun",
+    "Settings.recentTransactions": "Transaksi terkini",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "BERDAFTAR",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "Data Awam",
+    "Settings.account": "Akaun",
+    "Settings.currentBalance": "Baki Semasa",
+    "Settings.privateData": "Data Peribadi",
+    "Settings.vestingBalances": "Baki peletakhakan"
 }

@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "Pazar Alanı",
+    "FavoriteListings.favoriteListings": "Favori İlanlarım",
+    "FavoriteListings.byDate": "Tarihe göre",
+    "FavoriteListings.lowestPrice": "En Düşük Fiyat",
+    "FavoriteListings.highestPrice": "En Yüksek Fiyat"
 }

@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "उप-श्रेणी",
+    "ImportedFilesTable.category": "श्रेणी",
+    "ImportedFilesTable.currency": "मुद्रा",
+    "ImportedFilesTable.listingType": "सूचीकरण प्रकार",
+    "ImportedFilesTable.price": "मूल्य",
+    "ImportedFilesTable.title": "शीर्षक",
+    "ImportedFilesTable.description": "विवरण",
+    "ImportedFilesTable.contactType": "संपर्क प्रकार",
+    "ImportedFilesTable.contactInfo": "संपर्क सूचना"
 }

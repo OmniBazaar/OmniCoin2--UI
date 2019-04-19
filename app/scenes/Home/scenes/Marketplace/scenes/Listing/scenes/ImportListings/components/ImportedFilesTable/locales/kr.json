@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "하위 카테고리",
+    "ImportedFilesTable.category": "카테고리",
+    "ImportedFilesTable.currency": "화폐",
+    "ImportedFilesTable.listingType": "목록 유형",
+    "ImportedFilesTable.price": "가격",
+    "ImportedFilesTable.title": "제목",
+    "ImportedFilesTable.description": "설명",
+    "ImportedFilesTable.contactType": "접속 유형",
+    "ImportedFilesTable.contactInfo": "연락처 정보"
 }

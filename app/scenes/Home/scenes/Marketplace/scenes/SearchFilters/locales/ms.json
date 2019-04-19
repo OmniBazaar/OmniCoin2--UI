@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "Sub-kategori",
+    "SearchFilters.category": "Kategori",
+    "SearchFilters.search": "Cari",
+    "SearchFilters.currency": "Mata Wang"
 }

@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "GÖR",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "Varsayılan",
+    "DataTable.successSave": "Başarıyla kaydedildi",
+    "DataTable.search": "Arama",
+    "DataTable.successDelete": "Başarıyla Silindi",
+    "DataTable.date": "Tarih",
+    "DataTable.success": "bAŞARI",
+    "DataTable.delete": "SİL",
+    "DataTable.save": "KAYDET",
+    "DataTable.error": "Hata"
 }

@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "السوق",
+    "FavoriteListings.favoriteListings": "القوائم المفضلة",
+    "FavoriteListings.byDate": " بواسطة التاريخ",
+    "FavoriteListings.lowestPrice": "أقل سعراً",
+    "FavoriteListings.highestPrice": "اعلى سعر"
 }

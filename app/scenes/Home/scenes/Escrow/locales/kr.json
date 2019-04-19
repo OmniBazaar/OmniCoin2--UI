@@ -1,6 +1,6 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "나의 에스크로 거래",
+    "Escrow.agents": "나의 에스크로 중개인",
+    "Escrow.escrow": "에스크로",
+    "Escrow.settings": "나의 에스크로 세팅"
 }

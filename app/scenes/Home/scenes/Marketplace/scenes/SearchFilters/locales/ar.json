@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "مجموعة فرعية",
+    "SearchFilters.category": "المجموعة",
+    "SearchFilters.search": "بحث",
+    "SearchFilters.currency": "العملة"
 }

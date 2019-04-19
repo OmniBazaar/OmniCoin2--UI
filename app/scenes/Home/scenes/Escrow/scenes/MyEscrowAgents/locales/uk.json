@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "Помилка",
+    "MyEscrowAgents.agentsApproved": "Агенти успішно затверджено",
+    "MyEscrowAgents.clear": "Очистити",
+    "MyEscrowAgents.approve": "Затвердити",
+    "MyEscrowAgents.search": "Пошук",
+    "MyEscrowAgents.user": "Користувач",
+    "MyEscrowAgents.approveChanges": "Прийняти зміни",
+    "MyEscrowAgents.insufficientBalance": "У вашому гаманці не достатньо грошей."
 }

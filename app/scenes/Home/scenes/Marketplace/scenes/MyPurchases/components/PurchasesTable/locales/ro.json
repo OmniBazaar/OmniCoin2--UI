@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Preț",
+    "PurchasesTable.publisher": "Publisher",
+    "PurchasesTable.expirationTime": "Timp de expirare",
+    "PurchasesTable.count": "Count",
+    "PurchasesTable.title": "Titlu",
+    "PurchasesTable.date": "Data",
+    "PurchasesTable.seller": "Vânzător",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "Lista nu este disponibilă",
+    "PurchasesTable.buyer": "Cumpărător"
 }

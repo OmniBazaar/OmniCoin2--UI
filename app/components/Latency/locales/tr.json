@@ -1,7 +1,7 @@
 {
-    "Latency.low": "Latency.low", 
-    "Latency.milliseconds": "{latency} ms", 
-    "Latency.seconds": "{latency} s", 
-    "Latency.high": "Latency.high", 
-    "Latency.medium": "Latency.medium"
+    "Latency.low": "düşük.gecikme",
+    "Latency.milliseconds": "{latency} ms",
+    "Latency.seconds": "{gecikme} s",
+    "Latency.high": "Yüksek.gecikme",
+    "Latency.medium": "Gecikme.ortalama"
 }

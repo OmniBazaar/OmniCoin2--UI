@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "السوق",
+    "MyListings.myListings": "قوائمي",
+    "MyListings.lowestPrice": "أقل سعر",
+    "MyListings.highestPrice": "أعلى سعر",
+    "MyListings.byDate": "بواسطة التاريخ",
+    "MyListings.allCategories": "كل المجموعات"
 }

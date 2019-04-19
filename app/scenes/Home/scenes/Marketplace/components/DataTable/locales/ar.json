@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "عرض",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "افتراضي",
+    "DataTable.successSave": "تم الحفظ بنجاح",
+    "DataTable.search": "بحث",
+    "DataTable.successDelete": "تم الحذف بنجاح",
+    "DataTable.date": "التاريخ",
+    "DataTable.success": "نجاح",
+    "DataTable.delete": "حذف",
+    "DataTable.save": "حفظ",
+    "DataTable.error": "خطأ"
 }

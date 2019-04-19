@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "하위 카테고리",
+    "SearchFilters.category": "카테고리",
+    "SearchFilters.search": "검색",
+    "SearchFilters.currency": "화폐"
 }

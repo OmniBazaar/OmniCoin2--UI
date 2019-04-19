@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "에러",
+    "MyEscrowAgents.agentsApproved": "중개인으로써 성공적으로 승인되었습니다.",
+    "MyEscrowAgents.clear": "확실한",
+    "MyEscrowAgents.approve": "승인",
+    "MyEscrowAgents.search": "검색",
+    "MyEscrowAgents.user": "유저",
+    "MyEscrowAgents.approveChanges": "변경 승인",
+    "MyEscrowAgents.insufficientBalance": "지갑의 잔고가 부족합니다."
 }

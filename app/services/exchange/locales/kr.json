@@ -1,5 +1,5 @@
 {
-    "ExchangeService.exchangeBodyETH": "You requested {xomAmount} XOM for {cryptoAmount} ETH.\n Transaction hash: {txid}", 
-    "ExchangeService.exchange": "Exchange Request", 
-    "ExchangeService.exchangeBodyBTC": "You requested {xomAmount} XOM for {cryptoAmount} BTC.\n Transaction id: {txid}"
+    "ExchangeService.exchangeBodyETH": "귀하는 {xomAmount} XOM을 {cryptoAmount} ETH로 바꾸길 요청했습니다.\n 트랜잭션 해쉬: {txid}",
+    "ExchangeService.exchange": "교환요청",
+    "ExchangeService.exchangeBodyBTC": "당신은 {xomAmount} XOM를 {cryptoAmount} BTC로 바꾸길 원합니다.\n 트랜잭션 id: {txid}"
 }

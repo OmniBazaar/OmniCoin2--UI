@@ -1,13 +1,13 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "જુઓ",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "ડિફૉલ્ટ",
+    "DataTable.successSave": "સફળતાપૂર્વક સાચવ્યું",
+    "DataTable.search": "શોધો",
+    "DataTable.successDelete": "સફળતાપૂર્વક કાઢી નાખ્યું",
+    "DataTable.date": "તારીખ",
+    "DataTable.success": "સફળ",
+    "DataTable.delete": "કાઢી નાખો",
+    "DataTable.save": "સાચવો",
+    "DataTable.error": "ભૂલ"
 }

@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "错误",
+    "MyEscrowAgents.agentsApproved": "代理已成功批准",
+    "MyEscrowAgents.clear": "清除",
+    "MyEscrowAgents.approve": "赞成",
+    "MyEscrowAgents.search": "搜索",
+    "MyEscrowAgents.user": "用户",
+    "MyEscrowAgents.approveChanges": "同意更改",
+    "MyEscrowAgents.insufficientBalance": "你的钱包里没有足够的钱。"
 }

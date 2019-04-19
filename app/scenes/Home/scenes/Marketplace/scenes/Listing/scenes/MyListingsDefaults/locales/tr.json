@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "VARSAYILANLARI KAYDET",
+    "ListingsDefaults.listingDefaults": "İlan Varsayılanları",
+    "ListingsDefaults.saveListingSuccessMessage": "İlan Varsayılanları başarıyla kaydedildi.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Başarı",
+    "ListingsDefaults.myListings": "İlanlarım"
 }

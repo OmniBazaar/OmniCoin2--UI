@@ -1,4 +1,4 @@
 {
-    "MyPurchases.bought": "BOUGHT", 
-    "MyPurchases.sold": "SOLD"
+    "MyPurchases.bought": "已买",
+    "MyPurchases.sold": "已出售"
 }

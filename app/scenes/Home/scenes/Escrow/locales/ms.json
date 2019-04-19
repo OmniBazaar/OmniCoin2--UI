@@ -1,6 +1,6 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "Escrow Transaksi saya",
+    "Escrow.agents": "Ejen Escrow saya",
+    "Escrow.escrow": "Escrow",
+    "Escrow.settings": "Tetapan Escrow saya"
 }

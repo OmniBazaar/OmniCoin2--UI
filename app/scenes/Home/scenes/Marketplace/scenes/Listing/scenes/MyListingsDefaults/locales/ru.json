@@ -1,8 +1,8 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "СОХРАНИТЬ ПО УМОЛЧАНИЮ",
+    "ListingsDefaults.listingDefaults": "Листинг по умолчанию",
+    "ListingsDefaults.saveListingSuccessMessage": "Листинги по умолчанию были успешно сохранены.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Успешно",
+    "ListingsDefaults.myListings": "Мои листинги"
 }

@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "Голос принят",
+    "Settings.processor": "Обработчик",
+    "Settings.currentVotes": "Текущее голосование",
+    "Settings.vote": "ГОЛОСОВАТЬ",
+    "Settings.votes": "Голоса (XOM)",
+    "Settings.approval": "Согласование"
 }

@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "त्रुटी",
+    "MyEscrowAgents.agentsApproved": "एजेंटों ने सफलतापूर्वक मंजूरी दे दी",
+    "MyEscrowAgents.clear": "स्पष्ट",
+    "MyEscrowAgents.approve": "अनुमोदन",
+    "MyEscrowAgents.search": "खोज",
+    "MyEscrowAgents.user": "उपयोगकर्ता",
+    "MyEscrowAgents.approveChanges": "परिवर्तनों को स्वीकार करें",
+    "MyEscrowAgents.insufficientBalance": "आपके वॉलेट में पर्याप्त पैसा नहीं है।"
 }

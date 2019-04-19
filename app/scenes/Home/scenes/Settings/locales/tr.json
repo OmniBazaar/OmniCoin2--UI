@@ -1,13 +1,13 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "Hesap kimliği",
+    "Settings.recentTransactions": "Önceki İşlemler",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "KAYITLI",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "Genel veri",
+    "Settings.account": "Hesap",
+    "Settings.currentBalance": "Geçerli Bakiye",
+    "Settings.privateData": "Özel Veri",
+    "Settings.vestingBalances": "Yetki Dengesi"
 }

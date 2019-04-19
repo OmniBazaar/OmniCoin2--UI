@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
-    "Processors.error": "Error"
+    "Processors.standbyProcessors": "સ્ટેન્ડબાય પ્રોસેસર્સ",
+    "Processors.voteSuccess": "તમે સફળતાપૂર્વક મત આપ્યો!",
+    "Processors.topProcessors": "સક્રિય પ્રોસેસર્સ",
+    "Processors.success": "સફળ",
+    "Processors.error": "ભૂલ"
 }

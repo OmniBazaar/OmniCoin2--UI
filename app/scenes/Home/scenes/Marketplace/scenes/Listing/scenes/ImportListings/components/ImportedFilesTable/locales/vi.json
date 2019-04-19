@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Tiểu mục",
+    "ImportedFilesTable.category": "Thể loại",
+    "ImportedFilesTable.currency": "Tiền tệ",
+    "ImportedFilesTable.listingType": "Loại danh sách",
+    "ImportedFilesTable.price": "Giá",
+    "ImportedFilesTable.title": "Tiêu đề",
+    "ImportedFilesTable.description": "Mô tả",
+    "ImportedFilesTable.contactType": "Loại liên hệ",
+    "ImportedFilesTable.contactInfo": "Thông tin liên hệ"
 }

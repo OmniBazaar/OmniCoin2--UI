@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "مجموعة فرعية",
+    "ImportedFilesTable.category": "المجموعة",
+    "ImportedFilesTable.currency": "العملة",
+    "ImportedFilesTable.listingType": " نوع القائمة",
+    "ImportedFilesTable.price": "السعر",
+    "ImportedFilesTable.title": "العنوان",
+    "ImportedFilesTable.description": "الوصف",
+    "ImportedFilesTable.contactType": "نوع الاتصال",
+    "ImportedFilesTable.contactInfo": " معلومات الاتصال"
 }

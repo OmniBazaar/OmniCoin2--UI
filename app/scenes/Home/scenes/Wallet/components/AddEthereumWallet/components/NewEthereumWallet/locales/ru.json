@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New ETHEREUM Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "Создать новый кошелек Ether",
+    "NewEthereumWallet.success": "Успешно",
+    "NewEthereumWallet.successMessage": "Кошелек успешно добавлен.",
+    "NewEthereumWallet.createWallet": "СОЗДАТЬ КОШЕЛЕК",
+    "NewEthereumWallet.cancel": "ОТМЕНА",
+    "NewEthereumWallet.error": "Ошибка"
 }

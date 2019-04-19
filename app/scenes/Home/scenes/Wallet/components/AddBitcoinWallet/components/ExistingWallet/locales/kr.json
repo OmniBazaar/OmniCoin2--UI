@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "An error occurred while connecting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "취소",
+    "ExistingWallet.pleaseEnter": "입력해 주세요",
+    "ExistingWallet.connect": "연결",
+    "NewWallet.connectErrorMessage": "지갑에 접속하던 중 에러 발생",
+    "ExistingWallet.enterPassword": "계정의 접근을 위해 패스워드를 입력하세요.",
+    "ExistingWallet.walletGuid": "지갑 GUID",
+    "ExistingWallet.ipError": "이 지갑은 다른 ip에서 만들어졌습니다. blockchain.info에서 화이트리스트 {ip}에 등록해주세요.",
+    "NewWallet.connectErrorTitle": "접속 에러"
 }

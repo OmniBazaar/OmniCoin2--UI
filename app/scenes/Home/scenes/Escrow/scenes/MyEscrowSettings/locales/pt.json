@@ -1,9 +1,9 @@
 {
-    "MyEscrowSettings.error": "Error", 
-    "MyEscrowSettings.secondCategory": "Any user I vote for as Transaction Processor", 
-    "MyEscrowSettings.firstCategory": "Any user I give a positive reputation rating", 
-    "MyEscrowSettings.saved": "Successfully saved", 
-    "MyEscrowSettings.save": "SAVE SETTINGS", 
-    "MyEscrowSettings.title": "I approve the following categories of users to be escrow agents for my transactions:", 
-    "MyEscrowSettings.thirdCategory": "Any top participant who is an Active Transaction Processor"
+    "MyEscrowSettings.error": "Erro",
+    "MyEscrowSettings.secondCategory": "Qualquer usuário que eu vote como Processador de Transações",
+    "MyEscrowSettings.firstCategory": "Qualquer usuário que eu dou uma reputação positiva",
+    "MyEscrowSettings.saved": "Salvo com Sucesso",
+    "MyEscrowSettings.save": "SALVAR CONFIGURAÇÕES",
+    "MyEscrowSettings.title": "Eu aprovo as seguintes categorias de usuários para serem agentes de escrow para minhas transações:",
+    "MyEscrowSettings.thirdCategory": "Qualquer participante principal que seja um Processador de Transações Ativas"
 }

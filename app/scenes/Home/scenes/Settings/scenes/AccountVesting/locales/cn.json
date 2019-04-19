@@ -1,5 +1,5 @@
 {
-    "AccountVesting.success": "Success", 
-    "AccountVesting.error": "Error", 
-    "AccountVesting.noVestings": "You have no vesting balances."
+    "AccountVesting.success": "成功",
+    "AccountVesting.error": "错误",
+    "AccountVesting.noVestings": "你没有归属余额。"
 }

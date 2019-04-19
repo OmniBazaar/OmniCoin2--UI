@@ -1,13 +1,13 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "ID tài khoản",
+    "Settings.recentTransactions": "Giao dịch gần đây",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "ĐÃ ĐĂNG KÝ",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "Dữ liệu công khai",
+    "Settings.account": "Tài khoản",
+    "Settings.currentBalance": "Số dư hiện tại",
+    "Settings.privateData": "Dữ liệu riêng tư",
+    "Settings.vestingBalances": "Số dư Vesting"
 }

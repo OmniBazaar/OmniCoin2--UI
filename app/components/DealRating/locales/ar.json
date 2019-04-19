@@ -1,5 +1,5 @@
 {
-    "DealRating.great": "GREAT!", 
-    "DealRating.awful": "AWFUL", 
-    "DealRating.neutral": "NEUTRAL"
+    "DealRating.great": "!رائع",
+    "DealRating.awful": "فظيع",
+    "DealRating.neutral": "محايد"
 }

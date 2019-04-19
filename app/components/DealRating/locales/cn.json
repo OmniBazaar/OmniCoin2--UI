@@ -1,5 +1,5 @@
 {
-    "DealRating.great": "GREAT!", 
-    "DealRating.awful": "AWFUL", 
-    "DealRating.neutral": "NEUTRAL"
+    "DealRating.great": "太棒了!",
+    "DealRating.awful": "糟糕的",
+    "DealRating.neutral": "中性"
 }

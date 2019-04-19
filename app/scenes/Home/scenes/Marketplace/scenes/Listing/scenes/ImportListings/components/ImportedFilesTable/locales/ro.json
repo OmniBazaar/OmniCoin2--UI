@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Subcategorie",
+    "ImportedFilesTable.category": "Categorie",
+    "ImportedFilesTable.currency": "Monedă",
+    "ImportedFilesTable.listingType": "Tipul Listarii",
+    "ImportedFilesTable.price": "Prețul",
+    "ImportedFilesTable.title": "Titlu",
+    "ImportedFilesTable.description": "Descriere",
+    "ImportedFilesTable.contactType": "Tip de contact",
+    "ImportedFilesTable.contactInfo": "Informații de contact"
 }

@@ -1,4 +1,4 @@
 {
-    "BitcoinWalletDropdown.manualEnter": "Enter address manually", 
-    "BitcoinWalletDropdown.defaultWalletLabel": "Wallet"
+    "BitcoinWalletDropdown.manualEnter": "주소를 수동으로 입력하세요.",
+    "BitcoinWalletDropdown.defaultWalletLabel": "지갑"
 }

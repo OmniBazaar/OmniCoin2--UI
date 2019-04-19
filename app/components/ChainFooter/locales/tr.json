@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "Bağlanıyor...",
+    "ChainFooter.block": "Blok",
+    "ChainFooter.noConnection": "Bağlantı yok",
+    "ChainFooter.refresh": "Yenile"
 }

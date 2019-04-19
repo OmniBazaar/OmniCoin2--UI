@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "An error occurred while connecting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "रद्द करे",
+    "ExistingWallet.pleaseEnter": "कृपया दर्ज करें",
+    "ExistingWallet.connect": "जुडिये",
+    "NewWallet.connectErrorMessage": "वॉलेट जोड़ते  समय एक त्रुटि हुई",
+    "ExistingWallet.enterPassword": "खाता प्रवेश के लिए कूटशब्द डालें",
+    "ExistingWallet.walletGuid": "वॉलेट GUID",
+    "ExistingWallet.ipError": "यह वॉलेट एक अलग आईपी पर बनाया गया था। कृपया blockchain.info में श्वेतसूची {ip} करें।",
+    "NewWallet.connectErrorTitle": "संबद्ध त्रुटि"
 }

@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
+    "MyEscrowAgents.error": "Ошибка",
+    "MyEscrowAgents.agentsApproved": "Агенты успешно согласованы",
+    "MyEscrowAgents.clear": "Готово",
+    "MyEscrowAgents.approve": "Утвердить",
+    "MyEscrowAgents.search": "Поиск",
+    "MyEscrowAgents.user": "Пользователь",
+    "MyEscrowAgents.approveChanges": "Согласовать изменения",
+    "MyEscrowAgents.insufficientBalance": "В вашем кошельке недостаточно денег."
 }

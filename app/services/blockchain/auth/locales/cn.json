@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "我们无法在我们的Telegram频道中验证该用户名。",
+    "AuthService.invalidMailChimpEmail": "我们无法验证您的电子邮件订阅了我们的简报。",
+    "AuthService.invalidTwitterUsername": "我们无法在Twitter上验证该用户是否为我们的粉丝。",
+    "AuthService.invalidUsername": "仅使用小写字母数字字符、破折号和句点。用户名必须以字母开头, 不能以破折号结尾。",
+    "AuthService.noAccount": "账户不存在",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "无效的密码"
 }

@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "转到 {proposedTime}.",
+    "MyEscrowProposals.you": "你",
+    "MyEscrowProposals.error": "错误",
+    "MyEscrowProposals.success": "成功",
+    "MyEscrowProposals.proposalText": "申请延长托管交易的过期时间",
+    "MyEscrowProposals.approve": "同意",
+    "MyEscrowProposals.approveSuccess": "提案已成功批准"
 }
