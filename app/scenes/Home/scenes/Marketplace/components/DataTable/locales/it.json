@@ -1,13 +1,15 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "VISUALIZZA",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "Default",
+    "DataTable.successSave": "Salvato con successo",
+    "DataTable.search": "Ricerca",
+    "DataTable.successDelete": "Eliminato con successo",
+    "DataTable.date": "Data",
+    "DataTable.success": "Successo",
+    "DataTable.delete": "RIMUOVI",
+    "DataTable.save": "SALVA",
+    "DataTable.error": "Errore",
+    "DataTable.category": "Categoria",
+    "DataTable.subCategory": "Sotto-Categoria"
 }

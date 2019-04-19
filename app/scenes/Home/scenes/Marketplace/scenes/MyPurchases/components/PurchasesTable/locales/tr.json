@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Fiyat",
+    "PurchasesTable.publisher": "Yayıncı",
+    "PurchasesTable.expirationTime": "Harcanan Zaman",
+    "PurchasesTable.count": "Saymak",
+    "PurchasesTable.title": "Başlık",
+    "PurchasesTable.date": "Tarih",
+    "PurchasesTable.seller": "Satıcı",
+    "PurchasesTable.id": "Kimlik",
+    "PurchasesTable.listingNotAvaiable": "İlan mevcut değil",
+    "PurchasesTable.buyer": "Satın Alan"
 }

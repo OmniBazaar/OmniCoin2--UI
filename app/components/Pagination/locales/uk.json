@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "Наступний >",
+    "Pagination.ariaFirst": "Перший товар",
+    "Pagination.contentFirst": "<< Перший",
+    "Pagination.ariaNext": "Наступний товар",
+    "Pagination.ariaPrev": "Попередній товар",
+    "Pagination.contentPrev": "< Попередній",
+    "Pagination.ariaLast": "Останній товар",
+    "Pagination.contentLast": "Останній >>"
 }

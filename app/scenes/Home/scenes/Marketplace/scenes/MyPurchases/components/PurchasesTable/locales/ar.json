@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "السعر",
+    "PurchasesTable.publisher": "الناشر",
+    "PurchasesTable.expirationTime": "وقت انتهاء الصلاحية",
+    "PurchasesTable.count": "count",
+    "PurchasesTable.title": "العنوان",
+    "PurchasesTable.date": "التاريخ",
+    "PurchasesTable.seller": "البائع",
+    "PurchasesTable.id": "المعرِّف ",
+    "PurchasesTable.listingNotAvaiable": "القائمة غير متاحة  ",
+    "PurchasesTable.buyer": "المشتري"
 }

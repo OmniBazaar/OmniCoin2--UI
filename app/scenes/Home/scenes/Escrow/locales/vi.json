@@ -1,6 +1,7 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "Giao dịch ký quỹ của tôi",
+    "Escrow.agents": "Đại lý ký quỹ của tôi",
+    "Escrow.escrow": "Ký quỹ",
+    "Escrow.settings": "Cài đặt ký quỹ của tôi",
+    "Escrow.proposals": "Đề xuất ký quỹ của tôi"
 }

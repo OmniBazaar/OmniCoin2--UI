@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "हम अपने टेलीग्राम चैनल में उस उपयोगकर्ता नाम को सत्यापित नहीं कर सके।",
+    "AuthService.invalidMailChimpEmail": "हम आपके समाचार पत्र के लिए आपकी ईमेल सदस्यता को सत्यापित नहीं कर सके।",
+    "AuthService.invalidTwitterUsername": "हम ट्विटर पर उस उपयोगकर्ता नाम को अनुसरणकर्ता के रूप में सत्यापित नहीं कर सके।",
+    "AuthService.invalidUsername": "केवल छोटे अक्षर  अक्षरांकीय वर्ण, डैश और अवधि का उपयोग करें। उपयोगकर्ता नाम एक अक्षर से शुरू होना चाहिए और एक डैश के साथ समाप्त नहीं हो सकता।",
+    "AuthService.noAccount": "खाता मौजूद नहीं है",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "अवैध कूटशब्द"
 }

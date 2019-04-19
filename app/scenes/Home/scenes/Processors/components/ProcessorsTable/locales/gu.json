@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "સ્થાન",
+    "ProcessorsTable.name": "નામ",
+    "ProcessorsTable.approval": "મંજુર",
+    "ProcessorsTable.reliability": "વિશ્વસનીયતા",
+    "ProcessorsTable.reputation": "પ્રતિષ્ઠા",
+    "ProcessorsTable.referralScore": "રેફરલ સ્કોર",
+    "ProcessorsTable.publisherScore": " પ્રકાશક સ્કોર ",
+    "ProcessorsTable.netScore": "નેટ સ્કોર",
+    "ProcessorsTable.approve": "મંજૂર"
+}

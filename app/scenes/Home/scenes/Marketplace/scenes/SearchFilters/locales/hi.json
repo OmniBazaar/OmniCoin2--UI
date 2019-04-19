@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "उप-श्रेणी",
+    "SearchFilters.category": "श्रेणी",
+    "SearchFilters.search": "खोज",
+    "SearchFilters.currency": "मुद्रा"
 }

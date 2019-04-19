@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "આગળ >",
+    "Pagination.ariaFirst": "પ્રથમ વસ્તુ",
+    "Pagination.contentFirst": "<< પ્રથમ",
+    "Pagination.ariaNext": "આગલું આઇટમ",
+    "Pagination.ariaPrev": "આગલી વસ્તુ",
+    "Pagination.contentPrev": "< આગલું",
+    "Pagination.ariaLast": "છેલ્લી વસ્તુ",
+    "Pagination.contentLast": "છેલ્લું >>"
 }

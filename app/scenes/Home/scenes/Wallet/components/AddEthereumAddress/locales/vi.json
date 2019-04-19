@@ -1,6 +1,6 @@
 {
-    "AddEthereumAddress.createWallet": "ADD", 
-    "AddEthereumAddress.pleaseEnter": "Please enter", 
-    "AddEthereumAddress.cancel": "CANCEL", 
-    "AddEthereumAddress.label": "Label (optional)"
+    "AddEthereumAddress.createWallet": "THÊM",
+    "AddEthereumAddress.pleaseEnter": "Vui lòng nhập",
+    "AddEthereumAddress.cancel": "HỦY",
+    "AddEthereumAddress.label": "Nhãn (tùy chọn)"
 }

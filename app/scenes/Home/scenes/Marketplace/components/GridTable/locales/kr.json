@@ -1,0 +1,16 @@
+{
+    "GridTable.removeFromFavorites": "즐겨찾기에서 제거하기",
+    "GridTable.success": "성공",
+    "GridTable.delete": "삭제",
+    "GridTable.error": "에러",
+    "GridTable.deleteListingSuccess": "목록이 성공적으로 삭제 되었습니다.",
+    "GridTable.cancel": "최소",
+    "GridTable.noData": "데이터가 없습니다.",
+    "GridTable.noResult": "<b>No results found.</b>\n\nPlease select different search terms.\nOr, change your Search Priority to\ninclude a larger geographic area\nor adifferent Publisher. To modify\nyour Search Priority, ",
+    "GridTable.clickHere": "CLICK HERE.",
+    "GridTable.ok": "OK",
+    "GridTable.edit": "편집",
+    "GridTable.confirmDeleteTitle": "확인",
+    "GridTable.deleteListingError": "목록을 삭제하는 중 에러 발생.",
+    "GridTable.confirmDeleteMessage": "이 목록을 삭제하시겠습니까?"
+}

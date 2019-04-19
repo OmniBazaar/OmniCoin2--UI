@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "Sambung ralat",
+    "ExistingEthereumWallet.pleaseEnter": "Sila Masukkan",
+    "ExistingEthereumWallet.enterBrainKey": "Masukkan wallet Brain Utama",
+    "NewEthereumWallet.chooseOption": "Pilih kaedah untuk menambah wallet:",
+    "ExistingEthereumWallet.cancel": "BATAL",
+    "ExistingEthereumWallet.connect": "CONNECT",
+    "NewEthereumWallet.usingPrivateKey": "Gunakan Key swasta",
+    "NewEthereumWallet.connectErrorMessage": "Ralat telah berlaku semasa menyambung wallet.",
+    "NewEthereumWallet.usingBrainKey": "Gunakan Key Brain",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

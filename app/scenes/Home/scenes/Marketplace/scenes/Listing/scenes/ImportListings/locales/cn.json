@@ -1,0 +1,13 @@
+{
+    "ImportListings.removeAll": "删除所有",
+    "ImportListings.onlyTextFileMsg": "O只允许TXT文件。",
+    "ImportListings.warning": "警告",
+    "ImportListings.addFiles": "添加文件",
+    "ImportListings.importListings": "导入清单",
+    "ImportListings.myListings": "我的清单",
+    "ImportListings.ok": "好的",
+    "ImportListings.listingsVendor": "清单供应商",
+    "ImportListings.importedData": "进口数据",
+    "ImportListings.files": "文件",
+    "ImportListings.filesToImport": "文件导入"
+}

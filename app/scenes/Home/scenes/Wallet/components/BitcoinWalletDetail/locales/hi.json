@@ -1,5 +1,5 @@
 {
-    "BitcoinWalletDetail.currentBalance": "Current Balance", 
-    "BitcoinWalletDetail.wallet": "Wallet", 
-    "BitcoinWalletDetail.guid": "Wallet GUID:"
+    "BitcoinWalletDetail.currentBalance": "वर्तमान शेष",
+    "BitcoinWalletDetail.wallet": "वॉलेट",
+    "BitcoinWalletDetail.guid": "वॉलेट GUID:"
 }

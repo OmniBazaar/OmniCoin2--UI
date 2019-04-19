@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "बाजार",
+    "MyListings.myListings": "मेरी सूचियाँ",
+    "MyListings.lowestPrice": "निम्नतम मूल्य",
+    "MyListings.highestPrice": "उच्चतम मूल्य",
+    "MyListings.byDate": "तिथि के अनुसार",
+    "MyListings.allCategories": "सभी वर्ग"
 }

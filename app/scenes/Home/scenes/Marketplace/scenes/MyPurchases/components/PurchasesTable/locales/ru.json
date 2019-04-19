@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Цена",
+    "PurchasesTable.publisher": "Издатель",
+    "PurchasesTable.expirationTime": "Время окончания",
+    "PurchasesTable.count": "Число",
+    "PurchasesTable.title": "Название",
+    "PurchasesTable.date": "Дата",
+    "PurchasesTable.seller": "Продавец",
+    "PurchasesTable.id": "Номер",
+    "PurchasesTable.listingNotAvaiable": "Листинг не доступен",
+    "PurchasesTable.buyer": "Покупатель"
 }

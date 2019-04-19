@@ -1,8 +1,9 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": " બચાવ સાચવો ",
+    "ListingsDefaults.listingDefaults": "લિસ્ટિંગ ડિફોલ્ટ્સ",
+    "ListingsDefaults.saveListingSuccessMessage": "લિસ્ટિંગ ડિફોલ્ટ્સ સફળતાપૂર્વક સાચવવામાં આવી હતી.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "સફળ",
+    "ListingsDefaults.myListings": "મારી સૂચી",
+    "ListingsDefaults.defaultsNote": "આ માહિતી તમે બનાવો છો તે બધી નવી સૂચિમાં પૂર્વ-વસ્તીવાળી હશે."
 }

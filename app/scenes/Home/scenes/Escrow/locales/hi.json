@@ -1,6 +1,7 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "मेरा एस्क्रो लेनदेन",
+    "Escrow.agents": "मेरे एस्क्रो एजेंट",
+    "Escrow.escrow": "एस्क्रो",
+    "Escrow.settings": "मेरी एस्क्रो समायोजन्स",
+    "Escrow.proposals": "मेरा एस्क्रो प्रस्ताव"
 }

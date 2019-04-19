@@ -1,5 +1,5 @@
 {
-    "SettingsMenu.preferences": "Preferences", 
-    "SettingsMenu.logout": "Logout", 
-    "SettingsMenu.accountSettings": "Account Settings"
+    "SettingsMenu.preferences": "Preferencias",
+    "SettingsMenu.logout": "Cerrar sesión",
+    "SettingsMenu.accountSettings": "Configuración de la cuenta"
 }

@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
-    "Processors.error": "Error"
+    "Processors.standbyProcessors": "Processadores em Epera",
+    "Processors.voteSuccess": "Você votou com sucesso!",
+    "Processors.topProcessors": "Processadores Ativos",
+    "Processors.success": "Sucesso",
+    "Processors.error": "Erro"
 }

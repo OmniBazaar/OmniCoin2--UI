@@ -1,4 +1,9 @@
 {
-    "AuthService.invalidPassword": "Invalid password", 
-    "AuthService.noAccount": "Account doesn't exist"
+    "AuthService.invalidTelegramPhoneNumber": "Мы не смогли подтвердить это имя пользователя на нашем канале Telegram.",
+    "AuthService.invalidMailChimpEmail": "Мы не смогли подтвердить вашу email-подписку на нашу рассылку.",
+    "AuthService.invalidTwitterUsername": "Мы не смогли подтвердить это имя подписчика в Twitter.",
+    "AuthService.invalidUsername": "Используйте только строчные буквенно-цифровые символы, тире и точки. Имена пользователей должны начинаться с буквы и не должны заканчиваться дефисом.",
+    "AuthService.noAccount": "Учетная запись не существует",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "Неправильный пароль"
 }

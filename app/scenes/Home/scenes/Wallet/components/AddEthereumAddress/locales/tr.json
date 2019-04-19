@@ -1,6 +1,6 @@
 {
-    "AddEthereumAddress.createWallet": "ADD", 
-    "AddEthereumAddress.pleaseEnter": "Please enter", 
-    "AddEthereumAddress.cancel": "CANCEL", 
-    "AddEthereumAddress.label": "Label (optional)"
+    "AddEthereumAddress.createWallet": "EKLE",
+    "AddEthereumAddress.pleaseEnter": "Lütfen Girin",
+    "AddEthereumAddress.cancel": "İPTAL",
+    "AddEthereumAddress.label": "Etiket (isteğe bağlı)"
 }

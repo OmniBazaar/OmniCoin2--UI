@@ -1,0 +1,11 @@
+{
+    "LoginForm.enterUsername": "유저네임을 입력하세요.",
+    "LoginForm.error": "에러",
+    "LoginForm.signup": "가입",
+    "LoginForm.unlock": "열기",
+    "LoginForm.connectionDoesntExist": "인터넷 접속이 끊겼습니다. 인터넷에 다시 접속해 주세요.",
+    "LoginForm.accountDoesntExist": "계정이 존재하지 않습니다.",
+    "LoginForm.enterPassword": "패스워드를 입력하세요.",
+    "LoginForm.noAccount": "아직 계정이 없으십니까?",
+    "LoginForm.fieldRequired": "이 부분은 필수 항목입니다."
+}

@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Prezzo",
+    "PurchasesTable.publisher": "Editore",
+    "PurchasesTable.expirationTime": "Scadenza",
+    "PurchasesTable.count": "Quantità",
+    "PurchasesTable.title": "Titolo",
+    "PurchasesTable.date": "Data",
+    "PurchasesTable.seller": "Venditore",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "Elenco non disponibile",
+    "PurchasesTable.buyer": "Acquirente"
 }

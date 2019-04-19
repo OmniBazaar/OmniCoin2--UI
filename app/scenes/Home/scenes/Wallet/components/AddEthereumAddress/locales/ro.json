@@ -1,6 +1,6 @@
 {
-    "AddEthereumAddress.createWallet": "ADD", 
-    "AddEthereumAddress.pleaseEnter": "Please enter", 
-    "AddEthereumAddress.cancel": "CANCEL", 
-    "AddEthereumAddress.label": "Label (optional)"
+    "AddEthereumAddress.createWallet": "ADD",
+    "AddEthereumAddress.pleaseEnter": "Vă rugăm să introduceți",
+    "AddEthereumAddress.cancel": "CANCEL",
+    "AddEthereumAddress.label": "Etichetă (opțional)"
 }

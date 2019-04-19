@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "Под-категория",
+    "SearchFilters.category": "Категория",
+    "SearchFilters.search": "Поиск",
+    "SearchFilters.currency": "Валюта"
 }

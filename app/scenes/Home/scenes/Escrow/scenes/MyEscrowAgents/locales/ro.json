@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "Eroare",
+    "MyEscrowAgents.agentsApproved": "Agenți aprobați cu succes",
+    "MyEscrowAgents.clear": "Șterge",
+    "MyEscrowAgents.approve": "Aproba",
+    "MyEscrowAgents.search": "Căutare",
+    "MyEscrowAgents.user": "Utilizator",
+    "MyEscrowAgents.approveChanges": "Aprobați modificările",
+    "MyEscrowAgents.insufficientBalance": "Nu există suficienți bani în portofelul dvs."
 }

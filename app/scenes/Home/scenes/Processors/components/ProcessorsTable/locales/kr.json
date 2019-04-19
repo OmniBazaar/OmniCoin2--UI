@@ -1,0 +1,11 @@
+{
+    "ProcessorsTable.rank": "순위",
+    "ProcessorsTable.name": "이름",
+    "ProcessorsTable.approval": "승인",
+    "ProcessorsTable.reliability": "신뢰도",
+    "ProcessorsTable.reputation": "평판",
+    "ProcessorsTable.referralScore": "추천 점수",
+    "ProcessorsTable.publisherScore": "게시자 점수",
+    "ProcessorsTable.netScore": "넷 점수",
+    "ProcessorsTable.approve": "승인"
+}

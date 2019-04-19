@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "Conectarea ...",
+    "ChainFooter.block": "Blocare",
+    "ChainFooter.noConnection": "Nici o conexiune",
+    "ChainFooter.refresh": "Reîmprospătați"
 }

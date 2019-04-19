@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "خطأ",
+    "MyEscrowAgents.agentsApproved": "تمت الموافقة على الوكيل بنجاح",
+    "MyEscrowAgents.clear": "مسح",
+    "MyEscrowAgents.approve": "أوافق",
+    "MyEscrowAgents.search": "بحث",
+    "MyEscrowAgents.user": "المستخدم",
+    "MyEscrowAgents.approveChanges": "الموافقة على التغييرات",
+    "MyEscrowAgents.insufficientBalance": "لا يوجد مال كافٍ في محفظتك."
 }

@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "Votado",
+    "Settings.processor": "Processador",
+    "Settings.currentVotes": "Votos atuais",
+    "Settings.vote": "VOTAR",
+    "Settings.votes": "Votos (XOM)",
+    "Settings.approval": "Aprovação"
 }

@@ -1,5 +1,5 @@
 {
-    "AccountVesting.success": "Success", 
-    "AccountVesting.error": "Error", 
-    "AccountVesting.noVestings": "You have no vesting balances."
+    "AccountVesting.success": "نجاح",
+    "AccountVesting.error": "خطأ",
+    "AccountVesting.noVestings": "لا يمكن رد أو استرجاع المبالغ المدفوعة"
 }

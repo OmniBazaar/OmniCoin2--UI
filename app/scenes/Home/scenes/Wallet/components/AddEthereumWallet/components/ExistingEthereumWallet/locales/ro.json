@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "Conectare eroare",
+    "ExistingEthereumWallet.pleaseEnter": "Please Enter",
+    "ExistingEthereumWallet.enterBrainKey": "Introduceți cheie Brain Brain",
+    "NewEthereumWallet.chooseOption": "Selectați metoda pentru a adăuga portofel:",
+    "ExistingEthereumWallet.cancel": "CANCEL",
+    "ExistingEthereumWallet.connect": "CONNECT",
+    "NewEthereumWallet.usingPrivateKey": "Foloseste Cheia Privata",
+    "NewEthereumWallet.connectErrorMessage": "A apărut o eroare la conectarea portofelului",
+    "NewEthereumWallet.usingBrainKey": "Utilizați cheia de creier",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

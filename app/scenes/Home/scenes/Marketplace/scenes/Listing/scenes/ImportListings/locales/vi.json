@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "XÓA TẤT CẢ",
+    "ImportListings.onlyTextFileMsg": "Chỉ cho phép các tệp TXT.",
+    "ImportListings.warning": "Cảnh báo",
+    "ImportListings.addFiles": "THÊM TẬP TIN",
+    "ImportListings.importListings": "Danh sách nhập khẩu",
+    "ImportListings.myListings": "Danh sách của tôi",
+    "ImportListings.ok": "Okay",
+    "ImportListings.listingsVendor": "Danh sách nhà cung cấp",
+    "ImportListings.importedData": "Dữ liệu đã nhập",
+    "ImportListings.files": "Các tập tin",
+    "ImportListings.filesToImport": "Tập tin cần nhập"
 }

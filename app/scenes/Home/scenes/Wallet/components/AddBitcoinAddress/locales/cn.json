@@ -1,0 +1,7 @@
+{
+    "AddBitcoinAddress.label": "标签 (可选)",
+    "AddBitcoinAddress.pleaseEnter": "请输入",
+    "AddBitcoinAddress.cancel": "取消",
+    "AddBitcoinAddress.createWallet": "添加",
+    "AddBitcoinAddress.addSubWallet": "添加子钱包"
+}

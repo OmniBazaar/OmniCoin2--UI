@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Rank",
+    "ProcessorsTable.name": "Nume",
+    "ProcessorsTable.approval": "Aproba",
+    "ProcessorsTable.reliability": "Fiabilitate",
+    "ProcessorsTable.reputation": "Reputație",
+    "ProcessorsTable.referralScore": "Scorul de referință",
+    "ProcessorsTable.publisherScore": "Scorul editorului",
+    "ProcessorsTable.netScore": "Scorul Net",
+    "ProcessorsTable.approve": "Approve"
+}

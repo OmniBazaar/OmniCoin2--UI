@@ -1,6 +1,7 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "Мои транзакции по депонированию",
+    "Escrow.agents": "Мои агенты депонирования",
+    "Escrow.escrow": "Депонирование",
+    "Escrow.settings": "Мои настройки депонирования",
+    "Escrow.proposals": "Мои предложения по депонированию"
 }

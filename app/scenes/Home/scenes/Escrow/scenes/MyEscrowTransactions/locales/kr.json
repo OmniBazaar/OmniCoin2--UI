@@ -1,0 +1,23 @@
+{
+    "MyEscrowTransactions.seller": "판매자",
+    "MyEscrowTransactions.finalize": "마무리",
+    "MyEscrowTransactions.error": "에러",
+    "MyEscrowTransactions.askReturn": "정말 금액을 {username}에게 돌려 드리겠습니까?",
+    "MyEscrowTransactions.amount": "양",
+    "MyEscrowTransactions.transactionID": "트랜잭션 ID",
+    "MyEscrowTransactions.proposal": "요청",
+    "MyEscrowTransaction.rateSomeone": "등급 {username} ({type})",
+    "MyEscrowTransactions.askRelease": "{username}에게 정말 송금하시겠습니까?",
+    "MyEscrowTransactions.parties": "당사자",
+    "MyEscrowTransactions.successReturn": "{amount} XOM이 성공적으로 {username}에게 송금되었습니다!",
+    "MyEscrowTransactions.escrow": "에스크로",
+    "MyEscrowTransactions.expirationTime": "만료 시간",
+    "MyEscrowTransactions.voteUpTooltip": "판매자의 제품 또는 성능에 만족하면 여기를 클릭하십시오. 이것은 에스크로에 보유된 자금을 판매자에게 보내줍니다.",
+    "MyEscrowTransactions.buyer": "구매자",
+    "MyEscrowTransactions.noTransactions": "대기중인 에스크로 거래가 없습니다.",
+    "MyEscrowTransactions.voteDownTooltip": "이 에스크로 거래를 거부하거나 종료하려면 여기를 클릭하세요. 에스크로에서 가지고 있던 구매자의 자금을 돌려드립니다.",
+    "MyEscrowTransactions.successRelease": "{amount} XOM가 성공적으로 {username}에게 보내졌습니다!",
+    "MyEscrowTransactions.extendTime": "연장 시간",
+    "MyEscrowTransactions.success": "성공",
+    "MyEscrowTransaction.proposalConfirmation": "에스크로 만료시간을 상대방에게 다음과 같이 제안할려고 합니다.{time}."
+}

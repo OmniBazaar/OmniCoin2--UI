@@ -1,9 +1,9 @@
 {
-    "Categories.forSale": "For Sale", 
-    "Categories.jobs": "Jobs", 
-    "Categories.gigs": "Gigs", 
-    "Categories.cryptoBazaar": "CryptoBazaar", 
-    "Categories.community": "Community", 
-    "Categories.housing": "Housing", 
-    "Categories.services": "Services"
+    "Categories.forSale": "На продажу",
+    "Categories.jobs": "Работа",
+    "Categories.gigs": "Гиги",
+    "Categories.cryptoBazaar": "CryptoBazaar",
+    "Categories.community": "Сообщество",
+    "Categories.housing": "Жилье",
+    "Categories.services": "Сервисы"
 }

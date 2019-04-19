@@ -1,0 +1,16 @@
+{
+    "AmazonListingsConfig.successMessage": "配置已更新",
+    "AmazonListingsConfig.assocTag": "你的assoc标签",
+    "AmazonListingsConfig.secretKey": "你的密钥",
+    "AmazonListingsConfig.assocTagTitle": "AWS Assoc Tag*",
+    "AmazonListingsConfig.errorTitle": "错误",
+    "AmazonListingsConfig.successTitle": "成功",
+    "AmazonListingsConfig.rememberConfig": "我想为这个提供者将来的导入使用此配置",
+    "AmazonListingsConfig.accessKey": "你的访问密钥",
+    "AmazonListingsConfig.accessKeyTitle": "AWS访问钥匙*",
+    "AmazonListingsConfig.accessKeyError": "您的访问密钥丢失了",
+    "AmazonListingsConfig.assocTagError": "您的assoc标签丢失了",
+    "AmazonListingsConfig.secretKeyTitle": " AWS密钥*",
+    "AmazonListingsConfig.updateConfig": "更新配置",
+    "AmazonListingsConfig.secretKeyError": "你的密匙不见了"
+}

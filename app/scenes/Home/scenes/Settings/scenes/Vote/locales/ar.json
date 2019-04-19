@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "تم التصويت",
+    "Settings.processor": "المجهزون",
+    "Settings.currentVotes": "الاصوات الحالية ",
+    "Settings.vote": "صوّت",
+    "Settings.votes": " (XOM) الأصوات",
+    "Settings.approval": "موافقة"
 }

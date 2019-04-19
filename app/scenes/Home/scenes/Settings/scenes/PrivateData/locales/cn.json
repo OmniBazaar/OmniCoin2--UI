@@ -1,0 +1,17 @@
+{
+    "PrivateData.update": "更新",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "更新成功",
+    "PrivateData.notPublisherYet": "你还不是一位发布者",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "我们需要以下信息，以便我们将您与符合您兴趣的商家信息发布者联系起来。",
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "电子邮件",
+    "PrivateData.firstName": "第一个名字",
+    "PrivateData.lastName": "姓",
+    "PrivateData.website": "网站"
+}

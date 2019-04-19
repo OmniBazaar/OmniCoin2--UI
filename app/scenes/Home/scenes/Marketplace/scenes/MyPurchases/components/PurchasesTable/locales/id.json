@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Harga",
+    "PurchasesTable.publisher": "Penerbit",
+    "PurchasesTable.expirationTime": "Waktu kadaluarsa",
+    "PurchasesTable.count": "Hitung",
+    "PurchasesTable.title": "Judul",
+    "PurchasesTable.date": "Tanggal",
+    "PurchasesTable.seller": "Penjual",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "Daftar tidak tersedia",
+    "PurchasesTable.buyer": "Pembeli"
 }

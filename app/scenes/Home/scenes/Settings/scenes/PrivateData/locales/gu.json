@@ -1,13 +1,17 @@
 {
-    "PrivateData.update": "Update", 
-    "PrivateData.apply": "APPLY", 
-    "PrivateData.byCategoryType": "By Category / Type", 
-    "PrivateData.country": "Country", 
-    "PrivateData.updateSuccess": "Successfully updated", 
-    "PrivateData.notPublisherYet": "You are not a publisher yet.", 
-    "PrivateData.city": "City", 
-    "PrivateData.localArea": "Local Area", 
-    "PrivateData.startTyping": "Start typing...", 
-    "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.", 
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.update": "સુધારો",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "સફળતાપૂર્વક સુધારો",
+    "PrivateData.notPublisherYet": "તમે હજી સુધી કોઈ પ્રકાશક નથી.",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "અમને નીચેની માહિતીની જરૂર છે જેથી અમે તમને તમારી રુચિ સાથે સંરેખિત સૂચિબદ્ધ પ્રકાશકો સાથે જોડી શકીએ.",
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": " ઇમેઇલ ",
+    "PrivateData.firstName": "પ્રથમ નામ",
+    "PrivateData.lastName": "છેલ્લું નામ",
+    "PrivateData.website": "વેબસાઈટ"
 }

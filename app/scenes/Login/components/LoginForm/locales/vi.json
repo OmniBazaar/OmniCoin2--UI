@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": "Nhập tên người dùng của bạn",
+    "LoginForm.error": "Lỗi",
+    "LoginForm.signup": "Đăng ký",
+    "LoginForm.unlock": "Mở khóa",
+    "LoginForm.connectionDoesntExist": "Không có kết nối internet. Vui lòng kết nối với Internet và thử lại.",
+    "LoginForm.accountDoesntExist": "Tài khoản không tồn tại",
+    "LoginForm.enterPassword": "Nhập mật khẩu",
+    "LoginForm.noAccount": "Bạn chưa có tài khoản?",
+    "LoginForm.fieldRequired": "Ô này là bắt buộc"
 }

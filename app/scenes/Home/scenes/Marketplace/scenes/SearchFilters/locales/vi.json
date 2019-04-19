@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "Tiểu mục",
+    "SearchFilters.category": "Thể loại",
+    "SearchFilters.search": "Tìm kiếm",
+    "SearchFilters.currency": "Tiền tệ"
 }

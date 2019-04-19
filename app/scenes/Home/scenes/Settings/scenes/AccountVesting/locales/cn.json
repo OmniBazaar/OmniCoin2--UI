@@ -1,0 +1,5 @@
+{
+    "AccountVesting.success": "成功",
+    "AccountVesting.error": "错误",
+    "AccountVesting.noVestings": "你没有归属余额。"
+}

@@ -1,0 +1,12 @@
+{
+    "PurchasesTable.price": "价格",
+    "PurchasesTable.publisher": "发布者",
+    "PurchasesTable.expirationTime": " Exp.时间",
+    "PurchasesTable.count": "计数",
+    "PurchasesTable.title": "标题",
+    "PurchasesTable.date": "日期",
+    "PurchasesTable.seller": "卖方",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "清单无效",
+    "PurchasesTable.buyer": "买方"
+}

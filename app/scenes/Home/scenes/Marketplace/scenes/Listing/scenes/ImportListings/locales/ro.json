@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "REMOVE ALL",
+    "ImportListings.onlyTextFileMsg": "Sunt permise numai fisierele TXT",
+    "ImportListings.warning": "Avertisment",
+    "ImportListings.addFiles": "ADD FILES",
+    "ImportListings.importListings": "Import de anunțuri",
+    "ImportListings.myListings": "Lista mea",
+    "ImportListings.ok": "Bine",
+    "ImportListings.listingsVendor": "Vendor de anunțuri",
+    "ImportListings.importedData": "Datele importate",
+    "ImportListings.files": "Fișiere",
+    "ImportListings.filesToImport": "Fisiere de Importat"
 }

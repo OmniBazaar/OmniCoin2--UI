@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": " તમારું વપરાશકર્તા નામ દાખલ કરો ",
+    "LoginForm.error": "ભૂલ",
+    "LoginForm.signup": " સાઇન અપ કરો ",
+    "LoginForm.unlock": "અનલૉક કરો",
+    "LoginForm.connectionDoesntExist": "ત્યાં કોઈ ઇન્ટરનેટ કનેક્શન નથી. કૃપા કરીને ઇન્ટરનેટથી કનેક્ટ કરો અને ફરી પ્રયાસ કરો.",
+    "LoginForm.accountDoesntExist": " ખાતું અસ્તિત્વમાં નથી ",
+    "LoginForm.enterPassword": "પાસવર્ડ દાખલ કરો",
+    "LoginForm.noAccount": "હજી સુધી ખાતું નથી?",
+    "LoginForm.fieldRequired": "આ ક્ષેત્ર જરૂરી છે"
 }

@@ -1,7 +1,7 @@
 {
-    "AddBitcoinAddress.label": "Label (optional)", 
-    "AddBitcoinAddress.pleaseEnter": "Please enter", 
-    "AddBitcoinAddress.cancel": "CANCEL", 
-    "AddBitcoinAddress.createWallet": "ADD", 
-    "AddBitcoinAddress.addSubWallet": "Add Sub-Wallet"
+    "AddBitcoinAddress.label": "लेबल (वैकल्पिक)",
+    "AddBitcoinAddress.pleaseEnter": "कृपया दर्ज करें",
+    "AddBitcoinAddress.cancel": "रद्द करे",
+    "AddBitcoinAddress.createWallet": "जोड़े ",
+    "AddBitcoinAddress.addSubWallet": "उप-वॉलेट जोड़ें"
 }

@@ -1,0 +1,8 @@
+{
+    "NewEthereumWallet.info": "새로운 이더리움 지갑 생성",
+    "NewEthereumWallet.success": "성공",
+    "NewEthereumWallet.successMessage": "지갑이 성공적으로 추가됨.",
+    "NewEthereumWallet.createWallet": "지갑 만들기",
+    "NewEthereumWallet.cancel": "취소",
+    "NewEthereumWallet.error": "에러"
+}

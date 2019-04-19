@@ -1,7 +1,7 @@
 {
-    "AddBitcoinAddress.label": "Label (optional)", 
-    "AddBitcoinAddress.pleaseEnter": "Please enter", 
-    "AddBitcoinAddress.cancel": "CANCEL", 
-    "AddBitcoinAddress.createWallet": "ADD", 
-    "AddBitcoinAddress.addSubWallet": "Add Sub-Wallet"
+    "AddBitcoinAddress.label": "Nhãn (tùy chọn)",
+    "AddBitcoinAddress.pleaseEnter": "Vui lòng nhập",
+    "AddBitcoinAddress.cancel": "HỦY",
+    "AddBitcoinAddress.createWallet": "THÊM",
+    "AddBitcoinAddress.addSubWallet": "Thêm ví phụ"
 }

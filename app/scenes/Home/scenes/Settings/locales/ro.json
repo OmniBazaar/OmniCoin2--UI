@@ -1,13 +1,16 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "ID-ul contului",
+    "Settings.recentTransactions": "Tranzacții recente",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "REGISTERED",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "Date publice",
+    "Settings.account": "Account",
+    "Settings.currentBalance": "Balanța actuală",
+    "Settings.privateData": "Date Private",
+    "Settings.vestingBalances": "Balanțe de veste",
+    "Setting.ethAddressTitle": "Adresă Ethereum",
+    "Settings.to": "To",
+    "Settings.from": "From"
 }

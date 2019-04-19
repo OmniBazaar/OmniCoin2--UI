@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "Помилка підключення",
+    "ExistingEthereumWallet.pleaseEnter": "Будь ласка, введіть",
+    "ExistingEthereumWallet.enterBrainKey": "Введіть логічний ключ гаманця",
+    "NewEthereumWallet.chooseOption": "Виберіть метод, щоб додати гаманець:",
+    "ExistingEthereumWallet.cancel": "СКАСУВАТИ",
+    "ExistingEthereumWallet.connect": "ПІДКЛЮЧИТИ",
+    "NewEthereumWallet.usingPrivateKey": "Використати приватний ключ",
+    "NewEthereumWallet.connectErrorMessage": "Сталася помилка під час підключення до гаманця.",
+    "NewEthereumWallet.usingBrainKey": "Використовуйте словесний ключ",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

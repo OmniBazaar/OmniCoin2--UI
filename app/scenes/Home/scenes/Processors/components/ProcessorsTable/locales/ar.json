@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "الرتبة",
+    "ProcessorsTable.name": "الاسم",
+    "ProcessorsTable.approval": "موافقة",
+    "ProcessorsTable.reliability": "المصداقية",
+    "ProcessorsTable.reputation": "السُّمعة",
+    "ProcessorsTable.referralScore": "نقاط الإحالة",
+    "ProcessorsTable.publisherScore": "مجموع نقاط الناشر",
+    "ProcessorsTable.netScore": "صافي النقاط",
+    "ProcessorsTable.approve": "موافقة"
+}

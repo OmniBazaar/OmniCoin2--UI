@@ -1,8 +1,9 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "SALVA DEFAULT",
+    "ListingsDefaults.listingDefaults": "Annunci di default",
+    "ListingsDefaults.saveListingSuccessMessage": "L'elenco di default sono stati salvati correttamente.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Successo",
+    "ListingsDefaults.myListings": "I miei annunci",
+    "ListingsDefaults.defaultsNote": "Queste informazioni saranno inserite in tutte le nuove inserzioni che creerai."
 }

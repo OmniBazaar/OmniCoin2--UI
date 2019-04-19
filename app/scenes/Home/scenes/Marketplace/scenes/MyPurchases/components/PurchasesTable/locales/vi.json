@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Giá",
+    "PurchasesTable.publisher": "Nhà xuất bản",
+    "PurchasesTable.expirationTime": "T.g hết hạn",
+    "PurchasesTable.count": "Đếm",
+    "PurchasesTable.title": "Tiêu đề",
+    "PurchasesTable.date": "Ngày",
+    "PurchasesTable.seller": "Người bán",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "Danh sách không có sẵn",
+    "PurchasesTable.buyer": "Người mua"
 }

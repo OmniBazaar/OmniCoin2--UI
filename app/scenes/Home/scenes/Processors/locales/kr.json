@@ -1,0 +1,7 @@
+{
+    "Processors.standbyProcessors": "대기 프로세서",
+    "Processors.voteSuccess": "성공적으로 투표됨!",
+    "Processors.topProcessors": "액티브 프로세서",
+    "Processors.success": "성공",
+    "Processors.error": "에러"
+}

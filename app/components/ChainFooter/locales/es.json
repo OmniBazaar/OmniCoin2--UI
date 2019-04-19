@@ -1,5 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection"
+    "ChainFooter.connecting": "Conectando...",
+    "ChainFooter.block": "Bloquear",
+    "ChainFooter.noConnection": "Sin conexión",
+    "ChainFooter.refresh": "Actualizar"
 }

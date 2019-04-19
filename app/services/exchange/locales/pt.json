@@ -1,5 +1,5 @@
 {
-    "ExchangeService.exchangeBodyETH": "You requested {xomAmount} XOM for {cryptoAmount} ETH.\n Transaction hash: {txid}", 
-    "ExchangeService.exchange": "Exchange Request", 
-    "ExchangeService.exchangeBodyBTC": "You requested {xomAmount} XOM for {cryptoAmount} BTC.\n Transaction id: {txid}"
+    "ExchangeService.exchangeBodyETH": "Você solicitou {xomAmount} XOM para {cryptoAmount} ETH. \nTransação hash: {txid}",
+    "ExchangeService.exchange": "Solicitação de negociação",
+    "ExchangeService.exchangeBodyBTC": "Você solicitou {xomAmount} XOM por {cryptoAmount} BTC.\n Transaction id: {txid}"
 }

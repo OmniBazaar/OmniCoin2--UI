@@ -1,13 +1,16 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "رقم الحساب",
+    "Settings.recentTransactions": "المعاملات الحديثة",
+    "Settings.eth": "الإيثير",
+    "Settings.btc": "بيتكوين",
+    "Settings.registered": "مُسجّل",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "البيانات العامة",
+    "Settings.account": "الحساب",
+    "Settings.currentBalance": "الرصيد الحالي ",
+    "Settings.privateData": "تاريخ خاص ",
+    "Settings.vestingBalances": "أرصدة التخويل",
+    "Setting.ethAddressTitle": "عنوان الايثيريوم",
+    "Settings.to": "إلى",
+    "Settings.from": "من"
 }

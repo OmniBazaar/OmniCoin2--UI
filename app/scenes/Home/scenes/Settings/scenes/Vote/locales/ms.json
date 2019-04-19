@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "mengundi",
+    "Settings.processor": "Processor",
+    "Settings.currentVotes": "Undian Semasa",
+    "Settings.vote": "VOTE",
+    "Settings.votes": "Undian (XOM)",
+    "Settings.approval": "Kelulusan"
 }

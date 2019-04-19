@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "Marketplace",
+    "MyListings.myListings": "Daftar saya",
+    "MyListings.lowestPrice": "Harga terendah",
+    "MyListings.highestPrice": "Harga Tertinggi",
+    "MyListings.byDate": "Berdasarkan Tanggal",
+    "MyListings.allCategories": "Semua Kategori"
 }

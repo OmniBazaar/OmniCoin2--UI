@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
+    "Processors.standbyProcessors": "Pemroses yang Siaga",
+    "Processors.voteSuccess": "Anda Sukses di vote!",
+    "Processors.topProcessors": "Prosessor Aktif",
+    "Processors.success": "Sukses",
     "Processors.error": "Error"
 }

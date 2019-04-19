@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "УДАЛИТЬ ВСЕ",
+    "ImportListings.onlyTextFileMsg": "Разрешены только файлы в формате TXT.",
+    "ImportListings.warning": "Предупреждение",
+    "ImportListings.addFiles": "ДОБАВИТЬ ФАЙЛЫ",
+    "ImportListings.importListings": "Импортировать листинги",
+    "ImportListings.myListings": "Мои листинги",
+    "ImportListings.ok": "Ok",
+    "ImportListings.listingsVendor": "Потсавщик листингов",
+    "ImportListings.importedData": "Импортируемые данные",
+    "ImportListings.files": "Файлы",
+    "ImportListings.filesToImport": "Импортировать файлы"
 }

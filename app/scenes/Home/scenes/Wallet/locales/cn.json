@@ -1,0 +1,21 @@
+{
+    "Wallet.welcomeBonusText2": "作为回报，我们要求您花一些时间来探索OmniBazaar，为您愿意出售或提供的某些商品或服务在市场中创建至少一个列表，并至少向另一个人介绍OmniBazaar。",
+    "Bitcoin.ipError": "此钱包是使用不同的IP地址创建的。请登录www.Blockchain.com登录此钱包，将{ip}列入白名单。",
+    "Wallet.welcome": "欢迎来到OmniBazaar!",
+    "Wallet.welcomeBonusText3": "你创建的列表可以用来推广你的实体业务，销售二手自行车，找室友，或者提供一些你提供的服务。我们正在使用\"荣誉系统\"并请求您的合作。请尽你的一份力量，帮助我们开始市场创建一个或多个清单。",
+    "Wallet.noWalletYet": "您还没有创建或打开钱包",
+    "Bitcoin.step3": "3. 转到设置 - > 安全 - > 高级设置和\"白名单\"您的新IP地址。 您可以使用'％'符号将一系列IP地址列入白名单，如下所示：85.173.%.%",
+    "Wallet.quickStart": "快速启动指南!(请阅读…)",
+    "Bitcoin.step1": "1. 点击Blockchain.com中收到的电子邮件链接，确认您的电子邮件地址。",
+    "Wallet.welcomeBonus": "关于\"欢迎奖金\" ",
+    "Wallet.welcomeBonusText1": "首次在设备上启动OmniBazaar时，您将收到一个欢迎奖金。这个受欢迎的奖励是我们对安装和使用omnibazaar表示\"谢谢\"的方式。",
+    "Bitcoin.step4": "4. 登出Blockchain.com，返回OmniBazaar。再一次打开您的钱包。如有必要，请刷新此电子钱包页面。",
+    "Wallet.launch": " OmniBazaar市场现在准备使用。",
+    "Wallet.refreshWallet": "刷新",
+    "Bitcoin.note": "注意:如果您在这台机器上的IP地址发生了变化，或者您想从一个不同的IP地址访问这个比特币钱包，您将需要在www.blockchain.com上白名单新的或不同的IP地址。这是一个安全特性。",
+    "Bitcoin.instructions": "以下是如何做到这一点的步骤说明:",
+    "Wallet.note": "注意:一旦在这台计算机操作，您将从OmniBazaar处收到免费注册和欢迎奖金",
+    "Wallet.addWallet": "添加或打开钱包",
+    "Wallet.error": "错误",
+    "Bitcoin.step2": "2. 点击链接转到Blockchain.com，使用GUID以及您在此处创建的钱包密码登录您的帐户。"
+}

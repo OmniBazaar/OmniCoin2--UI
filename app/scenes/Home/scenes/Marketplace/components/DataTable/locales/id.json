@@ -1,13 +1,15 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "LIHAT",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "Default",
+    "DataTable.successSave": "Sukses disimpan",
+    "DataTable.search": "Cari",
+    "DataTable.successDelete": "Berhasil dihapus",
+    "DataTable.date": "Tanggal",
+    "DataTable.success": "Sukses",
+    "DataTable.delete": "HAPUS",
+    "DataTable.save": "SIMPAN",
+    "DataTable.error": "Error",
+    "DataTable.category": "Kategori",
+    "DataTable.subCategory": "Sub-Kategori"
 }

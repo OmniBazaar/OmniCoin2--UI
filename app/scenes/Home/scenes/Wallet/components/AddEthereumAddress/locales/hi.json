@@ -1,6 +1,6 @@
 {
-    "AddEthereumAddress.createWallet": "ADD", 
-    "AddEthereumAddress.pleaseEnter": "Please enter", 
-    "AddEthereumAddress.cancel": "CANCEL", 
-    "AddEthereumAddress.label": "Label (optional)"
+    "AddEthereumAddress.createWallet": "जोड़े ",
+    "AddEthereumAddress.pleaseEnter": "कृपया दर्ज करें",
+    "AddEthereumAddress.cancel": "रद्द करे",
+    "AddEthereumAddress.label": "लेबल (वैकल्पिक))"
 }

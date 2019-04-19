@@ -1,0 +1,16 @@
+{
+    "AmazonListingsConfig.successMessage": "설정 업데이트 됨",
+    "AmazonListingsConfig.assocTag": "귀하의 assoc 태그",
+    "AmazonListingsConfig.secretKey": "비밀 키",
+    "AmazonListingsConfig.assocTagTitle": "AWS Assoc 태그*",
+    "AmazonListingsConfig.errorTitle": "에러",
+    "AmazonListingsConfig.successTitle": "성공",
+    "AmazonListingsConfig.rememberConfig": "이 공급자의 미래 수입품 구성을 사용하고 싶습니다.",
+    "AmazonListingsConfig.accessKey": "귀하의 엑세스 키",
+    "AmazonListingsConfig.accessKeyTitle": "AWS 엑세스 키*",
+    "AmazonListingsConfig.accessKeyError": "엑세스 키가 없습니다.",
+    "AmazonListingsConfig.assocTagError": "귀하의 assoc 태그가 없습니다.",
+    "AmazonListingsConfig.secretKeyTitle": "AWS 비밀 키*",
+    "AmazonListingsConfig.updateConfig": "설정 업데이트",
+    "AmazonListingsConfig.secretKeyError": "귀하의 비밀 키가 없습니다"
+}

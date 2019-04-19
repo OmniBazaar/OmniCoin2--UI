@@ -1,9 +1,9 @@
 {
-    "Categories.forSale": "For Sale", 
-    "Categories.jobs": "Jobs", 
-    "Categories.gigs": "Gigs", 
-    "Categories.cryptoBazaar": "CryptoBazaar", 
-    "Categories.community": "Community", 
-    "Categories.housing": "Housing", 
-    "Categories.services": "Services"
+    "Categories.forSale": "बेचने के लिए",
+    "Categories.jobs": "नौकरी",
+    "Categories.gigs": "Gigs",
+    "Categories.cryptoBazaar": "क्रिप्टोबाजार",
+    "Categories.community": "समुदाय",
+    "Categories.housing": "आवास",
+    "Categories.services": "सेवाएं"
 }

@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": " أدخل اسم المستخدم الخاص بك ",
+    "LoginForm.error": "خطأ",
+    "LoginForm.signup": " اشتراك",
+    "LoginForm.unlock": "الغاء القفل",
+    "LoginForm.connectionDoesntExist": "لا يوجد اتصال بالإنترنت. يرجى الاتصال بالإنترنت والمحاولة مرة أخرى",
+    "LoginForm.accountDoesntExist": "الحساب غير موجود",
+    "LoginForm.enterPassword": "أدخل كلمة المرور",
+    "LoginForm.noAccount": "لا تملك حسابا حتى الآن؟ ",
+    "LoginForm.fieldRequired": "هذا الحقل مطلوب "
 }

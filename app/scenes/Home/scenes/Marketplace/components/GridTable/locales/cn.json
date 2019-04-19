@@ -1,0 +1,16 @@
+{
+    "GridTable.removeFromFavorites": "从收藏夹删除",
+    "GridTable.success": "成功",
+    "GridTable.delete": "删除",
+    "GridTable.error": "错误",
+    "GridTable.deleteListingSuccess": "成功删除清单。",
+    "GridTable.cancel": "撤销",
+    "GridTable.noData": "没有找到数据.",
+    "GridTable.noResult": "<b>No results found.</b>\n\nPlease select different search terms.\nOr, change your Search Priority to\ninclude a larger geographic area\nor adifferent Publisher. To modify\nyour Search Priority, ",
+    "GridTable.clickHere": "CLICK HERE.",
+    "GridTable.ok": "好的",
+    "GridTable.edit": "编辑",
+    "GridTable.confirmDeleteTitle": "确认",
+    "GridTable.deleteListingError": "删除清单时发生错误。",
+    "GridTable.confirmDeleteMessage": "您确定要删除此清单吗?"
+}

@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "Tạo ví Ether mới",
+    "NewEthereumWallet.success": "Thành công",
+    "NewEthereumWallet.successMessage": "Đã thêm ví thành công.",
+    "NewEthereumWallet.createWallet": "TẠO VÍ",
+    "NewEthereumWallet.cancel": "HỦY",
+    "NewEthereumWallet.error": "Lỗi"
 }

@@ -1,13 +1,17 @@
 {
-    "PrivateData.update": "Update", 
-    "PrivateData.apply": "APPLY", 
-    "PrivateData.byCategoryType": "By Category / Type", 
-    "PrivateData.country": "Country", 
-    "PrivateData.updateSuccess": "Successfully updated", 
-    "PrivateData.notPublisherYet": "You are not a publisher yet.", 
-    "PrivateData.city": "City", 
-    "PrivateData.localArea": "Local Area", 
-    "PrivateData.startTyping": "Start typing...", 
-    "PrivateData.publisherNeedInfo": "We need the following information so that we can connect you to a Publisher of listings that align with your interests.", 
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.update": "Actualizare",
+    "PrivateData.apply": "APPLY",
+    "PrivateData.byCategoryType": "By Category / Type",
+    "PrivateData.country": "Country",
+    "PrivateData.updateSuccess": "Actualizat cu succes",
+    "PrivateData.notPublisherYet": "Nu sunteți încă un editor",
+    "PrivateData.city": "City",
+    "PrivateData.localArea": "Local Area",
+    "PrivateData.startTyping": "Start typing...",
+    "PrivateData.publisherNeedInfo": "Avem nevoie de următoarele informații pentru a vă putea conecta la un Editor de înregistrări care se aliniază cu interesele dvs.",
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Prenume",
+    "PrivateData.lastName": "Nume de familie",
+    "PrivateData.website": "Website"
 }

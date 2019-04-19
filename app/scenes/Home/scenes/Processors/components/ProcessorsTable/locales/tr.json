@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Rütbe",
+    "ProcessorsTable.name": "İsim",
+    "ProcessorsTable.approval": "Onaylama",
+    "ProcessorsTable.reliability": "Güvenilirlik",
+    "ProcessorsTable.reputation": "İtibar",
+    "ProcessorsTable.referralScore": "Tavsiye Puanı",
+    "ProcessorsTable.publisherScore": "Yayıncı Puanı",
+    "ProcessorsTable.netScore": "Net Puan",
+    "ProcessorsTable.approve": "Onaylamak"
+}

@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Cấp",
+    "ProcessorsTable.name": "Tên",
+    "ProcessorsTable.approval": "Phê duyệt",
+    "ProcessorsTable.reliability": "Độ tin cậy",
+    "ProcessorsTable.reputation": "Danh tiếng",
+    "ProcessorsTable.referralScore": "Điểm giới thiệu",
+    "ProcessorsTable.publisherScore": "Điểm nhà xuất bản",
+    "ProcessorsTable.netScore": "Điểm Net",
+    "ProcessorsTable.approve": "Phê duyệt"
+}

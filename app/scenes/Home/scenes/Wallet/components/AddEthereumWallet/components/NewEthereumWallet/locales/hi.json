@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "नया ईथर वॉलेट बनाएं",
+    "NewEthereumWallet.success": "सफल",
+    "NewEthereumWallet.successMessage": "वॉलेट सफलतापूर्वक जोड़ा गया।",
+    "NewEthereumWallet.createWallet": "वॉलेट बनाये",
+    "NewEthereumWallet.cancel": "रद्द करे",
+    "NewEthereumWallet.error": "त्रुटी"
 }

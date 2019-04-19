@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "से {proposedTime}.",
+    "MyEscrowProposals.you": "आप",
+    "MyEscrowProposals.error": "त्रुटी",
+    "MyEscrowProposals.success": "सफल",
+    "MyEscrowProposals.proposalText": "{initiator} एस्क्रो लेन-देन की समाप्ति का समय बढ़ाने का प्रस्ताव",
+    "MyEscrowProposals.approve": "इसे मंज़ूरी दें",
+    "MyEscrowProposals.approveSuccess": "प्रस्ताव को सफलतापूर्वक मंजूरी दे दी गई थी"
 }

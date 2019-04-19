@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "Ми не змогли підтвердити це ім'я користувача на нашому каналі Telegram.",
+    "AuthService.invalidMailChimpEmail": "Ми не змогли підтвердити вашу електронну підписку через емейл на нашу розсилку.",
+    "AuthService.invalidTwitterUsername": "Ми не змогли підтвердити це ім'я користувача в Twitter.",
+    "AuthService.invalidUsername": "Використовуйте лише малі буквено-цифрові символи, штрихи та періоди. Імена користувачів повинні починатися з букви і не можуть закінчуватися тире.",
+    "AuthService.noAccount": "Обліковий запис не існує",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "Невірний пароль"
 }

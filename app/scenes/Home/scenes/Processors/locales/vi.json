@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
-    "Processors.error": "Error"
+    "Processors.standbyProcessors": "Bộ xử lý dự phòng",
+    "Processors.voteSuccess": "Bạn đã bình chọn thành công!",
+    "Processors.topProcessors": "Bộ xử lý hoạt động",
+    "Processors.success": "Thành công",
+    "Processors.error": "Lỗi"
 }

@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "до {proposedTime}.",
+    "MyEscrowProposals.you": "Ви",
+    "MyEscrowProposals.error": "Помилка",
+    "MyEscrowProposals.success": "Успіх",
+    "MyEscrowProposals.proposalText": "{initiator} запропонував продовжити термін дії ескроу транзакції",
+    "MyEscrowProposals.approve": "Затвердити це",
+    "MyEscrowProposals.approveSuccess": "Пропозицію успішно затверджено"
 }

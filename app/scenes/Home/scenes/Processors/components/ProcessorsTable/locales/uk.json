@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Місце",
+    "ProcessorsTable.name": "Ім'я",
+    "ProcessorsTable.approval": "Затвердження",
+    "ProcessorsTable.reliability": "Надійність",
+    "ProcessorsTable.reputation": "Репутація",
+    "ProcessorsTable.referralScore": "Рахунок рефералів",
+    "ProcessorsTable.publisherScore": "Оцінка Видавця",
+    "ProcessorsTable.netScore": "Чиста оцінка",
+    "ProcessorsTable.approve": "Затвердити"
+}

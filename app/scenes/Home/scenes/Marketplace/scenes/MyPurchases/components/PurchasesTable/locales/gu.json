@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "મુલ્ય",
+    "PurchasesTable.publisher": "પ્રકાશક",
+    "PurchasesTable.expirationTime": "સમાપ્તિ સમય",
+    "PurchasesTable.count": "ગણતરી",
+    "PurchasesTable.title": "શીર્ષક",
+    "PurchasesTable.date": "તારીખ",
+    "PurchasesTable.seller": " વિક્રેતા ",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "સૂચી ઉપલબ્ધ નથી",
+    "PurchasesTable.buyer": "ખરીદનાર"
 }

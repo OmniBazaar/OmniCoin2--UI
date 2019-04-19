@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "Lỗi",
+    "MyEscrowAgents.agentsApproved": "Đại lý phê duyệt thành công.",
+    "MyEscrowAgents.clear": "Dọn dẹp",
+    "MyEscrowAgents.approve": "Phê duyệt",
+    "MyEscrowAgents.search": "Tìm kiếm",
+    "MyEscrowAgents.user": "Người dùng",
+    "MyEscrowAgents.approveChanges": "Phê duyệt thay đổi",
+    "MyEscrowAgents.insufficientBalance": "Không có đủ tiền trong ví của bạn."
 }

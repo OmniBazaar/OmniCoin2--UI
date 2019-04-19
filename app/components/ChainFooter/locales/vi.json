@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "Đang kết nối ...",
+    "ChainFooter.block": "Khối",
+    "ChainFooter.noConnection": "Không có kết nối",
+    "ChainFooter.refresh": "Làm tươi"
 }

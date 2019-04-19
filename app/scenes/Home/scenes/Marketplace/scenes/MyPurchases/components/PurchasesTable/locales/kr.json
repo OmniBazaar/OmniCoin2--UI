@@ -1,0 +1,12 @@
+{
+    "PurchasesTable.price": "가격",
+    "PurchasesTable.publisher": "게시자",
+    "PurchasesTable.expirationTime": "만료. 시간",
+    "PurchasesTable.count": "카운트",
+    "PurchasesTable.title": "제목",
+    "PurchasesTable.date": "날짜",
+    "PurchasesTable.seller": "판매자",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "목록 이용불가",
+    "PurchasesTable.buyer": "구매자"
+}

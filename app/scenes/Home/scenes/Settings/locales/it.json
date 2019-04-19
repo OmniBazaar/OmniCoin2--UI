@@ -1,12 +1,16 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "ID Account",
+    "Settings.recentTransactions": "Le transazioni recenti",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "REGISTRATO",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "Dati pubblici",
+    "Settings.account": "Account",
+    "Settings.currentBalance": "Bilancio corrente",
+    "Settings.privateData": "Dati privati",
+    "Settings.vestingBalances": "Bilanci investiti",
+    "Setting.ethAddressTitle": "Indirizzo Ethereum",
+    "Settings.to": "A",
+    "Settings.from": "From"
 }
