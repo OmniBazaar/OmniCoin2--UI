@@ -3,8 +3,8 @@
     "AirDropForm: telegramUserID": "My Telegram user ID is", 
     "AirDropForm.joinTelegramChannelSuggestion": "Join our Telegram channel here:", 
     "AirDropForm.fieldRequired": "This field is required", 
-    "AirDropForm.joinTelegramChannelConfirmation": "I joined the OmniBazaar channel. My Telegram phone number is", 
-    "AirDropForm.receiveOmnicoinsByFollowingActions": "You can receive {current_bonus_amount} OmniCoins just for doing the following actions", 
+    "AirDropForm.joinTelegramChannelConfirmation": "I joined the OmniBazaar/OmniCoin channel. My Telegram phone number is", 
+    "AirDropForm.receiveOmnicoinsByFollowingActions": "You can receive {current_bonus_amount} OmniCoins just for doing the following actions:", 
     "AirDropForm.twitterUserName": "User name", 
     "AirDropForm.telegramUserName": "User name", 
     "AirDropForm.email": "E-mail Address", 
@@ -21,7 +21,7 @@
     "AirDropForm.telegramLink": "OmniBazaar on Telegram", 
     "AirDropForm.mailchimpLink": "OmniBazaar on MailChimp", 
     "AirDropForm.joinNewsletterChannelSuggestion": "Join our Newsletter mailing list here:", 
-    "AirDropForm: notWorkingServer": "The server is down. Try again later", 
+    "AirDropForm.notWorkingServer": "The server is down. Try again later", 
     "AirDropForm.skipFreeCoins": "Skip the free coins", 
     "AirDropForm.joinTwitterChannelConfirmation": "I joined the OmniBazaar channel. My Twitter user name is"
 }

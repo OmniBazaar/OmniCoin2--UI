@@ -358,7 +358,7 @@ export function* checkAndUpdatePublishersAliveStatus() {
   let publishers = allPublishers.filter(pub => publisherResultsMap[pub.publisher_ip]);
   const existPublishers = {};
   publishers.forEach(pub => {
-    existPublishers[pub.publisher_ip] = true;
+    existPublishers[pub.publisher_ip] = pub;
   });
   const tasks = [];
   const { currentUser } = (yield select()).default.auth;
@@ -368,6 +368,9 @@ export function* checkAndUpdatePublishersAliveStatus() {
       pub.alive = true;
       publishers.push(pub);
       tasks.push(call(checkPublisherAlive, user, pub));
+    } else {
+      existPublishers[pub.publisher_ip].publisher_fee = pub.publisher_fee;
+      existPublishers[pub.publisher_ip].listingCount = pub.listingCount;
     }
   });
   if (tasks.length) {

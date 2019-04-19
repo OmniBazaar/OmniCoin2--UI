@@ -1,5 +1,7 @@
 import isReachable from 'is-reachable';
 
+import {savePreferences} from '../../preferences/services';
+
 const key = 'currentUser';
 
 export const getStoredCurrentUser = () => JSON.parse(localStorage.getItem(key));
@@ -21,4 +23,8 @@ export const getFirstReachable = async (addresses) => {
       return addresses[i];
     }
   }
+};
+
+export const storeLanguage = (username, language) => {
+  savePreferences(username, {language});
 };

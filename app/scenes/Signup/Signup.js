@@ -6,6 +6,7 @@ import SignupForm from './components/SignupForm/SignupForm';
 import Background from '../../components/Background/Background';
 import './signup.scss';
 import { getAccount } from '../../services/blockchain/auth/authActions';
+import { loadLocalPreferences } from '../../services/preferences/preferencesActions';
 
 class Signup extends Component {
   componentWillReceiveProps(nextProps) {
@@ -18,6 +19,7 @@ class Signup extends Component {
       )
     ) {
       if (nextProps.auth.isWelcomeBonusAvailable) {
+        this.props.preferencesActions.loadLocalPreferences();
         this.props.history.push('/air-drop');
       } else {
         this.props.history.push('/');
@@ -38,6 +40,9 @@ export default connect(
   (state) => ({ ...state.default }),
   (dispatch) => ({
     authActions: bindActionCreators({ getAccount }, dispatch),
+    preferencesActions: bindActionCreators({
+      loadLocalPreferences
+    }, dispatch),
   }),
 )(Signup);
 
@@ -54,7 +59,10 @@ Signup.propTypes = {
   }),
   history: PropTypes.shape({
     push: PropTypes.func
-  })
+  }),
+  preferencesActions: PropTypes.shape({
+    loadLocalPreferences: PropTypes.func
+  }).isRequired
 };
 
 Signup.defaultProps = {

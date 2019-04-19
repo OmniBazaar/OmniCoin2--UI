@@ -198,7 +198,7 @@ class GridTable extends Component {
           (
             <TableCell className="item noData">
               <span>
-                {formatMessage(messages.noResult)}
+                <span dangerouslySetInnerHTML={{ __html: formatMessage(messages.noResult) }} />
                 <span class="link" onClick={this.goToSearchPriority}>
                   {formatMessage(messages.clickHere)}
                 </span>

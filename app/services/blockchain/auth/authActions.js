@@ -33,9 +33,9 @@ const {
   GET_CURRENT_USER: () => ({}),
   LOGIN: (username, password) => ({ username, password }),
   LOGOUT: () => ({}),
-  SIGNUP: (username, password, referrer, searchPriorityData, macAddress, harddriveId) => (
+  SIGNUP: (username, password, referrer, searchPriorityData, macAddress, harddriveId, language) => (
     {
-      username, password, referrer, searchPriorityData, macAddress, harddriveId
+      username, password, referrer, searchPriorityData, macAddress, harddriveId, language
     }
   ),
   REFERRAL_BONUS: () => ({ }),

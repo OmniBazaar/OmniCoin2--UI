@@ -102,6 +102,7 @@ class FavoriteListings extends Component {
           data={data}
           showActions={false}
           currency={favoriteCurrency}
+          showNoDataMessageOnEmpty={true}
           tabs={[
             {
               title: formatMessage(messages.byDate),
