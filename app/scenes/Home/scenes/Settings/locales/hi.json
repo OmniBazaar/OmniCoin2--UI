@@ -9,5 +9,8 @@
     "Settings.account": "खाता",
     "Settings.currentBalance": "वर्तमान शेष",
     "Settings.privateData": "निजी डेटा",
-    "Settings.vestingBalances": "निहितार्थ संतुलन"
+    "Settings.vestingBalances": "निहितार्थ संतुलन",
+    "Setting.ethAddressTitle": "एथेरम पता",
+    "Settings.to": "से",
+    "Settings.from": "से"
 }

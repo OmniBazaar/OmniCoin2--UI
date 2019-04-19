@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Clicca qui se hai bisogno o vuoi rifiutare o terminare questa transazione di deposito a garanzia. Ciò restituirà all'acquirente i fondi Escrow.",
     "MyEscrowTransactions.successRelease": "{amount} XOM è stato rilasciato a {username}!",
     "MyEscrowTransactions.extendTime": "ESTENDI TEMPO",
-    "MyEscrowTransactions.success": "Riuscito"
+    "MyEscrowTransactions.success": "Riuscito",
+    "MyEscrowTransaction.proposalConfirmation": "Stai per proporre alla controparte che il tempo di scadenza del deposito a garanzia venga esteso a {time}."
 }

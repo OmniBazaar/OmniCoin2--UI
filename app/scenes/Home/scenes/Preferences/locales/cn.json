@@ -55,5 +55,10 @@
     "Preferences.filipino": "Filipino (Filipino)",
     "Preferences.malaysian": "Malaysia (Malaysian)",
     "Preferences.romanian": "Română (Romanian)",
-    "Preferences.ukrainian": "Українська (Ukrainian)"
+    "Preferences.ukrainian": "Українська (Ukrainian)",
+    "Preferences.minutes": "(分钟)",
+    "Preferences.fieldInvalidNumber": "无效号码",
+    "Preferences.searchListingOptions": "搜索列表选项",
+    "Preferences.byAnyKeyword": "任何关键字",
+    "Preferences.byAllKeywords": "按所有关键字"
 }

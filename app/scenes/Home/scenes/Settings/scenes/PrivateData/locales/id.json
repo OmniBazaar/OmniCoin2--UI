@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Kami membutuhkan informasi berikut ini agar kami dapat menghubungkan Anda dengan Penerbit yang sesuai dengan minat Anda.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Nama Depan",
+    "PrivateData.lastName": "Nama Belakang",
+    "PrivateData.website": "Website"
 }

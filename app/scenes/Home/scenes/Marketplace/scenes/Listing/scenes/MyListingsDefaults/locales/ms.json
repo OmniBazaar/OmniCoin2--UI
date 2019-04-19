@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "Piawaikan Penyenaraian berjaya disimpan.",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "Kejayaan",
-    "ListingsDefaults.myListings": "Senarai saya"
+    "ListingsDefaults.myListings": "Senarai saya",
+    "ListingsDefaults.defaultsNote": "Maklumat ini akan menjadi pra-penduduk ke dalam semua penyenaraian baru yang anda buat."
 }

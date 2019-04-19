@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Click here if you need or want to reject or terminate this escrow transaction. This will return to the buyer the funds held in escrow.",
     "MyEscrowTransactions.successRelease": "{amount} XOM were successfully released to {username}!",
     "MyEscrowTransactions.extendTime": "EXTEND TIME",
-    "MyEscrowTransactions.success": "Success"
+    "MyEscrowTransactions.success": "Success",
+    "MyEscrowTransaction.proposalConfirmation": "You are about to propose to the counter-party that the escrow expiration time be extended to {time}."
 }

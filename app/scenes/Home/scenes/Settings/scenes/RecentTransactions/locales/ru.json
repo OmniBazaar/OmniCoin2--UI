@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "УЧЕТНАЯ ЗАПИСЬ",
     "RecentTransactions.balance": "Остаток",
     "RecentTransactions.transfer": "ПЕРЕВОД",
-    "RecentTransactions.return": "ВЕРНУТЬ"
+    "RecentTransactions.return": "ВЕРНУТЬ",
+    "RecentTransactions.date": "Дата"
 }

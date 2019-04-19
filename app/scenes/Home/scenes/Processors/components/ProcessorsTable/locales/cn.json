@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "排名",
+    "ProcessorsTable.name": "名字",
+    "ProcessorsTable.approval": "批准",
+    "ProcessorsTable.reliability": "可靠性",
+    "ProcessorsTable.reputation": "声誉",
+    "ProcessorsTable.referralScore": "推荐得分",
+    "ProcessorsTable.publisherScore": "发布者得分",
+    "ProcessorsTable.netScore": "净得分",
+    "ProcessorsTable.approve": "批准"
+}

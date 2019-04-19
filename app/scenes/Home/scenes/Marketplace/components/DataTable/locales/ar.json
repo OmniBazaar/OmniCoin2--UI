@@ -9,5 +9,7 @@
     "DataTable.success": "نجاح",
     "DataTable.delete": "حذف",
     "DataTable.save": "حفظ",
-    "DataTable.error": "خطأ"
+    "DataTable.error": "خطأ",
+    "DataTable.category": "المجموعة",
+    "DataTable.subCategory": "مجموعة فرعية"
 }

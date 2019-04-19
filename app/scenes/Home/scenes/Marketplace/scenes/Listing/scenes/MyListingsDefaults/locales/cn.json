@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "成功保存了清单默认值。",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "成功",
-    "ListingsDefaults.myListings": "我的清单"
+    "ListingsDefaults.myListings": "我的清单",
+    "ListingsDefaults.defaultsNote": "这些信息将被预先填充到您创建的所有新清单中。"
 }

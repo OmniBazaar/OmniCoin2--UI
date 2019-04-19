@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "જો તમને જરૂર હોય તો અહીં ક્લિક કરો અથવા આ એસ્ક્રો ટ્રાન્ઝેક્શનને રદ્દ કરવા અથવા સમાપ્ત કરવા માંગો છો. આ એસ્ક્રોમાં રાખવામાં આવેલા ભંડોળ ખરીદદાર પાસે પાછું આવશે.",
     "MyEscrowTransactions.successRelease": "{username}{amount} XOM ને સફળતાપૂર્વક મુક્ત કરવામાં આવ્યું!",
     "MyEscrowTransactions.extendTime": "સમય વધારો",
-    "MyEscrowTransactions.success": "સફળ"
+    "MyEscrowTransactions.success": "સફળ",
+    "MyEscrowTransaction.proposalConfirmation": "તમે કાઉન્ટર પાર્ટીનો પ્રસ્તાવ મૂકવાની તૈયારીમાં છો કે એસ્ક્રો સમાપ્તિ સમય {time}વિસ્તૃત કરવામાં આવશે."
 }

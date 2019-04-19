@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "Únase a nuestra lista de correo de boletines aquí:",
     "AirDropForm.notWorkingServer": "El servidor está inactivo. Inténtelo de nuevo más tarde.",
     "AirDropForm.skipFreeCoins": "Saltear las monedas gratis",
-    "AirDropForm.joinTwitterChannelConfirmation": "Me uní al canal OmniBazaar. Mi nombre de usuario de Twitter es"
+    "AirDropForm.joinTwitterChannelConfirmation": "Me uní al canal OmniBazaar. Mi nombre de usuario de Twitter es",
+    "AirDropForm.telegramUserID": "Mi ID de usuario de Telegram es"
 }

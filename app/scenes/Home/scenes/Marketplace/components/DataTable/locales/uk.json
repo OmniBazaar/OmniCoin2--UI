@@ -9,5 +9,7 @@
     "DataTable.success": "Успіх",
     "DataTable.delete": "ВИДАЛИТИ",
     "DataTable.save": "ЗБЕРЕГТИ",
-    "DataTable.error": "Помилка"
+    "DataTable.error": "Помилка",
+    "DataTable.category": "Категорія",
+    "DataTable.subCategory": "Суб-категорія"
 }

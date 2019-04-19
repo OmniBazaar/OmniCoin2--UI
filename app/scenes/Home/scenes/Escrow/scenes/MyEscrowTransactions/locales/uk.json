@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Натисніть тут, якщо вам потрібно чи ви хочете відхилити або припинити дію ескроу транзакції. Це дозволить повернути покупцеві кошти від ескроу агента.",
     "MyEscrowTransactions.successRelease": "{amount} XOM були успішно відправлені до {username}!",
     "MyEscrowTransactions.extendTime": "ПРОДОВЖИТИ ЧАС",
-    "MyEscrowTransactions.success": "Успіх"
+    "MyEscrowTransactions.success": "Успіх",
+    "MyEscrowTransaction.proposalConfirmation": "Ви збираєтеся запропонувати контрагенту, щоб термін дії ескроу був збільшений до {time}."
 }

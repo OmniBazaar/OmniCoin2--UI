@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "نحتاج إلى المعلومات التالية حتى نتمكن من ربطك مع ناشر القوائم الذي يتوافق مع اهتماماتك.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "البريد الالكتروني",
+    "PrivateData.firstName": "الاسم الأول",
+    "PrivateData.lastName": "الاسم الأخير",
+    "PrivateData.website": "الموقع"
 }

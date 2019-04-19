@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Haga clic aquí si necesita o desea rechazar o terminar esta transacción de depósito en garantía. Esto devolverá al comprador los fondos retenidos como depósito en garantía.",
     "MyEscrowTransactions.successRelease": "¡{cantidad} XOM se liberó con éxito en {nombre de usuario}!",
     "MyEscrowTransactions.extendTime": "AMPLIAR HORA",
-    "MyEscrowTransactions.success": "Éxito"
+    "MyEscrowTransactions.success": "Éxito",
+    "MyEscrowTransaction.proposalConfirmation": "Está a punto de proponerle a la contraparte que el tiempo de vencimiento de la cuenta de garantía se extienda a {time}."
 }

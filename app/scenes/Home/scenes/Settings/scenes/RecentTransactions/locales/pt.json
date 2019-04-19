@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "CONTA",
     "RecentTransactions.balance": "Saldo",
     "RecentTransactions.transfer": "TRANSFERÊNCIA",
-    "RecentTransactions.return": "RETORNADO"
+    "RecentTransactions.return": "RETORNADO",
+    "RecentTransactions.date": "Data"
 }

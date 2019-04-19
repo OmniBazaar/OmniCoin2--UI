@@ -9,5 +9,7 @@
     "DataTable.success": "Succes",
     "DataTable.delete": "DELETE",
     "DataTable.save": "SAVE",
-    "DataTable.error": "Eroare"
+    "DataTable.error": "Eroare",
+    "DataTable.category": "Categorie",
+    "DataTable.subCategory": "Subcategorie"
 }

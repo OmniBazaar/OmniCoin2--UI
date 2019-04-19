@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Avem nevoie de următoarele informații pentru a vă putea conecta la un Editor de înregistrări care se aliniază cu interesele dvs.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Prenume",
+    "PrivateData.lastName": "Nume de familie",
+    "PrivateData.website": "Website"
 }

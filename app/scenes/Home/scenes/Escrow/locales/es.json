@@ -2,5 +2,6 @@
     "Escrow.transactions": "Mis transacciones de depósitos en garantía",
     "Escrow.agents": "Mis agentes de depósito en garantía",
     "Escrow.escrow": "Depósito en garantía",
-    "Escrow.settings": "Mis ajustes de depósito de garantía"
+    "Escrow.settings": "Mis ajustes de depósito de garantía",
+    "Escrow.proposals": "Mis propuestas de depósito de garantía"
 }

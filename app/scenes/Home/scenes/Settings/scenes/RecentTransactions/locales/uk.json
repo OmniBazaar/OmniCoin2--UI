@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "ОБЛІКОВИЙ ЗАПИС",
     "RecentTransactions.balance": "Баланс",
     "RecentTransactions.transfer": "ПЕРЕКАЗ",
-    "RecentTransactions.return": "ПОВЕРНУТО"
+    "RecentTransactions.return": "ПОВЕРНУТО",
+    "RecentTransactions.date": "Дата"
 }

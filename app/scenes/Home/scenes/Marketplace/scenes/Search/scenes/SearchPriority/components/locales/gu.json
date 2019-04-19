@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "અદ્યતન",
     "SearchPrioritySetting.apply": "અરજી કરો",
-    "SearchPrioritySetting.publisherPlaceholder": "પ્રકાશક પસંદ કરો ..."
+    "SearchPrioritySetting.publisherPlaceholder": "પ્રકાશક પસંદ કરો ...",
+    "SearchPrioritySetting.searchPriority": " પ્રાધાન્યતા શોધો "
 }

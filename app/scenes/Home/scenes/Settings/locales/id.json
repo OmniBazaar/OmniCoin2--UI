@@ -9,5 +9,8 @@
     "Settings.account": "Akun",
     "Settings.currentBalance": "Saldo saat ini",
     "Settings.privateData": "Data Privat",
-    "Settings.vestingBalances": "Saldo Vesting "
+    "Settings.vestingBalances": "Saldo Vesting ",
+    "Setting.ethAddressTitle": "Alamat Ethereum",
+    "Settings.to": "Ke",
+    "Settings.from": "Dari"
 }

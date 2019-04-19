@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Bu emanet işlemini reddetmek veya sonlandırmak istiyorsanız, buraya tıklayın. Bu, emanette tutulan paralar alıcıya iade edecektir.",
     "MyEscrowTransactions.successRelease": "{amount} XOM başarıyla {username} 'a bırakıldı!",
     "MyEscrowTransactions.extendTime": "ZAMAN UZATMAK",
-    "MyEscrowTransactions.success": "Başarılı"
+    "MyEscrowTransactions.success": "Başarılı",
+    "MyEscrowTransaction.proposalConfirmation": "Karşı tarafa emanet sona erme zamanının {time} olarak uzatılmasını teklif etmek üzeresiniz."
 }

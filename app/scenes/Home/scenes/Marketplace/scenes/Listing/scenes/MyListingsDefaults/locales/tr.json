@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "İlan Varsayılanları başarıyla kaydedildi.",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "Başarı",
-    "ListingsDefaults.myListings": "İlanlarım"
+    "ListingsDefaults.myListings": "İlanlarım",
+    "ListingsDefaults.defaultsNote": "Bu bilgiler, oluşturduğunuz tüm yeni girişlere önceden yerleştirilecektir."
 }

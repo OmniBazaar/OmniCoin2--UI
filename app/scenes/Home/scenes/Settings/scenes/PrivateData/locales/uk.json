@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Нам потрібна така інформація, щоб ми могли підключити вас до Видавця лотів, що відповідають вашим інтересам.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Ім'я",
+    "PrivateData.lastName": "Прізвище",
+    "PrivateData.website": "Веб-сайт"
 }

@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "ખાતું",
     "RecentTransactions.balance": "સિલક",
     "RecentTransactions.transfer": "પરિવહન",
-    "RecentTransactions.return": "પરત"
+    "RecentTransactions.return": "પરત",
+    "RecentTransactions.date": "તારીખ"
 }

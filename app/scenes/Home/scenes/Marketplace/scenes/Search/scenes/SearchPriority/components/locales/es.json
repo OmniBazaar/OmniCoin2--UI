@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Actualización",
     "SearchPrioritySetting.apply": "APLICAR",
-    "SearchPrioritySetting.publisherPlaceholder": "Seleccionar publicador..."
+    "SearchPrioritySetting.publisherPlaceholder": "Seleccionar publicador...",
+    "SearchPrioritySetting.searchPriority": "Prioridad de la búsqueda"
 }

@@ -2,5 +2,6 @@
     "Escrow.transactions": "Transaksi Escrow Saya",
     "Escrow.agents": "Agen Escrow Saya",
     "Escrow.escrow": "Escrow",
-    "Escrow.settings": "Pengaturan Escrow Saya"
+    "Escrow.settings": "Pengaturan Escrow Saya",
+    "Escrow.proposals": "Proposal Escrow Saya"
 }

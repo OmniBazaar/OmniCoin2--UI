@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "पद",
+    "ProcessorsTable.name": "नाम ",
+    "ProcessorsTable.approval": "अनुमोदन",
+    "ProcessorsTable.reliability": "विश्वसनीयता",
+    "ProcessorsTable.reputation": "प्रतिष्ठा",
+    "ProcessorsTable.referralScore": "रेफरल अंक",
+    "ProcessorsTable.publisherScore": "प्रकाशक का अंक",
+    "ProcessorsTable.netScore": "कुल अंक",
+    "ProcessorsTable.approve": "अनुमोदित"
+}

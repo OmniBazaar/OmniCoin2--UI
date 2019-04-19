@@ -55,5 +55,10 @@
     "Preferences.filipino": "Filipino (Filipino)",
     "Preferences.malaysian": "Malaysia (Malaysian)",
     "Preferences.romanian": "Română (Romanian)",
-    "Preferences.ukrainian": "Українська (Ukrainian)"
+    "Preferences.ukrainian": "Українська (Ukrainian)",
+    "Preferences.minutes": "(분)",
+    "Preferences.fieldInvalidNumber": "잘못된 번호",
+    "Preferences.searchListingOptions": "검색 목록 선택",
+    "Preferences.byAnyKeyword": "모든 키워드 별 ",
+    "Preferences.byAllKeywords": "모든 키워드로"
 }

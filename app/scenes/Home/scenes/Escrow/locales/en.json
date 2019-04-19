@@ -2,5 +2,6 @@
     "Escrow.transactions": "My Escrow Transactions",
     "Escrow.agents": "My Escrow Agents",
     "Escrow.escrow": "Escrow",
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.settings": "My Escrow Settings",
+    "Escrow.proposals": "My Escrow Proposals"
 }

@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "Alăturați-vă listei noastre de discuții pentru newsletter aici:",
     "AirDropForm.notWorkingServer": "Serverul este în jos. Încercați din nou mai târziu",
     "AirDropForm.skipFreeCoins": "Treci peste token-uri gratuite",
-    "AirDropForm.joinTwitterChannelConfirmation": "M-am alăturat canalului OmniBazaar. Numele meu de utilizator Twitter este"
+    "AirDropForm.joinTwitterChannelConfirmation": "M-am alăturat canalului OmniBazaar. Numele meu de utilizator Twitter este",
+    "AirDropForm.telegramUserID": "ID-ul de utilizator al telegramei mele"
 }

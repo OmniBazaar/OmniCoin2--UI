@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Perbarui",
     "SearchPrioritySetting.apply": "TERAPKAN",
-    "SearchPrioritySetting.publisherPlaceholder": "Pilih penerbit..."
+    "SearchPrioritySetting.publisherPlaceholder": "Pilih penerbit...",
+    "SearchPrioritySetting.searchPriority": "Prioritas Pencarian"
 }

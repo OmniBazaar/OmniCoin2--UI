@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "हमारे समाचार प्रेषण सूची में यहां शामिल हों:",
     "AirDropForm.notWorkingServer": "सर्वर डाउन है। बाद में पुन: प्रयास करें",
     "AirDropForm.skipFreeCoins": "मुफ़्त सिक्के छोड़े",
-    "AirDropForm.joinTwitterChannelConfirmation": "मैं  OmniBazaar  चैनल से जुड़ गया। मेरा ट्विटर उपयोगकर्ता नाम है"
+    "AirDropForm.joinTwitterChannelConfirmation": "मैं  OmniBazaar  चैनल से जुड़ गया। मेरा ट्विटर उपयोगकर्ता नाम है",
+    "AirDropForm.telegramUserID": "मेरा टेलीग्राम उपयोगकर्ता आईडी है"
 }

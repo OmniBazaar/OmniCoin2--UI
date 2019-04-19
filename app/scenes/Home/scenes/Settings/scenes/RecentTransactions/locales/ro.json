@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "ACCOUNT",
     "RecentTransactions.balance": "Balanța",
     "RecentTransactions.transfer": "TRANSFER",
-    "RecentTransactions.return": "RETURNED"
+    "RecentTransactions.return": "RETURNED",
+    "RecentTransactions.date": "Data"
 }

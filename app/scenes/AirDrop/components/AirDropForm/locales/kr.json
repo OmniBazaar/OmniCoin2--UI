@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "우리의 뉴스레터를 구독하세요:",
     "AirDropForm.notWorkingServer": "서버가 다운되었습니다. 나중에 다시 시도하세요.",
     "AirDropForm.skipFreeCoins": "무료 코인 넘어가기",
-    "AirDropForm.joinTwitterChannelConfirmation": "본인은 OmniBazaar 채널에 참여했습니다. 저의 트위터 유저 네임은"
+    "AirDropForm.joinTwitterChannelConfirmation": "본인은 OmniBazaar 채널에 참여했습니다. 저의 트위터 유저 네임은",
+    "AirDropForm.telegramUserID": "텔레그램 유저 ID는"
 }

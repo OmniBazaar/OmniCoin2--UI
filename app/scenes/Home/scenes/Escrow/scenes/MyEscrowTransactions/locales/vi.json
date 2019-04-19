@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Bấm vào đây nếu bạn cần hoặc muốn từ chối hoặc chấm dứt giao dịch ký quỹ này. Điều này sẽ trả lại cho người mua các khoản tiền được giữ trong ký quỹ.",
     "MyEscrowTransactions.successRelease": "{amount} XOM đã được phát hành thành công đến {username}!",
     "MyEscrowTransactions.extendTime": "KÉO DÀI THỜI GIAN",
-    "MyEscrowTransactions.success": "Thành công"
+    "MyEscrowTransactions.success": "Thành công",
+    "MyEscrowTransaction.proposalConfirmation": "Bạn sắp đề xuất với đối tác rằng thời hạn của ký quỹ được kéo dài thành {time}."
 }

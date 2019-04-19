@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "TÀI KHOẢN",
     "RecentTransactions.balance": "Số dư",
     "RecentTransactions.transfer": "CHUYỂN KHOẢN",
-    "RecentTransactions.return": "TRẢ LẠI"
+    "RecentTransactions.return": "TRẢ LẠI",
+    "RecentTransactions.date": "Ngày"
 }

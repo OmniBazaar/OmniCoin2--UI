@@ -9,5 +9,8 @@
     "Settings.account": "Hesap",
     "Settings.currentBalance": "Geçerli Bakiye",
     "Settings.privateData": "Özel Veri",
-    "Settings.vestingBalances": "Yetki Dengesi"
+    "Settings.vestingBalances": "Yetki Dengesi",
+    "Setting.ethAddressTitle": "Ethereum adresi",
+    "Settings.to": "-a",
+    "Settings.from": "-dan"
 }

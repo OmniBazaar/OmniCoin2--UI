@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "تم حفظ القيم الافتراضية للقائمة بنجاح.",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "نجاح",
-    "ListingsDefaults.myListings": "قوائمي"
+    "ListingsDefaults.myListings": "قوائمي",
+    "ListingsDefaults.defaultsNote": "سيتم ملء هذه المعلومات مسبقًا بجميع القوائم الجديدة التي تنشئها."
 }

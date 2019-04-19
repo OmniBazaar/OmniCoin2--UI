@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Güncelleme",
     "SearchPrioritySetting.apply": "UYGULAMAK",
-    "SearchPrioritySetting.publisherPlaceholder": "Yayıncı Seçin..."
+    "SearchPrioritySetting.publisherPlaceholder": "Yayıncı Seçin...",
+    "SearchPrioritySetting.searchPriority": "Arama Önceliği"
 }

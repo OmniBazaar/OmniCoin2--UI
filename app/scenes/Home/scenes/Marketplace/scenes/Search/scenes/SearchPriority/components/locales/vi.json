@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Cập nhật",
     "SearchPrioritySetting.apply": "ÁP DỤNG",
-    "SearchPrioritySetting.publisherPlaceholder": "Chọn nhà xuất bản ..."
+    "SearchPrioritySetting.publisherPlaceholder": "Chọn nhà xuất bản ...",
+    "SearchPrioritySetting.searchPriority": "Ưu tiên tìm kiếm"
 }

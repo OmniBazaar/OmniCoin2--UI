@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "हमें निम्नलिखित जानकारी की आवश्यकता है ताकि हम आपको सूची के प्रकाशक से जोड़ सकें जो आपके हितों के साथ संरेखित हो।",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "ईमेल",
+    "PrivateData.firstName": "पहला नाम",
+    "PrivateData.lastName": "उपनाम",
+    "PrivateData.website": "वेबसाइट"
 }

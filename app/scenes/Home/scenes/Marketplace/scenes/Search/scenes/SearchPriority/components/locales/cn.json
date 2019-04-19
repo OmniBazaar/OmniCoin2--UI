@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "更新",
     "SearchPrioritySetting.apply": "回复",
-    "SearchPrioritySetting.publisherPlaceholder": "选择发布者..."
+    "SearchPrioritySetting.publisherPlaceholder": "选择发布者...",
+    "SearchPrioritySetting.searchPriority": "搜索的优先级"
 }

@@ -9,5 +9,7 @@
     "DataTable.success": "성공",
     "DataTable.delete": "삭제",
     "DataTable.save": "저장",
-    "DataTable.error": "에러"
+    "DataTable.error": "에러",
+    "DataTable.category": "카테고리",
+    "DataTable.subCategory": "하위 카테고리"
 }

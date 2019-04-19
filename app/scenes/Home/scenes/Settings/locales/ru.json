@@ -9,5 +9,8 @@
     "Settings.account": "Учетная запись",
     "Settings.currentBalance": "Текущий баланс",
     "Settings.privateData": "Личные данные",
-    "Settings.vestingBalances": "Предоставление остатка"
+    "Settings.vestingBalances": "Предоставление остатка",
+    "Setting.ethAddressTitle": "Адрес Ethereum",
+    "Settings.to": "Куда",
+    "Settings.from": "От"
 }

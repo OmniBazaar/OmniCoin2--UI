@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Klik di sini jika Anda perlu atau ingin menolak atau menghentikan transaksi escrow ini. Ini akan mengembalikan kepada pembeli , dana yang disimpan dalam escrow.",
     "MyEscrowTransactions.successRelease": "{amount} XOM berhasil dirilis ke{username}!",
     "MyEscrowTransactions.extendTime": "PERPANJANG WAKTU",
-    "MyEscrowTransactions.success": "Sukses"
+    "MyEscrowTransactions.success": "Sukses",
+    "MyEscrowTransaction.proposalConfirmation": "Anda akan mengusulkan kepada pihak lawan agar waktu kedaluwarsa escrow diperpanjang {time}."
 }

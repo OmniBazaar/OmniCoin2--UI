@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "खाता",
     "RecentTransactions.balance": "शेष",
     "RecentTransactions.transfer": "स्थानांतरण",
-    "RecentTransactions.return": "लौटा हुआ"
+    "RecentTransactions.return": "लौटा हुआ",
+    "RecentTransactions.date": "दिनांक"
 }

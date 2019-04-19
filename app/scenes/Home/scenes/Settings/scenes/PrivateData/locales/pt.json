@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Nós precisamos das seguintes informações para que possamos conectá-lo para um Publicador de listagens que se alinhem com seus interesses.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Primeiro Nome",
+    "PrivateData.lastName": "Sobrenome",
+    "PrivateData.website": "Website"
 }

@@ -9,5 +9,8 @@
     "Settings.account": "Tài khoản",
     "Settings.currentBalance": "Số dư hiện tại",
     "Settings.privateData": "Dữ liệu riêng tư",
-    "Settings.vestingBalances": "Số dư Vesting"
+    "Settings.vestingBalances": "Số dư Vesting",
+    "Setting.ethAddressTitle": "Địa chỉ Ethereum",
+    "Settings.to": "Đến",
+    "Settings.from": "Từ"
 }

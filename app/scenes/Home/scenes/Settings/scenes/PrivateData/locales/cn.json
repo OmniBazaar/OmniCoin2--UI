@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "我们需要以下信息，以便我们将您与符合您兴趣的商家信息发布者联系起来。",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "电子邮件",
+    "PrivateData.firstName": "第一个名字",
+    "PrivateData.lastName": "姓",
+    "PrivateData.website": "网站"
 }

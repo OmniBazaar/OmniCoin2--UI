@@ -9,5 +9,7 @@
     "DataTable.success": "成功",
     "DataTable.delete": "删除",
     "DataTable.save": "保存",
-    "DataTable.error": "错误"
+    "DataTable.error": "错误",
+    "DataTable.category": "类别",
+    "DataTable.subCategory": "子分类"
 }

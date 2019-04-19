@@ -9,5 +9,8 @@
     "Settings.account": "Account",
     "Settings.currentBalance": "Balanța actuală",
     "Settings.privateData": "Date Private",
-    "Settings.vestingBalances": "Balanțe de veste"
+    "Settings.vestingBalances": "Balanțe de veste",
+    "Setting.ethAddressTitle": "Adresă Ethereum",
+    "Settings.to": "To",
+    "Settings.from": "From"
 }

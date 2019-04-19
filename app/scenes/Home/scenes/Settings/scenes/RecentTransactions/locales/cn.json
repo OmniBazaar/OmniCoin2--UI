@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "账户",
     "RecentTransactions.balance": "余额",
     "RecentTransactions.transfer": "转移",
-    "RecentTransactions.return": "返回"
+    "RecentTransactions.return": "返回",
+    "RecentTransactions.date": "日期"
 }

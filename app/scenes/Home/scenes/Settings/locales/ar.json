@@ -9,5 +9,8 @@
     "Settings.account": "الحساب",
     "Settings.currentBalance": "الرصيد الحالي ",
     "Settings.privateData": "تاريخ خاص ",
-    "Settings.vestingBalances": "أرصدة التخويل"
+    "Settings.vestingBalances": "أرصدة التخويل",
+    "Setting.ethAddressTitle": "عنوان الايثيريوم",
+    "Settings.to": "إلى",
+    "Settings.from": "من"
 }

@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "AKUN",
     "RecentTransactions.balance": "Saldo",
     "RecentTransactions.transfer": "KIRIM",
-    "RecentTransactions.return": "DIKEMBALIKAN"
+    "RecentTransactions.return": "DIKEMBALIKAN",
+    "RecentTransactions.date": "Tanggal"
 }

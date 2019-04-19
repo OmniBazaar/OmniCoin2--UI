@@ -9,5 +9,7 @@
     "DataTable.success": "Thành công",
     "DataTable.delete": "XÓA",
     "DataTable.save": "LƯU",
-    "DataTable.error": "Lỗi"
+    "DataTable.error": "Lỗi",
+    "DataTable.category": "Thể loại",
+    "DataTable.subCategory": "Tiểu mục"
 }

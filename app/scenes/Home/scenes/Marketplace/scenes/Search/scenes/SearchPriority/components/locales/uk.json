@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Оновлення",
     "SearchPrioritySetting.apply": "ЗАСТОСУВАТИ",
-    "SearchPrioritySetting.publisherPlaceholder": "Виберіть видавця..."
+    "SearchPrioritySetting.publisherPlaceholder": "Виберіть видавця...",
+    "SearchPrioritySetting.searchPriority": "Пріоритет пошуку"
 }

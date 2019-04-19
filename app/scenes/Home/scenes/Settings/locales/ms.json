@@ -9,5 +9,8 @@
     "Settings.account": "Akaun",
     "Settings.currentBalance": "Baki Semasa",
     "Settings.privateData": "Data Peribadi",
-    "Settings.vestingBalances": "Baki peletakhakan"
+    "Settings.vestingBalances": "Baki peletakhakan",
+    "Setting.ethAddressTitle": "Alamat Ethereum",
+    "Settings.to": "Kepada",
+    "Settings.from": "Daripada"
 }

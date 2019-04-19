@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "이 에스크로 거래를 거부하거나 종료하려면 여기를 클릭하세요. 에스크로에서 가지고 있던 구매자의 자금을 돌려드립니다.",
     "MyEscrowTransactions.successRelease": "{amount} XOM가 성공적으로 {username}에게 보내졌습니다!",
     "MyEscrowTransactions.extendTime": "연장 시간",
-    "MyEscrowTransactions.success": "성공"
+    "MyEscrowTransactions.success": "성공",
+    "MyEscrowTransaction.proposalConfirmation": "에스크로 만료시간을 상대방에게 다음과 같이 제안할려고 합니다.{time}."
 }

@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "सूची डिफाल्ट को सफलतापूर्वक सहेजा गया।",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "सफल",
-    "ListingsDefaults.myListings": "मेरी सूचियाँ"
+    "ListingsDefaults.myListings": "मेरी सूचियाँ",
+    "ListingsDefaults.defaultsNote": "यह जानकारी आपके द्वारा बनाई गई सभी नई सूचियों में पूर्व-आबादी होगी।"
 }

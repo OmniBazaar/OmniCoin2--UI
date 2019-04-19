@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "Bülten posta listemize buradan katılın:",
     "AirDropForm.notWorkingServer": "Sunucu kapalı. Daha sonra tekrar deneyin",
     "AirDropForm.skipFreeCoins": "Ücretsiz paraları atla",
-    "AirDropForm.joinTwitterChannelConfirmation": "OmniBazaar kanalına katıldım. Twitter kullanıcı adım"
+    "AirDropForm.joinTwitterChannelConfirmation": "OmniBazaar kanalına katıldım. Twitter kullanıcı adım",
+    "AirDropForm.telegramUserID": "Telgraf kullanıcı kimliğim"
 }

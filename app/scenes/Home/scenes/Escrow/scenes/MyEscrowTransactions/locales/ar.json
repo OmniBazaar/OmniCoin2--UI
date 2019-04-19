@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "انقر هنا إذا كنت بحاجة أو تريد رفض أو إنهاء معاملة ايسكرو هذه. وبذلك سترجع الأموال الموجودة في ايسكرو للمشتري",
     "MyEscrowTransactions.successRelease": "!بنجاح {username} إلى XOM {amout} تم صرف",
     "MyEscrowTransactions.extendTime": "تمديد الوقت",
-    "MyEscrowTransactions.success": "نجاح"
+    "MyEscrowTransactions.success": "نجاح",
+    "MyEscrowTransaction.proposalConfirmation": "{time} أنت على وشك أن تقترح على الطرف المقابل أن وقت انتهاء صلاحية الايسكرو قد تم تمديده إلى"
 }

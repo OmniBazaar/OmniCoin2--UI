@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "Подпишитесь на нашу рассылку новостей:",
     "AirDropForm.notWorkingServer": "Сервер не работает. Попробуйте позже",
     "AirDropForm.skipFreeCoins": "Пропустить бесплатные коины",
-    "AirDropForm.joinTwitterChannelConfirmation": "Я присоединился к каналу OmniBazaar. Моё имя пользователя в Twitter"
+    "AirDropForm.joinTwitterChannelConfirmation": "Я присоединился к каналу OmniBazaar. Моё имя пользователя в Twitter",
+    "AirDropForm.telegramUserID": "Мое имя пользователя в Telegram"
 }

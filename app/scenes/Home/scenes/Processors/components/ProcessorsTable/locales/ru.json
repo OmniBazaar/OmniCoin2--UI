@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Рейтинг",
+    "ProcessorsTable.name": "Имя",
+    "ProcessorsTable.approval": "Подтверждение",
+    "ProcessorsTable.reliability": "Надежность",
+    "ProcessorsTable.reputation": "Репутация",
+    "ProcessorsTable.referralScore": "Реферальный балл",
+    "ProcessorsTable.publisherScore": "Рейтинг издателя",
+    "ProcessorsTable.netScore": "Баллы",
+    "ProcessorsTable.approve": "Согласовать"
+}

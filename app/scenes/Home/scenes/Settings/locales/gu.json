@@ -9,5 +9,8 @@
     "Settings.account": "ખાતું",
     "Settings.currentBalance": "વર્તમાન રકમ",
     "Settings.privateData": " ખાનગી ડેટા ",
-    "Settings.vestingBalances": "વેસ્ટિંગ બેલેન્સ"
+    "Settings.vestingBalances": "વેસ્ટિંગ બેલેન્સ",
+    "Setting.ethAddressTitle": "ઈથેરીયમ સરનામું",
+    "Settings.to": "થી",
+    "Settings.from": "થી"
 }

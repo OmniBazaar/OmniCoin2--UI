@@ -9,5 +9,8 @@
     "Settings.account": "Обліковий запис",
     "Settings.currentBalance": "Поточний баланс",
     "Settings.privateData": "Особисті дані",
-    "Settings.vestingBalances": "Заблоковані баланси"
+    "Settings.vestingBalances": "Заблоковані баланси",
+    "Setting.ethAddressTitle": "Адрес Ефіру",
+    "Settings.to": "До",
+    "Settings.from": "Від"
 }

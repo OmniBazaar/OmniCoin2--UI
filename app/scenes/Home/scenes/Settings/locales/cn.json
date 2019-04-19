@@ -9,5 +9,8 @@
     "Settings.account": "账户",
     "Settings.currentBalance": "目前的余额",
     "Settings.privateData": "私人数据",
-    "Settings.vestingBalances": "特别保护权余额"
+    "Settings.vestingBalances": "特别保护权余额",
+    "Setting.ethAddressTitle": "以太坊地址",
+    "Settings.to": "到",
+    "Settings.from": "来自"
 }

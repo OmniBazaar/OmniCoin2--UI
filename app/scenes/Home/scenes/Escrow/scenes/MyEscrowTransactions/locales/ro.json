@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Faceți clic aici dacă aveți nevoie sau doriți să respingeți sau să terminați această tranzacție escrow. Aceasta va reveni la cumpărător fondurile deținute în escrow.",
     "MyEscrowTransactions.successRelease": "Suma {XOM} a fost lansată cu succes la {username}!",
     "MyEscrowTransactions.extendTime": "EXTEND TIME",
-    "MyEscrowTransactions.success": "Succes"
+    "MyEscrowTransactions.success": "Succes",
+    "MyEscrowTransaction.proposalConfirmation": "Sunteți pe cale să propuneți contrapărții că termenul de expirare a escrow-ului va fi extins la {time}"
 }

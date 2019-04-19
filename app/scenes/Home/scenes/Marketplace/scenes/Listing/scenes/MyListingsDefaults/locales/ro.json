@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "Valorile implicite ale listei au fost salvate cu succes",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "Succes",
-    "ListingsDefaults.myListings": "Lista mea"
+    "ListingsDefaults.myListings": "Lista mea",
+    "ListingsDefaults.defaultsNote": "Aceste informații vor fi pre-populate în toate listele noi pe care le creați."
 }

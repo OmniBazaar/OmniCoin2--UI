@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "تحديث",
     "SearchPrioritySetting.apply": "تطبيق",
-    "SearchPrioritySetting.publisherPlaceholder": "... اختر ناشراً"
+    "SearchPrioritySetting.publisherPlaceholder": "... اختر ناشراً",
+    "SearchPrioritySetting.searchPriority": " أولوية البحث "
 }

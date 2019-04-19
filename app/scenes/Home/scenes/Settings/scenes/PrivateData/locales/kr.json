@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "귀하의 관심분야와 맞는 업체와 연결하기 위해서는 다음의 정보가 필요합니다.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "이메일",
+    "PrivateData.firstName": "이름",
+    "PrivateData.lastName": "성",
+    "PrivateData.website": "웹사이트"
 }

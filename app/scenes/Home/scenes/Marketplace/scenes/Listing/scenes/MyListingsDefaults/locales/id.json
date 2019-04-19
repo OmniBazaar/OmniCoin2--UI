@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "Daftar Default berhasil disimpan.",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "Sukses",
-    "ListingsDefaults.myListings": "Daftar Saya"
+    "ListingsDefaults.myListings": "Daftar Saya",
+    "ListingsDefaults.defaultsNote": "Informasi ini akan diisi sebelumnya ke semua daftar baru yang Anda buat."
 }

@@ -9,5 +9,8 @@
     "Settings.account": "Conta",
     "Settings.currentBalance": "Current Balance",
     "Settings.privateData": "Dados Pessoais",
-    "Settings.vestingBalances": "Saldos de Investimento"
+    "Settings.vestingBalances": "Saldos de Investimento",
+    "Setting.ethAddressTitle": "endereço Ethereum",
+    "Settings.to": "Para",
+    "Settings.from": "From"
 }

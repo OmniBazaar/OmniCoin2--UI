@@ -55,5 +55,10 @@
     "Preferences.filipino": "Filipino (Filipino)",
     "Preferences.malaysian": "Malaysia (Malaysian)",
     "Preferences.romanian": "Română (Romanian)",
-    "Preferences.ukrainian": "Українська (Ukrainian)"
+    "Preferences.ukrainian": "Українська (Ukrainian)",
+    "Preferences.minutes": "(minuti)",
+    "Preferences.fieldInvalidNumber": "Invalid number",
+    "Preferences.searchListingOptions": "Cerca opzioni degli annunci",
+    "Preferences.byAnyKeyword": "Con qualsiasi parola chiave",
+    "Preferences.byAllKeywords": "Con tutte le parole chiave"
 }

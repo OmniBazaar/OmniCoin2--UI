@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Sizi ilgi alanlarınıza uygun bir liste yayıncısına bağlayabilmemiz için aşağıdaki bilgilere ihtiyacımız var.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "İlk İsim",
+    "PrivateData.lastName": "Soyadı",
+    "PrivateData.website": "Web site"
 }

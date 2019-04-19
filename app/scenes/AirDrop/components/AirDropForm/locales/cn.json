@@ -23,5 +23,6 @@
     "AirDropForm.joinNewsletterChannelSuggestion": "请加入我们的通讯邮寄名单:",
     "AirDropForm.notWorkingServer": "服务器已关闭。请稍后再试",
     "AirDropForm.skipFreeCoins": " 跳过免费的货币 ",
-    "AirDropForm.joinTwitterChannelConfirmation": "我加入了OmniBazaar频道。我的Twitter用户名是"
+    "AirDropForm.joinTwitterChannelConfirmation": "我加入了OmniBazaar频道。我的Twitter用户名是",
+    "AirDropForm.telegramUserID": "我的Telegram用户ID是"
 }

@@ -9,5 +9,7 @@
     "DataTable.success": "Sukses",
     "DataTable.delete": "HAPUS",
     "DataTable.save": "SIMPAN",
-    "DataTable.error": "Error"
+    "DataTable.error": "Error",
+    "DataTable.category": "Kategori",
+    "DataTable.subCategory": "Sub-Kategori"
 }

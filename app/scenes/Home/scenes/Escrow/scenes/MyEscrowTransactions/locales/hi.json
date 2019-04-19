@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "यदि आपको जरूरत है तो यहां क्लिक करें या इस एस्क्रो लेनदेन को अस्वीकार या समाप्त करना चाहते हैं। यह खरीदार के लिए एस्क्रौ में रखे गए धन पर वापस आ जाएगा।",
     "MyEscrowTransactions.successRelease": "{amount}XOM को सफलतापूर्वक जारी किया गया {username}!",
     "MyEscrowTransactions.extendTime": "अतिरिक्त समय",
-    "MyEscrowTransactions.success": "सफलता"
+    "MyEscrowTransactions.success": "सफलता",
+    "MyEscrowTransaction.proposalConfirmation": "आप काउंटर-पार्टी के लिए प्रस्ताव रखने वाले हैं कि एस्क्रो समाप्ति समय को बढ़ाया जाए{time}."
 }

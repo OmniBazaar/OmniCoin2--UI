@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "계정",
     "RecentTransactions.balance": "잔고",
     "RecentTransactions.transfer": "이전",
-    "RecentTransactions.return": "복귀됨"
+    "RecentTransactions.return": "복귀됨",
+    "RecentTransactions.date": "일"
 }

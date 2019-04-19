@@ -9,5 +9,8 @@
     "Settings.account": "Account",
     "Settings.currentBalance": "Current Balance",
     "Settings.privateData": "Private Data",
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.vestingBalances": "Vesting Balances",
+    "Setting.ethAddressTitle": "Ether address",
+    "Settings.to": "To",
+    "Settings.from": "From"
 }

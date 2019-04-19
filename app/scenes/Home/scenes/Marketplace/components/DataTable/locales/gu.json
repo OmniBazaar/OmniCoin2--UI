@@ -9,5 +9,7 @@
     "DataTable.success": "સફળ",
     "DataTable.delete": "કાઢી નાખો",
     "DataTable.save": "સાચવો",
-    "DataTable.error": "ભૂલ"
+    "DataTable.error": "ભૂલ",
+    "DataTable.category": "શ્રેણી",
+    "DataTable.subCategory": "પેટા શ્રેણી"
 }

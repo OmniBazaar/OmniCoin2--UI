@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "Actualizare",
     "SearchPrioritySetting.apply": "APLICAȚI",
-    "SearchPrioritySetting.publisherPlaceholder": "Selectați editorul ..."
+    "SearchPrioritySetting.publisherPlaceholder": "Selectați editorul ...",
+    "SearchPrioritySetting.searchPriority": "Prioritate de căutare"
 }

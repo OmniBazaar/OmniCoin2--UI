@@ -139,7 +139,10 @@ class StartGuide extends Component {
       <div className="quick-start">
         <h1>{formatMessage(messages.quickStart)}</h1>
         <h3>{formatMessage(messages.welcome)}</h3>
-        <p>{formatMessage(messages.launch)}</p>
+        <p>{formatMessage(messages.launch, {Marketplace: formatMessage({
+          id: "Home.marketplace",
+          defaultMessage: "Marketplace"
+        })})}</p>
         <h3>{formatMessage(messages.welcomeBonus)}</h3>
         <p>
           {formatMessage(messages.welcomeBonusText1)}

@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Clique aqui se você precisa ou quer rejeitar ou encerrar essa transação escrow. Isto fará com que os fundos que estavam em escrow retornem ao comprador.",
     "MyEscrowTransactions.successRelease": "{amount} XOM foi lançado com sucesso para {username}!",
     "MyEscrowTransactions.extendTime": "TEMPO EXCEDIDO",
-    "MyEscrowTransactions.success": "Successo"
+    "MyEscrowTransactions.success": "Successo",
+    "MyEscrowTransaction.proposalConfirmation": "Você está prestes a propor à contraparte que o tempo de expiração do depósito seja estendido para {time}."
 }

@@ -9,5 +9,7 @@
     "DataTable.success": "सफल",
     "DataTable.delete": "हटाना",
     "DataTable.save": "सुरक्षित",
-    "DataTable.error": "त्रुटी"
+    "DataTable.error": "त्रुटी",
+    "DataTable.category": "श्रेणी",
+    "DataTable.subCategory": "उप-श्रेणी"
 }

@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "Нажмите здесь, если вам нужно или вы хотите отклонить или прекратить эту транзакцию условного депонирования. Это вернет покупателю средства, хранящиеся в условном депонировании.",
     "MyEscrowTransactions.successRelease": "{amount} XOM были успешно перечислены {username}!",
     "MyEscrowTransactions.extendTime": "ПРОДЛЕННОЕ ВРЕМЯ",
-    "MyEscrowTransactions.success": "Успешно"
+    "MyEscrowTransactions.success": "Успешно",
+    "MyEscrowTransaction.proposalConfirmation": "Вы собираетесь предложить контрагенту продлить срок действия условного депонирования до {time}."
 }

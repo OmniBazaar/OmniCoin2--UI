@@ -13,5 +13,6 @@
     "SearchPrioritySetting.startTyping": "Start typing...",
     "SearchPrioritySetting.update": "अद्यतन",
     "SearchPrioritySetting.apply": "लागू करें",
-    "SearchPrioritySetting.publisherPlaceholder": "प्रकाशक का चयन करें..."
+    "SearchPrioritySetting.publisherPlaceholder": "प्रकाशक का चयन करें...",
+    "SearchPrioritySetting.searchPriority": "खोज प्राथमिकता"
 }

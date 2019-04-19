@@ -9,5 +9,7 @@
     "DataTable.success": "bAŞARI",
     "DataTable.delete": "SİL",
     "DataTable.save": "KAYDET",
-    "DataTable.error": "Hata"
+    "DataTable.error": "Hata",
+    "DataTable.category": "Kategori",
+    "DataTable.subCategory": "Alt Kategori"
 }

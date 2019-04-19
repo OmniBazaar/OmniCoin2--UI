@@ -4,5 +4,6 @@
     "ListingsDefaults.saveListingSuccessMessage": "Листинги по умолчанию были успешно сохранены.",
     "ListingsDefaults.createListing": "Create Listings",
     "ListingsDefaults.success": "Успешно",
-    "ListingsDefaults.myListings": "Мои листинги"
+    "ListingsDefaults.myListings": "Мои листинги",
+    "ListingsDefaults.defaultsNote": "Эта информация будет добавлена во все создаваемые вами новые листинги."
 }

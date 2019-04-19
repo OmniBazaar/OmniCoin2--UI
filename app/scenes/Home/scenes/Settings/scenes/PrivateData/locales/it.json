@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Abbiamo bisogno delle seguenti informazioni per collegarti a un editore di annunci che si identificano con tuoi interessi.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "Email",
+    "PrivateData.firstName": "Nome",
+    "PrivateData.lastName": "Cognome",
+    "PrivateData.website": "Sito Web"
 }

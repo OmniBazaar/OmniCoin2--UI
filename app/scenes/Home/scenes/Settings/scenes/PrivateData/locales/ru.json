@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "Нам нужна следующая информация, чтобы мы могли связать вас с издателем листингов, которые соответствуют вашим интересам.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": "E-mail",
+    "PrivateData.firstName": "Имя",
+    "PrivateData.lastName": "Фамилия",
+    "PrivateData.website": "Сайт"
 }

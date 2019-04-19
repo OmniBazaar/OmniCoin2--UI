@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "ACCOUNT",
     "RecentTransactions.balance": "BIlancio",
     "RecentTransactions.transfer": "TRASFERIMENTO",
-    "RecentTransactions.return": "RINVIATO"
+    "RecentTransactions.return": "RINVIATO",
+    "RecentTransactions.date": "Data"
 }

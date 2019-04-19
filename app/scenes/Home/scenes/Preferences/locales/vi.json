@@ -55,5 +55,10 @@
     "Preferences.filipino": "Filipino (Filipino)",
     "Preferences.malaysian": "Malaysia (Malaysian)",
     "Preferences.romanian": "Română (Romanian)",
-    "Preferences.ukrainian": "Українська (Ukrainian)"
+    "Preferences.ukrainian": "Українська (Ukrainian)",
+    "Preferences.minutes": "(phút)",
+    "Preferences.fieldInvalidNumber": "Số không hợp lệ",
+    "Preferences.searchListingOptions": "Tùy chọn tìm kiếm trong danh sách",
+    "Preferences.byAnyKeyword": "Bằng bất kỳ từ khóa nào",
+    "Preferences.byAllKeywords": "Đối với tất cả các từ khóa"
 }

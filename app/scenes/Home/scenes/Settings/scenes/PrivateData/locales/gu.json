@@ -9,5 +9,9 @@
     "PrivateData.localArea": "Local Area",
     "PrivateData.startTyping": "Start typing...",
     "PrivateData.publisherNeedInfo": "અમને નીચેની માહિતીની જરૂર છે જેથી અમે તમને તમારી રુચિ સાથે સંરેખિત સૂચિબદ્ધ પ્રકાશકો સાથે જોડી શકીએ.",
-    "PrivateData.publisherName": "Specific publisher Name"
+    "PrivateData.publisherName": "Specific publisher Name",
+    "PrivateData.email": " ઇમેઇલ ",
+    "PrivateData.firstName": "પ્રથમ નામ",
+    "PrivateData.lastName": "છેલ્લું નામ",
+    "PrivateData.website": "વેબસાઈટ"
 }

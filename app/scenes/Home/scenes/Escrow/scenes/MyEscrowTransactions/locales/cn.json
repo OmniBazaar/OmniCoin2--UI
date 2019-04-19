@@ -18,5 +18,6 @@
     "MyEscrowTransactions.voteDownTooltip": "如果需要或希望拒绝或终止此托管事务，请单击此处。这将把托管的资金返还给买方。",
     "MyEscrowTransactions.successRelease": "{金额} XOM已成功发布到{用户名}！",
     "MyEscrowTransactions.extendTime": "延长时间",
-    "MyEscrowTransactions.success": "成功"
+    "MyEscrowTransactions.success": "成功",
+    "MyEscrowTransaction.proposalConfirmation": "您即将向对方提议将托管到期时间延长到 {时间}."
 }

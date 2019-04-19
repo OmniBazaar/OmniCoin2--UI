@@ -19,5 +19,6 @@
     "RecentTransactions.updateAccount": "الحساب",
     "RecentTransactions.balance": "الرصيد",
     "RecentTransactions.transfer": "نقل",
-    "RecentTransactions.return": "عودة"
+    "RecentTransactions.return": "عودة",
+    "RecentTransactions.date": "التاريخ"
 }
