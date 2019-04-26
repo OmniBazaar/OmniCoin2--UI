@@ -7,7 +7,7 @@ export default defineMessages({
   },
   preferences: {
     id: 'SettingsMenu.preferences',
-    defaultMessage: 'Preferences'
+    defaultMessage: 'Settings'
   },
   logout: {
     id: 'SettingsMenu.logout',

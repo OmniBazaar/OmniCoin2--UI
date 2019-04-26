@@ -18,6 +18,7 @@ import Checkbox from '../AddListing/components/Checkbox/Checkbox';
 import Images from '../AddListing/components/Images/Images';
 import BitcoinWalletDropdown from '../AddListing/components/BitcoinWalletDropdown/BitcoinWalletDropdown';
 import PriorityFeeDropdown from '../AddListing/components/PriorityFeeDropdown/PriorityFeeDropdown';
+import QuestionMark from '../../../../../../components/QuestionMark/QuestionMark';
 
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
 
@@ -308,6 +309,7 @@ class MyListingsDefaults extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(addListingMessages.bitcoinAddress)}
+              <QuestionMark message={formatMessage(addListingMessages.bitcoinAddressTooltip)} />
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -331,6 +333,7 @@ class MyListingsDefaults extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(addListingMessages.ethereumAddress)}
+              <QuestionMark message={formatMessage(addListingMessages.ethereumAddressTooltip)} />
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -349,7 +352,10 @@ class MyListingsDefaults extends Component {
 
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(addListingMessages.priorityFee)}</span>
+              <span>
+                {formatMessage(addListingMessages.priorityFee)}
+                <QuestionMark message={formatMessage(addListingMessages.priorityFeeTooltip)} />
+              </span>
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -375,7 +381,7 @@ class MyListingsDefaults extends Component {
                 name="description"
                 component={this.DescriptionInput}
                 className="textfield"
-                placeholder={formatMessage(addListingMessages.pleaseEnter)}
+                placeholder={formatMessage(addListingMessages.pleaseEnterDescription)}
                 onChange={this.onChange}
               />
             </Grid.Column>

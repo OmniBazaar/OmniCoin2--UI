@@ -22,6 +22,7 @@ import ValidatableField from '../../../../components/ValidatableField/Validatabl
 import messages from './messages';
 import languages from './languages';
 import listingPriorities from './priorities';
+import QuestionMark from '../../components/QuestionMark/QuestionMark';
 import './preferences.scss';
 
 // need this variable to check saving success when language is changed,
@@ -243,6 +244,7 @@ class PreferencesTab extends Component {
             <Grid.Row>
               <Grid.Column width={4}>
                 <span>{formatMessage(messages.priorityForListing)}</span>
+                <QuestionMark message={formatMessage(messages.priorityForListingToolTip)} />
               </Grid.Column>
               <Grid.Column width={10}>
                 <Field
@@ -292,10 +294,7 @@ class PreferencesTab extends Component {
             <Grid.Row>
               <Grid.Column width={4}>
                 <span className="search-list-options">{formatMessage(messages.searchListingOptions)}</span>
-                <Popup
-                  trigger={<span><Image src={Info} width={20} height={20} /></span>}
-                  content={formatMessage(messages.listingOptionsToolTip)}
-                />
+                <QuestionMark message={formatMessage(messages.listingOptionsToolTip)} />
               </Grid.Column>
               <Grid.Column width={5}>
                 <div className="radios field">
