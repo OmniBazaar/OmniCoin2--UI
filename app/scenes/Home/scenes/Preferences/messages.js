@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   preferencesTab: {
     id: 'Preferences.preferencesTab',
-    defaultMessage: 'Preferences'
+    defaultMessage: 'Settings'
   },
   consoleTab: {
     id: 'Preferences.consoleTab',
@@ -51,7 +51,11 @@ export default defineMessages({
   },
   priorityForListing: {
     id: 'Preferences.priorityForListing',
-    defaultMessage: 'Priority for Listings You Create'
+    defaultMessage: 'Search Priority for Listings You Create'
+  },
+  priorityForListingToolTip: {
+    id: 'Preferences.priorityForListingToolTip',
+    defaultMessage: 'Choose the search priority for listings you create. Higher search priority causes your listing to be presented to users closer to the beginning their search results. This fee is collected at the time the buyer purchases your item. This fee is paid to OmniBazaar.'
   },
   publisherFee: {
     id: 'Preferences.publisherFee',

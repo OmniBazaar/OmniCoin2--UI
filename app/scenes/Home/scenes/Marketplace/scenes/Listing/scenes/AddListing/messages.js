@@ -35,11 +35,11 @@ const messages = defineMessages({
   },
   pleaseEnterDescription: {
     id: 'AddListing.pleaseEnterDescription',
-    defaultMessage: 'Please enter description'
+    defaultMessage: 'Provide a detailed description of the product or service you are listing.'
   },
   placing: {
     id: 'AddListing.placing',
-    defaultMessage: 'Placing'
+    defaultMessage: 'Category/Sub-Category'
   },
   type: {
     id: 'AddListing.type',
@@ -253,6 +253,10 @@ const messages = defineMessages({
     id: 'AddListing.publisher',
     defaultMessage: 'Publisher'
   },
+  publisherTooltip: {
+    id: 'AddListing.publisherTooltip',
+    defaultMessage: 'Select the Publisher that will host your listing. The listed Publishers continuously run OmniBazaar publisher nodes and accept listings from other users for the fee amount shown. This fee is paid in OmniCoins (XOM) at the time you create the listing. The fee goes to the Publisher you select. If you wish to avoid this fee, you can run a Publisher node yourself. Go to "Wallets | Public Data" for more information. If you are running a Publisher node, you can select your own node from the drop-down list to avoid the fee.'
+  },
   selectPublisher: {
     id: 'AddListing.selectPublisher',
     defaultMessage: 'Select publisher'
@@ -273,6 +277,10 @@ const messages = defineMessages({
     id: 'AddListing.bitcoinAddress',
     defaultMessage: 'Bitcoin address'
   },
+  bitcoinAddressTooltip: {
+    id: 'AddListing.bitcoinAddressTooltip',
+    defaultMessage: 'If you have created or opened a Bitcoin wallet within OmniBazaar, your Bitcoin receiving address will automatically appear in this space. Or, enter an external wallet address manually. This is the address to which buyers will send bitcoins when they purchase your product or service. To create or open a Bitcoin wallet within OmniBazaar, go to the "Wallets" tab.'
+  },
   ethereumFieldValidator: {
     id: 'AddListing.ethereumFieldValidator',
     defaultMessage: 'Should be greater or equal to 1 wei'
@@ -285,6 +293,10 @@ const messages = defineMessages({
     id: 'AddListing.ethereumAddress',
     defaultMessage: 'Ether address'
   },
+  ethereumAddressTooltip: {
+    id: 'AddListing.ethereumAddressTooltip',
+    defaultMessage: 'If you have created or opened an Ether wallet within OmniBazaar, your Ether receiving address will automatically appear in this field. Or, enter an external wallet address manually. This is the address to which buyers will send Ether when they purchase your product or service. To create or open an Ether wallet within OmniBazaar, go to the "Wallets" tab.'
+  },
   searchPublishersErrorMessage: {
     id: 'AddListing.searchPublishersErrorMessage',
     defaultMessage: 'Have error when searching publishers'
@@ -295,7 +307,7 @@ const messages = defineMessages({
   },
   imagesSpecification: {
     id: 'AddListing.imagesSpecification',
-    defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}.'
+    defaultMessage: 'Max size per image: {imageSize}. Supported types: {supportedTypes}. To REMOVE an image, click the red (X) in the upper right corner of the image.'
   },
   saveListingErrorNoChangeDetectedMessage: {
     id: 'AddListing.saveListingErrorNoChangeDetectedMessage',
@@ -315,7 +327,7 @@ const messages = defineMessages({
   },
   addKeywords: {
     id: 'AddListing.addKeywords',
-    defaultMessage: 'Add keywords'
+    defaultMessage: 'Add keywords that will help users find your listing.'
   },
   priorityHighest: {
     id: 'AddListing.priorityHighest',
@@ -347,7 +359,11 @@ const messages = defineMessages({
   },
   priorityFee: {
     id: 'AddListing.priorityFee',
-    defaultMessage: 'Priority For Listings You Create'
+    defaultMessage: 'Search Priority for Listings You Create'
+  },
+  priorityFeeTooltip: {
+    id: 'AddListing.priorityFeeTooltip',
+    defaultMessage: 'Choose the search priority for listings you create. Higher search priority causes your listing to be presented to users closer to the beginning their search results. This fee is collected at the time the buyer purchases your item. This fee is paid to OmniBazaar.'
   },
   priorityHighest: {
     id: 'AddListing.priorityHighest',

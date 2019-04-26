@@ -25,6 +25,7 @@ import PublishersDropdown from './components/PublishersDropdown/PublishersDropdo
 import BitcoinWalletDropdown from './components/BitcoinWalletDropdown/BitcoinWalletDropdown';
 import FormPrompt from '../../../../../../../../components/FormPrompt/FormPrompt';
 import GeneralDropdown from './components/GeneralDropdown/GeneralDropdown';
+import QuestionMark from '../../../../../../components/QuestionMark/QuestionMark';
 
 import Images, { getImageId } from './components/Images/Images';
 import messages from './messages';
@@ -69,8 +70,8 @@ import { getStoredListingDefautls } from '../../../../../../../../services/listi
 
 const contactOmniMessage = 'OmniMessage';
 
-const SUPPORTED_IMAGE_TYPES = 'jpg, jpeg, png';
-const MAX_IMAGE_SIZE = '1mb';
+const SUPPORTED_IMAGE_TYPES = ' JPG, JPEG, PNG and GIF';
+const MAX_IMAGE_SIZE = '1MB';
 
 const unitKeys = ['weight_unit', 'width_unit', 'height_unit', 'length_unit'];
 
@@ -539,7 +540,6 @@ class ListingForm extends Component {
           }}
           onChange={this.onKeywordsChange.bind(this)}
         />
-        <div className="note">{formatMessage(messages.keywordsNote)}</div>
       </div>
     );
   }
@@ -734,6 +734,7 @@ class ListingForm extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.bitcoinAddress)}
+              <QuestionMark message={formatMessage(messages.bitcoinAddressTooltip)} />
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -762,6 +763,7 @@ class ListingForm extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               {formatMessage(messages.ethereumAddress)}
+              <QuestionMark message={formatMessage(messages.ethereumAddressTooltip)} />
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -855,7 +857,10 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.priorityFee)}*</span>
+              <span>
+                {formatMessage(messages.priorityFee)}*
+                <QuestionMark message={formatMessage(messages.priorityFeeTooltip)} />
+              </span>
             </Grid.Column>
             <Grid.Column width={12}>
               <Field
@@ -873,6 +878,7 @@ class ListingForm extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               <span>{formatMessage(messages.publisher)}*</span>
+              <QuestionMark message={formatMessage(messages.publisherTooltip)} />
             </Grid.Column>
             <Grid.Column width={8}>
               <Field
@@ -893,7 +899,7 @@ class ListingForm extends Component {
               <span className="title">{formatMessage(messages.images)}</span>
             </Grid.Column>
             <Grid.Column width={16}>
-              <span className="error">
+              <span>
                 {formatMessage(messages.imagesSpecification, {
                   imageSize: MAX_IMAGE_SIZE,
                   supportedTypes: SUPPORTED_IMAGE_TYPES
