@@ -219,11 +219,11 @@ export default defineMessages({
   },
   saveErrorMessage: {
     id: 'Preferences.saveErrorMessage',
-    defaultMessage: 'An error occurred while saving Preferences data.'
+    defaultMessage: 'An error occurred while saving Settings data.'
   },
   saveSuccessMessage: {
     id: 'Preferences.saveSuccessMessage',
-    defaultMessage: 'Preferences data was saved successfully.'
+    defaultMessage: 'Settings data was saved successfully.'
   },
   fieldRequired: {
     id: 'Preferences.fieldRequired',
