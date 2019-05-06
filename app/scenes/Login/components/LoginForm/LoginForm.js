@@ -26,7 +26,7 @@ const messages = defineMessages({
   connectionDoesntExist: {
     id: "LoginForm.connectionDoesntExist",
     defaultMessage:
-      "There is no internet connection. Please connect to the internet and try again"
+      "There is no internet connection. Please connect to the internet and try again."
   },
   enterPassword: {
     id: "LoginForm.enterPassword",

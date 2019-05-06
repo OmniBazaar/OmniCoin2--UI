@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
   connectingToDht: {
     id: 'SearchMenu.connectingToDht',
-    defaultMessage: 'Connecting to dht'
+    defaultMessage: 'Connecting to DHT'
   },
   saved: {
     id: 'SearchMenu.saved',
@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   noSavedSearches: {
     id: 'SearchMenu.noSavedSearches',
-    defaultMessage: 'You haven\'t saved any searches yet'
+    defaultMessage: 'You haven\'t saved any searches yet.'
   }
 });
 

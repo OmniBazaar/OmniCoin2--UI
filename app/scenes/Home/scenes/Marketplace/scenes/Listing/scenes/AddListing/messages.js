@@ -207,7 +207,7 @@ const messages = defineMessages({
   },
   numberImageLimit: {
     id: 'AddListing.numberImageLimit',
-    defaultMessage: 'Only {max} images is allowed'
+    defaultMessage: 'Only {max} images are allowed.'
   },
   uploadImageError: {
     id: 'AddListing.uploadImageError',
@@ -243,7 +243,7 @@ const messages = defineMessages({
   },
   listingNotFound: {
     id: 'AddListing.listingNotFound',
-    defaultMessage: 'Listing not found'
+    defaultMessage: 'Listing not found.'
   },
   saveListing: {
     id: 'AddListing.saveListing',

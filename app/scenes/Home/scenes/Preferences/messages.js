@@ -151,7 +151,7 @@ export default defineMessages({
   },
   priorityHighest: {
     id: 'Preferences.priorityHighest',
-    defaultMessage: 'High (1.00% Fee)'
+    defaultMessage: 'Highest (2.00% Fee)'
   },
   priorityHigher: {
     id: 'Preferences.priorityHigher',
@@ -239,7 +239,7 @@ export default defineMessages({
   },
   autoRunNote: {
     id: 'Preferences.autoRunNote',
-    defaultMessage: 'This action requires admin rights'
+    defaultMessage: 'This action requires admin rights.'
   },
   autoLogOut: {
     id: 'Preferences.autoLogOut',
@@ -257,10 +257,10 @@ export default defineMessages({
   },
   nodeRestartError: {
     id: 'Preferences.nodeRestartError',
-    defaultMessage: 'An error occured while restarting witness node'
+    defaultMessage: 'An error occured while restarting witness node.'
   },
   nodeRestartSuccess: {
     id: 'Preferences.nodeRestartSuccess',
-    defaultMessage: 'Witness node was restarted successfully'
+    defaultMessage: 'Witness node was restarted successfully.'
   }
 });

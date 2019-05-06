@@ -43,7 +43,7 @@ export default defineMessages({
   },
   getOmniCoinsText: {
     id: 'Marketplace.getOmniCoinsText',
-    defaultMessage: 'See how we are enabling e-commerce without middleman and payment without bankers. OmniBazaar is an Internet marketplace "of the people, by the people, for the people"'
+    defaultMessage: 'See how we are enabling e-commerce without middleman and payment without bankers. OmniBazaar is an Internet marketplace "of the people, by the people, for the people".'
   },
   exchangeOne: {
     id: 'Marketplace.exchangeOne',

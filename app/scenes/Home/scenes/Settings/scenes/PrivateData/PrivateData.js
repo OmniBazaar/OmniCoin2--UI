@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   updateSuccess: {
     id: 'PrivateData.updateSuccess',
-    defaultMessage: 'Update'
+    defaultMessage: 'Successfully updated'
   },
   update: {
     id: 'PrivateData.update',
