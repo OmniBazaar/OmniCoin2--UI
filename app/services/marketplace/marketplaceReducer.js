@@ -160,9 +160,41 @@ const reducer = handleActions({
       });
     }
 
-    let sortedData = _.sortBy(gridData, [sortBy]);
-    if (sortGridDirection === 'descending') {
-      sortedData = sortedData.reverse();
+    let sortedData;
+    if (sortBy === 'start_date' && sortGridDirection === 'ascending') {
+      sortedData = [...gridData].sort((a, b) => {
+        if (a.priority_fee > b.priority_fee) {
+          return -1;
+        } else if (a.priority_fee < b.priority_fee) {
+          return 1;
+        } else {
+          if (a.start_date < b.start_date) {
+            return -1;
+          } else if (a.start_date > b.start_date) {
+            return 1;
+          }
+
+          return 0;
+        }
+      });
+    } else {
+      // sortedData = _.sortBy(gridData, [sortBy]);
+      const isReversed = sortGridDirection === 'descending';
+      sortedData = [...gridData].sort((a, b) => {
+        if (a[sortBy] < b[sortBy]) {
+          return isReversed ? 1 : -1;
+        } else if (a[sortBy] > b[sortBy]) {
+          return isReversed ? -1 : 1;
+        } else {
+          if (a.priority_fee > b.priority_fee) {
+            return -1;
+          } else if (a.priority_fee < b.priority_fee) {
+            return 1;
+          }
+
+          return 0;
+        }
+      });
     }
 
     return {
