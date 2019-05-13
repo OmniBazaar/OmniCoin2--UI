@@ -1,0 +1,5 @@
+{
+    "AccountVesting.success": "성공",
+    "AccountVesting.error": "에러",
+    "AccountVesting.noVestings": "귀하에 귀속된 잔고가 없습니다."
+}

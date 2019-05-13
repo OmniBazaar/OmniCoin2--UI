@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "An error occurred while connecting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "İPTAL",
+    "ExistingWallet.pleaseEnter": "Lütfen Girin",
+    "ExistingWallet.connect": "BAĞLAN",
+    "NewWallet.connectErrorMessage": "Cüzdan bağlanırken bir hata oluştu",
+    "ExistingWallet.enterPassword": "Hesap Erişimi için Şifre Girin",
+    "ExistingWallet.walletGuid": "Cüzdan GUID",
+    "ExistingWallet.ipError": "Bu cüzdan farklı bir ip üzerinde oluşturuldu. Lütfen blockchain.info'da {ip} beyaz listeye ekleyin.",
+    "NewWallet.connectErrorTitle": "Bağlantı hatası"
 }

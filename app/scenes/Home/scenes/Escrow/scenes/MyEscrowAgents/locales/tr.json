@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "Hata",
+    "MyEscrowAgents.agentsApproved": "Temsilciler başarıyla onaylandı",
+    "MyEscrowAgents.clear": "Temizle",
+    "MyEscrowAgents.approve": "Onaylamak",
+    "MyEscrowAgents.search": "Arama",
+    "MyEscrowAgents.user": "Kullanıcı",
+    "MyEscrowAgents.approveChanges": "Değişiklikleri onayla",
+    "MyEscrowAgents.insufficientBalance": "Cüzdanında yeterli para yok."
 }

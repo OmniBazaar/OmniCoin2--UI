@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": "Digite seu nome de usuário",
+    "LoginForm.error": "Erro",
+    "LoginForm.signup": "Registre-se",
+    "LoginForm.unlock": "Desbloquear",
+    "LoginForm.connectionDoesntExist": "Não há conexão com a internet. Por favor conecte sua internet e tente novamente.",
+    "LoginForm.accountDoesntExist": "Conta inexistente",
+    "LoginForm.enterPassword": "Digite a senha",
+    "LoginForm.noAccount": "Ainda não tem uma conta?",
+    "LoginForm.fieldRequired": "Este campo é obrigatório"
 }

@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Суб-категорія",
+    "ImportedFilesTable.category": "Категорія",
+    "ImportedFilesTable.currency": "Валюта",
+    "ImportedFilesTable.listingType": "Дата лоту",
+    "ImportedFilesTable.price": "Ціна",
+    "ImportedFilesTable.title": "Назва",
+    "ImportedFilesTable.description": "Опис",
+    "ImportedFilesTable.contactType": "Тип контакту",
+    "ImportedFilesTable.contactInfo": "Контактна інформація"
 }

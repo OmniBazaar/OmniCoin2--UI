@@ -132,12 +132,11 @@ const reducer = handleActions({
     const { activePageGridTable } = state;
     const totalPagesGridTable = getTotalPages(data, rowsPerPageGridTable);
     const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
-
     return {
       ...state,
       totalPagesGridTable,
       rowsPerPageGridTable,
-      gridTableDataFiltered: currentData,
+      gridTableDataFiltered: currentData
     };
   },
   [sortGridTableBy](state, {
@@ -161,9 +160,41 @@ const reducer = handleActions({
       });
     }
 
-    let sortedData = _.sortBy(gridData, [sortBy]);
-    if (sortGridDirection === 'descending') {
-      sortedData = sortedData.reverse();
+    let sortedData;
+    if (sortBy === 'start_date' && sortGridDirection === 'ascending') {
+      sortedData = [...gridData].sort((a, b) => {
+        if (a.priority_fee > b.priority_fee) {
+          return -1;
+        } else if (a.priority_fee < b.priority_fee) {
+          return 1;
+        } else {
+          if (a.start_date < b.start_date) {
+            return -1;
+          } else if (a.start_date > b.start_date) {
+            return 1;
+          }
+
+          return 0;
+        }
+      });
+    } else {
+      // sortedData = _.sortBy(gridData, [sortBy]);
+      const isReversed = sortGridDirection === 'descending';
+      sortedData = [...gridData].sort((a, b) => {
+        if (a[sortBy] < b[sortBy]) {
+          return isReversed ? 1 : -1;
+        } else if (a[sortBy] > b[sortBy]) {
+          return isReversed ? -1 : 1;
+        } else {
+          if (a.priority_fee > b.priority_fee) {
+            return -1;
+          } else if (a.priority_fee < b.priority_fee) {
+            return 1;
+          }
+
+          return 0;
+        }
+      });
     }
 
     return {
@@ -175,12 +206,13 @@ const reducer = handleActions({
   [setActivePageGridTable](state, { payload: { activePageGridTable } }) {
     const data = state.gridTableData;
     if (activePageGridTable !== state.activePageGridTable) {
-      const { rowsPerPageGridTable } = state;
-      const currentData = sliceData(data, activePageGridTable, rowsPerPageGridTable);
+      const { rowsPerPageGridTable, totalPagesGridTable } = state;
+      const activePage = activePageGridTable <= totalPagesGridTable ? activePageGridTable : 1;
+      const currentData = sliceData(data, activePage, rowsPerPageGridTable);
 
       return {
         ...state,
-        activePageGridTable,
+        activePageGridTable: activePage,
         gridTableDataFiltered: currentData,
       };
     }

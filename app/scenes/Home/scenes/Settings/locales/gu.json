@@ -1,13 +1,16 @@
 {
-    "Settings.accountId": "Account ID", 
-    "Settings.recentTransactions": "Recent Transactions", 
-    "Settings.eth": "ETH", 
-    "Settings.btc": "BTC", 
-    "Settings.registered": "REGISTERED", 
-    "Settings.xom": "XOM", 
-    "Settings.publicData": "Public Data", 
-    "Settings.account": "Account", 
-    "Settings.currentBalance": "Current Balance", 
-    "Settings.privateData": "Private Data", 
-    "Settings.vestingBalances": "Vesting Balances"
+    "Settings.accountId": "ખાતા ક્રમાંક",
+    "Settings.recentTransactions": "તાજેતરના વ્યવહારો",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "રજીસ્ટર",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "જાહેર માહિતી",
+    "Settings.account": "ખાતું",
+    "Settings.currentBalance": "વર્તમાન રકમ",
+    "Settings.privateData": " ખાનગી ડેટા ",
+    "Settings.vestingBalances": "વેસ્ટિંગ બેલેન્સ",
+    "Setting.ethAddressTitle": "ઈથેરીયમ સરનામું",
+    "Settings.to": "થી",
+    "Settings.from": "થી"
 }

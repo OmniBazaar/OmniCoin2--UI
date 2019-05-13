@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Peringkat",
+    "ProcessorsTable.name": "Nama",
+    "ProcessorsTable.approval": "Persetujuan",
+    "ProcessorsTable.reliability": "Kehandalan",
+    "ProcessorsTable.reputation": "Reputasi",
+    "ProcessorsTable.referralScore": "Skor Referral",
+    "ProcessorsTable.publisherScore": "Skor Penerbit",
+    "ProcessorsTable.netScore": "Skor bersih",
+    "ProcessorsTable.approve": "Setuju"
+}

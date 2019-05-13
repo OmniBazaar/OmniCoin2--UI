@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Под-категория",
+    "ImportedFilesTable.category": "Категория",
+    "ImportedFilesTable.currency": "Валюта",
+    "ImportedFilesTable.listingType": "Тип листинга",
+    "ImportedFilesTable.price": "Цена",
+    "ImportedFilesTable.title": "Название",
+    "ImportedFilesTable.description": "Описание",
+    "ImportedFilesTable.contactType": "Тип контакта",
+    "ImportedFilesTable.contactInfo": "Контактная информация"
 }

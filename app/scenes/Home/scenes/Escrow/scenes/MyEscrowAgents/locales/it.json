@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There isn't enough money on your balance"
+    "MyEscrowAgents.error": "Errore",
+    "MyEscrowAgents.agentsApproved": "Agenti approvati con successo",
+    "MyEscrowAgents.clear": "Pulisci",
+    "MyEscrowAgents.approve": "Approva",
+    "MyEscrowAgents.search": "Cerca",
+    "MyEscrowAgents.user": "Utente",
+    "MyEscrowAgents.approveChanges": "Approva le modifiche",
+    "MyEscrowAgents.insufficientBalance": "Non ci sono abbastanza soldi nel tuo portafoglio."
 }

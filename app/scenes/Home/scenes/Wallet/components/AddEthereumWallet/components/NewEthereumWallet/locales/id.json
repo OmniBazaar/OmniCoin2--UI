@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
+    "NewEthereumWallet.info": "Buat Dompet Ether Baru",
+    "NewEthereumWallet.success": "Sukses",
+    "NewEthereumWallet.successMessage": "Dompet berhasil ditambahkan.",
+    "NewEthereumWallet.createWallet": "BUAT DOMPET",
+    "NewEthereumWallet.cancel": "BATAL",
     "NewEthereumWallet.error": "Error"
 }

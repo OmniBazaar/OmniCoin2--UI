@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "An error occurred while connecting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "HỦY",
+    "ExistingWallet.pleaseEnter": "Vui lòng nhập",
+    "ExistingWallet.connect": "KẾT NỐI",
+    "NewWallet.connectErrorMessage": "Đã xảy ra lỗi khi kết nối ví",
+    "ExistingWallet.enterPassword": "Nhập mật khẩu để truy cập tài khoản",
+    "ExistingWallet.walletGuid": "Ví GUID",
+    "ExistingWallet.ipError": "Ví này được tạo trên một ip khác. Vui lòng đưa {ip} whitelist vào blockchain.info.",
+    "NewWallet.connectErrorTitle": "Lỗi kết nối"
 }

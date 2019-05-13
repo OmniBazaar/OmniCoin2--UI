@@ -1,0 +1,18 @@
+{
+    "Settings.importWF": "WF 키 가져오기",
+    "Settings.rescanBlockchain": "블록체인 다시 스캔하기",
+    "Settings.walletPath": "지갑 경로",
+    "Settings.wfPrivateKey": "WF 프라이빗 키",
+    "Settings.publicKeyNote": "OmniCoins를 보내려는 사람들과 키를 공유하는 것은 안전합니다. 그러나 계정 이름을 주는 것이 더 쉽습니다!",
+    "Settings.yourPublicKey": "귀하의 퍼블릭 키",
+    "Settings.selectFile": "파일 선택",
+    "Settings.copy": "복사",
+    "Settings.importWallet": "지갑 가져오기",
+    "Settings.publicKey": "퍼블릭 키",
+    "Settings.keyCopied": "키가 복사됨!",
+    "Settings.importKey": "키 가져오기",
+    "Settings.enterPassword": "패스워드를 입력해 주세요.",
+    "Settings.walletPassword": "지갑 패스워드",
+    "Settings.enterPrivateKey": "프라이빗 키를 입력하세요.",
+    "Settings.importFromWallet": "지갑에서 키를 가져오기"
+}

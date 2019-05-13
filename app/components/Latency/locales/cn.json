@@ -1,0 +1,7 @@
+{
+    "Latency.low": "Latency.low",
+    "Latency.milliseconds": "{延迟} ms ",
+    "Latency.seconds": "{延迟} s",
+    "Latency.high": "Latency.high",
+    "Latency.medium": "Latency.medium"
+}

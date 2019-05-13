@@ -1,8 +1,8 @@
 {
-    "Settings.voted": "Voted", 
-    "Settings.processor": "Processor", 
-    "Settings.currentVotes": "Current Votes", 
-    "Settings.vote": "VOTE", 
-    "Settings.votes": "Votes (XOM)", 
-    "Settings.approval": "Approval"
+    "Settings.voted": "Đã bình chọn",
+    "Settings.processor": "Bộ xử lý",
+    "Settings.currentVotes": "Phiếu bầu hiện tại",
+    "Settings.vote": "BỎ PHIẾU",
+    "Settings.votes": "Phiếu bầu (XOM)",
+    "Settings.approval": "Phê duyệt"
 }

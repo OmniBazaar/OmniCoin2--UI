@@ -1,5 +1,5 @@
 {
-    "UpdateForcer.newVersionAvailable": "A new version of app is available. Please kindly install it or quit the app", 
-    "UpdateForcer.quit": "Quit", 
-    "UpdateForcer.install": "Install"
+    "UpdateForcer.newVersionAvailable": "ऐप का एक नया संस्करण उपलब्ध है। कृपया इसे स्थापित करें या ऐप छोड़ दें",
+    "UpdateForcer.quit": "छोड़ना",
+    "UpdateForcer.install": "स्थापित करें"
 }

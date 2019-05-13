@@ -1,0 +1,16 @@
+{
+    "Settings.accountId": "계정 ID",
+    "Settings.recentTransactions": "최근 거래",
+    "Settings.eth": "ETH",
+    "Settings.btc": "BTC",
+    "Settings.registered": "등록됨",
+    "Settings.xom": "XOM",
+    "Settings.publicData": "공개 데이터",
+    "Settings.account": "계정",
+    "Settings.currentBalance": "현재 잔고",
+    "Settings.privateData": "프라이빗 데이터",
+    "Settings.vestingBalances": "귀속 잔고",
+    "Setting.ethAddressTitle": "이더리움 주소",
+    "Settings.to": "에게",
+    "Settings.from": "에서부터"
+}

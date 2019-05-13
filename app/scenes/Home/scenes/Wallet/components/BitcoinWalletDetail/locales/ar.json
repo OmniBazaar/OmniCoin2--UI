@@ -1,5 +1,5 @@
 {
-    "BitcoinWalletDetail.currentBalance": "Current Balance", 
-    "BitcoinWalletDetail.wallet": "Wallet", 
-    "BitcoinWalletDetail.guid": "Wallet GUID:"
+    "BitcoinWalletDetail.currentBalance": "الرصيد الحالي",
+    "BitcoinWalletDetail.wallet": "المحفظة",
+    "BitcoinWalletDetail.guid": "الخاص بالمحفظة GUID رقم:"
 }

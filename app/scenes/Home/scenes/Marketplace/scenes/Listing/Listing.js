@@ -539,6 +539,10 @@ class Listing extends Component {
     )
   }
 
+  onBackClick = () => {
+    this.props.history.goBack();
+  }
+
   renderItemDetails(listingDetail) {
     const { isPreview } = this.state;
     const { formatMessage } = this.props.intl;
@@ -550,7 +554,14 @@ class Listing extends Component {
 
     return (
       <div className="item-description">
-        <span className="title">{listingDetail.listing_title}</span>
+        <span className="title">
+          {listingDetail.listing_title}
+          <Button
+            onClick={this.onBackClick}
+            content={formatMessage(messages.back)}
+            className="btn-back button--green-bg" />
+        </span>
+        
         <div className="seller-wrapper">
           <span>{formatMessage(messages.seller)}</span>
           <div className="seller-info">
@@ -841,4 +852,4 @@ export default connect(
       setBuyerAddress
     }, dispatch)
   }),
-)(injectIntl(Listing));
+)(injectIntl(withRouter(Listing)));

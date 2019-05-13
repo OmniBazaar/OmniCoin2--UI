@@ -4,9 +4,23 @@ import { bindActionCreators } from 'redux';
 import { injectIntl } from 'react-intl';
 import { Tab } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
+import _ from 'lodash';
 import GridTable from '../GridTable/GridTable';
 
+
 class TabsData extends Component {
+  constructor(props) {
+    super(props);
+
+    const { location } = props;
+    const query = queryString.parse(location.search);
+    this.state = {
+      activeIndex: query.tabIndex
+    };
+  }
+  
   renderPanes() {
     const {
       data, tabs, showActions, showTrailingLoader, currency, loading,
@@ -44,12 +58,29 @@ class TabsData extends Component {
     );
   }
 
+  onTabChange = (event, data) => {
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+    query.tabIndex = data.activeIndex;
+
+    const strs = Object.keys(query).map(key => `${key}=${query[key]}`);
+    this.props.history.push({
+      pathname: location.pathname,
+      search: `?${strs.join('&')}`
+    });
+
+    this.setState({ activeIndex: data.activeIndex });
+  }
+
   render() {
+    const { activeIndex } = this.state;
     return (
       <Tab
         className="tabs"
         menu={{ secondary: true, pointing: true }}
         panes={this.renderPanes()}
+        activeIndex={activeIndex}
+        onTabChange={this.onTabChange}
       />
     );
   }
@@ -77,4 +108,4 @@ export default connect(
     tabsDataActions: bindActionCreators({
     }, dispatch),
   })
-)(injectIntl(TabsData));
+)(injectIntl(withRouter(TabsData)));

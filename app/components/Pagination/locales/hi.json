@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "अगला >",
+    "Pagination.ariaFirst": "पहला वस्तु ",
+    "Pagination.contentFirst": "<< पहला",
+    "Pagination.ariaNext": "अगला वस्तु ",
+    "Pagination.ariaPrev": "पिछला वस्तु ",
+    "Pagination.contentPrev": "पिछला",
+    "Pagination.ariaLast": "अंतिम वस्तु",
+    "Pagination.contentLast": "अंतिम >>"
 }

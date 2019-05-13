@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import currencies from '../../../../../../commons/currencies';
 
@@ -33,9 +34,10 @@ class CurrencyDropdown extends Component {
 
   render() {
     const { value } = this.props.input;
-
+    const { required } = this.props;
     return (
       <Dropdown
+        className={cn({required: required && !value})}
         compact
         selection
         placeholder={this.props.placeholder}

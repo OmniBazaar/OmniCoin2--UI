@@ -1,7 +1,7 @@
 {
-    "AddBitcoinAddress.label": "Label (optional)", 
-    "AddBitcoinAddress.pleaseEnter": "Please enter", 
-    "AddBitcoinAddress.cancel": "CANCEL", 
-    "AddBitcoinAddress.createWallet": "ADD", 
-    "AddBitcoinAddress.addSubWallet": "Add Sub-Wallet"
+    "AddBitcoinAddress.label": "Rótulo (opcional)",
+    "AddBitcoinAddress.pleaseEnter": "Por favor digite",
+    "AddBitcoinAddress.cancel": "CANCELAR",
+    "AddBitcoinAddress.createWallet": "ADICIONAR",
+    "AddBitcoinAddress.addSubWallet": "Adicionar Sub-Carteira"
 }

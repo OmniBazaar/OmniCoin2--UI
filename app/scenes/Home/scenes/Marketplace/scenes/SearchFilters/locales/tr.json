@@ -1,6 +1,6 @@
 {
-    "SearchFilters.subCategory": "Sub-category", 
-    "SearchFilters.category": "Category", 
-    "SearchFilters.search": "Search", 
-    "SearchFilters.currency": "Currency"
+    "SearchFilters.subCategory": "Alt Kategori",
+    "SearchFilters.category": "Kategori",
+    "SearchFilters.search": "Arama",
+    "SearchFilters.currency": "Para Birimi"
 }

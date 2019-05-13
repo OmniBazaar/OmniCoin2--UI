@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import cn from 'classnames';
 
 import { getPublishers } from '../../../../../../../../../../services/accountSettings/accountActions';
 import { searchPublishers } from '../../../../../../../../../../services/listing/listingActions';
@@ -81,9 +82,10 @@ class PublishersDropdown extends Component {
   render() {
     const { value } = this.props.input || this.props;
     const { searching } = this.props.publishers;
-
+    const { required } = this.props;
     return (
       <Dropdown
+        className={cn({required: required && !value})}
         compact
         selection
         placeholder={this.props.placeholder}

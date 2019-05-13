@@ -1,0 +1,11 @@
+{
+    "LoginForm.enterUsername": "输入你的用户名",
+    "LoginForm.error": "错误",
+    "LoginForm.signup": "报名",
+    "LoginForm.unlock": "开锁",
+    "LoginForm.connectionDoesntExist": "没有网络连接。请连接到互联网, 然后重试。",
+    "LoginForm.accountDoesntExist": "帐户不存在",
+    "LoginForm.enterPassword": "输入密码",
+    "LoginForm.noAccount": "至今未拥有一个账号吗?",
+    "LoginForm.fieldRequired": "此字段是必需的"
+}

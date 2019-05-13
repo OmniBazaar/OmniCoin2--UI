@@ -1,0 +1,10 @@
+{
+    "Pagination.contentNext": "다음 >",
+    "Pagination.ariaFirst": "첫번째 물품",
+    "Pagination.contentFirst": "<< 처음",
+    "Pagination.ariaNext": "다음 물품",
+    "Pagination.ariaPrev": "이전 아이템",
+    "Pagination.contentPrev": "< 이전",
+    "Pagination.ariaLast": "마지막 물품",
+    "Pagination.contentLast": "마지막 >>"
+}

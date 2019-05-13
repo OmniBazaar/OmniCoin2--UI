@@ -1,11 +1,11 @@
 {
-    "LoginForm.enterUsername": "Enter your username", 
-    "LoginForm.error": "Error", 
-    "LoginForm.signup": "Sign up", 
-    "LoginForm.unlock": "Unlock", 
-    "LoginForm.connectionDoesntExist": "There is no internet connection. Please connect to the internet and try again.", 
-    "LoginForm.accountDoesntExist": "Account doesn't exist", 
-    "LoginForm.enterPassword": "Enter password", 
-    "LoginForm.noAccount": "Don't have an account yet?", 
-    "LoginForm.fieldRequired": "This field is required"
+    "LoginForm.enterUsername": "Введіть своє ім'я користувача",
+    "LoginForm.error": "Помилка",
+    "LoginForm.signup": "Зареєструватися",
+    "LoginForm.unlock": "Розблокувати",
+    "LoginForm.connectionDoesntExist": "Немає з'єднання з Інтернетом. Будь ласка, підключіться до інтернету і повторіть спробу.",
+    "LoginForm.accountDoesntExist": "Обліковий запис не існує",
+    "LoginForm.enterPassword": "Введіть пароль",
+    "LoginForm.noAccount": "Ще не маєте облікового запису?",
+    "LoginForm.fieldRequired": "Це поле є обов'язковим"
 }

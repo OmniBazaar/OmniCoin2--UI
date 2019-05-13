@@ -1,8 +1,8 @@
 {
-    "MyListings.marketplace": "Marketplace", 
-    "MyListings.myListings": "My Listings", 
-    "MyListings.lowestPrice": "Lowest Price", 
-    "MyListings.highestPrice": "Highest Price", 
-    "MyListings.byDate": "By Date", 
-    "MyListings.allCategories": "All Categories"
+    "MyListings.marketplace": "Thị trường",
+    "MyListings.myListings": "Danh sách của tôi",
+    "MyListings.lowestPrice": "Giá thấp nhất",
+    "MyListings.highestPrice": "Giá cao nhất",
+    "MyListings.byDate": "Theo ngày",
+    "MyListings.allCategories": "Tất cả danh mục"
 }

@@ -1,8 +1,9 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "ЗБЕРЕГТИ ЗНАЧЕННЯ ЗА ЗАМОВЧУВАННЯМ",
+    "ListingsDefaults.listingDefaults": "Лот за замовчуванням",
+    "ListingsDefaults.saveListingSuccessMessage": "Умови Лоту за замовчуванням були успішно збережені.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Успіх",
+    "ListingsDefaults.myListings": "Мої лоти",
+    "ListingsDefaults.defaultsNote": "Ця інформація буде попередньо внесена в усі нові лоти, які ви створюєте."
 }

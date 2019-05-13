@@ -1,0 +1,19 @@
+{
+    "TransactionDetails.amountOfAsset": "资产金额",
+    "TransactionDetails.transaction": "交易",
+    "TransactionDetails.operations": "运营",
+    "TransactionDetails.referrerSellerFee": "卖方推荐费:{费用}XOM ",
+    "TransactionDetails.timeStamp": "时间戳",
+    "TransactionDetails.escrowFeeDetail": "托管费用: {费用} XOM ",
+    "TransactionDetails.feeDetail": "费用: {费用} XOM",
+    "TransactionDetails.next": "接下来",
+    "TransactionDetails.omnibazaarFeeDetail": " OmniBazaar费用:{费用} XOM ",
+    "TransactionDetails.block": "区块",
+    "TransactionDetails.close": "关闭",
+    "TransactionDetails.referrerBuyerFee": "买方推荐费: {费用} XOM ",
+    "TransactionDetails.publisherFee": "发布者费用: {费用} XOM ",
+    "TransactionDetails.deposit": "存入",
+    "TransactionDetails.transactionHash": "交易哈希",
+    "TransactionDetails.transactionDetails": "交易细节",
+    "TransactionDetails.withdraw": "撤回"
+}

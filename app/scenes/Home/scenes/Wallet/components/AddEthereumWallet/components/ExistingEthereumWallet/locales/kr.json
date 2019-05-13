@@ -1,0 +1,12 @@
+{
+    "NewEthereumWallet.connectErrorTitle": "접속 에러",
+    "ExistingEthereumWallet.pleaseEnter": "입력해 주세요.",
+    "ExistingEthereumWallet.enterBrainKey": "지갑 브레인 키를 입력하세요.",
+    "NewEthereumWallet.chooseOption": "지갑을 추가하는 방법을 선택하세요:",
+    "ExistingEthereumWallet.cancel": "취소",
+    "ExistingEthereumWallet.connect": "접속",
+    "NewEthereumWallet.usingPrivateKey": "프라이빗 키 사용",
+    "NewEthereumWallet.connectErrorMessage": "지갑에 접속하던 중 에러가 발생했습니다.",
+    "NewEthereumWallet.usingBrainKey": "브레인키 사용",
+    "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
+}

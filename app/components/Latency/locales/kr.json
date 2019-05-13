@@ -1,0 +1,7 @@
+{
+    "Latency.low": "레이턴시.낮음",
+    "Latency.milliseconds": "{latency} ms",
+    "Latency.seconds": "{latency} s",
+    "Latency.high": "레이턴시.높음",
+    "Latency.medium": "레이턴시.중간"
+}

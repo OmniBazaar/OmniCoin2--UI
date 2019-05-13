@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "जोड़ा जा रहा है...",
+    "ChainFooter.block": "ब्लाक",
+    "ChainFooter.noConnection": "कोई कनेक्शन नहीं",
+    "ChainFooter.refresh": "रिफ़्रेश"
 }

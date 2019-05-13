@@ -27,11 +27,11 @@ const messages = defineMessages({
   },
   omniBazaarSoftware1: {
     id: 'TermsConditions.omniBazaarSoftware1',
-    defaultMessage: '1. Create a peer-to-peer data-sharing network (the “OmniBazaar Marketplace Platform” or “Network”).'
+    defaultMessage: '1. Create a peer-to-peer data-sharing network (the "OmniBazaar Marketplace Platform" or "Network").'
   },
   omniBazaarSoftware2: {
     id: 'TermsConditions.omniBazaarSoftware2',
-    defaultMessage: '2. Connect the user’s computer to that Network.'
+    defaultMessage: '2. Connect the user\'s computer to that Network.'
   },
   omniBazaarSoftware3: {
     id: 'TermsConditions.omniBazaarSoftware3',
@@ -68,7 +68,7 @@ const messages = defineMessages({
   },
   omniCoinToken1: {
     id: 'TermsConditions.omniCoinToken1',
-    defaultMessage: '1.	OmniBazaar is conducting Token Sale Event (“Sale”) of its OmniBazaar Tokens, as further described in the OmniBazaar White Paper and the OmniBazaar Offering and/or Terms and Conditions Memorandum (collectively, the “Memorandum”.)'
+    defaultMessage: '1.	OmniBazaar is conducting Token Sale Event ("Sale") of its OmniBazaar Tokens, as further described in the OmniBazaar White Paper and the OmniBazaar Offering and/or Terms and Conditions Memorandum (collectively, the "Memorandum".)'
   },
   omniCoinToken2: {
     id: 'TermsConditions.omniCoinToken2',
@@ -82,7 +82,7 @@ const messages = defineMessages({
   
   agreement1: {
     id: 'TermsConditions.agreement1',
-    defaultMessage: '1.	You understand that by installing or using the Software, you are agreeing to comply with and be bound by the terms and conditions contained herein ("Terms of Use" or "Agreement", which also incorporates OmniBazaar’s'
+    defaultMessage: '1.	You understand that by installing or using the Software, you are agreeing to comply with and be bound by the terms and conditions contained herein ("Terms of Use" or "Agreement", which also incorporates OmniBazaar\'s'
   },
   privacyPolicy: {
     id: 'TermsConditions.privacyPolicy',
@@ -136,7 +136,7 @@ const messages = defineMessages({
   },
   copyrightContent1: {
     id: 'TermsConditions.copyrightContent1',
-    defaultMessage: '1. The content, organization, graphics, design, compilation, magnetic translation, digital conversion and other matters related to the Software (“Copyright Content”) are the property of OmniBazaar, Inc. or the applicable content owner and are protected under applicable copyrights, trademarks and other proprietary rights.'
+    defaultMessage: '1. The content, organization, graphics, design, compilation, magnetic translation, digital conversion and other matters related to the Software ("Copyright Content") are the property of OmniBazaar, Inc. or the applicable content owner and are protected under applicable copyrights, trademarks and other proprietary rights.'
   },
   copyrightContent2: {
     id: 'TermsConditions.copyrightContent2',
@@ -154,11 +154,11 @@ const messages = defineMessages({
   },
   trademarksTitle1: {
     id: 'TermsConditions.trademarksTitle1',
-    defaultMessage: '1. You agree that OmniBazaar, CryptoBazaar, OmniCoin, and other OmniBazaar graphics, logos, page headers, button icons, scripts, and service names are trademarks, registered trademarks or trade dress of OmniBazaar or its affiliates (“Trademark Content”).'
+    defaultMessage: '1. You agree that OmniBazaar, CryptoBazaar, OmniCoin, and other OmniBazaar graphics, logos, page headers, button icons, scripts, and service names are trademarks, registered trademarks or trade dress of OmniBazaar or its affiliates ("Trademark Content").'
   },
   trademarksTitle2: {
     id: 'TermsConditions.trademarksTitle2',
-    defaultMessage: '2.	OmniBazaar trademarks and trade dress may not be used in connection with any product or service that is not OmniBazaar’s, in any manner that is likely to cause confusion among consumers, or in any manner that disparages or discredits OmniBazaar.'
+    defaultMessage: '2.	OmniBazaar trademarks and trade dress may not be used in connection with any product or service that is not OmniBazaar\'s, in any manner that is likely to cause confusion among consumers, or in any manner that disparages or discredits OmniBazaar.'
   },
   trademarksTitle3: {
     id: 'TermsConditions.trademarksTitle3',
@@ -184,7 +184,7 @@ const messages = defineMessages({
   },
   limitedPurposes4: {
     id: 'TermsConditions.limitedPurposes4',
-    defaultMessage: '4. The Software contains or uses OmniCoin and other software, the source code for which is “open source”, and the reproduction and use of which is governed by the licenses of those programs. Specifically, the OmniCoin cryptocurrency software is licensed under the MIT license ('
+    defaultMessage: '4. The Software contains or uses OmniCoin and other software, the source code for which is "open source", and the reproduction and use of which is governed by the licenses of those programs. Specifically, the OmniCoin cryptocurrency software is licensed under the MIT license ('
   },
   limitedPurposesLink1: {
     id: 'TermsConditions.limitedPurposesLink1',
@@ -212,7 +212,7 @@ const messages = defineMessages({
   },
   limitedPurposes7: {
     id: 'TermsConditions.limitedPurposes7',
-    defaultMessage: '7. You may not use any meta tags or any other "hidden text" utilizing OmniBazaar’s name or trademarks without the express written consent of OmniBazaar. Any unauthorized use terminates the permission or license granted by OmniBazaar hereunder.'
+    defaultMessage: '7. You may not use any meta tags or any other "hidden text" utilizing OmniBazaar\'s name or trademarks without the express written consent of OmniBazaar. Any unauthorized use terminates the permission or license granted by OmniBazaar hereunder.'
   },
   limitedPurposes8: {
     id: 'TermsConditions.limitedPurposes8',
@@ -284,7 +284,7 @@ const messages = defineMessages({
   },
   personalInfo2: {
     id: 'TermsConditions.personalInfo2',
-    defaultMessage: '2. OmniBazaar will only use personal information in accordance with OmniBazaar’s'
+    defaultMessage: '2. OmniBazaar will only use personal information in accordance with OmniBazaar\'s'
   },
   personalInfo3: {
     id: 'TermsConditions.personalInfo3',
@@ -315,7 +315,7 @@ const messages = defineMessages({
   
   ageOfUseTitle: {
     id: 'TermsConditions.ageOfUseTitle',
-    defaultMessage: 'You must be 18 or older to use the OmniBazaar Software'
+    defaultMessage: 'You must be 18 or older to use the OmniBazaar Software.'
   },
   ageOfUse1: {
     id: 'TermsConditions.ageOfUse1',
@@ -327,7 +327,7 @@ const messages = defineMessages({
   },
   ageOfUse3: {
     id: 'TermsConditions.ageOfUse3',
-    defaultMessage: '3. Any use of or access to the Software by anyone under 18 is unauthorized. If you are 13 or older but under 18, you must have your parent or legal guardian’s permission to use the Software and to accept the Terms of Use.'
+    defaultMessage: '3. Any use of or access to the Software by anyone under 18 is unauthorized. If you are 13 or older but under 18, you must have your parent or legal guardian\'s permission to use the Software and to accept the Terms of Use.'
   },
   ageOfUse4: {
     id: 'TermsConditions.ageOfUse4',
@@ -379,7 +379,7 @@ const messages = defineMessages({
   
   conductPoliciesTitle: {
     id: 'TermsConditions.conductPoliciesTitle',
-    defaultMessage: 'You agree to comply with OmniBazaar’s conduct policies when using the Software'
+    defaultMessage: 'You agree to comply with OmniBazaar\'s conduct policies when using the Software'
   },
   conductPolicies1: {
     id: 'TermsConditions.conductPolicies1',
@@ -419,7 +419,7 @@ const messages = defineMessages({
   },
   conductPolicies10: {
     id: 'TermsConditions.conductPolicies10',
-    defaultMessage: 'You will not solicit passwords or personally identifying information (this includes, but is not limited to, someone else’s name, birth date, home address, IP address, credit card number, social security number, or other government-issued identification information) for commercial or unlawful purposes;'
+    defaultMessage: 'You will not solicit passwords or personally identifying information (this includes, but is not limited to, someone else\'s name, birth date, home address, IP address, credit card number, social security number, or other government-issued identification information) for commercial or unlawful purposes;'
   },
   conductPolicies11: {
     id: 'TermsConditions.conductPolicies11',
@@ -427,7 +427,7 @@ const messages = defineMessages({
   },
   conductPolicies12: {
     id: 'TermsConditions.conductPolicies12',
-    defaultMessage: 'You will not otherwise take any action in violation of OmniBazaar’s guidelines and policies;'
+    defaultMessage: 'You will not otherwise take any action in violation of OmniBazaar\'s guidelines and policies;'
   },
   conductPolicies13: {
     id: 'TermsConditions.conductPolicies13',
@@ -478,7 +478,7 @@ const messages = defineMessages({
   },
   liabilityLimitedTitle: {
     id: 'TermsConditions.liabilityLimitedTitle',
-    defaultMessage: 'OmniBazaar’s liability is limited'
+    defaultMessage: 'OmniBazaar\'s liability is limited'
   },
   liabilityLimited1: {
     id: 'TermsConditions.liabilityLimited1',
@@ -511,7 +511,7 @@ const messages = defineMessages({
   },
   liabilityLimitedEnd3: {
     id: 'TermsConditions.liabilityLimitedEnd3',
-    defaultMessage: 'OMNIBAZAAR’S LIABILITY TO YOU FOR ANY CAUSE WHATSOEVER, AND REGARDLESS OF THE FORM OF THE ACTION, WILL AT ALL TIMES BE LIMITED TO THE FEES, IF ANY, PAID BY YOU TO US FOR THE USE OF THE SOFTWARE, BUT IN NO CASE WILL OUR LIABILITY TO YOU SHALL EXCEED $50. YOU AGREE THAT DISPUTES BETWEEN YOU AND OMNIBAZAAR WILL BE RESOLVED BY BINDING, INDIVIDUAL ARBITRATION AND YOU WAIVE YOUR RIGHT TO PARTICIPATE IN A CLASS ACTION LAWSUIT OR CLASS-WIDE ARBITRATION. YOU ACKNOWLEDGE THAT IF NO FEES ARE PAID TO US FOR THE SOFTWARE, YOU SHALL BE LIMITED TO INJUNCTIVE RELIEF ONLY, UNLESS OTHERWISE PERMITTED BY LAW, AND SHALL NOT BE ENTITLED TO DAMAGES OF ANY KIND FROM US, REGARDLESS OF THE CAUSE OF ACTION. IF YOU ARE A CALIFORNIA RESIDENT, YOU WAIVE CALIFORNIA CIVIL CODE SECTION 1542, WHICH STATES, IN PART: "A GENERAL RELEASE DOES NOT EXTEND TO CLAIMS WHICH THE CREDITOR DOES NOT KNOW OR SUSPECT TO EXIST IN HIS FAVOR AT THE TIME OF EXECUTING THE RELEASE, WHICH IF KNOWN BY HIM MUST HAVE MATERIALLY AFFECTED HIS SETTLEMENT WITH THE DEBTOR".'
+    defaultMessage: 'OMNIBAZAAR\'S LIABILITY TO YOU FOR ANY CAUSE WHATSOEVER, AND REGARDLESS OF THE FORM OF THE ACTION, WILL AT ALL TIMES BE LIMITED TO THE FEES, IF ANY, PAID BY YOU TO US FOR THE USE OF THE SOFTWARE, BUT IN NO CASE WILL OUR LIABILITY TO YOU SHALL EXCEED $50. YOU AGREE THAT DISPUTES BETWEEN YOU AND OMNIBAZAAR WILL BE RESOLVED BY BINDING, INDIVIDUAL ARBITRATION AND YOU WAIVE YOUR RIGHT TO PARTICIPATE IN A CLASS ACTION LAWSUIT OR CLASS-WIDE ARBITRATION. YOU ACKNOWLEDGE THAT IF NO FEES ARE PAID TO US FOR THE SOFTWARE, YOU SHALL BE LIMITED TO INJUNCTIVE RELIEF ONLY, UNLESS OTHERWISE PERMITTED BY LAW, AND SHALL NOT BE ENTITLED TO DAMAGES OF ANY KIND FROM US, REGARDLESS OF THE CAUSE OF ACTION. IF YOU ARE A CALIFORNIA RESIDENT, YOU WAIVE CALIFORNIA CIVIL CODE SECTION 1542, WHICH STATES, IN PART: "A GENERAL RELEASE DOES NOT EXTEND TO CLAIMS WHICH THE CREDITOR DOES NOT KNOW OR SUSPECT TO EXIST IN HIS FAVOR AT THE TIME OF EXECUTING THE RELEASE, WHICH IF KNOWN BY HIM MUST HAVE MATERIALLY AFFECTED HIS SETTLEMENT WITH THE DEBTOR".'
   },
   
   agreeToIndemnifyTitle: {
@@ -529,7 +529,7 @@ const messages = defineMessages({
   },
   floridaLawText1: {
     id: 'TermsConditions.floridaLawText1',
-    defaultMessage: 'Subject to the arbitration clauses included above, if there is any dispute arising out of the Software, by using the Software, you expressly agree that any such dispute shall be governed by the laws of the State of Florida, without regard to its conflict of law provisions, and you expressly agree and consent to the exclusive jurisdiction and venue of the state and federal courts of the State of Florida, in Pinellas County, for the resolution of any such dispute. Omnibazaar and you hereby exclude the application of the Uniform Computer Information Transactions Act (“UCITA”), the United Nations Convention on the International Sale of Goods (“CISG”) and any law of any jurisdiction that would apply UCITA or CISG or terms equivalent to UCITA or CISG to this Agreement'
+    defaultMessage: 'Subject to the arbitration clauses included above, if there is any dispute arising out of the Software, by using the Software, you expressly agree that any such dispute shall be governed by the laws of the State of Florida, without regard to its conflict of law provisions, and you expressly agree and consent to the exclusive jurisdiction and venue of the state and federal courts of the State of Florida, in Pinellas County, for the resolution of any such dispute. Omnibazaar and you hereby exclude the application of the Uniform Computer Information Transactions Act ("UCITA"), the United Nations Convention on the International Sale of Goods ("CISG") and any law of any jurisdiction that would apply UCITA or CISG or terms equivalent to UCITA or CISG to this Agreement'
   },
   floridaLawText2: {
     id: 'TermsConditions.floridaLawText2',
@@ -537,7 +537,7 @@ const messages = defineMessages({
   },
   floridaLawText3: {
     id: 'TermsConditions.floridaLawText3',
-    defaultMessage: 'The Software is a “commercial item,” as that term is defined at 48 C.F.R. 2.101 (Oct. 1995), consisting of “commercial computer software” and “commercial computer software documentation”, as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all United States government end users acquire only those rights in the Software that are provided by this Agreement'
+    defaultMessage: 'The Software is a "commercial item," as that term is defined at 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer software" and "commercial computer software documentation", as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all United States government end users acquire only those rights in the Software that are provided by this Agreement'
   },
   
   representationAndWarrantyTitle: {
@@ -571,7 +571,7 @@ const messages = defineMessages({
   },
   otherTerms2: {
     id: 'TermsConditions.otherTerms2',
-    defaultMessage: '2. You agree that, except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (”JAMS”) by arbitrators appointed in accordance with such rules.'
+    defaultMessage: '2. You agree that, except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. ("JAMS") by arbitrators appointed in accordance with such rules.'
   },
   otherTerms3: {
     id: 'TermsConditions.otherTerms3',

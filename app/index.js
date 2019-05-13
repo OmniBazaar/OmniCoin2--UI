@@ -8,12 +8,7 @@ import { reducer as toastrReducer } from 'react-redux-toastr';
 import { AppContainer } from 'react-hot-loader';
 import { addLocaleData } from 'react-intl';
 import { ChainConfig } from 'omnibazaarjs-ws';
-import reduxReset from 'redux-reset'
-import en from 'react-intl/locale-data/en';
-import es from 'react-intl/locale-data/es';
-import fr from 'react-intl/locale-data/fr';
-import it from 'react-intl/locale-data/it';
-import ru from 'react-intl/locale-data/ru';
+import reduxReset from 'redux-reset';
 
 import './app.global.scss';
 import App from './App';
@@ -48,7 +43,17 @@ import {
 
 ChainConfig.address_prefix = 'XOM';
 
-addLocaleData([...en, ...es, ...fr, ...it]);
+const newLocale = (locale) => ({
+  locale,
+  pluralRuleFunction: () => ''
+});
+
+// addLocaleData([...en, ...es, ...fr, ...it]);
+addLocaleData([
+  newLocale('cn'),
+  newLocale('kr'),
+  newLocale('tl')
+]);
 
 const reducer = combineReducers({
   ...reducers,

@@ -1,0 +1,12 @@
+{
+    "NewEthereumWallet.connectErrorTitle": "连接错误",
+    "ExistingEthereumWallet.pleaseEnter": "请输入",
+    "ExistingEthereumWallet.enterBrainKey": "输入钱包大脑密钥",
+    "NewEthereumWallet.chooseOption": "选择添加钱包的方法:",
+    "ExistingEthereumWallet.cancel": "取消",
+    "ExistingEthereumWallet.connect": "连接",
+    "NewEthereumWallet.usingPrivateKey": "使用私钥",
+    "NewEthereumWallet.connectErrorMessage": "连接钱包时发生错误。",
+    "NewEthereumWallet.usingBrainKey": "使用大脑钥匙",
+    "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
+}

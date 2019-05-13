@@ -1,7 +1,7 @@
 {
-    "AddBitcoinAddress.label": "Label (optional)", 
-    "AddBitcoinAddress.pleaseEnter": "Please enter", 
-    "AddBitcoinAddress.cancel": "CANCEL", 
-    "AddBitcoinAddress.createWallet": "ADD", 
-    "AddBitcoinAddress.addSubWallet": "Add Sub-Wallet"
+    "AddBitcoinAddress.label": "Етикетка (опціонально)",
+    "AddBitcoinAddress.pleaseEnter": "Будь ласка, введіть",
+    "AddBitcoinAddress.cancel": "СКАСУВАТИ",
+    "AddBitcoinAddress.createWallet": "ДОДАТИ",
+    "AddBitcoinAddress.addSubWallet": "Додати суб-гаманець"
 }

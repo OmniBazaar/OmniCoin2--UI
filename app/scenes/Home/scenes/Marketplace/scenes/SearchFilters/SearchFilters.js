@@ -9,6 +9,9 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm, getFormValues, change } from 'redux-form';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
+import _ from 'lodash';
 
 import CurrencyDropdown from '../Listing/scenes/AddListing/components/CurrencyDropdown/CurrencyDropdown';
 import CategoryDropdown from '../../scenes/Listing/scenes/AddListing/components/CategoryDropdown/CategoryDropdown';
@@ -49,9 +52,25 @@ class SearchFilters extends Component {
   }
 
   componentDidMount() {
-    const {
+    let {
       searchTerm, category, subCategory, currency
     } = this.props.search;
+
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+    
+    searchTerm = query.searchTerm ? query.searchTerm : searchTerm;
+    category = query.category ? query.category : category;
+    subCategory = query.subcategory ? query.subcategory : subCategory;
+    currency = query.currency ? query.currency : currency;
+
+    this.updateLocation({
+      searchTerm,
+      category,
+      subcategory: subCategory,
+      currency
+    });
+
     this.props.initialize({
       searchTerm,
       category,
@@ -104,17 +123,37 @@ class SearchFilters extends Component {
     </div>
   );
 
+  updateLocation = (formValues) => {
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+    Object.keys(formValues).forEach(key => {
+      if (formValues[key]) {
+        query[key] = formValues[key];
+      } else {
+        delete query[key];
+      }
+    });
+
+    const strs = Object.keys(query).map(key => `${key}=${query[key]}`);
+    this.props.history.push({
+      pathname: location.pathname,
+      search: `?${strs.join('&')}`
+    });
+  }
+
   changeCurrency(currency) {
     const searchTerm = (this.searchInput && this.searchInput.value) || '';
     const values = {
       ...this.props.formValues,
       searchTerm
     };
+    this.updateLocation({ ...values, currency });
     this.props.onChangeCurrency(values, currency);
   }
 
   handleSubmit(values) {
     const searchTerm = (this.searchInput && this.searchInput.value) || '';
+    this.updateLocation({ ...values, searchTerm });
     this.props.onSubmit(values, searchTerm);
   }
 
@@ -182,4 +221,4 @@ export default compose(
     ...state.default,
     formValues: getFormValues('searchForm')(state)
   }))
-)(injectIntl(SearchFilters));
+)(injectIntl(withRouter(SearchFilters)));

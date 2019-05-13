@@ -1,0 +1,20 @@
+{
+    "Menu.usefulLinks": "유용한 링크",
+    "Menu.viewAll": "VIEW ALL",
+    "Menu.housing": "주택",
+    "Menu.default": "Default",
+    "Menu.gigs": "공연",
+    "Menu.omniLink": "OmniBazaar.com",
+    "Menu.extendedSearch": "Extended Search",
+    "Menu.recent": "최신",
+    "Menu.community": "커뮤니티",
+    "Menu.quickLinks": "빠른 링크",
+    "Menu.addListing": "목록 추가",
+    "Menu.support": "지원",
+    "SearchMenu.connectingToDht": "DHT에 접속하기",
+    "SearchMenu.default": "기본 설정",
+    "SearchMenu.saved": "저장된 검색",
+    "SearchMenu.extendedSearch": "고급 검색",
+    "SearchMenu.viewAll": "모두 보기",
+    "SearchMenu.noSavedSearches": "귀하는 어떤 검색도 저장하지 않았습니다."
+}

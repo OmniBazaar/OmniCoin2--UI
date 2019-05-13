@@ -1,0 +1,16 @@
+{
+    "NewWallet.enter": "입력하세요",
+    "NewWallet.email": "엑세스 복원을 위한 이메일 주소",
+    "NewWallet.error": "에러",
+    "NewWallet.required": "이 부분은 필수 항목입니다.",
+    "NewWallet.createPassword": "지갑 패스워드 생성",
+    "NewWallet.noMatch": "패스워드가 틀립니다.",
+    "NewWallet.createWallet": "지갑 만들기",
+    "NewWallet.message": "전자 메일을 제공하는 것은 선택 사항이지만 입력하는 것이 추천합니다. 그렇지 않으면 암호를 분실했을 경우 지갑에 대한 액세스를 복원 할 수 없습니다.",
+    "NewWallet.label": "레이블",
+    "NewWallet.cancel": "취소",
+    "NewWallet.minLength": "비밀번호는 10자 이상이어야 합니다.",
+    "NewWallet.success": "성공",
+    "NewWallet.rememberGuid": "입력해 귀하의 GUID를 보호해 주세요.",
+    "NewWallet.repeatPassword": "지갑에 엑세스 하기 위해 패스워드를 다시 입력해 주세요."
+}

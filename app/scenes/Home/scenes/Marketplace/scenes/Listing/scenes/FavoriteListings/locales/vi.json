@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "Thị trường",
+    "FavoriteListings.favoriteListings": "Danh sách yêu thích",
+    "FavoriteListings.byDate": "Theo ngày",
+    "FavoriteListings.lowestPrice": "Giá thấp nhất",
+    "FavoriteListings.highestPrice": "Giá cao nhất"
 }

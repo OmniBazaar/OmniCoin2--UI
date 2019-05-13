@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "لم نتمكن من التحقق من اسم المستخدم هذا في قناة تيلغرام الخاصة بنا.",
+    "AuthService.invalidMailChimpEmail": "لم نتمكن من التحقق من اشتراك بريدك الإلكتروني في نشرتنا الإخبارية",
+    "AuthService.invalidTwitterUsername": "لم نتمكن من التحقق من اسم المستخدم هذا كمتابع على تويتر",
+    "AuthService.invalidUsername": " استخدم فقط الأحرف الأبجدية الصغيرة والشرطات والفترات. يجب أن تبدأ أسماء المستخدمين بحرف ولا يمكن أن تنتهي بشرطة",
+    "AuthService.noAccount": "الحساب غير موجود",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "كلمة المرور غير صالح"
 }

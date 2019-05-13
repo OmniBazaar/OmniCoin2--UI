@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "ВИДАЛИТИ ВСІ",
+    "ImportListings.onlyTextFileMsg": "Тільки TXT файли дозволено.",
+    "ImportListings.warning": "Попередження",
+    "ImportListings.addFiles": "ДОДАТИ ФАЙЛИ",
+    "ImportListings.importListings": "Імпортувати лоти",
+    "ImportListings.myListings": "Мої лоти",
+    "ImportListings.ok": "Добре",
+    "ImportListings.listingsVendor": "Короткий список продавців",
+    "ImportListings.importedData": "Імпортовані дані",
+    "ImportListings.files": "Файли",
+    "ImportListings.filesToImport": "Файли для імпорту"
 }

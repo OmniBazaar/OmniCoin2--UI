@@ -1,7 +1,7 @@
 {
-    "AddBitcoinAddress.label": "Label (optional)", 
-    "AddBitcoinAddress.pleaseEnter": "Please enter", 
-    "AddBitcoinAddress.cancel": "CANCEL", 
-    "AddBitcoinAddress.createWallet": "ADD", 
-    "AddBitcoinAddress.addSubWallet": "Add Sub-Wallet"
+    "AddBitcoinAddress.label": "Etiket (isteğe bağlı)",
+    "AddBitcoinAddress.pleaseEnter": "Lütfen Girin",
+    "AddBitcoinAddress.cancel": "İPTAL",
+    "AddBitcoinAddress.createWallet": "EKLE",
+    "AddBitcoinAddress.addSubWallet": "Alt-Cüzdan Ekle"
 }

@@ -1,8 +1,9 @@
 {
-    "ListingsDefaults.saveDefaults": "SAVE DEFAULTS", 
-    "ListingsDefaults.listingDefaults": "Listing Defaults", 
-    "ListingsDefaults.saveListingSuccessMessage": "Listing Defaults were saved successfully.", 
-    "ListingsDefaults.createListing": "Create Listings", 
-    "ListingsDefaults.success": "Success", 
-    "ListingsDefaults.myListings": "My Listings"
+    "ListingsDefaults.saveDefaults": "LƯU MẶC ĐỊNH",
+    "ListingsDefaults.listingDefaults": "Danh sách mặc định",
+    "ListingsDefaults.saveListingSuccessMessage": "Danh sách mặc định đã được lưu thành công.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "Thành công",
+    "ListingsDefaults.myListings": "Danh sách của tôi",
+    "ListingsDefaults.defaultsNote": "Thông tin này sẽ được điền sẵn trong tất cả các danh sách mới mà bạn tạo."
 }

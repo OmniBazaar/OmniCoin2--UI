@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "Yeni Ether Cüzdanı Yarat",
+    "NewEthereumWallet.success": "Başarı",
+    "NewEthereumWallet.successMessage": "Cüzdan başarıyla eklendi.",
+    "NewEthereumWallet.createWallet": "CÜZDAN OLUŞTUR",
+    "NewEthereumWallet.cancel": "İPTAL",
+    "NewEthereumWallet.error": "Hata"
 }

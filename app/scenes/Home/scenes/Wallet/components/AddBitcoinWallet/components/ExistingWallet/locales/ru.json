@@ -1,10 +1,10 @@
 {
-    "ExistingWallet.cancel": "CANCEL", 
-    "ExistingWallet.pleaseEnter": "Please Enter", 
-    "ExistingWallet.connect": "CONNECT", 
-    "NewWallet.connectErrorMessage": "Having error when conneting wallet", 
-    "ExistingWallet.enterPassword": "Enter Password for Account Access", 
-    "ExistingWallet.walletGuid": "Wallet GUID", 
-    "ExistingWallet.ipError": "This wallet was created on a different ip. Please whitelist {ip} in blockchain.info", 
-    "NewWallet.connectErrorTitle": "Connect error"
+    "ExistingWallet.cancel": "ОТМЕНА",
+    "ExistingWallet.pleaseEnter": "Введите",
+    "ExistingWallet.connect": "СОЕДИНЕНИЕ",
+    "NewWallet.connectErrorMessage": "Произошла ошибка при подключении кошелька",
+    "ExistingWallet.enterPassword": "Введите пароль для доступа к учетной записи",
+    "ExistingWallet.walletGuid": "GUIDE кошелька",
+    "ExistingWallet.ipError": "Этот кошелек был создан на другом ip. Пожалуйста, включите в белый список {ip} на blockchain.info.",
+    "NewWallet.connectErrorTitle": "Ошибка соединения"
 }

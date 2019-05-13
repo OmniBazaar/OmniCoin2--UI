@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "પેટા શ્રેણી",
+    "ImportedFilesTable.category": "શ્રેણી",
+    "ImportedFilesTable.currency": "ચલણ",
+    "ImportedFilesTable.listingType": "લિસ્ટિંગનો પ્રકાર",
+    "ImportedFilesTable.price": "મુલ્ય",
+    "ImportedFilesTable.title": "શીર્ષક",
+    "ImportedFilesTable.description": "વર્ણન",
+    "ImportedFilesTable.contactType": "સંપર્કનો પ્રકાર",
+    "ImportedFilesTable.contactInfo": "સંપર્ક માહિતી"
 }

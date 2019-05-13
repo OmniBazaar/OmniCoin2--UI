@@ -1,12 +1,12 @@
 {
-    "NewEthereumWallet.connectErrorTitle": "Connect error", 
-    "ExistingEthereumWallet.pleaseEnter": "Please Enter", 
-    "ExistingEthereumWallet.enterBrainKey": "Enter wallet Brain Key", 
-    "NewEthereumWallet.chooseOption": "Select method to add wallet:", 
-    "ExistingEthereumWallet.cancel": "CANCEL", 
-    "ExistingEthereumWallet.connect": "CONNECT", 
-    "NewEthereumWallet.usingPrivateKey": "Use Private Key", 
-    "NewEthereumWallet.connectErrorMessage": "An error occurred while connecting wallet.", 
-    "NewEthereumWallet.usingBrainKey": "Use Brain Key", 
+    "NewEthereumWallet.connectErrorTitle": "Kết nối lỗi",
+    "ExistingEthereumWallet.pleaseEnter": "Vui lòng nhập",
+    "ExistingEthereumWallet.enterBrainKey": "Nhập ví khóa Brain",
+    "NewEthereumWallet.chooseOption": "Chọn một phương thức để thêm ví:",
+    "ExistingEthereumWallet.cancel": "HỦY",
+    "ExistingEthereumWallet.connect": "KẾT NỐI",
+    "NewEthereumWallet.usingPrivateKey": "Sử dụng Private Key",
+    "NewEthereumWallet.connectErrorMessage": "Đã xảy ra lỗi khi kết nối ví.",
+    "NewEthereumWallet.usingBrainKey": "Sử dụng khóa Brain",
     "ExistingEthereumWallet.enterPrivateKey": "Enter wallet Private Key"
 }

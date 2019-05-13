@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "Nu am putut verifica acest nume de utilizator în canalul nostru de telegrame.",
+    "AuthService.invalidMailChimpEmail": "Nu am putut verifica abonamentul dvs. prin e-mail la newsletter-ul nostru",
+    "AuthService.invalidTwitterUsername": "Nu am putut verifica acest nume de utilizator ca pe un follower pe Twitter",
+    "AuthService.invalidUsername": "Utilizați numai caractere alfanumerice, liniuțe și perioade. Numele de utilizator trebuie să înceapă cu o literă și să nu se termine cu o linie.",
+    "AuthService.noAccount": "Contul nu există",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "Parola nevalidă"
 }

@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "HEPSİNİ KALDIR",
+    "ImportListings.onlyTextFileMsg": "Yalnızca TXT dosyalarına izin verilir.",
+    "ImportListings.warning": "Uyarı",
+    "ImportListings.addFiles": "DOSYA EKLE",
+    "ImportListings.importListings": "İlanları İçe Aktar",
+    "ImportListings.myListings": "İlanlarım",
+    "ImportListings.ok": "Tamam",
+    "ImportListings.listingsVendor": "İlan Satıcısı",
+    "ImportListings.importedData": "Alınan Veri",
+    "ImportListings.files": "Dosyalar",
+    "ImportListings.filesToImport": "Alınacak Dosyalar"
 }

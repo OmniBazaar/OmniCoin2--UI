@@ -16,7 +16,7 @@
 
     .add-listing-form,
     .import-listing-form {
-      width: 70%;
+      width: 80%;
 
       .ui.grid {
         padding-bottom: 50px;
@@ -217,4 +217,11 @@
 
 .parent {
   height: 42px;
+}
+
+input[value=''].required,
+textarea.required,
+.dropdown.required,
+.react-tagsinput.required {
+  border-color: red !important;
 }

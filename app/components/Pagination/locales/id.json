@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "Berikutnya >",
+    "Pagination.ariaFirst": "Item Pertama",
+    "Pagination.contentFirst": "<< Pertama",
+    "Pagination.ariaNext": "Barang berikutnya",
+    "Pagination.ariaPrev": "Item Sebelumnya",
+    "Pagination.contentPrev": "< Sebelumnya",
+    "Pagination.ariaLast": "Item Terakhir",
+    "Pagination.contentLast": "Terakhir >>"
 }

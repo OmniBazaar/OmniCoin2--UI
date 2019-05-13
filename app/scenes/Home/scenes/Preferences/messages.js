@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   preferencesTab: {
     id: 'Preferences.preferencesTab',
-    defaultMessage: 'Preferences'
+    defaultMessage: 'Settings'
   },
   consoleTab: {
     id: 'Preferences.consoleTab',
@@ -51,7 +51,11 @@ export default defineMessages({
   },
   priorityForListing: {
     id: 'Preferences.priorityForListing',
-    defaultMessage: 'Priority for Listings You Create'
+    defaultMessage: 'Search Priority for Listings You Create'
+  },
+  priorityForListingToolTip: {
+    id: 'Preferences.priorityForListingToolTip',
+    defaultMessage: 'Choose the search priority for listings you create. Higher search priority causes your listing to be presented to users closer to the beginning their search results. This fee is collected at the time the buyer purchases your item. This fee is paid to OmniBazaar.'
   },
   publisherFee: {
     id: 'Preferences.publisherFee',
@@ -147,7 +151,7 @@ export default defineMessages({
   },
   priorityHighest: {
     id: 'Preferences.priorityHighest',
-    defaultMessage: 'High (1.00% Fee)'
+    defaultMessage: 'Highest (2.00% Fee)'
   },
   priorityHigher: {
     id: 'Preferences.priorityHigher',
@@ -215,11 +219,11 @@ export default defineMessages({
   },
   saveErrorMessage: {
     id: 'Preferences.saveErrorMessage',
-    defaultMessage: 'An error occurred while saving Preferences data.'
+    defaultMessage: 'An error occurred while saving Settings data.'
   },
   saveSuccessMessage: {
     id: 'Preferences.saveSuccessMessage',
-    defaultMessage: 'Preferences data was saved successfully.'
+    defaultMessage: 'Settings data was saved successfully.'
   },
   fieldRequired: {
     id: 'Preferences.fieldRequired',
@@ -235,7 +239,7 @@ export default defineMessages({
   },
   autoRunNote: {
     id: 'Preferences.autoRunNote',
-    defaultMessage: 'This action requires admin rights'
+    defaultMessage: 'This action requires admin rights.'
   },
   autoLogOut: {
     id: 'Preferences.autoLogOut',
@@ -253,10 +257,10 @@ export default defineMessages({
   },
   nodeRestartError: {
     id: 'Preferences.nodeRestartError',
-    defaultMessage: 'An error occured while restarting witness node'
+    defaultMessage: 'An error occured while restarting witness node.'
   },
   nodeRestartSuccess: {
     id: 'Preferences.nodeRestartSuccess',
-    defaultMessage: 'Witness node was restarted successfully'
+    defaultMessage: 'Witness node was restarted successfully.'
   }
 });

@@ -1,4 +1,4 @@
-@import '../../../../../../styles/index';
+@import "../../../../../../styles/index";
 
 .listing {
   .body {
@@ -8,6 +8,13 @@
       font-size: 18px;
       font-weight: bold;
       margin-top: 12px;
+      position: relative;
+
+      .btn-back {
+        position: absolute;
+        right: 0;
+        bottom: -8px;
+      }
     }
 
     .loader-container {
@@ -29,11 +36,16 @@
       flex: $galleryWidth;
       margin-right: 20px;
 
+      .image-gallery-slide-wrapper {
+        max-height: 365px;
+      }
+
       .image-gallery-swipe,
       .image-gallery-slides,
       .image-gallery-image,
       .image-gallery-slide {
-        height: 365px;
+        height: 100%;
+        max-height: 365px;
       }
 
       .image-gallery-slide {
@@ -42,7 +54,7 @@
           display: flex;
           img {
             height: auto;
-            max-height: 100%;
+            max-height: 365px;
             max-width: 100%;
             object-fit: fill;
             object-position: center;
@@ -51,12 +63,18 @@
             margin: auto;
           }
         }
+      }
 
+      .image-gallery-thumbnails-container {
+        display: flex;
+        flex-wrap: wrap;
       }
 
       a.image-gallery-thumbnail {
+        display: block;
         width: 100px;
         height: 80px;
+        margin-left: 0 !important;
 
         div {
           width: 100%;
@@ -115,7 +133,6 @@
             }
           }
           .rating {
-
           }
           .votes {
             display: flex;
@@ -181,7 +198,7 @@
             border: none;
             background-color: $lighter-blue;
             font-size: 14px !important;
-            font-family: 'Titillium Web', sans-serif;
+            font-family: "Titillium Web", sans-serif;
           }
         }
       }
@@ -193,7 +210,9 @@
     }
   }
 
-  .listing-description, .listing-weight-size, .shipping {
+  .listing-description,
+  .listing-weight-size,
+  .shipping {
     flex: 1 1 auto;
     padding: 20px;
     background-color: $background-gray;
@@ -219,9 +238,9 @@
       margin-bottom: 2px;
     }
 
-    >div {
+    > div {
       margin-top: 10px;
-      >span {
+      > span {
         display: inline-block;
         min-width: 60px;
       }

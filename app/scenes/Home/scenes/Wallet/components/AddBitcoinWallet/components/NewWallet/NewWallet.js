@@ -65,7 +65,7 @@ const messages = defineMessages({
   },
   rememberGuid: {
     id: 'NewWallet.rememberGuid',
-    defaultMessage: 'Please write down protect your guid.'
+    defaultMessage: 'Please write down protect your GUID.'
   },
   minLength: {
     id: 'NewWallet.minLength',

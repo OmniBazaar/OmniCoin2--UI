@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "untuk {proposedTime}.",
+    "MyEscrowProposals.you": "Anda",
+    "MyEscrowProposals.error": "Ralat",
+    "MyEscrowProposals.success": "Kejayaan",
+    "MyEscrowProposals.proposalText": "{initiator} dicadangkan untuk melanjutkan escrow masa transaksi tamat tempoh",
+    "MyEscrowProposals.approve": "Meluluskan ia",
+    "MyEscrowProposals.approveSuccess": "Cadangan telah berjaya diluluskan"
 }

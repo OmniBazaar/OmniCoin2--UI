@@ -1,10 +1,10 @@
 {
-    "Pagination.contentNext": "Next >", 
-    "Pagination.ariaFirst": "First item", 
-    "Pagination.contentFirst": "<< First", 
-    "Pagination.ariaNext": "Next item", 
-    "Pagination.ariaPrev": "Previous item", 
-    "Pagination.contentPrev": "< Prev", 
-    "Pagination.ariaLast": "Last item", 
-    "Pagination.contentLast": "Last >>"
+    "Pagination.contentNext": "Tiếp theo >",
+    "Pagination.ariaFirst": "Mục đầu tiên",
+    "Pagination.contentFirst": "<< Đầu tiên",
+    "Pagination.ariaNext": "Mục tiếp theo",
+    "Pagination.ariaPrev": "Mục trước",
+    "Pagination.contentPrev": "< Trước",
+    "Pagination.ariaLast": "Mục cuối",
+    "Pagination.contentLast": "Cuối >>"
 }

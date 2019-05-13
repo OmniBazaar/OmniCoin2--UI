@@ -1,0 +1,13 @@
+{
+    "ImportListings.removeAll": "모두 제거",
+    "ImportListings.onlyTextFileMsg": "TXT 파일만 사용가능.",
+    "ImportListings.warning": "경고",
+    "ImportListings.addFiles": "파일 추가",
+    "ImportListings.importListings": "목록 가져오기",
+    "ImportListings.myListings": "나의 목록",
+    "ImportListings.ok": "Okay",
+    "ImportListings.listingsVendor": "업체 목록",
+    "ImportListings.importedData": "가져온 데이터",
+    "ImportListings.files": "파일",
+    "ImportListings.filesToImport": "파일 가져오기"
+}

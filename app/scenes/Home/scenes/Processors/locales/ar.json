@@ -1,7 +1,7 @@
 {
-    "Processors.standbyProcessors": "Standby Processors", 
-    "Processors.voteSuccess": "You voted successfully!", 
-    "Processors.topProcessors": "Active Processors", 
-    "Processors.success": "Success", 
-    "Processors.error": "Error"
+    "Processors.standbyProcessors": "المجهزون الاحتياطيون",
+    "Processors.voteSuccess": "!لقد قمت بالتصويت بنجاح",
+    "Processors.topProcessors": "المجهزين النشطين",
+    "Processors.success": "نجاح",
+    "Processors.error": "خطأ"
 }

@@ -1,7 +1,7 @@
 {
-    "FavoriteListings.marketplace": "Marketplace", 
-    "FavoriteListings.favoriteListings": "Favorite Listings", 
-    "FavoriteListings.byDate": "By Date", 
-    "FavoriteListings.lowestPrice": "Lowest Price", 
-    "FavoriteListings.highestPrice": "Highest Price"
+    "FavoriteListings.marketplace": "Marketplace",
+    "FavoriteListings.favoriteListings": "Penyenaraian Kegemaran",
+    "FavoriteListings.byDate": "Tarikh",
+    "FavoriteListings.lowestPrice": "Harga terendah",
+    "FavoriteListings.highestPrice": "Harga Tertinggi"
 }

@@ -92,7 +92,7 @@ const messages = defineMessages({
   },
   notEnoughBalance: {
     id: 'PublicData.notEnoughBalance',
-    defaultMessage: 'Update failed due to insufficient funds available'
+    defaultMessage: 'Update failed due to insufficient funds available.'
   },
   failedUpdate: {
     id: 'PublicData.failedUpdate',
@@ -116,7 +116,7 @@ const messages = defineMessages({
   },
   voteFee: {
     id: 'PublicData.voteFee',
-    defaultMessage: 'Fee for voting operation is 20xom'
+    defaultMessage: 'Fee for voting operation is 20 XOM'
   },
   customDownloadAddress: {
     id: 'PublicData.customDownloadAddress',

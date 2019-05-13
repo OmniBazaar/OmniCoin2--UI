@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "Criar Nova Carteira Ether",
+    "NewEthereumWallet.success": "Sucesso",
+    "NewEthereumWallet.successMessage": "Carteira adicionada com sucesso.",
+    "NewEthereumWallet.createWallet": "CRIAR CARTEIRA",
+    "NewEthereumWallet.cancel": "CANCELAR",
+    "NewEthereumWallet.error": "Erro"
 }

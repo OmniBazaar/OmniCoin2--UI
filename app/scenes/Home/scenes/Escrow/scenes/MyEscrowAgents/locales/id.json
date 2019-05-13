@@ -1,10 +1,10 @@
 {
-    "MyEscrowAgents.error": "Error", 
-    "MyEscrowAgents.agentsApproved": "Agents successfully approved", 
-    "MyEscrowAgents.clear": "Clear", 
-    "MyEscrowAgents.approve": "Approve", 
-    "MyEscrowAgents.search": "Search", 
-    "MyEscrowAgents.user": "User", 
-    "MyEscrowAgents.approveChanges": "Approve changes", 
-    "MyEscrowAgents.insufficientBalance": "There is not enough money in your wallet."
+    "MyEscrowAgents.error": "Error",
+    "MyEscrowAgents.agentsApproved": "Agen berhasil disetujui",
+    "MyEscrowAgents.clear": "Clear",
+    "MyEscrowAgents.approve": "Setuju",
+    "MyEscrowAgents.search": "Cari",
+    "MyEscrowAgents.user": "Pengguna",
+    "MyEscrowAgents.approveChanges": "Setujui Perubahan",
+    "MyEscrowAgents.insufficientBalance": "Tidak ada cukup uang di dompet Anda."
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import cn from 'classnames';
 import { mainCategories } from '../../../../../../categories';
 
 const categoryIds = [
@@ -32,9 +33,10 @@ class CategoryDropdown extends Component {
 
   render() {
     const { value, defaultValue } = this.props.input;
+    const { required } = this.props;
     return (
       <Dropdown
-        className="category-dropdown"
+        className={cn('category-dropdown', {required: required && !value})}
         compact
         selection
         placeholder={this.props.placeholder}

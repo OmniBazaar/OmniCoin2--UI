@@ -1,0 +1,7 @@
+{
+    "AddBitcoinAddress.label": "레이블 (선택)",
+    "AddBitcoinAddress.pleaseEnter": "입력하세요.",
+    "AddBitcoinAddress.cancel": "취소",
+    "AddBitcoinAddress.createWallet": "추가",
+    "AddBitcoinAddress.addSubWallet": "하위 지갑 추가"
+}

@@ -22,7 +22,6 @@ export const storePreferences = async (preferences) => {
   const user = getStoredCurrentUser();
 
   if (user) {
-    const preferences_key = `${storageKey}_${user.username}`;
     const account = await Apis.instance().db_api().exec('get_account_by_name', [user.username]);
     const publisher_fee = parseInt(parseFloat(preferences.publisherFee) * 100)
     const escrow_fee = parseInt(parseFloat(preferences.escrowFee) * 100)
@@ -32,18 +31,18 @@ export const storePreferences = async (preferences) => {
     };
     
     // save preferences on local storage
-    await localStorage.setItem(preferences_key, JSON.stringify(preferences));
+    savePreferences(user.username, preferences);
   
-    if (isNaN(publisher_fee) || isNaN(escrow_fee)) {
+    if (isNaN(publisher_fee) && isNaN(escrow_fee)) {
       return
     }
     
-    /*if (isNaN(publisher_fee)) {
+    if (isNaN(publisher_fee)) {
       delete trObj.publisher_fee
     }
     if (isNaN(escrow_fee)) {
       delete trObj.escrow_fee
-    }*/
+    }
     
     // save preferences on server
     const tr = new TransactionBuilder();
@@ -56,6 +55,11 @@ export const storePreferences = async (preferences) => {
     await tr.add_signer(key.privKey, key.pubKey);
     const result = await tr.broadcast();
   }
+}
+
+export const savePreferences = (username, preferences) => {
+  const preferences_key = `${storageKey}_${username}`;
+  localStorage.setItem(preferences_key, JSON.stringify(preferences));
 }
 
 export const getuserPrefereneces = async () => {

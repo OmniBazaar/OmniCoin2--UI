@@ -23,7 +23,7 @@ export default defineMessages({
   },
   fieldRequired: {
     id: 'NewWallet.required',
-    defaultMessage: 'This field is required'
+    defaultMessage: 'This field is required.'
   },
   connectErrorTitle: {
     id: 'NewWallet.connectErrorTitle',
@@ -35,6 +35,6 @@ export default defineMessages({
   },
   ipError: {
     id: 'ExistingWallet.ipError',
-    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info'
+    defaultMessage: 'This wallet was created on a different ip. Please whitelist {ip} in blockchain.info.'
   }
 });

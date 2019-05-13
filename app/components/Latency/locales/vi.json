@@ -1,7 +1,7 @@
 {
-    "Latency.low": "Latency.low", 
-    "Latency.milliseconds": "{latency} ms", 
-    "Latency.seconds": "{latency} s", 
-    "Latency.high": "Latency.high", 
-    "Latency.medium": "Latency.medium"
+    "Latency.low": "Độ trễ.thấp",
+    "Latency.milliseconds": "{latency} ms",
+    "Latency.seconds": "{latency} s",
+    "Latency.high": "Độ trễ.cao",
+    "Latency.medium": "Độ trễ.trung bình"
 }

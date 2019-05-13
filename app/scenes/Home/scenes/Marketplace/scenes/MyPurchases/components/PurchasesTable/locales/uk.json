@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "Ціна",
+    "PurchasesTable.publisher": "Видавець",
+    "PurchasesTable.expirationTime": "Пройшло часу",
+    "PurchasesTable.count": "Підрахунок",
+    "PurchasesTable.title": "Назва",
+    "PurchasesTable.date": "Дата",
+    "PurchasesTable.seller": "Продавець",
+    "PurchasesTable.id": "ID",
+    "PurchasesTable.listingNotAvaiable": "Лот не доступний",
+    "PurchasesTable.buyer": "Покупець"
 }

@@ -1,0 +1,9 @@
+{
+    "MyEscrowSettings.error": "错误",
+    "MyEscrowSettings.secondCategory": "我投票支持的任何用户将作为交易处理者",
+    "MyEscrowSettings.firstCategory": "任何用户, 我给一个积极的声誉评级",
+    "MyEscrowSettings.saved": "成功保存",
+    "MyEscrowSettings.save": "保存设置",
+    "MyEscrowSettings.title": "我批准下列类别的用户成为交易的托管代理人:",
+    "MyEscrowSettings.thirdCategory": "任何作为活跃交易处理器的顶级参与者"
+}

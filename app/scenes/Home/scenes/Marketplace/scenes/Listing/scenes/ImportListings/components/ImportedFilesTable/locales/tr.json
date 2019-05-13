@@ -1,11 +1,11 @@
 {
-    "ImportedFilesTable.subCategory": "Sub-Category", 
-    "ImportedFilesTable.category": "Category", 
-    "ImportedFilesTable.currency": "Currency", 
-    "ImportedFilesTable.listingType": "Listing Type", 
-    "ImportedFilesTable.price": "Price", 
-    "ImportedFilesTable.title": "Title", 
-    "ImportedFilesTable.description": "Description", 
-    "ImportedFilesTable.contactType": "Contact Type", 
-    "ImportedFilesTable.contactInfo": "Contact Info"
+    "ImportedFilesTable.subCategory": "Alt Kategori",
+    "ImportedFilesTable.category": "Kategori",
+    "ImportedFilesTable.currency": "Para birimi",
+    "ImportedFilesTable.listingType": "Listeleme Türü",
+    "ImportedFilesTable.price": "Fiyat",
+    "ImportedFilesTable.title": "Başlık",
+    "ImportedFilesTable.description": "Açıklama",
+    "ImportedFilesTable.contactType": "İletişim Türü",
+    "ImportedFilesTable.contactInfo": "İletişim bilgileri"
 }

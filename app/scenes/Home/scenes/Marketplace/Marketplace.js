@@ -75,7 +75,9 @@ class Marketplace extends Component {
       descriptionMaxSize: 50,
       titleMaxSize: 50,
       categoryMaxSize: 25
-    }
+    },
+    searchResults: [],
+    searchResultsByCategory: []
   };
 
   componentWillMount() {
@@ -101,6 +103,26 @@ class Marketplace extends Component {
       this.fetchListings(this.props.account.publisherData);
     }
 
+    if (this.props.search.searchResults !== nextProps.search.searchResults) {
+      this.setState({
+        searchResults: this.sortListings(nextProps.search.searchResults)
+      });
+    }
+
+    if (this.props.search.searchResultsByCategory !== nextProps.search.searchResultsByCategory) {
+      const searchResultsByCategory = [];
+      nextProps.search.searchResultsByCategory.forEach(listing => {
+        const nListing = {
+          ...listing,
+          listings: this.sortListings(listing.listings)
+        };
+        searchResultsByCategory.push(nListing);
+      });
+      this.setState({
+        searchResultsByCategory
+      });
+    }
+
     // if (this.props.dht.isConnecting && !nextProps.dht.isConnecting) {
     //   this.fetchListings(this.props.account.publisherData);
     // }
@@ -115,6 +137,22 @@ class Marketplace extends Component {
   }) {
     const searchTerm = keywords.join(' ');
     this.props.searchActions.searchListings(searchTerm, 'All', country, state, city, true, null);
+  }
+
+  sortListings(listings) {
+    if (!listings || !listings.length) {
+      return [];
+    }
+
+    return [...listings].sort((a, b) => {
+      if (a.priority_fee > b.priority_fee) {
+        return -1;
+      } else if (a.priority_fee < b.priority_fee) {
+        return 1;
+      }
+
+      return 0;
+    });
   }
 
   listItems(items, size) {
@@ -559,7 +597,7 @@ class Marketplace extends Component {
   }
 
   getListingForCategory(category) {
-    const searchResultsByCategory = this.props.search.searchResultsByCategory || [];
+    const searchResultsByCategory = this.state.searchResultsByCategory || [];
     let result = [];
     searchResultsByCategory.forEach((listing) => {
       if (listing.category === category) {
@@ -572,7 +610,7 @@ class Marketplace extends Component {
 
   renderMarketHome() {
     const { formatMessage } = this.props.intl;
-    const { searchResults } = this.props.search;
+    const { searchResults } = this.state;
     const isSearching = this.props.dht.isLoading || this.props.search.searching;
     const { saving } = this.props.listing.saveListing;
 

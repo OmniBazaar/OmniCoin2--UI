@@ -1,6 +1,7 @@
 {
-    "Escrow.transactions": "My Escrow Transactions", 
-    "Escrow.agents": "My Escrow Agents", 
-    "Escrow.escrow": "Escrow", 
-    "Escrow.settings": "My Escrow Settings"
+    "Escrow.transactions": "Emanet İşlemlerim",
+    "Escrow.agents": "Emanet Temsilcilerim",
+    "Escrow.escrow": "Emanet",
+    "Escrow.settings": "Emanet Ayarlarım",
+    "Escrow.proposals": "Emanet Tekliflerim"
 }

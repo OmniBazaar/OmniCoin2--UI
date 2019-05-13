@@ -1,9 +1,9 @@
 {
-    "MyEscrowProposals.to": "to {proposedTime}.", 
-    "MyEscrowProposals.you": "You", 
-    "MyEscrowProposals.error": "Error", 
-    "MyEscrowProposals.success": "Success", 
-    "MyEscrowProposals.proposalText": "{initiator} proposed to extend escrow transaction expiration time", 
-    "MyEscrowProposals.approve": "Approve it", 
-    "MyEscrowProposals.approveSuccess": "Proposal was successfully approved"
+    "MyEscrowProposals.to": "đến {proposedTime}.",
+    "MyEscrowProposals.you": "Bạn",
+    "MyEscrowProposals.error": "Lỗi",
+    "MyEscrowProposals.success": "Thành công",
+    "MyEscrowProposals.proposalText": "{initiator} đề xuất gia hạn thời hạn của giao dịch ký quỹ",
+    "MyEscrowProposals.approve": "Phê duyệt nó",
+    "MyEscrowProposals.approveSuccess": "Đề xuất đã được phê duyệt thành công"
 }

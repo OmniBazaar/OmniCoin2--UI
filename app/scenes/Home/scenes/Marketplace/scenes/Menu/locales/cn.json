@@ -1,0 +1,20 @@
+{
+    "Menu.usefulLinks": "有效的链接",
+    "Menu.viewAll": "VIEW ALL",
+    "Menu.housing": "房屋",
+    "Menu.default": "Default",
+    "Menu.gigs": "演出",
+    "Menu.omniLink": "OmniBazaar.com",
+    "Menu.extendedSearch": "Extended Search",
+    "Menu.recent": "最近",
+    "Menu.community": "社区",
+    "Menu.quickLinks": "快速链接",
+    "Menu.addListing": "添加清单",
+    "Menu.support": "支持",
+    "SearchMenu.connectingToDht": "连接到DHT",
+    "SearchMenu.default": "默认",
+    "SearchMenu.saved": "保存搜索",
+    "SearchMenu.extendedSearch": "扩展搜索",
+    "SearchMenu.viewAll": "查看全部",
+    "SearchMenu.noSavedSearches": "您还没有保存任何搜索。"
+}

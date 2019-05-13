@@ -1,9 +1,9 @@
 {
-    "AuthService.invalidTelegramPhoneNumber": "We could not verify that username in our Telegram channel.", 
-    "AuthService.invalidMailChimpEmail": "We could not verify your email subscription to our newsletter.", 
-    "AuthService.invalidTwitterUsername": "We could not verify that username as a follower on Twitter.", 
-    "AuthService.invalidUsername": "Use only lowercase alphanumeric characters, dashes and periods. Usernames must start with a letter and cannot end with a dash.", 
-    "AuthService.noAccount": "Account doesn't exist", 
-    "AuthService.accountExists": "This account name is already taken. Please choose another one", 
-    "AuthService.invalidPassword": "Invalid password"
+    "AuthService.invalidTelegramPhoneNumber": "Chúng tôi không thể xác nhận tên người dùng này trên kênh Telegram của chúng tôi.",
+    "AuthService.invalidMailChimpEmail": "Chúng tôi không thể xác minh đăng ký email của bạn vào bản tin của chúng tôi.",
+    "AuthService.invalidTwitterUsername": "Chúng tôi không thể xác minh tên người dùng Twitter này.",
+    "AuthService.invalidUsername": "Chỉ sử dụng các ký tự chữ và số viết thường, dấu gạch ngang và dấu chấm. Tên người dùng phải bắt đầu bằng một chữ cái và không được kết thúc bằng dấu gạch ngang.",
+    "AuthService.noAccount": "Tài khoản không tồn tại",
+    "AuthService.accountExists": "This account name is already taken. Please choose another one",
+    "AuthService.invalidPassword": "Mật khẩu không hợp lệ"
 }

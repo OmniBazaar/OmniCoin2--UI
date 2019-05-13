@@ -1,0 +1,9 @@
+{
+    "ListingsDefaults.saveDefaults": "기본값으로 저장",
+    "ListingsDefaults.listingDefaults": "기본 설정 목록",
+    "ListingsDefaults.saveListingSuccessMessage": "목록 기본설정이 성공적으로 저장되었습니다.",
+    "ListingsDefaults.createListing": "Create Listings",
+    "ListingsDefaults.success": "성공",
+    "ListingsDefaults.myListings": "나의 목록",
+    "ListingsDefaults.defaultsNote": "이 정보는 내가 작성한 모든 새 목록에 미리 입력됩니다."
+}

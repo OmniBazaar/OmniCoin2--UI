@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   successMessage: {
     id: 'NewEthereumWallet.successMessage',
-    defaultMessage: 'Wallet added successfully'
+    defaultMessage: 'Wallet added successfully.'
   },
   info: {
     id: 'NewEthereumWallet.info',

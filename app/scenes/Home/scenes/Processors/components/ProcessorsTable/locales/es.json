@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Rango",
+    "ProcessorsTable.name": "Nombre",
+    "ProcessorsTable.approval": "Aprobación",
+    "ProcessorsTable.reliability": "Fiabilidad",
+    "ProcessorsTable.reputation": "Reputación",
+    "ProcessorsTable.referralScore": "Puntaje de referidos",
+    "ProcessorsTable.publisherScore": "Score del publicador",
+    "ProcessorsTable.netScore": "Puntaje neto",
+    "ProcessorsTable.approve": "Aprobar"
+}

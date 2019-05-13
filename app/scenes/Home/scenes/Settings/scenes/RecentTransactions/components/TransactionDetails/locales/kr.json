@@ -1,0 +1,19 @@
+{
+    "TransactionDetails.amountOfAsset": "자산량,",
+    "TransactionDetails.transaction": "트랜잭션",
+    "TransactionDetails.operations": "조작",
+    "TransactionDetails.referrerSellerFee": "판매자의 추천인 수수료: {fee} XOM",
+    "TransactionDetails.timeStamp": "타임스탬프",
+    "TransactionDetails.escrowFeeDetail": "에스크로 수수료: {수수료} XOM",
+    "TransactionDetails.feeDetail": "수수료: {fee} XOM",
+    "TransactionDetails.next": "다음",
+    "TransactionDetails.omnibazaarFeeDetail": "OmniBazaar 수수료: {fee} XOM",
+    "TransactionDetails.block": "블럭",
+    "TransactionDetails.close": "닫기",
+    "TransactionDetails.referrerBuyerFee": "구매자의 추천인 수수료: {fee} XOM",
+    "TransactionDetails.publisherFee": "게시자 수수료: {fee} XOM",
+    "TransactionDetails.deposit": "예금",
+    "TransactionDetails.transactionHash": "트랜잭션 해쉬",
+    "TransactionDetails.transactionDetails": "거래 세부사항",
+    "TransactionDetails.withdraw": "인출"
+}

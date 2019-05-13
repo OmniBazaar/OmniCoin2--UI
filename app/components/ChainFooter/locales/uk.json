@@ -1,6 +1,6 @@
 {
-    "ChainFooter.connecting": "Connecting...", 
-    "ChainFooter.block": "Block", 
-    "ChainFooter.noConnection": "No connection", 
-    "ChainFooter.refresh": "Refresh"
+    "ChainFooter.connecting": "Підключення...",
+    "ChainFooter.block": "Блок",
+    "ChainFooter.noConnection": "Немає з'єднання",
+    "ChainFooter.refresh": "Оновити"
 }

@@ -1,13 +1,13 @@
 {
-    "ImportListings.removeAll": "REMOVE ALL", 
-    "ImportListings.onlyTextFileMsg": "Only TXT files are allowed.", 
-    "ImportListings.warning": "Warning", 
-    "ImportListings.addFiles": "ADD FILES", 
-    "ImportListings.importListings": "Import Listings", 
-    "ImportListings.myListings": "My Listings", 
-    "ImportListings.ok": "Okay", 
-    "ImportListings.listingsVendor": "Listings Vendor", 
-    "ImportListings.importedData": "Imported Data", 
-    "ImportListings.files": "Files", 
-    "ImportListings.filesToImport": "Files to Import"
+    "ImportListings.removeAll": "બધા દૂર કરો",
+    "ImportListings.onlyTextFileMsg": "માત્ર TXT ફાઈલ માન્ય.",
+    "ImportListings.warning": "ચેતવણી",
+    "ImportListings.addFiles": "ફાઈલ ઉમેરો",
+    "ImportListings.importListings": "સૂચિ આયાત કરો",
+    "ImportListings.myListings": "મારી સૂચી",
+    "ImportListings.ok": "બરાબર",
+    "ImportListings.listingsVendor": "વિક્રેતા યાદી",
+    "ImportListings.importedData": "આયાત કરેલ ડેટા",
+    "ImportListings.files": "ફાઈલ",
+    "ImportListings.filesToImport": "આયાત કરવા માટેની ફાઇલો"
 }

@@ -1,13 +1,15 @@
 {
-    "DataTable.view": "VIEW", 
-    "DataTable.parameters": "Parameters", 
-    "DataTable.default": "Default", 
-    "DataTable.successSave": "Successfully saved", 
-    "DataTable.search": "Search", 
-    "DataTable.successDelete": "Successfully deleted", 
-    "DataTable.date": "Date", 
-    "DataTable.success": "Success", 
-    "DataTable.delete": "DELETE", 
-    "DataTable.save": "SAVE", 
-    "DataTable.error": "Error"
+    "DataTable.view": "ВИД",
+    "DataTable.parameters": "Parameters",
+    "DataTable.default": "По умолчанию",
+    "DataTable.successSave": "Успешно сохранено",
+    "DataTable.search": "Поиск",
+    "DataTable.successDelete": "Успешно удалено",
+    "DataTable.date": "Дата",
+    "DataTable.success": "Успешно",
+    "DataTable.delete": "УДАЛИТЬ",
+    "DataTable.save": "СОХРАНИТЬ",
+    "DataTable.error": "Ошибка",
+    "DataTable.category": "Категория",
+    "DataTable.subCategory": "Под-категория"
 }

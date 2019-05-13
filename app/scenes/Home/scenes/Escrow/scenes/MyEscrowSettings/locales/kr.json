@@ -1,0 +1,9 @@
+{
+    "MyEscrowSettings.error": "에러",
+    "MyEscrowSettings.secondCategory": "모든 유저 I 거래 프로세서로써 투표",
+    "MyEscrowSettings.firstCategory": "내가 긍정적인 평판 등급을 준 유저",
+    "MyEscrowSettings.saved": "성공적으로 저장됨",
+    "MyEscrowSettings.save": "설정 저장하기",
+    "MyEscrowSettings.title": "I본인은 다음 카테고리의 유저를 거래의 에스트로 중개인으로 승인합니다:",
+    "MyEscrowSettings.thirdCategory": "액티브 트랜잭션 프로세서인 최상위 참가자."
+}

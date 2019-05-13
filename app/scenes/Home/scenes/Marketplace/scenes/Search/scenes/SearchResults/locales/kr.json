@@ -1,0 +1,16 @@
+{
+    "SearchResults.lowestPrice": "최저가",
+    "SearchResults.newArrivals": "신제품",
+    "SearchResults.searchingForPublishers": "게시자 찾기",
+    "SearchResults.searchResults": "결과 검색",
+    "SearchResults.currency": "화폐",
+    "SearchResults.marketplace": "마켓플레이스",
+    "SearchResults.highestPrice": "최고가",
+    "SearchResults.featured": "특징",
+    "SearchResults.category": "카테고리",
+    "SearchResults.subCategory": "하위 카테고리",
+    "SearchResults.extendedSearch": "Extended Search",
+    "SearchResults.allCategories": "모든 카테고리",
+    "SearchResults.search": "검색",
+    "SearchResults.loadingListings": "목록 로딩"
+}

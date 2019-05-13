@@ -1,1 +1,11 @@
-{}
+{
+    "ProcessorsTable.rank": "Rank",
+    "ProcessorsTable.name": "Name",
+    "ProcessorsTable.approval": "Approval",
+    "ProcessorsTable.reliability": "Reliability",
+    "ProcessorsTable.reputation": "Reputation",
+    "ProcessorsTable.referralScore": "Referral Score",
+    "ProcessorsTable.publisherScore": "Publisher Score",
+    "ProcessorsTable.netScore": "Net Score",
+    "ProcessorsTable.approve": "Approve"
+}

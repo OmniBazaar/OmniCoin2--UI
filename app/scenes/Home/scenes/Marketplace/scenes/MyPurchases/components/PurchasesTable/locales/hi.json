@@ -1,12 +1,12 @@
 {
-    "PurchasesTable.price": "Price", 
-    "PurchasesTable.publisher": "Publisher", 
-    "PurchasesTable.expirationTime": "Exp. time", 
-    "PurchasesTable.count": "Count", 
-    "PurchasesTable.title": "Title", 
-    "PurchasesTable.date": "Date", 
-    "PurchasesTable.seller": "Seller", 
-    "PurchasesTable.id": "ID", 
-    "PurchasesTable.listingNotAvaiable": "Listing not available", 
-    "PurchasesTable.buyer": "Buyer"
+    "PurchasesTable.price": "मूल्य",
+    "PurchasesTable.publisher": "प्रकाशक ",
+    "PurchasesTable.expirationTime": "समाप्ति समय",
+    "PurchasesTable.count": "गणना",
+    "PurchasesTable.title": "शीर्षक",
+    "PurchasesTable.date": "दिनांक",
+    "PurchasesTable.seller": "Seller",
+    "PurchasesTable.id": "आईडी",
+    "PurchasesTable.listingNotAvaiable": "सूची उपलब्ध नहीं है",
+    "PurchasesTable.buyer": "क्रेता"
 }

@@ -1,8 +1,8 @@
 {
-    "NewEthereumWallet.info": "Create New Ether Wallet", 
-    "NewEthereumWallet.success": "Success", 
-    "NewEthereumWallet.successMessage": "Wallet added successfully.", 
-    "NewEthereumWallet.createWallet": "CREATE WALLET", 
-    "NewEthereumWallet.cancel": "CANCEL", 
-    "NewEthereumWallet.error": "Error"
+    "NewEthereumWallet.info": "Creați un nou portofel Ether",
+    "NewEthereumWallet.success": "Succes",
+    "NewEthereumWallet.successMessage": "Portalul a fost adăugat cu succes",
+    "NewEthereumWallet.createWallet": "CREATE WALLET",
+    "NewEthereumWallet.cancel": "CANCEL",
+    "NewEthereumWallet.error": "Eroare"
 }
