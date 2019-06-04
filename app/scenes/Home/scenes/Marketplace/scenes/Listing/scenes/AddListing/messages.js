@@ -484,6 +484,14 @@ const messages = defineMessages({
   phone: {
     id: 'AddListing.phone',
     defaultMessage: 'Phone (optional)'
+  },
+  createdUpdatedDate: {
+    id: 'AddListing.createdUpdatedDate',
+    defaultMessage: 'Listing Created/Updated'
+  },
+  listingExpiredLegend: {
+    id: 'AddListing.listingExpiredLegend',
+    defaultMessage: 'Listings expire after {ttlDays} days, unless updated or deleted.'
   }
 });
 

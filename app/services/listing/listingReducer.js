@@ -54,7 +54,8 @@ import {
   filterFavorites,
   clearMyListings,
   checkPublishersAlive,
-  checkPublishersAliveFinish
+  checkPublishersAliveFinish,
+  getListingTtlDone
 } from './listingActions';
 
 import { marketplaceReturnListings } from '../search/searchActions';
@@ -128,7 +129,8 @@ const defaultState = {
     loading: false,
     publishers: [],
     error: null
-  }
+  },
+  listingTtl: 0
 };
 
 const changeCurrencies = (selectedCurrency, listing) => listing.map((item) => {
@@ -815,6 +817,12 @@ const reducer = handleActions({
         error,
         publishers: error ? state.allPublishers.publishers : publishers
       }
+    };
+  },
+  [getListingTtlDone](state, {payload: {ttl}}) {
+    return {
+      ...state,
+      listingTtl: ttl
     };
   }
 }, defaultState);

@@ -54,7 +54,9 @@ const {
   filterFavorites,
   clearMyListings,
   checkPublishersAlive,
-  checkPublishersAliveFinish
+  checkPublishersAliveFinish,
+  getListingTtl,
+  getListingTtlDone
 } = createActions({
   GET_LISTING_DETAIL: (listingId) => ({ listingId }),
   GET_LISTING_DETAIL_SUCCEEDED: (listingDetail) => ({ listingDetail }),
@@ -124,7 +126,9 @@ const {
   }),
   CLEAR_MY_LISTINGS: () => ({}),
   CHECK_PUBLISHERS_ALIVE: () => ({}),
-  CHECK_PUBLISHERS_ALIVE_FINISH: (error, publishers) => ({ error, publishers })
+  CHECK_PUBLISHERS_ALIVE_FINISH: (error, publishers) => ({ error, publishers }),
+  GET_LISTING_TTL: () => ({}),
+  GET_LISTING_TTL_DONE: (ttl) => ({ttl})
 });
 
 export {
@@ -181,5 +185,7 @@ export {
   filterFavorites,
   clearMyListings,
   checkPublishersAlive,
-  checkPublishersAliveFinish
+  checkPublishersAliveFinish,
+  getListingTtl,
+  getListingTtlDone
 };

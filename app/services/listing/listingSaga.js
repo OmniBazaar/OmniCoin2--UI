@@ -38,7 +38,8 @@ import {
   isListingFineFailed,
   searchPublishersFinish,
   awaitListingDetail,
-  checkPublishersAliveFinish
+  checkPublishersAliveFinish,
+  getListingTtlDone
 } from './listingActions';
 import {
   lookupIp
@@ -76,7 +77,8 @@ export function* listingSubscriber() {
     takeEvery('SEARCH_PUBLISHERS', searchPublishers),
     takeEvery('REPORT_LISTING', reportListing),
     takeEvery('MARKETPLACE_RETURN_LISTINGS', marketplaceReturnListings),
-    takeEvery('CHECK_PUBLISHERS_ALIVE', checkPublishersAlive)
+    takeEvery('CHECK_PUBLISHERS_ALIVE', checkPublishersAlive),
+    takeEvery('GET_LISTING_TTL', getListingTtlSaga)
   ]);
 }
 
@@ -492,6 +494,8 @@ function* marketplaceReturnListings({ data }) {
         listingDetail.existsInBlockchain = true;
         listingDetail.quantity = blockchainListingData.quantity;
         listingDetail.isReportedByCurrentUser = blockchainListingData.reported_accounts.includes(userAcc.get('id'));
+        listingDetail.created_at = blockchainListingData.created_at;
+        listingDetail.updated_at = blockchainListingData.updated_at;
       }
 
       const ownerAcc = yield Apis.instance().db_api().exec('get_account_by_name', [listingDetail.owner]);
@@ -506,5 +510,14 @@ function* marketplaceReturnListings({ data }) {
   } catch (error) {
       console.log("ERROR ", error);
       yield put(getListingDetailFailed(error));
+  }
+}
+
+function* getListingTtlSaga() {
+  try {
+    const properties = yield Apis.instance().db_api().exec('get_global_properties', []);
+    yield put(getListingTtlDone(properties.parameters.maximum_listing_lifetime));
+  } catch (err) {
+    console.log(err);
   }
 }
