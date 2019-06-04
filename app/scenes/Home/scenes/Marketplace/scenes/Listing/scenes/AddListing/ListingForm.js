@@ -39,7 +39,8 @@ import {
   saveListing,
   previewListing,
   clearPreviewListing,
-  resetSaveListing
+  resetSaveListing,
+  getListingTtl
 } from '../../../../../../../../services/listing/listingActions';
 import { saveListingDefault } from '../../../../../../../../services/listing/listingDefaultsActions';
 import {
@@ -148,6 +149,8 @@ class ListingForm extends Component {
   );
 
   componentWillMount() {
+    this.props.listingActions.getListingTtl();
+
     if (!this.props.listing.previewListing) {
       this.resetForm();
     } else {
@@ -208,6 +211,13 @@ class ListingForm extends Component {
       } else {
         data.ethereum_address = ethereum.address;
       }
+    }
+
+    if (!data.start_date) {
+      data.start_date = moment().format('YYYY-MM-DD HH:mm:ss');
+    }
+    if (typeof data.continuous === 'undefined') {
+      data.continuous = true;
     }
 
     unitKeys.forEach(key => {
@@ -562,6 +572,19 @@ class ListingForm extends Component {
     toastr.success(formatMessage(messages.savedAsDefaults));
   }
 
+  getListingDate() {
+    const {editingListing} = this.props;
+    if (!editingListing) {
+      if (!this.createTime) {
+        this.createTime = moment.utc().format('YYYY-MM-DD HH:mm:ss');
+      }
+      return this.createTime;
+    }
+
+    const date = editingListing.updated_at ? editingListing.updated_at : editingListing.created_at;
+    return date.replace('T', ' ');
+  }
+
   render() {
     const { formatMessage } = this.props.intl;
     const {
@@ -587,6 +610,7 @@ class ListingForm extends Component {
 
     const formValues = this.props.formValues || {};
     const { saving } = this.props.listing.saveListing;
+    const {listingTtl} = this.props.listing;
 
     const btcWalletAddress = bitcoin.wallets.length ? bitcoin.wallets[0].receiveAddress : null;
     const ethWalletAddress = ethereum.address;
@@ -814,9 +838,12 @@ class ListingForm extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <span>{formatMessage(messages.listingDates)}*</span>
+              <span>{formatMessage(messages.createdUpdatedDate)}</span>
             </Grid.Column>
-            <Grid.Column width={4} className="align-top">
+            <Grid.Column width={12}>
+              <span>{this.getListingDate()} UTC</span>
+            </Grid.Column>
+            {/* <Grid.Column width={4} className="align-top">
               <Field
                 type="text"
                 name="start_date"
@@ -853,6 +880,13 @@ class ListingForm extends Component {
                   label: formatMessage(messages.continuous)
                 }}
               />
+            </Grid.Column>
+            */}
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+              <span>{formatMessage(messages.listingExpiredLegend, {ttlDays: listingTtl / 86400})}</span>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -1331,7 +1365,8 @@ export default compose(
         saveListing,
         resetSaveListing,
         previewListing,
-        clearPreviewListing
+        clearPreviewListing,
+        getListingTtl
       }, dispatch),
       accountActions: bindActionCreators({
         setBtcAddress,
