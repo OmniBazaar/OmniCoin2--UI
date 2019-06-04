@@ -883,7 +883,7 @@ class ListingForm extends Component {
             </Grid.Column>
             */}
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row style={{marginTop: '-8px'}}>
             <Grid.Column width={4} />
             <Grid.Column width={12}>
               <span>{formatMessage(messages.listingExpiredLegend, {ttlDays: listingTtl / 86400})}</span>
