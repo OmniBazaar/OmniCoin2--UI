@@ -29,40 +29,30 @@ class IdentityVerificationForm extends Component {
   }
 
   componentDidUpdate() {
+    const { username } = this.props.auth.currentUser;
     if (this.state.identityVerificationToken && this.state.identityVerificationUiLoaded && !this.state.iframeLoaded) {
       idensic.init(
         // selector of an iframe container (see above)
         '#identityVerification',
         // configuration object (see preparation steps)
         {
+          clientId: 'OmniBazaar',
+          externalUserId: username,
           accessToken: this.state.identityVerificationToken,
           excludedCountries: ['CHN', 'USA', 'UMI'],
-          applicantDataPage: {
-            enabled: true,
-            fields: [
-              {
-                name: 'country',
-                required: true
-              },
-              {
-                name: 'firstName',
-                required: true
-              },
-              {
-                name: 'lastName',
-                required: true
-              }
-            ]
+          navConf: {
+            skipWelcomeScreen: false,
+            skipAgreementsScreen: false,
+            skipReviewScreen: false,
+            registration: "disabled"
           },
-          // steps to require:
-          // identity proof (passport, id card or driving license) and a selfie
-          requiredDocuments: 'IDENTITY:PASSPORT,ID_CARD,DRIVERS;SELFIE:SELFIE',
           uiConf: {
             steps: {
               APPLICANT_DATA: {
-                instructions: 'To get your account verified fill the basic information below. \n\n ###### Citizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.'
+                subTitle: 'To get your account verified fill the basic information below. \n\n ###### Citizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.'
               },
               IDENTITY: {
+                subTitle: "To get your account verified fill the basic information below. \n\n ###### Citizens and residents of the United States, Canada, China, Cayman Islands, Iran, Syria, Sudan, Cuba, Burma, and Côte d’Ivoire are not eligible to participate in the OmniCoin Token Sale.",
                 instructions: 'NOTE: Please provide a quality photo that is well lit, in focus and has high resolution. An unsatisfactory photo is the most frequent cause of failure of this identity verification process.'
               },
               SELFIE: {
@@ -88,7 +78,7 @@ class IdentityVerificationForm extends Component {
     return (
       <React.Fragment>
         <Script
-          url="https://test-api.sumsub.com/idensic/static/idensic.js"
+          url="https://api.sumsub.com/idensic/static/sumsub-kyc.js"
           onLoad={() => { this.setState({ identityVerificationUiLoaded: true }); }}
         />
         <div id="identityVerification" />

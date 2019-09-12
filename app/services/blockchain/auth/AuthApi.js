@@ -69,12 +69,73 @@ export const getIdentityVerificationStatus = wrapRequest(async (user, username) 
 
 export const isWelcomeBonusReceived = wrapRequest(async (user, username) => doAuthRequest(`${apiURL}/is-welcome-bonus-received/${username}`, user));
 
-const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
-const identityVerificationBaseURL = 'https://test-api.sumsub.com';
-const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}&key=${identityVerificationApiKey}`, {
-  method: 'POST'
-}));
+// const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
+const identityVerificationBaseURL = 'https://api.sumsub.com';
+const username = 'omnibazaar_api';
+const password = 'Cq0x07J5bT';
+const getIdentityVerificationToken = async (userId) => {
+  const base64Auth = Buffer.from(`${username}:${password}`).toString('base64');
+  const loginResp = await fetch(`${identityVerificationBaseURL}/resources/auth/login`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${base64Auth}`
+    }
+  });
 
-const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
+  const loginToken = (await loginResp.json()).payload;
+  const accessTokenResp = await fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${loginToken}`
+    }
+  });
+  const accessToken = (await accessTokenResp.json()).token;
+  await makeApplicantRequest(userId, accessToken);
 
-export { getIdentityVerificationToken, getApplicantInformation };
+  return accessToken;
+};
+
+const makeApplicantRequest = async (userId, token) => fetch(`${identityVerificationBaseURL}/resources/accounts/-/applicantRequests`, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    applicant: {
+      requiredIdDocs: {
+        docSets: [
+          {
+            "idDocSetType": "APPLICANT_DATA",
+            "types": null,
+            "subTypes": null,
+            "fields": [
+              {
+                "name": "firstName",
+                "required": true
+              },
+              {
+                "name": "lastName",
+                "required": true
+              }
+            ],
+            "imageIds": null,
+            "mode": null
+          },
+          {
+            idDocSetType: "IDENTITY",
+            types: ["ID_CARD", "PASSPORT", "DRIVERS"]
+          }, {
+            idDocSetType: "SELFIE",
+            types: ["SELFIE"]
+          }
+        ]
+      },
+      externalUserId: userId
+    }
+  })
+});
+
+// const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
+
+export { getIdentityVerificationToken };

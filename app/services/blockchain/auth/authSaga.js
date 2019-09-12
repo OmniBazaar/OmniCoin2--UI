@@ -229,8 +229,8 @@ function* getWelcomeBonusAmount() {
 
 function* getIdentityVerificationToken({ payload: { username } }) {
   try {
-    const resp = yield call(AuthApi.getIdentityVerificationToken, username);
-    yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token: resp.token });
+    const token = yield call(AuthApi.getIdentityVerificationToken, username);
+    yield put({ type: 'GET_IDENTITY_VERIFICATION_TOKEN_SUCCEEDED', token });
   } catch (error) {
     console.log(error);
   }
