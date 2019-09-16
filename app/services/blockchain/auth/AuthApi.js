@@ -2,7 +2,7 @@
  * created by alaverdyanrafayel on 08/07/18
  */
 import { wrapRequest } from '../../utils';
-import { apiURL } from '../../../config/config';
+import { apiURL, sumsub } from '../../../config/config';
 import { getAuthHeaders } from '../../listing/apis';
 
 const doAuthRequest = async (url, user, options) => {
@@ -69,13 +69,70 @@ export const getIdentityVerificationStatus = wrapRequest(async (user, username) 
 
 export const isWelcomeBonusReceived = wrapRequest(async (user, username) => doAuthRequest(`${apiURL}/is-welcome-bonus-received/${username}`, user));
 
-const identityVerificationApiKey = 'NRRVCPBSGZZTGD';
-const identityVerificationBaseURL = 'https://api.sumsub.com';
+const identityVerificationBaseURL = sumsub.baseUrl;
+const getIdentityVerificationToken = async (userId) => {
+  const base64Auth = Buffer.from(`${sumsub.user}:${sumsub.password}`).toString('base64');
+  const loginResp = await fetch(`${identityVerificationBaseURL}/resources/auth/login`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${base64Auth}`
+    }
+  });
 
-const getIdentityVerificationToken = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}&key=${identityVerificationApiKey}`, {
-  method: 'POST'
-}));
+  const loginToken = (await loginResp.json()).payload;
+  const accessTokenResp = await fetch(`${identityVerificationBaseURL}/resources/accessTokens?userId=${userId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${loginToken}`
+    }
+  });
+  const accessToken = (await accessTokenResp.json()).token;
+  await makeApplicantRequest(userId, accessToken);
 
-const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
+  return accessToken;
+};
 
-export { getIdentityVerificationToken, getApplicantInformation };
+const makeApplicantRequest = async (userId, token) => fetch(`${identityVerificationBaseURL}/resources/accounts/-/applicantRequests`, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    applicant: {
+      requiredIdDocs: {
+        docSets: [
+          {
+            "idDocSetType": "APPLICANT_DATA",
+            "types": null,
+            "subTypes": null,
+            "fields": [
+              {
+                "name": "firstName",
+                "required": true
+              },
+              {
+                "name": "lastName",
+                "required": true
+              }
+            ],
+            "imageIds": null,
+            "mode": null
+          },
+          {
+            idDocSetType: "IDENTITY",
+            types: ["ID_CARD", "PASSPORT", "DRIVERS"]
+          }, {
+            idDocSetType: "SELFIE",
+            types: ["SELFIE"]
+          }
+        ]
+      },
+      externalUserId: userId
+    }
+  })
+});
+
+// const getApplicantInformation = wrapRequest(async (userId) => fetch(`${identityVerificationBaseURL}/resources/applicants/-;externalUserId=${userId}?key=${identityVerificationApiKey}`));
+
+export { getIdentityVerificationToken };

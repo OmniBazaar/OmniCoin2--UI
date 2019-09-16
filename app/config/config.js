@@ -4,5 +4,11 @@ export default {
   exchangeServer: "http://74.208.211.227/exchange/api",
   mailServer: "http://74.208.211.227/sendmail/",
   apiURL: 'http://74.208.211.227:5050/api',
-  configJson: 'https://omnibazaar.com/config.json'
+  configJson: 'https://omnibazaar.com/config.json',
+	
+	sumsub: {
+		baseUrl: 'https://api.sumsub.com',
+		user: 'omnibazaar_api',
+		password: 'Cq0x07J5bT'
+	}
 };
