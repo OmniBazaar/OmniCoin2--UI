@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import Script from 'react-load-script';
 import PropTypes from 'prop-types';
 import { getIdentityVerificationToken } from '../../../../services/blockchain/auth/authActions';
+import config from '../../../../config/config';
 import './style.scss';
 
 class IdentityVerificationForm extends Component {
@@ -78,7 +79,7 @@ class IdentityVerificationForm extends Component {
     return (
       <React.Fragment>
         <Script
-          url="https://api.sumsub.com/idensic/static/sumsub-kyc.js"
+          url={`${config.sumsub.baseUrl}/idensic/static/sumsub-kyc.js`}
           onLoad={() => { this.setState({ identityVerificationUiLoaded: true }); }}
         />
         <div id="identityVerification" />

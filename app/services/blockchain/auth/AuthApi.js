@@ -2,7 +2,7 @@
  * created by alaverdyanrafayel on 08/07/18
  */
 import { wrapRequest } from '../../utils';
-import { apiURL } from '../../../config/config';
+import { apiURL, sumsub } from '../../../config/config';
 import { getAuthHeaders } from '../../listing/apis';
 
 const doAuthRequest = async (url, user, options) => {
@@ -69,12 +69,9 @@ export const getIdentityVerificationStatus = wrapRequest(async (user, username) 
 
 export const isWelcomeBonusReceived = wrapRequest(async (user, username) => doAuthRequest(`${apiURL}/is-welcome-bonus-received/${username}`, user));
 
-// const identityVerificationApiKey = 'JGNAJSHUJFGEQR';
-const identityVerificationBaseURL = 'https://api.sumsub.com';
-const username = 'omnibazaar_api';
-const password = 'Cq0x07J5bT';
+const identityVerificationBaseURL = sumsub.baseUrl;
 const getIdentityVerificationToken = async (userId) => {
-  const base64Auth = Buffer.from(`${username}:${password}`).toString('base64');
+  const base64Auth = Buffer.from(`${sumsub.user}:${sumsub.password}`).toString('base64');
   const loginResp = await fetch(`${identityVerificationBaseURL}/resources/auth/login`, {
     method: 'POST',
     headers: {
